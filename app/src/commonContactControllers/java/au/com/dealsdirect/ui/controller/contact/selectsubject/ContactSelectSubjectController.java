@@ -44,12 +44,15 @@ public class ContactSelectSubjectController extends BaseController
     RecyclerView mContactSelectSubjectControllerRecyclerView;
 
     public static ContactSelectSubjectController newInstance(List<String> contactSubjects) {
-        Log.d("clickable", "clicked subject "+contactSubjects.size());
-
-//        myContactSubjects = contactSubjects;
         return new ContactSelectSubjectController(
                 new BundleBuilder(new Bundle())
                         .putStringArrayList(KEY_SUBJECTS, (ArrayList<String>) contactSubjects)
+                        .build());
+    }
+
+    public static ContactSelectSubjectController newInstance() {
+        return new ContactSelectSubjectController(
+                new BundleBuilder(new Bundle())
                         .build());
     }
 

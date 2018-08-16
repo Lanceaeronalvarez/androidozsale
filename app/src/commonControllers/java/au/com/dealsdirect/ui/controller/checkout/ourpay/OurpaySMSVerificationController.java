@@ -281,7 +281,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
         mSMSVerificationPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if (mIsPhoneValid) {
+                if (mIsPhoneValid && mSMSVerificationPhone != null) {
                     mSMSVerificationPhone.setActivated(false);
                 }
             }

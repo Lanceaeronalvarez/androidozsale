@@ -1,14 +1,12 @@
 package au.com.dealsdirect.ui.controller.main;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
@@ -17,13 +15,19 @@ import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.OriginalPrice;
+import au.com.dealsdirect.data.network.model.saleitemdetails.Price;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.module.ControllerFactory;
@@ -121,19 +125,13 @@ public class MainController extends BaseController implements MainMvpView {
                 if (!router.hasRootController()) {
                     switch (position) {
                         case 0:
-                            GateKeeper.setRoot(router, GateKeeper.Destination.ACCOUNT,RouterTransaction.with(mAccountsController));
-                            mAccountsRouter = router;
-                            mRouterList.put(0,mAccountsRouter);
+                            GateKeeper.setRoot(router, GateKeeper.Destination.ACCOUNT, RouterTransaction.with(mAccountsController));
                             break;
                         case 1:
-                            GateKeeper.setRoot(router, GateKeeper.Destination.SALEITEMS,RouterTransaction.with(mSaleItemsController));
-                            mSaleItemsRouter = router;
-                            mRouterList.put(1,mSaleItemsRouter);
+                            GateKeeper.setRoot(router, GateKeeper.Destination.SALEITEMS, RouterTransaction.with(mSaleItemsController));
                             break;
                         case 2:
-                            GateKeeper.setRoot(router, GateKeeper.Destination.CHECKOUT,RouterTransaction.with(mCheckoutController));
-                            mCheckoutRouter = router;
-                            mRouterList.put(2,mCheckoutRouter);
+                            GateKeeper.setRoot(router, GateKeeper.Destination.CHECKOUT, RouterTransaction.with(mCheckoutController));
                             break;
                         default:
                             router.setRoot(RouterTransaction.with(mSaleItemsController));
@@ -176,7 +174,7 @@ public class MainController extends BaseController implements MainMvpView {
         }
     }
 
-    public void goToAccounts(){
+    public void goToAccounts() {
         if (mHomeViewPager != null) {
             mHomeViewPager.setCurrentItem(0);
         }
@@ -233,7 +231,7 @@ public class MainController extends BaseController implements MainMvpView {
         return mRouterList.get(mCurrentVisibleIndex);
     }
 
-    private void setPageChangeListener(){
+    private void setPageChangeListener() {
         mHomeViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -259,5 +257,34 @@ public class MainController extends BaseController implements MainMvpView {
 
             }
         });
+    }
+
+
+    public void deepLinkProductDetails(String seoIdentifier, String skuId) {
+
+        ((SaleItemsController) mSaleItemsController).deepLinkSaleItemDetails(seoIdentifier, skuId);
+    }
+
+    public void deepLinkProductDetails() {
+        GetSaleItemDetailsResponse getSaleItemDetailsResponse = new GetSaleItemDetailsResponse();
+        getSaleItemDetailsResponse.setSkuId("ZDQ5Nzk5M2UtMjU2Yy00ODMzLWJkZmEtNDE2OGNjMGIyOWRiX2FlMGRiNDQ2LWY4YWItNDFlMi1iZTY5LTIwYjNmYjQwZjg1Nw==");
+        List<String> linkedList = new LinkedList<>();
+        linkedList.add("https://c1.mysalec.com/brands/320f61c3-ad87-4b66-abc2-8f82f31c4b59/b4ceed87-debf-4502-9874-9eb558de3061/b82162ef-e0c5-4a34-80b3-c24b54dcdcd1_50x50.JPG");
+
+        getSaleItemDetailsResponse.setImages(linkedList);
+        getSaleItemDetailsResponse.setSeoIdentifier("qDzCZLx7gE_aKbguHqNfeg");
+        Price price = new Price();
+        OriginalPrice originalPrice = new OriginalPrice();
+        price.setValue(Double.valueOf(1));
+        originalPrice.setValue(Double.valueOf(2));
+        getSaleItemDetailsResponse.setPrice(price);
+        getSaleItemDetailsResponse.setOriginalPrice(originalPrice);
+
+        ((SaleItemsController) mSaleItemsController).deepLinkSaleItemDetails("qDzCZLx7gE_aKbguHqNfeg", "ZDQ5Nzk5M2UtMjU2Yy00ODMzLWJkZmEtNDE2OGNjMGIyOWRiX2FlMGRiNDQ2LWY4YWItNDFlMi1iZTY5LTIwYjNmYjQwZjg1Nw==");
+    }
+
+    public void loadSaleItems(String categoryKey) {
+        Log.d("deeplinking", "loadsaleitems");
+        ((SaleItemsController) mSaleItemsController).updateSaleItems(categoryKey);
     }
 }

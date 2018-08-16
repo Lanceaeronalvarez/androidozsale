@@ -36,7 +36,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     OrderDetailsMvpPresenter<OrderDetailsMvpView> mPresenter;
 
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mOrderDetailsToolarTitle;
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mOrderDetailsRightOption;
@@ -113,6 +113,11 @@ public class OrderDetailsController extends BaseController implements OrderDetai
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
 
         }
+    }
+
+    @Override
+    public void showOrderTrackingWeb(String link) {
+
     }
 
     @OnClick(R.id.partial_toolbar_left_view)

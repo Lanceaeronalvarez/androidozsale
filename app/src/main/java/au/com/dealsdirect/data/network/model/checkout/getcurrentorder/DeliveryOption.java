@@ -9,28 +9,28 @@ import com.google.gson.annotations.SerializedName;
 
 public class DeliveryOption {
 
-    @SerializedName("DeliveryOptions")
+    @SerializedName(value = "DeliveryOptions")
     @Expose
     private List<String> deliveryOptions = null;
-    @SerializedName("PostServiceId")
+    @SerializedName(value = "PostServiceId", alternate = {"postServiceId"})
     @Expose
     private String postServiceId;
-    @SerializedName("Price")
+    @SerializedName(value = "Price", alternate = {"price"})
     @Expose
     private Double price;
-    @SerializedName("Selected")
+    @SerializedName(value = "Selected", alternate = {"selected"})
     @Expose
     private Boolean selected;
-    @SerializedName("Name")
+    @SerializedName(value = "Name", alternate = {"alternate"})
     @Expose
     private String name;
-    @SerializedName("Description")
+    @SerializedName(value = "Description", alternate = {"description"})
     @Expose
     private String description;
-    @SerializedName("OurpaySelect")
+    @SerializedName(value = "OurpaySelect", alternate = {"ourpaySelect"})
     @Expose
     private boolean ourPaySelect;
-    @SerializedName("AgreedWithTerms")
+    @SerializedName(value = "AgreedWithTerms", alternate = {"agreedWithTerms"})
     @Expose
     private boolean agreedWithTerms;
 

@@ -3,12 +3,14 @@
     <color name="colorPrimary">@color/white</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">@color/colorPrimaryDark</color>
+    <color name="colorDisabled">#87939D</color>
 
     <color name="colorSecondary">#4F4F4F</color>
 
     <color name="recyclerview_overscroll">@color/colorSecondary</color>
 
-    <color name="status_bar">@color/colorSecondary</color>
+    <color name="status_bar">@color/bg_splash</color>
+    <color name="status_bar_splash">@color/bg_splash</color>
 
     <!--Search Edit Text-->
     <color name="search_edit_text_hint">#CCFFFFFF</color>
@@ -32,12 +34,15 @@
     <color name="bg_row_view_vouchers">@color/background_default</color>
     <color name="bg_dialog_default">@color/background_default</color>
     <color name="item_view_selected_color">#E4E4E4</color>
-    <color name="splash_background_color">@color/bg_splash</color>
 
     <!-- Buttons -->
     <color name="bg_button_ripple">@color/white</color>
     <color name="bg_button_default">@color/colorSecondary</color>
     <color name="bg_button_pressed">@color/colorSecondary</color>
+
+    <color name="bg_join_now_btn_ripple">@color/white</color>
+    <color name="bg_join_now_btn_default">#cacaca</color>
+    <color name="bg_join_now_btn_pressed">#cacaca</color>
 
     <color name="clipboard_default">#FF8B8B8B</color>
     <color name="clipboard_pressed">#FF8B8B8B</color>
@@ -55,6 +60,7 @@
 
     <color name="bg_button_addcart_default">#65D87F</color>
     <color name="bg_button_addcart_pressed">#65D87F</color>
+    <color name="bg_button_copy_to_clipboard">#4F4F4F</color>
 
     <!-- Text -->
     <color name="text_extra_dark">#000000</color>
@@ -81,6 +87,7 @@
     <color name="payment_success_text_order_name">@color/colorAccent</color>
     <color name="product_details_text_product_price">@color/colorAccent</color>
     <color name="product_details_text_product_sale_price">@color/text_light</color>
+    <color name="language_selected">@color/colorAccent</color>
 
     <!-- Border -->
     <color name="border_light">#FBFBFB</color>
@@ -104,12 +111,11 @@
     <color name="icon_snack_bar">@color/colorAccent</color>
     <color name="icon_default">#919191</color>
 
-    <color name="tab_bar_icon_inactive">#87939D</color>
+    <color name="tab_bar_icon_inactive">@color/colorDisabled</color>
     <color name="tab_bar_icon_active">@color/colorAccent</color>
     <color name="tab_bar_icon_hovered">@color/colorAccent</color>
 
     <color name="bottom_nav_accent">@color/colorAccent</color>
-    <color name="bottom_nav_badge">@color/colorAccent</color>
     <color name="bottom_nav_inactive">@color/text_extra_light</color>
     <color name="bottom_nav_background">@color/toolbar_skin</color>
 
@@ -138,6 +144,11 @@
 
     <!-- ViewHolder -->
     <color name="viewholder_text_remove">@color/text_highlight</color>
+
+    <!--Join Now-->
+    <color name="join_now_text_color">@color/white</color>
+
+    <color name="refunded_state_color">@color/ourpay_orange</color>
 
 
 </resources>

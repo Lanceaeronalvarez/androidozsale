@@ -7,6 +7,8 @@
     android:background="@color/background_default"
     tools:ignore="MissingPrefix">
 
+    <include layout="@layout/partial_toolbar_arrow" />
+
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/controller_view_voucher_layout"
         android:layout_width="match_parent"

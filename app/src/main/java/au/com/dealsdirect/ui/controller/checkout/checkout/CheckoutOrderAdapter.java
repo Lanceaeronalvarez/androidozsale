@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.checkout.checkout;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,6 +124,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         ProductQuantityLayout quantityLayout;
         @BindView(R.id.item_subtotal_price)
         TextView subTotal;
+        @Nullable
         @BindView(R.id.item_checkout_personalisation_layout)
         PersonalisationLayout personalisationLayout;
 

@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -22,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -47,25 +45,36 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsControlle
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.SearchEditText;
-import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
-import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.ChangeHandler;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_POSITION;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SALE_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SKU_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_NAME;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORIES;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
 /**
+ * a
  * dp Created by Admin on 6/8/17.
  */
 
@@ -80,6 +89,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     private String mCategoryKey = "";
     private String mCategoryForTitle = "";
     private String mSearchQuery = "";
+    private String mCategoryName = "";
+    private String mCategoryId = "";
 
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
     private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
@@ -101,7 +112,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     LinearLayout mPlaceholder;
 
     @BindView(R.id.partial_toolbar_field_title_left_option)
-    View mSaleItemsBackIcon;
+    ImageButton mSaleItemsBackIcon;
 
     @BindView(R.id.partial_toolbar_field_title_right_option)
     ImageButton mSaleItemsFilterIcon;
@@ -128,6 +139,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     private boolean mFromShopSearch = false;
     private boolean mFromCategorySearch = false;
     private boolean mIsSearchActive = false;
+    private boolean mFromCategoryDeeplink = false;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
 
@@ -184,7 +196,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     public static SaleItemsController newInstance() {
 
-
         return new SaleItemsController(new BundleBuilder(new Bundle()).build());
     }
 
@@ -209,6 +220,15 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             mFromCategorySearch = getArgs().getBoolean(SALEITEMS_FROM_CATEGORY_SEARCH, true);
         if (args.containsKey(SALEITEMS_FROM_CATEGORIES)) {
             mIsFromCategory = getArgs().getBoolean(SALEITEMS_FROM_CATEGORIES, true);
+        }
+        if (args.containsKey(SALEITEMS_CATEGORY_ID)) {
+            mCategoryId = getArgs().getString(SALEITEMS_CATEGORY_ID, "");
+        }
+        if (args.containsKey(SALEITEMS_CATEGORY_NAME)) {
+            mCategoryName = getArgs().getString(SALEITEMS_CATEGORY_NAME, "");
+        }
+        if (args.containsKey(SALEITEMS_FROM_CATEGORY_DEEPLINK)) {
+            mFromCategoryDeeplink = getArgs().getBoolean(SALEITEMS_FROM_CATEGORY_DEEPLINK, false);
         }
 
     }
@@ -373,6 +393,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         super.onDestroyView(view);
+
     }
 
     @Override
@@ -405,6 +426,8 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             }
         };
 
+        Log.d("deeplink", "sale items controller = " + mSaleId);
+
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
         if (mPresenter.isTablet()) {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
@@ -419,7 +442,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         if (isFiltered || mSaleItems.isEmpty()) {
             showLoading();
 
+            Log.d("deeplinking", "category key = "+mCategoryKey+ " , " +mCategoryId);
             mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, mChipFilters));
+            Log.d("deeplink", "sale items controller = " + mSaleId);
 
             /* show popular products after filter with empty chips */
             if (mCategoryKey.isEmpty() && (mSaleId == null || mSaleId.isEmpty()) && mChipFilters.isEmpty()) {
@@ -642,26 +667,20 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             names.add(getResources().getString(R.string.transition_sale_image_indexed, position));
             mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
+
             Bundle bundle = new Bundle();
-            bundle.putInt("KEY_POSITION", position);
-            bundle.putString("KEY_IMAGE_ID", imageUrl);
-            bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
-            bundle.putString("KEY_SKU_ID", skuId);
-            bundle.putString("KEY_SALE_ID", saleId);
-            bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString());
-            bundle.putString("KEY_SALE_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
-            bundle.putString("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
+            bundle.putInt(SALEITEMDETAILS_KEY_POSITION, position);
+            bundle.putString(SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl);
+            bundle.putString(SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
+            bundle.putString(SALEITEMDETAILS_KEY_SKU_ID, skuId);
+            bundle.putString(SALEITEMDETAILS_KEY_SALE_ID, saleId);
+            bundle.putString(SALEITEMDETAILS_KEY_ITEM_NAME, ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString());
+            bundle.putString(SALEITEMDETAILS_KEY_ITEM_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
+            bundle.putString(SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-                        .pushChangeHandler(new FadeChangeHandler())
-                        .popChangeHandler(new FadeChangeHandler()));
-            } else {
-                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-                        .pushChangeHandler(new SharedArcFadePushChangeHandler())
-                        .popChangeHandler(new SharedArcFadePopChangeHandler()));
-            }
-
+            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                    .pushChangeHandler(new ChangeHandler().fadeChangeHandler())
+                    .popChangeHandler(new ChangeHandler().fadeChangeHandler()));
 
             mFromShopSearch = false;
             mFromCategorySearch = false;

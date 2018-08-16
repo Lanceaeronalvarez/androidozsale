@@ -7,7 +7,7 @@
               android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearlayout_placeholder_boredered"
+        android:id="@+id/linearlayout_placeholder_bordered"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">

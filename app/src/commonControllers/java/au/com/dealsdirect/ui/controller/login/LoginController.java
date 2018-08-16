@@ -59,7 +59,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     @BindView(R.id.controller_login_forgot_password_text)
     TextView mForgotPasswordTextView;
     @BindView(R.id.partial_toolbar_left_view)
-    TextView mLeftButton;
+    View mLeftButton;
 
     @Nullable
     @BindView(R.id.controller_login_legalities_container)
@@ -170,7 +170,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         super.onDestroyView(view);
     }
 
-    @OnClick(R.id.partial_toolbar_right_view)
+    @OnClick({R.id.partial_toolbar_right_view, R.id.controller_login_close_icon})
     void onCloseIconClick() {
         mActivity.onBackPressed();
     }
@@ -186,10 +186,12 @@ public class LoginController extends BaseController implements LoginMvpView {
             if (!mActivity.isAuthorized()) {
                 mActivity.getMainController().getHomeController().resetVisibleContainer();
             }
-            mActivity.getHomeController().resetAccountRouter();
+            mActivity.getHomeController().resetVisibleContainer();
 
             return true;
         }
+
+        mActivity.getHomeController().resetVisibleContainer();
 
         hideKeyboard();
 

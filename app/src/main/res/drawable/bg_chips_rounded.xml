@@ -16,7 +16,7 @@
                 <shape android:shape="rectangle">
                     <corners android:radius="@dimen/edit_text_corner_radius"/>
                     <solid android:color="@color/bg_chips_default"/>
-                    <stroke android:width="@dimen/border_thin" android:color="@color/bg_chips_border_default"/>
+                    <stroke android:width="@dimen/border_thin" android:color="@color/bg_chips_default_border"/>
                 </shape>
             </item>
 

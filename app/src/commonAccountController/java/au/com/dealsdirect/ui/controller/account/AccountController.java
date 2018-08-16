@@ -53,7 +53,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     AccountItemAdapter accountItemAdapter;
 
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
 
     @BindView(R.id.partial_toolbar_left_view)
@@ -172,7 +172,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyOrders() {
-        getRouter().pushController(RouterTransaction.with(new OrdersController())
+        getRouter().pushController(RouterTransaction.with(OrdersController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }

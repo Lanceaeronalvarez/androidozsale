@@ -142,21 +142,11 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                             for (View v : mViewsToToggle) {
                                 v.setVisibility(View.VISIBLE);
                             }
-
-                            if (mContainerToToggle != null && !mIsTablet) {
-                                mContainerToToggle.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                            }
-
                         } else {
                             for (View v : mViewsToToggle) {
                                 v.setVisibility(!mIsTablet ? View.GONE : View.INVISIBLE);
                             }
-
-                            if (mContainerToToggle != null && !mIsTablet) {
-                                mContainerToToggle.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-                            }
                         }
-
                     });
                 }
                 break;

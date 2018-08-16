@@ -8,11 +8,8 @@ import com.braintreepayments.api.exceptions.InvalidArgumentException;
 
 import javax.inject.Singleton;
 
-import au.com.dealsdirect.data.AppDataManager;
-import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.di.ActivityContext;
 import au.com.dealsdirect.di.PerActivity;
-import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.main.MainMvpPresenter;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.ui.main.MainPresenter;

@@ -79,7 +79,7 @@ public class DDApplication extends Application {
         return mApplicationComponent;
     }
 
-    // Needed to replace the component with a test specific one
+    // Needed to replace the au.com.dealsdirect.di.component with a test specific one
     public void setComponent(ApplicationComponent applicationComponent) {
         mApplicationComponent = applicationComponent;
     }
@@ -111,12 +111,13 @@ public class DDApplication extends Application {
             Timber.d("CLEAN_LEGACY", "delete preferences");
 
             this.getSharedPreferences("MainActivity", Context.MODE_PRIVATE).edit().clear().apply();
-            this.getSharedPreferences("MyPrefsFile", Context.MODE_PRIVATE).edit().clear().apply();
+//            do not clear prefs so as users do not get logged out when updating to new app
+//            this.getSharedPreferences("MyPrefsFile", Context.MODE_PRIVATE).edit().clear().apply();
             this.getSharedPreferences("RateThisApp", Context.MODE_PRIVATE).edit().clear().apply();
 
             //Remove Cache folder and image cache
             try {
-                trimCache(this);
+//                trimCache(this);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -45,10 +45,6 @@ public abstract class BasePullToRefreshController extends BaseController impleme
         }
     }
 
-    private LinearLayout mSearchBarLayout;
-
-    protected EditText mSearchBarEditText;
-
     FrameLayout mToolbarFrameLayout;
 
     protected FrameLayout mContentLayout;
@@ -78,16 +74,11 @@ public abstract class BasePullToRefreshController extends BaseController impleme
         View view = inflater.inflate(R.layout.controller_base_ptr, container, false);
         bindPtrViews(view);
         fillToolbar(inflater.inflate(type.getLayout(), container, false));
-        setSearchBarVisible(false);
         return view;
     }
 
     public void setToolBarVisible(boolean isVisible) {
         setViewVisible(mToolBarView, isVisible);
-    }
-
-    public void setSearchBarVisible(boolean isVisible) {
-        setViewVisible(mSearchBarLayout, isVisible);
     }
 
     private void setViewVisible(View view, boolean isVisible) {
@@ -96,10 +87,6 @@ public abstract class BasePullToRefreshController extends BaseController impleme
     }
 
     protected void bindPtrViews(View view){
-
-        mSearchBarLayout = (LinearLayout) view.findViewById(R.id.controller_base_search_layout);
-
-        mSearchBarEditText = (EditText) view.findViewById(R.id.controller_base_search_edittext);
 
         mToolbarFrameLayout = (FrameLayout) view.findViewById(R.id.controller_base_toolbar_layout);
 

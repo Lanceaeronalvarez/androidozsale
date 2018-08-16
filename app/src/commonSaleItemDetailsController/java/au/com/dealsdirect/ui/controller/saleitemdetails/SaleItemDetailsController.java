@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
@@ -44,6 +45,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
@@ -63,6 +65,9 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE;
+
 
 /*
  * Created by smartwave on 08/06/2017.
@@ -151,6 +156,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     Button mAddToCartButton;
     @BindView(R.id.product_details_button_overlay)
     ImageView mAddToCartOverlay;
+    @Nullable
     @BindView(R.id.productPreviousPriceLabel)
     TextView mProductPreviousPriceLabel;
 
@@ -165,7 +171,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mToolbarItemBrandTextView;
     @BindView(R.id.toolbar_item_name)
     TextView mToolbarItemNameTextView;
-    @BindView(R.id.toolbar_item_price)
+    @BindView(R.id.controller_details_price)
     TextView mToolbarItemPriceTextView;
     @BindView(R.id.controller_details_price_info)
     ImageButton mPriceInfoButton;
@@ -198,6 +204,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private int mFromPosition = -1;
 
     boolean checkOutLocated = false;
+    private boolean isDeepLinkedWithoutSale = false;
 
     int[] checkoutLocation = new int[2];
     boolean isAnimating = false;
@@ -232,6 +239,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     public SaleItemDetailsController(Bundle args) {
         super(args);
+
+        if (args.containsKey(SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE)) {
+            isDeepLinkedWithoutSale = getArgs().getBoolean(SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE, false);
+        }
+
         mSaleId = args.getString(KEY_SALE_ID);
         mSkuId = args.getString(KEY_SKU_ID, "");
         mItemImageUrl = args.getString(KEY_ITEM_IMAGE_ID);
@@ -240,6 +252,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSalePrice = args.getString(KEY_ITEM_PRICE);
         mSaleOldPrice = args.getString(KEY_ITEM_OLD_PRICE);
         mFromPosition = args.getInt(KEY_POSITION);
+
     }
 
 
@@ -357,7 +370,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onDestroyView(@NonNull View view) {
         KeyboardUtils.hideSoftInput(mActivity);
         mPresenter.onDetach();
-        super.onDestroyView(view);
+        if (isDeepLinkedWithoutSale)
+            mActivity.getMainController().setViewpagerDraggable(true);
+
+            super.onDestroyView(view);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -493,7 +509,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     isSizeSoldOut = saleDetail.getSkuVariants().get(selectedIndex).isSoldOut();
 
                     mAddToCartButton.setEnabled(!isSizeSoldOut);
-                    mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
+                    mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_basket : R.string.sold_out);
 
                     didSelectSize = true;
                 } else {
@@ -517,7 +533,30 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductPreviousPrice.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
         mProductPreviousPriceLabel.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
 
-        mPresenter.loadOurpayData(saleDetail);
+//        Remove showing ourpay for dd temporarily 07/26/2018
+//        mPresenter.loadOurpayData(saleDetail);
+    }
+
+    @Override
+    public void showAddToCartResponse(Value cartDetailsResponse) {
+        RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
+
+        //notify bottom navigation view(checkout) with success.
+        CartUtil.addValueToCart(1);
+        mActivity.getMainController().getHomeController().updateBasketItemCount();
+
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                mActivity.getString(R.string.add_to_cart_success));
+
+        mActivity.getHomeController().sendSaleItemToCheckout(cartDetailsResponse);
+    }
+
+    @Override
+    public void showAddToCartResponseFailed() {
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                mActivity.getString(R.string.add_to_cart_failed));
     }
 
     private void toggleProductInfoWebView(String shippingPricing, boolean isNewPricing) {
@@ -536,22 +575,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void showAddToCartResponse(boolean showAddToCart) {
-        RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
-
-        //notify bottom navigation view(checkout) with success.
-        if (showAddToCart) {
-            CartUtil.addValueToCart(1);
-            mActivity.getMainController().getHomeController().updateBasketItemCount();
-
-            CustomAlertDialog.showCustomAlertDialog(
-                    mActivity,
-                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    mActivity.getString(R.string.add_to_cart_success));
-        }
-    }
-
-    @Override
     public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
         if (ourpay != null) {
             OurpayPanel panel = new OurpayPanel(mActivity);
@@ -564,6 +587,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onCallGetBasketItemsQuantity() {
 
+    }
+
+    @Override
+    public int getVerticalOffset() {
+        return 0;
     }
 
     @Override

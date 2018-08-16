@@ -34,7 +34,7 @@
                 <ImageView
                     android:id="@+id/controller_login_close_icon"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/login_drawable_close_height"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/margin_extra_small"
                     android:rotation="180"
@@ -216,6 +216,58 @@
             </LinearLayout>
 
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/controller_login_legalities_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View style="@style/horizontalBorderView" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/padding_default_half"
+                android:paddingBottom="@dimen/padding_default_half"
+                android:background="@color/white"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/controller_login_about_us_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:textColor="@color/facet_item_text_selector"
+                    android:text="@string/account_about_us"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_body" />
+
+                <TextView
+                    android:id="@+id/controller_login_tnc_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:textColor="@color/facet_item_text_selector"
+                    android:text="@string/account_tnc"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_body" />
+
+                <TextView
+                    android:id="@+id/controller_login_privacy_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:textColor="@color/facet_item_text_selector"
+                    android:text="@string/account_privacy"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_body" />
+
+            </LinearLayout>
+        </LinearLayout>
+
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

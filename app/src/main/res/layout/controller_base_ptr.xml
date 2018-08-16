@@ -11,27 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/controller_base_search_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/controller_base_search_edittext"
-            style="@style/DDEditTextStyleNoBorder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_search_gray"
-            android:hint="@string/search_filter_hint" />
-
-        <View
-            android:background="@color/border_regular"
-            android:layout_height="@dimen/border_thin"
-            android:layout_width="match_parent"/>
-
-    </LinearLayout>
-
     <in.srain.cube.views.ptr.PtrClassicFrameLayout
         android:id="@+id/controller_base_ptr_layout"
         android:layout_width="match_parent"

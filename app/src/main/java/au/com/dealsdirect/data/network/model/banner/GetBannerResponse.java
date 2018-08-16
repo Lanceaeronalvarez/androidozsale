@@ -196,10 +196,13 @@ public class GetBannerResponse {
 
         @SerializedName("type")
         @Expose
-        private String type;
+        private String type = "";
+        @SerializedName("title")
+        @Expose
+        private String title = "";
         @SerializedName("isClickable")
         @Expose
-        private Boolean isClickable;
+        private Boolean isClickable = false;
         @SerializedName("banners")
         @Expose
         private List<Banner> banners = null;
@@ -208,16 +211,8 @@ public class GetBannerResponse {
             return type;
         }
 
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public Boolean getIsClickable() {
-            return isClickable;
-        }
-
-        public void setIsClickable(Boolean isClickable) {
-            this.isClickable = isClickable;
+        public String getTitle() {
+            return title;
         }
 
         public List<Banner> getBanners() {
@@ -226,10 +221,5 @@ public class GetBannerResponse {
             }
             return banners;
         }
-
-        public void setBanners(List<Banner> banners) {
-            this.banners = banners;
-        }
-
     }
 }

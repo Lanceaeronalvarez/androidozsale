@@ -107,4 +107,9 @@ public class OrderDetailsController extends SwipeableBaseToolBarController imple
         }
     }
 
+    @Override
+    public void showOrderTrackingWeb(String link) {
+
+    }
+
 }

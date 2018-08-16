@@ -124,6 +124,12 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     }
 
     @Override
+    public boolean isGdprDisabled() {
+        //consent mode 0, gdpr disabled. -1 default return value from preferences if no response is saved in preferences.
+        return getDataManager().getAppSettingsConsentMode() <= 0;
+    }
+
+    @Override
     public void doApiCallForResponse(Observable observable, final ApiCallback callback) {
 //        getMvpView().showLoading();
 

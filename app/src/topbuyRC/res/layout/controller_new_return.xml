@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/reason"
-                android:textColor="@color/dark_text" />
+                android:textColor="@color/text_dark" />
 
             <EditText
                 android:id="@+id/controller_new_return_field"
@@ -66,7 +66,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:text="@string/submit"
-                android:textSize="@dimen/text_size_xlarge" />
+                android:textSize="@dimen/text_size_headline2" />
 
         </RelativeLayout>
 

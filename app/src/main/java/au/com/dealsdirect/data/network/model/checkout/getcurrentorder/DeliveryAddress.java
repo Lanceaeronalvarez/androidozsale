@@ -12,27 +12,27 @@ import au.com.dealsdirect.data.network.model.address.AddressesItem;
 
 
 public class DeliveryAddress implements Parcelable {
-    @SerializedName("ID")
+    @SerializedName(value = "ID", alternate = {"id"})
     public String id;
-    @SerializedName("Name")
+    @SerializedName(value = "Name", alternate = {"name"})
     public String name;
-    @SerializedName("Phone")
+    @SerializedName(value = "Phone", alternate = {"phone"})
     public String phone;
-    @SerializedName("State")
+    @SerializedName(value = "State", alternate = {"state"})
     public String state;
-    @SerializedName("City")
+    @SerializedName(value = "City", alternate = {"city"})
     public String city;
-    @SerializedName("Suburb")
+    @SerializedName(value = "Suburb", alternate = {"suburb"})
     public String suburb;
-    @SerializedName("Postcode")
+    @SerializedName(value = "Postcode", alternate = {"postcode"})
     public String postcode;
-    @SerializedName("AddressLines")
+    @SerializedName(value = "AddressLines", alternate = {"addressLines"})
     public String addressLines;
-    @SerializedName("AuthToLeave")
+    @SerializedName(value = "AuthToLeave", alternate = {"authToLeave"})
     public Boolean authToLeave;
-    @SerializedName("AuthComment")
+    @SerializedName(value = "AuthComment", alternate = {"authComment"})
     public String authComment;
-    @SerializedName("AdditionalData")
+    @SerializedName(value = "AdditionalData", alternate = {"additionalData"})
     public String additionalData;
 
     protected DeliveryAddress(Parcel in) {

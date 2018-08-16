@@ -164,7 +164,7 @@
     <string name="delivery_address_added">delivery address added</string>
     <string name="remove_string">remove</string>
     <string name="add_to_basket">Add to Basket</string>
-    <string name="add_to_cart">Add to Cart</string>
+    <string name="add_to_cart">add to cart</string>
     <string name="add_to_cart_success">Item has been added to your basket</string>
     <string name="add_to_cart_failed">Item has not been added to your basket</string>
     <string name="category_title">Categories</string>
@@ -253,6 +253,8 @@
     <string name="no_order_number">No Order Number</string>
     <string name="create_contact">Create Contact</string>
     <string name="create_contact_fill_up">Please fill up all fields</string>
+    <string name="apply_vouchers">Apply Vouchers</string>
+    <string name="add_voucher">Add Voucher</string>
 
 
     <!--INVITE-->
@@ -358,6 +360,7 @@
     <string name="remove_payment_method">Removed Payment Method</string>
     <string name="password_does_not_match">Password does not match</string>
     <string name="my_returns">my returns</string>
+    <string name="return_details">return details</string>
     <string name="my_orders">my orders</string>
     <string name="reply">reply</string>
     <string name="select_language">Select Language</string>
@@ -429,6 +432,8 @@
     <string name="clear">clear</string>
 
     <string name="loading">loading</string>
+    <string name="sale_is_currently_closed">Sale is currently closed</string>
+    <string name="ok">OK</string>
 
     <integer-array name="account_title_array">
         <item>@string/account_details</item>
@@ -616,10 +621,17 @@
     <string name="app_uri_header">market://details?id="</string>
     <string name="app_playstore_uri_header">market://details?id="</string>
     <string name="back">Back</string>
+    <string name="enter_address_details">ENTER ADDRESS DETAILS</string>
+    <string name="enter_promo_code_caps">ENTER CODE</string>
+    <string name="my_sales">MY SALES</string>
+    <string name="my_subjects">MY SUBJECTS</string>
+    <string name="dummy_text">dummy text</string>
+
 
     <!--Country Id Mapping-->
     <string name="country_id_AS">AS</string>
     <string name="toggle_notifications">Toggle Notifications</string>
     <string name="value">value</string>
+    <string name="product_item_source_name">@string/app_name</string>
 
 </resources>

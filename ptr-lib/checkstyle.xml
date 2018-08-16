@@ -1,120 +1,120 @@
 <?xml version="1.0"?>
-<!DOCTYPE module PUBLIC
+<!DOCTYPE au.com.dealsdirect.di.module PUBLIC
     "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
     "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
-<module name="Checker">
-    <!--module name="NewlineAtEndOfFile"/-->
-    <module name="FileLength"/>
-    <module name="FileTabCharacter"/>
+<au.com.dealsdirect.di.module name="Checker">
+    au.com.dealsdirect.moduledule name="NewlineAtEndOfFile"/-->
+    <au.com.dealsdirect.di.module name="FileLength"/>
+    <au.com.dealsdirect.di.module name="FileTabCharacter"/>
 
     <!-- Trailing spaces -->
-    <module name="RegexpSingleline">
+    <au.com.dealsdirect.di.module name="RegexpSingleline">
         <property name="format" scheduledPlan="\s+$"/>
         <property name="message" scheduledPlan="Line has trailing spaces."/>
-    </module>
+    </au.com.dealsdirect.di.module>
 
-    <module name="TreeWalker">
+    <au.com.dealsdirect.di.module name="TreeWalker">
         <property name="cacheFile" scheduledPlan="${checkstyle.cache.file}"/>
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <!--module name="JavadocMethod"/-->
-        <!--module name="JavadocType"/-->
-        <!--module name="JavadocVariable"/-->
-        <!--module name="JavadocStyle"/-->
+        au.com.dealsdirect.moduledule name="JavadocMethod"/-->
+        au.com.dealsdirect.moduledule name="JavadocType"/-->
+        au.com.dealsdirect.moduledule name="JavadocVariable"/-->
+        au.com.dealsdirect.moduledule name="JavadocStyle"/-->
 
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
-        <!--module name="ConstantName"/-->
-        <!--module name="LocalFinalVariableName"/-->
-        <!--module name="LocalVariableName"/-->
-        <module name="MemberName"/>
-        <!--module name="MethodName"/-->
-        <module name="PackageName"/>
-        <!--module name="ParameterName"/-->
-        <!--module name="StaticVariableName"/-->
-        <!--module name="TypeName"/-->
+        au.com.dealsdirect.moduledule name="ConstantName"/-->
+        au.com.dealsdirect.moduledule name="LocalFinalVariableName"/-->
+        au.com.dealsdirect.moduledule name="LocalVariableName"/-->
+        <au.com.dealsdirect.di.module name="MemberName"/>
+        au.com.dealsdirect.moduledule name="MethodName"/-->
+        <au.com.dealsdirect.di.module name="PackageName"/>
+        au.com.dealsdirect.moduledule name="ParameterName"/-->
+        au.com.dealsdirect.moduledule name="StaticVariableName"/-->
+        au.com.dealsdirect.moduledule name="TypeName"/-->
 
 
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_import.html -->
-        <module name="AvoidStarImport"/>
-        <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
-        <module name="RedundantImport"/>
-        <module name="UnusedImports"/>
+        <au.com.dealsdirect.di.module name="AvoidStarImport"/>
+        <au.com.dealsdirect.di.module name="IllegalImport"/> <!-- defaults to sun.* packages -->
+        <au.com.dealsdirect.di.module name="RedundantImport"/>
+        <au.com.dealsdirect.di.module name="UnusedImports"/>
 
 
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <!--module name="LineLength"/-->
-        <!--module name="MethodLength"/-->
-        <!--module name="ParameterNumber"/-->
+        au.com.dealsdirect.moduledule name="LineLength"/-->
+        au.com.dealsdirect.moduledule name="MethodLength"/-->
+        au.com.dealsdirect.moduledule name="ParameterNumber"/-->
 
 
         <!-- Checks for whitespace                               -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
-        <!--module name="EmptyForIteratorPad"/-->
-        <!--module name="MethodParamPad"/-->
-        <!--module name="NoWhitespaceAfter"/-->
-        <!--module name="NoWhitespaceBefore"/-->
-        <!--module name="OperatorWrap"/-->
-        <!--module name="ParenPad"/-->
-        <!--module name="TypecastParenPad"/-->
-        <!--module name="WhitespaceAfter"/-->
-        <!--module name="WhitespaceAround"/-->
+        au.com.dealsdirect.moduledule name="EmptyForIteratorPad"/-->
+        au.com.dealsdirect.moduledule name="MethodParamPad"/-->
+        au.com.dealsdirect.moduledule name="NoWhitespaceAfter"/-->
+        au.com.dealsdirect.moduledule name="NoWhitespaceBefore"/-->
+        au.com.dealsdirect.moduledule name="OperatorWrap"/-->
+        au.com.dealsdirect.moduledule name="ParenPad"/-->
+        au.com.dealsdirect.moduledule name="TypecastParenPad"/-->
+        au.com.dealsdirect.moduledule name="WhitespaceAfter"/-->
+        au.com.dealsdirect.moduledule name="WhitespaceAround"/-->
 
 
         <!-- Modifier Checks                                    -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
-        <!--module name="ModifierOrder"/-->
-        <!--module name="RedundantModifier"/-->
+        au.com.dealsdirect.moduledule name="ModifierOrder"/-->
+        au.com.dealsdirect.moduledule name="RedundantModifier"/-->
 
 
         <!-- Checks for blocks. You know, those {}'s         -->
         <!-- See http://checkstyle.sf.net/config_blocks.html -->
-        <!--module name="AvoidNestedBlocks"/-->
-        <!--module name="EmptyBlock"/-->
-        <!--module name="LeftCurly"/-->
-        <!--module name="NeedBraces"/-->
-        <!--module name="RightCurly"/-->
+        au.com.dealsdirect.moduledule name="AvoidNestedBlocks"/-->
+        au.com.dealsdirect.moduledule name="EmptyBlock"/-->
+        au.com.dealsdirect.moduledule name="LeftCurly"/-->
+        au.com.dealsdirect.moduledule name="NeedBraces"/-->
+        au.com.dealsdirect.moduledule name="RightCurly"/-->
 
 
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
-        <!--module name="AvoidInlineConditionals"/-->
-        <!--module name="EmptyStatement"/-->
-        <!--module name="EqualsHashCode"/-->
-        <!--module name="HiddenField"/-->
-        <!--module name="IllegalInstantiation"/-->
-        <!--module name="InnerAssignment"/-->
-        <!--module name="MagicNumber"/-->
-        <!--module name="MissingSwitchDefault"/-->
-        <module name="RedundantThrows"/>
-        <!--module name="SimplifyBooleanExpression"/-->
-        <!--module name="SimplifyBooleanReturn"/-->
-        <module name="StringLiteralEquality"/>
-        <module name="CovariantEquals"/>
-        <!--module name="NoClone"/-->
-        <module name="NoFinalizer"/>
-        <module name="PackageDeclaration"/>
-        <!--module name="FallThrough"/-->
+        au.com.dealsdirect.moduledule name="AvoidInlineConditionals"/-->
+        au.com.dealsdirect.moduledule name="EmptyStatement"/-->
+        au.com.dealsdirect.moduledule name="EqualsHashCode"/-->
+        au.com.dealsdirect.moduledule name="HiddenField"/-->
+        au.com.dealsdirect.moduledule name="IllegalInstantiation"/-->
+        au.com.dealsdirect.moduledule name="InnerAssignment"/-->
+        au.com.dealsdirect.moduledule name="MagicNumber"/-->
+        au.com.dealsdirect.moduledule name="MissingSwitchDefault"/-->
+        <au.com.dealsdirect.di.module name="RedundantThrows"/>
+        au.com.dealsdirect.moduledule name="SimplifyBooleanExpression"/-->
+        au.com.dealsdirect.moduledule name="SimplifyBooleanReturn"/-->
+        <au.com.dealsdirect.di.module name="StringLiteralEquality"/>
+        <au.com.dealsdirect.di.module name="CovariantEquals"/>
+        au.com.dealsdirect.moduledule name="NoClone"/-->
+        <au.com.dealsdirect.di.module name="NoFinalizer"/>
+        <au.com.dealsdirect.di.module name="PackageDeclaration"/>
+        au.com.dealsdirect.moduledule name="FallThrough"/-->
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
-        <!--module name="DesignForExtension"/-->
-        <!--module name="FinalClass"/-->
-        <!--module name="HideUtilityClassConstructor"/-->
-        <!--module name="InterfaceIsType"/-->
-        <!--module name="VisibilityModifier"/-->
+        au.com.dealsdirect.moduledule name="DesignForExtension"/-->
+        au.com.dealsdirect.moduledule name="FinalClass"/-->
+        au.com.dealsdirect.moduledule name="HideUtilityClassConstructor"/-->
+        au.com.dealsdirect.moduledule name="InterfaceIsType"/-->
+        au.com.dealsdirect.moduledule name="VisibilityModifier"/-->
 
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
-        <!--module name="ArrayTypeStyle"/-->
-        <!--module name="FinalParameters"/-->
-        <!--module name="TodoComment"/-->
-        <module name="UpperEll"/>
-    </module>
-</module>
+        au.com.dealsdirect.moduledule name="ArrayTypeStyle"/-->
+        au.com.dealsdirect.moduledule name="FinalParameters"/-->
+        au.com.dealsdirect.moduledule name="TodoComment"/-->
+        <au.com.dealsdirect.di.module name="UpperEll"/>
+    </au.com.dealsdirect.di.module>
+</au.com.dealsdirect.di.module>

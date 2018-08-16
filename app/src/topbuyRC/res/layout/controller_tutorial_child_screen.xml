@@ -21,7 +21,7 @@
             tools:text="test header"
             android:textColor="#FFFFFF"
             fontPath="@string/font_app_medium"
-            android:textSize="@dimen/text_size_xxxxlarge" />
+            android:textSize="@dimen/text_size_title" />
 
         <View
             android:id="@+id/header_underline"

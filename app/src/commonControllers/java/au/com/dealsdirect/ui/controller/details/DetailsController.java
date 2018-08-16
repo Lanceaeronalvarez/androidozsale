@@ -49,6 +49,9 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.partial_toolbar_left_view)
     View mToolbarLeftView;
 
+    @BindView(R.id.controller_details_consent_switch_layout)
+    ViewGroup mConsentSwitchesRootLayout;
+
     @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
 
@@ -78,9 +81,6 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @BindView(R.id.controller_details_text_confirm_password)
     EditText mConfirmPasswordText;
-
-    @BindView(R.id.controller_details_background)
-    LinearLayout background;
 
     @Nullable
     @BindView(R.id.register_emails_toggle)
@@ -141,6 +141,8 @@ public class DetailsController extends BasePullToRefreshController implements De
     @Override
     protected void setUp(View view) {
 
+        mConsentSwitchesRootLayout.setVisibility(mPresenter.isGdprDisabled() ? View.GONE : View.VISIBLE);
+
         if (mPromotionEmailsText != null) {
             mPromotionEmailsText.setText(Html.fromHtml(mPresenter.getGdprTemplateTexts(
                     AppPreferencesHelper.CONSENT_WITH_REGISTRATION_EMAILS_TEXT)));
@@ -158,13 +160,15 @@ public class DetailsController extends BasePullToRefreshController implements De
         mSaveUserDetailsButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
         mSaveUserDetailsButton.setVisibility(getBoolean(R.bool.is_ozsale_app) ? View.INVISIBLE : View.VISIBLE);
         mTitleTextView.setText(getString(R.string.account_details));
-        mToolbarLeftView.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mPresenter.isTablet() ? View.INVISIBLE : View.VISIBLE);
 
-        List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
-        CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(mActivity,
-                R.layout.row_custom_spinner_drop_down,
-                list);
-        mGenderSpinner.setAdapter(customSpinnerAdapter);
+        if (getBoolean(R.bool.is_gender_enabled)) {
+            List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
+            CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(mActivity,
+                    R.layout.row_custom_spinner_drop_down,
+                    list);
+            mGenderSpinner.setAdapter(customSpinnerAdapter);
+        }
 
         mCalendar = Calendar.getInstance();
 
@@ -227,7 +231,9 @@ public class DetailsController extends BasePullToRefreshController implements De
             genderItem = 1;
         }
 
-        mGenderSpinner.setSelection(genderItem);
+        if (getBoolean(R.bool.is_gender_enabled)) {
+            mGenderSpinner.setSelection(genderItem);
+        }
     }
 
     @Override
@@ -262,7 +268,7 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         String firstname = mFirstNameText.getText().toString();
         String lastname = mLastNameText.getText().toString();
-        boolean gender = mGenderSpinner.getSelectedItem().toString().equals("Male") ? true : false;
+        boolean gender = getBoolean(R.bool.is_gender_enabled) && mGenderSpinner.getSelectedItem().toString().equals("Male");
         String dateofbirth = mDateOfBirthText.getText().toString();
         String email = mEmailAddressText.getText().toString();
         String password = mPasswordText.getText().toString();

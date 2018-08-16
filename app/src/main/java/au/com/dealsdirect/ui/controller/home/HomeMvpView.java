@@ -22,4 +22,6 @@ public interface HomeMvpView extends MvpView {
     void showFifthTabController();
 
     void updateBasketItemCount();
+
+    boolean isPopUpControllerVisible();
 }

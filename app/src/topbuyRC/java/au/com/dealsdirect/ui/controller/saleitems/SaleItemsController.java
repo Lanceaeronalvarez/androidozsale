@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.saleitems;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -55,11 +56,10 @@ import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.ViewPagerBottomSheetBehavior;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchTagsAdapter;
-import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
-import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.ChangeHandler;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
@@ -282,8 +282,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         setupBottomSheet();
         setupSearchFilters();
 
+        String action = mActivity.getIntent().getAction();
+
+
         if (mSaleItems.isEmpty()) {
             initialLoad = true;
+            Log.d("deeplinking", "entered");
             mPresenter.loadSaleItems(createSaleItemsRequest(mChosenCategoryKey, "", 0, mChipFilters, ""));
         }
 
@@ -306,6 +310,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         isSetupFinished = true;
 
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mActivity.saleItemsCallback();
+
+            }
+        }, 1000);
     }
 
     @Override
@@ -513,19 +526,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPrice.getText().toString());
         bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, ((SaleItemsAdapter.ShopItemsViewHolder) viewHolder).productPreviousPrice.getText().toString());
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-                    .pushChangeHandler(new FadeChangeHandler())
-                    .popChangeHandler(new FadeChangeHandler()));
-        } else {
-            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-//                        .pushChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position)))
-//                        .popChangeHandler(new ArcFadeMoveChangeHandler(getResources().getString(R.string.transition_sale_image_indexed, position))));
-                    .popChangeHandler(new SharedArcFadePopChangeHandler())
-                    .pushChangeHandler(new SharedArcFadePushChangeHandler()));
-        }
-
-
+        getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                .pushChangeHandler(new ChangeHandler().fadeChangeHandler())
+                .popChangeHandler(new ChangeHandler().fadeChangeHandler()));
     }
 
     @Override
@@ -554,7 +557,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (!mCategoriesRouter.hasRootController()) {
             Bundle bundle = new BundleBuilder(new Bundle())
                     .build();
-            Prefs.putString(BundleKeys.CATEGORIES_ITEM_LIST,new Gson().toJson(mCategories));
+            Prefs.putString(BundleKeys.CATEGORIES_ITEM_LIST, new Gson().toJson(mCategories));
             Controller controller = ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES, bundle);
             GateKeeper.setRoot(mCategoriesRouter, GateKeeper.Destination.CATEGORIES, RouterTransaction.with(controller).popChangeHandler(new FadeChangeHandler()).pushChangeHandler(new FadeChangeHandler()));
         } else {
@@ -563,8 +566,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mCategoriesController.getBottomSheetBehavior().setState(CoordinatorLayoutAsBottomSheetBehavior.STATE_EXPANDED);
             }
         }
-
-
     }
 
     @Override
@@ -897,7 +898,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         hasLoadedAllItems = false;
         mPaginateManager.setHasMoreDataToLoad(true);
         loadingInProgress = true;
-        mPresenter.loadSaleItems(createSaleItemsRequest(mChosenCategoryKey, "", page, mChipFilters, ""));
+//        mPresenter.loadSaleItems(createSaleItemsRequest(mChosenCategoryKey, "", page, mChipFilters, ""));
 
     }
 
@@ -923,6 +924,35 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void setIsSearchActive(boolean val) {
         mIsSearchFiltersActive = val;
+    }
+
+    /* Deep Link Sale Item Details */
+    public void deepLinkSaleItemDetails(String seoIdentifier, String skuId) {
+
+        /* Check if Details controllers already pushed in the router */
+        Controller mRouterController = GateKeeper.getCurrentControllerOnRouter(getRouter());
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION, 0);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, skuId);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, skuId);
+
+        if (mRouterController instanceof SaleItemDetailsController) {
+
+            getRouter().replaceTopController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                    .pushChangeHandler(new ChangeHandler().fadeChangeHandler())
+                    .popChangeHandler(new ChangeHandler().fadeChangeHandler()));
+        } else {
+
+            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                    .pushChangeHandler(new ChangeHandler().fadeChangeHandler(true))
+                    .popChangeHandler(new ChangeHandler().fadeChangeHandler(true)));
+        }
+    }
+
+    public void updateSaleItems(String categoryKey) {
+        mPresenter.loadSaleItems(createSaleItemsRequest(categoryKey, "", 0, mChipFilters, ""));
+
     }
 }
 

@@ -53,6 +53,11 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     }
 
+    @Override
+    public boolean isPopUpControllerVisible() {
+        return false;
+    }
+
     public HomeMvpPresenter<HomeMvpView> getPresenter() {
         return null;
     }

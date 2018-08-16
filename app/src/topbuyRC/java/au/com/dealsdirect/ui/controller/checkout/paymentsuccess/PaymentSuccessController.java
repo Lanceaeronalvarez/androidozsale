@@ -48,13 +48,13 @@ public class PaymentSuccessController extends SwipeableBaseToolBarController imp
     @Inject
     PaymentSuccessMvpPresenter<PaymentSuccessMvpView> mPresenter;
 
-    @BindView(R.id.fragment_payment_success_address)
+    @BindView(R.id.payment_success_address_text_view)
     TextView mAddress;
-    @BindView(R.id.fragment_payment_success_price)
+    @BindView(R.id.payment_success_price_text_view)
     TextView mPriceTextView;
-    @BindView(R.id.fragment_payment_success_address_orderno)
+    @BindView(R.id.payment_success_address_order_number_text_view)
     TextView mOrderNumber;
-    @BindView(R.id.fragment_payment_success_estimated_delivery)
+    @BindView(R.id.payment_success_estimated_delivery_text_view)
     TextView mEstimatedDelivery;
     @BindView(R.id.payment_ourpay_success_detail_container)
     LinearLayout mPaymentOurpaySuccessDetailContainer;

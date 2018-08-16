@@ -53,6 +53,14 @@ public class ContactSelectSubjectController extends SwipeableBaseToolBarControll
                         .build());
     }
 
+    public static ContactSelectSubjectController newInstance() {
+
+//        myContactSubjects = contactSubjects;
+        return new ContactSelectSubjectController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
     public ContactSelectSubjectController(Bundle args) {
         super(args);
 
@@ -106,10 +114,7 @@ public class ContactSelectSubjectController extends SwipeableBaseToolBarControll
 
     @Override
     public void onContactSubjectItemClicked(String contactSubject) {
-        ContactPreferenceHelper.setChosenSubjectString(
-                mActivity,
-                contactSubject);
-
+        ContactPreferenceHelper.setChosenSubjectString(mActivity, contactSubject);
         getRouter().popCurrentController();
     }
 }

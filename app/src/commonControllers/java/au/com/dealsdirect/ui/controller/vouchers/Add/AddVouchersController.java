@@ -111,7 +111,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    TextView mArrowImage;
+    View mArrowImage;
 
     @BindView(R.id.controller_button_add_voucher)
     Button mAddVoucherButton;
@@ -193,7 +193,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     protected void setUp(View view) {
 
 
-        mTitleText.setText(getString(R.string.add_voucher));
+        mTitleText.setText(getString(R.string.add_new_voucher));
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(action -> {
             mActivity.onBackPressed();

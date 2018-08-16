@@ -87,6 +87,15 @@
                 tools:text="AU 14" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/item_subtotal_price"
+            fontPath="@string/font_app_semibold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_extra_dark"
+            android:visibility="gone"
+            tools:text="$19.00" />
+
         <au.com.dealsdirect.ui.custom.PersonalisationLayout
             android:id="@+id/item_checkout_personalisation_layout"
             android:layout_width="match_parent"

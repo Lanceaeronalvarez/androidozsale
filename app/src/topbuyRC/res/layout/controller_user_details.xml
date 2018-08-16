@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="First Name"
-        android:textColor="@color/gray_active_field_text" />
+        android:textColor="@color/text_medium" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/firstNameWrapper"
@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Last Name"
-        android:textColor="@color/gray_active_field_text" />
+        android:textColor="@color/text_medium" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/lastNameWrapper"
@@ -69,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Date of Birth"
-        android:textColor="@color/gray_active_field_text" />
+        android:textColor="@color/text_medium" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/dateOfBirthWrapper"
@@ -99,7 +99,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Gender"
-        android:textColor="@color/gray_active_field_text" />
+        android:textColor="@color/text_medium" />
 
 
     <RelativeLayout
@@ -132,7 +132,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Email Address"
-        android:textColor="@color/gray_active_field_text" />
+        android:textColor="@color/text_medium" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/emailAddressWrapper"
@@ -159,7 +159,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Password"
-        android:textColor="@color/gray_active_field_text" />
+        android:textColor="@color/text_medium" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/passwordWrapper"
@@ -188,7 +188,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="New Password"
-        android:textColor="@color/gray_active_field_text" />
+        android:textColor="@color/text_medium" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/newPasswordWrapper"
@@ -218,7 +218,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Confirm Password"
-        android:textColor="@color/gray_active_field_text" />
+        android:textColor="@color/text_medium" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/confirmPasswordWrapper"

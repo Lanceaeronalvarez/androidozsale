@@ -121,12 +121,29 @@
             </LinearLayout>
 
         </LinearLayout>
+    </LinearLayout>
 
-        <View
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_default">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/promo_code"
+            android:textColor="@color/row_checkout_text_light_color"
+            android:textSize="@dimen/text_size_body" />
+
+        <TextView
+            android:id="@+id/partial_checkout_voucher_promo_code_text_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/border_thin"
-            android:layout_marginLeft="@dimen/padding_default"
-            android:background="@color/border_regular" />
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textColor="@color/colorAccent"
+            tools:text="H27AEJALS" />
     </LinearLayout>
 
 </LinearLayout>

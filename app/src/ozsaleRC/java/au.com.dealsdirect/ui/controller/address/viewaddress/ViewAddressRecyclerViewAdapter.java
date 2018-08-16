@@ -118,7 +118,7 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
 
     @Override
     public int onGetSwipeReactionType(ViewAddressRecyclerViewAdapter.MyAddressModuleViewHolder holder, int position, int x, int y) {
-        return SwipeableItemConstants.REACTION_CAN_SWIPE_LEFT;
+        return isCalledFromCart ? SwipeableItemConstants.REACTION_CAN_NOT_SWIPE_ANY : SwipeableItemConstants.REACTION_CAN_SWIPE_LEFT;
     }
 
     @Override

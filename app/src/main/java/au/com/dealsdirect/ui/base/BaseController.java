@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.base;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -181,6 +182,11 @@ public abstract class BaseController extends RefWatchingController implements Mv
         return isAttached();
     }
 
+
+    public void onOrientationChanged(Configuration newConfiguration) {
+
+    }
+
     public Resources getResource() {
         return mActivity.getResources();
     }
@@ -226,4 +232,5 @@ public abstract class BaseController extends RefWatchingController implements Mv
         }
         return mActivity.getResources().getBoolean(resId);
     }
+
 }

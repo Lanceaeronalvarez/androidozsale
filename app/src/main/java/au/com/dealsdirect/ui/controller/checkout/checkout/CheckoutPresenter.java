@@ -242,6 +242,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             GetCurrentOrderOurpay getCurrentOrderOurpay = value.getOurpay();
 
             /* default */
+            ourpay.setDescription(getCurrentOrderOurpay.getSummary().getDescription());
             ourpay.setCanUse(getCurrentOrderOurpay.getSettings().getIsOurPayEnabled());
             ourpay.setErrorCode(getCurrentOrderOurpay.getReasonCode());
             ourpay.setTermsAndConditionsCheckboxState(getCurrentOrderOurpay.getSettings().getTermsAndConditions());
@@ -348,6 +349,35 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             getMvpView().onError(response.getD().getMessage());
         }
 
+    }
+
+    @Override
+    public void updateCart(Value cartDetailsValue) {
+
+        if (!isViewAttached()) {
+            return;
+        }
+
+        getMvpView().updateCheckoutBadge();
+        
+        if (!cartDetailsValue.isEmpty()) {
+            Value value = cartDetailsValue;
+
+
+            getMvpView().showCartDetails(cartDetailsValue.getItems());
+
+            getMvpView().showAddressDetails(cartDetailsValue.getDeliveryAddress(), cartDetailsValue.getDecorationInfoList());
+
+            getMvpView().showDeliveryOptions(cartDetailsValue.getDeliveryOptions(), cartDetailsValue.getDeliveryServicePackageDetail());
+
+            getMvpView().storeCartDetails(value);
+
+            getMvpView().showVoucherDetails(cartDetailsValue.getVouchers());
+
+            getMvpView().showSummaryDetails(cartDetailsValue.getSummary());
+        } else {
+            getMvpView().showCartDetails(new ArrayList<>());
+        }
     }
 
     @Override

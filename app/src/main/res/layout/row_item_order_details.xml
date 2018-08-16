@@ -1,43 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingTop="@dimen/margin_small"
+    tools:ignore="MissingPrefix">
 
     <ImageView
-        android:id="@+id/order_image"
-        android:layout_width="85dp"
-        android:layout_height="135dp"
+        android:id="@+id/controller_order_details_item_imageview"
+        android:layout_width="@dimen/order_image_width"
+        android:layout_height="@dimen/order_image_height"
+        android:layout_below="@id/my_order_information_header"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin" />
 
     <LinearLayout
+        android:id="@+id/order_item_details_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/order_image"
-        android:layout_marginLeft="5dp"
+        android:layout_alignTop="@+id/controller_order_details_item_imageview"
+        android:layout_below="@id/my_order_information_header"
+        android:layout_marginLeft="@dimen/margin_extra_small"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/order_image"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_toRightOf="@+id/controller_order_details_item_imageview"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/my_order_product_name"
+            android:id="@+id/controller_order_details_item_product_name_textview"
+            fontPath="@string/font_app_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="#565656"
+            android:textColor="@color/text_dark"
             android:textSize="@dimen/text_size_headline3"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            tools:text="Item Name" />
 
         <TextView
-            android:id="@+id/productQuantityTextView"
+            android:id="@+id/controller_order_details_item_description_textview"
+            fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/my_order_product_name"
-            android:text="  "
-            android:textColor="#9b9b9b"
+            android:layout_below="@+id/controller_order_details_item_product_name_textview"
+            android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_body"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            tools:text="1 Item" />
 
 
         <LinearLayout
@@ -49,19 +59,46 @@
                 android:id="@+id/product_size_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Size:"
-                android:textColor="#9b9b9b"
+                android:text="@string/size"
+                android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_headline3"
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/product_size"
+                android:id="@+id/controller_order_details_item_size_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text=""
-                android:textColor="#747474"
+                android:layout_marginLeft="@dimen/margin_extra_small"
+                android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_headline3"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/product_quantity_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/quantity"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_headline3"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/controller_order_details_item_quantity_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_extra_small"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_headline3"
+                android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
@@ -76,49 +113,60 @@
                 android:id="@+id/product_price_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Price:"
-                android:textColor="#9b9b9b"
+                android:text="@string/price_colon"
+                android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_headline3"
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/product_price"
+                android:id="@+id/controller_order_details_item_price_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text=""
-                android:textColor="#747474"
+                android:layout_marginLeft="@dimen/margin_extra_small"
+                android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_headline3"
+                android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/margin_small">
 
             <TextView
                 android:id="@+id/product_subtotal_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Subtotal:"
-                android:textColor="#9b9b9b"
+                android:text="@string/subtotal_colon"
+                android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_headline3"
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/product_subtotal"
+                android:id="@+id/controller_order_details_item_subtotal_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text=""
-                android:textColor="#747474"
+                android:layout_marginLeft="@dimen/margin_extra_small"
+                android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_headline3"
+                android:textStyle="bold"
                 tools:ignore="HardcodedText" />
+
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_regular"
+        android:paddingTop="@dimen/margin_small"
+        android:layout_below="@id/order_item_details_layout"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:background="@color/border_regular" />
 
 </RelativeLayout>
 

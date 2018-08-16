@@ -5,7 +5,8 @@
     fontPath="@string/font_app_semibold"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/bg_search_edit_text"
     android:padding="@dimen/padding_small"
     android:textColor="@color/text_extra_dark"
+    android:textSize="@dimen/text_size_body"
     tools:ignore="MissingPrefix" />

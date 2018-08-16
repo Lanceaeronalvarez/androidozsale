@@ -2,6 +2,10 @@
 <resources>
     <dimen name="default_button_height">48dp</dimen>
     <dimen name="product_details_bottom_padding">64dp</dimen>
+    <dimen name="banner_mobile_width">423dp</dimen>
+    <dimen name="banner_mobile_height">143dp</dimen>
+    <dimen name="banner_tablet_width">320dp</dimen>
+    <dimen name="banner_tablet_height">193dp</dimen>
 
     <dimen name="product_details_image_layout_height">420dp</dimen>
 
@@ -12,5 +16,7 @@
     <!--Contacts-->
     <dimen name="contact_subject_items_margin_start">0dp</dimen>
     <dimen name="contact_order_items_margin_start">0dp</dimen>
+
+    <dimen name="controller_shop_banner_margin">2dp</dimen>
 
 </resources>

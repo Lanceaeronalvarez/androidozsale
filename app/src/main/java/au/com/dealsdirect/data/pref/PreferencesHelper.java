@@ -175,4 +175,8 @@ public interface PreferencesHelper {
     void setIsPaypalCreditEnabled(boolean isPaypalCreditEnabled);
 
     boolean isPaypalCreditEnabled();
+
+    void setIsSortingEnabled(boolean isSortingEnabled);
+
+    boolean getIsSortingEnabled();
 }

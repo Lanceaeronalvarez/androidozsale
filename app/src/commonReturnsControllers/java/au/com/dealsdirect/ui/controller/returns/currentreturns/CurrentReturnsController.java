@@ -41,19 +41,19 @@ import butterknife.OnClick;
  */
 
 public class CurrentReturnsController extends BasePullToRefreshController
-        implements CurrentReturnsMvpView, CurrentReturnClickListener{
+        implements CurrentReturnsMvpView {
 
     public static final String TAG = "CurrentReturnsController";
     private static final String KEY_TEXT = "CurrentReturnsController.KEY_TEXT";
 
     private CurrentReturnClickListener mCurrentReturnsListener;
-    private HashMap<Integer,GetReturnDetailsResponseBody> returnItemsMap = new HashMap<>();
+    private HashMap<Integer, GetReturnDetailsResponseBody> returnItemsMap = new HashMap<>();
     private List<GetReturnDetailsResponseBody> returnDetailsResponseBodyList = new ArrayList<>();
     private List<CurrentReturns> mCurrentReturns;
     private int itemIterator = 0;
     private CurrentReturnAdapter mCurrentReturnsAdapter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mCurrentReturnsToolarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)
@@ -103,25 +103,24 @@ public class CurrentReturnsController extends BasePullToRefreshController
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
-        mCurrentReturnsListener = this;
         mCurrentReturnsToolarTitle.setText("My Returns");
-        if(mPresenter.isTablet()){
+        if (mPresenter.isTablet()) {
             mCurrentReturnsRightOption.setPadding(5, 5, 5, 5);
         } else {
             mCurrentReturnsRightOption.setPadding(20, 20, 20, 20);
         }
         mCurrentReturnsRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
 
-        if (mCurrentReturns == null || mCurrentReturns.size() == 0){
+        if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
             showLoading();
             mPresenter.loadCurrentReturns();
-        }  else {
+        } else {
 
             mCurrentReturnsAdapter = new CurrentReturnAdapter(
                     mCurrentReturns,
                     returnDetailsResponseBodyList,
                     mActivity,
-                    mCurrentReturnsListener);
+                    mPresenter);
 
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
@@ -133,8 +132,8 @@ public class CurrentReturnsController extends BasePullToRefreshController
     @Override
     protected void setUp(View view) {
 
-        mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager
-                .HORIZONTAL,false));
+        mCurrentReturnsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager
+                .HORIZONTAL, false));
 
     }
 
@@ -150,7 +149,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
         List<CurrentReturns> currentReturns =
                 currentReturnResponseBody.getCurrentReturnResponse().getCurrentReturns();
 
-        if(currentReturns!=null && currentReturns.size() != 0) {
+        if (currentReturns != null && currentReturns.size() != 0) {
             mPlaceholderLayout.setVisibility(View.GONE);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
 
@@ -160,13 +159,13 @@ public class CurrentReturnsController extends BasePullToRefreshController
                     currentReturns,
                     returnDetailsResponseBodyList,
                     mActivity,
-                    mCurrentReturnsListener);
+                    mPresenter);
 
             mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
             getCurrentReturnItems(mCurrentReturns);
 
 
-        }else{
+        } else {
 
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mCurrentReturnsRecyclerView.setVisibility(View.GONE);
@@ -176,39 +175,25 @@ public class CurrentReturnsController extends BasePullToRefreshController
     @Override
     public void showCurrentReturnDetails(GetReturnDetailsResponseBody getReturnDetailsResponseBody) {
 
-        returnItemsMap.put(itemIterator,getReturnDetailsResponseBody);
-            if (returnItemsMap.size() == mCurrentReturns.size()){
-                returnDetailsResponseBodyList.clear();
+        returnItemsMap.put(itemIterator, getReturnDetailsResponseBody);
+        if (returnItemsMap.size() == mCurrentReturns.size()) {
+            returnDetailsResponseBodyList.clear();
 
-                for (int i = 0; i < returnItemsMap.size(); i++){
-                    returnDetailsResponseBodyList.add(returnItemsMap.get(i));
-                }
-                mCurrentReturnsAdapter.updateReturnDetailsResponseBody(returnDetailsResponseBodyList);
-
-            }else{
-                returnDetailsResponseBodyList.add(returnItemsMap.get(itemIterator));
-
-                itemIterator = itemIterator + 1;
-                mPresenter.loadReturnDetails(createReturnDetailsRequest(mCurrentReturns.get(itemIterator).getID()));
+            for (int i = 0; i < returnItemsMap.size(); i++) {
+                returnDetailsResponseBodyList.add(returnItemsMap.get(i));
             }
-    }
+            mCurrentReturnsAdapter.updateReturnDetailsResponseBody(returnDetailsResponseBodyList);
 
-    public void getCurrentReturnItems(List<CurrentReturns> currentReturns){
-        mPresenter.loadReturnDetails(createReturnDetailsRequest(currentReturns.get(itemIterator).getID()));
+        } else {
+            returnDetailsResponseBodyList.add(returnItemsMap.get(itemIterator));
 
+            itemIterator = itemIterator + 1;
+            mPresenter.loadReturnDetails(createReturnDetailsRequest(mCurrentReturns.get(itemIterator).getID()));
+        }
     }
 
     @Override
-    public void onCurrentReturnClickListener(
-            int orderNumber,
-            CurrentReturnViewHolder holder,
-            int position,
-            String productRequestStatus,
-            String productRAN,
-            String returnRequestDateFormat,
-            String isRequestApproved,
-            String returnId) {
-
+    public void onCurrentReturnClickListener(int orderNumber, int position, String productName, String productRequestStatus, String productRAN, String returnRequestDateFormat, String isRequestApproved, String returnId) {
         getRouter().pushController(RouterTransaction.with(
                 ReturnDetailsController.newInstance(
                         orderNumber,
@@ -219,18 +204,22 @@ public class CurrentReturnsController extends BasePullToRefreshController
                         productRAN))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
+    }
+
+    public void getCurrentReturnItems(List<CurrentReturns> currentReturns) {
+        mPresenter.loadReturnDetails(createReturnDetailsRequest(currentReturns.get(itemIterator).getID()));
 
     }
 
     @OnClick(R.id.partial_toolbar_left_view)
-    public void onBackClick(){
+    public void onBackClick() {
         mActivity.onBackPressed();
     }
 
     @OnClick(R.id.partial_toolbar_right_view)
 
-    public void onAddReturnClick(){
-        if (mCurrentReturns!=null)
+    public void onAddReturnClick() {
+        if (mCurrentReturns != null)
             mCurrentReturns.clear();
 
         getRouter().pushController(RouterTransaction.with(
@@ -239,7 +228,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-    public GetReturnDetailRequest createReturnDetailsRequest(String itemID) {
+    private GetReturnDetailRequest createReturnDetailsRequest(String itemID) {
         return new GetReturnDetailRequest(itemID);
     }
 }

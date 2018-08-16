@@ -4,6 +4,7 @@
     android:id="@+id/no_returns_placeholder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerInParent="true"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingLeft="@dimen/placeholder_padding"
@@ -30,9 +31,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/padding_default"
         android:text="@string/you_currently_do_not_have_any_returns"
-        android:textColor="#9f9f9f"
+        android:textColor="@color/text_medium"
         android:textSize="@dimen/text_size_headline3" />
 
 </LinearLayout>

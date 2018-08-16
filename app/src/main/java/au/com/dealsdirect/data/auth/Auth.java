@@ -17,7 +17,8 @@ public class Auth implements AuthHelper {
     public static AuthHandler sAuthHandler = null;
 
     private final String IS_LOGGED_IN = "KEY_IS_LOGGED_IN";
-    private final String LOGIN_TICKET = "KEY_LOGIN_TICKET";
+    //matched the same key string as legacy to prevent logging out when upgrading
+    private final String LOGIN_TICKET = "loginticket";
 
     @Inject
     public Auth(){
@@ -49,7 +50,7 @@ public class Auth implements AuthHelper {
 
     @Override
     public boolean isAuthorized() {
-        return (Prefs.getBoolean(IS_LOGGED_IN,false) && getLoginTicket().length() > 1);
+        return (Prefs.getBoolean(IS_LOGGED_IN,false) || getLoginTicket().length() > 1);
     }
 
     public void invokeLogin(Router router, AuthHandler handler) {

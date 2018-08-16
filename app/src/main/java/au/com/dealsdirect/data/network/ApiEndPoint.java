@@ -14,14 +14,17 @@ public final class ApiEndPoint {
     private static final String PRODUCTS = "api/shop/shop/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/products";
     private static final String PRODUCT_DETAILS = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/products/{seo_identifier}";
     private static final String OURPAY_DATA = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/ourpaydata";
-    private static final String ADDTOCART = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/basket/items";
+    private static final String ADDTOCART = "api/shop/product/v2/accounts/" + BuildConfig.ACCOUNT_ID + "/basket/items";
     private static final String BASKET_QUANTITY = "api/shop/product/v1/accounts/" + BuildConfig.ACCOUNT_ID + "/basket/items/quantity";
     private static final String EVENTS = "api/shop/eventing/v1/events";
     private static final String USERS = "api/shop/eventing/v1/users/current";
 
+
     /* Deep Link Data */
     public static final String DEEP_LINK = BuildConfig.API_ROOT + "api/shop/settings/v1/deeplinkdata";
 
+    /* Account Data*/
+    public static final String ACCOUNT_DATA = getBaseApiGenie() + "api/shop/settings/v1/settings/accountdata/" + BuildConfig.ACCOUNT_ID;
 
     public static final String GET_CATEGORY_TREE = getBaseApiGenie() + CATEGORY_TREE;
     public static final String GET_SORTING = getBaseApiGenie() + SORTING;

@@ -56,7 +56,8 @@ public class AddContactController extends BaseController implements AddContactMv
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mAddContactToolbarRightOption;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @Nullable
+    @BindView(R.id.partial_toolbar_title)
     TextView mAddContactToolbarTitle;
 
     @BindView(R.id.controller_add_contact_subject_title)

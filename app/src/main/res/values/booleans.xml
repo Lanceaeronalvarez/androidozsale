@@ -3,8 +3,13 @@
 
     <bool name="is_item_attribute_gone">false</bool>
     <bool name="is_checkout_orders_label_visible">false</bool>
+    <bool name="is_item_details_split_enabled">false</bool>
 
     <!--APP SPECIFIC SETTINGS-->
     <bool name="is_ourpay_app">false</bool>
     <bool name="is_ozsale_app">false</bool>
+    <bool name="master_detail_enabled">false</bool>
+    <bool name="language_check_enabled">false</bool>
+    <bool name="is_gender_enabled">true</bool>
+    <bool name="is_oo_app">false</bool>
 </resources>

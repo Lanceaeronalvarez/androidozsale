@@ -43,12 +43,9 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 
     @Override
     public void onBindViewHolder(LanguageAdapter.LanguagesViewHolder holder, int position) {
-        if (mSelectedLanguage.equals(mLanguages.get(position).getID()) || mSelectedLanguage.equals(mLanguages.get(position).getID())) {
-            holder.mLanguageTextView.setTextColor(context.getResources().getColor(R.color.colorAccent));
-            if (holder.mLanguageCheckIcon != null) {
-                holder.mLanguageCheckIcon.setVisibility(View.VISIBLE);
-            }
-        }
+        boolean isSelected = mSelectedLanguage.equals(mLanguages.get(position).getID()) || mSelectedLanguage.equals(mLanguages.get(position).getID());
+        holder.mLanguageTextView.setTextColor(context.getResources().getColor(isSelected ? R.color.language_selected : R.color.text_medium));
+        holder.mLanguageCheckIcon.setVisibility(isSelected && context.getResources().getBoolean(R.bool.language_check_enabled) ? View.VISIBLE : View.GONE);
 
         holder.mLanguageTextView.setText(mLanguages.get(position).getName());
 

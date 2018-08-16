@@ -44,10 +44,10 @@ import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
+import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -133,7 +133,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private RelativeLayout item;
     private ImageView rightOption;
 
-    private int mBannerClickCounter = 0;
     private boolean isRefreshShop = false;
     private int mPaginateManagerCounter = 0;
 
@@ -142,8 +141,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private int mVerticalOffset;
     private boolean mIsRecyclerViewScrollIdle;
 
-    private static final boolean ENABLE_BANNER_HEADERS = false;
-
+    private static final int MAX_BANNERS = 5;
+    private static final int MOBILE_BANNER = 1;
     @Override
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
@@ -152,7 +151,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         /* bug/gen-8065_ozsale-reskin_bugfixing - allow draggable viewpager */
         mActivity.getMainController().setViewpagerDraggable(true);
 
-        mBannerClickCounter = 0;
         mActivity.setShopController(this);
         mShopPtrLayout.setPtrHandler(this);
         mShopAppBarLayout.addOnOffsetChangedListener(this);
@@ -255,34 +253,24 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         };
 
         mBannerClickListener = this;
-        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, new ArrayList(), mBannerClickListener);
 
-        if (getResources().getBoolean(R.bool.is_tablet)) {
-            mLayoutManager = new GridLayoutManager(mActivity, 2, GridLayoutManager.VERTICAL, false);
-        } else {
-            mLayoutManager = new GridLayoutManager(mActivity, 1, GridLayoutManager.VERTICAL, false);
-        }
+        displayBanners();
 
-        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, this);
-        shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
-        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-        if (ENABLE_BANNER_HEADERS) {
-            shopsControllerBannerRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBannersAdapter));
-        }
+        shopsControllerBannerRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBannersAdapter));
         shopsControllerBannerRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                int bottomNavVisibility = mActivity.getHomeController().getBottomNavigationView().getVisibility();
-                if (dy > 0) {
-                    //hides bottom Nav
-                    mActivity.getHomeController().animateBottomNav(0);
-                } else {
-                    //show bottom Nav
-                    if (bottomNavVisibility == View.GONE) {
-                        mActivity.getHomeController().animateBottomNav(dy);
-                    }
-                }
+//                int bottomNavVisibility = mActivity.getHomeController().getBottomNavigationView().getVisibility();
+//                if (dy > 0) {
+//                    //hides bottom Nav
+//                    mActivity.getHomeController().animateBottomNav(0);
+//                } else {
+//                    //show bottom Nav
+//                    if (bottomNavVisibility == View.GONE) {
+//                        mActivity.getHomeController().animateBottomNav(dy);
+//                    }
+//                }
             }
 
             @Override
@@ -294,7 +282,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         if (sales.isEmpty()) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, bannerLimit));
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
         } else {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
             mBannersAdapter.replace(sales);
@@ -307,6 +295,24 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         setupPtrHeader();
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
 
+    }
+
+    private void displayBanners() {
+        int bannerWidth = getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_width : R.integer.banner_mobile_width);
+
+        int computedColumnCount = ScreenUtils.getScreenWidth(mActivity) / bannerWidth;
+
+        int actualColumnCount = computedColumnCount > MAX_BANNERS ? MAX_BANNERS
+                : computedColumnCount;
+
+        actualColumnCount = mPresenter.isTablet() ? actualColumnCount : MOBILE_BANNER;
+
+        mLayoutManager = new GridLayoutManager(mActivity, actualColumnCount, GridLayoutManager.VERTICAL, false);
+
+        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, this, actualColumnCount);
+
+        shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
+        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
     }
 
     private void setupPtrHeader() {
@@ -323,9 +329,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         loadingInProgress = true;
 
         if (mIsDeeplink) {
-            mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryName, mCategoryID, 0, 0));
+            mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, 0, 0));
         } else {
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, bannerLimit));
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
         }
     }
 
@@ -355,47 +361,43 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
                 .putBoolean(SALEITEMS_FROM_SHOP_SEARCH, false)
                 .build();
 
-        if (mBannerClickCounter != 1) {
-            mBannerClickCounter = +1;
+        List<String> names = new ArrayList<>();
+        names.add(bannerId + position);
+        if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
+            mActivity.showLoginController(getRouter(), new AuthHandler() {
+                @Override
+                public void success() {
+                    mActivity.callGCMRegisterSubscriber();
 
+                    mActivity.getHomeRouter().pushController(RouterTransaction.with(
+                            new SaleItemsController(args))
+                            .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                            .pushChangeHandler(new HorizontalChangeHandler())
+                            .popChangeHandler(new HorizontalChangeHandler()));
+                }
 
-            List<String> names = new ArrayList<>();
-            names.add(bannerId + position);
-            if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
-                mActivity.showLoginController(getRouter(), new AuthHandler() {
-                    @Override
-                    public void success() {
-                        mActivity.callGCMRegisterSubscriber();
+                @Override
+                public void error() {
 
-                        mActivity.getHomeRouter().pushController(RouterTransaction.with(
+                }
+            });
+        } else {
+
+// Check if sale is available
+            //TODO: Need computation for date and time when sale response is cached
+            if (isAvailable) {
+                mActivity
+                        .getHomeRouter()
+                        .pushController(RouterTransaction.with(
                                 new SaleItemsController(args))
                                 .tag(mActivity.getString(R.string.sale_items_controller_tag))
                                 .pushChangeHandler(new HorizontalChangeHandler())
                                 .popChangeHandler(new HorizontalChangeHandler()));
-                    }
-
-                    @Override
-                    public void error() {
-
-                    }
-                });
             } else {
-
-// Check if sale is available
-                //TODO: Need computation for date and time when sale response is cached
-                if (isAvailable) {
-                    mActivity
-                            .getHomeRouter()
-                            .pushController(RouterTransaction.with(
-                                    new SaleItemsController(args))
-                                    .tag(mActivity.getString(R.string.sale_items_controller_tag))
-                                    .pushChangeHandler(new HorizontalChangeHandler())
-                                    .popChangeHandler(new HorizontalChangeHandler()));
-                } else {
-                    DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
-                }
+                DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
             }
         }
+
     }
 
     @OnClick(R.id.partial_toolbar_hamburger)
@@ -434,23 +436,24 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         loadingInProgress = false;
 
+        sales = getBannerResponses.getGroups();
+
         if (page == 0 || isRefreshShop) {
-            mBannersAdapter.replace(getBannerResponses.getGroups());
+            mBannersAdapter.replace(sales);
             if (mPaginateManager != null) {
                 mPaginateManager.unbind();
             }
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
             isRefreshShop = false;
         } else {
+            mBannersAdapter.addAll(sales);
 
-            mBannersAdapter.addAll(getBannerResponses.getGroups());
-
-            if (getBannerResponses.getGroups().isEmpty()) {
+            if (sales.isEmpty()) {
                 hasLoadedAllItems = true;
+                mPaginateManager.setHasMoreDataToLoad(false);
             }
         }
 
-        sales = mBannersAdapter.getData();
         onRefreshEnd();
     }
 
@@ -547,14 +550,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     }
 
     public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse) {
-        mPresenter.onAttach(this);
-        if (shopsControllerBannerRecyclerView != null) {
-            shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-        }
+        resetShopsBanners(getCategoryTreeResponse);
 
         if (getCategoryTreeResponse.getKey() != null) {
-
-            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0));
+            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getId(), bannerOffset, bannerLimit));
             if (mShopsControllerToolbarLogo != null) {
                 mShopsControllerToolbarLogo.setVisibility(View.GONE);
             }
@@ -566,8 +565,29 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         } else {
             assert (mActivity) != null;
             mActivity.setIsFromCategories(false);
-            loadShopBanners();
+            showLogoHeader();
+            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getId(), bannerOffset, bannerLimit));
         }
+    }
+
+    private void resetShopsBanners(GetCategoryTreeResponse getCategoryTreeResponse) {
+        mPresenter.onAttach(this);
+        if (shopsControllerBannerRecyclerView != null) {
+            shopsControllerBannerRecyclerView.setVisibility(View.GONE);
+        }
+
+        //reset for values for Get_sales API call
+        page = 0;
+        bannerOffset = 0;
+        bannerLimit = bannerOffset + newBannerCount;
+        mCategoryID = getCategoryTreeResponse.getId();
+
+        //reset adapter
+        sales = new ArrayList<>();
+        mBannersAdapter.getData().clear();
+        mLayoutManager.scrollToPosition(0);
+
+        hasLoadedAllItems = false;
     }
 //
 //    @SuppressWarnings({"deprecation", "ConstantConditions"})
@@ -638,14 +658,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
     public void loadShopBanners() {
         if (isAttached()) {
-            mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
-            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_action_menu));
-            mShopsControllerToolbarTextView.setVisibility(View.GONE);
-            shopsControllerSearchView.setVisibility(View.VISIBLE);
+            showLogoHeader();
         }
-        GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
+        mPresenter.loadShopsBanner(createBannerRequest("", 0, 0));
+    }
 
-        mPresenter.loadShopsBanner(createBannerRequest(shopCategory.getKey(), shopCategory.getId(), 0, 0));
+    private void showLogoHeader() {
+        mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+        mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_action_menu));
+        mShopsControllerToolbarTextView.setVisibility(View.GONE);
+        shopsControllerSearchView.setVisibility(View.VISIBLE);
     }
 
     public void goToSaleItemsFromCategorySearch() {
@@ -672,13 +694,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         bannerOffset = 0;
 
         if (mIsDeeplink) {
-            mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryName, mCategoryID, bannerOffset, newBannerCount), true);
+            mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, bannerOffset, newBannerCount), true);
         } else {
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, newBannerCount), true);
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, newBannerCount), true);
         }
     }
 
-    private GetBannerRequest createBannerRequest(String categoryName, String categoryId, int bannerOffset, int bannerLimit) {
+    private GetBannerRequest createBannerRequest(String categoryId, int bannerOffset, int bannerLimit) {
 
         int lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
         GetBannerResponse.Banner lastVisibleBanner = mBannersAdapter.getItem(lastVisiblePos);
@@ -693,17 +715,15 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         }
         getBannerRequest.setLimit(String.valueOf(bannerLimit));
 
-        if (categoryName != null && !categoryName.isEmpty())
-            getBannerRequest.setCategory(categoryName);
-
-        if (categoryId != null && !categoryId.isEmpty())
+        if (categoryId != null && !categoryId.isEmpty()) {
+            getBannerRequest.setCategory(categoryId);
             getBannerRequest.setCategoryId(categoryId);
-
+        }
 
         return getBannerRequest;
     }
 
-    private GetBannerRequest createDeepLinkBannerRequest(String categoryName, String saleCategoryId, int bannerOffset, int bannerLimit) {
+    private GetBannerRequest createDeepLinkBannerRequest(String saleCategoryId, int bannerOffset, int bannerLimit) {
 
         int lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
         GetBannerResponse.Banner lastVisibleBanner = mBannersAdapter.getItem(lastVisiblePos);
@@ -716,12 +736,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         }
         getBannerRequest.setLimit(String.valueOf(bannerLimit));
 
-        if (categoryName != null && !categoryName.isEmpty())
-            getBannerRequest.setCategory(categoryName);
-
-        if (saleCategoryId != null && !saleCategoryId.isEmpty())
-            getBannerRequest.setSaleCategoryId(saleCategoryId);
-
+        if (saleCategoryId != null && !saleCategoryId.isEmpty()) {
+            getBannerRequest.setCategory(saleCategoryId);
+            getBannerRequest.setCategoryId(saleCategoryId);
+        }
 
         return getBannerRequest;
     }
@@ -734,9 +752,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     @Override
     public void onRefreshBegin(PtrFrameLayout frame) {
         if (mIsDeeplink) {
-            mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryName, mCategoryID, 0, 0));
+            mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, 0, 0));
         } else {
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, bannerLimit));
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
         }
     }
 
@@ -761,8 +779,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         if (mBannersAdapter != null && shopsControllerBannerRecyclerView != null && mLayoutManager != null) {
             int currentScrollPosition = mLayoutManager.findFirstVisibleItemPosition();
-            mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, this);
-            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+            displayBanners();
             mLayoutManager.scrollToPosition(currentScrollPosition);
         }
     }
@@ -776,8 +793,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             mCategoryName = categoryKey;
             mCategoryID = categoryId;
 
-            if (mIsDeeplink)
-                mPresenter.loadShopsBanner(createDeepLinkBannerRequest(categoryKey, categoryId, 0, 0));
+            if (mIsDeeplink) {
+                mPresenter.loadShopsBanner(createDeepLinkBannerRequest(categoryId, 0, 0));
+            }
 
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
             mShopsControllerToolbarTextView.setText(getCategoryParentKey(categoryKey));

@@ -27,8 +27,6 @@
 
             <include layout="@layout/partial_checkout_address" />
 
-            <include layout="@layout/partial_checkout_delivery_options" />
-
             <include layout="@layout/partial_checkout_payment" />
 
             <include layout="@layout/partial_checkout_voucher" />

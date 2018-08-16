@@ -43,9 +43,6 @@ import butterknife.OnClick;
 
 public class ViewContactsController extends BaseController implements ViewContactsMvpView {
 
-    public static final String TAG = "ContactController";
-    private static final String KEY_TEXT = "ContactController.KEY_TEXT";
-
     private ContactsAdapter mContactAdapter;
 
     @BindView(R.id.partial_toolbar_title)

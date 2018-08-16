@@ -17,6 +17,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturns;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.data.network.model.returns.returndetails.Item;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsMvpPresenter;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.listener.CurrentReturnClickListener;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder.CurrentReturnViewHolder;
 import au.com.dealsdirect.ui.controller.returns.returndetails.adapter.ReturnDetailsAdapter;
@@ -28,10 +29,7 @@ import au.com.dealsdirect.utils.DateUtils;
 
 public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnViewHolder> {
 
-    private final CurrentReturnClickListener mListener;
-    private int lastPosition = -1;
-    private int currentPosition = 0;
-    private CurrentReturnViewHolder mCurrentReturnsHolder;
+    private CurrentReturnsMvpPresenter mPresenter;
 
     List<CurrentReturns> mCurrentReturnList = Collections.emptyList();
     List<GetReturnDetailsResponseBody> mReturnDetailsResponseBodyList = new LinkedList<>();
@@ -42,12 +40,12 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
             List<CurrentReturns> currentReturnsList,
             List<GetReturnDetailsResponseBody> returnDetailsResponseBodyList,
             Context context,
-            CurrentReturnClickListener listener){
+            CurrentReturnsMvpPresenter mvpPresenter) {
 
         this.mCurrentReturnList = currentReturnsList;
         this.mReturnDetailsResponseBodyList = returnDetailsResponseBodyList;
         this.mContext = context;
-        this.mListener = listener;
+        mPresenter = mvpPresenter;
     }
 
 
@@ -65,8 +63,6 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         String cardViewTransition = mCurrentReturnList.get(position).getID();
 
         holder.currentReturnProductItem.setTransitionName(cardViewTransition);
-        mCurrentReturnsHolder = holder;
-        currentPosition = position;
 
         String productName = mCurrentReturnList.get(position).getDescription();
 
@@ -81,7 +77,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         String productApproveDate = "";
         String returnApproveDateFormat = "";
 
-        if (isProductReturnRequestApprovedObject != null){
+        if (isProductReturnRequestApprovedObject != null) {
             productApproveDate = isProductReturnRequestApprovedObject.toString();
             returnApproveDateFormat = DateUtils.getTrimmedServerDateString(productApproveDate);
 
@@ -90,7 +86,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         String productRequestStatus = mCurrentReturnList.get(position).getReturnStatus();
         String productRAN = mCurrentReturnList.get(position).getRan();
 
-        holder.currentReturnsRequestNumberValueTextView.setText(productRequestNumber+"");
+        holder.currentReturnsRequestNumberValueTextView.setText(productRequestNumber + "");
         holder.currentReturnsRequestProductNameValueTextView.setText(productName);
         holder.currentReturnsRequestDateValueTextView.setText(returnRequestDateFormat);
 
@@ -99,14 +95,14 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         holder.currentReturnsRequestStatusValueTextView.setText(productRequestStatus);
         holder.currentReturnsRequestRANValueTextView.setText(productRAN);
 
-        if (mReturnDetailsResponseBodyList.size()!=0){
+        if (mReturnDetailsResponseBodyList.size() != 0) {
             updateHolderReturnItems(holder, position);
         }
 
-        holder.currentReturnProductItem.setOnClickListener(view -> mListener.onCurrentReturnClickListener(
+        holder.currentReturnProductItem.setOnClickListener(view -> mPresenter.currentReturnSelected(
                 orderNumber,
-                holder,
                 position,
+                productName,
                 productRequestStatus,
                 productRAN,
                 returnRequestDateFormat,
@@ -121,10 +117,10 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
 
             @Override
             public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-                mListener.onCurrentReturnClickListener(
+                mPresenter.currentReturnSelected(
                         orderNumber,
-                        holder,
                         position,
+                        productName,
                         productRequestStatus,
                         productRAN,
                         returnRequestDateFormat,
@@ -161,7 +157,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
                     .getValue()
                     .getTotal();
 
-            Log.d("itemiterator", "items = "+items.size() + " , subtotal = "+subTotal + " content = "+items.get(0).getCount()+" , "+items.get(0).getPrice());
+            Log.d("itemiterator", "items = " + items.size() + " , subtotal = " + subTotal + " content = " + items.get(0).getCount() + " , " + items.get(0).getPrice());
 
             final ReturnDetailsAdapter adapter =
                     new ReturnDetailsAdapter(items, subTotal, mContext);
@@ -174,7 +170,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
                 }
 
                 @Override
-                public boolean canScrollHorizontally(){
+                public boolean canScrollHorizontally() {
                     return false;
                 }
             };
@@ -189,7 +185,7 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         }
     }
 
-    public void updateReturnDetailsResponseBody(List<GetReturnDetailsResponseBody> list){
+    public void updateReturnDetailsResponseBody(List<GetReturnDetailsResponseBody> list) {
         mReturnDetailsResponseBodyList = list;
         notifyDataSetChanged();
     }

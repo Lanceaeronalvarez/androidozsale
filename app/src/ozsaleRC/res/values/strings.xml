@@ -1,4 +1,17 @@
 <resources>
+
+    <!-- Font Strings -->
+    <string name="font_app_bold">fonts/opensans/OpenSans-Bold.ttf</string>
+    <string name="font_app_bold_italic">fonts/opensans/OpenSans-BoldItalic.ttf</string>
+    <string name="font_app_heavy">fonts/opensans/OpenSans-ExtraBold.ttf</string>
+    <string name="font_app_heavy_italic">fonts/opensans/OpenSans-ExtraBoldItalic.ttf</string>
+    <string name="font_app_italic">fonts/opensans/OpenSans-Italic.ttf</string>
+    <string name="font_app_light">fonts/opensans/OpenSans-Light.ttf</string>
+    <string name="font_app_light_italic">fonts/opensans/OpenSans-LightItalic.ttf</string>
+    <string name="font_app_regular">fonts/opensans/OpenSans-Regular.ttf</string>
+    <string name="font_app_semibold">fonts/opensans/OpenSans-Semibold.ttf</string>
+    <string name="font_app_semibold_italic">fonts/opensans/OpenSans-SemiboldItalic.ttf</string>
+
     <string name="error">error</string>
     <string name="dummy_text">dummy text</string>
 
@@ -122,7 +135,7 @@
     <string name="add_new_delivery_address">Add New Delivery Address</string>
     <string name="billing_address">Billing Address</string>
     <string name="add_new_billing_address">Add New Billing Address</string>
-    <string name="payment_method">PAYMENT METHOD</string>
+    <string name="payment_method">MY PAYMENT METHOD</string>
     <string name="add_new_payment_method">Add New Payment Method</string>
     <string name="subtotal">Subtotal</string>
     <string name="shipping_fee">Shipping Fee</string>
@@ -180,9 +193,9 @@
     <string name="promo_code">Promo Code</string>
     <string name="voucher">voucher</string>
     <string name="voucher_label">Voucher</string>
-    <string name="clear">Clear Vouchers</string>
+    <string name="clear">clear</string>
 
-    <string name="my_payment_methods">MY PAYMENT METHODS</string>
+    <string name="my_payment_methods">MY PAYMENT METHOD</string>
     <string name="my_messages">MY MESSAGES</string>
     <string name="my_payments">My Payments</string>
 
@@ -218,6 +231,7 @@
 
     <integer-array name="account_options_sub_item_title_array">
         <item>@string/account_notification</item>
+        <!--removed for release, still using 3.23, GDPR not included-->
         <item>@string/account_clear_cookies_data</item>
     </integer-array>
 
@@ -253,5 +267,6 @@
     <string name="no_orders_for_return">No orders for return</string>
     <string name="welcome_to_my_returns">Welcome to My Returns!</string>
     <string name="you_currently_do_not_have_any_returns">You do not currently have any returns.</string>
+    <string name="product_item_source_name">ozsale.com</string>
 
 </resources>

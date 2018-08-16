@@ -10,8 +10,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical"
         android:paddingLeft="@dimen/placeholder_padding"
         android:paddingRight="@dimen/placeholder_padding">
@@ -31,14 +31,14 @@
             android:paddingLeft="@dimen/placeholder_padding"
             android:paddingRight="@dimen/placeholder_padding"
             android:text="@string/your_cart_is_currently_empty"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/text_extra_dark"
             android:textSize="@dimen/text_size_headline1" />
 
         <TextView
             fontPath="@string/font_app_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/padding_default"
             android:gravity="center"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -56,8 +56,7 @@
         android:layout_height="@dimen/button_height_regular"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:gravity="center"
         android:text="@string/shop_now"
-        android:textSize="@dimen/text_size_headline2" />
+        android:textSize="@dimen/text_size_body" />
 
 </RelativeLayout>

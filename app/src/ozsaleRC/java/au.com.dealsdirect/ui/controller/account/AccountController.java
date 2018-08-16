@@ -36,6 +36,7 @@ import au.com.dealsdirect.ui.controller.account.model.AccountItem;
 import au.com.dealsdirect.ui.controller.account.model.AccountSubItem;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
@@ -91,6 +92,8 @@ public class AccountController extends BaseController implements AccountMvpView,
     private ControllerChangeHandler.ControllerChangeListener mControllerChangeListener;
 
     private ArrayList<AccountItem> mAccountItems;
+    private boolean mIsLoginSuccessful;
+    private String mChosenOption = "";
 
     public static AccountController newInstance() {
         return new AccountController(
@@ -116,8 +119,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         getControllerComponent().inject(this);
 
         //MOCK MULTI COUNTRY in my accounts temporarily for BA
-        if (getActivity().getPackageName().equals("au.com.buyinvite.rc") ||
-                getActivity().getPackageName().equals("au.com.buyinvite.test")) {
+        if (mActivity.getPackageName().equals("au.com.buyinvite.rc") ||
+                mActivity.getPackageName().equals("au.com.buyinvite.test")) {
             mPresenter.setMultiCountry(true);
         }
 
@@ -163,6 +166,12 @@ public class AccountController extends BaseController implements AccountMvpView,
             @Override
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
                 mIsChangeInProgress = false;
+                if (mIsLoginSuccessful) {
+                    mPresenter.onAccountItemClick(mActivity, mChosenOption);
+                    mChosenOption = "";
+                    mIsLoginSuccessful = false;
+                }
+
             }
         };
 
@@ -318,9 +327,9 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void showContactUs() {
         if (getResources().getBoolean(R.bool.is_account_contact_visible)) {
             if (!mPresenter.isTablet()) {
-                GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.CONTACT_US, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+                GateKeeper.push(getDisplayRouter(), ViewContactsController.TAG, GateKeeper.Destination.CONTACT_US, new HorizontalChangeHandler(), new HorizontalChangeHandler());
             } else {
-                GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CONTACT_US, RouterTransaction.with(LanguageController.newInstance()));
+                GateKeeper.setRoot(getDisplayRouter(), ViewContactsController.TAG, GateKeeper.Destination.CONTACT_US, RouterTransaction.with(LanguageController.newInstance()));
             }
         }
     }
@@ -377,29 +386,30 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     @Override
-    public void triggerLogin(String option, int position) {
+    public void triggerLogin(String option) {
         AccountMvpView mvpView = this;
 
         mActivity.showLoginController(getDisplayRouter(), new AuthHandler() {
             @Override
             public void success() {
+                mIsLoginSuccessful = true;
+                mChosenOption = option;
                 mPresenter.onAttach(mvpView);
                 mActivity.callGCMRegisterSubscriber();
 
                 if (mRightToolbarButton != null) {
-                    mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_out));
+                    mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_out));
                 }
 
-                mActivity.getMainController().getHomeController().resetRouters();
+                mActivity.getHomeController().resetRouters();
                 if (mPresenter.isTablet()) {
                     mActivity.getMainController().getHomeController().resetAccountRouter();
-                } else {
-                    mPresenter.onAccountItemClick(mActivity, option, position);
                 }
             }
 
             @Override
             public void error() {
+                mIsLoginSuccessful = false;
                 mPresenter.onAttach(mvpView);
             }
         });
@@ -418,28 +428,26 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.loadAccountItems(mAccountItems);
                 CartUtil.setValueToCart(0);
                 mActivity.getMainController().getHomeController().removeBasketItemCount();
-                mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_in));
+                mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_in));
                 CookieUtils.getInstance().clear();
 
                 //reset routers with unique user info
                 mActivity.getMainController().getHomeController().resetRouters();
-                if (mPresenter.isTablet()) {
-                    mActivity.setShopsAsVisibleContainer();
-                }
+                mActivity.setShopsAsVisibleContainer();
 
                 if (showDialog) {
-                    CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                    CustomAlertDialog.showCustomAlertDialog(mActivity,
                             CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                            getActivity().getString(R.string.logout_successful));
+                            mActivity.getString(R.string.logout_successful));
                 }
             }
 
             @Override
             public void error() {
                 if (showDialog) {
-                    CustomAlertDialog.showCustomAlertDialog(getActivity(),
+                    CustomAlertDialog.showCustomAlertDialog(mActivity,
                             CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                            getActivity().getString(R.string.logout_failed));
+                            mActivity.getString(R.string.logout_failed));
                 }
             }
         });
@@ -449,10 +457,10 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void initLoginDrawable() {
         if (mPresenter.isAuthorized()) {
-            mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_out));
+            mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_out));
 
         } else {
-            mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_in));
+            mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_in));
         }
 
         mRightToolbarButton.setVisibility(View.VISIBLE);
@@ -486,14 +494,16 @@ public class AccountController extends BaseController implements AccountMvpView,
             mActivity.showLoginController(getDisplayRouter(), new AuthHandler() {
                 @Override
                 public void success() {
+                    mIsLoginSuccessful = true;
                     mPresenter.onAttach(AccountController.this);
                     mActivity.callGCMRegisterSubscriber();
-                    mRightToolbarButton.setText(getActivity().getResources().getString(R.string.log_out));
+                    mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_out));
                     mActivity.getMainController().getHomeController().initControllers(true);
                 }
 
                 @Override
                 public void error() {
+                    mIsLoginSuccessful = false;
                 }
             });
         }

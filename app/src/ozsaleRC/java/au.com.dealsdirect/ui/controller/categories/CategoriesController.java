@@ -202,8 +202,6 @@ public class CategoriesController extends BaseController
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
-
-        mSubCategoryAdapter.animateInsertItems(false);
     }
 
 

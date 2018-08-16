@@ -42,6 +42,7 @@ import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by Paul on 7/3/17.
@@ -58,11 +59,11 @@ public class InviteSendController extends BasePullToRefreshController implements
     @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
-    @BindView(R.id.partial_toolbar_right_view)
-    ImageView mFilterView;
-
     @BindView(R.id.partial_toolbar_left_view)
-    TextView mArrowImage;
+    View mLeftView;
+
+    @BindView(R.id.partial_toolbar_right_view)
+    ImageView mRightView;
 
     @BindView(R.id.controller_invite_buttons_layout)
     LinearLayout mSendInvitationContainer;
@@ -187,9 +188,12 @@ public class InviteSendController extends BasePullToRefreshController implements
         assert mActivity != null;
         mActivity.getMainController().showBottomNav();
 
-        mTitleText.setText("Invite Friends");
-        mFilterView.setVisibility(View.INVISIBLE);
-        mArrowImage.setVisibility(View.INVISIBLE);
+        if(mPresenter.isTablet()){
+            mLeftView.setVisibility(View.INVISIBLE);
+        }
+
+        mTitleText.setText(getString(R.string.account_invite_friend));
+        mRightView.setVisibility(View.INVISIBLE);
 
 
         Glide.with(mActivity)
@@ -455,6 +459,12 @@ public class InviteSendController extends BasePullToRefreshController implements
         });
 
         mPresenter.start();
+    }
+
+    @OnClick(R.id.partial_toolbar_left_view)
+    public void onBackClick() {
+        hideKeyboard();
+        mActivity.onBackPressed();
     }
 
     @Override

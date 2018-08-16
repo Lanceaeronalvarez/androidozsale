@@ -14,6 +14,7 @@ import java.util.List;
 
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
@@ -100,6 +101,7 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -146,7 +148,7 @@ public interface ApiHelper {
 
     Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest);
 
-    Observable<String> callAddItemToCart(AddToCartRequest requestValues);
+    Observable<AddToCartResponse.Response> callAddItemToCart(AddToCartRequest requestValues);
 
     // CONFIG API CALLS
     Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId);
@@ -173,6 +175,7 @@ public interface ApiHelper {
 
     Observable<GetContactHistoryResponse.ResponseValue> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest);
 
+    Observable<AccountData> callGetAccountData();
     // LOGIN API CALLS
 
     Observable<LoginEmail.ResponseValue> callLoginViaEmail(LoginEmail.RequestValue requestValue);

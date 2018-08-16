@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="@string/welcome_remark_title_orders"
             android:layout_gravity="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/text_extra_dark"
             android:textSize="@dimen/text_size_headline1"/>
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/welcome_remark_subtitle_orders"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/padding_default"
             android:layout_gravity="center"/>
 
     </LinearLayout>

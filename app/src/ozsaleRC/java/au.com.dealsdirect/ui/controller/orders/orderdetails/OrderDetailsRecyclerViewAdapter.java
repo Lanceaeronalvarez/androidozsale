@@ -75,6 +75,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderD
         holder.mItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager
                 .VERTICAL, false));
 
+        holder.orderNumberTextView.setText(String.valueOf(mPaymentReferenceNo));
 
         GetPaymentsList.ResponseValue.Order item = mOrderList.get(position);
 
@@ -124,6 +125,9 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderD
 
         @BindView(R.id.controller_order_track_here_text)
         TextView trackHereTextView;
+
+        @BindView(R.id.order_number_text_view)
+        TextView orderNumberTextView;
 
         public OrdersViewHolder(View itemView) {
             super(itemView);

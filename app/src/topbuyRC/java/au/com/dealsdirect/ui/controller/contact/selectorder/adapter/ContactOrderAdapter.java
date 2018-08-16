@@ -58,10 +58,6 @@ public class ContactOrderAdapter extends RecyclerView.Adapter<ContactOrderViewHo
                 .setText(mCurrentContactOrderList.get(position).getDescription() + " ("
                         + mCurrentContactOrderList.get(position).getInvoiceNo() + ")");
 
-        if (ContactPreferenceHelper.getChosenInvoice(mContext).equalsIgnoreCase(mCurrentContactOrderList.get(position).getInvoiceNo())) {
-
-        }
-
         holder.contactOrderRowLayout.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 myContactOrderItemClickListener.onContactOrderItemClicked

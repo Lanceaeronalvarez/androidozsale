@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
+import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -34,7 +37,8 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     @Inject
     OrdersMvpPresenter<OrdersMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @Nullable
+    @BindView(R.id.partial_toolbar_title)
     TextView mOrdersToolarTitle;
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mOrdersRightOption;
@@ -46,6 +50,18 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     OrdersRecyclerViewAdapter mAdapter;
     ArrayList<GetPaymentsList.ResponseValue.PaymentItem> mOrders = new ArrayList<>();
+
+    public static OrdersController newInstance() {
+
+        return new OrdersController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
+    public OrdersController(Bundle args) {
+        super(args);
+    }
+
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {

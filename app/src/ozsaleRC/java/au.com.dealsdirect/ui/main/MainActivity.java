@@ -53,6 +53,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrent
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
@@ -78,6 +79,7 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
+import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -159,16 +161,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
      */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        BaseController controller = (BaseController) getCurrentController(getCurrentRouter());
+        controller.onOrientationChanged(newConfig);
+
         super.onConfigurationChanged(newConfig);
-
-        /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape to call onActivityResume */
-        if (mSaleItemsController != null) {
-            mSaleItemsController.onOrientationChanged();
-        }
-
-        if (mShopController != null) {
-            mShopController.onOrientationChange();
-        }
     }
 
     @Override
@@ -191,6 +187,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             mPresenter.callGetPublicAppSettings();
             mPresenter.callGetPublicAppSettingsConsent(this);
         }
+
+        mPresenter.callGetAccountData();
 
     }
 
@@ -294,12 +292,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         (dialogInterface, i) -> {
                         });
             } else if (!isMasterDetail(currentRouter)) {
-                getHomeController().resetVisibleContainer();
-            } else if (currentController instanceof PaymentSuccessMvpView) {
-                //backpress for payment success
-                getMainController().getHomeController().getCheckoutRouter().popToRoot();
-                Controller controller = getMainController().getHomeController().getCurrentControllerOnRouter(mCheckoutRouter);
-                ((CheckoutMvpView) controller).loadCart();
+                getMainController().showBottomNav();
+                setShopsAsVisibleContainer();
             } else {
                 currentRouter.handleBack();
             }
@@ -518,7 +512,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             ((AddPaymentController) currentController).showAddPaymentResult(true, "");
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
-            onBackPressed();
+            currentRouter.popToRoot();
         }
     }
 
@@ -723,7 +717,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void setShopController(ShopsController shopsController) {
-        getMainController().getHomeController().setShopRouterViewPagerDraggable();
+        if(getMainController().getHomeController() != null) {
+            getMainController().getHomeController().setShopRouterViewPagerDraggable();
+        }
         mShopController = shopsController;
     }
 
@@ -741,12 +737,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             mMainController = MainController.newInstance();
             mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
         }
+
+        ScreenUtils.setStatusBarColor(this, R.color.status_bar);
     }
 
     public void setShopsAsVisibleContainer() {
-        getMainController().getHomeController().setVisibleContainer(0);
-        getMainController().getHomeController().setShopRouterViewPagerDraggable();
-
+        getHomeController().setVisibleContainer(0);
+        getHomeController().setShopRouterViewPagerDraggable();
     }
 
     private void setPaymentSuccessOurpay(CreatePaymentTransaction.ResponseValue responseValue) {

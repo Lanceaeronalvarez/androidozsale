@@ -92,4 +92,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         getMvpView().setIsCategoryChanged(val);
     }
 
+    @Override
+    public boolean isSortingEnabled() {
+        return getDataManager().getIsSortingEnabled();
+    }
+
 }

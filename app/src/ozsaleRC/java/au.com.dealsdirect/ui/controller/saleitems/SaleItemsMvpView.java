@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import android.content.res.Configuration;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;

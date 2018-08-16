@@ -28,6 +28,8 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
@@ -118,6 +120,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     private int currentVisibleIndex = 0;
     private int previousVisibleIndex = 0;
+    private boolean initNewBadge = false;
 
     public static HomeController newInstance() {
 
@@ -168,6 +171,15 @@ public class HomeController extends BaseController implements HomeMvpView {
         mBottomNavigationView.setDefaultBackgroundColor(getResources().getColor(R.color.bottom_nav_background));
         mBottomNavigationView.setAccentColor(getResources().getColor(R.color.bottom_nav_accent));
         mBottomNavigationView.setInactiveColor(getResources().getColor(R.color.bottom_nav_inactive));
+
+//        ADD "NEW" Badge to categories
+        AHNotification notification = new AHNotification.Builder()
+                .setText("NEW")
+                .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge))
+                .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
+                .build();
+        getBottomNavigationView().setNotification(notification, TAB_CATEGORIES_INDEX);
+        initNewBadge = true;
         setUp(view);
     }
 
@@ -212,15 +224,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         });
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
-            if (mCheckoutRouter != null) {
-                Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
-                if (controller instanceof CheckoutController) {
-                    Log.d("ourpay", "home controller remove ourpay");
-                    ((CheckoutController) controller).removeOurpayView();
-                    ((CheckoutController) controller).clearOurpayGraphBitmapsAndListeners();
-                }
-            }
-
             if (!wasSelected) {
 
                 Controller checkoutController = getCurrentControllerOnRouter(mCheckoutRouter);
@@ -233,6 +236,10 @@ public class HomeController extends BaseController implements HomeMvpView {
                         showFirstTabController();
                         break;
                     case TAB_CATEGORIES_INDEX:
+                        if(initNewBadge) {
+                            getBottomNavigationView().setNotification(new AHNotification(), TAB_CATEGORIES_INDEX);
+                            initNewBadge = false;
+                        }
                         showSecondTabController();
                         break;
                     case TAB_ACCOUNT_INDEX:
@@ -301,7 +308,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         mActivity.setContactRouter(mContactRouter);
         Controller contactsController = ControllerFactory.getInstance(GateKeeper.Destination.CONTACT_US);
         mViewContactsMvpView = (ViewContactsMvpView) contactsController;
-        mContactRouter.setRoot(RouterTransaction.with(contactsController));
+        mContactRouter.setRoot(RouterTransaction.with(contactsController).tag(ViewContactsMvpView.TAG));
     }
 
     public void resetCheckoutRouter() {
@@ -311,7 +318,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         if (!mPresenter.isTablet()) {
             Controller checkoutController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
-            mCheckoutMvpView = (CheckoutMvpView) checkoutController;
+            mCheckoutMvpView =  (CheckoutMvpView) checkoutController;
             mCheckoutRouter.setRoot(RouterTransaction.with(checkoutController)
                     .tag(getActivity().getResources().getString(R.string.checkout_controller)));
         } else {
@@ -370,7 +377,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     @Override
     public void showFourthTabController() {
         mActivity.getMainController().setViewpagerDraggable(false);
-
+        setVisibleContainer(TAB_CONTACT_INDEX);
         if (!mActivity.isAuthorized()) {
             mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
                 @Override
@@ -386,13 +393,13 @@ public class HomeController extends BaseController implements HomeMvpView {
             });
         } else {
             mViewContactsMvpView.getPresenter().loadContacts();
-            setVisibleContainer(TAB_CONTACT_INDEX);
         }
     }
 
     @Override
     public void showFifthTabController() {
         mActivity.getMainController().setViewpagerDraggable(false);
+        setVisibleContainer(TAB_CHECKOUT_INDEX);
         if (!mActivity.isAuthorized()) {
             mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
                 @Override
@@ -407,7 +414,6 @@ public class HomeController extends BaseController implements HomeMvpView {
                 }
             });
         } else { //should load cart everytime checkout is clicked on bottom nav
-            setVisibleContainer(TAB_CHECKOUT_INDEX);
             Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
             if (controller instanceof CheckoutMvpView) {
                 ((CheckoutMvpView) controller).loadCart();
@@ -430,7 +436,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         } else {
             AHNotification notification = new AHNotification.Builder()
                     .setText(CartUtil.getCartValue() + "")
-                    .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge_color))
+                    .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge))
                     .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
                     .build();
             getBottomNavigationView().setNotification(notification, TAB_CHECKOUT_INDEX);
@@ -473,15 +479,16 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void resetVisibleContainer() {
+        if (!(getCurrentRouter() ==  mAccountsRouter || getCurrentRouter() == mShopRouter)) {
+            mRouterContainerMapping.get(currentVisibleIndex).second.setVisibility(View.GONE);
+            if (currentVisibleIndex == previousVisibleIndex) {
+                previousVisibleIndex = 0;
+            }
+            mRouterContainerMapping.get(previousVisibleIndex).second.setVisibility(View.VISIBLE);
+            mBottomNavigationView.setCurrentItem(previousVisibleIndex, false);
+            currentVisibleIndex = previousVisibleIndex;
 
-        mRouterContainerMapping.get(currentVisibleIndex).second.setVisibility(View.GONE);
-        if (currentVisibleIndex == previousVisibleIndex) {
-            previousVisibleIndex = 0;
         }
-        mRouterContainerMapping.get(previousVisibleIndex).second.setVisibility(View.VISIBLE);
-        mBottomNavigationView.setCurrentItem(previousVisibleIndex, false);
-        currentVisibleIndex = previousVisibleIndex;
-
         if (getCurrentRouter() == mShopRouter) {
             showBottomNav();
         }
@@ -545,6 +552,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
     }
 
+    @Override
     public boolean isPopUpControllerVisible() {
         return mPopUpHostRouter != null && mPopUpHostRouter.getBackstackSize() >= 1;
     }
@@ -606,6 +614,9 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     }
 
+    public void sendSaleItemToCheckout(Value getCurrentOrder) {
+        mCheckoutMvpView.getPresenter().updateCart(getCurrentOrder);
+    }
 
     public void deepLinkSaleCategory(String categoryName, String categoryIdentifier) {
 

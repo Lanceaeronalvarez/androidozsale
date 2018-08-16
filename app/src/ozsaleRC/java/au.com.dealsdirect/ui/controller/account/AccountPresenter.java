@@ -31,7 +31,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void onAccountItemClick(Context context, String option, int position) {
+    public void onAccountItemClick(Context context, String option) {
 
         if (!isViewAttached() || getMvpView().isChangeInProgress()) {
             return;
@@ -43,13 +43,13 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             if (isTablet()) {
                 showAuthenticationRequiredScreens(context, option);
                 if (!getDataManager().isAuthorized()) {
-                    getMvpView().triggerLogin(option, position);
+                    getMvpView().triggerLogin(option);
                 }
             } else {
                 if (getDataManager().isAuthorized()) {
                     showAuthenticationRequiredScreens(context, option);
                 } else {
-                    getMvpView().triggerLogin(option, position);
+                    getMvpView().triggerLogin(option);
                 }
             }
         }

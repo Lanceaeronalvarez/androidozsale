@@ -5,8 +5,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/place_holder_padding"
-                android:paddingRight="@dimen/place_holder_padding"
+                android:paddingLeft="@dimen/padding_default"
+                android:paddingRight="@dimen/padding_default"
                 tools:ignore="MissingPrefix">
 
     <LinearLayout
@@ -17,8 +17,8 @@
 
 
         <ImageView
-            android:layout_width="@dimen/placeholder_icon_size"
-            android:layout_height="@dimen/placeholder_icon_size"
+            android:layout_width="@dimen/placeholder_icon_width"
+            android:layout_height="@dimen/placeholder_icon_height"
             android:layout_gravity="center"
             android:src="@drawable/ic_return_placeholder" />
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="welcome to my returns!"
-            android:textSize="@dimen/text_size_xxxlarge" />
+            android:textSize="@dimen/text_size_title" />
 
         <TextView
             fontPath="@string/font_app_light"

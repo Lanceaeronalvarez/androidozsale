@@ -49,7 +49,12 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   ChindeeTubasis@mysale.com,
   michael@smartwave.ph,
   EricaPena@mysale.com,
-  jc@apacsale.com
+  jc@apacsale.com,
+  TrishCorpuz@mysale.com,
+  lindz@smartwave.ph,
+  gerald@smartwave.ph,
+  chindee@smartwave.ph,
+  ejptacc123@gmail.com
 "'
 
 default_platform :android

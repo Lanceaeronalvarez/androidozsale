@@ -20,7 +20,7 @@
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/controller_sale_item_detail_scrollview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:fillViewport="true">
@@ -32,6 +32,7 @@
                     android:background="@android:color/white"
                     android:clipChildren="false"
                     android:clipToPadding="false"
+                    android:descendantFocusability="blocksDescendants"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -134,7 +135,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text=""
-                                    android:textColor="@color/gray_hint_text"
+                                    android:textColor="@color/text_medium"
                                     android:textSize="@dimen/text_size_small" />
 
                             </LinearLayout>
@@ -162,7 +163,7 @@
                                     android:layout_gravity="right"
                                     android:maxLines="1"
                                     android:text=""
-                                    android:textColor="@color/gray_hint_text"
+                                    android:textColor="@color/text_medium"
                                     android:textSize="@dimen/text_size_small" />
 
                             </LinearLayout>
@@ -252,7 +253,7 @@
                             <WebView
                                 android:id="@+id/product_description_text"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 tools:ignore="WebViewLayout" />
 

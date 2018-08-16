@@ -192,22 +192,22 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
         }
     }
 
+    @Override
+    public void onCurrentReturnClickListener(int orderNumber, int position, String productName, String productRequestStatus, String productRAN, String returnRequestDateFormat, String isRequestApproved, String returnId) {
+
+    }
+
     public void getCurrentReturnItems(List<CurrentReturns> currentReturns) {
         mPresenter.loadReturnDetails(createReturnDetailsRequest(currentReturns.get(itemIterator).getID()));
 
     }
 
-    @Override
-    public void onCurrentReturnClickListener(
-            int orderNumber,
-            CurrentReturnViewHolder holder,
-            int position,
-            String productRequestStatus,
-            String productRAN,
-            String returnRequestDateFormat,
-            String isRequestApproved,
-            String returnId) {
+    public GetReturnDetailRequest createReturnDetailsRequest(String itemID) {
+        return new GetReturnDetailRequest(itemID);
+    }
 
+    @Override
+    public void onCurrentReturnClickListener(int orderNumber, CurrentReturnViewHolder holder, int position, String productName, String productRequestStatus, String productRAN, String returnRequestDateFormat, String isRequestApproved, String returnId) {
         getRouter().pushController(RouterTransaction.with(
                 ReturnDetailsController.newInstance(
                         orderNumber,
@@ -218,11 +218,5 @@ public class CurrentReturnsController extends SwipeableBaseToolBarController
                         productRAN))
                 .pushChangeHandler(new VerticalChangeHandler())
                 .popChangeHandler(new VerticalChangeHandler()));
-
     }
-
-    public GetReturnDetailRequest createReturnDetailsRequest(String itemID) {
-        return new GetReturnDetailRequest(itemID);
-    }
-
 }

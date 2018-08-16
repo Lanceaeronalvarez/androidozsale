@@ -5,6 +5,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#F00065</color>
+    <color name="colorDisabled">#87939D</color>
 
     <color name="color_text_option">#F00065</color>
     <color name="color_item_title">#466E87</color>
@@ -20,15 +21,15 @@
     <color name="bg_edit_text_focused">#009BEC</color>
 
     <color name="status_bar">@color/colorAccent</color>
+    <color name="status_bar_splash">@color/colorAccent</color>
 
     <color name="payment_success_order_text_color">#446E87</color>
-
-    <color name="bottom_nav_accent_color">#F00065</color>
-    <color name="bottom_nav_badge_color">#ffcc0000</color>
 
     <color name="cart_order_price_text_color">#454545</color>
 
     <color name="search_gray_opaque">#7e404040</color>
+
+    <color name="bg_search_edit_text">#f1f1f2</color>
 
     <!-- Background -->
     <color name="background_default">@color/white</color>
@@ -46,6 +47,11 @@
     <color name="bg_button_pressed">#FFB9004E</color>
     <color name="bg_button_tutorial">#f5f4f4</color>
     <color name="bg_button_tutorial_pressed">#ECECEC</color>
+    <color name="bg_button_disabled">@color/colorDisabled</color>
+
+    <color name="bg_join_now_btn_ripple">@color/white</color>
+    <color name="bg_join_now_btn_default">#cacaca</color>
+    <color name="bg_join_now_btn_pressed">#cacaca</color>
 
     <color name="tab_bar_search_hint">#CCFFFFFF</color>
 
@@ -77,10 +83,13 @@
 
     <color name="filter_text_active">@color/text_highlight</color>
     <color name="filter_text_inactive">@color/text_extra_light</color>
-    <!--Search Edit Text Colors-->
-    <color name="search_edit_text_hint_color">#CCFFFFFF</color>
-    <color name="search_edit_text_color">@color/white</color>
-    <color name="search_edit_cursor_color">@color/white</color>
+    <color name="language_selected">@color/bluegreen</color>
+
+
+    <!--Search Edit Text-->
+    <color name="search_edit_text_hint">#CCFFFFFF</color>
+    <color name="search_edit_text">@color/white</color>
+    <color name="search_edit_cursor">@color/white</color>
 
     <color name="category_text_active">@color/colorAccent</color>
     <color name="category_text_inactive">@color/text_light</color>
@@ -98,7 +107,7 @@
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>
     <color name="bg_chips_default">#F8FAFD</color>
-    <color name="bg_chips_border_default">#EDF0F5</color>
+    <color name="bg_chips_default_border">#EDF0F5</color>
     <color name="bg_chips_checked">#ED1167</color>
     <color name="bg_chips_text">#FFFFFF</color>
 
@@ -106,7 +115,7 @@
     <color name="icon_snack_bar">@color/colorAccent</color>
     <color name="icon_default">#919191</color>
 
-    <color name="tab_bar_icon_inactive">#87939D</color>
+    <color name="tab_bar_icon_inactive">@color/colorDisabled</color>
     <color name="tab_bar_icon_active">@color/colorAccent</color>
     <color name="tab_bar_icon_hovered">@color/colorAccent</color>
 
@@ -132,6 +141,9 @@
     <color name="ourpay_orange">#FFE47C0B</color>
     <color name="ourpay_orange_dark">#FFAE5F0A</color>
     <color name="ourpay_border_gray">#FFC7C7C7</color>
+    <color name="ourpay_circle_state_color_active">#FCBD12</color>
+    <color name="ourpay_circle_state_color_default">#D7D8DA</color>
+
     <color name="ourpay_navy">#000080</color>
     <color name="ourpay_red">#FF0000</color>
     <color name="ourpay_verify_resend">#000080</color>

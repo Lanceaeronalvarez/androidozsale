@@ -22,6 +22,8 @@ public interface MvpPresenter<V extends MvpView> {
 
     boolean isTablet();
 
+    boolean isGdprDisabled();
+
     void doApiCallForResponse(Observable observable, ApiCallback callback);
 
 }

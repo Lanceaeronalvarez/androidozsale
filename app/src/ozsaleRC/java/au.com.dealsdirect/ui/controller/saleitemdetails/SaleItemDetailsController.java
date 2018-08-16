@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.google.gson.Gson;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
+import com.mysale.genie.utility.LegacyBaseResponseValue;
 import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -45,7 +47,10 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
 import au.com.dealsdirect.service.ourpay.Ourpay;
@@ -59,7 +64,9 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
+import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
+import au.com.dealsdirect.utils.NoBounceBehavior;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
@@ -100,6 +107,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mSaleName;
     private String mSalePrice;
     private String mSaleOldPrice;
+    private Ourpay mOurpay;
     private List<GetSaleItemDetailsResponse> mSkuVariants = new ArrayList<>();
 
     @BindView(R.id.arrow_left)
@@ -260,7 +268,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
-        if (getBoolean(R.bool.is_ozsale_app) && !getBoolean(R.bool.is_tablet)) {
+        if (!getBoolean(R.bool.is_tablet)||(getBoolean(R.bool.is_tablet) && !getBoolean(R.bool.is_item_details_split_enabled))) {
             ((AppBarLayout) mAppBarLayout).addOnOffsetChangedListener(this);
         }
     }
@@ -274,8 +282,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onDetach(View view) {
         super.onDetach(view);
-        if (getBoolean(R.bool.is_ozsale_app) && !getBoolean(R.bool.is_tablet)) {
+        if (!getBoolean(R.bool.is_tablet)||(getBoolean(R.bool.is_tablet) && !getBoolean(R.bool.is_item_details_split_enabled))) {
             ((AppBarLayout) mAppBarLayout).removeOnOffsetChangedListener(this);
+        }
+    }
+
+    @Override
+    public void onOrientationChanged(Configuration newConfiguration) {
+        if (mOurpay != null) {
+            showMyPayDetails(null, mOurpay);
         }
     }
 
@@ -325,7 +340,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductImagesRvLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
         mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(mPresenter.isTablet(),
-                mPresenter.isTablet() ? null : mAppBarLayout,
+                mPresenter.isTablet() && getBoolean(R.bool.is_item_details_split_enabled) ? null : mAppBarLayout,
                 new ArrayList<View>() {{
                     add(mLeftView);
                     add(mOtherImagesRv);
@@ -356,7 +371,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mHtmlFooter = mActivity.getResources()
                 .getString(R.string.base_html_template_footer);
 
-        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 
     @Override
@@ -385,9 +399,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mToolbarItemBrandTextView.setText(brandName);
         mToolbarItemNameTextView.setText(name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
-
-        mAddToCartButton.setEnabled(!saleDetail.isSoldOut());
-        mAddToCartButton.setText(!saleDetail.isSoldOut() ? R.string.add_to_cart : R.string.sold_out);
 
         mProductName.setText(name.trim());
         mProductBrand.setText(brandName.trim());
@@ -533,24 +544,31 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void showAddToCartResponse(boolean showAddToCart) {
+    public void showAddToCartResponse(Value cartDetailsResponse) {
         RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
 
         //notify bottom navigation view(checkout) with success.
-        if (showAddToCart) {
-            CartUtil.addValueToCart(1);
-            mActivity.getMainController().getHomeController().updateBasketItemCount();
-        }
+        CartUtil.addValueToCart(1);
+        mActivity.getMainController().getHomeController().updateBasketItemCount();
 
         CustomAlertDialog.showCustomAlertDialog(
-                mActivity,
-                showAddToCart ? CustomAlertDialog.CustomDialogIconState.POSITIVE : CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                mActivity.getString(showAddToCart ? R.string.add_to_cart_success : R.string.add_to_cart_failed));
+                mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                mActivity.getString(R.string.add_to_cart_success));
+
+        mActivity.getHomeController().sendSaleItemToCheckout(cartDetailsResponse);
+    }
+
+    @Override
+    public void showAddToCartResponseFailed() {
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                mActivity.getString(R.string.add_to_cart_failed));
     }
 
     @Override
     public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
         if (ourpay != null) {
+            mOurpay = ourpay;
             OurpayPanel panel = new OurpayPanel(mActivity);
             mOurpayHolder.setVisibility(View.VISIBLE);
             mOurpayHolder.removeAllViews();
@@ -748,7 +766,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         mToolbarVerticalOffset = verticalOffset;
-        RxBus.instance().post(new Pair<>(SALE_ITEM_DETAILS_VERTICAL_OFFSET,mToolbarVerticalOffset));
+        RxBus.instance().post(new Pair<>(SALE_ITEM_DETAILS_VERTICAL_OFFSET, mToolbarVerticalOffset));
         TypedValue tv = new TypedValue();
         mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
         boolean showToolbar = Math.abs(verticalOffset) >= ((AppBarLayout) mAppBarLayout).getTotalScrollRange();

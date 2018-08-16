@@ -228,9 +228,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 onMasterpassButtonClick();
                 mCheckoutMvpView.setIsPaymentMethodChanged(true);
             });
+
         } else {
             mMasterpassButton.setVisibility(View.GONE);
             mVisaCheckoutButton.setVisibility(View.GONE);
+            mPaypalCreditButton.setVisibility(View.GONE);
         }
 
 
@@ -281,7 +283,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mPaypalButton.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
         mMasterpassButton.setVisibility(!isFromCart || !mPresenter.isMasterPassEnabled() || mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
         mVisaCheckoutButton.setVisibility(!isFromCart || mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
-        mPaypalCreditButton.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
+        mPaypalCreditButton.setVisibility(!isFromCart || mIsOurpaySelectDeliveryMethod || !mPresenter.isPaypalCreditEnabled() ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -393,7 +395,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @OnClick(R.id.partial_toolbar_left_view)
     void onBackPressed() {
         hideKeyboard();
-        getActivity().onBackPressed();
+        mActivity.onBackPressed();
     }
 
     @OnClick(R.id.bt_camera)

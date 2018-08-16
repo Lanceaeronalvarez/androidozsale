@@ -110,7 +110,7 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
 
     @Override
     public int onGetSwipeReactionType(PaymentSelectViewHolder holder, int position, int x, int y) {
-        return SwipeableItemConstants.REACTION_CAN_SWIPE_LEFT;
+        return isFromCart? SwipeableItemConstants.REACTION_CAN_NOT_SWIPE_ANY : SwipeableItemConstants.REACTION_CAN_SWIPE_LEFT;
     }
 
     @Override

@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -13,8 +12,6 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
-import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -37,7 +34,7 @@ public class BannerFiltersAdapter extends RecyclerView.Adapter<BannerFiltersAdap
 
     @Override
     public BannerFiltersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_account_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_text_item, parent, false);
         return new BannerFiltersViewHolder(view);
     }
 
@@ -59,7 +56,7 @@ public class BannerFiltersAdapter extends RecyclerView.Adapter<BannerFiltersAdap
 
     public static class BannerFiltersViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.row_account_text)
+        @BindView(R.id.row_viewholder_text)
         public TextView bannerFilterText;
 
         public BannerFiltersViewHolder(View itemView) {

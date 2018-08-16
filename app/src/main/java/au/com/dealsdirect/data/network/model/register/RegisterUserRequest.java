@@ -18,6 +18,7 @@ public class RegisterUserRequest {
     String referredBy;
     String invitedBy;
     String voucherID;
+    boolean tcWasRead;
     HashMap<String, Boolean> parameters;
 
     public RegisterUserRequest(
@@ -41,6 +42,10 @@ public class RegisterUserRequest {
         this.parameters.put("emailsAccepted", emailsAccepted);
     }
 
+    public void setToGdprDisabled(){
+        this.parameters = null;
+        this.tcWasRead = true;
+    }
 
     public String getLanguageID() {
         return languageID;

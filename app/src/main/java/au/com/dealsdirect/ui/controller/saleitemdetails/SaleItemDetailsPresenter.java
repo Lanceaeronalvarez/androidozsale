@@ -97,7 +97,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
-                getMvpView().showAddToCartResponse(((AddToCartResponse) response).getResult());
+                getMvpView().showAddToCartResponse(((AddToCartResponse.Response) response).getValue());
 
                 AppEventHelper.addedToCart(requestValues.getSkuId(), requestValues.getItemName(),
                         requestValues.getPrice(), getDataManager().getCountryId());
@@ -109,8 +109,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
                 getMvpView().hideLoading();
                 getMvpView().onError(throwable.getMessage());
-                getMvpView().showAddToCartResponse(false);
-
+                getMvpView().showAddToCartResponseFailed();
 
                 // handle load accounts error here
                 if (throwable instanceof ANError) {
@@ -135,6 +134,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
         try {
             ourpay.setState(OurpayState.PRECART);
 
+            ourpay.setDescription(ourpayDataResponse.getSummary().getDescription());
             ourpay.setTotalAmount(value.getPrice().getValue());
             ourpay.setCanUse(true);
             ourpay.setBillingPeriod(ourpayDataResponse.getPayment().getBillingPeriod());

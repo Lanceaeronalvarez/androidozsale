@@ -18,6 +18,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponse;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.List;
@@ -47,7 +48,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
     private static List mReturnItem;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mNewReturnToolbarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)
@@ -198,9 +199,8 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     }
 
     @Override
-    public void finishCreateReturnRequest(CreateReturnRequestResponseBody createReturnRequest) {
-
-        if (createReturnRequest.getCreateReturnRequestResponse().getResult()) {
+    public void finishCreateReturnRequest(CreateReturnRequestResponse createReturnRequestResponse) {
+        if (createReturnRequestResponse.getResult()) {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
@@ -209,7 +209,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         getRouter().popToTag("CurrentReturnController");
         hideKeyboard();
-
     }
 
     @Override
@@ -223,6 +222,11 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         mNewReturnOrderRecyclerView.setAdapter(adapter);
         mNewReturnOrderRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+
+    }
+
+    @Override
+    public void onReturnValueUpdated(String itemId, int position, int productQuantityValue, boolean isChecked) {
 
     }
 

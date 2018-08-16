@@ -22,6 +22,18 @@ public class Meta {
 
     String encodedSaleId;
 
+    String qs__ssf;
+
+    String qs__saleID;
+
+    String qs__ui;
+
+    String qs__sc;
+
+    String qs__c;
+
+    String qs__ca;
+
     public String getCategoryName() {
         return categoryName;
     }
@@ -84,5 +96,53 @@ public class Meta {
 
     public void setEncodedSaleId(String encodedSaleId) {
         this.encodedSaleId = encodedSaleId;
+    }
+
+    public String getQs__ssf() {
+        return qs__ssf;
+    }
+
+    public void setQs__ssf(String qs__ssf) {
+        this.qs__ssf = qs__ssf;
+    }
+
+    public String getQs__saleID() {
+        return qs__saleID;
+    }
+
+    public void setQs__saleID(String qs__saleID) {
+        this.qs__saleID = qs__saleID;
+    }
+
+    public String getQs__ui() {
+        return qs__ui;
+    }
+
+    public void setQs__ui(String qs__ui) {
+        this.qs__ui = qs__ui;
+    }
+
+    public String getQs__sc() {
+        return qs__sc;
+    }
+
+    public void setQs__sc(String qs__sc) {
+        this.qs__sc = qs__sc;
+    }
+
+    public String getQs__c() {
+        return qs__c;
+    }
+
+    public void setQs__c(String qs__c) {
+        this.qs__c = qs__c;
+    }
+
+    public String getQs__ca() {
+        return qs__ca;
+    }
+
+    public void setQs__ca(String qs__ca) {
+        this.qs__ca = qs__ca;
     }
 }

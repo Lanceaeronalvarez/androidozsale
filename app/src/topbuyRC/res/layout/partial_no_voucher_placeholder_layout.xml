@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:paddingLeft="@dimen/place_holder_padding"
-    android:paddingRight="@dimen/place_holder_padding"
+    android:paddingLeft="@dimen/padding_default"
+    android:paddingRight="@dimen/padding_default"
     android:visibility="visible"
     tools:ignore="MissingPrefix">
 

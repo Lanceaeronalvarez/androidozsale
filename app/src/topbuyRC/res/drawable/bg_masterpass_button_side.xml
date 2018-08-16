@@ -6,9 +6,9 @@
     <item>
         <shape>
             <corners android:bottomLeftRadius="0dp"
-                     android:bottomRightRadius="@dimen/corner_radius"
+                     android:bottomRightRadius="@dimen/corner_radius_default"
                      android:topLeftRadius="0dp"
-                     android:topRightRadius="@dimen/corner_radius"/>
+                     android:topRightRadius="@dimen/corner_radius_default"/>
             <solid android:color="#E4762E" />
         </shape>
     </item>

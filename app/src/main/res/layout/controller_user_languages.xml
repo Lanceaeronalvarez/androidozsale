@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:padding="@dimen/padding_default">
 
         <TextView
             fontPath="@string/font_app_bold"
@@ -18,13 +19,13 @@
             android:layout_height="wrap_content"
             android:text="@string/select_language"
             android:textColor="@color/text_extra_dark"
-            android:padding="@dimen/padding_default"
             android:textSize="@dimen/text_size_body" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/controller_recycler_details"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/padding_default" />
 
     </LinearLayout>
 

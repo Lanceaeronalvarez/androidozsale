@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -58,7 +59,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     @BindView(R.id.partial_toolbar_title)
     TextView mPaymentSelectToolbarTitle;
     @BindView(R.id.no_payment_method_placeholder)
-    LinearLayout mNoPaymentPlaceholder;
+    RelativeLayout mNoPaymentPlaceholder;
     @BindView(R.id.controller_payment_description_text)
     TextView mPaymentSubtitleText;
 
@@ -178,7 +179,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     @Override
     protected void setUp(View view) {
 
-        mToolbarLeftView.setVisibility(mPresenter.isTablet() && !isFromCart ? View.GONE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mPresenter.isTablet() && !isFromCart ? View.INVISIBLE : View.VISIBLE);
         mPaymentSelectToolbarTitle.setText(getString(R.string.my_payments));
 
         mAdapter = new PaymentSelectAdapter(mActivity, mPaymentMethods, mPresenter, isFromCart);

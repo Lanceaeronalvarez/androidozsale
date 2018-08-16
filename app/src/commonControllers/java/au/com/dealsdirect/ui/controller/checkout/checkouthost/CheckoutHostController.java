@@ -106,8 +106,8 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     protected void setUp(View view) {
 //disable toolbar left and right buttons
-        mToolbarLeftButton.setVisibility(View.GONE);
-        mToolbarRightButton.setVisibility(View.GONE);
+        mToolbarLeftButton.setVisibility(View.INVISIBLE);
+        mToolbarRightButton.setVisibility(View.INVISIBLE);
         mTitleTextView.setText(getString(R.string.account_orders));
 
         mCheckoutDetailView = mCheckoutController = CheckoutController.newInstance();

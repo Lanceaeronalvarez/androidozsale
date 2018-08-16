@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <include
+        android:id="@+id/view_contacts_toolbar"
+        layout="@layout/partial_toolbar_title_details" />
+
+    <View style="@style/horizontalBorderView" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/contact_history_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:layout_above="@id/controller_add_contact_message_container"
+            android:padding="5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@id/controller_add_contact_message_container"
+            android:background="@color/border_regular" />
+
+        <LinearLayout
+            android:id="@+id/controller_add_contact_message_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/contacts_edittext_height"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:elevation="5dp"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_default_half">
+
+            <EditText
+                android:id="@+id/controller_view_contacts_history_message_field"
+                style="@style/DDEditTextStyle"
+                android:layout_width="0dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_weight="1"
+                android:padding="@dimen/padding_small"
+                android:background="@drawable/bg_add_contact_message"
+                android:hint="@string/write_a_message" />
+
+            <ImageButton
+                android:id="@+id/controller_view_contacts_history_reply_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:src="@drawable/ic_contact_us_send" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
+

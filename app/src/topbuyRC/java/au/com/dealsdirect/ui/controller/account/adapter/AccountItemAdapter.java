@@ -53,7 +53,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemViewHold
         holder.mAccountItemName
                 .setText(mContext.getResources().getString(mAccountItems.get(position)));
         holder.itemView.setOnClickListener(view -> {
-                mPresenter.onAccountItemClick(mAccountItems.get(position));
+            mPresenter.onAccountItemClick(mAccountItems.get(position));
         });
     }
 

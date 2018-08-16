@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 

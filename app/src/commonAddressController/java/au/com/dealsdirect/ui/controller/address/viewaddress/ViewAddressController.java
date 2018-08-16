@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.address.viewaddress;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,8 +54,10 @@ public class ViewAddressController extends BasePullToRefreshController implement
     @BindView(R.id.controller_addresses_recyclerview)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @Nullable
+    @BindView(R.id.partial_toolbar_title)
     TextView mViewAddressToolarTitle;
+
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mViewAddressRightOption;
     @BindView(R.id.address_office_delivery_subtitle)

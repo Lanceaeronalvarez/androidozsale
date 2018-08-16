@@ -8,7 +8,6 @@ import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,16 +50,12 @@ public class OurpayPanel {
         this.mBaseActivity = activity;
         View view = activity.getLayoutInflater().inflate(R.layout.ourpay_panel_holder, null, false);
         mPanelHolder = (LinearLayout) view.findViewById(R.id.linearLayout_placeholder);
-        mHolderInBorder = (LinearLayout) view.findViewById(R.id.linearlayout_placeholder_boredered);
+        mHolderInBorder = (LinearLayout) view.findViewById(R.id.linearlayout_placeholder_bordered);
     }
 
     public OurpayPanel(BaseActivity activity, Router router) {
-        this.mBaseActivity = activity;
+        this(activity);
         this.mRouter = router;
-
-        View view = activity.getLayoutInflater().inflate(R.layout.ourpay_panel_holder, null, false);
-        mPanelHolder = (LinearLayout) view.findViewById(R.id.linearLayout_placeholder);
-        mHolderInBorder = (LinearLayout) view.findViewById(R.id.linearlayout_placeholder_boredered);
     }
 
     public View generatePanel(Ourpay ourpay) {
@@ -81,7 +76,7 @@ public class OurpayPanel {
 
                 LinearLayout headerHolder = (LinearLayout) header.findViewById(R.id.linearLayout_header);
 
-                String templateTexts = OurpayTemplateText.getTemplateText(mBaseActivity, ourpay);
+                String templateTexts = ourpay.getDescription();
                 final View templateView = getTemplateText(templateTexts);
                 headerHolder.addView(templateView, headerHolder.getChildCount() - 1);
 
@@ -120,8 +115,7 @@ public class OurpayPanel {
                 View header = getPanelHeader(ourpay);
                 mHolderInBorder.addView(header);
 
-                mPanelHolder.addView(getTemplateText(
-                        OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)), 1);
+                mPanelHolder.addView(getTemplateText(ourpay.getDescription()), 1);
 
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
                     mPanelHolder.addView(getTermsAndConditions(ourpay), 2);
@@ -187,7 +181,6 @@ public class OurpayPanel {
     }
 
     private View getPanelRows(List<GetCurrentOrderOurpay.PlannedTransaction> transactions) {
-
         return mOurpayGraph.generateGraph(mBaseActivity, transactions);
     }
 
@@ -274,10 +267,10 @@ public class OurpayPanel {
     }
 
     public void clearOurpayGraphBitmapsAndListeners() {
-        mOurpayGraph.clearOurpayGraphBitmapsAndListeners();
+//        mOurpayGraph.clearOurpayGraphBitmapsAndListeners();
     }
 
     public void setIsGraphVisible(boolean isVisible) {
-        mOurpayGraph.setIsGraphVisible(isVisible);
+//        mOurpayGraph.setIsGraphVisible(isVisible);
     }
 }

@@ -29,6 +29,7 @@ public class Ourpay {
     private PaymentMethodNonce paymentMethodNonce;
     private String termsAndConditionsText = "";
     private PhoneVerification ourpayPhoneVerification;
+    private String description = "";
 
     public Ourpay() {
 
@@ -50,6 +51,7 @@ public class Ourpay {
         this.paymentMethodNonce = ourpay.paymentMethodNonce;
         this.termsAndConditionsText = ourpay.termsAndConditionsText;
         this.ourpayPhoneVerification = ourpay.ourpayPhoneVerification;
+        this.description = ourpay.description;
     }
 
     public boolean isCanUse() {
@@ -175,4 +177,13 @@ public class Ourpay {
     public boolean isPhoneVerificationRequired() {
         return (ourpayPhoneVerification != null && ourpayPhoneVerification.getRequired());
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }

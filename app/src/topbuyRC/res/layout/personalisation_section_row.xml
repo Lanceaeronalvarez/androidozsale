@@ -7,20 +7,17 @@
 
     <TextView
         android:id="@+id/personalisation_section_row_label"
-        fontPath="@string/font_app_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        tools:ignore="MissingPrefix"
         tools:text="Label" />
 
     <au.com.dealsdirect.ui.custom.ClearFocusEditText
         android:id="@+id/personalisation_section_row_edit_text"
-        style="@style/DDEditTextStyle"
-        fontPath="@string/font_app_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:background="@drawable/personalisation_section_background"
         android:focusable="true"
         android:gravity="center"
         android:imeOptions="actionDone"
@@ -29,7 +26,7 @@
         android:padding="@dimen/padding_small"
         android:singleLine="true"
         android:textAlignment="center"
-        android:textColor="@color/dark_text"
+        android:textColor="@color/text_dark"
         tools:text="John Doe" />
 
     <RelativeLayout
@@ -45,7 +42,7 @@
             android:layout_alignParentStart="true"
             android:text="@string/this_is_a_required_field"
             android:textColor="@color/personalisation_error_color"
-            android:textSize="@dimen/text_size_small"
+            android:textSize="@dimen/text_size_caption1"
             android:visibility="gone" />
 
         <TextView
@@ -54,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:text="@string/max_characters"
-            android:textSize="@dimen/text_size_small" />
+            android:textSize="@dimen/text_size_caption1" />
 
     </RelativeLayout>
 
@@ -66,5 +63,23 @@
         android:layout_marginTop="@dimen/margin_small"
         android:background="#23000000"
         android:visibility="gone" />
+
+    <View
+        android:id="@+id/personalisation_section_row_inner_border"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/border_regular"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/personalisation_section_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:visibility="gone">
+
+    </RelativeLayout>
 
 </LinearLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:clickable="true"
+    android:layout_marginStart="@dimen/padding_default">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_default"
+        android:paddingEnd="@dimen/padding_default"
+        android:paddingTop="@dimen/padding_default_half"
+        android:paddingBottom="@dimen/padding_default_half">
+
+        <TextView
+            android:id="@+id/row_viewholder_text"
+            fontPath="@string/font_app_regular"
+            style="@style/TextViewStyle"
+            android:layout_toLeftOf="@+id/row_viewholder_image_right"
+            android:layout_alignParentLeft="true"
+            tools:text="Men's"
+            tools:ignore="MissingPrefix" />
+
+
+
+        <ImageView
+            android:id="@+id/row_viewholder_image_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_gray_chevron"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_marginStart="@dimen/padding_default"
+        style="@style/horizontalBorderView"/>
+
+</LinearLayout>

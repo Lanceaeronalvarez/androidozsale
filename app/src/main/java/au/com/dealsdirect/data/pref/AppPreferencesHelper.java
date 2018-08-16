@@ -127,6 +127,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public static final String CONSENT_TNC_CHECKED = "RegAgreementTermsAndConditionCheckboxTicked";
     public static final String CONSENT_EMAILS_CHECKED = "RegAgreementReceiveEmailsCheckboxTicked";
 
+    /*ACCOUNT DATA*/
+    public static final String ACCOUNT_DATA_SORTING = "AccountDataSorting";
+
     private Context mContext;
 
     @Inject
@@ -621,6 +624,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean isPaypalCreditEnabled() {
         return Prefs.getBoolean(PAYMENT_PAYPAL_CREDIT_ENABLED, false);
+    }
+
+    @Override
+    public void setIsSortingEnabled(boolean isSortingEnabled) {
+        Prefs.putBoolean(ACCOUNT_DATA_SORTING, isSortingEnabled);
+    }
+
+    @Override
+    public boolean getIsSortingEnabled() {
+        return Prefs.getBoolean(ACCOUNT_DATA_SORTING, true);
     }
 
     public void setEventUserId(String userId) {

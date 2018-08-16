@@ -107,7 +107,6 @@ public class DeliveryOptionsController extends BaseController implements Deliver
 
     @Override
     public void onSetDeliveryOption(GetCurrentOrder.ResponseValue responseValue) {
-        mCheckoutMvpView.getPresenter().updateCart(responseValue);
         onBackPressed();
     }
 

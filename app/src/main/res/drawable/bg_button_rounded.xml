@@ -22,7 +22,7 @@
             <item android:state_enabled="false">
                 <shape android:shape="rectangle">
                     <corners android:radius="@dimen/edit_text_corner_radius"/>
-                    <solid android:color="@color/tab_bar_icon_inactive"/>
+                    <solid android:color="@color/bg_button_disabled"/>
                 </shape>
             </item>
 

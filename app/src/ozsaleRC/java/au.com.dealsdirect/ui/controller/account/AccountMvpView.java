@@ -41,7 +41,7 @@ public interface AccountMvpView extends MvpView {
 
     void showLegalities(String key, String option);
 
-    void triggerLogin(String option,int position);
+    void triggerLogin(String option);
 
     void triggerLogout();
 

@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:text="@string/payment_method"
-            android:textColor="@color/gray_title_text" />
+            android:textColor="@color/text_medium" />
 
         <TextView
             fontPath="@string/font_app_bold"

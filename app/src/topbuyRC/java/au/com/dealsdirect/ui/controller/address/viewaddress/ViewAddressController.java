@@ -51,7 +51,7 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
 
     @BindView(R.id.no_addresses_layout)
     RelativeLayout mAddressPlaceHolder;
-    @BindView(R.id.view_addresses_recyclerView)
+    @BindView(R.id.controller_addresses_recyclerview)
     RecyclerView mRecyclerView;
 
     @BindView(R.id.address_office_delivery_subtitle)

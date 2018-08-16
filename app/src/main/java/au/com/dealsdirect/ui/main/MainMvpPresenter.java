@@ -67,11 +67,17 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void callApiSettings(Context context);
 
+    void callGetAccountData();
+
     void initFacebookAnalytics();
 
     void initializeAnalytics(Context activityContext, Context applicationContext);
 
     void getDeepLinkData(String url);
+
+    void deepLinkMessageThread();
+
+    void deepLinkSaleItems();
 
     boolean isDebug();
 }

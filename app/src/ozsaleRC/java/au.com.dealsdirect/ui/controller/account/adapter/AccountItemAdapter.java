@@ -1,14 +1,12 @@
 package au.com.dealsdirect.ui.controller.account.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemAdapter;
 
-import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
@@ -68,7 +66,7 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
 
     @Override
     public AccountItemViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_account_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_text_item, parent, false);
         return new AccountItemViewHolder(v);
     }
 
@@ -99,7 +97,7 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
         if (mSelectFirstItem && groupPosition == 0) {
             mPreviousPos = groupPosition;
             holder.itemView.setSelected(true);
-            mPresenter.onAccountItemClick(mContext,title,groupPosition);
+            mPresenter.onAccountItemClick(mContext,title);
             mSelectFirstItem = false; //reset
         }
 
@@ -113,7 +111,7 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
                 notifyItemChanged(groupPosition);
                 mPreviousPos = groupPosition;
             }
-            mPresenter.onAccountItemClick(mContext, title, groupPosition);
+            mPresenter.onAccountItemClick(mContext, title);
         });
 
     }
@@ -129,7 +127,7 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
         }
 
         holder.mAccountSubItemName.setText(title);
-        holder.itemView.setOnClickListener(view -> mPresenter.onAccountItemClick(mContext, title, childPosition));
+        holder.itemView.setOnClickListener(view -> mPresenter.onAccountItemClick(mContext, title));
 
     }
 

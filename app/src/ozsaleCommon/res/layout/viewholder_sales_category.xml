@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/category_width"
+    android:layout_height="@dimen/category_height"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_small"
+    android:clickable="true"
+    tools:ignore="MissingPrefix"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_medium"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="@dimen/category_background_width"
+            android:layout_height="@dimen/category_background_height"
+            android:layout_gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/row_category_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/row_category_indicator"
+                fontPath="@string/font_app_light"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/text_light"
+                android:textSize="@dimen/text_size_caption1"
+                tools:text="A" />
+
+            <ImageView
+                android:id="@+id/row_category_image_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foregroundGravity="center"
+                android:padding="@dimen/category_image_padding"
+                android:src="@drawable/ic_shop"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/row_category_name"
+            fontPath="@string/font_app_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:gravity="center_horizontal"
+            android:textSize="@dimen/text_size_caption1"
+            android:duplicateParentState="true"
+            tools:text="Mens" />
+
+    </LinearLayout>
+
+</RelativeLayout>

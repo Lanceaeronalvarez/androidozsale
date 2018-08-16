@@ -43,6 +43,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
@@ -473,7 +474,28 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductPreviousPrice.setVisibility(View.VISIBLE);
         }
 
-        mPresenter.generateOurpay(saleDetail);
+        mPresenter.loadOurpayData(saleDetail);
+    }
+
+    @Override
+    public void showAddToCartResponse(Value addToCartDetailsResponse) {
+        RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
+
+
+        CartUtil.addValueToCart(1);
+        mCartCounter.setText(CartUtil.getCartValue() + "");
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity,
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                mActivity.getString(R.string.add_to_cart_success));
+
+    }
+
+    @Override
+    public void showAddToCartResponseFailed() {
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                mActivity.getString(R.string.add_to_cart_failed));
     }
 
     @Override
@@ -508,20 +530,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void showAddToCartResponse(boolean val) {
-        RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
-
-        if (val) {
-            CartUtil.addValueToCart(1);
-            mCartCounter.setText(CartUtil.getCartValue() + "");
-            CustomAlertDialog.showCustomAlertDialog(
-                    mActivity,
-                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    mActivity.getString(R.string.add_to_cart_success));
-        }
-    }
-
-    @Override
     public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
 
     }
@@ -529,6 +537,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onCallGetBasketItemsQuantity() {
         mCartCounter.setText(CartUtil.getCartValue() + "");
+    }
+
+    @Override
+    public int getVerticalOffset() {
+        return 0;
     }
 
     @Override
@@ -593,13 +606,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
                     TypedArray title = mActivity.getResources().obtainTypedArray(R.array.account_title_array);
                     List<Integer> titles = new ArrayList<>();
-                    for(int i = 0; i < title.length(); i++) {
-                        titles.add(title.getResourceId(i,0));
+                    for (int i = 0; i < title.length(); i++) {
+                        titles.add(title.getResourceId(i, 0));
                     }
                     TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
                     List<Integer> drawables = new ArrayList<>();
-                    for(int i = 0; i < drawable.length(); i++) {
-                        drawables.add(drawable.getResourceId(i,0));
+                    for (int i = 0; i < drawable.length(); i++) {
+                        drawables.add(drawable.getResourceId(i, 0));
                     }
 
                     mAccountsPresenter.onAttach((AccountMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getAccountsRouter()));

@@ -7,33 +7,33 @@ import com.google.gson.annotations.SerializedName;
 
 public class Summary {
     public Double getSubtotal() {
-        return subtotal;
+        return subtotal != null ? subtotal : 0;
     }
 
     public Double getDelivery() {
-        return delivery;
+        return delivery != null ? delivery : 0;
     }
 
     public Double getDiscount() {
-        return discount;
+        return discount != null ? discount : 0;
     }
 
     public Double getTotal() {
-        return total;
+        return total != null ? total : 0;
     }
 
     public Double getTax() {
-        return tax;
+        return tax != null ? tax : 0;
     }
 
-    @SerializedName("Subtotal")
+    @SerializedName(value = "Subtotal", alternate = {"subtotal"})
     private Double subtotal;
-    @SerializedName("Delivery")
+    @SerializedName(value = "Delivery", alternate = {"delivery"})
     private Double delivery;
-    @SerializedName("Discount")
+    @SerializedName(value = "Discount", alternate = {"discount"})
     private Double discount;
-    @SerializedName("Total")
+    @SerializedName(value = "Total", alternate = {"total"})
     private Double total;
-    @SerializedName("Tax")
+    @SerializedName(value = "Tax", alternate = {"tax"})
     private Double tax;
 }

@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.home;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +20,8 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,20 +30,37 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SKU_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_NAME;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -89,6 +110,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     private Router mCheckoutRouter;
     private List<Router> mRouterList;
     private List<ViewGroup> mContainersList;
+    private CheckoutMvpView mCheckoutMvpView;
 
     private int currentVisibleIndex = 1;
     private int previousVisibleIndex = 0;
@@ -115,6 +137,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         View view = inflater.inflate(R.layout.controller_home, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        Log.d("deeplinking", "homecontroller setup");
 
         return view;
     }
@@ -130,9 +153,15 @@ public class HomeController extends BaseController implements HomeMvpView {
         mInvitesRouter = getChildRouter(mFourthControllerContainer);
         mCheckoutRouter = getChildRouter(mFifthControllerContainer);
 
+        mShopRouter = getChildRouter(mFirstControllerContainer);
+        mActivity.setSaleItemsShopRouter(mShopRouter);
+
+        Log.d("deeplinking", "homecontroller onviewbound");
         if (!mShopRouter.hasRootController()) {
             ShopsController shopsController = new ShopsController();
             mActivity.setShopController(shopsController);
+//            mActivity.shopControllerCallback();
+
             mShopRouter.setRoot(RouterTransaction.with(shopsController)
                     .tag(ShopsController.TAG));
         }
@@ -151,9 +180,9 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
 
         if (!mCheckoutRouter.hasRootController()) {
-            mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
-                    .tag(getActivity().getResources().getString(R.string.checkout_controller)));
-            ((MainActivity) getActivity()).setCheckoutRouter(mCheckoutRouter);
+            GateKeeper.setRoot(mCheckoutRouter, GateKeeper.Destination.CHECKOUT,
+                    RouterTransaction.with(CheckoutController.newInstance()).tag(getActivity().getResources().getString(R.string.checkout_controller)));
+            mActivity.setCheckoutRouter(mCheckoutRouter);
         }
         mRouterContainerMapping = new HashMap<>();
         mRouterContainerMapping.put(0, new Pair<>(mShopRouter,mFirstControllerContainer));
@@ -164,6 +193,11 @@ public class HomeController extends BaseController implements HomeMvpView {
         setVisibleContainer(0);
 
         mActivity.setHomeRouter(mShopRouter);
+        mActivity.setShopRouter(mShopRouter);
+
+        /* May 4, 2018 - Deep Link using ShopRouter */
+//        mActivity.shopRouterCallback();
+
         AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
         mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
@@ -186,6 +220,9 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     protected void setUp(View view) {
+
+        initControllers(true);
+
         if (mPresenter.isAuthorized()) {
             mPresenter.callGetBasketItemsQuantity();
         }
@@ -193,6 +230,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         mShopRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                Log.d("homecontroller", "change listner = " + to.toString());
 
             }
 
@@ -211,13 +249,21 @@ public class HomeController extends BaseController implements HomeMvpView {
                 } else if (to instanceof CheckoutController) {
                     mBottomNavigationView.setCurrentItem(4);
                 }
+
+
+                /* May 7, 2018 - Check if deep linked to contact history, if so update current item */
+                if (getCurrentRouter() != null && getCurrentRouter() == mContactsRouter) {
+                    if (getCurrentControllerOnRouter(getCurrentRouter()) instanceof ViewContactHistoryController) {
+                        mBottomNavigationView.setCurrentItem(2);
+
+                    }
+                }
             }
         });
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
 
-
-            if (mCheckoutRouter!=null){
+            if (mCheckoutRouter != null) {
                 Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (controller instanceof CheckoutController) {
                     Log.d("ourpay", "home controller remove ourpay");
@@ -259,15 +305,30 @@ public class HomeController extends BaseController implements HomeMvpView {
                         break;
                 }
             } else {
-                if (position == 0) {
-                    mShopRouter.popToRoot();
-                } else if (position == 1) {
-                    mAccountsRouter.popToRoot();
+                switch (position) {
+                    case 0:
+                        mShopRouter.popToRoot();
+                        break;
+                    case 1:
+                        mAccountsRouter.popToRoot();
+                        break;
+                    case 2:
+                        mContactsRouter.popToRoot();
+                        break;
+                    case 3:
+                        mInvitesRouter.popToRoot();
+                        break;
+                    case 4:
+                        mCheckoutMvpView.getDisplayRouter().popToRoot();
+                        break;
                 }
             }
             return true;
         });
+    }
 
+    public Router getPopUpHostRouter(){
+        return mShopRouter;
     }
 
     public void initControllers(boolean includeShop) {
@@ -281,15 +342,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         mAccountsRouter.setRoot(RouterTransaction.with(AccountController.newInstance()));
         mActivity.setAccountsRouter(mAccountsRouter);
 
-        mContactsRouter = getChildRouter(mThirdControllerContainer);
-        mContactsRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance()));
-
-        mInvitesRouter = getChildRouter(mFourthControllerContainer);
-        mInvitesRouter.setRoot(RouterTransaction.with(InviteSendController.newInstance()));
-
-        mCheckoutRouter = getChildRouter(mFifthControllerContainer);
-        mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
-                .tag(getActivity().getResources().getString(R.string.checkout_controller)));
+        resetRouters();
     }
 
     public void resetInviteRouter() {
@@ -300,31 +353,40 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void resetContactsRouter() {
         mContactsRouter = getChildRouter(mThirdControllerContainer);
+        mActivity.setContactRouter(mContactsRouter);
         mContactsRouter.setRoot(RouterTransaction.with(ViewContactsController.newInstance()));
 
     }
 
     public void resetCheckoutRouter() {
         mCheckoutRouter = getChildRouter(mFifthControllerContainer);
-        mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
+        Controller checkoutController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
+        mCheckoutMvpView =  (CheckoutMvpView) checkoutController;
+        mCheckoutRouter.setRoot(RouterTransaction.with(checkoutController)
                 .tag(getActivity().getResources().getString(R.string.checkout_controller)));
     }
 
     @Override
     public void showFirstTabController() {
 
-        if (mShopRouter!=null){
+        if (mShopRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
             if (controller instanceof ShopsController) {
-                ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(true);
+                ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(true);
             }
         }
 
         setVisibleContainer(0);
     }
 
+
+    public void sendSaleItemToCheckout(Value getCurrentOrder) {
+        mCheckoutMvpView.getPresenter().updateCart(getCurrentOrder);
+    }
+
     @Override
     public void showSecondTabController() {
+        mActivity.getMainController().setViewpagerDraggable(false);
         setVisibleContainer(1);
         int size = mAccountsRouter.getBackstack().size();
         if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView)
@@ -333,10 +395,10 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showThirdTabController() {
+        mActivity.getMainController().setViewpagerDraggable(false);
         setVisibleContainer(2);
-
         if (!mActivity.isAuthorized()) {
-            mActivity.showLoginController(mContactsRouter, new AuthHandler() {
+            mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     resetRouters();
@@ -352,10 +414,10 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showFourthTabController() {
+        mActivity.getMainController().setViewpagerDraggable(false);
         setVisibleContainer(3);
-
         if (!mActivity.isAuthorized()) {
-            mActivity.showLoginController(mInvitesRouter, new AuthHandler() {
+            mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     resetRouters();
@@ -371,10 +433,10 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showFifthTabController() {
+        mActivity.getMainController().setViewpagerDraggable(false);
         setVisibleContainer(4);
-
         if (!mActivity.isAuthorized()) {
-            mActivity.showLoginController(mCheckoutRouter, new AuthHandler() {
+            mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
                 @Override
                 public void success() {
                     resetRouters();
@@ -392,6 +454,132 @@ public class HomeController extends BaseController implements HomeMvpView {
                 ((CheckoutController) controller).setIsGraphVisible(true);
             }
         }
+    }
+
+
+    public void deepLinkSaleItemDetails(String seoIdentifierId, String skuId, boolean isWithSale) {
+
+        Bundle bundle = new Bundle();
+        bundle.putString(SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
+        bundle.putString(SALEITEMDETAILS_KEY_SKU_ID, skuId);
+        bundle.putBoolean(SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE, isWithSale);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            if (mShopRouter != null)
+                mShopRouter.pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .pushChangeHandler(new FadeChangeHandler(false))
+                        .popChangeHandler(new FadeChangeHandler()));
+        } else {
+            if (mShopRouter != null)
+                mShopRouter.pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .pushChangeHandler(new SharedArcFadePushChangeHandler())
+                        .popChangeHandler(new SharedArcFadePopChangeHandler()));
+        }
+    }
+
+    public void deepLinkContactHistory() {
+
+        setVisibleContainer(2);
+        if (!mActivity.isAuthorized()) {
+            mActivity.showLoginController(mContactsRouter, new AuthHandler() {
+                @Override
+                public void success() {
+                    resetRouters();
+                    mContactsRouter.pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+                            "Comments and Suggestions",
+                            "",
+                            0,
+                            "",
+                            4319646))
+                            .pushChangeHandler(new HorizontalChangeHandler())
+                            .popChangeHandler(new HorizontalChangeHandler()));
+                }
+
+                @Override
+                public void error() {
+
+                }
+            });
+        } else {
+            resetRouters();
+            mContactsRouter.pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+                    "Comments and Suggestions",
+                    "",
+                    0,
+                    "",
+                    4319646))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        }
+    }
+
+    public void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
+
+        Bundle args = new BundleBuilder(new Bundle())
+                .putString(SALEITEMS_TITLE, bannerTitle)
+                .putString(SALEITEMS_SALE_ID, saleId)
+                .putString(SALEITEMS_BANNER_ID, bannerId)
+                .build();
+
+
+        int deepLinkSaleItemsDelay = 1000;
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+
+            if (!mPresenter.isAuthorized()) {
+
+                // Invoke login if no auth or not an open app
+                if (mShopRouter != null)
+                    mShopRouter.pushController(RouterTransaction.with(
+                            new SaleItemsController(args))
+                            .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                            .pushChangeHandler(new HorizontalChangeHandler())
+                            .popChangeHandler(new HorizontalChangeHandler()));
+            } else {
+
+                // Check if sale is available
+                mShopRouter.pushController(RouterTransaction.with(
+                        new SaleItemsController(args))
+                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+            }
+        }, deepLinkSaleItemsDelay);
+
+    }
+
+    public void deepLinkSaleCategory(String categoryName, String categoryIdentifier) {
+
+        Bundle args = new BundleBuilder(new Bundle())
+                .putString(SALEITEMS_CATEGORY_ID, categoryIdentifier)
+                .putString(SALEITEMS_CATEGORY_NAME, categoryName)
+                .build();
+
+
+        int deepLinkSaleItemsDelay = 1000;
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+
+            if (!mPresenter.isAuthorized()) {
+
+                // Invoke login if no auth or not an open app
+                if (mShopRouter != null)
+                    mShopRouter.pushController(RouterTransaction.with(
+                            new SaleItemsController(args))
+                            .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                            .pushChangeHandler(new HorizontalChangeHandler())
+                            .popChangeHandler(new HorizontalChangeHandler()));
+            } else {
+
+                // Check if sale is available
+                mShopRouter.pushController(RouterTransaction.with(
+                        new SaleItemsController(args))
+                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+            }
+        }, deepLinkSaleItemsDelay);
+
     }
 
     public boolean isAccountsActive() {
@@ -414,6 +602,11 @@ public class HomeController extends BaseController implements HomeMvpView {
                     .build();
             getBottomNavigationView().setNotification(notification, 4);
         }
+    }
+
+    @Override
+    public boolean isPopUpControllerVisible() {
+        return false;
     }
 
     public void removeBasketItemCount() {
@@ -455,26 +648,30 @@ public class HomeController extends BaseController implements HomeMvpView {
         currentVisibleIndex = i;
     }
 
-    public void setShopRouterViewPagerDraggable(){
-        if (mShopRouter!=null){
+    public void setShopRouterViewPagerDraggable() {
+        if (mShopRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
             if (controller instanceof ShopsController) {
-                ((MainActivity)getActivity()).getMainController().setViewpagerDraggable(true);
+                ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(true);
             }
         }
     }
 
     public void resetVisibleContainer() {
-
         if (!(getCurrentRouter() ==  mAccountsRouter || getCurrentRouter() == mShopRouter)) {
             mRouterContainerMapping.get(currentVisibleIndex).second.setVisibility(View.GONE);
+            if (currentVisibleIndex == previousVisibleIndex) {
+                previousVisibleIndex = 0;
+            }
             mRouterContainerMapping.get(previousVisibleIndex).second.setVisibility(View.VISIBLE);
             mBottomNavigationView.setCurrentItem(previousVisibleIndex, false);
             currentVisibleIndex = previousVisibleIndex;
+        }
 
-        } else if (getCurrentRouter() == mShopRouter) {
+        if (getCurrentRouter() == mShopRouter) {
             showBottomNav();
         }
+
     }
 
     @Override
@@ -509,8 +706,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         resetCheckoutRouter();
     }
 
-    public boolean isCheckoutRouterVisible(){
-        Log.d("ourpay", "current item = "+mBottomNavigationView.getCurrentItem());
-        return mBottomNavigationView.getCurrentItem()==4;
+    public boolean isCheckoutRouterVisible() {
+        return mBottomNavigationView.getCurrentItem() == 4;
     }
 }

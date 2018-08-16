@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.shops.adapter;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,20 +10,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.view.RxView;
+import com.mindorks.placeholderview.Utils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.ScreenUtils;
+import au.com.dealsdirect.utils.ViewUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * dp Created by Admin on 6/7/17.
@@ -36,12 +44,15 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     private Context mContext;
     private ShopsMvpPresenter mPresenter;
     private BannerClickListener mBannerClickListener;
+    private int width;
+    private int height;
 
     public BannersAdapter(
             Context context,
             ShopsMvpPresenter presenter,
             List<GetBannerResponse.Group> sales,
-            BannerClickListener bannerClickListener) {
+            BannerClickListener bannerClickListener,
+            int columnCount) {
 
         this.mGroups = sales;
         this.mSales = new ArrayList<>();
@@ -52,21 +63,15 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         this.mPresenter = presenter;
         this.mBannerClickListener = bannerClickListener;
 
+        width = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_width : R.integer.banner_mobile_width);
+        height = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_height : R.integer.banner_mobile_height);
+
         if (!mContext.getResources().getBoolean(R.bool.is_ourpay_app)) {
             // Dynamic Height Computation
-            if (mPresenter.isTablet()) {
-
-                int screenWidth = ScreenUtils.getScreenWidth(mContext) / 2;
-
-                mComputedHeight = ImageUtils.getComputedBannerHeight(AppConstants.BANNER_TABLET_WIDTH,
-                        AppConstants.BANNER_TABLET_HEIGHT, screenWidth);
-            } else {
-
-                int screenWidth = ScreenUtils.getScreenWidth(mContext);
-
-                mComputedHeight = ImageUtils.getComputedBannerHeight(AppConstants.BANNER_MOBILE_WIDTH,
-                        AppConstants.BANNER_MOBILE_HEIGHT, screenWidth);
-            }
+            int screenWidth = mPresenter.isTablet() ? ScreenUtils.getScreenWidth(mContext) / columnCount : ScreenUtils.getScreenWidth(mContext);
+            mComputedHeight = ImageUtils.getComputedBannerHeight(width, height, screenWidth);
+            String orientation = ScreenUtils.getOrientation(mContext) == Configuration.ORIENTATION_LANDSCAPE ? "Landscape" : "Portrait";
+            AppLogger.d(orientation + " Width: " + ScreenUtils.getScreenWidth(mContext) + " Height: " + mComputedHeight);
         }
     }
 
@@ -114,6 +119,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
     public void addAll(List<GetBannerResponse.Group> bannerResponses) {
         int previousCount = mSales.size();
+
         for (GetBannerResponse.Group group : bannerResponses) {
             mSales.addAll(group.getBanners());
         }
@@ -133,30 +139,32 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         holder.name.setText(item.getDescription());
         String imgUrl;
 
-        if (mPresenter.isTablet()) {
-            imgUrl = ImageUtils.getBannerTabletSize(item.getImage());
-        } else {
-            imgUrl = ImageUtils.getBannerMobileSize(item.getImage());
-        }
+        imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), width, height);
+
 
         ImageUtils.loadImage(mContext, imgUrl, holder.image);
         if (!item.getIsAvailable()) {
             holder.overlay.setEnabled(false);
         }
 
-        holder.layout.setOnClickListener(view ->
-                mBannerClickListener.onBannerClicked(
-                        item.getDestinationId(),
-                        item.getDescription(),
-                        item.getId(),
-                        position,
-                        ImageUtils.getBannerMobileSize(item.getImage()),
-                        item.getIsAvailable()));
+        RxView.clicks(holder.layout)
+            .throttleFirst(1000, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(action -> mBannerClickListener.onBannerClicked(
+                    item.getDestinationId(),
+                    item.getDescription(),
+                    item.getId(),
+                    position,
+                    imgUrl,
+                    item.getIsAvailable()));
     }
 
     @Override
     public long getHeaderId(int position) {
-        return mSales.get(position).getGroup().getType().charAt(0);
+
+        String title = position < getItemCount() ? mSales.get(position).getGroup().getTitle() : "";
+
+        return title == null || title.equals("") ? -1 : title.charAt(0);
     }
 
     @Override
@@ -169,7 +177,9 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         HeaderViewHolder holder = (HeaderViewHolder) viewHolder;
 
-        holder.headerText.setText(mSales.get(position).getGroup().getType());
+        String title = position < getItemCount() ? mSales.get(position).getGroup().getTitle() : "";
+
+        holder.headerText.setText(title == null ? "" : title);
     }
 
     @Override

@@ -79,7 +79,7 @@ android {
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/v3.23/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "buyinvite Test"
@@ -98,12 +98,12 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 71
+            versionCode 79
             versionName "2.3.1"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.24/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "DealsDirect"
@@ -123,12 +123,12 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 73
+            versionCode 82
             versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/v3.23/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
             resValue "string", "app_name", "DealsDirect Test"
@@ -147,12 +147,12 @@ android {
         }
 
         ooRC {
-            versionCode 11
-            versionName "0.9"
+            versionCode 101
+            versionName "1.14.0"
             applicationId "au.com.oo"
 
             buildConfigField "String", "API_ROOT", "\"https://www.oo.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.oo.com.au/papi/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.oo.com.au/papi/public/v3.23/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
 
             resValue "string", "app_name", "OO"
@@ -164,19 +164,19 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "default_country_id", "OA"
             resValue "string", "default_language_id", "EN"
-            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
+            resValue "string", "app_uri_hostname", "www.oo.com.au"
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ooTest {
-            versionCode 15
+            versionCode 22
             versionName "0.9"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.20/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/v3.23/\""
             buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
 
             resValue "string", "app_name", "OO Test"
@@ -188,14 +188,15 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "default_country_id", "OA"
             resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.oo.com.au"
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         topbuyRC {
-            versionCode 80
-            versionName "2.3.0"
+            versionCode 87
+            versionName "2.3.1"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "API_ROOT", "\"https://www.topbuy.com.au/\""
@@ -267,7 +268,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 24
+            versionCode 27
             versionName "0.9"
             applicationId "au.com.ozsale"
 
@@ -292,12 +293,12 @@ android {
         }
 
         ozsaleTest {
-            versionCode 17
+            versionCode 20
             versionName "0.9"
             applicationId "au.com.ozsale.test"
 
             buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/V3.24/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/V3.23/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A816D792-E940-44F0-B752-06DE1ED5C2B9\""
 
             resValue "string", "app_name", "Ozsale Test"
@@ -322,6 +323,7 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonRegisterController/java',
                             'src/commonSaleItemDetailsController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
@@ -330,6 +332,9 @@ android {
                             'src/commonShopsController/java/',
                             'src/commonOrdersController/java',
                             'src/commonMainController/java/',
+                            'src/commonAccountController/java',
+                            'src/commonPaymentsController/java',
+                            'src/commonAddressController/java',
                             'src/commonActivity/java/',
                             'src/dealsDirectRC/java/',
                             'src/main/java/']
@@ -339,52 +344,35 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonRegisterController/java',
                             'src/commonSaleItemDetailsController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
                             'src/commonContactControllers/java/',
+                            'src/commonRegisterController/java',
                             'src/commonReturnsControllers/java/',
                             'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
+                            'src/commonAccountController/java',
+                            'src/commonAddressController/java',
+                            'src/commonPaymentsController/java',
                             'src/commonActivity/java/',
                             'src/dealsDirectRC/java/',
                             'src/main/java/']
         }
 
         ooRC {
-            res.srcDir 'src/ooTest/res/'
-            java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonHomeController/java/',
-                            'src/commonCategoriesController/java/',
-                            'src/commonSaleItemDetailsController/java/',
-                            'src/commonSaleItemsController/java/',
-                            'src/commonSearchFilterController/java/',
-                            'src/commonContactControllers/java/',
-                            'src/commonReturnsControllers/java/',
-                            'src/commonOrdersController/java',
-                            'src/commonShopsController/java/',
-                            'src/commonMainController/java/',
-                            'src/commonActivity/java/',
-                            'src/ooTest/java/',
+            res.srcDirs = ['src/ooRC/res', 'src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         ooTest {
-            res.srcDir 'src/ooTest/res/'
-            java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonHomeController/java/',
-                            'src/commonCategoriesController/java/',
-                            'src/commonSaleItemDetailsController/java/',
-                            'src/commonSaleItemsController/java/',
-                            'src/commonSearchFilterController/java/',
-                            'src/commonContactControllers/java/',
-                            'src/commonReturnsControllers/java/',
-                            'src/commonOrdersController/java',
-                            'src/commonShopsController/java/',
-                            'src/commonMainController/java/',
-                            'src/commonActivity/java/',
-                            'src/ooTest/java/',
+            res.srcDirs = ['src/ooRC/res', 'src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
                             'src/main/java/']
         }
 
@@ -393,6 +381,7 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonRegisterController/java',
                             'src/commonSaleItemDetailsController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
@@ -401,6 +390,9 @@ android {
                             'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
+                            'src/commonAddressController/java',
+                            'src/commonAccountController/java',
+                            'src/commonPaymentsController/java',
                             'src/commonActivity/java/',
                             'src/buyinviteTest/java/',
                             'src/main/java/']
@@ -410,6 +402,7 @@ android {
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
+                            'src/commonRegisterController/java',
                             'src/commonSaleItemDetailsController/java/',
                             'src/commonSaleItemsController/java/',
                             'src/commonSearchFilterController/java/',
@@ -418,6 +411,9 @@ android {
                             'src/commonOrdersController/java',
                             'src/commonShopsController/java/',
                             'src/commonMainController/java/',
+                            'src/commonAddressController',
+                            'src/commonAccountController/java',
+                            'src/commonPaymentsController/java',
                             'src/commonActivity/java/',
                             'src/buyinviteTest/java/',
                             'src/main/java']
@@ -426,32 +422,35 @@ android {
         ourpayTest {
             java.srcDirs = ['src/ourpayTest/java/',
                             'src/commonControllers/java/',
+                            'src/commonRegisterController/java',
                             'src/commonSaleItemDetailsController/java/',
                             'src/commonOrdersController/java',
                             'src/commonContactControllers/java/',
+                            'src/commonAddressController',
                             'src/commonReturnsControllers/java/',
+                            'src/commonPaymentsController/java',
+                            'src/commonAccountController/java',
                             'src/main/java/']
         }
 
         topbuyTest {
-            res.srcDir 'src/topbuyRC/res/'
             java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
         }
 
         topbuyRC {
-            res.srcDir 'src/topbuyRC/res/'
             java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
         }
 
+
         ozsaleRC {
-            res.srcDir 'src/ozsaleRC/res/'
+            res.srcDirs = ['src/ozsaleRC/res','src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         ozsaleTest {
-            res.srcDir 'src/ozsaleRC/res/'
+            res.srcDirs = ['src/ozsaleRC/res','src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
@@ -503,6 +502,8 @@ dependencies {
     compile "com.android.support:design:$rootProject.supportLibrary"
     compile "com.android.support:support-vector-drawable:$rootProject.supportLibrary"
     compile "com.android.support:animated-vector-drawable:$rootProject.supportLibrary"
+
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
     // font
     compile "uk.co.chrisjenx:calligraphy:$rootProject.calligraphyVersion"
@@ -634,6 +635,7 @@ dependencies {
     compile project(path: ':genie-views')
     compile project(path: ':CardForm')
     compile project(path: ':ptr-lib')
+
 
 }
 

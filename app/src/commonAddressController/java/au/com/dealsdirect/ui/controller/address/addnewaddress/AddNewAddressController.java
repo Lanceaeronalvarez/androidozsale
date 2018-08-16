@@ -48,7 +48,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     @Inject
     AddNewAddressMvpPresenter<AddNewAddressMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mAddNewAddressToolarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)

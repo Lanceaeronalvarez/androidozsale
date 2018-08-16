@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.custom;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -86,8 +87,17 @@ public class ProductQuantityLayout extends LinearLayout {
             }
 
             plus.setClickable(false);
-            minus.setVisibility(View.GONE);
-            mMinusLoader.setVisibility(View.VISIBLE);
+
+            if (!getResources().getBoolean(R.bool.is_oo_app)){
+                minus.setVisibility(View.GONE);
+                mMinusLoader.setVisibility(View.VISIBLE);
+            } else {
+
+                minus.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.ic_quantity_less_loading));
+                plus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_quantity_more_loading));
+
+            }
+
             listener.onQuantityDecrease(this, quantityValue);
         });
 
@@ -101,8 +111,15 @@ public class ProductQuantityLayout extends LinearLayout {
 
             if (quantityValue < max) {
                 minus.setClickable(false);
-                plus.setVisibility(View.GONE);
-                mPlusLoader.setVisibility(View.VISIBLE);
+
+                if (!getResources().getBoolean(R.bool.is_oo_app)){
+                    plus.setVisibility(View.GONE);
+                    mPlusLoader.setVisibility(View.VISIBLE);
+                } else {
+                    minus.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.ic_quantity_less_loading));
+                    plus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_quantity_more_loading));
+                }
+
             }
             listener.onQuantityIncrease(this, quantityValue);
         });
@@ -115,6 +132,11 @@ public class ProductQuantityLayout extends LinearLayout {
         plus.setClickable(true);
         plus.setVisibility(View.VISIBLE);
         mPlusLoader.setVisibility(View.GONE);
+
+        if (getResources().getBoolean(R.bool.is_oo_app)){
+            minus.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.quantity_button_less_click));
+            plus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.quantity_button_more_click));
+        }
     }
 
     public void setAutoUpdateQuantity(boolean enabled) {

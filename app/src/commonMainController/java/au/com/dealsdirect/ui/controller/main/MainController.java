@@ -36,6 +36,10 @@ public class MainController extends BaseController implements MainMvpView {
 
     public static final String TAG = "MainController";
 
+    public static final int BANNER_FILTER_INDEX = 0;
+
+    public static final int SHOP_INDEX = 1;
+
     private String mChosenSubCategoryItemKey = "";
 
     @Inject

@@ -38,7 +38,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     OrderDetailsMvpPresenter<OrderDetailsMvpView> mPresenter;
 
     @BindView(R.id.partial_toolbar_title)
-    TextView mOrderDetailsToolarTitle;
+    TextView mOrderDetailsToolbarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mOrderDetailsRightOption;
@@ -82,7 +82,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     @Override
     protected void setUp(View view) {
-        mOrderDetailsToolarTitle.setText(getString(R.string.order_sharp_colon) + mOrderItem.getPaymentReferenceNo());
+        mOrderDetailsToolbarTitle.setText(getString(R.string.account_orders));
         mOrderDetailsRightOption.setImageDrawable(null);
 
         GetOrderPaymentDetails.RequestValues requestValues = new GetOrderPaymentDetails.RequestValues(mPaymentReferenceNo);

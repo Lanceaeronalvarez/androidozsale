@@ -29,11 +29,16 @@ import butterknife.ButterKnife;
 public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<GetCategoryTreeResponse> mData = new ArrayList<>();
+    private List<String> mCategoryIds = new ArrayList<>();
     private CategoriesMvpPresenter mPresenter;
     private CategoryClickListener mCategoryAdapterClickListener;
     private int mLastPosition = -1;
-    private int mLastSelectedCategory = 0;
     private ImageView mLastSelectedViewHolderImageView = null;
+
+
+    private boolean isDeepLinkSaleCategory = false;
+    public int mDeepLinkSelectedCategory = -1;
+    private String mDeepLinkSelectedCategoryId = "";
 
     public CategoriesAdapter(
             List<GetCategoryTreeResponse> data,
@@ -43,6 +48,23 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mData = data;
         mPresenter = presenter;
         mCategoryAdapterClickListener = categoryClickListener;
+        generateCategoryIds();
+        mDeepLinkSelectedCategory = -1;
+
+    }
+
+    public CategoriesAdapter(
+            List<GetCategoryTreeResponse> data,
+            CategoriesMvpPresenter presenter,
+            CategoryClickListener categoryClickListener,
+            String deepLinkSelectedCategoryId) {
+
+        mData = data;
+        mPresenter = presenter;
+        mCategoryAdapterClickListener = categoryClickListener;
+        mDeepLinkSelectedCategoryId = deepLinkSelectedCategoryId;
+        isDeepLinkSaleCategory = false;
+        generateCategoryIds();
     }
 
     @Override
@@ -58,25 +80,59 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (!mData.isEmpty()) {
             if (!mData.get(position).getName().isEmpty()) {
-                Log.d("category",mData.get(position).getName());
-                setCategoryImage(((CategoriesViewHolder)holder), mData.get(position).getName(), position);
+                Log.d("category", mData.get(position).getName());
+                setCategoryImage(((CategoriesViewHolder) holder), mData.get(position).getName(), position);
 
             }
-
-            if (position==1){
-                mCategoryAdapterClickListener.onCategoryClicked(position,mData.get(position));
+            Log.d("deeplinker", "adapter  mDeepLinkSelectedCategoryId = " + mDeepLinkSelectedCategoryId + " , position = " + position + " , " + mDeepLinkSelectedCategory);
+            if (position==1) {
+                mCategoryAdapterClickListener.onCategoryClicked(position, mData.get(position));
                 mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
                 mLastSelectedViewHolderImageView.setBackgroundDrawable(
                         holder.itemView.getContext().getResources()
                                 .getDrawable(R.drawable.bg_category_item_active));
             }
+//            int tempPosition = mCategoryIds.indexOf(mDeepLinkSelectedCategoryId);
+//            if (!mDeepLinkSelectedCategoryId.isEmpty() && tempPosition == position) {
+////                mCategoryAdapterClickListener.onCategoryClicked(position, mData.get(position));
+//                mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
+//                mLastSelectedViewHolderImageView.setBackgroundDrawable(
+//                        holder.itemView.getContext().getResources()
+//                                .getDrawable(R.drawable.bg_category_item_active));
+//
+//            } else if (mDeepLinkSelectedCategoryId.isEmpty() && (position == 1)) {
+//
+//                Log.d("deeplinker", " else if" + !mDeepLinkSelectedCategoryId.isEmpty() + " ,  " + tempPosition + " = " + position);
+//
+//                mCategoryAdapterClickListener.onCategoryClicked(position, mData.get(position));
+//                mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
+//                mLastSelectedViewHolderImageView.setBackgroundDrawable(
+//                        holder.itemView.getContext().getResources()
+//                                .getDrawable(R.drawable.bg_category_item_active));
+//            }
+
+
+            if (isDeepLinkSaleCategory) {
+                if (position == mDeepLinkSelectedCategory) {
+                    mLastSelectedViewHolderImageView.setBackgroundDrawable(
+                            holder.itemView.getContext().getResources()
+                                    .getDrawable(R.drawable.bg_category_item_inactive));
+
+                    mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
+
+                    mLastSelectedViewHolderImageView.setBackgroundDrawable(
+                            holder.itemView.getContext().getResources()
+                                    .getDrawable(R.drawable.bg_category_item_active));
+                }
+            }
+
 
             ((CategoriesViewHolder) holder).categoryText.setText(mData.get(position).getName());
             ((CategoriesViewHolder) holder).itemView.setOnClickListener(view -> {
 
                 if (mLastSelectedViewHolderImageView == null) {
 
-                    if (position!=0){
+                    if (position != 0) {
                         mLastSelectedViewHolderImageView = ((CategoriesViewHolder) holder).categoryTitleBackground;
                         mLastSelectedViewHolderImageView.setBackgroundDrawable(
                                 holder.itemView.getContext().getResources()
@@ -84,7 +140,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 } else {
 
-                    if (position!=0){
+                    if (position != 0) {
                         mLastSelectedViewHolderImageView.setBackgroundDrawable(
                                 holder.itemView.getContext().getResources()
                                         .getDrawable(R.drawable.bg_category_item_inactive));
@@ -94,21 +150,18 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         mLastSelectedViewHolderImageView.setBackgroundDrawable(
                                 holder.itemView.getContext().getResources()
                                         .getDrawable(R.drawable.bg_category_item_active));
-                    }else{
+                    } else {
 
                         mLastSelectedViewHolderImageView.setBackgroundDrawable(
                                 holder.itemView.getContext().getResources()
                                         .getDrawable(R.drawable.bg_category_item_inactive));
-
                     }
-
                 }
 
                 mCategoryAdapterClickListener.onCategoryClicked(
                         position,
                         mData.get(position));
             });
-
         }
     }
 
@@ -125,7 +178,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        if(mData!=null)
+        if (mData != null)
             return mData.size();
         return 0;
     }
@@ -172,11 +225,22 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mData.get(position);
     }
 
-    public void setCategoryImage(CategoriesViewHolder holder,String category, int position){
+    public void setupSaleCategory(String categoryName, String categoryKey) {
+        Log.d("deeplink", "load = " + mCategoryIds.indexOf(categoryKey));
+        Log.d("deeplink", "load = " + mData.get(mCategoryIds.indexOf(categoryKey)).getName());
+
+        mDeepLinkSelectedCategory = mCategoryIds.indexOf(categoryKey);
+        isDeepLinkSaleCategory = true;
+        mCategoryAdapterClickListener.onCategoryClicked(
+                mCategoryIds.indexOf(categoryKey),
+                mData.get(mCategoryIds.indexOf(categoryKey)));
+    }
+
+    public void setCategoryImage(CategoriesViewHolder holder, String category, int position) {
         holder.categoryImageIndicator.setVisibility(View.VISIBLE);
         holder.categoryIndicator.setVisibility(View.GONE);
         Context context = holder.itemView.getContext();
-        switch (category){
+        switch (category) {
             case "Shop":
                 holder.categoryImageIndicator.setImageDrawable(context.getDrawable(R.drawable.ic_shop));
                 break;
@@ -206,5 +270,20 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 holder.categoryIndicator.setVisibility(View.VISIBLE);
                 holder.categoryIndicator.setText(StringUtils.getCategoryInitials(mData.get(position)));
         }
+    }
+
+    private void generateCategoryIds() {
+
+        for (GetCategoryTreeResponse response : mData) {
+            mCategoryIds.add(response.getId());
+        }
+    }
+
+    public int getDeepLinkChosenCategory() {
+        return mDeepLinkSelectedCategory;
+    }
+
+    public void setDeepLinkChosenCategory(int selectedPosition) {
+        mDeepLinkSelectedCategory = selectedPosition;
     }
 }

@@ -60,6 +60,8 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                 tncAccepted,
                 emailsAccepted);
 
+        if (isGdprDisabled()) registerUserRequest.setToGdprDisabled();
+
         doApiCallForResponse(getDataManager().callRegister(registerUserRequest), new AppApiCallback(){
 
             @Override

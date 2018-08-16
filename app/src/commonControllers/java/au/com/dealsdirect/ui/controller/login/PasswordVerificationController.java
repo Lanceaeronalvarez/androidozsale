@@ -90,7 +90,7 @@ public class PasswordVerificationController extends VisaCheckoutController imple
     @Override
     protected void setUp(View view) {
         mTitleTextView.setText("Password Verification");
-        mFilterButton.setVisibility(View.GONE);
+        mFilterButton.setVisibility(View.INVISIBLE);
 
         if(!mAccountExists) {
             mAccountEmailGuide.setText(getResources().getString(R.string.new_vco_user_guide) + " " + mAccountEmail);

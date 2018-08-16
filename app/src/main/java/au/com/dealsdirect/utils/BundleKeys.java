@@ -25,7 +25,6 @@ public class BundleKeys {
     public static final String SALEITEMS_CATEGORY_ID = "SaleItemsController.SALEITEMS_CATEGORY_ID";
     public static final String SALEITEMS_CATEGORY_NAME = "SaleItemsController.SALEITEMS_CATEGORY_NAME";
     public static final String SALEITEMS_FROM_CATEGORY_DEEPLINK = "SaleItemsController.FROM_CATEGORY_LINK";
-
     public static final String SALEITEMS_KEY_CATEGORIES = "SaleItemsController.KEY_CATEGORIES";
 
     //sale item details
@@ -38,7 +37,7 @@ public class BundleKeys {
     public static final String SALEITEMDETAILS_KEY_ITEM_PRICE = "KEY_SALE_PRICE";
     public static final String SALEITEMDETAILS_KEY_ITEM_OLD_PRICE = "KEY_SALE_OLD_PRICE";
     public static final String SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE = "KEY_IS_DEEP_LINKED_WITH_SALE";
- 
+
     //search filters
     public static final String FACET_FILTER_TYPE = "FACET_FILTER_TYPE";
     public static final String BRANDS_FACET_FILTER_TYPE = "brands";

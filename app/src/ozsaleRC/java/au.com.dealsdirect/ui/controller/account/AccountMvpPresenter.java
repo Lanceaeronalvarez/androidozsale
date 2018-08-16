@@ -16,7 +16,7 @@ public interface AccountMvpPresenter <V extends MvpView> extends MvpPresenter<V>
 
     void loadAccountItems(List<AccountItem> accountItems);
 
-    void onAccountItemClick(Context context, String option, int position);
+    void onAccountItemClick(Context context, String option);
 
     void setMultiCountry(boolean isMultiCountry);
 

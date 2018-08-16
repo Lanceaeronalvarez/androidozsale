@@ -29,7 +29,7 @@
             tools:text="@string/category_default"
             android:visibility="gone"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_xxxlarge"
+            android:textSize="@dimen/text_size_title"
             android:maxLines="2" />
 
 
@@ -83,9 +83,9 @@
             android:id="@+id/no_items_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_xxxxlarge"
+            android:textSize="@dimen/text_size_title"
             android:text="@string/sorry_default_text"
-            android:textColor="@color/gray_field_label"/>
+            android:textColor="@color/text_medium"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -108,11 +108,9 @@
 
     <View
         android:id="@+id/header_separator"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
+        style="@style/horizontalBorderView"
         android:layout_marginTop="10dp"
         android:layout_below="@id/no_search_items_layout"
-        android:background="@color/border_gray"
         android:visibility="gone"/>
 
     <TextView
@@ -124,7 +122,7 @@
         android:layout_below="@id/header_separator"
         android:layout_centerHorizontal="true"
         android:text="see other popular products"
-        android:textColor="@color/gray_hint_text"
-        android:textSize="@dimen/text_size_xxxlarge"
+        android:textColor="@color/text_medium"
+        android:textSize="@dimen/text_size_title"
         android:visibility="gone"/>
 </RelativeLayout>

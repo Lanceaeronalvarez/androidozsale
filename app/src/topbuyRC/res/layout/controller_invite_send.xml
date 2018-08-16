@@ -171,7 +171,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:text="@string/send_personal_invite_text"
-                        android:textColor="@color/gray_active_field_text"
+                        android:textColor="@color/text_medium"
                         android:textIsSelectable="false" />
 
 
@@ -186,7 +186,7 @@
                         android:inputType="textMultiLine"
                         android:maxLines="4"
                         android:minLines="4"
-                        android:textColor="@color/gray_active_field_text"
+                        android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_headline1" />
 
 
@@ -205,7 +205,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:text="Invitation link"
-                        android:textColor="@color/gray_active_field_text"/>
+                        android:textColor="@color/text_medium"/>
 
 
                     <RelativeLayout
@@ -232,8 +232,8 @@
                             android:paddingRight="43dp"
                             android:paddingTop="15dp"
                             android:singleLine="true"
-                            android:textColor="@color/gray_inactive_field_text"
-                            android:textColorHint="@color/gray_inactive_field_text"
+                            android:textColor="@color/text_medium"
+                            android:textColorHint="@color/text_medium"
                             android:textSize="@dimen/text_size_headline1"/>
                     </RelativeLayout>
                 </LinearLayout>
@@ -308,7 +308,7 @@
                             android:paddingLeft="@dimen/invite_friends_padding"
                             android:paddingRight="@dimen/invite_friends_padding"
                             android:text="or"
-                            android:textColor="@color/gray_active_field_text"
+                            android:textColor="@color/text_medium"
                             android:textSize="@dimen/text_size_headline2" />
 
                         <RelativeLayout

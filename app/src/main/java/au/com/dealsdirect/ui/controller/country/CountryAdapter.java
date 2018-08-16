@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.country;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +87,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.Countrie
         @BindView(R.id.row_text_language)
         TextView mCountryText;
 
+        @Nullable
         @BindView(R.id.row_check_icon)
         ImageView mCountryCheckIcon;
 

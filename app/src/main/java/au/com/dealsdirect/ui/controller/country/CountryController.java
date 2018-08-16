@@ -38,7 +38,7 @@ public class CountryController extends BasePullToRefreshController implements Co
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mArrowImage;
+    View mArrowImage;
 
     @BindView(R.id.controller_recycler_details)
     RecyclerView mRecyclerView;

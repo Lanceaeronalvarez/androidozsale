@@ -99,7 +99,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
             case ORDER_DATE_NEGATIVE_STATE:
                 setupOrderDateNode(holder, colorActive);
 
-                holder.orderFirstNodeStatusTextView.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.ourpay_red : R.color.text_medium));
+                holder.orderFirstNodeStatusTextView.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
                 holder.orderDateGraphNodeView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
                 if (isRefunded) {
                     approvedDate += " Refunded";
@@ -113,7 +113,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
             case ORDER_STOCK_ARRIVED_NEGATIVE_STATE:
                 setupStockArrivedNode(holder, colorActive);
 
-                holder.orderSecondNodeStatusTextView.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.ourpay_red : R.color.text_medium));
+                holder.orderSecondNodeStatusTextView.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
                 holder.stockArrivedGraphNodeView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
                 if (isRefunded) {
                     stockDate += " Refunded";
@@ -128,7 +128,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
             case ORDER_PACKED_NEGATIVE_STATE:
                 setupOrderPackedNode(holder, colorActive);
 
-                holder.orderThirdNodeStatusTextView.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.ourpay_red : R.color.text_medium));
+                holder.orderThirdNodeStatusTextView.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
                 holder.orderPackedGraphNodeView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
 
                 if (isRefunded) {
@@ -144,7 +144,7 @@ public class OrdersItemRecyclerViewAdapter extends RecyclerView.Adapter<OrdersIt
             case ORDER_DISPATCHED_NEGATIVE_STATE:
                 setupDispatchNode(holder, colorActive);
 
-                holder.orderFourthNodeStatusTextView.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.ourpay_red : R.color.text_medium));
+                holder.orderFourthNodeStatusTextView.setTextColor(mContext.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
                 holder.dispatchedGraphNodeTextView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
 
                 if (isRefunded) {

@@ -22,6 +22,7 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -94,7 +95,7 @@ public class AddContactController extends BaseController implements AddContactMv
         View view = inflater.inflate(R.layout.controller_add_contact, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mViewContactsMvpView = (ViewContactsMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getContactRouter());
+        mViewContactsMvpView = ((ViewContactsMvpView) mActivity.getHomeController().getCurrentRouter().getControllerWithTag(ViewContactsMvpView.TAG));
         return view;
     }
 
@@ -122,6 +123,7 @@ public class AddContactController extends BaseController implements AddContactMv
     }
 
     private void sendMessage(){
+        hideKeyboard();
         mChosenOptionInvoice = ContactPreferenceHelper.getChosenInvoice(mActivity);
         CreateContactRequest createContactRequest = new CreateContactRequest();
 

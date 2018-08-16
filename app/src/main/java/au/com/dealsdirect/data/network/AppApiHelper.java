@@ -1,5 +1,7 @@
 package au.com.dealsdirect.data.network;
 
+import android.accounts.Account;
+
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -17,6 +19,7 @@ import javax.inject.Singleton;
 
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
@@ -104,6 +107,7 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -156,7 +160,7 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public Observable<GetBannerResponse> callGetBanners(
             GetBannerRequest getBannerRequest, boolean getOnlyFromNetwork) {
-        if(getOnlyFromNetwork) {
+        if (getOnlyFromNetwork) {
             return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES)
                     .addHeaders(mApiHeader.get())
                     .addQueryParameter(getBannerRequest)
@@ -238,12 +242,12 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<String> callAddItemToCart(AddToCartRequest requestValues) {
+    public Observable<AddToCartResponse.Response> callAddItemToCart(AddToCartRequest requestValues) {
         return Rx2AndroidNetworking.post(ApiEndPoint.ADD_TO_CART)
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
-                .getStringObservable();
+                .getObjectObservable(AddToCartResponse.Response.class);
     }
 
     @Override
@@ -712,6 +716,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<AccountData> callGetAccountData() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.ACCOUNT_DATA)
+                .addHeaders(mApiHeader.get())
+                .doNotCacheResponse()
+                .build()
+                .getObjectObservable(AccountData.class);
+    }
+
+    @Override
     public Observable<SetUserDetailsResponse> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.SAVE_USER_DETAILS)
                 .addHeaders(mApiHeader.get())
@@ -848,7 +861,8 @@ public class AppApiHelper implements ApiHelper {
         return Rx2AndroidNetworking.post(ApiEndPoint.SMS_VERIFICATION_CODE_CONFRIM)
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(verificationCodeConfirmRequest))
                 .build()
-                .getObjectObservable(VerificationCodeConfirmResponseBody.class);    }
+                .getObjectObservable(VerificationCodeConfirmResponseBody.class);
+    }
 
     @Override
     public Observable<JSONObject> callMasterpassPayment(MasterPassPaymentRequest request) {

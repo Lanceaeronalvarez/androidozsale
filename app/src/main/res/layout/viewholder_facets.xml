@@ -15,7 +15,7 @@
 
         <RelativeLayout
             android:id="@+id/row_facets_image_container"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/category_background_width"
             android:layout_height="@dimen/category_background_height"
             android:background="@drawable/bg_facet_selector">
 

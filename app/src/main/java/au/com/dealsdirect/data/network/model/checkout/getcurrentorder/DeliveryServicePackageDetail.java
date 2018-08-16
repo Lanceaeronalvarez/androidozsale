@@ -8,28 +8,28 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class DeliveryServicePackageDetail {
-        @SerializedName("Name")
+        @SerializedName(value = "Name", alternate = {"name"})
         @Expose
         private String name;
-        @SerializedName("InitialCount")
+        @SerializedName(value = "InitialCount", alternate = {"initialCount"})
         @Expose
         private Integer initialCount;
-        @SerializedName("CurrentCount")
+        @SerializedName(value = "CurrentCount", alternate = {"currentCount"})
         @Expose
         private Integer currentCount;
-        @SerializedName("RemainingCount")
+        @SerializedName(value = "RemainingCount", alternate = {"remainingCount"})
         @Expose
         private Integer remainingCount;
-        @SerializedName("ExpiryDate")
+        @SerializedName(value = "ExpiryDate", alternate = {"expiryDate"})
         @Expose
         private String expiryDate;
-        @SerializedName("Amount")
+        @SerializedName(value = "Amount", alternate = {"amount"})
         @Expose
         private Double amount;
-        @SerializedName("Purchased")
+        @SerializedName(value = "Purchased", alternate = {"purchased"})
         @Expose
         private Boolean purchased;
-        @SerializedName("DeliveryServicePackageDetailID")
+        @SerializedName(value = "DeliveryServicePackageDetailID", alternate = {"deliveryServicePackageDetailID"})
         @Expose
         private String deliveryServicePackageDetailID;
 

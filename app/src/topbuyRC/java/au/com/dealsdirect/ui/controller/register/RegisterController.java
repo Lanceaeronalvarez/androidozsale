@@ -208,6 +208,7 @@ public class RegisterController extends SwipeableVisaCheckoutController implemen
                 mRegisterSurnameField.getText().toString(),
                 mRegisterEmailField.getText().toString(),
                 mRegisterPasswordField.getText().toString(),
+                true,
                 true);
 
 //        if (mTermsCheck.isChecked()) {

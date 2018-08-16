@@ -37,6 +37,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
@@ -52,6 +53,7 @@ import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppEventHelper;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.DeepLinkUrlType;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
@@ -105,6 +107,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_CONSENT_SHORT_TEXT = "ConsentShortTextPTNameV1";
     public static final String KEY_CONSENT_FULL_TEXT = "ConsentFullTextPTNameV1";
     public static final String KEY_CONSENT_TERMS_AND_CONDITION = "TermsAndConditions_Text";
+
+    static final String KEY_DEEP_LINK_SALES = "DEEPLINK_SALES";
+    static final String KEY_DEEP_LINK_SALE_ITEMS = "DEEPLINK_SALE_ITEMS";
+    static final String KEY_DEEP_LINK_SALE_CATEGORY = "DEEPLINK_SALE_CATEGORY";
+    static final String KEY_DEEP_LINK_SALES_CATEGORY = "DEEPLINK_SALES_CATEGORY";
 
     private static String[] templateTextsKeys = {
             KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT, //0
@@ -272,7 +279,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     getDataManager().setVisaCheckoutProviderType(value.getPayments().getVisaCheckout().getVisaCheckoutProviderType());
                 }
             }
-
         }
     };
 
@@ -294,6 +300,18 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         }
     };
 
+    private Consumer<AccountData> mAccountDataCallback = new Consumer<AccountData>() {
+        @Override
+        public void accept(AccountData accountData) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            if (accountData != null) {
+                getDataManager().setIsSortingEnabled(accountData.getSorting().getIsEnabled());
+            }
+        }
+    };
 
     @Override
     public void callGetAppSettingsSection(Context context) {
@@ -589,6 +607,21 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         callGetPublicPaymentToken();
         callGetAppSettingsSection(context);
         callGetAppSettingsConsent(context);
+        callGetAccountData();
+    }
+
+    @Override
+    public void callGetAccountData() {
+        getCompositeDisposable().add(getDataManager()
+                .callGetAccountData()
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(mAccountDataCallback, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        AppLogger.d(throwable.getMessage());
+                    }
+                }));
     }
 
     @Override
@@ -617,6 +650,36 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             initFacebookAnalytics();
             FacebookSdk.setIsDebugEnabled(true);
         }
+    }
+
+    @Override
+    public void getDeepLinkData(String url) {
+
+        doApiCallForResponse(getDataManager().callGetDeepLinkData(new DeepLinkDataRequest(url)),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        DeepLinkDataResponse deepLinkDataResponse = ((DeepLinkDataResponse) response);
+                        deepLinkData(deepLinkDataResponse);
+
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                    }
+                });
+    }
+
+    @Override
+    public void deepLinkMessageThread() {
+
+    }
+
+    @Override
+    public void deepLinkSaleItems() {
+
     }
 
     @Override
@@ -943,23 +1006,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         return getDataManager().getIsMyPayEnabled();
     }
 
-
-    @Override
-    public void getDeepLinkData(String url) {
-
-        doApiCallForResponse(getDataManager().callGetDeepLinkData(new DeepLinkDataRequest(url)),
-                new AppApiCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        super.onSuccess(response);
-                        DeepLinkDataResponse deepLinkDataResponse = ((DeepLinkDataResponse) response);
-                        deepLinkData(deepLinkDataResponse);
-
-                    }
-                });
-    }
-
-
     /* May 11, 2018 - Deep Link to Sale Category */
     private void deepLinkSaleCategory(String categoryName, String categoryIdentifier) {
         getMvpView().deepLinkSales(categoryName, categoryIdentifier);
@@ -973,7 +1019,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     /* May 11, 2018 - Deep Link to Category Link */
     private void deepLinkCategoryLink(String seoFriendlyName, String encodedCategoryData) {
-        Log.d("deeplinkers", " 2 from presenter = " + encodedCategoryData);
         getMvpView().deepLinkCategoryLink(seoFriendlyName, encodedCategoryData);
     }
 
@@ -997,8 +1042,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         switch (urlType) {
             case DeepLinkUrlType.CATEGORY_LINK: {
-                Log.d("deeplinkdata", "response on category link");
-
                 String seoFriendlyName = deepLinkDataResponse.getMeta().getSeoFriendlyCategoryName();
                 String encodedCategoryData = deepLinkDataResponse.getMeta().getCategoryIdentifier();
                 deepLinkCategoryLink(seoFriendlyName, encodedCategoryData);
@@ -1006,21 +1049,15 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 break;
             }
             case DeepLinkUrlType.PRODUCT_LINK_WITH_SALE: {
-                Log.d("deeplinkdata", "response on product with sale link ");
-
                 String saleName = deepLinkDataResponse.getMeta().getSaleName();
                 String encodedSaleId = deepLinkDataResponse.getMeta().getEncodedSaleId();
                 String seoProductName = deepLinkDataResponse.getMeta().getSeoProductName();
                 String encodedMasterSkuIdentifier = deepLinkDataResponse.getMeta().getEncodedMasterSkuIdentifier();
-                Log.d("deeplinkdata", "response on product with sale link - " + encodedSaleId + "  , " + encodedMasterSkuIdentifier);
-
                 deepLinkProductLinkWithSale(saleName, encodedSaleId, seoProductName, encodedMasterSkuIdentifier);
 
                 break;
             }
             case DeepLinkUrlType.PRODUCT_LINK_WITHOUT_SALE: {
-                Log.d("deeplinkdata", "response on product without sale link");
-
                 String seoProductName = deepLinkDataResponse.getMeta().getSeoProductName();
                 String encodedSkuIdentifier = deepLinkDataResponse.getMeta().getEncodedMasterSkuIdentifier();
                 deepLinkProductLinkWithoutSale(seoProductName, encodedSkuIdentifier);
@@ -1028,19 +1065,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 break;
             }
             case DeepLinkUrlType.SALE_CATEGORY: {
-                Log.d("deeplinkdata", "response on sale category");
-
                 String categoryName = deepLinkDataResponse.getMeta().getCategoryName();
                 String categoryIdentifier = deepLinkDataResponse.getMeta().getCategoryIdentifier();
-                Log.d("deeplinkdata", "sale category category name = " + categoryName + " , identifier = " + categoryIdentifier);
-
                 deepLinkSaleCategory(categoryName, categoryIdentifier);
 
                 break;
             }
             case DeepLinkUrlType.SALE_SEARCH: {
-                Log.d("deeplinkdata", "response on sale search");
-                Log.d("deeplinkdata", "sale items controller = " + deepLinkDataResponse.getMeta().getEncodedSaleId());
                 String saleName = deepLinkDataResponse.getMeta().getSaleName();
                 String saleIdentifier = deepLinkDataResponse.getMeta().getSaleIdentifier();
                 deepLinkSaleSearch(saleName, saleIdentifier);
@@ -1053,6 +1084,4 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             }
         }
     }
-
-
 }

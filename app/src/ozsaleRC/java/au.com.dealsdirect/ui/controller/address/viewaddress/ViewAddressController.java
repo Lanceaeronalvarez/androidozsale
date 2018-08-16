@@ -101,7 +101,7 @@ public class ViewAddressController extends BaseController implements ViewAddress
         mPresenter.loadAddresses();
 
 
-        mToolbarLeftView.setVisibility(mPresenter.isTablet() && !mCalledFromCart ? View.GONE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mPresenter.isTablet() && !mCalledFromCart ? View.INVISIBLE : View.VISIBLE);
         mViewAddressToolarTitle.setText(getString(R.string.my_addresses_toolbar_title));
         mAddressList = new ArrayList<>();
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();

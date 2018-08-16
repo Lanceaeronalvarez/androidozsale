@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.account.adapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,10 +16,10 @@ import butterknife.ButterKnife;
 
 public class AccountSubItemViewHolder extends AbstractExpandableItemViewHolder {
 
-    @BindView(R.id.row_account_text)
+    @BindView(R.id.row_viewholder_text)
     TextView mAccountSubItemName;
 
-    @BindView(R.id.row_account_arrow_right)
+    @BindView(R.id.row_viewholder_image_right)
     ImageView mAccountArrowRight;
 
     AccountSubItemViewHolder(View itemView) {

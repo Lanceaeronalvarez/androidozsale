@@ -11,6 +11,8 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface ViewContactsMvpView extends MvpView {
 
+    String TAG = "ContactController";
+
     void showContactItems(GetContactsResponse.Response myContacts);
 
     void onContactClicked(GetContactsResponse.ContactList contactList);

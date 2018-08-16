@@ -23,11 +23,11 @@ import io.reactivex.disposables.CompositeDisposable;
  * dp Created by Admin on 6/20/17.
  */
 
-public class AddContactpresenter<V extends AddContactMvpView> extends BasePresenter<V> implements
+public class AddContactPresenter<V extends AddContactMvpView> extends BasePresenter<V> implements
         AddContactMvpPresenter<V> {
 
     @Inject
-    public AddContactpresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
+    public AddContactPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 

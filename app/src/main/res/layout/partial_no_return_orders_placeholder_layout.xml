@@ -4,6 +4,7 @@
     android:id="@+id/no_returns_placeholder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerInParent="true"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingLeft="@dimen/placeholder_padding"
@@ -23,7 +24,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/no_orders_for_return"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/text_extra_dark"
         android:textSize="@dimen/text_size_headline1" />
 
     <TextView
@@ -31,11 +32,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/padding_default"
         android:gravity="center"
-        android:layout_marginBottom="@dimen/button_height_regular"
-        android:paddingBottom="@dimen/button_height_regular"
         android:text="@string/you_have_not_added_any_orders_for_return"
-        android:textColor="#9f9f9f"
+        android:textColor="@color/text_medium"
         android:textSize="@dimen/text_size_headline3" />
 </LinearLayout>

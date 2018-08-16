@@ -34,7 +34,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
-        doApiCallForResponse(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);

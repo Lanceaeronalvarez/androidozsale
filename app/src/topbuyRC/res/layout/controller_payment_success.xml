@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:scrollbars="none"
+    android:overScrollMode="never"
+    android:paddingLeft="@dimen/padding_default"
+    android:paddingRight="@dimen/padding_default"
+    android:paddingTop="@dimen/padding_default">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_small"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="@string/your_payment_has_been_successful"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/payment_success_estimated_delivery_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingTop="@dimen/margin_small"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_large"/>
+
+
+        <LinearLayout
+            android:id="@+id/payment_ourpay_success_detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/margin_small"
+                android:textSize="@dimen/text_size_headline2"
+                android:textColor="@color/text_medium"
+                android:text="@string/your_order_number_is"/>
+
+
+            <TextView
+                android:id="@+id/payment_success_order_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_small"
+                android:textColor="@color/payment_success_order_text_color"
+                android:gravity="center"
+                android:textSize="45sp"
+                android:textStyle="bold"
+                tools:text="301231331"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_large"
+                android:layout_marginTop="20dp"
+                android:text="@string/thank_you_for_shopping"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
+
+        <LinearLayout
+            android:background="@drawable/bg_success_rounded"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/payment_success_table_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_default">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_home_delivery"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/address"
+                            android:textColor="@color/text_medium" />
+
+                        <TextView
+                            android:id="@+id/payment_success_address_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_size_headline1"
+                            android:textStyle="bold"
+                            tools:text="Express Delivery"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View style="@style/horizontalBorderView"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_default">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_total_payment"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/total_payment"
+                            android:textColor="@color/text_medium"/>
+
+                        <TextView
+                            android:id="@+id/payment_success_price_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_size_headline1"
+                            android:textStyle="bold"
+                            tools:text="$100"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View style="@style/horizontalBorderView"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_default">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_order_number"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/order_number"
+                            android:textColor="@color/text_medium" />
+
+                        <TextView
+                            android:id="@+id/payment_success_address_order_number_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_size_headline1"
+                            android:textStyle="bold"
+                            tools:text="123312312312"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/partial_continue_shopping_button"
+            style="@style/DDButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:padding="0dp"
+            android:text="@string/continue_shopping"
+            android:textSize="@dimen/text_size_headline1" />
+
+        <LinearLayout
+            android:id="@+id/ourpay_panel_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:orientation="vertical"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,18 +1,26 @@
 package au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * dp Created by Admin on 8/10/17.
  */
 
 public class VerificationCodeConfirmRequest {
 
-    public String phone;
-
-    public String countryID;
-
-    public String code;
-
-    public String languageID;
+    @SerializedName("phone")
+    @Expose
+    private String phone;
+    @SerializedName("countryID")
+    @Expose
+    private String countryID;
+    @SerializedName("languageID")
+    @Expose
+    private String languageID;
+    @SerializedName("code")
+    @Expose
+    private String code;
 
     public String getPhone() {
         return phone;

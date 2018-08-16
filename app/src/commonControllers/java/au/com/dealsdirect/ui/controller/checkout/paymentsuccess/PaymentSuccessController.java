@@ -41,8 +41,6 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     @Inject
     PaymentSuccessMvpPresenter<PaymentSuccessMvpView> mPresenter;
 
-    @BindView(R.id.payment_success_estimated_delivery_text_view)
-    TextView mEstimatedDeliveryTextView;
     @BindView(R.id.payment_success_order_number)
     TextView mOrderNumberTextView;
 
@@ -100,14 +98,12 @@ public class PaymentSuccessController extends BaseController implements PaymentS
             mPresenter.generateOurpay();
         }
 
-        mEstimatedDeliveryTextView.setVisibility(View.GONE);
         setUp(view);
     }
 
     @Override
     protected void setUp(View view) {
         mOrderNumberTextView.setText(mInvoiceString);
-        mEstimatedDeliveryTextView.setText(Html.fromHtml(mEstimatedDeliveryString).toString());
 
         mPackageName = getActivity().getPackageName();
 
@@ -169,6 +165,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     @Override
     public void showOurpay() {
+        mOurpayDetailsContainer.setVisibility(View.VISIBLE);
         PaymentInfo.getOurpay().setState(OurpayState.POSTCART);
         if (PaymentInfo.getOurpay() != null) {
             OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity());
@@ -181,14 +178,10 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     public boolean handleBack() {
         PaymentInfo.resetPaymentInfo();
 
-        if (mPresenter.isTablet() && getBoolean(R.bool.is_ozsale_app)) {
-            mActivity.getHomeController().resetCheckoutRouter();
-        } else {
-            mActivity.getCheckoutRouter().popToRoot();
-        }
         mActivity.setShopsAsVisibleContainer();
+        mActivity.getHomeController().resetCheckoutRouter();
 
-        return super.handleBack();
+        return true;
     }
 
     @OnClick(R.id.partial_continue_shopping_button)

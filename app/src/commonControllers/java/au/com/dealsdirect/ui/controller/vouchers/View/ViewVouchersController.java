@@ -48,7 +48,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    TextView mArrowImage;
+    View mArrowImage;
 
     @BindView(R.id.controller_view_voucher_desc_text)
     TextView mVouchersDescText;
@@ -110,7 +110,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
     protected void setUp(View view) {
         mTitleText.setText(getString(R.string.account_vouchers));
         mFilterView.setVisibility(View.INVISIBLE);
-        mArrowImage.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
+        mArrowImage.setVisibility(mPresenter.isTablet() ? View.INVISIBLE : View.VISIBLE);
         mArrowImage.setOnClickListener(action -> {
             mActivity.onBackPressed();
         });

@@ -2,6 +2,7 @@ package au.com.dealsdirect.utils.module;
 
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
@@ -139,11 +140,33 @@ public class GateKeeper {
      * sets CURRENT_LOCATION to specified destination.
      *
      * @param router            Conductor router
+     * @param tag               String controller's tag
      * @param destination       Destination enum controller
      * @param pushChangeHandler your custom pushChangeHandler
      * @param popChangeHandler  your custom popChangehandler
      */
-    public static void push(    Router router, Destination destination, Bundle bundle, ControllerChangeHandler pushChangeHandler, ControllerChangeHandler popChangeHandler) {
+    public static void push(Router router, String tag, Destination destination, ControllerChangeHandler pushChangeHandler, ControllerChangeHandler popChangeHandler) {
+//        if(validateRouteOrigin(destination)){
+        router.pushController(RouterTransaction.with(ControllerFactory.getInstance(destination)).tag(tag).pushChangeHandler(pushChangeHandler).popChangeHandler(popChangeHandler));
+        sCURRENT_LOCATION.put(router, destination);
+//        } else {
+//            Controller currentController = getCurrentControllerOnRouter(router);
+//            if(currentController != null) {
+////                ((BaseController) currentController).showInvalidRoute();
+//            }
+//        }
+    }
+
+    /**
+     * Router push operation given specified destination. Uses given pop/push changehandler.
+     * sets CURRENT_LOCATION to specified destination.
+     *
+     * @param router            Conductor router
+     * @param destination       Destination enum controller
+     * @param pushChangeHandler your custom pushChangeHandler
+     * @param popChangeHandler  your custom popChangehandler
+     */
+    public static void push(Router router, Destination destination, Bundle bundle, ControllerChangeHandler pushChangeHandler, ControllerChangeHandler popChangeHandler) {
 //        if(validateRouteOrigin(destination)){
         router.pushController(RouterTransaction.with(ControllerFactory.getInstance(destination, bundle)).pushChangeHandler(pushChangeHandler).popChangeHandler(popChangeHandler));
         sCURRENT_LOCATION.put(router, destination);
@@ -202,6 +225,19 @@ public class GateKeeper {
         sCURRENT_LOCATION.put(router, destination);
     }
 
+    /**
+     * sets root controller of the specified router
+     *
+     * @param router            conductor router
+     * @param tag               String controller's tag
+     * @param destination       destination enum
+     * @param routerTransaction your custom router transaction
+     */
+    public static void setRoot(Router router, String tag, Destination destination, RouterTransaction routerTransaction) {
+        router.setRoot(routerTransaction.tag(tag));
+        sCURRENT_LOCATION.put(router, destination);
+    }
+
     public static Destination getCurrentLocation(Router router) {
         return sCURRENT_LOCATION.get(router);
     }
@@ -211,4 +247,33 @@ public class GateKeeper {
         sCURRENT_LOCATION.put(router, destination);
     }
 
+    /**
+     * @param router
+     * @param destination
+     * @param bundle
+     * @param pushChangeHandler
+     * @param popChangeHandler
+     */
+    public static void deepLinkSaleItems(Router router, Destination destination, Bundle bundle, ControllerChangeHandler pushChangeHandler, ControllerChangeHandler popChangeHandler) {
+        Log.d("gatekeeper", "entered deep link sale items");
+        router.pushController(RouterTransaction.with(ControllerFactory.getInstance(destination, bundle)).pushChangeHandler(pushChangeHandler).popChangeHandler(popChangeHandler));
+        sCURRENT_LOCATION.put(router, destination);
+    }
+
+    /**
+     * @param router
+     * @param saleItemsBundle
+     * @param saleItemDetailsBundle
+     * @param saleItemsPushChangeHandler
+     * @param saleItemsPopChangeHandler
+     * @param itemDetailsPushChangeHandler
+     * @param itemDetailsPopChangeHandler
+     */
+    public static void deepLinkSaleItemDetailsWithSale(Router router, Bundle saleItemsBundle, Bundle saleItemDetailsBundle, ControllerChangeHandler saleItemsPushChangeHandler, ControllerChangeHandler saleItemsPopChangeHandler, ControllerChangeHandler itemDetailsPushChangeHandler, ControllerChangeHandler itemDetailsPopChangeHandler) {
+        router.pushController(RouterTransaction.with(ControllerFactory.getInstance(Destination.SALEITEMS, saleItemsBundle)).pushChangeHandler(saleItemsPushChangeHandler).popChangeHandler(saleItemsPopChangeHandler));
+        sCURRENT_LOCATION.put(router, Destination.SALEITEMS);
+
+        router.pushController(RouterTransaction.with(ControllerFactory.getInstance(Destination.SALEITEM_DETAILS, saleItemDetailsBundle)).pushChangeHandler(itemDetailsPushChangeHandler).popChangeHandler(itemDetailsPopChangeHandler));
+        sCURRENT_LOCATION.put(router, Destination.SALEITEM_DETAILS);
+    }
 }

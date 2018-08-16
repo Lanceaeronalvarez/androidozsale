@@ -72,7 +72,7 @@ public abstract class VisaCheckoutController extends BaseController implements V
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
-        mVisaCheckoutButton = (VisaCheckoutButton) view.findViewById(R.id.button_visacheckout);
+        mVisaCheckoutButton = (VisaCheckoutButton) view.findViewById(R.id.button_visa_checkout);
         if(mVisaCheckoutButton!=null) {
             mVisaCheckoutBtnParent = ((ViewGroup) mVisaCheckoutButton.getParent());
             mVisaCheckoutButton.setCheckoutListener(new VisaCheckoutButton.CheckoutWithVisaListener() {

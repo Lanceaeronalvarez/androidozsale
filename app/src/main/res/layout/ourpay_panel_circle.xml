@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ourpay_progress_state_circle"
+    fontPath="@string/font_app_heavy"
+    android:layout_width="@dimen/ourpay_circle_state_size"
+    android:layout_height="@dimen/ourpay_circle_state_size"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:textColor="@color/white"
+    android:background="@drawable/ourpay_circle_state_default"
+    tools:text="1" />
+

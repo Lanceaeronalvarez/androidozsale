@@ -151,9 +151,11 @@ public class ImageUtils {
         Glide.clear(imageView);
     }
 
-    private static String appendBannerSizeUrl(String url, String bannerSize) {
+    public static String appendBannerSizeUrl(String url, int width, int height) {
 
-        if (url.equals("")) return url;
+        String bannerSize = String.format("_%dx%d", width , height);
+
+        if (!url.contains(".")) return url;
 
         String removedExtension = url.substring(0, url.lastIndexOf('.'));
 
@@ -166,14 +168,6 @@ public class ImageUtils {
         url = String.format("%s%s.%s", removedExtension, bannerSize, extension);
 
         return url;
-    }
-
-    public static String getBannerMobileSize(String url) {
-        return appendBannerSizeUrl(url, AppConstants.BANNER_SIZE_MOBILE);
-    }
-
-    public static String getBannerTabletSize(String url) {
-        return appendBannerSizeUrl(url, AppConstants.BANNER_SIZE_TABLET);
     }
 
     public static int getComputedBannerHeight(int width, int height, int screenWidth) {

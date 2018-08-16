@@ -30,6 +30,8 @@ import com.visa.checkout.VisaPaymentSummary;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.SwipeableVisaCheckoutController;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
@@ -39,6 +41,7 @@ import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
@@ -65,19 +68,23 @@ public class AddPaymentController extends SwipeableVisaCheckoutController implem
     TextView mTextPaypal;
     @BindView(R.id.partial_checkout_button_paypal)
     RelativeLayout mButtonPaypal;
+    @BindView(R.id.partial_checkout_button_paypal_credit)
+    RelativeLayout mButtonPaypalCredit;
     @BindView(R.id.partial_checkout_button_masterpass)
     RelativeLayout mMasterpassButton;
 
     private boolean isFromCart = false;
     private boolean isPayPalSubmitClicked = false;
     private Double mCartTotalCost;
-    private int mItemListSize;
+
+    public static AddPaymentController newInstance() {
+        return new AddPaymentController(new BundleBuilder(new Bundle()).build());
+    }
 
     public AddPaymentController(Bundle args) {
         super(args);
         isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
         mCartTotalCost = args.getDouble(BundleKeys.CART_TOTAL_COST, 0);
-        mItemListSize = args.getInt(BundleKeys.ITEM_LIST_SIZE, -1);
     }
 
     @Override
@@ -133,13 +140,22 @@ public class AddPaymentController extends SwipeableVisaCheckoutController implem
                 mMasterpassButton.setVisibility(View.VISIBLE);
             }
 
-	    if (mVcoPresenter.isVisaCheckoutEnabled()) {
+            if (mVcoPresenter.isVisaCheckoutEnabled()) {
                 mVcoPresenter.setupVisaCheckout();
             }
+
+            if (mPresenter.isPaypalCreditEnabled()) {
+                mButtonPaypalCredit.setVisibility(View.VISIBLE);
+                mButtonPaypalCredit.setOnClickListener(action -> {
+                    onPaypalCreditSubmit();
+                });
+            }
+
         } else {
             mMasterpassButton.setEnabled(false);
             mMasterpassButton.setVisibility(View.GONE);
             mVisaCheckoutButton.setVisibility(View.GONE);
+            mButtonPaypalCredit.setVisibility(View.GONE);
         }
 
         if (((MainActivity) getActivity()).isBraintreeInitialized()) {
@@ -232,6 +248,11 @@ public class AddPaymentController extends SwipeableVisaCheckoutController implem
         mActivity.startPaypalPayment();
     }
 
+    public void onPaypalCreditSubmit() {
+        showLoading();
+        mActivity.startPaypalCreditPayment(String.valueOf(mCartTotalCost));
+    }
+
 
     @Override
     public void showAddPaymentResult(boolean result, String message) {
@@ -254,6 +275,11 @@ public class AddPaymentController extends SwipeableVisaCheckoutController implem
         mCardForm.getCardEditText().getText().clear();
         mCardForm.getCvvEditText().getText().clear();
         mCardForm.getExpirationDateEditText().getText().clear();
+    }
+
+    @Override
+    public void showMyPayDetails(Value value, Ourpay ourpay) {
+
     }
 
     @Override

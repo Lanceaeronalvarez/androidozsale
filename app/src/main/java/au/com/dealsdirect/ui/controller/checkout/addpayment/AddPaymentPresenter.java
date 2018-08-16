@@ -43,6 +43,7 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
             GetCurrentOrderOurpay getCurrentOrderOurpay = value.getOurpay();
 
             /* default */
+            ourpay.setDescription(getCurrentOrderOurpay.getSummary().getDescription());
             ourpay.setCanUse(getCurrentOrderOurpay.getSettings().getIsOurPayEnabled());
             ourpay.setErrorCode(getCurrentOrderOurpay.getReasonCode());
             ourpay.setTermsAndConditionsCheckboxState(getCurrentOrderOurpay.getSettings().getTermsAndConditions());

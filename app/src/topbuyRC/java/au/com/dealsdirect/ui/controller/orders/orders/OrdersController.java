@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.ui.base.SwipeableBaseToolBarController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
+import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
 /**
@@ -39,6 +41,18 @@ public class OrdersController extends SwipeableBaseToolBarController implements 
 
     OrdersRecyclerViewAdapter mAdapter;
     ArrayList<GetPaymentsList.ResponseValue.PaymentItem> mOrders = new ArrayList<>();
+
+    public static OrdersController newInstance() {
+
+        return new OrdersController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
+    public OrdersController(Bundle args) {
+        super(args);
+    }
+
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {

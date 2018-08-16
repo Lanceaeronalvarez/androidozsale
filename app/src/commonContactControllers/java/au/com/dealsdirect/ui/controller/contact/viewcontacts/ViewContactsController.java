@@ -48,7 +48,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
     private ContactsAdapter mContactAdapter;
     private ContactsClickListener mContactClickListener;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mViewContactsToolarTitle;
 
     @BindView(R.id.partial_toolbar_right_view)

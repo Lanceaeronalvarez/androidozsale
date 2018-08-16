@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/bg_join_now_btn_ripple">
+    <item>
+        <selector>
+
+            <item android:state_enabled="true">
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/button_corner_radius"/>
+                    <solid android:color="@color/bg_join_now_btn_default"/>
+                </shape>
+            </item>
+
+            <item android:state_enabled="true" android:state_pressed="true">
+
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/button_corner_radius"/>
+                    <solid android:color="@color/bg_join_now_btn_pressed"/>
+                </shape>
+            </item>
+
+            <item android:state_enabled="false">
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/button_corner_radius"/>
+                    <solid android:color="@color/tab_bar_icon_inactive"/>
+                </shape>
+            </item>
+
+
+        </selector>
+    </item>
+</ripple>
+

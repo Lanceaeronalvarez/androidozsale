@@ -256,9 +256,9 @@ public class AddVouchersController extends SwipeableBaseToolBarController implem
     @Override
     public void onVouchersApplied(ApplyVouchersResponse applyVouchersResponseBody) {
 
-        String responseMessage = applyVouchersResponseBody.getValue().getMessage();
-        boolean responseResult = applyVouchersResponseBody.getValue().getResult();
-        boolean responseIsAuthenticated = applyVouchersResponseBody.getValue().isAuthenticated();
+        String responseMessage = applyVouchersResponseBody.getD().getMessage();
+        boolean responseResult = applyVouchersResponseBody.getD().getResult();
+        boolean responseIsAuthenticated = applyVouchersResponseBody.getD().isAuthenticated();
 
         if (responseMessage.isEmpty() && responseResult && responseIsAuthenticated) {
 
