@@ -218,9 +218,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Nullable
     @BindView(R.id.delivery_option_ourpay_select_description_text_view)
     TextView mDeliveryOptionOurpaySelectDescriptionTextView;
-    @Nullable
-    @BindView(R.id.delivery_option_ourpay_select_before_purchase_description_text_view)
-    TextView mDeliveryOptionOurpaySelectBeforePurchaseDescriptionTextView;
 
     private RelativeLayout mButtonOurpay;
     private CustomToggleSwitch mCheckBoxOurpayTC;
@@ -648,8 +645,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             mDeliveryOptionRootLayout.setVisibility(View.VISIBLE);
 
-            checkPaymentMethodValidForOurPaySelect();
-
             String deliveryOptionName = "";
             Double deliveryOptionPrice = 0d;
             for (DeliveryOption option : deliveryOptions) {
@@ -662,6 +657,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 }
             }
 
+            //need to invalidate paypal/masterpass if ourpayselect delivery method is chosen;
+            //mIsPaymentMethodChanged is set to true from PaymentSelectController or AddPaymentController if they choose
+            //or add a payment method. It is then set to false when going back to those screens from CheckoutController
+            if (isOurPaySelectDeliveryMethod() && mIsPaymentMethodChanged && checkPaymentMethodValidForOurPaySelect()) {
+                return;
+            }
 
             displayPaymentDetails();
             displayDeliveryOptionsUI(deliveryOptionName, deliveryOptionPrice);
@@ -705,19 +706,19 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
     }
 
-    private void checkPaymentMethodValidForOurPaySelect() {
-        //need to invalidate paypal/masterpass if ourpayselect delivery method is chosen;
-        //mIsPaymentMethodChanged is set to true from PaymentSelectController or AddPaymentController if they choose
-        //or add a payment method. It is then set to false when going back to those screens from CheckoutController
-        if (isOurPaySelectDeliveryMethod() && mIsPaymentMethodChanged) {
-            PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
-            if (paymentMethod != null) {
-                if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)
-                        || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT)) {
-                    mPresenter.setDeliveryOption(createStandardDeliveryOptionRequest());
-                }
+    private boolean checkPaymentMethodValidForOurPaySelect() {
+
+        PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
+        if (paymentMethod != null) {
+            if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)
+                    || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT)) {
+                mPresenter.setDeliveryOption(createStandardDeliveryOptionRequest());
+                return true;
             }
         }
+
+        return false;
+
     }
 
     private void showDeliveryOptionsController() {
@@ -756,6 +757,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (paymentMethod != null) {
 
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
+                mMasterpassButton.setVisibility(View.GONE);
                 mVisaCheckoutButton.setVisibility(View.GONE);
                 mPayButton.setVisibility(View.GONE);
                 mPaypalButton.setVisibility(View.VISIBLE);
@@ -772,7 +774,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mPaypalCreditButton.setVisibility(View.GONE);
             }
 
-            mMasterpassButton.setVisibility(View.GONE);
 
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setText(paymentMethod.getPaymentType());
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_details)).setText(paymentMethod.getDescription());
@@ -1087,7 +1088,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private void checkVisiblePaymentButtons() {
         mPayButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
         mPaypalButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
-        mMasterpassButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
+        mMasterpassButton.setVisibility(!mPresenter.isMasterPassEnabled() || isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
         mVisaCheckoutButton.setVisibility(isOurPaySelectDeliveryMethod() || mActivity.getPaymentMethodSelected() != null ? View.GONE : View.VISIBLE);
         mPaypalCreditButton.setVisibility(isOurPaySelectDeliveryMethod() || !mPresenter.isPaypalCreditEnabled() ? View.GONE : View.VISIBLE);
     }

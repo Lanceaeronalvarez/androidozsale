@@ -38,7 +38,7 @@
                 fontPath="@string/font_app_semibold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.35"
+                android:layout_weight="0.4"
                 android:padding="@dimen/padding_default"
                 android:text="@string/country_code"
                 android:textColor="@color/text_medium"
@@ -49,10 +49,10 @@
                 style="@style/DDEditTextStyleNoBorder"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.65"
+                android:layout_weight="0.6"
                 android:background="@color/transparent"
                 android:enabled="false"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/text_extra_dark" />
 
         </LinearLayout>
 
@@ -69,7 +69,7 @@
                 fontPath="@string/font_app_semibold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.35"
+                android:layout_weight="0.4"
                 android:padding="@dimen/padding_default"
                 android:text="@string/mobile_number"
                 android:textColor="@color/text_medium"
@@ -80,10 +80,10 @@
                 style="@style/DDEditTextStyleNoBorder"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.65"
+                android:layout_weight="0.6"
                 android:focusableInTouchMode="true"
                 android:inputType="phone"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/text_extra_dark" />
         </LinearLayout>
 
 
@@ -142,7 +142,7 @@
                 fontPath="@string/font_app_semibold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.35"
+                android:layout_weight="0.4"
                 android:padding="@dimen/padding_default"
                 android:text="@string/ourpay_code_hint"
                 android:textColor="@color/text_medium"
@@ -153,8 +153,9 @@
                 style="@style/DDEditTextStyleNoBorder"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.65"
+                android:layout_weight="0.6"
                 android:focusableInTouchMode="true"
+                android:textColor="@color/text_extra_dark"
                 android:hint="@string/ourpay_code_hint"
                 android:inputType="phone"
                 android:maxLength="6" />

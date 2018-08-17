@@ -72,6 +72,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+
     public SaleItemDetailsImageAdapter(boolean isTablet,
                                        View container,
                                        ArrayList<View> views,
@@ -138,13 +139,15 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                     scalableImageView.setOnScaleChangeListener((scaleFactor, focusX, focusY) -> {
 
                         boolean resetZoom = scalableImageView.getScale() <= 1.05f;
+                        mSaleItemDetailsView.toggleClipPadding(resetZoom);
                         if (resetZoom) {
                             for (View v : mViewsToToggle) {
                                 v.setVisibility(View.VISIBLE);
                             }
                         } else {
                             for (View v : mViewsToToggle) {
-                                v.setVisibility(!mIsTablet ? View.GONE : View.INVISIBLE);
+                                v.setVisibility(!mIsTablet ||
+                                        (mIsTablet && !mContext.getResources().getBoolean(R.bool.is_item_details_split_enabled)) ? View.GONE : View.INVISIBLE);
                             }
                         }
                     });

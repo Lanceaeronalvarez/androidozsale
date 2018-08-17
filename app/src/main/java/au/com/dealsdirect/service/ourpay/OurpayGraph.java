@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
@@ -64,7 +65,8 @@ public class OurpayGraph {
                 tempPay.setText(R.string.paid);
                 checkImage.setVisibility(View.VISIBLE);
             } else {
-                tempPay.setText(PriceUtils.getPriceStringValue(ourpayTransactions.get(i).getAmount()));
+                String formattedPriceString = PriceUtils.TEMP_CURRENCY_SIGN + String.format(Locale.ENGLISH, "%.2f", ourpayTransactions.get(i).getAmount());
+                tempPay.setText(formattedPriceString);
                 checkImage.setVisibility(View.INVISIBLE);
             }
 

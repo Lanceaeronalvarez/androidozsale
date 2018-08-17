@@ -23,4 +23,6 @@ public interface SaleItemDetailsMvpView extends MvpView {
     void onCallGetBasketItemsQuantity();
 
     int getVerticalOffset();
+
+    void toggleClipPadding(boolean isClipped);
 }

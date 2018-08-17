@@ -36,7 +36,7 @@
                 fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/text_dark"
                 android:textSize="@dimen/text_size_body"
                 tools:ignore="HardcodedText"
                 tools:text="Philosophy Cotton Sleeveless Plain" />
@@ -66,7 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_small"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/text_dark"
                     android:textSize="@dimen/text_size_body"
                     tools:ignore="HardcodedText"
                     tools:text="1" />
@@ -95,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/text_dark"
                     android:textSize="@dimen/text_size_body"
                     tools:text="123.45" />
 
@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_small"
                     android:fontFamily="@string/font_app_regular"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/text_dark"
                     android:textSize="@dimen/text_size_body"
                     tools:text="8" />
 
@@ -152,7 +152,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_small"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/text_dark"
                     android:textSize="@dimen/text_size_body"
                     tools:ignore="HardcodedText"
                     tools:text="123.45" />

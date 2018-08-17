@@ -33,13 +33,13 @@
 
     <TextView
         android:id="@+id/controller_contact_select_order_placeholder"
-        fontPath="@string/font_app_bold"
+        fontPath="@string/font_app_regular"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/no_orders"
         android:textColor="@color/text_medium"
-        android:textSize="@dimen/text_size_headline1"
+        android:textSize="@dimen/text_size_body"
         android:visibility="gone" />
 
 </LinearLayout>

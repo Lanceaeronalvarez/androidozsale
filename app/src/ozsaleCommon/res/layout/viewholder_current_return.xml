@@ -25,7 +25,7 @@
             android:layout_weight="4"
             android:maxLines="2"
             android:text="Philosophy Cotton Sleeveless Plain"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/text_dark"
             android:textSize="@dimen/text_size_caption1"
             tools:ignore="HardcodedText" />
 
@@ -38,8 +38,8 @@
             android:layout_marginStart="@dimen/margin_extra_small"
             android:gravity="end"
             android:layout_weight="2"
-            android:text="204400890"
-            android:textColor="@color/colorAccent"
+            tools:text="204400890"
+            android:textColor="@color/text_dark"
             android:textSize="@dimen/text_size_caption1"
             tools:ignore="HardcodedText" />
 
@@ -112,21 +112,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="March 1, 2013"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/text_dark" />
 
                 <TextView
                     android:id="@+id/my_current_returns_product_is_approved_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="March 8, 2013"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/text_dark" />
 
                 <TextView
                     android:id="@+id/my_current_return_item_RAN_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ran_value"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/text_dark"
                     android:textSize="@dimen/text_size_caption1" />
 
                 <TextView
@@ -134,7 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="stat_value"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/text_dark"
                     android:textSize="@dimen/text_size_caption1" />
 
             </LinearLayout>

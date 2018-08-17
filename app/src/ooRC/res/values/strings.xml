@@ -190,7 +190,7 @@
     <string name="enter_promo_code">Enter Code</string>
     <string name="enter_promo_code_caps">ENTER CODE</string>
     <string name="apply">Apply</string>
-    <string name="apply_vouchers">Apply Vouchers</string>
+    <string name="apply_vouchers">Apply Voucher</string>
     <string name="promo_code">Promo Code</string>
     <string name="voucher">voucher</string>
     <string name="voucher_label">Voucher</string>
@@ -273,5 +273,5 @@
     <string name="you_currently_do_not_have_any_returns">You do not currently have any returns.</string>
 
     <string name="product_item_source_name">oo.com.au</string>
-
+    <string name="no_orders">You do not have any orders</string>
 </resources>

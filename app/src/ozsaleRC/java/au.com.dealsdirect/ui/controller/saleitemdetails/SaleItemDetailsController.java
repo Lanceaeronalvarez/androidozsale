@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -145,7 +146,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_shared_image)
     ImageView mProductSharedImage;
     @BindView(R.id.product_details_coordinator)
-    RelativeLayout mProductCoordinatorLayout;
+    CoordinatorLayout mProductCoordinatorLayout;
     @BindView(R.id.bottom_card)
     LinearLayout mProductDetailBottomCard;
     @BindView(R.id.product_details_name_price_container)
@@ -346,6 +347,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     add(mOtherImagesRv);
                     add(mProductPriceCategory);
                     add(mProductDetailScrollView);
+                    add(mAddToCartButton);
+                    add(mAddToCartOverlay);
                 }},
                 loadImagesListener, new ArrayList<>(), 1, mProductSharedImage.getDrawable(), this);
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
@@ -587,6 +590,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
+    public void toggleClipPadding(boolean isClipped) {
+        mProductCoordinatorLayout.setClipChildren(isClipped);
+        mProductCoordinatorLayout.setClipToPadding(isClipped);
+
+    }
+
+    @Override
     public boolean handleBack() {
         if (!isAnimating) {
             mProductDetailScrollView.scrollTo(0, 0);
@@ -774,4 +784,5 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductDetailsTitleLayout.setVisibility(!showToolbar ? View.VISIBLE : View.GONE);
         mProductPriceCategory.setBackgroundColor(getColor(!showToolbar ? R.color.product_details_transparent : R.color.toolbar_active_skin));
     }
+
 }

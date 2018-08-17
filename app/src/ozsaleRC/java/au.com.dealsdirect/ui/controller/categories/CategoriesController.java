@@ -1,8 +1,10 @@
 package au.com.dealsdirect.ui.controller.categories;
 
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -149,6 +151,7 @@ public class CategoriesController extends BaseController
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
             mRecyclerView.setMotionEventSplittingEnabled(false);
             mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL));
 
             mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, !mCategories.isEmpty() && mCategories.get(0).getChildren() != null ?
                     mCategories.get(0).getChildren() : new ArrayList<>(), mPresenter,

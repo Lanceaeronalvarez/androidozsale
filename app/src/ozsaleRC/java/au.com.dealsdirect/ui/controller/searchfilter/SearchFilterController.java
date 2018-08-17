@@ -33,6 +33,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
@@ -200,7 +201,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
         setupPriceFacet();
 
 //      SETUP CATEGORIES
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mActivity,"", mCategoryTree, mPresenter, mCategoryMap,10);
+        mSubCategoriesAdapter = new SubCategoriesAdapter(mActivity, "", mCategoryTree, mPresenter, mCategoryMap, (int) getDimension(R.dimen.margin_small));
 
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
@@ -261,7 +262,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     public void closeFacets() {
         mIsSearchFilterControllerActive = false;
-        mFacetsFrame.setVisibility(View.GONE);
+        mFacetsFrame.setVisibility(View.INVISIBLE);
         mSaleItemsView.enableSaleItemsScroll(true);
     }
 
@@ -384,11 +385,11 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
                 mFacetItemsRecyclerView.setVisibility(View.VISIBLE);
                 mSeekbarLayout.setVisibility(View.GONE);
-                mFilterCategoriesRecyclerView.setVisibility(View.GONE);
+                mFilterCategoriesRecyclerView.setVisibility(View.INVISIBLE);
             }
 
         } else { //price is clicked
-            mFilterCategoriesRecyclerView.setVisibility(View.GONE);
+            mFilterCategoriesRecyclerView.setVisibility(View.INVISIBLE);
             mFacetItemsRecyclerView.setVisibility(View.GONE);
             mSeekbarLayout.setVisibility(View.VISIBLE);
         }

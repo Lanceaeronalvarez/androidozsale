@@ -20,7 +20,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
@@ -63,10 +62,10 @@ import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.TabLayoutUtils;
-import au.com.dealsdirect.utils.ViewUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -90,7 +89,7 @@ import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 public class SaleItemsController extends BaseController implements SaleItemsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
 
     public static final String TAG = SaleItemsController.class.getSimpleName();
-    private static final long DELAY = 500; // milliseconds
+    private static final long DELAY_MS = 150; // milliseconds
     private static final String CATEGORY_KEY_SEPARATOR = ">>>";
     private static final String CATEGORY_KEY_SEPARATOR_REPLACEMENT = " • ";
 
@@ -211,7 +210,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                                 mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
                             }
                         }
-                    }, DELAY);
+                    }, DELAY_MS);
 
         }
 
@@ -363,6 +362,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void onDetach(View view) {
         mPtrFrameLayout.setPtrHandler(null);
         mAppBar.removeOnOffsetChangedListener(this);
+        hideKeyboard();
         super.onDetach(view);
     }
 
@@ -379,7 +379,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setSaleItemsController(this);
         mActivity.getMainController().setViewpagerDraggable(false);
-        mActivity.getHomeController().animateBottomNav(1);
         setupPtrHeader();
 
         //use initialcategory tree map if it came from categories.
@@ -447,13 +446,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void showKeyboard() {
         if (mFromShopSearch) {
-            mSaleItemsToolbarField.requestFocus();
-            mSaleItemsToolbarField.postDelayed(() -> {
-                InputMethodManager inputMethodManager = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (inputMethodManager != null) {
-                    inputMethodManager.showSoftInput(mSaleItemsToolbarField, InputMethodManager.SHOW_IMPLICIT);
-                }
-            }, DELAY);
+            KeyboardUtils.showSoftInput(mSaleItemsToolbarField, mActivity);
+            InputMethodManager inputMethodManager = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                inputMethodManager.showSoftInput(mSaleItemsToolbarField, InputMethodManager.SHOW_FORCED);
+            }
         }
     }
 
@@ -550,7 +547,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             setupSearchFilters();
             mIsCategoryChanged = false;
         }
-        showKeyboard();
         onRefreshEnd();
 
     }
@@ -639,7 +635,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             GateKeeper.setRoot(mSearchFilterRouter, GateKeeper.Destination.SEARCH_FILTER, RouterTransaction.with(searchFilterController));
             mFacetFilters = mSearchFilterMvpView.parseFacets(mFacets);
             setupTabs();
-            Completable.timer(DELAY, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showCollapsingToolbar);
+            Completable.timer(DELAY_MS, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showCollapsingToolbar);
+            Completable.timer(DELAY_MS, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showKeyboard);
         }
     }
 
@@ -804,12 +801,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void onSelectTab(TabLayout.Tab tab){
+        hideKeyboard();
         mSearchFilterMvpView.showFacetItem(tab.getPosition());
         mCurrentTabPosition = tab.getPosition();
         mIsSearchFilterControllerActive = true;
         mSearchFilterMvpView.setSearchFilterControllerActive(mIsSearchFilterControllerActive);
         toggleTabSelection(mCurrentTabPosition,true);
-        hideKeyboard();
     }
 
     private void showCollapsingToolbar() {

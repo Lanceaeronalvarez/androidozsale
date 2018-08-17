@@ -9,16 +9,18 @@
     tools:ignore="MissingPrefix">
 
     <RelativeLayout
-        android:id="@+id/product_details_coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
 
         <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/product_details_coordinator"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="@color/white"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:clickable="true">
 
             <android.support.design.widget.AppBarLayout
@@ -409,14 +411,14 @@
                     <LinearLayout
                         android:id="@+id/bottom_card"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:visibility="visible">
 
                         <LinearLayout
                             android:id="@+id/about_pricing_container"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:background="@color/white"
                             android:orientation="vertical"
                             android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -528,7 +530,7 @@
                         <LinearLayout
                             android:id="@+id/product_details_shipping_desc_container"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:background="@color/white"
                             android:orientation="vertical"
                             android:visibility="gone">
@@ -556,7 +558,7 @@
                         <LinearLayout
                             android:id="@+id/product_details_return_policy_container"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_small"
                             android:background="@color/white"
                             android:orientation="vertical"
@@ -585,7 +587,7 @@
                         <LinearLayout
                             android:id="@+id/product_description_container"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_small"
                             android:background="@color/white"
                             android:orientation="vertical">
@@ -690,7 +692,7 @@
                             <WebView
                                 android:id="@+id/product_about"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_marginTop="@dimen/margin_tiny" />
 
                         </LinearLayout>

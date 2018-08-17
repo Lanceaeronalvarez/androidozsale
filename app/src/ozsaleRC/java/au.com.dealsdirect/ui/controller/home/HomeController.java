@@ -542,16 +542,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         return mBottomNavigationView;
     }
 
-    public void animateBottomNav(int verticalAdjustmentPixels) {
-        if (Math.abs(verticalAdjustmentPixels) > 0) {
-            showBottomNav();
-            mBottomNavigationView.restoreBottomNavigation(true);
-        } else {
-            mBottomNavigationView.hideBottomNavigation(true);
-            hideBottomNav();
-        }
-    }
-
     @Override
     public boolean isPopUpControllerVisible() {
         return mPopUpHostRouter != null && mPopUpHostRouter.getBackstackSize() >= 1;

@@ -140,7 +140,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
                 .setContext(context)
                 .setMode(ContextWrapper.MODE_PRIVATE)
                 .setPrefsName(prefFileName)
-                .setUseDefaultSharedPreference(true)
                 .build();
 
         //Set default settings here

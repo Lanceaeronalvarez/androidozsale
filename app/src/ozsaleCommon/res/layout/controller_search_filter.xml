@@ -10,7 +10,7 @@
         android:id="@+id/controller_search_filter_facets_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <View
             android:id="@+id/controller_sale_items_opaque_view"
@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_small"
                     android:overScrollMode="never"
-                    android:visibility="gone" />
+                    android:visibility="invisible" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/filters_facet_items_recyclerview"

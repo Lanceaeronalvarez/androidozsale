@@ -104,19 +104,15 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
     public static class CategoriesViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.row_category_image_indicator)
-        public ImageView categoryImageIndicator;
-
-        @BindView(R.id.row_category_image)
-        public ImageView categoryTitleBackground;
-
         @BindView(R.id.row_category_name)
         public TextView categoryText;
 
-        @BindView(R.id.row_category_indicator)
-        public TextView categoryIndicator;
-
         public CategoriesMvpPresenter mPresenter;
+
+        public CategoriesViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
 
         public CategoriesViewHolder(View itemView, CategoriesMvpPresenter presenter) {
             super(itemView);

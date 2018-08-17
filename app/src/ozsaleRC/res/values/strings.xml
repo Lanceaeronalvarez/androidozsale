@@ -268,5 +268,6 @@
     <string name="welcome_to_my_returns">Welcome to My Returns!</string>
     <string name="you_currently_do_not_have_any_returns">You do not currently have any returns.</string>
     <string name="product_item_source_name">ozsale.com</string>
+    <string name="no_orders">You do not have any orders</string>
 
 </resources>

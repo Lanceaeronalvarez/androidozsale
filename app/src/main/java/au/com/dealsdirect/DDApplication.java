@@ -117,7 +117,7 @@ public class DDApplication extends Application {
 
             //Remove Cache folder and image cache
             try {
-//                trimCache(this);
+                trimCache(this);
             } catch (Exception e) {
                 e.printStackTrace();
             }

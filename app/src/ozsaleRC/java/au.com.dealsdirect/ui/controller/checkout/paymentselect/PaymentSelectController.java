@@ -196,11 +196,13 @@ public class PaymentSelectController extends BaseController implements PaymentSe
             showLoading();
             mPresenter.fetchUserPaymentMethods();
         } else {
-            if(!mPaymentMethods.isEmpty()) {
+            if (!mPaymentMethods.isEmpty()) {
                 showPaymentList(mPaymentMethods);
                 mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {
+                    if (mActivity.getPaymentMethodSelected() != mPaymentMethods.get(position)) {
+                        mCheckoutMvpView.setIsPaymentMethodChanged(true);
+                    }
                     mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
-                    mAdapter.notifyDataSetChanged();
                     mActivity.onBackPressed();
                 }));
             }
