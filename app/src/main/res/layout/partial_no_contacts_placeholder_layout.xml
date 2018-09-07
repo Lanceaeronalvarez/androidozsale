@@ -37,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center"
             android:layout_marginTop="@dimen/padding_default"
             android:text="@string/welcome_remark_subtitle_contact_us"
             android:textColor="@color/text_medium"

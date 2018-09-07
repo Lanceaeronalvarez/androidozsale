@@ -64,6 +64,7 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
 
             LinearLayout.LayoutParams messageTextViewParams = (LinearLayout.LayoutParams) holder.contactHistoryMessageTextView.getLayoutParams();
             messageTextViewParams.gravity = Gravity.START;
+
         }
 
         holder.contactHistoryMessageTextView.setText(contactMessage);

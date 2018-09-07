@@ -271,8 +271,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void changePayment() {
-        if (!mPaymentList.isEmpty()) {
-//                  //push to payment select
+        if (!mPaymentList.isEmpty() && mPaymentList.size() >= 2) {
+            //push to payment select
             showPaymentSelectController();
         } else {
             //push controller to add payment

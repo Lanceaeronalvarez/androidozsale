@@ -76,6 +76,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
     private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
     private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
+    private static final String TEXT_ALL = "• All";
 
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
@@ -653,7 +654,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 //    }
 
     public String getCategoryParentKey(String saleCategoryKey) {
-        return saleCategoryKey + " • All";
+        return getBoolean(R.bool.is_category_all_enabled) ? saleCategoryKey + TEXT_ALL : saleCategoryKey;
     }
 
     public void loadShopBanners() {

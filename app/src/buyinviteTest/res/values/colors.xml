@@ -11,8 +11,10 @@
     <color name="white">#FFFFFF</color>
 
     <color name="payment_success_order_text_color">#616161</color>
+    <color name="colorSecondary">@color/colorAccent</color>
+    <color name="background_default">#EDEDED</color>
 
-
+    <color name="status_bar">@color/text_extra_dark</color>
     <color name="dark_text">#99000000</color>
     <color name="dark_icon">#99000000</color>
     <color name="dialog_background">#fafafa</color>
@@ -57,8 +59,8 @@
     <color name="tab_bar_icon_hovered">@color/colorPrimary</color>
 
     <color name="app_skin">#FAFAF9</color>
-    <color name="toolbar_skin">@color/colorAccent</color>
-    <color name="toolbar_active_skin">@color/colorAccent</color>
+    <color name="toolbar_skin">@color/white</color>
+    <color name="toolbar_active_skin">@color/white</color>
 
 
     <!-- Button Theme -->
@@ -89,8 +91,8 @@
     <color name="ourpay_orange_dark">#D98221</color>
     <color name="ourpay_border_gray">#FFC7C7C7</color>
 
-    <color name="invite_fb">#009BEC</color>
-    <color name="invite_fb_pressed">#339EF0</color>
+    <color name="invite_fb">@color/fb_default</color>
+    <color name="invite_fb_pressed">@color/fb_pressed</color>
     <color name="invite_twitter">#00B5E9</color>
     <color name="invite_twitter_pressed">#10C4F8</color>
     <color name="invite_mail">#EA5757</color>
@@ -98,6 +100,48 @@
     <color name="invite_sms">#65D87F</color>
     <color name="invite_sms_pressed">#72E98D</color>
 
+    <color name="fb_default">#3b5998</color>
+    <color name="fb_pressed">#8b9dc3</color>
+
+    <color name="bg_button_addcart_default">#65D87F</color>
+    <color name="bg_button_addcart_pressed">#65D87F</color>
+    <color name="bg_button_copy_to_clipboard">#4F4F4F</color>
+
+    <color name="bg_chips_selected">@color/colorAccent</color>
+    <color name="bg_chips_border_checked">@color/colorAccent</color>
+    <color name="bg_chips_border_default">@color/border_regular</color>
+
+    <!-- Facets Theme -->
+    <color name="bg_facets_selected">@color/colorAccent</color>
+    <color name="bg_facets_border_checked">@color/colorAccent</color>
+    <color name="bg_facets_default">@color/white</color>
+    <color name="bg_facets_border_default">#f1f1f1</color>
+
+    <color name="bg_order_node">@color/colorAccent</color>
+    <color name="refunded_state_color">@color/ourpay_orange</color>
+
     <color name="item_select_remove">@color/colorAccent</color>
     <color name="verify_resend_color">@color/colorAccent</color>
+    <color name="red">#FF785F</color>
+
+    <color name="text_highlight">@color/colorAccent</color>
+    <color name="text_label">#847E7E</color>
+    <color name="text_field">#323232</color>
+    <color name="text_hint">#8E8E93</color>
+    <color name="text_extra_dark">#000000</color>
+    <color name="text_dark">#323232</color>
+    <color name="text_light">#919191</color>
+    <color name="text_extra_light">#cacaca</color>
+
+    <color name="status_bar_splash">@color/colorAccent</color>
+    <color name="bg_splash">@color/colorAccent</color>
+    <color name="bottom_nav_inactive">@color/text_extra_light</color>
+
+    <color name="product_details_text_product_price">@color/text_extra_dark</color>
+    <color name="product_details_text_product_sale_price">@color/text_light</color>
+    <color name="payment_success_text_order_name">@color/text_highlight</color>
+
+    <color name="language_selected">@color/colorAccent</color>
+    <color name="item_view_selected_color">@color/white</color>
+
 </resources>

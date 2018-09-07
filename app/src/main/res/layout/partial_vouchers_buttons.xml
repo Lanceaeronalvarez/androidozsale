@@ -27,7 +27,7 @@
             style="@style/DDButtonStyle"
             android:layout_width="match_parent"
             android:layout_marginBottom="@dimen/padding_default"
-            android:text="@string/apply_vouchers"/>
+            android:text="@string/apply"/>
 
     </LinearLayout>
 </RelativeLayout>

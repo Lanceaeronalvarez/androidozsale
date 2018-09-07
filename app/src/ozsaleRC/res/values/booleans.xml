@@ -11,5 +11,6 @@
     <bool name="master_detail_enabled">true</bool>
     <bool name="language_check_enabled">true</bool>
     <bool name="is_gender_enabled">false</bool>
+    <bool name="is_category_all_enabled">false</bool>
 
 </resources>

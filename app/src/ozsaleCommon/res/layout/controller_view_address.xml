@@ -17,6 +17,10 @@
         android:visibility="visible"
         android:layout_below="@id/controller_view_address_toolbar">
 
+        <include
+            layout="@layout/view_address_placeholder_layout"
+            android:visibility="gone" />
+
         <TextView
             fontPath="@string/font_app_light"
             android:id="@+id/address_office_delivery_subtitle"
@@ -43,10 +47,6 @@
                 android:layout_height="match_parent"
                 android:overScrollMode="never"
                 android:visibility="visible" />
-
-            <include
-                layout="@layout/view_address_placeholder_layout"
-                android:visibility="gone" />
 
         </FrameLayout>
 

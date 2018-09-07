@@ -12,4 +12,7 @@
     <bool name="language_check_enabled">false</bool>
     <bool name="is_gender_enabled">true</bool>
     <bool name="is_oo_app">false</bool>
+    <bool name="is_category_all_enabled">true</bool>
+    <bool name="is_quantity_spinner_loading">true</bool>
+
 </resources>

@@ -88,7 +88,7 @@ public class ProductQuantityLayout extends LinearLayout {
 
             plus.setClickable(false);
 
-            if (!getResources().getBoolean(R.bool.is_oo_app)){
+            if (getResources().getBoolean(R.bool.is_quantity_spinner_loading)){
                 minus.setVisibility(View.GONE);
                 mMinusLoader.setVisibility(View.VISIBLE);
             } else {
@@ -112,7 +112,7 @@ public class ProductQuantityLayout extends LinearLayout {
             if (quantityValue < max) {
                 minus.setClickable(false);
 
-                if (!getResources().getBoolean(R.bool.is_oo_app)){
+                if (getResources().getBoolean(R.bool.is_quantity_spinner_loading)){
                     plus.setVisibility(View.GONE);
                     mPlusLoader.setVisibility(View.VISIBLE);
                 } else {
@@ -133,7 +133,7 @@ public class ProductQuantityLayout extends LinearLayout {
         plus.setVisibility(View.VISIBLE);
         mPlusLoader.setVisibility(View.GONE);
 
-        if (getResources().getBoolean(R.bool.is_oo_app)){
+        if (!getResources().getBoolean(R.bool.is_quantity_spinner_loading)){
             minus.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.quantity_button_less_click));
             plus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.quantity_button_more_click));
         }
