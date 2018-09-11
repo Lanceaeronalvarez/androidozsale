@@ -322,6 +322,56 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
+
+        singsaleRC {
+            versionCode 95
+            versionName "1.13.0"
+            applicationId "sg.com.singsale"
+
+            buildConfigField "String", "API_ROOT", "\"https://www.singsale.com.sg/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.singsale.com.sg/papi/public/v3.23/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"0508BB90-AFA8-435A-8EEA-FB27F500FBF7\""
+
+            resValue "string", "app_name", "Singsale"
+            def facebookAppId = "213701285425668"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "586750a24521ba339ff775ff2d729eb8"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "181383195228374"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=524844978"
+            resValue "string", "default_country_id", "SI"
+            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.singsale.com.sg"
+
+            ext.newRelicAppToken = "AA7859bf063d467b13d1118979fb839dec128eb88a"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+
+        }
+
+        singsaleTest {
+            versionCode 95
+            versionName "1.13.0"
+            applicationId "sg.com.singsaletest"
+
+            buildConfigField "String", "API_ROOT", "\"https://genie-ui-singsale-pre.mysaledev.com/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/v3.23/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"0508BB90-AFA8-435A-8EEA-FB27F500FBF7\""
+
+            resValue "string", "app_name", "Singsale"
+            def facebookAppId = "213701285425668"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "586750a24521ba339ff775ff2d729eb8"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "181383195228374"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=524844978"
+            resValue "string", "default_country_id", "SI"
+            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.singsale.com.sg"
+
+            ext.newRelicAppToken = "AA7859bf063d467b13d1118979fb839dec128eb88a"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
+
     }
 
     sourceSets {
@@ -428,6 +478,20 @@ android {
 
         ozsaleTest {
             res.srcDirs = ['src/ozsaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        singsaleRC {
+            res.srcDirs = ['src/singsaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        singsaleTest {
+            res.srcDirs = ['src/singsaleRC/res','src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']

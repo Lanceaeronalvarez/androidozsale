@@ -136,10 +136,9 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 editTextValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(infoList.MaxLength)});
 
                 //Add asterisk to required fields
-                if (infoList.getValidate().equalsIgnoreCase("*")) {
+                if (infoList.getValidate() != null && infoList.getValidate().equalsIgnoreCase("*")){
                     textViewLabel.setText(textViewLabel.getText() + "*");
                 }
-
                 break;
             case "select":
                 TextView spinnerLabel = (TextView) dynamicView.findViewById(R.id.row_add_address_label);

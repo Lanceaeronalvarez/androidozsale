@@ -377,6 +377,68 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72197270300:android:87942a000f497465",
+        "android_client_info": {
+          "package_name": "sg.com.singsale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "72197270300-8imqkribi80v4o70bsgt4gkh7oh42k0s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByuxDzliSIR7kUlqhRsLYy8KWJ30HzJAU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72197270300:android:87942a000f497465",
+        "android_client_info": {
+          "package_name": "sg.com.singsaletest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "72197270300-8imqkribi80v4o70bsgt4gkh7oh42k0s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByuxDzliSIR7kUlqhRsLYy8KWJ30HzJAU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

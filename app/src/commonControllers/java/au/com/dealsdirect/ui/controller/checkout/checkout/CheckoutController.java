@@ -439,7 +439,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             @Override
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                if (to instanceof CheckoutController && mActivity.isAuthorized()) {
+                if (to instanceof CheckoutController && (mActivity != null && mActivity.isAuthorized()) || from instanceof AddPaymentController) {
                     loadCart();
                 }
             }
@@ -778,9 +778,15 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setText(paymentMethod.getPaymentType());
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_details)).setText(paymentMethod.getDescription());
 
+//            Hardcoded visa checkout logo if visa checkout is payment type. this is due to api not wanting to update their response LOL.
+            String visaCheckoutLogoUrl = "https://assets.secure.checkout.visa.com/VCO/images/acc_40x30_wht01.png";
+            String paymentMethodImageUrl = paymentMethod.getImageUrl();
+            if (paymentMethod.getPaymentType().equalsIgnoreCase("VisaCheckoutBraintree") || paymentMethod.getPaymentType().equalsIgnoreCase("VisaCheckoutCyberSource")) {
+                paymentMethodImageUrl = visaCheckoutLogoUrl;
+            }
             ImageUtils.loadImage(mActivity
-                    , paymentMethod.getImageUrl()
-                    , (ImageView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_image));
+                    , paymentMethodImageUrl
+                    , mPaymentLayout.findViewById(R.id.partial_checkout_payment_image));
 
             mAddNewPaymentLayout.setVisibility(View.GONE);
             mPaymentLayout.setVisibility(View.VISIBLE);
