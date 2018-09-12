@@ -1,6 +1,8 @@
 package au.com.dealsdirect.service.ourpay;
 
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -30,28 +32,13 @@ public class Ourpay {
     private String termsAndConditionsText = "";
     private PhoneVerification ourpayPhoneVerification;
     private String description = "";
+    private double firstTransactionAmount = 0.0;
+    private double plannedTransactionAmount = 0.0;
+    private String firstTransactionText = "";
+    private String plannedTransactionText = "";
 
     public Ourpay() {
 
-    }
-
-    public Ourpay(Ourpay ourpay) {
-        this.canUse = ourpay.canUse;
-        this.initialAmount = ourpay.initialAmount;
-        this.totalAmount = ourpay.totalAmount;
-        this.details = ourpay.details;
-        this.minAmount = ourpay.minAmount;
-        this.maxAmount = ourpay.maxAmount;
-        this.errorCode = ourpay.errorCode;
-        this.transactionCount = ourpay.transactionCount;
-        this.billingPeriod = ourpay.billingPeriod;
-        this.plannedTransactions = ourpay.plannedTransactions;
-        this.termsAndConditionsCheckboxState = ourpay.termsAndConditionsCheckboxState;
-        this.state = ourpay.state;
-        this.paymentMethodNonce = ourpay.paymentMethodNonce;
-        this.termsAndConditionsText = ourpay.termsAndConditionsText;
-        this.ourpayPhoneVerification = ourpay.ourpayPhoneVerification;
-        this.description = ourpay.description;
     }
 
     public boolean isCanUse() {
@@ -182,8 +169,43 @@ public class Ourpay {
         return description;
     }
 
+
+    public void setFirstTransactionAmount(double firstTransactionAmount) {
+        this.firstTransactionAmount = firstTransactionAmount;
+    }
+
+    public void setPlannedTransactionAmount(double plannedTransactionAmount) {
+        this.plannedTransactionAmount = plannedTransactionAmount;
+    }
+
+    public void setFirstTransactionText(String firstTransactionText) {
+        this.firstTransactionText = firstTransactionText;
+    }
+
+    public void setPlannedTransactionText(String plannedTransactionText) {
+        this.plannedTransactionText = plannedTransactionText;
+    }
+
+    public double getFirstTransactionAmount() {
+        return firstTransactionAmount;
+    }
+
+    public double getPlannedTransactionAmount() {
+        return plannedTransactionAmount;
+    }
+
+    public String getFirstTransactionText() {
+        return firstTransactionText;
+    }
+
+    public String getPlannedTransactionText() {
+        return plannedTransactionText;
+    }
+
     public void setDescription(String description) {
+
         this.description = description;
     }
+
 
 }

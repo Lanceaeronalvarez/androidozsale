@@ -40,6 +40,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostContro
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
+import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -102,9 +103,6 @@ public class HomeController extends BaseController implements HomeMvpView {
     @BindView(R.id.login_host_frame)
     ViewGroup mLoginHostContainer;
 
-    @BindView(R.id.controller_home_bottom_nav)
-    AHBottomNavigation mBottomNavigationView;
-
     private HashMap<Integer, Pair<Router, ViewGroup>> mRouterContainerMapping;
 
     private Router mShopRouter;
@@ -117,6 +115,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     private AccountMvpView mAccountMvpView;
     private CheckoutMvpView mCheckoutMvpView;
     private ViewContactsMvpView mViewContactsMvpView;
+    private AHBottomNavigation mBottomNavigationView;
 
     private int currentVisibleIndex = 0;
     private int previousVisibleIndex = 0;
@@ -154,6 +153,8 @@ public class HomeController extends BaseController implements HomeMvpView {
         super.onViewBound(view);
 
         initControllers(true);
+
+        mBottomNavigationView = mActivity.getMainController().getBottomNav();
 
         mRouterContainerMapping = new HashMap<>();
         mRouterContainerMapping.put(TAB_SHOP_INDEX, new Pair<>(mShopRouter, mShopContainer));
@@ -225,7 +226,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
             if (!wasSelected) {
-
+                mActivity.getMainController().goToPage(MainController.SHOP_INDEX);
                 Controller checkoutController = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (position != TAB_CATEGORIES_INDEX && checkoutController instanceof PaymentSuccessController) {
                     mCheckoutRouter.popToRoot();
@@ -345,9 +346,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         if (mShopRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
-            if (controller instanceof ShopsController) {
-                ((MainActivity) getActivity()).getMainController().setViewpagerDraggable(true);
-            }
+            mActivity.setDraggableViewPager(controller instanceof ShopsController);
 
             if (controller instanceof SaleItemsController) {
                 mActivity.onBackPressed();
@@ -359,14 +358,14 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showSecondTabController() {
-        mActivity.getMainController().setViewpagerDraggable(false);
+        mActivity.setDraggableViewPager(true);
         setVisibleContainer(TAB_CATEGORIES_INDEX);
     }
 
     @Override
     public void showThirdTabController() {
         setVisibleContainer(TAB_ACCOUNT_INDEX);
-        mActivity.getMainController().setViewpagerDraggable(false);
+        mActivity.setDraggableViewPager(true);
         int size = mAccountsRouter.getBackstack().size();
 
         if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView) {
@@ -376,7 +375,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showFourthTabController() {
-        mActivity.getMainController().setViewpagerDraggable(false);
+        mActivity.setDraggableViewPager(true);
         setVisibleContainer(TAB_CONTACT_INDEX);
         if (!mActivity.isAuthorized()) {
             mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
@@ -398,7 +397,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showFifthTabController() {
-        mActivity.getMainController().setViewpagerDraggable(false);
+        mActivity.setDraggableViewPager(true);
         setVisibleContainer(TAB_CHECKOUT_INDEX);
         if (!mActivity.isAuthorized()) {
             mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
@@ -473,7 +472,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (mShopRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
             if (controller instanceof ShopsController) {
-                mActivity.getMainController().setViewpagerDraggable(true);
+                mActivity.setDraggableViewPager(true);
             }
         }
     }
@@ -605,7 +604,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void sendSaleItemToCheckout(Value getCurrentOrder) {
-        mCheckoutMvpView.getPresenter().updateCart(getCurrentOrder);
+        mCheckoutMvpView.getPresenter().updateCartValues(getCurrentOrder);
     }
 
     public void deepLinkSaleCategory(String categoryName, String categoryIdentifier) {

@@ -18,4 +18,13 @@ public interface ShopsMvpView extends MvpView {
     void refresh();
 
     void unBindPaginate();
+
+    void onBannerClicked(String saleId,
+                         String bannerTitle,
+                         String bannerId,
+                         int position,
+                         String imageUrl,
+                         boolean isAvailable);
+
+    boolean isChangeInProgress();
 }

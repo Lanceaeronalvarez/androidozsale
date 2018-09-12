@@ -146,6 +146,10 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             ourpay.setInitialAmount(ourpayDataResponse.getSummary().getFirstTransactionAmount());
 
             ourpay.setPlannedTransactions(ourpayDataResponse.getPayment().getBillingAgreement().getPlannedTransactions());
+            ourpay.setPlannedTransactionText(ourpayDataResponse.getSummary().getPlannedTransactionsText());
+            ourpay.setPlannedTransactionAmount(ourpayDataResponse.getSummary().getPlannedTransactionsAmount());
+            ourpay.setFirstTransactionText(ourpayDataResponse.getSummary().getFirstTransactionText());
+            ourpay.setFirstTransactionAmount(ourpayDataResponse.getSummary().getFirstTransactionAmount());
 
             if (ourpayDataResponse.getSummary().getDescription() != null) {
                 ourpay.setDetails(ourpayDataResponse.getSummary().getDescription());

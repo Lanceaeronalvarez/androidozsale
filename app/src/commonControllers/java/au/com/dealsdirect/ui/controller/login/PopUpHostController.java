@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 
@@ -15,6 +16,8 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -82,6 +85,9 @@ public class PopUpHostController extends BaseController implements PopUpHostMvpV
     void dismissDialog() {
         mPopUpHostChildRouter.handleBack();
         getRouter().popController(this);
+        int routerStackSize = mActivity.getCurrentRouter().getBackstackSize();
+        Controller previousController = mActivity.getCurrentRouter().getBackstack().get(routerStackSize - 1).controller();
+        mActivity.setDraggableViewPager(mDestination == GateKeeper.Destination.LOGIN && !(previousController instanceof SaleItemDetailsController));
     }
 
     @Override

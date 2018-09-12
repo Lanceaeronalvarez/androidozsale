@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.checkouthost;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -137,6 +138,11 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
+    public void onOrientationChanged(Configuration newConfiguration) {
+        mCheckoutController.onOrientationChanged(newConfiguration);
+    }
+
+    @Override
     public void showMyPayDetails(Value value, Ourpay ourpay) {
         mCheckoutDetailView.showMyPayDetails(value, ourpay);
     }
@@ -158,20 +164,15 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public void showCartDetailsOnHost(List<Item> items) {
+        if(items == null) return;
         mItemList = items;
 
-        if (items == null || items.isEmpty()) {
-            //no items
-            showNoCartItemsLayout();
-        } else {
+        mAdapter.replaceData(items);
+        mNoCartItemsLayout.setVisibility(View.GONE);
+        mCheckoutContainer.setVisibility(View.VISIBLE);
+        int showOrdersLabel = getBoolean(R.bool.is_checkout_orders_label_visible) ? View.VISIBLE : View.GONE;
 
-            mAdapter.replaceData(items);
-            mNoCartItemsLayout.setVisibility(View.GONE);
-            mCheckoutContainer.setVisibility(View.VISIBLE);
-            int showOrdersLabel = getResources().getBoolean(R.bool.is_checkout_orders_label_visible) ? View.VISIBLE : View.GONE;
-
-            mOrdersLabel.setVisibility(showOrdersLabel);
-        }
+        mOrdersLabel.setVisibility(showOrdersLabel);
     }
 
     @Override

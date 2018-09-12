@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_default"
+    android:clickable="true"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
@@ -111,7 +112,7 @@
                 android:layout_weight="0.65"
                 android:gravity="end"
                 android:text="@string/resend_code"
-                android:textColor="@color/text_medium"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size_caption1" />
 
         </LinearLayout>

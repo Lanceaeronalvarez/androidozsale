@@ -36,6 +36,7 @@
     <dimen name="margin_large">20dp</dimen>
     <dimen name="margin_extra_large">30dp</dimen>
     <dimen name="margin_huge">40dp</dimen>
+    <dimen name="margin_extra_huge">60dp</dimen>
 
     <dimen name="negative_margin_small">-10dp</dimen>
 

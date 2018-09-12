@@ -89,7 +89,8 @@ import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 public class SaleItemsController extends BaseController implements SaleItemsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
 
     public static final String TAG = SaleItemsController.class.getSimpleName();
-    private static final long DELAY_MS = 150; // milliseconds
+    private static final long SEARCH_DELAY_MS = 1000; // milliseconds
+    private static final long DELETE_DELAY_MS = 1250; // milliseconds
     private static final String CATEGORY_KEY_SEPARATOR = ">>>";
     private static final String CATEGORY_KEY_SEPARATOR_REPLACEMENT = " • ";
 
@@ -159,7 +160,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private int mVerticalOffset;
     private int mSaleItemsPageNumber = 0;
-    private int mSaleItemClickCounter = 0;
 
     private boolean mIsFiltered = false;
     private boolean mIsSearch = false;
@@ -202,15 +202,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             timer.cancel();
             timer = new Timer();
             timer.schedule(
-                    new TimerTask() {
-                        @Override
-                        public void run() {
-                            if (before != 0 || count != 0) {
-                                mActivity.runOnUiThread(() -> showLoading());
-                                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
-                            }
-                        }
-                    }, DELAY_MS);
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        mActivity.runOnUiThread(() -> showLoading());
+                        mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                    }
+                }, count >= before ? SEARCH_DELAY_MS : DELETE_DELAY_MS);
 
         }
 
@@ -269,8 +267,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void onAttach(@NonNull View view) {
+        mActivity.setDraggableViewPager(false);
         mPresenter.onAttach(this);
-        mSaleItemClickCounter = 0;
         mPtrFrameLayout.setPtrHandler(this);
         mAppBar.addOnOffsetChangedListener(this);
 
@@ -378,7 +376,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
 
         mActivity.setSaleItemsController(this);
-        mActivity.getMainController().setViewpagerDraggable(false);
+        mActivity.setDraggableViewPager(false);
         setupPtrHeader();
 
         //use initialcategory tree map if it came from categories.
@@ -413,12 +411,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
 
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
+        boolean isLandscape = mActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (mPresenter.isTablet()) {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getInteger(R.integer.sale_items_tablet_column_count)));
+                    getInteger(isLandscape ? R.integer.sale_items_tablet_column_count_landscape
+                            : R.integer.sale_items_tablet_column_count_portrait)));
         } else {
             mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getInteger(R.integer.sale_items_phone_column_count)));
+                    getInteger(isLandscape ? R.integer.sale_items_phone_column_count_landscape
+                        : R.integer.sale_items_phone_column_count_portrait)));
         }
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
@@ -446,6 +447,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void showKeyboard() {
         if (mFromShopSearch) {
+            activateSearch();
             KeyboardUtils.showSoftInput(mSaleItemsToolbarField, mActivity);
             InputMethodManager inputMethodManager = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
             if (inputMethodManager != null) {
@@ -540,6 +542,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
+        mSearchFilterMvpView.updateFacets(mFacets);
         //replace category tree all the time.
         mSearchFilterMvpView.replaceCategoryTree(mCategoryTreeResponse);
 
@@ -580,40 +583,31 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
 
-        if (mSaleItemClickCounter != 1) {
-            mSaleItemClickCounter = +1;
+        mSearchFilterMvpView.closeFacets();
+        mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
-            Handler clickHandler = new Handler();
-            clickHandler.postDelayed(() -> {
-                mSaleItemClickCounter = 0;
-            }, 2000);
+        Bundle bundle = new Bundle();
+        bundle.putInt("KEY_POSITION", position);
+        bundle.putString("KEY_IMAGE_ID", imageUrl);
+        bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
+        bundle.putString("KEY_SKU_ID", skuId);
+        bundle.putString("KEY_SALE_ID", saleId);
+        bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString());
+        bundle.putString("KEY_SALE_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
+        bundle.putString("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
 
-            mSearchFilterMvpView.closeFacets();
-            mSaleItemsRecyclerView.smoothScrollToPosition(position);
-
-            Bundle bundle = new Bundle();
-            bundle.putInt("KEY_POSITION", position);
-            bundle.putString("KEY_IMAGE_ID", imageUrl);
-            bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
-            bundle.putString("KEY_SKU_ID", skuId);
-            bundle.putString("KEY_SALE_ID", saleId);
-            bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString());
-            bundle.putString("KEY_SALE_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
-            bundle.putString("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-                        .pushChangeHandler(new FadeChangeHandler())
-                        .popChangeHandler(new FadeChangeHandler()));
-            } else {
-                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-                        .pushChangeHandler(new SharedArcFadePushChangeHandler())
-                        .popChangeHandler(new SharedArcFadePopChangeHandler()));
-            }
-
-            mFromShopSearch = false;
-            mFromCategorySearch = false;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                    .pushChangeHandler(new FadeChangeHandler())
+                    .popChangeHandler(new FadeChangeHandler()));
+        } else {
+            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                    .pushChangeHandler(new SharedArcFadePushChangeHandler())
+                    .popChangeHandler(new SharedArcFadePopChangeHandler()));
         }
+
+        mFromShopSearch = false;
+        mFromCategorySearch = false;
 
     }
 
@@ -635,8 +629,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             GateKeeper.setRoot(mSearchFilterRouter, GateKeeper.Destination.SEARCH_FILTER, RouterTransaction.with(searchFilterController));
             mFacetFilters = mSearchFilterMvpView.parseFacets(mFacets);
             setupTabs();
-            Completable.timer(DELAY_MS, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showCollapsingToolbar);
-            Completable.timer(DELAY_MS, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showKeyboard);
+            Completable.timer(DELETE_DELAY_MS, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showCollapsingToolbar);
+            Completable.timer(DELETE_DELAY_MS, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showKeyboard);
         }
     }
 
@@ -856,36 +850,41 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @OnClick(R.id.partial_toolbar_field_title_edittext)
     public void activateSearch() {
-        mSaleItemsToolbarField.setSelection(mSaleItemsToolbarField.getText().length());
-        if (mSearchFilterMvpView != null) {
-            mSearchFilterMvpView.closeFacets();
-        }
-
-        mSaleItemsToolbarField.addTextChangedListener(mTextWatcher);
-        mSaleItemsToolbarField.setOnEditorActionListener((textView, actionId, keyEvent) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                hideKeyboard();
-                mSearchQuery = textView.getText().toString();
-                mIsSearch = true;
-                showLoading();
-                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+        if(isViewAttached()) {
+            mSaleItemsToolbarField.setSelection(mSaleItemsToolbarField.getText().length());
+            if (mSearchFilterMvpView != null) {
+                mSearchFilterMvpView.closeFacets();
             }
-            return false;
-        });
+
+            mSaleItemsToolbarField.addTextChangedListener(mTextWatcher);
+            mSaleItemsToolbarField.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    hideKeyboard();
+                    mSearchQuery = textView.getText().toString();
+                    mIsSearch = true;
+                    showLoading();
+                    mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                }
+                return false;
+            });
+        }
     }
 
     /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape */
     @Override
     public void onOrientationChanged(Configuration newConfig) {
+        boolean isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (mSaleItemsRecyclerView != null) {
             GridLayoutManager gridLayoutManager = (GridLayoutManager) mSaleItemsRecyclerView.getLayoutManager();
             int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
             mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
             gridLayoutManager.scrollToPosition(currentScrollPosition);
 
-            gridLayoutManager.setSpanCount(getInteger(R.integer.sale_items_phone_column_count));
+            gridLayoutManager.setSpanCount(getInteger(isLandscape ? R.integer.sale_items_phone_column_count_landscape
+                : R.integer.sale_items_phone_column_count_portrait));
             if (mPresenter != null && mPresenter.isTablet()) {
-                gridLayoutManager.setSpanCount(getInteger(R.integer.sale_items_tablet_column_count));
+                gridLayoutManager.setSpanCount(getInteger(isLandscape ? R.integer.sale_items_tablet_column_count_landscape
+                        : R.integer.sale_items_tablet_column_count_portrait));
             }
         }
 //        updateTabConfiguration();

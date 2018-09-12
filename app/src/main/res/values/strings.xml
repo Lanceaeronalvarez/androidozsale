@@ -179,6 +179,7 @@
     <string name="welcome_to_my_orders">welcome to my orders!</string>
     <string name="no_network_connection">No Network Connection</string>
     <string name="i_am_looking_for">I am looking for...</string>
+    <string name="no_order_tracking_message">This order does not have a tracking URL set.</string>
 
     <!--CHECKOUT-->
     <string name="checkout_page_toolbar_title">Checkout</string>
@@ -429,6 +430,7 @@
     <string name="sorry_today_we_can_t_find_anything_by_your_request">Sorry, today we can\'t find anything by your request. </string>
     <string name="meanwhile_why_not_search_for_something_else">Meanwhile, why not search for something else?</string>
     <string name="request_new_return">Request New Return</string>
+    <string name="add_new_returns">Add New Returns</string>
     <string name="clear">clear</string>
 
     <string name="loading">loading</string>

@@ -12,7 +12,7 @@
         android:id="@+id/controller_order_details_item_imageview"
         android:layout_width="@dimen/order_image_width"
         android:layout_height="@dimen/order_image_height"
-        android:layout_below="@id/my_order_information_header"
+        android:layout_below="@+id/my_order_information_header"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin" />
 

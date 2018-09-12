@@ -100,6 +100,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public static final String CARD_VISA_CHECKOUT = "VisaCheckoutBraintree";
     public static final String CARD_MASTERCARD = "MasterCard";
     public static final String CARD_VISA = "Visa";
+    private final int OurPayTCDisabled = 0;
+    private final int OurPayTCShowUnchecked = 1;
+    private final int OurPayTCShowChecked = 2;
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
@@ -414,7 +417,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     protected void setUp(View view) {
         if (mActivity != null) {
             mActivity.getMainController().showBottomNav();
-            mActivity.getMainController().setViewpagerDraggable(false);
+            mActivity.setDraggableViewPager(false);
         }
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
@@ -532,6 +535,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
             boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
 
+            if (paymentMethod != null && paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT)) {
+                return;
+            }
+
             if (ourpay != null && isMyPayEnabled && ourpay.isCanUse()) {
 
                 if (((MainActivity) getActivity()).getMainController().getHomeController().isCheckoutRouterVisible()) {
@@ -541,23 +548,27 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
                     ourpayPanel = new OurpayPanel(mActivity, getRouter());
                     mOurpayHolder.removeAllViews();
-                    if (mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
-                        mOurpayHolder.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay(), isRowVisible -> {
-                            if (isRowVisible) {
-                                new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
-                            }
-                        }));
-                    }
+                    mOurpayHolder.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay(), isRowVisible -> {
+                        if (isRowVisible) {
+                            new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
+                        }
+                    }));
+
+
 
                     mButtonOurpay = mOurpayHolder.findViewById(R.id.rl_button_ourpay);
-                    mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
+                    if (mButtonOurpay != null) {
+                        mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
+                    }
 
 
                     mCheckBoxOurpayTC = mOurpayHolder.findViewById(R.id.ourpay_toggle_switch_tc);
-                    mCheckBoxOurpayTC.setVisibility(ourpay.getTermsAndConditionsCheckboxState() != 0 ? View.VISIBLE : View.GONE);
-                    //set to yes if ourpay T&C == 2 (final int OurPayTCShowChecked = 2;)
-                    mCheckBoxOurpayTC.setCheckedTogglePosition(ourpay.getTermsAndConditionsCheckboxState() == 2 ? 0 : 1);
+                    if (mCheckBoxOurpayTC != null) {
+                        mCheckBoxOurpayTC.setVisibility(ourpay.getTermsAndConditionsCheckboxState() != OurPayTCDisabled ? View.VISIBLE : View.GONE);
+                        //set to yes if ourpay T&C == 2 (final int OurPayTCShowChecked = 2;)
+                        mCheckBoxOurpayTC.setCheckedTogglePosition(ourpay.getTermsAndConditionsCheckboxState() == OurPayTCShowChecked ? OurPayTCDisabled : OurPayTCShowUnchecked);
 
+                    }
                     if (isOurPaySelectDeliveryMethod()) { // show ourpay select related summary
                         mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount()));
                         mSummaryPayTodayTextView.setText(PriceUtils.getPriceStringValue(ourpay.getInitialAmount()));
@@ -650,7 +661,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             for (DeliveryOption option : deliveryOptions) {
                 if (option.getSelected()) {
                     mSelectedDeliveryOption = option;
-                    setIsOurPaySelectedDeliveryOption();
+                    String ourpayOption = OurpayTemplateText.DeliveryOptions.OURPAYSELECT.toString();
+                    setIsOurPaySelectedDeliveryOption(mSelectedDeliveryOption.getDeliveryOptions()
+                            .get(0).equalsIgnoreCase(ourpayOption));
                     deliveryOptionName = option.getDeliveryOptions().get(0); //get name
                     deliveryOptionPrice = option.getPrice();
                     break;
@@ -749,6 +762,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         } else if (mActivity.getPaymentMethodSelected() == null) {
             mActivity.setPaymentMethodSelected(paymentMethod);
         }
+
+        displayPaymentDetails();
 
     }
 
@@ -998,6 +1013,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
         if (mActivity.isBraintreeInitialized()) {
+            setIsOurPaySelectedDeliveryOption(true);
 
             if (!isAddressValid()) {
 
@@ -1094,7 +1110,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private void checkVisiblePaymentButtons() {
         mPayButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
         mPaypalButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
-        mMasterpassButton.setVisibility(!mPresenter.isMasterPassEnabled() || isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
+        mMasterpassButton.setVisibility(!mPresenter.isMasterPassEnabled() || isOurPaySelectDeliveryMethod() || mActivity.getPaymentMethodSelected() != null ? View.GONE : View.VISIBLE);
         mVisaCheckoutButton.setVisibility(isOurPaySelectDeliveryMethod() || mActivity.getPaymentMethodSelected() != null ? View.GONE : View.VISIBLE);
         mPaypalCreditButton.setVisibility(isOurPaySelectDeliveryMethod() || !mPresenter.isPaypalCreditEnabled() ? View.GONE : View.VISIBLE);
     }
@@ -1206,11 +1222,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     }
 
-    private void setIsOurPaySelectedDeliveryOption() {
-        mIsOurPaySelectDeliveryOption = false;
-        if (mSelectedDeliveryOption.getDeliveryOptions().get(0).equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.OURPAYSELECT.toString())) {
-            mIsOurPaySelectDeliveryOption = true;
-        }
+    private void setIsOurPaySelectedDeliveryOption(boolean isOurPaySelected) {
+        mIsOurPaySelectDeliveryOption = isOurPaySelected;
     }
 }
 

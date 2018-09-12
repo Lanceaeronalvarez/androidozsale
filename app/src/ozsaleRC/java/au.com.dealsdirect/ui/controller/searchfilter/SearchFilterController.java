@@ -260,6 +260,38 @@ public class SearchFilterController extends BaseController implements SearchFilt
         return mFacetFilters;
     }
 
+    @Override
+    public void updateFacets(List<GetSaleItemsResponse.Facets> facets) {
+        mBrandList = new ArrayList<>();
+        mSizeList = new ArrayList<>();
+        mColorList = new ArrayList<>();
+        for (int i = 0; i < facets.size(); i++) {
+            switch (facets.get(i).getFacetName()) {
+                case BundleKeys.BRANDS_FACETFILTER_NAME:
+                    for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
+                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        mBrandList.add(facetValue.getValue());
+                    }
+                    break;
+                case BundleKeys.SIZES_FACETFILTER_NAME:
+                    for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
+                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        mSizeList.add(facetValue.getValue());
+                    }
+                    break;
+                case BundleKeys.COLORS_FACETFILTER_NAME:
+                    for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
+                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        mColorList.add(facetValue.getValue());
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
     public void closeFacets() {
         mIsSearchFilterControllerActive = false;
         mFacetsFrame.setVisibility(View.INVISIBLE);

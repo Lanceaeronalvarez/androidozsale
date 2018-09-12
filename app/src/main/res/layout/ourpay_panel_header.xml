@@ -60,7 +60,7 @@
             android:paddingLeft="@dimen/margin_small">
 
             <TextView
-                android:id="@+id/ourpay_panel_header_price"
+                android:id="@+id/ourpay_panel_header_first_price"
                 fontPath="@string/font_app_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,20 +71,35 @@
                 tools:text="$35.00" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5sp"
-                android:text="x"
-                android:textColor="@color/ourpay_panel_header_price"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/ourpay_panel_header_transaction"
+                android:id="@+id/ourpay_panel_header_first_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/ourpay_panel_header_price"
                 android:textSize="@dimen/margin_large"
-                tools:text="4" />
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                tools:text="Today" />
+
+            <TextView
+                android:id="@+id/ourpay_panel_header_planned_price"
+                fontPath="@string/font_app_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/ourpay_panel_header_price"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold"
+                tools:ignore="MissingPrefix"
+                tools:text="$35.00" />
+
+            <TextView
+                android:id="@+id/ourpay_panel_header_planned_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/ourpay_panel_header_price"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_tiny"
+                android:textSize="@dimen/margin_large"
+                tools:text="x4" />
 
         </LinearLayout>
 

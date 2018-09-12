@@ -248,6 +248,10 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             ourpay.setTermsAndConditionsCheckboxState(getCurrentOrderOurpay.getSettings().getTermsAndConditions());
             ourpay.setMinAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMinAmountThreshold());
             ourpay.setMaxAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMaxAmountThreshold());
+            ourpay.setFirstTransactionAmount(getCurrentOrderOurpay.getSummary().getFirstTransactionAmount());
+            ourpay.setFirstTransactionText(getCurrentOrderOurpay.getSummary().getFirstTransactionText());
+            ourpay.setPlannedTransactionAmount(getCurrentOrderOurpay.getSummary().getPlannedTransactionsAmount());
+            ourpay.setPlannedTransactionText(getCurrentOrderOurpay.getSummary().getPlannedTransactionsText());
 
             if (getCurrentOrderOurpay.getSummary().getDescription() != null) {
                 ourpay.setDetails(getCurrentOrderOurpay.getSummary().getDescription());
@@ -312,38 +316,13 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Override
     public void updateCart(GetCurrentOrder.ResponseValue response) {
-
-        if (!isViewAttached()) {
-            return;
-        }
-
         if (!response.getD().isAuthenticated()) {
             getMvpView().triggerLoginTicket();
-
             return;
         }
 
-        getMvpView().updateCheckoutBadge();
-
         if (response.getD().getResult()) {
-
-            if (!response.getD().getValue().isEmpty()) {
-                Value value = response.getD().getValue();
-
-                getMvpView().showCartDetails(response.getD().getValue().getItems());
-
-                getMvpView().showAddressDetails(response.getD().getValue().getDeliveryAddress(), response.getD().getValue().getDecorationInfoList());
-
-                getMvpView().showDeliveryOptions(response.getD().getValue().getDeliveryOptions(), response.getD().getValue().getDeliveryServicePackageDetail());
-
-                getMvpView().storeCartDetails(value);
-
-                getMvpView().showVoucherDetails(response.getD().getValue().getVouchers());
-
-                getMvpView().showSummaryDetails(response.getD().getValue().getSummary());
-            } else {
-                getMvpView().showCartDetails(new ArrayList<>());
-            }
+            updateCartValues(response.getD().getValue());
         } else {
             getMvpView().showCartDetails(null);
             getMvpView().onError(response.getD().getMessage());
@@ -352,7 +331,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void updateCart(Value cartDetailsValue) {
+    public void updateCartValues(Value cartDetailsValue) {
 
         if (!isViewAttached()) {
             return;
@@ -362,7 +341,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         
         if (!cartDetailsValue.isEmpty()) {
             Value value = cartDetailsValue;
-
 
             getMvpView().showCartDetails(cartDetailsValue.getItems());
 

@@ -59,6 +59,7 @@ import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessMvpView;
 import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
@@ -146,8 +147,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         // Init All analytics sdk
         mPresenter.initializeAnalytics(this, this.getApplication());
 
-        mMainController = MainController.newInstance();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
+        mMainController = MainController.newInstance();
         showSplashScreen();
 
         onNewIntent(getIntent());
@@ -161,10 +162,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
      */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
         BaseController controller = (BaseController) getCurrentController(getCurrentRouter());
         controller.onOrientationChanged(newConfig);
-
-        super.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -202,7 +203,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onResume() {
         super.onResume();
-
         mPresenter.onAttach(this);
         registerInternetCheckReceiver();
     }
@@ -252,7 +252,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         } else {
             Router currentRouter = getCurrentRouter();
             Controller currentController = getCurrentController(currentRouter);
-
             switch (getMainController().getHomeViewPager().getCurrentItem()) {
                 case BANNER_FILTER_INDEX:
                     setRootViewpagerItem(SHOP_INDEX);
@@ -505,14 +504,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         // Pop current fragment and return to cart controller
         HomeController homeController = getMainController().getHomeController();
-        Router currentRouter = homeController.getCurrentRouter();
-        Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
+        Controller currentController = homeController.getCurrentControllerOnRouter(homeController.getCurrentRouter());
 
         if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
             ((AddPaymentController) currentController).showAddPaymentResult(true, "");
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
-            currentRouter.popToRoot();
+
+            if (currentController instanceof CheckoutHostController) {
+                ((CheckoutHostController) currentController).getDisplayRouter().popToRoot();
+            } else {
+                currentController.getRouter().popToRoot();
+            }
         }
     }
 
@@ -708,6 +711,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public Router getContactRouter() {
         return mContactsRouter;
     }
+
     public void setAccountsRouter(Router router) {
         mAccountsRouter = router;
     }
@@ -717,7 +721,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void setShopController(ShopsController shopsController) {
-        if(getMainController().getHomeController() != null) {
+        if (getMainController().getHomeController() != null) {
             getMainController().getHomeController().setShopRouterViewPagerDraggable();
         }
         mShopController = shopsController;
@@ -993,7 +997,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             bundle.putString(SALEITEMDETAILS_KEY_SKU_ID, skuId);
             bundle.putBoolean(SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE, false);
 
-            mMainController.setViewpagerDraggable(false);
+            setDraggableViewPager(false);
             mMainController.getHomeController().deepLinkSaleItemDetails(seoIdentifierId, skuId, false);
             deepLinkSuceeded();
         }, mDeepLinkLoadDelay);

@@ -20,6 +20,7 @@
             android:id="@+id/viewholder_subcategory_title"
             fontPath="@string/font_app_regular"
             style="@style/TextViewStyle"
+            android:textColor="@color/text_medium"
             android:layout_gravity="left|center_vertical"
             tools:ignore="MissingPrefix"
             tools:text="Category" />

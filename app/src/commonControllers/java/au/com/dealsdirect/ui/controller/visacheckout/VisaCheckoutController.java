@@ -58,7 +58,7 @@ public abstract class VisaCheckoutController extends BaseController implements V
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         mControllerComponent = DaggerControllerComponent.builder()
-                .controllerModule(new ControllerModule(this))
+                .controllerModule(new ControllerModule(this, mActivity))
                 .activityComponent(((BaseActivity) getActivity()).getActivityComponent())
                 .build();
         mControllerComponent.inject(this);

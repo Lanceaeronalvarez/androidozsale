@@ -79,8 +79,6 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderD
 
         GetPaymentsList.ResponseValue.Order item = mOrderList.get(position);
 
-        holder.trackHereTextView.setVisibility(item.getLink().isEmpty() ? View.GONE : View.VISIBLE);
-
         String approvedTime = DateUtils.getTimeFromDateString(item.getTracker().getApprovedDate());
 
         holder.orderStatusTextView.setText(item.getStatus());

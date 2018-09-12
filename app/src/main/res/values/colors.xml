@@ -109,7 +109,13 @@
     <color name="bg_chips_default">#F8FAFD</color>
     <color name="bg_chips_default_border">#EDF0F5</color>
     <color name="bg_chips_checked">#ED1167</color>
-    <color name="bg_chips_text">#FFFFFF</color>
+    <color name="bg_chips_selected">@color/colorAccent</color>
+    <color name="bg_chips_border_default">#323232</color>
+    <color name="bg_chips_border_checked">@color/colorAccent</color>
+    <color name="bg_chips_border_soldout">#e4e4e4</color>
+    <color name="bg_chips_soldout_fill">#F6F6F6</color>
+    <color name="bg_chips_soldout_text">#959595</color>
+    <color name="bg_chips_text">@color/white</color>
 
     <!-- Icon -->
     <color name="icon_snack_bar">@color/colorAccent</color>

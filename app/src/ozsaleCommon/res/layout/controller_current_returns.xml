@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="@dimen/padding_default"
-        android:text="@string/request_new_return"
+        android:text="@string/add_new_returns"
         android:visibility="gone" />
 
 </FrameLayout>

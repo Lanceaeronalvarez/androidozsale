@@ -50,13 +50,6 @@
             android:layout_above="@+id/controller_home_bottom_nav"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
-            android:id="@+id/controller_home_bottom_nav"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_nav_height"
-	    android:background="@color/bg_tab_bar"
-            android:layout_alignParentBottom="true" />
-
         <ImageView
             android:id="@+id/product_details_add_to_cart"
             android:layout_width="match_parent"

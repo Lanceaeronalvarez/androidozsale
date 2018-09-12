@@ -26,6 +26,8 @@ public class NotificationController extends BaseController implements Notificati
     @Inject
     NotificationMvpPresenter<NotificationMvpView> mPresenter;
 
+    @BindView(R.id.partial_toolbar_left_view)
+    TextView mToolbarTextViewLeft;
     @BindView(R.id.notification_switch)
     Switch mNotificationSwitch;
     @BindView(R.id.partial_toolbar_title)
@@ -46,6 +48,7 @@ public class NotificationController extends BaseController implements Notificati
         View view = inflater.inflate(R.layout.controller_notifications, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        mToolbarTextViewLeft.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
         return view;
     }
 

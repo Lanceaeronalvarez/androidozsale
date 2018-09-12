@@ -171,11 +171,17 @@ public class OurpayPanel {
 
         View header = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_panel_header, null, false);
 
-        TextView textViewPrice = (TextView) header.findViewById(R.id.ourpay_panel_header_price);
-        TextView textViewCount = (TextView) header.findViewById(R.id.ourpay_panel_header_transaction);
+        TextView textViewFirstPrice = (TextView) header.findViewById(R.id.ourpay_panel_header_first_price);
+        TextView textViewFirstMultiplier = (TextView) header.findViewById(R.id.ourpay_panel_header_first_text);
+        TextView textViewPlannedPrice = (TextView) header.findViewById(R.id.ourpay_panel_header_planned_price);
+        TextView textViewPlannedMultiplier = (TextView) header.findViewById(R.id.ourpay_panel_header_planned_text);
 
-        textViewPrice.setText(PriceUtils.getRpStringValue(ourpay.getInitialAmount()));
-        textViewCount.setText(Integer.toString(ourpay.getTransactionCount()));
+        textViewFirstPrice.setText(PriceUtils.getRpStringValue(ourpay.getFirstTransactionAmount()));
+        textViewFirstMultiplier.setText(ourpay.getFirstTransactionText());
+        textViewPlannedPrice.setText(PriceUtils.getRpStringValue(ourpay.getPlannedTransactionAmount()));
+        textViewPlannedMultiplier.setText(ourpay.getPlannedTransactionText());
+        textViewPlannedMultiplier.setVisibility(ourpay.getPlannedTransactionText() == null ? View.GONE : View.VISIBLE);
+        textViewPlannedPrice.setVisibility(ourpay.getPlannedTransactionAmount() == 0 ? View.GONE : View.VISIBLE);
 
         return header;
     }

@@ -6,6 +6,7 @@ package au.com.dealsdirect.service.ourpay;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,24 +71,26 @@ public class OurpayGraph {
                 checkImage.setVisibility(View.INVISIBLE);
             }
 
+            viewGroup.addView(ourpayPanelRow);
+
             mOnGlobalLayoutListener = new OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
                     if (circlesContainer.getMeasuredWidth() != 0) {
                         circlesContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        generateProgressCircles(circlesContainer, context, circlesContainer.getWidth(), transactionsCount);
+                        circlesContainer.postDelayed(
+                                () -> generateProgressCircles(circlesContainer, context, circlesContainer.getMeasuredWidth(), transactionsCount), 1000);
                     }
                 }
             };
 
             circlesContainer.getViewTreeObserver().addOnGlobalLayoutListener(mOnGlobalLayoutListener);
 
-            viewGroup.addView(ourpayPanelRow);
         }
     }
 
-    private void generateProgressCircles(ViewGroup circlesContainer, Context context, int margin, int transactionsSize) {
-        int initialMargin = margin - (context.getResources().getDimensionPixelSize(R.dimen.ourpay_circle_state_size) * transactionsSize);
+    private void generateProgressCircles(ViewGroup circlesContainer, Context context, int width, int transactionsSize) {
+        int initialMargin = width - (context.getResources().getDimensionPixelSize(R.dimen.ourpay_circle_state_size) * transactionsSize);
         int finalMargin = initialMargin / (transactionsSize - 1);
 
         for (int j = 0; j < transactionsSize; j++) {
@@ -103,10 +106,10 @@ public class OurpayGraph {
             if (j > 0) {
                 LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) panelCircleState.getLayoutParams();
                 lp.setMargins(finalMargin, 0, 0, 0);
+                panelCircleState.setLayoutParams(lp);
             }
 
             circlesContainer.addView(panelCircleState);
-
         }
 
     }

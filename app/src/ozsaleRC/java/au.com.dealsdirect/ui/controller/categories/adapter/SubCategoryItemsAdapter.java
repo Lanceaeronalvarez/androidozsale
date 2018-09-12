@@ -67,6 +67,12 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                     mLastSelectedViewHolder.subCategoryCheck.setVisibility(View.INVISIBLE);
                 }
 
+                View previousItemView = activity.getMainController().getSelectedSubCategoryItem();
+                if(previousItemView != null) {
+                    SubCategoryItemViewHolder subCategoryItemViewHolder = new SubCategoryItemViewHolder(previousItemView);
+                    subCategoryItemViewHolder.subCategoryCheck.setVisibility(View.GONE);
+                }
+
                 activity.getMainController().setSelectedSubCategoryItem(holder.itemView);
                 holder.subCategoryCheck.setVisibility(View.VISIBLE);
                 mLastSelectedViewHolder = holder;

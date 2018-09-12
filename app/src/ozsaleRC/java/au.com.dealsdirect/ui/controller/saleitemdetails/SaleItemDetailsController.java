@@ -14,17 +14,18 @@ import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,7 +35,7 @@ import android.widget.TextView;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.google.gson.Gson;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
-import com.mysale.genie.utility.LegacyBaseResponseValue;
+import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPagerAdapter;
 import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -48,10 +49,8 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
-import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
-import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
 import au.com.dealsdirect.service.ourpay.Ourpay;
@@ -61,14 +60,14 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListe
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
-import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
-import au.com.dealsdirect.utils.NoBounceBehavior;
 import au.com.dealsdirect.utils.PriceUtils;
+import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -79,7 +78,7 @@ import static com.mysale.genie.utility.GenericEvent.Events.SALE_ITEM_DETAILS_VER
  * Created by smartwave on 08/06/2017.
  */
 
-public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener, AppBarLayout.OnOffsetChangedListener {
+public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener, ViewTreeObserver.OnScrollChangedListener {
 
     private final String KEY_POSITION = "KEY_POSITION";
     private final String KEY_SKU_ID = "KEY_SKU_ID";
@@ -168,9 +167,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.productPreviousPriceLabel)
     TextView mProductPreviousPriceLabel;
 
-    //Collapsing Toolbar UI
-    @BindView(R.id.controler_product_details_app_bar_layout)
-    ViewGroup mAppBarLayout;
+    @BindView(R.id.controller_image_frame_layout)
+    FrameLayout mProductDetailsImageLayout;
     @BindView(R.id.controller_sale_details_toolbar)
     RelativeLayout mProductDetailsToolbar;
     @BindView(R.id.controller_product_details_title_description)
@@ -185,6 +183,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ImageButton mOldPriceInfoButton;
     @BindView(R.id.product_about_old_pricing_text)
     WebView mOldProductPricing;
+    @BindView(R.id.main_layout)
+    LinearLayout mMainContentLayout;
 
     ImageView mImageViewToAnimate;
 
@@ -208,6 +208,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private boolean didSelectSize = false;
     private int mFromPosition = -1;
     private int mToolbarVerticalOffset;
+    private boolean isSoldOutCombined = true;
 
     boolean checkOutLocated = false;
 
@@ -217,6 +218,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ElasticDragDismissFrameLayout mRootView;
     View mCheckoutView;
     AHBottomNavigation mBottomNavView;
+
+    private int mDefaultHeight;
+    private int mZoomedHeight;
 
     private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
@@ -269,9 +273,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
-        if (!getBoolean(R.bool.is_tablet)||(getBoolean(R.bool.is_tablet) && !getBoolean(R.bool.is_item_details_split_enabled))) {
-            ((AppBarLayout) mAppBarLayout).addOnOffsetChangedListener(this);
-        }
+        mActivity.setDraggableViewPager(false);
     }
 
     @Override
@@ -283,9 +285,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onDetach(View view) {
         super.onDetach(view);
-        if (!getBoolean(R.bool.is_tablet)||(getBoolean(R.bool.is_tablet) && !getBoolean(R.bool.is_item_details_split_enabled))) {
-            ((AppBarLayout) mAppBarLayout).removeOnOffsetChangedListener(this);
-        }
     }
 
     @Override
@@ -299,6 +298,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void setUp(View view) {
 
         mRootView = ((ElasticDragDismissFrameLayout) view);
+
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mProductDetailsImageLayout.getLayoutParams();
+        int bottomNavHeight = mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight();
+
+        int screenAllowanceSize = mPresenter.isTablet() ? bottomNavHeight * 3: bottomNavHeight;
+        mDefaultHeight = ScreenUtils.getScreenHeight(mActivity) - screenAllowanceSize;
+        mZoomedHeight = ScreenUtils.getScreenHeight(mActivity) - bottomNavHeight;
+
+        lp.height = mDefaultHeight;
+        mProductDetailsImageLayout.setLayoutParams(lp);
 
         //product info
         mProductName.setText(mSaleName);
@@ -334,24 +343,29 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
         mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(mPresenter.isTablet(),
-                null, null, loadImagesListener, new ArrayList<>(), 2, null, this);
+                mProductDetailScrollView, null, loadImagesListener, new ArrayList<>(), 2, null, this);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
         mOtherImagesRv.setVisibility(View.INVISIBLE);
 
         mProductImagesRvLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
-        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(mPresenter.isTablet(),
-                mPresenter.isTablet() && getBoolean(R.bool.is_item_details_split_enabled) ? null : mAppBarLayout,
-                new ArrayList<View>() {{
-                    add(mLeftView);
-                    add(mOtherImagesRv);
-                    add(mProductPriceCategory);
-                    add(mProductDetailScrollView);
-                    add(mAddToCartButton);
-                    add(mAddToCartOverlay);
-                }},
-                loadImagesListener, new ArrayList<>(), 1, mProductSharedImage.getDrawable(), this);
-        mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
+
+        ArrayList<View> toggledViews = new ArrayList<View>() {{
+            add(mLeftView);
+            add(mOtherImagesRv);
+            add(mProductPriceCategory);
+            add(mAddToCartButton);
+            add(mOurpayHolder);
+            add(mProductDetailBottomCard);
+            add(mAddToCartOverlay);
+            add(mMainContentLayout);
+        }};
+
+        if(mPresenter.isTablet()) toggledViews.add(mAddToCartOverlay);
+
+        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(mPresenter.isTablet(),null,
+                toggledViews, loadImagesListener, new ArrayList<>(), 1, mProductSharedImage.getDrawable(), this);
+        mProductImagesRv.setAdapter(new RecyclerViewPagerAdapter(mProductImagesRv, mSaleItemImagesAdapter));
         mProductImagesRv.setEnabled(false);
         mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
@@ -374,10 +388,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mHtmlFooter = mActivity.getResources()
                 .getString(R.string.base_html_template_footer);
 
+        mProductDetailScrollView.getViewTreeObserver().addOnScrollChangedListener(this);
     }
 
     @Override
     protected void onDestroyView(@NonNull View view) {
+        mProductDetailScrollView.getViewTreeObserver().removeOnScrollChangedListener(this);
         KeyboardUtils.hideSoftInput(mActivity);
         mPresenter.onDetach();
         super.onDestroyView(view);
@@ -499,9 +515,26 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                     parent,
                                     false);
                     tv.setText(data.first);
+                    if(mSkuVariants.get(position).isSoldOut()) {
+                        tv.setBackground(getDrawable(R.drawable.bg_chips_soldout));
+                        tv.setTextColor(getColor(R.color.bg_chips_soldout_text));
+                    }
+
                     return tv;
                 }
             };
+
+            isSoldOutCombined = true;
+            for(GetSaleItemDetailsResponse response : mSkuVariants) {
+                if(!response.isSoldOut()) {
+                    isSoldOutCombined = false;
+                    break;
+                }
+            }
+
+            //modify Initial state depending on the result of all variant's isSoldOut
+            mAddToCartButton.setText(!isSoldOutCombined ? R.string.add_to_cart : R.string.sold_out);
+            mAddToCartButton.setEnabled(!isSoldOutCombined);
 
             mSizesFlowLayout.setAdapter(mSizesAdapter);
 
@@ -513,14 +546,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
                     boolean isSizeSoldOut = saleDetail.getSkuVariants().get(selectedIndex).isSoldOut();
 
-                    mAddToCartButton.setEnabled(!isSizeSoldOut);
+                    if(isSizeSoldOut) return;
+
                     mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
+                    mAddToCartButton.setEnabled(!isSizeSoldOut);
 
                     didSelectSize = true;
                 } else {
                     didSelectSize = false;
                 }
             });
+
         }
 
         boolean isOldPriceInfoVisible = saleDetail.getOriginalPrice().getValue() <= 0;
@@ -772,17 +808,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mActivity.onBackPressed();
     }
 
-
     @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        mToolbarVerticalOffset = verticalOffset;
-        RxBus.instance().post(new Pair<>(SALE_ITEM_DETAILS_VERTICAL_OFFSET, mToolbarVerticalOffset));
-        TypedValue tv = new TypedValue();
-        mActivity.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
-        boolean showToolbar = Math.abs(verticalOffset) >= ((AppBarLayout) mAppBarLayout).getTotalScrollRange();
-        mProductDetailsToolbar.setVisibility(showToolbar ? View.VISIBLE : View.GONE);
-        mProductDetailsTitleLayout.setVisibility(!showToolbar ? View.VISIBLE : View.GONE);
-        mProductPriceCategory.setBackgroundColor(getColor(!showToolbar ? R.color.product_details_transparent : R.color.toolbar_active_skin));
+    public void onScrollChanged() {
+        if(isViewAttached()) {
+            boolean isScrollGreater = mProductDetailScrollView.getScrollY() >= ScreenUtils.getScreenHeight(mActivity) -
+                    (mProductDetailsTitleLayout.getBottom() + mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight());
+            mProductDetailsToolbar.setVisibility(isScrollGreater && !mPresenter.isTablet() ? View.VISIBLE : View.GONE);
+        }
     }
-
 }

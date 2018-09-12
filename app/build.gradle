@@ -38,11 +38,15 @@ android {
             zipAlignEnabled true
 
             resValue "bool", "debug_mode", "false"
+            aaptOptions.cruncherEnabled = true
+            ext.alwaysUpdateBulidId = true
         }
 
         // Always use debug variant during development
         debug {
             resValue "bool", "debug_mode", "true"
+            aaptOptions.cruncherEnabled = false
+            ext.alwaysUpdateBulidId = false
         }
     }
 
@@ -153,7 +157,7 @@ android {
         }
 
         ooRC {
-            versionCode 20
+            versionCode 24
             versionName "0.9"
             applicationId "au.com.oo"
 
@@ -177,7 +181,7 @@ android {
         }
 
         ooTest {
-            versionCode 25
+            versionCode 29
             versionName "0.9"
             applicationId "au.com.oo.test"
 
@@ -518,10 +522,6 @@ android {
 
     dataBinding {
         enabled = true
-    }
-
-    dexOptions {
-        javaMaxHeapSize "4g"
     }
 }
 

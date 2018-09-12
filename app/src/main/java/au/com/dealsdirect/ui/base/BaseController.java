@@ -45,16 +45,19 @@ public abstract class BaseController extends RefWatchingController implements Mv
         setHasOptionsMenu(false);
 
         mControllerComponent = DaggerControllerComponent.builder()
-                .controllerModule(new ControllerModule(this))
+                .controllerModule(new ControllerModule(this, getActivity()))
                 .activityComponent(((BaseActivity) getActivity()).getActivityComponent())
                 .build();
-        mControllerComponent.inject(this);
 
+        mControllerComponent.inject(this);
         return super.onCreateView(inflater, container);
     }
 
     @Override
     protected void onAttach(@NonNull View view) {
+        if (getActivity() instanceof MainActivity) {
+            this.mActivity = (MainActivity) getActivity();
+        }
         super.onAttach(view);
     }
 

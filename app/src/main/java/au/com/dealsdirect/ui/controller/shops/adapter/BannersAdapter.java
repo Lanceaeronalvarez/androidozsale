@@ -43,7 +43,6 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     private List<GetBannerResponse.Banner> mSales;
     private Context mContext;
     private ShopsMvpPresenter mPresenter;
-    private BannerClickListener mBannerClickListener;
     private int width;
     private int height;
 
@@ -51,7 +50,6 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
             Context context,
             ShopsMvpPresenter presenter,
             List<GetBannerResponse.Group> sales,
-            BannerClickListener bannerClickListener,
             int columnCount) {
 
         this.mGroups = sales;
@@ -61,7 +59,6 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         }
         this.mContext = context;
         this.mPresenter = presenter;
-        this.mBannerClickListener = bannerClickListener;
 
         width = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_width : R.integer.banner_mobile_width);
         height = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_height : R.integer.banner_mobile_height);
@@ -150,7 +147,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         RxView.clicks(holder.layout)
             .throttleFirst(1000, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(action -> mBannerClickListener.onBannerClicked(
+            .subscribe(action -> mPresenter.selectBanner(
                     item.getDestinationId(),
                     item.getDescription(),
                     item.getId(),

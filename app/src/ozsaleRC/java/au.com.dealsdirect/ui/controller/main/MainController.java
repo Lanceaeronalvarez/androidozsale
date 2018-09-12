@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -52,6 +53,8 @@ public class MainController extends BaseController implements MainMvpView {
 
     private String mChosenSubCategoryItemKey = "";
 
+    @BindView(R.id.controller_home_bottom_nav)
+    AHBottomNavigation mBottomNavigationView;
 
     public static MainController newInstance() {
 
@@ -178,6 +181,10 @@ public class MainController extends BaseController implements MainMvpView {
 
     public void goToPage(int position) {
         mHomeViewPager.setCurrentItem(position);
+    }
+
+    public AHBottomNavigation getBottomNav() {
+        return mBottomNavigationView;
     }
 
 }

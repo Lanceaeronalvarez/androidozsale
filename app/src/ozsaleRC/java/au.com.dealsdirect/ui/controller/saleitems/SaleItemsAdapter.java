@@ -11,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.view.RxView;
+
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
@@ -20,6 +23,7 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -29,6 +33,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private static final int SALE_ITEM_IMAGE_WIDTH = 225;
     private static final int SALE_ITEM_IMAGE_HEIGHT = 360;
     private static final int SCREEN_PADDING_MULTIPLIER = 15;
+    private static final int SCREEN_TRANSITION_DELAY = 2000;
 
     private List<GetSaleItemsResponse.Products> mData;
     private Context mContext;
@@ -82,8 +87,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         this.mSaleId = saleId;
 
         // Dynamic Height Computation
-        int columns = mPresenter.isTablet() ? mContext.getResources().getInteger(R.integer.sale_items_tablet_column_count)
-                : mContext.getResources().getInteger(R.integer.sale_items_phone_column_count);
+        int columns = mPresenter.isTablet() ? mContext.getResources().getInteger(R.integer.sale_items_tablet_column_count_portrait)
+                : mContext.getResources().getInteger(R.integer.sale_items_phone_column_count_portrait);
         int screenWidth = (int) (ScreenUtils.getScreenWidth(mContext) / columns - (SCREEN_PADDING_MULTIPLIER * ScreenUtils.getScreenDensity(mContext)));
         mComputedHeight = ImageUtils.getComputedBannerHeight(SALE_ITEM_IMAGE_WIDTH, SALE_ITEM_IMAGE_HEIGHT, screenWidth);
     }
@@ -125,15 +130,17 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         holder.oldPrice.setText(saleItemOldPrice);
         holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-
-        holder.itemView.setOnClickListener(v -> mPresenter.loadProductDetails(
-                holder,
-                position,
-                mData.get(position).getSeoIdentifier(),
-                url,
-                mData.get(position).getSkus().isEmpty() ? "" : mData.get(position).getSkus().get(0).getId(),
-                mSaleId));
-
+        RxView.clicks(holder.itemView)
+                .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> mPresenter.loadProductDetails(
+                        holder,
+                        position,
+                        mData.get(position).getSeoIdentifier(),
+                        url,
+                        mData.get(position).getSkus().isEmpty() ? "" :
+                                mData.get(position).getSkus().get(0).getId(),
+                        mSaleId));
 
     }
 

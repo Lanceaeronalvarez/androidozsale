@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.shops;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -69,7 +72,7 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
  * dp Created by Admin on 6/6/17.
  */
 
-public class ShopsController extends BaseController implements ShopsMvpView, BannerClickListener, PtrHandler, AppBarLayout.OnOffsetChangedListener {
+public class ShopsController extends BaseController implements ShopsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
 
     public static final String TAG = "ShopsController";
     private static final String KEY_TEXT = "ShopController.KEY_TEXT";
@@ -130,27 +133,25 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
     private List<GetBannerResponse.Group> sales;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap;
 
-    private View child;
-    private RelativeLayout item;
-    private ImageView rightOption;
-
     private boolean isRefreshShop = false;
-    private int mPaginateManagerCounter = 0;
-
-    BannerClickListener mBannerClickListener;
 
     private int mVerticalOffset;
     private boolean mIsRecyclerViewScrollIdle;
 
     private static final int MAX_BANNERS = 5;
     private static final int MOBILE_BANNER = 1;
+
+
+    private boolean mIsChangeInProgress = false;
+    private ControllerChangeHandler.ControllerChangeListener mControllerChangeListener;
+
     @Override
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
         assert (mActivity) != null;
 
         /* bug/gen-8065_ozsale-reskin_bugfixing - allow draggable viewpager */
-        mActivity.getMainController().setViewpagerDraggable(true);
+        mActivity.setDraggableViewPager(true);
 
         mActivity.setShopController(this);
         mShopPtrLayout.setPtrHandler(this);
@@ -230,6 +231,20 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
         sales = new LinkedList<>();
         mCategoryMap = new HashMap<>();
 
+        mControllerChangeListener = new ControllerChangeHandler.ControllerChangeListener() {
+            @Override
+            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                mIsChangeInProgress = true;
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+                mIsChangeInProgress = false;
+            }
+        };
+
+        getRouter().addChangeListener(mControllerChangeListener);
+
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -253,8 +268,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             }
         };
 
-        mBannerClickListener = this;
-
         displayBanners();
 
         shopsControllerBannerRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBannersAdapter));
@@ -262,16 +275,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-//                int bottomNavVisibility = mActivity.getHomeController().getBottomNavigationView().getVisibility();
-//                if (dy > 0) {
-//                    //hides bottom Nav
-//                    mActivity.getHomeController().animateBottomNav(0);
-//                } else {
-//                    //show bottom Nav
-//                    if (bottomNavVisibility == View.GONE) {
-//                        mActivity.getHomeController().animateBottomNav(dy);
-//                    }
-//                }
             }
 
             @Override
@@ -310,7 +313,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
 
         mLayoutManager = new GridLayoutManager(mActivity, actualColumnCount, GridLayoutManager.VERTICAL, false);
 
-        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, this, actualColumnCount);
+        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, actualColumnCount);
 
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
@@ -384,21 +387,24 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             });
         } else {
 
-// Check if sale is available
+            // Check if sale is available
             //TODO: Need computation for date and time when sale response is cached
             if (isAvailable) {
-                mActivity
-                        .getHomeRouter()
-                        .pushController(RouterTransaction.with(
-                                new SaleItemsController(args))
-                                .tag(mActivity.getString(R.string.sale_items_controller_tag))
-                                .pushChangeHandler(new HorizontalChangeHandler())
-                                .popChangeHandler(new HorizontalChangeHandler()));
+                mActivity.getHomeRouter().pushController(RouterTransaction.with(
+                        new SaleItemsController(args))
+                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
             } else {
                 DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
             }
         }
 
+    }
+
+    @Override
+    public boolean isChangeInProgress() {
+        return mIsChangeInProgress;
     }
 
     @OnClick(R.id.partial_toolbar_hamburger)
@@ -455,6 +461,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ban
             }
         }
 
+        shopsControllerBannerRecyclerView.stopScroll();
         onRefreshEnd();
     }
 

@@ -119,7 +119,7 @@
 
     <color name="cart_text_order_price">@color/text_dark</color>
     <color name="payment_success_text_order_name">@color/colorAccent</color>
-    <color name="product_details_text_product_price">@color/text_extra_dark</color>
+    <color name="product_details_text_product_price">@color/colorAccent</color>
     <color name="product_details_text_product_sale_price">@color/text_light</color>
 
     <!-- Border -->
@@ -130,8 +130,11 @@
     <color name="bg_chips_ripple">@color/white</color>
     <color name="bg_chips_default">@color/white</color>
     <color name="bg_chips_selected">@color/colorAccent</color>
-    <color name="bg_chips_border_default">@color/border_regular</color>
+    <color name="bg_chips_border_default">#323232</color>
     <color name="bg_chips_border_checked">@color/colorAccent</color>
+    <color name="bg_chips_border_soldout">#e4e4e4</color>
+    <color name="bg_chips_soldout_fill">#F6F6F6</color>
+    <color name="bg_chips_soldout_text">#959595</color>
     <color name="bg_chips_text">@color/white</color>
 
     <!-- Facets Theme -->

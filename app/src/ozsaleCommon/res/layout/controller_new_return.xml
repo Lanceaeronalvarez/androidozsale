@@ -47,8 +47,8 @@
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/margin_small"
             android:layout_weight="1"
+            android:padding="@dimen/padding_small"
             android:background="@drawable/bg_add_contact_message"
-            android:inputType="textNoSuggestions|textMultiLine"
             android:hint="@string/write_a_message" />
 
         <ImageButton

@@ -54,7 +54,9 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   lindz@smartwave.ph,
   gerald@smartwave.ph,
   chindee@smartwave.ph,
-  ejptacc123@gmail.com
+  ejptacc123@gmail.com,
+  geraldadorza@mysale.com,
+  geraldadorza@apacsale.com
 "'
 
 default_platform :android

@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.ourpay;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -116,6 +117,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
 
     @Override
     protected void setUp(View view) {
+        mSMSVerificationResendCode.setPaintFlags(mSMSVerificationResendCode.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         mOurpaySMSVerificationTitle.setText(R.string.sms_verification_title);
 
         mSMSVerificationPhone.setText(mPhoneFromCart);
@@ -139,7 +141,6 @@ public class OurpaySMSVerificationController extends BaseController implements O
         if (!getBoolean(R.bool.is_ozsale_app)) {
             mSMSVerificationProgressBar.setVisibility(View.VISIBLE);
         }
-        mSMSVerificationPhoneExtension.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -382,7 +383,6 @@ public class OurpaySMSVerificationController extends BaseController implements O
 
     private void setExtension(String extension) {
         mExtensionString = extension;
-        mSMSVerificationPhoneExtension.setVisibility(View.VISIBLE);
 
         if (!getBoolean(R.bool.is_ozsale_app)) {
             mSMSVerificationProgressBar.setVisibility(View.GONE);
