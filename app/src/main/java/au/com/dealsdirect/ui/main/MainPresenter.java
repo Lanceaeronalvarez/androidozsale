@@ -160,7 +160,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public void doApiCallForResponse(Observable observable, ApiCallback callback) {
         super.doApiCallForResponse(observable, callback);
 
-        checkConsentCookie();
+//        checkConsentCookie();
     }
 
     @Override

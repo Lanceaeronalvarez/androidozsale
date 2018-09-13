@@ -898,9 +898,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void createCategoryMap(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
-        for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
-            mCategoryMap.put(category.getKey(), category);
-            createCategoryMap(category.getChildren());
+        if (getCategoryTreeResponses != null) {
+            for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
+                mCategoryMap.put(category.getKey(), category);
+                createCategoryMap(category.getChildren());
+            }
         }
     }
 

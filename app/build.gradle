@@ -107,6 +107,54 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
+        cocosaRC {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "uk.co.cocosa"
+
+            buildConfigField "String", "API_ROOT", "\"https://www.cocosa.co.uk/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.cocosa.co.uk/papi/public/v3.23/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"E9C291A6-80E1-4CD3-AF3E-4107BEBC376A\""
+
+            resValue "string", "app_name", "Cocosa"
+            def facebookAppId = "1455477634704544"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "8b8c0b64fa8ac9dc5b4835a68a356bf7"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "10357598833"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=2686522639"
+            resValue "string", "default_country_id", "CU"
+            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.cocosa.co.uk"
+
+            ext.newRelicAppToken = "AA29d6653b62c988db6cf1de11f5f6c98ca7a2b0c4"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
+
+        cocosaTest {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "uk.co.cocosatest"
+
+            buildConfigField "String", "API_ROOT", "\"https://genie-ui-cocosa-pre.mysaledev.com/\""
+            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/v3.23/\""
+            buildConfigField "String", "ACCOUNT_ID", "\"954775B6-28C9-4C5C-880C-88F195C8E4F0\""
+
+            resValue "string", "app_name", "Cocosa Test"
+            def facebookAppId = "1455477634704544"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "8b8c0b64fa8ac9dc5b4835a68a356bf7"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "10357598833"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=2686522639"
+            resValue "string", "default_country_id", "CU"
+            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.cocosa.com.au"
+
+            ext.newRelicAppToken = "AA29d6653b62c988db6cf1de11f5f6c98ca7a2b0c4"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
+
         dealsDirectRC {
             versionCode 79
             versionName "2.3.1"
@@ -496,6 +544,20 @@ android {
 
         singsaleTest {
             res.srcDirs = ['src/singsaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        cocosaRC {
+            res.srcDirs = ['src/cocosaRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        cocosaTest {
+            res.srcDirs = ['src/cocosaRC/res','src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
