@@ -150,7 +150,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<SampleResponse> doSampleApiCall(SampleRequest request) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getAppSettings())
                 .addHeaders(mApiHeader.get())
                 .addBodyParameter(request)
                 .build()
@@ -161,14 +161,14 @@ public class AppApiHelper implements ApiHelper {
     public Observable<GetBannerResponse> callGetBanners(
             GetBannerRequest getBannerRequest, boolean getOnlyFromNetwork) {
         if (getOnlyFromNetwork) {
-            return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES)
+            return Rx2AndroidNetworking.get(ApiEndPoint.getSales())
                     .addHeaders(mApiHeader.get())
                     .addQueryParameter(getBannerRequest)
                     .getResponseOnlyFromNetwork()
                     .build()
                     .getObjectObservable(GetBannerResponse.class);
         } else {
-            return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES)
+            return Rx2AndroidNetworking.get(ApiEndPoint.getSales())
                     .addHeaders(mApiHeader.get())
                     .addQueryParameter(getBannerRequest)
                     .build()
@@ -178,7 +178,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SHOP_CATEGORIES)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getShopCategories())
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(request)
                 .build()
@@ -187,7 +187,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<List<GetCategoryTreeResponse>> callGetGetCategories() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_CATEGORY_TREE)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getCategoryTree())
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getObjectListObservable(GetCategoryTreeResponse.class);
@@ -195,7 +195,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_PRODUCT_DETAILS)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getProductDetails())
                 .addHeaders(mApiHeader.get())
                 .addPathParameter("seo_identifier", seoIdentifierId)
                 .build()
@@ -204,7 +204,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_OURPAY_DATA)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getOurpayData())
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(request)
                 .build()
@@ -213,7 +213,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetPublicSaleDetailsResponse> callGetPublicSaleDetails(GetPublicSaleDetailsRequest request) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SALES_ITEM_SALE_DETAILS)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getSalesItemSaleDetails())
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(request)
                 .build()
@@ -225,7 +225,7 @@ public class AppApiHelper implements ApiHelper {
     public Observable<GetPublicSaleItemsResponse> callGetPublicSaleItems(
             GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
 
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_PUBLIC_SALE_ITEMS)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getPublicSaleItems())
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(getPublicSaleItemsRequest)
                 .build()
@@ -234,7 +234,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_PRODUCTS)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getProducts())
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(getSaleItemsRequest)
                 .build()
@@ -243,7 +243,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<AddToCartResponse.Response> callAddItemToCart(AddToCartRequest requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.ADD_TO_CART)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getAddToCart())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -252,7 +252,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_SERVER_SETTINGS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getServerSettings())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetServerSettings.RequestValue(countryId)))
                 .build()
@@ -261,7 +261,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PUBLIC_APP_SETTINGS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getPublicAppSettings())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettings.RequestValue(countryId)))
                 .build()
@@ -270,7 +270,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetPublicPaymentToken.ResponseValue> callGetPublicPaymentToken(String countryId, String languageId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PUBLIC_PAYMENT_TOKEN)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getPublicPaymentToken())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetPublicPaymentToken.RequestValue(countryId,languageId)))
                 .build()
@@ -279,7 +279,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetAppSettings.ResponseValue> callGetAppSettings(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getAppSettings())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettings.RequestValue(countryId)))
                 .build()
@@ -288,7 +288,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS_SECTION)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getAppSettingsSection())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsSection.RequestValue(countryId)))
                 .build()
@@ -297,7 +297,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_APP_SETTINGS_SECTION)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getAppSettingsSection())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsConsent.RequestValue(countryId)))
                 .build()
@@ -306,7 +306,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetConsentDataResponse> callGetConsentData(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONSENT_DATA)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getConsentData())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new ConsentDataRequest(countryId)))
                 .build()
@@ -315,7 +315,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<SaveConsentDataResponse> callSaveConsentData(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.SAVE_CONSENT_DATA)
+        return Rx2AndroidNetworking.post(ApiEndPoint.saveConsentData())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new ConsentDataRequest(countryId)))
                 .build()
@@ -324,7 +324,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<SaveReceiveSalesResponse> callSaveReceiveSales(SaveReceiveSalesRequest saveReceiveSalesRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.SAVE_RECEIVE_SALES)
+        return Rx2AndroidNetworking.post(ApiEndPoint.saveReceiveSales())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(saveReceiveSalesRequest))
                 .build()
@@ -333,7 +333,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetAppSettingsConsent.ResponseValue> callGetPublicAppSettingsConsent(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PUBLIC_APP_SETTINGS_SECTION)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getPublicAppSettingsSection())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsConsent.RequestValue(countryId)))
                 .build()
@@ -342,7 +342,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<LoginEmail.ResponseValue> callLoginViaEmail(LoginEmail.RequestValue requestValue) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.LOGIN_EMAIL)
+        return Rx2AndroidNetworking.post(ApiEndPoint.loginEmail())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
@@ -351,7 +351,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<JSONObject> callLoginViaFacebook(LoginFacebook.RequestValue requestValue) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.LOGIN_FB)
+        return Rx2AndroidNetworking.post(ApiEndPoint.loginFb())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
@@ -360,7 +360,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<LoginEmail.ResponseValue> callLoginTicket(LoginTicket.RequestValue requestValue) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.LOGIN_TICKET)
+        return Rx2AndroidNetworking.post(ApiEndPoint.loginTicket())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
@@ -369,7 +369,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<Logout.ResponseValue> callLogout(Logout.RequestValue requestValue) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.LOGOUT)
+        return Rx2AndroidNetworking.post(ApiEndPoint.logout())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
@@ -378,7 +378,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<LoginVisa.ResponseValue> callLoginVisaCheckout(LoginVisa.RequestValue requestValue) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.VISA_CHECKOUT_LOGIN)
+        return Rx2AndroidNetworking.post(ApiEndPoint.visaCheckoutLogin())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
@@ -387,7 +387,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<RegisterUserResponse> callRegister(RegisterUserRequest requestValue) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.REGISTRATION)
+        return Rx2AndroidNetworking.post(ApiEndPoint.registration())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
@@ -396,7 +396,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<ForgotPasswordResponseBody> callForgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.FORGOT_PASSWORD)
+        return Rx2AndroidNetworking.post(ApiEndPoint.forgotPassword())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(forgotPasswordRequest))
                 .build()
@@ -405,7 +405,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetAddresses.ResponseValue> callGetUserAddresses(GetAddresses.RequestValues requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_USER_ADDRESSES)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getUserAddresses())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -414,7 +414,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<AddAddress.ResponseValue> callSetUserDeliveryAddress(AddAddress.RequestValues requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.SET_USER_DELIVERY_ADDRESS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.setUserDeliveryAddress())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -423,7 +423,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<ApplyAddressResponse> callApplyDeliveryAddress(ApplyAddressRequest requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.APPLY_DELIVERY_ADDRESS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.applyDeliveryAddress())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -432,7 +432,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<DeleteUserAddress.ResponseValue> callDeleteUserDeliveryAddress(DeleteUserAddress.RequestValues requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.DELETE_USER_DELIVERY_ADDRESS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.deleteUserDeliveryAddress())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -441,7 +441,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetPaymentsList.ResponseValue> callGetPaymentsList(GetPaymentsList.RequestValues requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PAYMENTS_LIST)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getPaymentsList())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -450,7 +450,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetOrderPaymentDetails.ResponseValue> callGetOrderPaymentDetails(GetOrderPaymentDetails.RequestValues requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_ORDER_PAYMENT_DETAILS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getOrderPaymentDetails())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -459,7 +459,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetCurrentOrder.ResponseValue> callGetCurrentOrder(GetCurrentOrder.RequestValue requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CURRENT_ORDER)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getCurrentOrder())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -468,7 +468,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetUserPaymentMethods.ResponseValue> callGetUserPaymentMethods(GetUserPaymentMethods.RequestValue requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_USER_PAYMENT_METHODS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getUserPaymentMethods())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -480,10 +480,10 @@ public class AppApiHelper implements ApiHelper {
         String endPoint;
         switch (url) {
             case "IncreaseOrderItem":
-                endPoint = ApiEndPoint.INCREASE_ORDER_ITEM;
+                endPoint = ApiEndPoint.increaseOrderItem();
                 break;
             case "DecreaseOrderItem":
-                endPoint = ApiEndPoint.DECREASE_ORDER_ITEM;
+                endPoint = ApiEndPoint.decreaseOrderItem();
                 break;
             default:
                 endPoint = "";
@@ -498,7 +498,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<CreatePaymentMethod.ResponseValue> callCreatePaymentMethod(CreatePaymentMethod.RequestValue requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.CREATE_PAYMENT_METHOD)
+        return Rx2AndroidNetworking.post(ApiEndPoint.createPaymentMethod())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -507,7 +507,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetPaymentToken.ResponseValue> callGetPaymentToken(GetPaymentToken.RequestValue requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PAYMENT_TOKEN)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getPaymentToken())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -531,7 +531,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransaction(CreatePaymentTransaction.RequestValue requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.CREATE_PAYMENT_TRANSACTION)
+        return Rx2AndroidNetworking.post(ApiEndPoint.createPaymentTransaction())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -540,7 +540,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionVco(CreatePaymentTransactionVco.RequestValue requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.CREATE_PAYMENT_TRANSACTION)
+        return Rx2AndroidNetworking.post(ApiEndPoint.createPaymentTransaction())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -549,7 +549,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue requestValues) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.REMOVE_USER_PAYMENT_METHOD)
+        return Rx2AndroidNetworking.post(ApiEndPoint.removeUserPaymentMethod())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
@@ -558,7 +558,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetDeliveryServicePackageDetails.ResponseValue> callGetDeliveryServicePackageDetails(GetDeliveryServicePackageDetails.RequestValue requestValue) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_DELIVERY_SERVICE_PACKAGE_DETAILS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getDeliveryServicePackageDetails())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
@@ -567,7 +567,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetCurrentOrder.ResponseValue> callSetDeliveryOption(SetDeliveryOption setDeliveryOption) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.SET_DELIVERY_OPTION)
+        return Rx2AndroidNetworking.post(ApiEndPoint.setDeliveryOption())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(setDeliveryOption))
                 .build()
@@ -576,7 +576,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<BasketQuantityResponse> callGetBasketItemsQuantity() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_BASKET_QUANTITY)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getBasketQuantity())
                 .addHeaders(mApiHeader.get())
                 .doNotCacheResponse()
                 .build()
@@ -586,7 +586,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetInviteResponse> callGetInvite(GetInviteRequest request) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_INVITE)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getInvite())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
@@ -595,7 +595,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<SetInviteResponse> callSetInvite(SetInviteRequest request) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.SET_INVITE)
+        return Rx2AndroidNetworking.post(ApiEndPoint.setInvite())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
@@ -605,7 +605,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<ContactOrders> callGetContactOrders() {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACT_INVOICES)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getContactInvoices())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
                 .build()
@@ -614,7 +614,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<ContactSubjects> callGetContactSubjects(ContactSubjectsRequest contactSubjectsRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACT_SUBJECTS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getContactSubjects())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(contactSubjectsRequest))
                 .build()
@@ -623,7 +623,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<CreateContactResponse> callCreateContact(CreateContactRequest createContactRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.CREATE_CONTACT)
+        return Rx2AndroidNetworking.post(ApiEndPoint.createContact())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(createContactRequest))
                 .build()
@@ -632,7 +632,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<ReplyContactResponse> callReplyContact(ReplyContactRequest createContactRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.ANSWER_CONTACT)
+        return Rx2AndroidNetworking.post(ApiEndPoint.answerContact())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(createContactRequest))
                 .build()
@@ -641,7 +641,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_LEGALITIES_TEXT)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getLegalitiesText())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(templateTextRequest))
                 .build()
@@ -650,7 +650,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetTemplateTextsResponse> callGetTemplateTexts(GetTemplateTextsRequest templateTextRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_TEMPLATE_TEXTS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getTemplateTexts())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(templateTextRequest))
                 .build()
@@ -659,7 +659,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<RegisterDevice.ResponseValue> callRegisterDevice(RegisterDevice.RequestValue requestValue) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GCM_REGISTER_DEVICE)
+        return Rx2AndroidNetworking.get(ApiEndPoint.gcmRegisterDevice())
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(requestValue)
                 .build()
@@ -668,7 +668,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<NotificationEvent.ResponseValue> callNotificationEvent(NotificationEvent.RequestValue requestValue) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GCM_NOTIFICATION_EVENT)
+        return Rx2AndroidNetworking.post(ApiEndPoint.gcmNotificationEvent())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
@@ -681,7 +681,7 @@ public class AppApiHelper implements ApiHelper {
             3/23/2018 - feature/android-3308-registersubscriber
             added - doNotCacheResponse() to fresh call register subscriber
          */
-        return Rx2AndroidNetworking.get(ApiEndPoint.GCM_REGISTER_SUBSCRIBER)
+        return Rx2AndroidNetworking.get(ApiEndPoint.gcmRegisterSubscriber())
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(param)
                 .doNotCacheResponse()
@@ -691,7 +691,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<List<SortingResponse>> callSortingFacets() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SORTING)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getSorting())
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getObjectListObservable(SortingResponse.class);
@@ -699,7 +699,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetContactsResponse> callGetContacts(String languageId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACTS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getContacts())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsSection.RequestValue(languageId)))
                 .build()
@@ -708,7 +708,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetContactHistoryResponse.ResponseValue> callGetContactHistory(GetContactHistoryRequest request) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_CONTACT)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getContact())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
@@ -717,7 +717,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<AccountData> callGetAccountData() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.ACCOUNT_DATA)
+        return Rx2AndroidNetworking.get(ApiEndPoint.accountData())
                 .addHeaders(mApiHeader.get())
                 .doNotCacheResponse()
                 .build()
@@ -726,7 +726,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<SetUserDetailsResponse> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.SAVE_USER_DETAILS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.saveUserDetails())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(setUserDetailsRequest))
                 .build()
@@ -735,7 +735,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.LOAD_USER_DETAILS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.loadUserDetails())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(setUserDetailsRequest))
                 .build()
@@ -743,7 +743,7 @@ public class AppApiHelper implements ApiHelper {
     }
 
     public Observable<GetUserVoucherResponse> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_USER_VOUCHERS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getUserVouchers())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(getUserVouchersRequest))
                 .build()
@@ -752,7 +752,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetVouchersResponse> callGetVouchers(GetUserVouchersRequest getUserVouchersRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_VOUCHERS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getVouchers())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(getUserVouchersRequest))
                 .build()
@@ -761,7 +761,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<ClearVouchersResponse> callGetClearVouchers(ClearVouchersRequest clearVouchersRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.CLEAR_VOUCHERS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.clearVouchers())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(clearVouchersRequest))
                 .build()
@@ -770,7 +770,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<ApplyVouchersResponse> callGetApplyVouchers(ApplyVouchersRequest applyVouchersRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.APPLY_VOUCHERS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.applyVouchers())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(applyVouchersRequest))
                 .build()
@@ -779,7 +779,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<AddVoucherByKeyResponse> callGetAddVoucherByKey(AddVoucherByKeyRequest addVoucherByKeyRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.ADD_VOUCHER_BY_KEY)
+        return Rx2AndroidNetworking.post(ApiEndPoint.addVoucherByKey())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(addVoucherByKeyRequest))
                 .build()
@@ -788,7 +788,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<AddAndApplyVoucherByKeyResponse> callGetAddAndApplyVoucherByKey(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.ADD_AND_APPLY_VOUCHER)
+        return Rx2AndroidNetworking.post(ApiEndPoint.addAndApplyVoucher())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(addAndApplyVoucherByKeyRequest))
                 .build()
@@ -797,7 +797,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<CurrentReturnResponseBody> callGetCurrentReturns() {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_RETURNS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getReturns())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
                 .build()
@@ -806,7 +806,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetReturnOrders> callGetReturnOrders() {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_RETURN_ORDERS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getReturnOrders())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
                 .build()
@@ -815,7 +815,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetReturnDetailsResponse> callGetReturnDetails(GetReturnDetailRequest getReturnDetailRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_RETURN_DETAILS)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getReturnDetails())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(getReturnDetailRequest))
                 .build()
@@ -824,7 +824,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<NewReturnOrderDetailResponseBody> callGetNewReturnOrderDetail(NewReturnOrderDetailRequest newReturnOrderDetailRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_RETURN_ORDER_DETAIL)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getReturnOrderDetail())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(newReturnOrderDetailRequest))
                 .build()
@@ -833,7 +833,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<CreateReturnRequestResponseBody> callCreateReturnRequest(CreateReturnRequest createReturnRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.CREATE_RETURN)
+        return Rx2AndroidNetworking.post(ApiEndPoint.createReturn())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(createReturnRequest))
                 .build()
@@ -842,7 +842,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<VerificationNormalizePhoneResponseBody> callNormalizePhone(VerificationNormalizePhoneRequest verificationNormalizePhoneRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.SMS_VERIFICATION_NORMALIZE_PHONE)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSmsVerificationNormalizePhone())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(verificationNormalizePhoneRequest))
                 .build()
                 .getObjectObservable(VerificationNormalizePhoneResponseBody.class);
@@ -850,7 +850,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<VerificationNormalizePhoneResponseBody> callVerificationCodeSend(VerificationNormalizePhoneRequest verificationNormalizePhoneRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.SMS_VERIFICATION_CODE_SEND)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSmsVerificationCodeSend())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(verificationNormalizePhoneRequest))
                 .build()
                 .getObjectObservable(VerificationNormalizePhoneResponseBody.class);
@@ -858,7 +858,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<VerificationCodeConfirmResponseBody> callVerificationCodeConfirm(VerificationCodeConfirmRequest verificationCodeConfirmRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.SMS_VERIFICATION_CODE_CONFRIM)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSmsVerificationCodeConfirm())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(verificationCodeConfirmRequest))
                 .build()
                 .getObjectObservable(VerificationCodeConfirmResponseBody.class);
@@ -866,7 +866,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<JSONObject> callMasterpassPayment(MasterPassPaymentRequest request) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.MASTERPASS_PAYMENT)
+        return Rx2AndroidNetworking.post(ApiEndPoint.masterpassPayment())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
@@ -875,7 +875,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<JSONObject> callMasterpassPostTransaction(MasterPassPostTransactionRequest request) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.MASTERPASS_POST_TRANSACTION)
+        return Rx2AndroidNetworking.post(ApiEndPoint.masterpassPostTransaction())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
@@ -884,7 +884,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<String> callSearchEvent(SearchEventRequest request) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.SEARCH_EVENT)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
@@ -893,7 +893,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<String> callEventUser() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_EVENT_USER)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getEventUser())
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getStringObservable();
@@ -901,7 +901,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PAYMENT_METHOD_NONCE)
+        return Rx2AndroidNetworking.post(ApiEndPoint.getPaymentMethodNonce())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
@@ -910,7 +910,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetPaymentPlansResponse> callGetPaymentPlans() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_PAYMENT_PLANS)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getPaymentPlans())
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getObjectObservable(GetPaymentPlansResponse.class);
@@ -918,7 +918,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetScheduledPlansResponse> callGetScheduledPlans() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_SCHEDULED_PLANS)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getScheduledPlans())
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getObjectObservable(GetScheduledPlansResponse.class);
@@ -926,7 +926,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetPastPaymentsResponse> callGetPastPayments() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_PAST_PAYMENTS)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getPastPayments())
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getObjectObservable(GetPastPaymentsResponse.class);
@@ -934,7 +934,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetDeliveryServiceResponse> callGetDeliveryService() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.GET_DELIVERY_SERVICE)
+        return Rx2AndroidNetworking.get(ApiEndPoint.getDeliveryService())
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getObjectObservable(GetDeliveryServiceResponse.class);
@@ -942,7 +942,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest deepLinkDataRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.DEEP_LINK)
+        return Rx2AndroidNetworking.post(ApiEndPoint.deepLink())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(deepLinkDataRequest))
                 .build()

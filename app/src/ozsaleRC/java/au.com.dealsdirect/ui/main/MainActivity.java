@@ -61,11 +61,12 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
-import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessMvpView;
+import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -142,7 +143,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         setUnBinder(ButterKnife.bind(this));
 
         mPresenter.onAttach(this);
-        mPresenter.callGetTemplateTexts();
+//        mPresenter.callGetTemplateTexts();
 
         // Init All analytics sdk
         mPresenter.initializeAnalytics(this, this.getApplication());
@@ -152,7 +153,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         showSplashScreen();
 
         onNewIntent(getIntent());
-        setUp();
+//        setUp();
     }
 
     /**
@@ -173,23 +174,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         // Initialize GCM
 //        mPresenter.initializeNotifications(getApplicationContext());
-
-        // Call API settings
-        mPresenter.callGetServerSettings();
-        mPresenter.callGetAppSettingsSection(this);
-        mPresenter.callGetPublicPaymentToken();
-        if (isAuthorized()) {
-            // If login ticket exist, call login ticket api to renew cookies and ticket
-            // GetAppSettings and GetPaymentToken will be called on success of this call
-            mPresenter.callLoginTicket();
-            mPresenter.callGetAppSettingsConsent(this);
-        } else {
-            //If not logged in, call GetPublicAppSettings
-            mPresenter.callGetPublicAppSettings();
-            mPresenter.callGetPublicAppSettingsConsent(this);
-        }
-
-        mPresenter.callGetAccountData();
 
     }
 
@@ -737,12 +721,45 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void splashShownCallback() {
+        Settings.getSupportedCountries();
+        ScreenUtils.setStatusBarColor(this, R.color.status_bar);
+
+        if (Settings.getIsMultiCountry() && mPresenter.defaultCountryId().isEmpty()) {
+            if (!mIsShowingStrictConsentUI) mRouter.setRoot(RouterTransaction.with(new CountryController(true)));
+            return;
+        }
+
+        Settings.Country country = Settings.getIsMultiCountry() ? Settings.getCountryWithId(mPresenter.defaultCountryId()) :
+                Settings.getDefaultCountry() ;
+        setAppCountries(country);
+        setUpAfterCountrySet();
+    }
+
+    public void setUpAfterCountrySet(){
+
+        // Call API settings
+        mPresenter.callGetTemplateTexts();
+        mPresenter.callGetServerSettings();
+        mPresenter.callGetAppSettingsSection(this);
+        mPresenter.callGetPublicPaymentToken();
+        if (isAuthorized()) {
+            // If login ticket exist, call login ticket api to renew cookies and ticket
+            // GetAppSettings and GetPaymentToken will be called on success of this call
+            mPresenter.callLoginTicket();
+            mPresenter.callGetAppSettingsConsent(this);
+        } else {
+            //If not logged in, call GetPublicAppSettings
+            mPresenter.callGetPublicAppSettings();
+            mPresenter.callGetPublicAppSettingsConsent(this);
+        }
+
+        mPresenter.callGetAccountData();
+
         if (!mIsShowingStrictConsentUI) {
             mMainController = MainController.newInstance();
             mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
         }
 
-        ScreenUtils.setStatusBarColor(this, R.color.status_bar);
     }
 
     public void setShopsAsVisibleContainer() {
@@ -1057,5 +1074,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setSaleItemsController(SaleItemsController mSaleItemsController) {
         this.mSaleItemsController = mSaleItemsController;
+    }
+
+    public void setAppCountries(Settings.Country selectedCountry){
+        Settings.setCountry(selectedCountry);
     }
 }

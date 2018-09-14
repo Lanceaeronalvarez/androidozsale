@@ -7,9 +7,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.country.Country;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -30,20 +32,13 @@ public class CountryPresenter<V extends CountryMvpView> extends BasePresenter<V>
 
         List<Country> countries = new LinkedList<>();
 
-        Country australia = new Country();
-        australia.setCountry("Australia");
-        australia.setCurrency("AUD");
-        australia.setShopCode("BA");
-        australia.setShopName("BuyInvate");
-
-        Country newzealand = new Country();
-        newzealand.setCountry("New Zealand");
-        newzealand.setCurrency("NZD");
-        newzealand.setShopCode("BN");
-        newzealand.setShopName("BuyInvatew");
-
-        countries.add(0, australia);
-        countries.add(1, newzealand);
+        for (Settings.Country country : Settings.getSupportedCountries()) {
+            Country listOfCountry = new Country();
+            listOfCountry.setShopCode(country.countryId);
+            listOfCountry.setShopName(BuildConfig.APP_NAME);
+            listOfCountry.setCountry(country.countryName);
+            countries.add(listOfCountry);
+        }
 
         getMvpView().showCountries(countries, getDataManager().getCountryId());
         getMvpView().hideLoading();
@@ -51,19 +46,24 @@ public class CountryPresenter<V extends CountryMvpView> extends BasePresenter<V>
 
     @Override
     public void onCountryItemClick(Country country) {
-        Boolean isMultiCountry = getDataManager().getIsMultiCountry();
-        getMvpView().showSelectedCountryDialog(country);
 
         Prefs.clear();
         CookieUtils.getInstance().clear();
-        getDataManager().setCountryId(country.getShopCode());
+
+        getMvpView().showSelectedCountryDialog(country);
+
+        Boolean isMultiCountry = getDataManager().getIsMultiCountry();
+        getDataManager().setCountryId(Settings.getSelectedCountry().countryId);
         getDataManager().setIsMultiCountry(isMultiCountry);
-        getMvpView().onBackPress();
+        getDataManager().setLanguageId(Settings.getSelectedCountry().languageId);
+
     }
 
     @Override
     public void setCountry(Country country) {
-        getDataManager().setCountryId(country.getShopCode());
+        getDataManager().setCountryId(Settings.getSelectedCountry().countryId);
+        getDataManager().setLanguageId(Settings.getSelectedCountry().languageId);
+        getDataManager().setUserAgent();
     }
 
 

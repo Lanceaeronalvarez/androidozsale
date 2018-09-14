@@ -144,8 +144,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
         //Set default settings here
         Prefs.putString(FB_SECRET, context.getResources().getString(R.string.facebook_app_secret));
-        Prefs.putString(COUNTRY_ID, context.getResources().getString(R.string.default_country_id));
-        Prefs.putString(LANGUAGE_ID, context.getResources().getString(R.string.default_language_id));
+        Prefs.putString(COUNTRY_ID, getCountryId());
+        Prefs.putString(LANGUAGE_ID, getLanguageId());
         Prefs.putBoolean(DEBUG_MODE, context.getResources().getBoolean(R.bool.debug_mode));
         setUserAgent();
     }

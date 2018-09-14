@@ -58,15 +58,8 @@ android {
             versionName "0.9"
             applicationId "au.com.buyinvite.bi"
 
-            //AU Configuration
-            buildConfigField "String", "API_ROOT", "\"https://www.buyinvite.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.buyinvite.com.au/papi/public/v3.20/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"FD6E7F98-F8B4-49D9-8FEF-D1AA02BCB43A\""
-
-            //NZ Configuration
-//            buildConfigField "String", "API_ROOT", "\"https://www.buyinvite.co.nz/\""
-//            buildConfigField "String", "API_LEGACY", "\"https://www.buyinvite.co.nz/papi/public/v3.20/\""
-//            buildConfigField "String", "ACCOUNT_ID", "\"461308FD-59C6-4BE1-A3D0-FCA74BCD338F\""
+            buildConfigField "String", "APP_NAME", "\"buyinvite\""
+            buildConfigField "boolean", "IS_TEST", "false"
 
             resValue "string", "app_name", "buyinvite"
             def facebookAppId = "391019637656000"
@@ -75,8 +68,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "153472458025053"
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
-            resValue "string", "default_country_id", "BA"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.buyinvite.com.au"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
@@ -88,9 +79,8 @@ android {
             versionName "0.9"
             applicationId "au.com.buyinvite.bi.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/v3.23/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"FD6E7F98-F8B4-49D9-8FEF-D1AA02BCB43A\""
+            buildConfigField "String", "APP_NAME", "\"buyinvite\""
+            buildConfigField "boolean", "IS_TEST", "true"
 
             resValue "string", "app_name", "buyinvite Test"
             def facebookAppId = "391019637656000"
@@ -99,8 +89,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "153472458025053"
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
-            resValue "string", "default_country_id", "BA"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.buyinvite.com.au"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
@@ -112,9 +100,8 @@ android {
             versionName "1.14.0"
             applicationId "uk.co.cocosa"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.cocosa.co.uk/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.cocosa.co.uk/papi/public/v3.23/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"E9C291A6-80E1-4CD3-AF3E-4107BEBC376A\""
+            buildConfigField "String", "APP_NAME", "\"cocosa\""
+            buildConfigField "boolean", "IS_TEST", "false"
 
             resValue "string", "app_name", "Cocosa"
             def facebookAppId = "1455477634704544"
@@ -123,9 +110,7 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "10357598833"
             resValue "string", "twitter_user_id", "twitter://user?user_id=2686522639"
-            resValue "string", "default_country_id", "CU"
-            resValue "string", "default_language_id", "EN"
-            resValue "string", "app_uri_hostname", "www.cocosa.co.uk"
+            resValue "string", "app_uri_hostname", "www.cocosa.com.au"
 
             ext.newRelicAppToken = "AA29d6653b62c988db6cf1de11f5f6c98ca7a2b0c4"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -136,9 +121,8 @@ android {
             versionName "1.14.0"
             applicationId "uk.co.cocosatest"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-cocosa-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/v3.23/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"954775B6-28C9-4C5C-880C-88F195C8E4F0\""
+            buildConfigField "String", "APP_NAME", "\"cocosa\""
+            buildConfigField "boolean", "IS_TEST", "true"
 
             resValue "string", "app_name", "Cocosa Test"
             def facebookAppId = "1455477634704544"
@@ -147,8 +131,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "10357598833"
             resValue "string", "twitter_user_id", "twitter://user?user_id=2686522639"
-            resValue "string", "default_country_id", "CU"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.cocosa.com.au"
 
             ext.newRelicAppToken = "AA29d6653b62c988db6cf1de11f5f6c98ca7a2b0c4"
@@ -160,9 +142,8 @@ android {
             versionName "2.3.1"
             applicationId "au.com.dealsdirect"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.24/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            buildConfigField "String", "APP_NAME", "\"dealsdirect\""
+            buildConfigField "boolean", "IS_TEST", "false"
 
             resValue "string", "app_name", "DealsDirect"
             def facebookAppId = "1650094968544406"
@@ -171,8 +152,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "default_country_id", "DA"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
@@ -185,9 +164,8 @@ android {
             versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/v3.23/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            buildConfigField "String", "APP_NAME", "\"dealsdirect\""
+            buildConfigField "boolean", "IS_TEST", "true"
 
             resValue "string", "app_name", "DealsDirect Test"
             def facebookAppId = "1658400667713836"
@@ -196,8 +174,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "default_country_id", "DA"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
@@ -209,9 +185,8 @@ android {
             versionName "0.9"
             applicationId "au.com.oo"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.oo.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.oo.com.au/papi/public/v3.23/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
+            buildConfigField "String", "APP_NAME", "\"oo\""
+            buildConfigField "boolean", "IS_TEST", "false"
 
             resValue "string", "app_name", "OO"
             def facebookAppId = "1654976038100746"
@@ -220,8 +195,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "10357598833"
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
-            resValue "string", "default_country_id", "OA"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.oo.com.au"
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
@@ -233,9 +206,8 @@ android {
             versionName "0.9"
             applicationId "au.com.oo.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/v3.23/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
+            buildConfigField "String", "APP_NAME", "\"oo\""
+            buildConfigField "boolean", "IS_TEST", "true"
 
             resValue "string", "app_name", "OO Test"
             def facebookAppId = "600738863393881"
@@ -244,8 +216,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "10357598833"
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
-            resValue "string", "default_country_id", "OA"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.oo.com.au"
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
@@ -257,9 +227,8 @@ android {
             versionName "2.3.1"
             applicationId "au.com.topbuy"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.topbuy.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.topbuy.com.au/papi/public/v3.20/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
+            buildConfigField "String", "APP_NAME", "\"topbuy\""
+            buildConfigField "boolean", "IS_TEST", "false"
 
             resValue "string", "app_name", "TopBuy"
             def facebookAppId = "1544909069170785"
@@ -268,8 +237,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "47143367223"
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
-            resValue "string", "default_country_id", "TA"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.topbuy.com.au"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
@@ -281,9 +248,8 @@ android {
             versionName "2.3.0"
             applicationId "au.com.topbuy.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/\""
-            buildConfigField "String", "API_LEGACY", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/public/v3.20/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
+            buildConfigField "String", "APP_NAME", "\"topbuy\""
+            buildConfigField "boolean", "IS_TEST", "true"
 
             resValue "string", "app_name", "TopBuy Test"
             def facebookAppId = "1544909372504088"
@@ -292,8 +258,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "47143367223"
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
-            resValue "string", "default_country_id", "TA"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
@@ -317,8 +281,6 @@ android {
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "new_relic_app_token", "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "default_country_id", "DA"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "asjdasldkalsnasdT"
@@ -330,9 +292,8 @@ android {
             versionName "0.9"
             applicationId "au.com.ozsale"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.ozsale.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.ozsale.com.au/papi/public/v3.24/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A816D792-E940-44F0-B752-06DE1ED5C2B9\""
+            buildConfigField "String", "APP_NAME", "\"ozsale\""
+            buildConfigField "boolean", "IS_TEST", "false"
 
             resValue "string", "app_name", "Ozsale"
             def facebookAppId = "421544284547550"
@@ -341,8 +302,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "160420993982663"
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
-            resValue "string", "default_country_id", "AS"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.ozsale.com.au"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
@@ -355,9 +314,8 @@ android {
             versionName "0.9"
             applicationId "au.com.ozsale.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/V3.23/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A816D792-E940-44F0-B752-06DE1ED5C2B9\""
+            buildConfigField "String", "APP_NAME", "\"ozsale\""
+            buildConfigField "boolean", "IS_TEST", "true"
 
             resValue "string", "app_name", "Ozsale Test"
             def facebookAppId = "437865102935987"
@@ -366,8 +324,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "160420993982663"
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
-            resValue "string", "default_country_id", "AS"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.ozsale.com.au"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
@@ -380,9 +336,8 @@ android {
             versionName "1.13.0"
             applicationId "sg.com.singsale"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.singsale.com.sg/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.singsale.com.sg/papi/public/v3.23/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"0508BB90-AFA8-435A-8EEA-FB27F500FBF7\""
+            buildConfigField "String", "APP_NAME", "\"singsale\""
+            buildConfigField "boolean", "IS_TEST", "false"
 
             resValue "string", "app_name", "Singsale"
             def facebookAppId = "213701285425668"
@@ -391,8 +346,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "181383195228374"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524844978"
-            resValue "string", "default_country_id", "SI"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.singsale.com.sg"
 
             ext.newRelicAppToken = "AA7859bf063d467b13d1118979fb839dec128eb88a"
@@ -405,9 +358,8 @@ android {
             versionName "1.13.0"
             applicationId "sg.com.singsaletest"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-singsale-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/Public/v3.23/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"0508BB90-AFA8-435A-8EEA-FB27F500FBF7\""
+            buildConfigField "String", "APP_NAME", "\"singsale\""
+            buildConfigField "boolean", "IS_TEST", "true"
 
             resValue "string", "app_name", "Singsale"
             def facebookAppId = "213701285425668"
@@ -416,8 +368,6 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "181383195228374"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524844978"
-            resValue "string", "default_country_id", "SI"
-            resValue "string", "default_language_id", "EN"
             resValue "string", "app_uri_hostname", "www.singsale.com.sg"
 
             ext.newRelicAppToken = "AA7859bf063d467b13d1118979fb839dec128eb88a"

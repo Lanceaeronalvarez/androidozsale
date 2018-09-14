@@ -80,4 +80,6 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void deepLinkSaleItems();
 
     boolean isDebug();
+
+    String defaultCountryId();
 }

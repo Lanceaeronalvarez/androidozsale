@@ -18,15 +18,20 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.country.Country;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by Admin on 12/18/17.
  */
 
 public class CountryController extends BasePullToRefreshController implements CountryMvpView {
+
+    public static final String TAG = "CountryController";
+    private static final String BUNDLE_CALLED_AFTER_SPLASH = "BUNDLE_CALLED_AFTER_SPLASH";
 
     @Inject
     CountryMvpPresenter<CountryMvpView> mPresenter;
@@ -44,6 +49,7 @@ public class CountryController extends BasePullToRefreshController implements Co
     RecyclerView mRecyclerView;
 
     private CountryAdapter mAdapter;
+    private boolean mIsAfterSplash;
 
     public static CountryController newInstance() {
         return new CountryController(
@@ -51,8 +57,15 @@ public class CountryController extends BasePullToRefreshController implements Co
                         .build());
     }
 
+    public CountryController(boolean calledAfterSplash) {
+        this(new BundleBuilder(new Bundle())
+                .putBoolean(BUNDLE_CALLED_AFTER_SPLASH, calledAfterSplash)
+                .build());
+    }
+
     public CountryController(Bundle args) {
         super(args);
+        mIsAfterSplash = args.getBoolean(BUNDLE_CALLED_AFTER_SPLASH, false);
     }
 
 
@@ -83,33 +96,37 @@ public class CountryController extends BasePullToRefreshController implements Co
 
     @Override
     public void showSelectedCountryDialog(Country country) {
+        Settings.Country selectedCountry = Settings.getCountryWithId(country.getShopCode());
+        mActivity.setAppCountries(selectedCountry);
+        mPresenter.setCountry(country);
+
+        mActivity.setUpAfterCountrySet();
+
         mActivity.callApiSettings();
         CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                country.getCountry());
-        mPresenter.setCountry(country);
-
-        onBackPress();
-    }
-
-    @Override
-    public void onBackPress() {
-        mActivity.onBackPressed();
+                Settings.getSelectedCountry().countryName);
     }
 
     @Override
     protected void setUp(View view) {
         mTitleText.setText("Country");
         mFilterView.setVisibility(View.INVISIBLE);
-        mArrowImage.setOnClickListener(v -> {
-            onBackPress();
-        });
+
+        if (mIsAfterSplash){
+            mArrowImage.setVisibility(View.INVISIBLE);
+        }
 
         mAdapter = new CountryAdapter(new ArrayList<>(), mActivity, mPresenter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
 
         mPresenter.getUserCountries();
+    }
+
+    @OnClick(R.id.partial_toolbar_left_view)
+    public void onBackClick() {
+        mActivity.onBackPressed();
     }
 
     @NonNull
@@ -124,4 +141,5 @@ public class CountryController extends BasePullToRefreshController implements Co
         mPresenter.onAttach(this);
         return view;
     }
+
 }

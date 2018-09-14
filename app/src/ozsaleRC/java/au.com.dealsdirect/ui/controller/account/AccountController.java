@@ -355,7 +355,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.COUNTRY, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
-            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.COUNTRY, RouterTransaction.with(CountryController.newInstance()));
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.COUNTRY, RouterTransaction.with(new CountryController(false)));
         }
     }
 
