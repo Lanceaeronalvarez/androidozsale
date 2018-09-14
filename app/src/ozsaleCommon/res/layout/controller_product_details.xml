@@ -319,6 +319,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
+                            android:paddingBottom="@dimen/bottom_nav_height"
                             android:visibility="gone">
 
                             <LinearLayout
@@ -432,18 +433,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:visibility="gone" />
-
-                            <Button
-                                android:id="@+id/product_details_add_to_basket"
-                                style="@style/DDButtonAddCart"
-                                fontPath="@string/font_app_medium"
-                                android:layout_width="match_parent"
-                                android:layout_gravity="bottom"
-                                android:layout_marginBottom="@dimen/margin_medium"
-                                android:layout_marginLeft="@dimen/margin_extra_small"
-                                android:layout_marginRight="@dimen/margin_extra_small"
-                                android:layout_marginTop="@dimen/margin_medium"
-                                android:text="@string/add_to_cart" />
 
                             <LinearLayout
                                 android:id="@+id/product_details_shipping_desc_container"
@@ -803,6 +792,17 @@
 
         </FrameLayout>
 
+        <Button
+            android:id="@+id/product_details_add_to_basket"
+            style="@style/DDButtonAddCart"
+            fontPath="@string/font_app_medium"
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginLeft="@dimen/margin_extra_small"
+            android:layout_marginRight="@dimen/margin_extra_small"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:text="@string/add_to_cart" />
 
         <ImageView
             android:id="@+id/product_details_button_overlay"
@@ -810,7 +810,7 @@
             android:layout_height="@dimen/button_height_regular"
             android:layout_gravity="bottom"
             android:background="@color/product_details_button_overlay"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </android.support.design.widget.CoordinatorLayout>
 

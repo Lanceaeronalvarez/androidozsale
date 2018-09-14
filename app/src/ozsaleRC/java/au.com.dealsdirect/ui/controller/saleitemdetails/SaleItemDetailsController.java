@@ -220,7 +220,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     AHBottomNavigation mBottomNavView;
 
     private int mDefaultHeight;
-    private int mZoomedHeight;
 
     private final ElasticDragDismissFrameLayout.ElasticDragDismissCallback dragDismissListener
             = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
@@ -302,9 +301,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mProductDetailsImageLayout.getLayoutParams();
         int bottomNavHeight = mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight();
 
-        int screenAllowanceSize = mPresenter.isTablet() ? bottomNavHeight * 3: bottomNavHeight;
+        int screenAllowanceSize = mPresenter.isTablet() ? bottomNavHeight * 3: bottomNavHeight * 2  + (int) getDimension(R.dimen.margin_extra_small);
         mDefaultHeight = ScreenUtils.getScreenHeight(mActivity) - screenAllowanceSize;
-        mZoomedHeight = ScreenUtils.getScreenHeight(mActivity) - bottomNavHeight;
 
         lp.height = mDefaultHeight;
         mProductDetailsImageLayout.setLayoutParams(lp);

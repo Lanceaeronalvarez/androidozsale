@@ -85,6 +85,7 @@
             />
 
         <TextView
+            android:id="@+id/controller_add_voucher_select_text"
             fontPath="@string/font_app_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,8 +100,7 @@
             android:id="@+id/container_voucher_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/margin_small"
-            android:visibility="gone">
+            android:layout_marginTop="@dimen/margin_small">
 
             <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
                 android:id="@+id/controller_recycler_view_promo_vouchers"
@@ -109,7 +109,9 @@
                 app:rvp_singlePageFling="true"
                 app:rvp_triggerOffset="0.1" />
 
+
         </LinearLayout>
+        <include layout="@layout/partial_no_voucher_placeholder_layout" />
 
 
 

@@ -131,6 +131,12 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @BindView(R.id.partial_checkout_vouchers_button_apply)
     Button mButtonApply;
 
+    @BindView(R.id.no_vouchers_placeholder)
+    LinearLayout mPlaceholderLayout;
+
+    @BindView(R.id.controller_add_voucher_select_text)
+    TextView mSelectTextView;
+
     List<String> voucherIds = new LinkedList<>();
     List<String> tempVoucherIds = new LinkedList<>();
 
@@ -220,13 +226,11 @@ public class AddVouchersController extends BaseController implements AddVouchers
             }
         });
 
-        if (mVouchers.isEmpty()) {
-            mVoucherListContainerLayout.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.GONE);
-        } else {
-            mVoucherListContainerLayout.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-        }
+        mVoucherListContainerLayout.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
+        mRecyclerView.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
+        mSelectTextView.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
+        mPlaceholderLayout.setVisibility(mVouchers.isEmpty() ? View.VISIBLE : View.GONE);
+        mButtonApply.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
 
         mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);
         mRecyclerView.setAdapter(mAdapter);
@@ -249,10 +253,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
                                 mActivity.getString(R.string.please_input_promo_code));
             }
         });
-
-        if (mVouchers.isEmpty()) {
-            mButtonApply.setVisibility(View.GONE);
-        }
     }
 
 
