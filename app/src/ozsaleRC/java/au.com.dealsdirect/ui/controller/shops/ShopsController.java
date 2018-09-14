@@ -783,8 +783,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     /*
      * bug/gen-7818-landscape - update layoutmanager on orientation change
+     *
      */
-
     @Override
     public void onOrientationChanged(Configuration newConfiguration) {
         super.onOrientationChanged(newConfiguration);
