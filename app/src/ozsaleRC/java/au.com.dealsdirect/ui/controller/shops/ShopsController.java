@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.shops;
 
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -783,15 +784,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     /*
      * bug/gen-7818-landscape - update layoutmanager on orientation change
      */
-    public void onOrientationChange() {
 
+    @Override
+    public void onOrientationChanged(Configuration newConfiguration) {
+        super.onOrientationChanged(newConfiguration);
         if (mBannersAdapter != null && shopsControllerBannerRecyclerView != null && mLayoutManager != null) {
             int currentScrollPosition = mLayoutManager.findFirstVisibleItemPosition();
             displayBanners();
             mLayoutManager.scrollToPosition(currentScrollPosition);
         }
     }
-
 
     /* Deep Link Sales */
     public void goToSales(String categoryKey, String categoryId) {

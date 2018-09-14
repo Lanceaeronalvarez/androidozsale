@@ -536,6 +536,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
 
             if (paymentMethod != null && paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT)) {
+                mOurpayHolder.removeAllViews();
                 return;
             }
 

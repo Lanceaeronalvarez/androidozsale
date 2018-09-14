@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--No items placeholder icons visibility VISIBLE,INVISIBLE,GONE(0,1,2 respectively)-->
-    <integer name="no_items_placeholder_icon_visibility">0</integer>
+    <integer name="no_items_placeholder_icon_visibility">2</integer>
     <integer name="gender_option_visibility">2</integer>
     <integer name="banner_column_count_portrait">2</integer>
     <integer name="banner_column_count_landscape">2</integer>
