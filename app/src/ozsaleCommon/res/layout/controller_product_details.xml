@@ -302,7 +302,7 @@
                     <LinearLayout
                         android:id="@+id/main_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         android:orientation="vertical">
@@ -715,7 +715,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/white"
                 android:orientation="horizontal"
-                android:visibility="invisible">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/toolbar_left_view"

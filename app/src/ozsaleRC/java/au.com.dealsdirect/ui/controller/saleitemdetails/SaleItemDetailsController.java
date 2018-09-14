@@ -500,7 +500,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (!mProductSizes.isEmpty()) {
 
-            mSizesContainer.setVisibility(View.VISIBLE);
             hasSizes = true;
 
             mSizesAdapter = new TagAdapter<Pair<String, String>>(mProductSizes) {
@@ -786,6 +785,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductImagesRv.setEnabled(true);
             mOtherImagesRv.setVisibility(View.VISIBLE);
             mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+            mSizesContainer.setVisibility(!mProductSizes.isEmpty() ? View.VISIBLE : View.GONE);
         }
 
     }
