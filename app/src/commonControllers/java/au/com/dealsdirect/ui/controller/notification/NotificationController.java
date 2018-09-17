@@ -48,7 +48,6 @@ public class NotificationController extends BaseController implements Notificati
         View view = inflater.inflate(R.layout.controller_notifications, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mToolbarTextViewLeft.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
         return view;
     }
 
@@ -61,7 +60,7 @@ public class NotificationController extends BaseController implements Notificati
     @Override
     protected void setUp(View view) {
         mTitleTextView.setText(getString(R.string.account_notification));
-
+        mToolbarTextViewLeft.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
         mNotificationSwitch.setChecked(mPresenter.getIsNotificationsEnabled());
         mNotificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
