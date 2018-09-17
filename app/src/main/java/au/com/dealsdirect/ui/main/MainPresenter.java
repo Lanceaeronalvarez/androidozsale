@@ -43,6 +43,7 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.country.Country;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
@@ -52,6 +53,7 @@ import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
@@ -178,7 +180,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         com.mysale.genie.utility.config.model.getserversettings.Value value = responseValue.d.getValue();
                         if (value != null) {
-                            getDataManager().setCountryId(responseValue.getCountryId());
+//                            getDataManager().setCountryId(responseValue.getCountryId());
                             getDataManager().setLanguageId(responseValue.getLanguages().get(0).getID());
                             Gson gson = new Gson();
                             getDataManager().setLanguages(gson.toJson(responseValue.getLanguages()));
@@ -598,6 +600,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public String defaultCountryId() {
         return getDataManager().getCountryId();
+    }
+
+    @Override
+    public void setCountry(Settings.Country country) {
+        getDataManager().setCountryId(country.countryId);
+        getDataManager().setLanguageId(country.languageId);
     }
 
     @Override

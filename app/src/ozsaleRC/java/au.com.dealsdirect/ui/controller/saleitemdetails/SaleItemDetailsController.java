@@ -814,4 +814,5 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductDetailsToolbar.setVisibility(isScrollGreater && !mPresenter.isTablet() ? View.VISIBLE : View.GONE);
         }
     }
+
 }

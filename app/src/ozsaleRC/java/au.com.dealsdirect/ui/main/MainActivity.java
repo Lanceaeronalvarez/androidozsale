@@ -729,8 +729,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             return;
         }
 
-        Settings.Country country = Settings.getIsMultiCountry() ? Settings.getCountryWithId(mPresenter.defaultCountryId()) :
+        Settings.Country country = Settings.getIsMultiCountry() ?
+                Settings.getCountryWithId(mPresenter.defaultCountryId()) :
                 Settings.getDefaultCountry() ;
+
+         if (!Settings.getIsMultiCountry()) mPresenter.setCountry(Settings.getDefaultCountry());
+
         setAppCountries(country);
         setUpAfterCountrySet();
     }

@@ -9,8 +9,10 @@ import android.content.Context;
 import com.visa.checkout.VisaPaymentSummary;
 
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.country.Country;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.ui.base.MvpPresenter;
+import au.com.dealsdirect.ui.controller.main.Settings;
 
 @PerActivity
 public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V> {
@@ -82,4 +84,6 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     boolean isDebug();
 
     String defaultCountryId();
+
+    void setCountry(Settings.Country country);
 }
