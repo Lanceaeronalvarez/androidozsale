@@ -31,7 +31,7 @@
             android:paddingEnd="@dimen/margin_extra_small"
             android:src="@drawable/ic_pink_chevron"
             android:text="@string/back"
-            android:textColor="@color/text_medium"
+            android:textColor="@color/toolbar_text_medium"
             android:textSize="@dimen/text_size_caption1" />
 
 
@@ -42,7 +42,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/partial_toolbar_field_title_left_option"
             android:background="@drawable/bg_toolbar_button"
-            android:src="@drawable/ic_toolbar_filter" />
+            android:src="@drawable/ic_toolbar_filter"
+            android:visibility="invisible"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/text_extra_dark"
+                android:textColor="@color/toolbar_text_dark"
                 android:textSize="@dimen/text_size_headline2"
                 android:visibility="gone"
                 android:singleLine="true"
@@ -71,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center|bottom"
                 android:singleLine="true"
-                android:textColor="@color/text_extra_dark"
+                android:textColor="@color/toolbar_text_dark"
                 android:textSize="@dimen/text_size_subtitle"
                 tools:text="Bedroom" />
 
@@ -83,7 +84,7 @@
                 android:gravity="center|top"
                 android:singleLine="true"
                 android:ellipsize="middle"
-                android:textColor="@color/text_medium"
+                android:textColor="@color/toolbar_text_medium"
                 android:textSize="@dimen/text_size_caption2"
                 tools:text="Home • Furniture" />
         </LinearLayout>

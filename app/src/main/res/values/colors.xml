@@ -209,4 +209,15 @@
     <color name="bg_ripple_paypal">#ffe392</color>
     <color name="bg_ripple_paypal_item">#FED151</color>
 
+    <!--Toolbar Text-->
+    <color name="toolbar_text_dark">#000000</color>
+    <color name="toolbar_text_medium">#787878</color>
+    <color name="toolbar_text_light">#919191</color>
+    <color name="toolbar_text_medium_dark">#616161</color>
+
+    <!--Splash Gradient-->
+    <color name="bg_splash_color_start">@color/bg_splash</color>
+    <color name="bg_splash_color_center">@color/bg_splash</color>
+    <color name="bg_splash_color_end">@color/bg_splash</color>
+
 </resources>

@@ -34,7 +34,7 @@
             android:paddingRight="@dimen/margin_extra_small"
             android:src="@drawable/ic_pink_chevron"
             android:text="@string/back"
-            android:textColor="@color/text_medium"
+            android:textColor="@color/toolbar_text_medium"
             android:textSize="@dimen/text_size_caption2"
             android:visibility="invisible" />
 
@@ -59,7 +59,7 @@
             android:layout_toRightOf="@+id/partial_toolbar_left_view"
             android:layout_toLeftOf="@+id/partial_toolbar_right_view"
             android:singleLine="true"
-            android:textColor="@color/text_extra_dark"
+            android:textColor="@color/toolbar_text_dark"
             android:textSize="@dimen/text_size_headline2"
             tools:text="Title" />
 
@@ -76,7 +76,7 @@
             android:paddingRight="@dimen/margin_extra_small"
             android:src="@drawable/ic_pink_chevron"
             android:text="@string/close"
-            android:textColor="@color/text_medium"
+            android:textColor="@color/toolbar_text_medium"
             android:textSize="@dimen/text_size_caption2"
             android:visibility="visible" />
 

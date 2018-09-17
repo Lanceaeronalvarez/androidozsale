@@ -34,7 +34,7 @@
             android:maxLines="1"
             android:padding="@dimen/margin_small"
             android:text=""
-            android:textColor="@color/text_extra_dark"
+            android:textColor="@color/toolbar_text_dark"
             android:textSize="@dimen/text_size_headline2" />
 
         <TextView
@@ -50,7 +50,7 @@
             android:paddingRight="@dimen/margin_extra_small"
             android:src="@drawable/ic_pink_chevron"
             android:text="@string/back"
-            android:textColor="@color/text_medium"
+            android:textColor="@color/toolbar_text_medium"
             android:textSize="@dimen/text_size_caption1" />
 
         <ImageButton
@@ -72,7 +72,8 @@
             android:layout_alignTop="@+id/partial_toolbar_field_title_textview"
             android:layout_centerVertical="true"
             android:background="@color/white"
-            android:src="@drawable/ic_toolbar_filter" />
+            android:src="@drawable/ic_toolbar_filter"
+            android:visibility="invisible"/>
 
 
     </RelativeLayout>

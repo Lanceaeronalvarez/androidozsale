@@ -37,7 +37,7 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:singleLine="true"
-            android:textColor="@color/text_extra_dark"
+            android:textColor="@color/toolbar_text_dark"
             android:textSize="@dimen/text_size_headline2"
             tools:text="Title" />
 
@@ -47,6 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:textColor="@color/toolbar_text_dark"
             android:scaleType="fitCenter"
             android:padding="@dimen/partial_toolbar_button_padding" />
 

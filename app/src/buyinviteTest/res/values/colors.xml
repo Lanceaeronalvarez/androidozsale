@@ -144,4 +144,8 @@
     <color name="language_selected">@color/colorAccent</color>
     <color name="item_view_selected_color">@color/white</color>
 
+    <color name="bg_chips_border_soldout">#e4e4e4</color>
+    <color name="bg_chips_soldout_fill">#F6F6F6</color>
+    <color name="bg_chips_soldout_text">#959595</color>
+
 </resources>

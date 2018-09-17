@@ -100,6 +100,9 @@
     <color name="bg_chips_border_default">@color/border_regular</color>
     <color name="bg_chips_border_checked">@color/colorAccent</color>
     <color name="bg_chips_text">#FFFFFF</color>
+    <color name="bg_chips_border_soldout">#e4e4e4</color>
+    <color name="bg_chips_soldout_fill">#F6F6F6</color>
+    <color name="bg_chips_soldout_text">#959595</color>
 
     <!-- Facets Theme -->
     <color name="bg_facets_selected">#353535</color>

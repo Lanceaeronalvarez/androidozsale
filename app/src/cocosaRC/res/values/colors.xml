@@ -130,9 +130,9 @@
     <color name="product_details_indicator_active">@color/colorAccent</color>
 
     <!-- Toolbar -->
-    <color name="toolbar_skin">@color/white</color>
-    <color name="toolbar_active_skin">#f9f9f9</color>
-    <color name="toolbar_border">@color/border_light</color>
+    <color name="toolbar_skin">#181818</color>
+    <color name="toolbar_active_skin">@color/toolbar_skin</color>
+    <color name="toolbar_border">@color/toolbar_skin</color>
 
     <!-- Ourpay -->
     <color name="ourpay_gray">#FF898989</color>
@@ -154,5 +154,10 @@
 
     <color name="refunded_state_color">@color/ourpay_orange</color>
 
+    <!--Toolbar Text-->
+    <color name="toolbar_text_dark">@color/white</color>
+    <color name="toolbar_text_medium">@color/white</color>
+    <color name="toolbar_text_light">@color/white</color>
+    <color name="toolbar_text_medium_dark">@color/white</color>
 
 </resources>
