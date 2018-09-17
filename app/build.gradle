@@ -374,6 +374,50 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
+        nzsaleRC {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "nz.co.nzsale"
+
+            buildConfigField "String", "APP_NAME", "\"nzsale\""
+            buildConfigField "boolean", "IS_TEST", "false"
+
+            resValue "string", "app_name", "Nzsale"
+            def facebookAppId = "122094841270614"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "c427c4000b760c98c818350619930764"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "293974924171"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=61630958"
+            resValue "string", "app_uri_hostname", "www.nzsale.co.nz"
+
+            ext.newRelicAppToken = "AAfebece95884f3f5bc6acaacb76d02440c0f7eb85"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+
+        }
+
+        nzsaleTest {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "nz.co.nzsaletest"
+
+            buildConfigField "String", "APP_NAME", "\"nzsale\""
+            buildConfigField "boolean", "IS_TEST", "true"
+
+            resValue "string", "app_name", "Nzsale Test"
+            def facebookAppId = "122094841270614"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "c427c4000b760c98c818350619930764"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "293974924171"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=61630958"
+            resValue "string", "app_uri_hostname", "www.nzsale.co.nz"
+
+            ext.newRelicAppToken = "AAfebece95884f3f5bc6acaacb76d02440c0f7eb85"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+
+        }
+
     }
 
     sourceSets {
@@ -508,6 +552,20 @@ android {
 
         cocosaTest {
             res.srcDirs = ['src/cocosaRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        nzsaleRC {
+            res.srcDirs = ['src/nzsaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        nzsaleTest {
+            res.srcDirs = ['src/nzsaleRC/res','src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']

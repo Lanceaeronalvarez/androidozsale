@@ -247,3 +247,19 @@ lane :fabric_deploy_cocosa_test do
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'cocosa test' emails:" + dev_emails + " apk_name:" + 'app-cocosaTest-release.apk' + " build_variant:" + 'cocosaTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'cocosaTest' + " app_notes_path:" + app_dir + '/fastlane/CocosaReleaseNotes'
 end
+
+lane :fabric_deploy_nzsale_rc do
+  Dir.chdir("..")
+  app_dir = Dir.pwd
+
+  #Change apk_name and app_name for other flavors
+  sh "fastlane dd_build app_name:'nzsale' emails:" + dev_emails + " apk_name:" + 'app-nzsaleRC-release.apk' + " build_variant:" + 'nzsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'nzsaleRC' + " app_notes_path:" + app_dir + '/fastlane/NzsaleReleaseNotes'
+end
+
+lane :fabric_deploy_nzsale_test do
+  Dir.chdir("..")
+  app_dir = Dir.pwd
+
+  #Change apk_name and app_name for other flavors
+  sh "fastlane dd_build app_name:'nzsale test' emails:" + dev_emails + " apk_name:" + 'app-nzsaleTest-release.apk' + " build_variant:" + 'nzsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'nzsaleTest' + " app_notes_path:" + app_dir + '/fastlane/NzsaleReleaseNotes'
+end
