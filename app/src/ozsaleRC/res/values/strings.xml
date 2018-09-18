@@ -52,6 +52,7 @@
     <string name="dec_2025">Dec 2025</string>
     <string name="discover_the_products_you_love">discover the products you love</string>
     <string name="surname">Surname</string>
+    <string name="add_to_cart">Add to Cart</string>
 
     <string name="payment_schedule">Payment Schedule</string>
     <string name="ourpay">Ourpay</string>
@@ -267,7 +268,7 @@
     <string name="no_orders_for_return">No orders for return</string>
     <string name="welcome_to_my_returns">Welcome to My Returns!</string>
     <string name="you_currently_do_not_have_any_returns">You do not currently have any returns.</string>
-    <string name="product_item_source_name">ozsale.com</string>
+    <string name="product_item_source_name">ozsale.com.au</string>
     <string name="no_orders">You do not have any orders</string>
 
 </resources>

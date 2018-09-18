@@ -332,8 +332,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 95
-            versionName "1.13.0"
+            versionCode 101
+            versionName "1.14.0"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -354,8 +354,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 95
-            versionName "1.13.0"
+            versionCode 101
+            versionName "1.14.0"
             applicationId "sg.com.singsaletest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""

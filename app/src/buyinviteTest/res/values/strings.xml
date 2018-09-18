@@ -158,7 +158,7 @@
 
 
     <integer-array name="account_options_sub_item_title_array">
-        <item>@string/account_language</item>
+        <!--<item>@string/account_language</item>-->
         <item>@string/account_country</item>
         <item>@string/account_notification</item>
         <!--removed for release, still using 3.23, GDPR not included-->

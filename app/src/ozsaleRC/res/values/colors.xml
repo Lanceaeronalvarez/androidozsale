@@ -5,12 +5,12 @@
     <color name="colorAccent">@color/colorPrimaryDark</color>
     <color name="colorDisabled">#87939D</color>
 
-    <color name="colorSecondary">#4F4F4F</color>
+    <color name="colorSecondary">#323232</color>
 
     <color name="recyclerview_overscroll">@color/colorSecondary</color>
 
     <color name="status_bar">@color/bg_splash</color>
-    <color name="status_bar_splash">@color/bg_splash</color>
+    <color name="status_bar_splash">@color/bg_splash_color_end</color>
 
     <!--Search Edit Text-->
     <color name="search_edit_text_hint">#CCFFFFFF</color>

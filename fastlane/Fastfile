@@ -263,3 +263,19 @@ lane :fabric_deploy_nzsale_test do
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'nzsale test' emails:" + dev_emails + " apk_name:" + 'app-nzsaleTest-release.apk' + " build_variant:" + 'nzsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'nzsaleTest' + " app_notes_path:" + app_dir + '/fastlane/NzsaleReleaseNotes'
 end
+
+lane :fabric_deploy_mysale_rc do
+  Dir.chdir("..")
+  app_dir = Dir.pwd
+
+  #Change apk_name and app_name for other flavors
+  sh "fastlane dd_build app_name:'mysale' emails:" + dev_emails + " apk_name:" + 'app-mysaleRC-release.apk' + " build_variant:" + 'mysaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'mysaleRC' + " app_notes_path:" + app_dir + '/fastlane/MysaleReleaseNotes'
+end
+
+lane :fabric_deploy_mysale_test do
+  Dir.chdir("..")
+  app_dir = Dir.pwd
+
+  #Change apk_name and app_name for other flavors
+  sh "fastlane dd_build app_name:'mysale test' emails:" + dev_emails + " apk_name:" + 'app-mysaleTest-release.apk' + " build_variant:" + 'mysaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'mysaleTest' + " app_notes_path:" + app_dir + '/fastlane/MysaleReleaseNotes'
+end
