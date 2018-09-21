@@ -134,7 +134,7 @@
     <dimen name="ourpay_logo_height_summary">15dp</dimen>
     <dimen name="ourpay_info_logo_width">25dp</dimen>
     <dimen name="ourpay_info_logo_height">25dp</dimen>
-    <dimen name="ourpay_panel_bar_height">3dp</dimen>
+    <dimen name="ourpay_panel_bar_height">1.5dp</dimen>
     <dimen name="ourpay_panel_check_width">20dp</dimen>
     <dimen name="ourpay_panel_check_height">20dp</dimen>
     <dimen name="ourpay_thank_you_logo_width">180dp</dimen>
