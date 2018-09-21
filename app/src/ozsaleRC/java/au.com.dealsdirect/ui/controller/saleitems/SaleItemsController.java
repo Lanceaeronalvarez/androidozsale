@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -55,6 +54,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
+import au.com.dealsdirect.ui.custom.AdaptiveTabLayout;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
@@ -81,6 +81,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+import static au.com.dealsdirect.utils.BundleKeys.PRICE_FACET_FILTER_TYPE;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -93,6 +94,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private static final long DELETE_DELAY_MS = 1250; // milliseconds
     private static final String CATEGORY_KEY_SEPARATOR = ">>>";
     private static final String CATEGORY_KEY_SEPARATOR_REPLACEMENT = " • ";
+    private static final String CATEGORY_FILTER_TYPE = "Category";
 
     private String mSaleId = "";
     private String mTitle = "";
@@ -109,9 +111,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mSortingListJsonString = "";
     private boolean mIsFilterClicked = false;
     private boolean mIsSearchClicked = false;
-    private int mCurrentTabPosition = -1;
+    private int mCurrentTabPosition = 0;
     private List<Pair<String, String>> mFacetFilters = new ArrayList();
     private List<String> mTabTitles = new ArrayList();
+    private List<String> mSelectedTitle = new ArrayList<>();
 
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
@@ -138,7 +141,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     ViewGroup mSearchFilterContainer;
 
     @BindView(R.id.controller_search_filter_tabs)
-    TabLayout mTabLayout;
+    AdaptiveTabLayout mTabLayout;
 
     @BindView(R.id.controller_sale_items_ptr)
     PtrClassicFrameLayout mPtrFrameLayout;
@@ -170,7 +173,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean mIsRecyclerViewScrollIdle;
     private boolean mIsLoadingProgress = false;
     private boolean mHasLoadedAllItems = false;
-    private boolean mIsCategoryChanged = false;
     private boolean mFromCategoryDeeplink = false;
     private boolean mInitialLoad = false;
     private boolean mIsFromCategories = false;
@@ -182,7 +184,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     //store removed query chips
     private List<String> mRemovedChipTitles;
-
 
     private TextWatcher mTextWatcher = new TextWatcher() {
         private Timer timer = new Timer();
@@ -477,86 +478,74 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
         mCategoryTreeResponse = getSaleItemsResponse.getCategories();
+        mFacets = getSaleItemsResponse.getFacets();
 
         mPtrFrameLayout.setPullToRefresh(true);
 
-        if (forFacetCorrection) {
-            mFacets = getSaleItemsResponse.getFacets();
+        List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
+
+        mPtrFrameLayout.setPullToRefresh(true); //default true
+
+        mIsLoadingProgress = false;
+
+        if (items.size() == 0 && mSaleItemsPageNumber != 0) {
+            mHasLoadedAllItems = true;
+            mPaginateManager.setHasMoreDataToLoad(false);
+            mPtrFrameLayout.setPullToRefresh(false);
+            mSaleItemsPageNumber = 0;
         } else {
 
-            mFacets = getSaleItemsResponse.getFacets();
-
-            List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
-
-            mPtrFrameLayout.setPullToRefresh(true); //default true
-
-            mIsLoadingProgress = false;
-
-            if (items.size() == 0 && mSaleItemsPageNumber != 0) {
-                mHasLoadedAllItems = true;
-                mPaginateManager.setHasMoreDataToLoad(false);
+            if (!mChipFilters.isEmpty() || mFromCategorySearch || mFromShopSearch || !mSearchQuery.isEmpty()) {
                 mPtrFrameLayout.setPullToRefresh(false);
-                mSaleItemsPageNumber = 0;
-            } else {
+            }
 
-                if (!mChipFilters.isEmpty() || mFromCategorySearch || mFromShopSearch || !mSearchQuery.isEmpty()) {
-                    mPtrFrameLayout.setPullToRefresh(false);
+
+            if (mSaleItemsPageNumber == 0 || mIsSearch) {
+                if (mPaginateManager != null) {
+                    mPaginateManager.unbind();
                 }
 
-
-                if (mSaleItemsPageNumber == 0 || mIsSearch) {
-                    if (mPaginateManager != null) {
-                        mPaginateManager.unbind();
-                    }
-
-                    if (items.size() <= getResources().getInteger(R.integer.sale_items_threshold)) {
-                        if (mPaginateManager == null || items.size() == 0){
-                            mPlaceholder.setVisibility(View.VISIBLE);
-                            mSaleItemsRecyclerView.setVisibility(View.GONE);
-                        } else {
-                            mHasLoadedAllItems = true;
-                            mPaginateManager.setHasMoreDataToLoad(false);
-                            mSaleItemsPageNumber = 0;
-                        }
+                if (items.size() <= getResources().getInteger(R.integer.sale_items_threshold)) {
+                    if (mPaginateManager == null || items.size() == 0){
+                        mPlaceholder.setVisibility(View.VISIBLE);
+                        mSaleItemsRecyclerView.setVisibility(View.GONE);
                     } else {
-                        mPaginateManager = PaginateUtils.init(mActivity, mSaleItemsRecyclerView, mPaginateCallbacks);
-                        mSaleItemsRecyclerView.scrollToPosition(0);
+                        mHasLoadedAllItems = true;
+                        mPaginateManager.setHasMoreDataToLoad(false);
+                        mSaleItemsPageNumber = 0;
                     }
-                    mSaleItemsAdapter.replaceData(items);
-
-                    mIsSearch = false;
                 } else {
-                    mSaleItemsAdapter.addData(items);
+                    mPaginateManager = PaginateUtils.init(mActivity, mSaleItemsRecyclerView, mPaginateCallbacks);
+                    mSaleItemsRecyclerView.scrollToPosition(0);
                 }
-            }
+                mSaleItemsAdapter.replaceData(items);
 
-            mSaleItems = mSaleItemsAdapter.getData();
-
-            if (mSaleItems == null || mSaleItems.isEmpty()) {
-                mPlaceholder.setVisibility(View.VISIBLE);
-                mSaleItemsRecyclerView.setVisibility(View.GONE);
-
+                mIsSearch = false;
             } else {
-                mPlaceholder.setVisibility(View.GONE);
-                mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
-            }
-
-            if (mInitialLoad) {
-                setupSearchFilters();
-                mInitialLoad = false;
+                mSaleItemsAdapter.addData(items);
             }
         }
 
-        mSearchFilterMvpView.updateFacets(mFacets);
+        mSaleItems = mSaleItemsAdapter.getData();
+
+        if (mSaleItems == null || mSaleItems.isEmpty()) {
+            mPlaceholder.setVisibility(View.VISIBLE);
+            mSaleItemsRecyclerView.setVisibility(View.GONE);
+
+        } else {
+            mPlaceholder.setVisibility(View.GONE);
+            mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+        }
+
+        setupSearchFilters();
+        setupTabs();
+        if (mInitialLoad) mInitialLoad = false;
+
         //replace category tree all the time.
+        mSearchFilterMvpView.updateFacets(mFacets);
         mSearchFilterMvpView.replaceCategoryTree(mCategoryTreeResponse);
 
-        if (mIsCategoryChanged) { //replace facets only when category has changed.
-            setupSearchFilters();
-            mIsCategoryChanged = false;
-        }
         onRefreshEnd();
-
     }
 
     void onBackClick() {
@@ -632,8 +621,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             Controller searchFilterController = ControllerFactory.getInstance(GateKeeper.Destination.SEARCH_FILTER, bundle);
             mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
             GateKeeper.setRoot(mSearchFilterRouter, GateKeeper.Destination.SEARCH_FILTER, RouterTransaction.with(searchFilterController));
-            mFacetFilters = mSearchFilterMvpView.parseFacets(mFacets);
-            setupTabs();
             Completable.timer(DELETE_DELAY_MS, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showCollapsingToolbar);
             Completable.timer(DELETE_DELAY_MS, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showKeyboard);
         }
@@ -689,6 +676,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             facetFilters.put("saleId", saleIds);
         }
 
+        //clear SelectedTitle Array and add filter category if any
+        mSelectedTitle.clear();
+        if(!categoryKey.isEmpty()) mSelectedTitle.add(CATEGORY_FILTER_TYPE);
+
         if (chipsList == null) {
             getSaleItemsRequest.setHasFilters(false);
         } else {
@@ -713,6 +704,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     }
                 }
 
+                //Store Selected Filters
+                if(!brandNameFacetFilters.isEmpty()) mSelectedTitle.add(BundleKeys.BRANDS_FACET_FILTER_TYPE);
+                if(!colorFacetFilters.isEmpty()) mSelectedTitle.add(BundleKeys.COLOR_FACET_FILTER_TYPE);
+                if(!sizesFacetFilters.isEmpty()) mSelectedTitle.add(BundleKeys.SIZE_FACET_FILTER_TYPE);
+                if(!priceFacetFilters.isEmpty()) mSelectedTitle.add(BundleKeys.PRICE_FACET_FILTER_TYPE);
+
                 facetFilters.put(BundleKeys.BRANDS_FACETFILTER_NAME, brandNameFacetFilters);
                 facetFilters.put(BundleKeys.COLORS_FACETFILTER_NAME, colorFacetFilters);
                 facetFilters.put(BundleKeys.SIZES_FACETFILTER_NAME, sizesFacetFilters);
@@ -732,11 +729,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         return getSaleItemsRequest;
     }
 
-    @Override
-    public void setIsCategoryChanged(boolean val) {
-        mIsCategoryChanged = val;
-    }
-
     private String mapSortingTitleToKey(String title) {
         for (SortingResponse response : mSortingResponse) {
             if (response.getTitle().equalsIgnoreCase(title)) {
@@ -748,21 +740,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void setupTabs() {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mTabLayout.getLayoutParams();
-        layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin + (int) getDimension(R.dimen.edit_text_height), layoutParams.rightMargin, layoutParams.bottomMargin);
+        //clear facets and tablayout
+        mFacetFilters.clear();
         mTabLayout.removeAllTabs();
         mTabTitles.clear();
-        mFacetFilters.add(0, new Pair<String, String>(BundleKeys.CATEGORY_TREE_FACET, "Category"));
-        if(mPresenter.isSortingEnabled()) {
-            mFacetFilters.add(mFacetFilters.size(), new Pair<String, String>(BundleKeys.SORT_FACETFILTER_NAME, "Sort"));
-        }
-        for (Pair<String, String> pair : mFacetFilters) {
-            String newTitle = !pair.second.isEmpty() ? pair.second.substring(0,1).toUpperCase() + pair.second.substring(1) : pair.second;
-            mTabTitles.add(newTitle);
-            mTabLayout.addTab(mTabLayout.newTab(), false);
-        }
 
-        TabLayoutUtils.setupWithCustomTextView(mActivity,mTabLayout,mTabTitles,getString(R.string.font_app_light));
+        addFacets();
+
+        TabLayoutUtils.setupWithCustomTextView(mActivity, mTabLayout, mTabTitles);
 
         //ANDR - Fit filters on the screen (TAB) https://apacsale.atlassian.net/browse/GEN-9022
         //set tabs layout weight to 1 so that when rotated to landscape even still in scrollable mode, it will fill whole width
@@ -774,29 +759,58 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             tab.setLayoutParams(lp);
         }
 
-        mSearchFilterMvpView.setFacetFilterItems(mFacetFilters);
+        retainSelectedTabs();
 
-        //Remove selected state by default setup
-        mTabLayout.getTabAt(0).select();
-        mCurrentTabPosition = 0;
-        toggleTabSelection(0,false);
+        //add listener
+        if(mInitialLoad) {
+            //Remove selected state by default setup
+            mCurrentTabPosition = 0;
+            toggleTabSelection(0,false);
 
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                onSelectTab(tab);
-            }
+            mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    onSelectTab(tab);
+                    retainSelectedTabs();
+                }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                toggleTabSelection(tab.getPosition(),false);
-            }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    toggleTabSelection(tab.getPosition(), mSelectedTitle.contains(mFacetFilters.get(tab.getPosition()).second));
+                }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                onSelectTab(tab);
-            }
-        });
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    onSelectTab(tab);
+                }
+            });
+        }
+    }
+
+    private void addFacets() {
+        mFacetFilters = mSearchFilterMvpView.parseFacets(mFacets);
+        mFacetFilters.add(0, new Pair<String, String>(BundleKeys.CATEGORY_TREE_FACET, CATEGORY_FILTER_TYPE));
+        mFacetFilters.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, PRICE_FACET_FILTER_TYPE));
+        if(mPresenter.isSortingEnabled()) mFacetFilters.add(mFacetFilters.size(), new Pair<String, String>(BundleKeys.SORT_FACETFILTER_NAME, "Sort"));
+
+        mTabLayout.setTabCount(mFacetFilters.size());
+        mTabLayout.setMinTabWidth();
+        for (Pair<String, String> pair : mFacetFilters) {
+            String newTitle = !pair.second.isEmpty() ? pair.second.substring(0,1).toUpperCase() + pair.second.substring(1) : pair.second;
+            mTabTitles.add(newTitle);
+
+            mSearchFilterMvpView.setFacetFilterItems(mFacetFilters);
+            mTabLayout.addTab(mTabLayout.newTab(), false);
+        }
+    }
+
+    private void retainSelectedTabs() {
+        for(int i = 0; i < mFacetFilters.size(); i++){
+            if(mSelectedTitle.contains(mFacetFilters.get(i).second)) toggleTabSelection(i, true);
+        }
+
+        TabLayout.Tab tab = mTabLayout.getTabAt(mCurrentTabPosition);
+        if(tab != null) tab.select();
     }
 
     private void onSelectTab(TabLayout.Tab tab){
@@ -805,7 +819,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mCurrentTabPosition = tab.getPosition();
         mIsSearchFilterControllerActive = true;
         mSearchFilterMvpView.setSearchFilterControllerActive(mIsSearchFilterControllerActive);
-        toggleTabSelection(mCurrentTabPosition,true);
+        toggleTabSelection(tab.getPosition(), true);
     }
 
     private void showCollapsingToolbar() {
@@ -819,9 +833,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
     }
 
-    private void toggleTabSelection(int tabPos, boolean isTabActive) {
+    @Override
+    public void toggleTabSelection(int tabPos, boolean isTabActive) {
         LinearLayout tabStrip = (LinearLayout) mTabLayout.getChildAt(0);
-        tabStrip.getChildAt(tabPos).setSelected(isTabActive);
+        View tab = tabStrip.getChildAt(tabPos);
+        if(tab != null) tab.setSelected(isTabActive);
+    }
+
+    @Override
+    public void toggleTabSelection(int tabPos) {
+        toggleTabSelection(tabPos, mSelectedTitle.contains(mFacetFilters.get(tabPos).second));
     }
 
     @Override
@@ -918,5 +939,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public boolean isFromCategories() {
         return mIsFromCategories;
+    }
+
+    @Override
+    public int getSelectedPosition() {
+        return mCurrentTabPosition;
     }
 }

@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import java.util.List;
 
@@ -54,13 +53,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
             public void onSuccess(Object response) {
                 super.onSuccess(response);
                 Pair pair = (Pair) response;
-                if (getSaleItemsRequest.hasFilters()) {
-                    getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>)pair.second);
-                    getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, false);
-                } else {
-                    getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>)pair.second);
-                    getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, true);
-                }
+                getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>)pair.second);
+                getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, !getSaleItemsRequest.hasFilters());
             }
         });
     }
@@ -85,11 +79,6 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                 getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) response);
             }
         });
-    }
-
-    @Override
-    public void onCategoryChanged(boolean val) {
-        getMvpView().setIsCategoryChanged(val);
     }
 
     @Override

@@ -17,7 +17,5 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void loadSortingFacets();
 
-    void onCategoryChanged(boolean isCategoryChanged);
-
     boolean isSortingEnabled();
 }

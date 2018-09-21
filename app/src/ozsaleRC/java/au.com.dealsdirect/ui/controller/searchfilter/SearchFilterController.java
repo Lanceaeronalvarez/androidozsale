@@ -33,7 +33,6 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.categories.adapter.CategoriesAdapter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
@@ -132,11 +131,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     Set<String> mCategoryKeys = new LinkedHashSet<>();
 
-    private Set<Integer> origSelectedSet = new HashSet<Integer>();
-
-    private int mPreviousSelectedFacetIndex = -1;
-
-    private HashMap<String, Set<Integer>> mPreviousSelectedFacetIndices = new HashMap<>();
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
 
     public static SearchFilterController newInstance() {
@@ -220,41 +214,36 @@ public class SearchFilterController extends BaseController implements SearchFilt
     @Override
     public List<Pair<String, String>> parseFacets(List<GetSaleItemsResponse.Facets> facets) {
         mFacets = facets;
-        if (facets.size() != 0) {
-            mBrandList = new ArrayList<>();
-            mSizeList = new ArrayList<>();
-            mColorList = new ArrayList<>();
-            mFacetFilters = new ArrayList<>();
-            for (int i = 0; i < facets.size(); i++) {
-                switch (facets.get(i).getFacetName()) {
-                    case BundleKeys.BRANDS_FACETFILTER_NAME:
-                        for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                            GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
-                            mBrandList.add(facetValue.getValue());
-                        }
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.BRANDS_FACETFILTER_NAME, BRANDS_FACET_FILTER_TYPE));
-                        break;
-                    case BundleKeys.PRICE_FACETFILTER_NAME:
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, PRICE_FACET_FILTER_TYPE));
-                        break;
-                    case BundleKeys.SIZES_FACETFILTER_NAME:
-                        for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                            GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
-                            mSizeList.add(facetValue.getValue());
-                        }
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.SIZES_FACETFILTER_NAME, SIZE_FACET_FILTER_TYPE));
-                        break;
-                    case BundleKeys.COLORS_FACETFILTER_NAME:
-                        for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                            GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
-                            mColorList.add(facetValue.getValue());
-                        }
-                        mFacetFilters.add(new Pair<String, String>(BundleKeys.COLORS_FACETFILTER_NAME, COLOR_FACET_FILTER_TYPE));
-                        break;
+        mBrandList = new ArrayList<>();
+        mSizeList = new ArrayList<>();
+        mColorList = new ArrayList<>();
+        mFacetFilters = new ArrayList<>();
+        for (int i = 0; i < facets.size(); i++) {
+            switch (facets.get(i).getFacetName()) {
+                case BundleKeys.BRANDS_FACETFILTER_NAME:
+                    for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
+                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        mBrandList.add(facetValue.getValue());
+                    }
+                    mFacetFilters.add(new Pair<String, String>(BundleKeys.BRANDS_FACETFILTER_NAME, BRANDS_FACET_FILTER_TYPE));
+                    break;
+                case BundleKeys.SIZES_FACETFILTER_NAME:
+                    for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
+                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        mSizeList.add(facetValue.getValue());
+                    }
+                    mFacetFilters.add(new Pair<String, String>(BundleKeys.SIZES_FACETFILTER_NAME, SIZE_FACET_FILTER_TYPE));
+                    break;
+                case BundleKeys.COLORS_FACETFILTER_NAME:
+                    for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
+                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        mColorList.add(facetValue.getValue());
+                    }
+                    mFacetFilters.add(new Pair<String, String>(BundleKeys.COLORS_FACETFILTER_NAME, COLOR_FACET_FILTER_TYPE));
+                    break;
 
-                    default:
-                        break;
-                }
+                default:
+                    break;
             }
         }
         return mFacetFilters;
@@ -296,6 +285,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mIsSearchFilterControllerActive = false;
         mFacetsFrame.setVisibility(View.INVISIBLE);
         mSaleItemsView.enableSaleItemsScroll(true);
+        mSaleItemsView.toggleTabSelection(mSaleItemsView.getSelectedPosition());
     }
 
     private void setupPriceFacet() {
@@ -450,12 +440,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
     }
 
     @Override
-    public void replaceFacets(List<GetSaleItemsResponse.Facets> newFacets) {
-        mFacets = newFacets;
-        parseFacets(mFacets);
-    }
-
-    @Override
     public void replaceCategoryTree(List<GetCategoryTreeResponse> categoryTree) {
         mSubCategoriesAdapter.replaceData(categoryTree);
     }
@@ -480,7 +464,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
             }
         }
 
-        mSaleItemsPresenter.onCategoryChanged(true);
         if (mSaleItemsView.isFromCategories() && mCategoryKeys.size() == 0) {
             mCategoryKeys.add(mCategoryKey);
         }

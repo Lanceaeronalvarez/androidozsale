@@ -5,8 +5,6 @@ import android.graphics.Typeface;
 import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -31,7 +29,7 @@ public class TabLayoutUtils {
         }
     }
 
-    public static void setupWithCustomTextView(Context context, TabLayout tabLayout, List<String> tabTitles, String fontPath) {
+    public static void setupWithCustomTextView(Context context, TabLayout tabLayout, List<String> tabTitles) {
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             View tabCustomView = LayoutInflater.from(context).inflate(R.layout.tab_custom_font, null);
             TextView tabTitle = (TextView) tabCustomView.findViewById(R.id.tab_title);

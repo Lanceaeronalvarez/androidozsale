@@ -32,11 +32,16 @@ public interface SaleItemsMvpView extends MvpView{
 
     GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, List<SearchChipModel> chipsList);
 
-    void setIsCategoryChanged(boolean val);
-
     void enableSaleItemsScroll(boolean  val);
 
     Map<String, GetCategoryTreeResponse> getCategoryMap();
 
     boolean isFromCategories();
+
+    void toggleTabSelection(int tabPos, boolean isTabActive);
+
+    void toggleTabSelection(int tabPos);
+
+    int getSelectedPosition();
+
 }

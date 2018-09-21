@@ -103,7 +103,8 @@
                 android:layout_height="?attr/actionBarSize"
                 android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways">
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:animateLayoutChanges="true">
 
                 <au.com.dealsdirect.ui.custom.AdaptiveTabLayout
                     android:id="@+id/controller_search_filter_tabs"
@@ -112,8 +113,10 @@
                     android:layout_height="@dimen/controller_sale_items_tab_height"
                     android:layout_gravity="bottom"
                     android:background="@color/white"
+                    app:tabMaxWidth="0dp"
                     android:minHeight="@dimen/controller_sale_items_tab_height"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    />
 
                 <au.com.dealsdirect.ui.custom.SearchEditText
                     android:id="@+id/partial_toolbar_field_title_edittext"

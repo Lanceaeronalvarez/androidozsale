@@ -139,7 +139,7 @@
 
     <!-- Facets Theme -->
     <color name="bg_facets_selected">@color/colorAccent</color>
-    <color name="bg_facets_border_checked">@color/colorAccent</color>
+    <color name="bg_facets_border_checked">@color/white</color>
     <color name="bg_facets_default">@color/white</color>
     <color name="bg_facets_border_default">#f1f1f1</color>
 

@@ -22,8 +22,6 @@ public interface SearchFilterMvpView extends MvpView{
 
     void onResetPriceRange();
 
-    void replaceFacets(List<GetSaleItemsResponse.Facets> newFacets);
-
     void replaceCategoryTree(List<GetCategoryTreeResponse> categoryTree);
 
     void onCategoryClicked(GetCategoryTreeResponse category);

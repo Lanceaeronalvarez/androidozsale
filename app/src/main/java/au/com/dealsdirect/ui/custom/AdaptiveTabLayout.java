@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.custom;
 import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import java.lang.reflect.Field;
 
@@ -12,6 +11,8 @@ import java.lang.reflect.Field;
  */
 
 public class AdaptiveTabLayout extends TabLayout {
+
+    private int mTabCount = 0;
 
     public AdaptiveTabLayout(Context context) {
         super(context);
@@ -28,12 +29,20 @@ public class AdaptiveTabLayout extends TabLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMinTabWidth();
+    }
+
+    public void setTabCount(int tabCount) {
+        this.mTabCount = tabCount;
+    }
+
+    public void setMinTabWidth() {
         try {
-            if (getTabCount() == 0)
+            if (mTabCount == 0)
                 return;
             Field field = TabLayout.class.getDeclaredField("mScrollableTabMinWidth");
             field.setAccessible(true);
-            field.set(this, (int) (getMeasuredWidth() / (float) getTabCount()));
+            field.set(this, (int) (getMeasuredWidth() / (float) mTabCount));
         } catch (Exception e) {
             e.printStackTrace();
         }
