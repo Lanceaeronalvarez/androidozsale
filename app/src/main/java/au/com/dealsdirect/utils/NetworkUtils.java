@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.androidnetworking.common.ANConstants;
+import com.androidnetworking.interceptors.GzipRequestInterceptor;
 import com.androidnetworking.interceptors.HttpLoggingInterceptor;
 import com.androidnetworking.utils.Utils;
 import com.mysale.genie.utility.Prefs;
@@ -61,6 +62,7 @@ public final class NetworkUtils {
         return builder.addInterceptor(provideOfflineCacheInterceptor(ctx, CACHE_EXPIRATION, TimeUnit.HOURS))
                 .addNetworkInterceptor(provideCacheInterceptor())
                 .addInterceptor(provideReceivedCookiesInterceptor())
+                .addInterceptor(new GzipRequestInterceptor())
                 .build();
     }
 
