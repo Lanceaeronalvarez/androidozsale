@@ -21,6 +21,7 @@ import au.com.dealsdirect.data.network.model.contactreply.ReplyContact;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryAdapter;
+import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.KeyboardUtils;
@@ -112,6 +113,7 @@ public class ViewContactHistoryController extends BaseController implements View
     protected void setUp(View view) {
 
         KeyboardUtils.setKeyboardAdjustResize(mActivity);
+        if (!mPresenter.isTablet()) mActivity.getMainController().hideBottomNav();
 
         mContactHistoryRightOption.setVisibility(View.INVISIBLE);
         mContactHistoryTitle.setText(mContactSubject);
@@ -137,10 +139,10 @@ public class ViewContactHistoryController extends BaseController implements View
         ContactHistoryAdapter adapter = new ContactHistoryAdapter(myContactItems, mActivity);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
-        layoutManager.setStackFromEnd(!mPresenter.isTablet());
 
         mContactHistoryRecyclerView.setAdapter(adapter);
         mContactHistoryRecyclerView.setLayoutManager(layoutManager);
+        mContactHistoryRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     @OnClick(R.id.partial_toolbar_field_title_left_option)

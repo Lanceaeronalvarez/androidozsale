@@ -510,9 +510,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     }
 
                     if (items.size() <= getResources().getInteger(R.integer.sale_items_threshold)) {
-                        mHasLoadedAllItems = true;
-                        mPaginateManager.setHasMoreDataToLoad(false);
-                        mSaleItemsPageNumber = 0;
+                        if (mPaginateManager == null || items.size() == 0){
+                            mPlaceholder.setVisibility(View.VISIBLE);
+                            mSaleItemsRecyclerView.setVisibility(View.GONE);
+                        } else {
+                            mHasLoadedAllItems = true;
+                            mPaginateManager.setHasMoreDataToLoad(false);
+                            mSaleItemsPageNumber = 0;
+                        }
                     } else {
                         mPaginateManager = PaginateUtils.init(mActivity, mSaleItemsRecyclerView, mPaginateCallbacks);
                         mSaleItemsRecyclerView.scrollToPosition(0);

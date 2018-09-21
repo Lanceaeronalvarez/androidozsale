@@ -28,6 +28,7 @@ import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.controller.contact.listener.ContactClickListener;
 import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
@@ -117,17 +118,23 @@ public class ViewContactsController extends BaseController implements ViewContac
     protected void setUp(View view) {
 
         assert (mActivity) != null;
-        mActivity.setDraggableViewPager(false);
 
         if (mPresenter.isTablet()) {
             mContactDetailRouter = getChildRouter(mContactDetailContainer);
         }
 
+        mViewContactsAddNewMessage.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
+
         mViewContactsToolarTitle.setText(getResource().getString(R.string.account_contact_us));
         mViewContactsToolbarLeftOption.setVisibility(View.INVISIBLE);
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
 
-        mContactAdapter = new ContactsAdapter(new ArrayList<>(), mPresenter);
+        mContactAdapter = new ContactsAdapter(new ArrayList<>(), mPresenter, new ContactClickListener() {
+            @Override
+            public void onCreateMessageClick() {
+                addContact();
+            }
+        });
 
         mViewContactsRecyclerView.setAdapter(mContactAdapter);
         mViewContactsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -159,6 +166,8 @@ public class ViewContactsController extends BaseController implements ViewContac
 
     @Override
     public void showContactItems(GetContactsResponse.Response myContacts) {
+
+        mActivity.setDraggableViewPager(false);
 
         List<GetContactsResponse.ContactList> items = myContacts.getList();
         if (items != null && items.size() != 0) {

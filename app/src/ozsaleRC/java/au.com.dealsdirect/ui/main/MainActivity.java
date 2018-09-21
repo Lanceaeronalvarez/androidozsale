@@ -745,16 +745,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.callGetTemplateTexts();
         mPresenter.callGetServerSettings();
         mPresenter.callGetAppSettingsSection(this);
-        mPresenter.callGetPublicPaymentToken();
         if (isAuthorized()) {
             // If login ticket exist, call login ticket api to renew cookies and ticket
             // GetAppSettings and GetPaymentToken will be called on success of this call
             mPresenter.callLoginTicket();
+            mPresenter.callGetAppSettings();
             mPresenter.callGetAppSettingsConsent(this);
         } else {
-            //If not logged in, call GetPublicAppSettings
-            mPresenter.callGetPublicAppSettings();
-            mPresenter.callGetPublicAppSettingsConsent(this);
+            callPublicSettings();
         }
 
         mPresenter.callGetAccountData();
@@ -764,6 +762,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
         }
 
+        callGCMRegisterSubscriber();
+
+    }
+
+    public void callPublicSettings(){
+        //If not logged in, call GetPublicAppSettings
+        mPresenter.callGetPublicPaymentToken();
+        mPresenter.callGetPublicAppSettings();
+        mPresenter.callGetPublicAppSettingsConsent(this);
     }
 
     public void setShopsAsVisibleContainer() {

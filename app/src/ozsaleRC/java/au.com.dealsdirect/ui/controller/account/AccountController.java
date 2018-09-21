@@ -435,6 +435,8 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mActivity.getMainController().getHomeController().resetRouters();
                 mActivity.setShopsAsVisibleContainer();
 
+                mActivity.callPublicSettings();
+
                 if (showDialog) {
                     CustomAlertDialog.showCustomAlertDialog(mActivity,
                             CustomAlertDialog.CustomDialogIconState.POSITIVE,

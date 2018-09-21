@@ -108,9 +108,11 @@ public class AddContactController extends BaseController implements AddContactMv
     @Override
     protected void setUp(View view) {
         KeyboardUtils.setKeyboardAdjustPan(mActivity);
+        if (!mPresenter.isTablet()) mActivity.getMainController().hideBottomNav();
 
         mAddContactToolbarRightOption.setVisibility(View.INVISIBLE);
         mAddContactToolbarTitle.setText(R.string.new_message);
+        mActivity.setDraggableViewPager(false);
 
         if(ContactPreferenceHelper.getChosenInvoice(mActivity).isEmpty()) {
             mAddContactOrderText.setText(getString(R.string.select_a_sale));

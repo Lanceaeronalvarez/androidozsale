@@ -1,10 +1,10 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +13,7 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
+import au.com.dealsdirect.ui.controller.contact.listener.ContactClickListener;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpPresenter;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.StringUtils;
@@ -27,6 +28,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewCo
 
     List<GetContactsResponse.ContactList> mCurrentContactsList = Collections.emptyList();
     private ViewContactsMvpPresenter mPresenter;
+    private ContactClickListener mContactClickListener;
 
     public void replace(List<GetContactsResponse.ContactList> items) {
         mCurrentContactsList = items;
@@ -35,10 +37,12 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewCo
 
     public ContactsAdapter(
             List<GetContactsResponse.ContactList> contactLists,
-            ViewContactsMvpPresenter mvpPresenter) {
+            ViewContactsMvpPresenter mvpPresenter,
+            ContactClickListener contactClickListener) {
 
         mCurrentContactsList = contactLists;
         mPresenter = mvpPresenter;
+        mContactClickListener = contactClickListener;
     }
 
     @Override
@@ -61,6 +65,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewCo
         holder.contactUsDescriptionTextView.setText(itemLastComment);
         holder.contactUsTimeStampTextView.setText(DateUtils.getDateForContactMessages(itemLastAnswer));
         holder.contactItem.setOnClickListener(v -> mPresenter.selectContact(mCurrentContactsList.get(position)));
+
+        if (mPresenter.isTablet() && position == getItemCount() - 1){
+            holder.contactUsCreateMessageButton.setVisibility(View.VISIBLE);
+            holder.contactUsCreateMessageButton.setOnClickListener(view -> {
+                mContactClickListener.onCreateMessageClick();
+            });
+        } else {
+            holder.contactUsCreateMessageButton.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -70,7 +84,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewCo
 
     static class ViewContactsItemViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.my_contact_us_recycler_row_item_layout)
+        @BindView(R.id.my_contact_us_row_layout)
         LinearLayout contactItem;
         @BindView(R.id.my_contact_us_row_title_text_view)
         TextView contactUsTitleTextView;
@@ -78,6 +92,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewCo
         TextView contactUsTimeStampTextView;
         @BindView(R.id.my_contact_us_row_description_text_view)
         TextView contactUsDescriptionTextView;
+        @BindView(R.id.controller_contacts_new_message_button)
+        Button contactUsCreateMessageButton;
 
         public ViewContactsItemViewHolder(View itemView) {
             super(itemView);

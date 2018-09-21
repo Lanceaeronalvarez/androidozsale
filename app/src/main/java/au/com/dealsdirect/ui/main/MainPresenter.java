@@ -878,7 +878,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             if (responseValue.isSuccess()) {
                                 getDataManager().acknowledgeAuth(responseValue.getTicket());
                                 // Call required post login api methods
-                                getMvpView().loginSuccessMethods();
                             } else {
                                 //On login ticket fail, call logout and go back to shop
                                 callLogout(null);

@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@drawable/bg_account_item"
         android:padding="@dimen/padding_default">
 
         <LinearLayout
@@ -73,5 +74,14 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/border_thin"
         android:background="@color/border_regular" />
+
+    <Button
+        android:id="@+id/controller_contacts_new_message_button"
+        style="@style/DDButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/padding_default"
+        android:text="@string/create_message"
+        android:visibility="gone"/>
 
 </LinearLayout>

@@ -9,6 +9,9 @@
 
     <include layout="@layout/partial_toolbar_arrow" />
 
+    <include
+        layout="@layout/partial_checkout_empty" />
+
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/checkout_scrollview"
         android:layout_width="match_parent"

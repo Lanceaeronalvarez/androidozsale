@@ -84,8 +84,9 @@ public class ContactSelectSubjectController extends BaseController
 
         mViewContactsToolarTitle.setText(getResource().getString(R.string.select_a_subject));
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
+        mActivity.setDraggableViewPager(false);
 
-        mActivity.getHomeController().showBottomNav();
+        if (!mPresenter.isTablet()) mActivity.getMainController().hideBottomNav();
 
         mAdapter = new ContactSubjectAdapter(myContactSubjects, mPresenter);
 
