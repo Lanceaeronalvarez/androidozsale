@@ -15,11 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.di.component.ControllerComponent;
 import au.com.dealsdirect.di.component.DaggerControllerComponent;
 import au.com.dealsdirect.di.module.ControllerModule;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.main.MainActivity;
 
 
@@ -27,6 +29,9 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Inject
     protected MainActivity mActivity;
+
+    @Inject
+    protected ActionTracker mActionTracker;
 
     private ControllerComponent mControllerComponent;
 
@@ -50,6 +55,7 @@ public abstract class BaseController extends RefWatchingController implements Mv
                 .build();
 
         mControllerComponent.inject(this);
+
         return super.onCreateView(inflater, container);
     }
 

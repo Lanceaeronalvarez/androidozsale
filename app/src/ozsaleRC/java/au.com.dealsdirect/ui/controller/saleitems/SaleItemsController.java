@@ -31,6 +31,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mysale.genie.profiler.Profiler;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
@@ -81,6 +83,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+import static au.com.dealsdirect.service.event.ActionTracker.ClickType.PRODUCT_CLICK;
 import static au.com.dealsdirect.utils.BundleKeys.PRICE_FACET_FILTER_TYPE;
 
 /**
@@ -164,18 +167,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int mVerticalOffset;
     private int mSaleItemsPageNumber = 0;
 
-    private boolean mIsFiltered = false;
     private boolean mIsSearch = false;
+    private boolean mFromBannerSearch = false;
     private boolean mFromShopSearch = false;
     private boolean mFromCategorySearch = false;
-    private boolean hasSearchFilters;
+
     private boolean mIsSearchFilterControllerActive = false;
     private boolean mIsRecyclerViewScrollIdle;
     private boolean mIsLoadingProgress = false;
     private boolean mHasLoadedAllItems = false;
     private boolean mFromCategoryDeeplink = false;
     private boolean mInitialLoad = false;
-    private boolean mIsFromCategories = false;
+
+    private String mSalesOrigin = ActionTracker.ViewSource.SALE;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
 
@@ -236,32 +240,29 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mTitle = getArgs().getString(BundleKeys.SALEITEMS_TITLE, "");
             mTitle = mTitle.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT);
         }
-        if (args.containsKey(BundleKeys.SALEITEMS_SALE_ID)) {
-            mSaleId = getArgs().getString(BundleKeys.SALEITEMS_SALE_ID, "");
-        }
-        if (args.containsKey(BundleKeys.SALEITEMS_CATEGORY_MAP)) {
-            mCategoryKey = getArgs().getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
-        }
+
+        mSaleId = getArgs().getString(BundleKeys.SALEITEMS_SALE_ID, "");
+
+        mCategoryKey = getArgs().getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
+
         if (args.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
             mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
             }.getType());
         }
-        if (args.containsKey(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH)) {
-            mFromShopSearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, true);
-        }
-        if (args.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH)) {
-            mFromCategorySearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, true);
-        }
-        if (args.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK)) {
-            mFromCategoryDeeplink = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, false);
-        }
+
+        mFromBannerSearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, false);
+        mFromShopSearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, false);
+        mFromCategorySearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, false);
+
+        if (mFromShopSearch) mSalesOrigin = ActionTracker.ViewSource.SEARCH;
+        if (mFromCategorySearch) mSalesOrigin = ActionTracker.ViewSource.CATEGORY;
+
+        mFromCategoryDeeplink = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, false);
+
         //initial category tree from categoriescontroller
         if (args.containsKey(BundleKeys.SALEITEMS_KEY_CATEGORIES)) {
             mInitialCategoryTree = JsonUtils.convertStringToObject(args.getString(BundleKeys.SALEITEMS_KEY_CATEGORIES, ""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
             }.getType());
-        }
-        if (args.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORIES)) {
-            mIsFromCategories = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORIES, false);
         }
 
     }
@@ -297,7 +298,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
+        mActivity.getProfiler().setStartLogTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue());
         mSaleItemsBackIcon.setOnClickListener(view12 -> mActivity.onBackPressed());
         setUp(view);
 
@@ -477,6 +478,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
+        mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue());
+        mActionTracker.CVItemList(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue()));
+
         mCategoryTreeResponse = getSaleItemsResponse.getCategories();
         mFacets = getSaleItemsResponse.getFacets();
 
@@ -576,19 +580,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
-
         mSearchFilterMvpView.closeFacets();
         mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
         Bundle bundle = new Bundle();
-        bundle.putInt("KEY_POSITION", position);
-        bundle.putString("KEY_IMAGE_ID", imageUrl);
-        bundle.putString("KEY_SEO_IDENTIFIER", seoIdentifierId);
-        bundle.putString("KEY_SKU_ID", skuId);
-        bundle.putString("KEY_SALE_ID", saleId);
-        bundle.putString("KEY_SALE_NAME", ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString());
-        bundle.putString("KEY_SALE_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
-        bundle.putString("KEY_SALE_OLD_PRICE", ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
+        bundle.putInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION, position);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, skuId);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID, saleId);
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString());
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
+        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, mSalesOrigin);
+
+        mActionTracker.clicksEvent(mSalesOrigin + PRODUCT_CLICK, position);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
@@ -938,7 +944,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public boolean isFromCategories() {
-        return mIsFromCategories;
+        return mFromCategorySearch;
     }
 
     @Override

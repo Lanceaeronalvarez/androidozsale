@@ -1,7 +1,8 @@
-include ':app', ':genie-utility', ':genie-animation', ':genie-views', ':CardForm', ':card.io'
+include ':app', ':genie-utility', ':genie-animation', ':genie-views', ':genie-profiler', ':CardForm', ':card.io'
 include ':ptr-lib'
 project(':genie-utility').projectDir = new File('sw_o_android.genieandroid/genie-utility')
 project(':genie-animation').projectDir = new File('sw_o_android.genieandroid/genie-animation')
 project(':genie-views').projectDir = new File('sw_o_android.genieandroid/genie-views')
+project(':genie-profiler').projectDir = new File('sw_o_android.genieandroid/genie-profiler')
 project(':CardForm').projectDir = new File('android-card-form/CardForm')
 project(':card.io').projectDir = new File('card.io-Android-source/card.io')

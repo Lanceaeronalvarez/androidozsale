@@ -23,6 +23,7 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse
 import au.com.dealsdirect.di.ApplicationContext;
 import au.com.dealsdirect.di.PreferenceInfo;
 import au.com.dealsdirect.service.fcm.GNotification;
+import au.com.dealsdirect.ui.controller.main.Settings;
 
 
 @Singleton
@@ -130,6 +131,18 @@ public class AppPreferencesHelper implements PreferencesHelper {
     /*ACCOUNT DATA*/
     public static final String ACCOUNT_DATA_SORTING = "AccountDataSorting";
 
+    /* Fabric App Events */
+    private static final String LAST_REDIRECTION = "LAST_REDIRECTION_SCREEN";
+    private static final String IS_NEW_USER = "IS_NEW_USER";
+    private static final String HAS_ACTIVE_CHECKOUT_SESSION = "HAS_ACTIVE_CHECKOUT_SESSION";
+
+    // AddToCart Journey
+    private static final String HAS_VIEWED_SALE = "HAS_VIEWED_SALE";
+    private static final String HAS_VIEWED_PRODUCT_CATEGORY = "HAS_VIEWED_PRODUCT_CATEGORY";
+    private static final String HAS_VIEWED_PRODUCT = "HAS_VIEWED_PRODUCT";
+    private static final String HAS_ADDED_TO_CART = "HAS_CLICKED_ADD_TO_CART";
+    private static final String HAS_VIEWED_CART = "HAS_CLICKED_VIEW_CART";
+
     private Context mContext;
 
     @Inject
@@ -208,7 +221,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getCountryId() {
-        return Prefs.getString(COUNTRY_ID, "");
+        return Prefs.getString(COUNTRY_ID, Settings.getDefaultCountry() != null ?
+                Settings.getDefaultCountry().countryId : "");
     }
 
     @Override
@@ -218,7 +232,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getLanguageId() {
-        return Prefs.getString(LANGUAGE_ID, "");
+        return Prefs.getString(LANGUAGE_ID, Settings.getDefaultCountry() != null ?
+                Settings.getDefaultCountry().languageId : "");
     }
 
     @Override
@@ -633,6 +648,95 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean getIsSortingEnabled() {
         return Prefs.getBoolean(ACCOUNT_DATA_SORTING, true);
+    }
+
+    @Override
+    public void setLastRedirection(String lastRedirection) {
+        Prefs.putString(LAST_REDIRECTION, lastRedirection);
+    }
+
+    @Override
+    public String getLastRedirection() {
+        return Prefs.getString(LAST_REDIRECTION, "");
+    }
+
+    @Override
+    public void setIsNewUser(boolean isNewUser) {
+        Prefs.putBoolean(IS_NEW_USER, isNewUser);
+    }
+
+    @Override
+    public boolean getIsNewUser() {
+        return Prefs.getBoolean(IS_NEW_USER, false);
+    }
+
+    @Override
+    public void setHasActiveCheckoutSession(boolean hasActiveCheckoutSession) {
+        Prefs.putBoolean(HAS_ACTIVE_CHECKOUT_SESSION, hasActiveCheckoutSession);
+    }
+
+    @Override
+    public boolean hasActiveCheckoutSession() {
+        return Prefs.getBoolean(HAS_ACTIVE_CHECKOUT_SESSION, false);
+    }
+
+    @Override
+    public void resetAddToCartJourneyFlags() {
+        setHasViewedSale(false);
+        setHasViewedProductCategory(false);
+        setHasViewedProduct(false);
+        setHasAddedToCart(false);
+        setHasViewedCart(false);
+    }
+
+    @Override
+    public void setHasViewedSale(boolean hasViewedSale) {
+        Prefs.putBoolean(HAS_VIEWED_SALE, hasViewedSale);
+    }
+
+    @Override
+    public boolean hasViewedSale() {
+        return Prefs.getBoolean(HAS_VIEWED_SALE, false);
+    }
+
+    @Override
+    public void setHasViewedProductCategory(boolean hasViewedProductCategory) {
+        Prefs.putBoolean(HAS_VIEWED_PRODUCT_CATEGORY, hasViewedProductCategory);
+    }
+
+    @Override
+    public boolean hasViewedProductCategory() {
+        return Prefs.getBoolean(HAS_VIEWED_PRODUCT_CATEGORY, false);
+    }
+
+    @Override
+    public void setHasViewedProduct(boolean hasViewedProduct) {
+        Prefs.putBoolean(HAS_VIEWED_PRODUCT, hasViewedProduct);
+    }
+
+    @Override
+    public boolean hasViewedProduct() {
+        return Prefs.getBoolean(HAS_VIEWED_PRODUCT, false);
+    }
+
+    @Override
+    public void setHasAddedToCart(boolean hasAddedToCart) {
+        Prefs.putBoolean(HAS_ADDED_TO_CART, hasAddedToCart);
+    }
+
+    @Override
+    public boolean hasAddedToCart() {
+        return Prefs.getBoolean(HAS_ADDED_TO_CART, false);
+    }
+
+    @Override
+    public void setHasViewedCart(boolean hasViewedCart) {
+        Prefs.putBoolean(HAS_VIEWED_CART, hasViewedCart);
+    }
+
+    @Override
+    public boolean hasViewedCart() {
+        return Prefs.getBoolean(HAS_VIEWED_CART, false);
     }
 
     public void setEventUserId(String userId) {

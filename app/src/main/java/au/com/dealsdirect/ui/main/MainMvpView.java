@@ -39,6 +39,8 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void loginSuccessMethods();
 
+    void logLoginTicket();
+
     void callLoginTicket();
 
     void callLogout(AuthHandler handler);

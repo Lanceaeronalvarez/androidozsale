@@ -358,7 +358,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
         if (isFacebookDetailsComplete()) {
             loginViaFacebook(strEmail, strFirstName, strLastName, strFBUserID, strFBSignedRequest);
         } else {
-            getMvpView().showLoginError("Missing info from Facebook");
+            getMvpView().showLoginError("Missing info from Facebook", true);
         }
     }
 
@@ -425,10 +425,10 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
 
         if (isSuccess) {
             getDataManager().acknowledgeAuth(ticket);
-            getMvpView().showLoginSuccessful(ticket);
+            getMvpView().showLoginSuccessful(ticket, true);
         } else {
             getDataManager().revokeAuth();
-            getMvpView().showLoginError(errorMessage);
+            getMvpView().showLoginError(errorMessage, true);
         }
     }
 

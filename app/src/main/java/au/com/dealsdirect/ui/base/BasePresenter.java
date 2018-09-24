@@ -119,6 +119,21 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     }
 
     @Override
+    public void setLastCartRedirection(String lastRedirection) {
+        getDataManager().setLastRedirection(lastRedirection);
+    }
+
+    @Override
+    public boolean hasActiveCheckoutSession() {
+        return getDataManager().hasActiveCheckoutSession();
+    }
+
+    @Override
+    public void setActiveCheckoutSessionFalse() {
+        getDataManager().setHasActiveCheckoutSession(false);
+    }
+
+    @Override
     public boolean isTablet() {
         return getDataManager().isTablet();
     }
@@ -127,6 +142,16 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     public boolean isGdprDisabled() {
         //consent mode 0, gdpr disabled. -1 default return value from preferences if no response is saved in preferences.
         return getDataManager().getAppSettingsConsentMode() <= 0;
+    }
+
+    @Override
+    public void setIsNewUser(boolean isNewUser) {
+        getDataManager().setIsNewUser(isNewUser);
+    }
+
+    @Override
+    public boolean getIsNewUser() {
+        return getDataManager().getIsNewUser();
     }
 
     @Override

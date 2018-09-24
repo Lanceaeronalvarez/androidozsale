@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -116,6 +117,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     @Override
     public void showOrderTrackingWeb(String link) {
         if(!link.isEmpty()) {
+            mActionTracker.CVOrderTrack(ActionTracker.ViewSource.ORDER_DETAILS);
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
         } else {
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_order_tracking_message));

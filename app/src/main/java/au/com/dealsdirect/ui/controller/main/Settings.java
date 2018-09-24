@@ -48,11 +48,7 @@ public class Settings {
     }
 
     public static boolean getIsMultiCountry() {
-        if (supportedCountries.length > 1){
-            return true;
-        } else {
-            return false;
-        }
+        return supportedCountries.length > 1;
     }
 
     public static Country[] getSupportedCountries() {
@@ -74,7 +70,7 @@ public class Settings {
     }
 
     public static Country getDefaultCountry() {
-        return supportedCountries[0];
+        return supportedCountries != null ? supportedCountries[0] : null;
     }
 
     static void load(){
@@ -419,6 +415,7 @@ public class Settings {
                                         "https://api.mysaledev.com/")} );
         }
 
+        if (!getIsMultiCountry()) setCountry(Settings.getDefaultCountry());
     }
 
     static void populatePackageWithCountries(Country[] countries) {

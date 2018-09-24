@@ -53,6 +53,8 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
@@ -266,6 +268,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private void changeAddress() {
         if (mDeliveryAddress == null) {
             showAddAddressController();
+            getPresenter().setLastCartRedirection(ActionTracker.LastRedirection.ADD_ADDRESS);
         } else {
             getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress))
                     .pushChangeHandler(new HorizontalChangeHandler(false))
@@ -285,6 +288,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 showAddAddressController();
             } else {
                 showAddPaymentMethodController();
+                getPresenter().setLastCartRedirection(ActionTracker.LastRedirection.ADD_PAYMENT_METHOD);
             }
         }
     }
@@ -389,7 +393,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
 
         setUp(view);
-
     }
 
 
@@ -427,11 +430,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         }
-
-        mPayButton.setOnClickListener(view1 -> onPayButtonClick());
-        mPaypalButton.setOnClickListener(view2 -> onPaypalButtonClick());
-        mPaypalCreditButton.setOnClickListener(view2 -> onPaypalCreditButtonClick());
-        mMasterpassButton.setOnClickListener(view3 -> onMasterpassButtonClick());
 
         //Code for returning to checkout, call reload
         getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
@@ -935,13 +933,16 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             showAddAddressController();
             return;
         }
-
+        mActionTracker.startCheckoutEvent();
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
         if (mActivity.isBraintreeInitialized()) {
             if (mActivity.getPaymentMethodSelected() == null) {
                 showAddPaymentMethodController();
             } else {
+                PaymentInfo.setFabricPaymentType(PaymentInfo.isThreeDSecureRequired() ?
+                        ActionTracker.PaymentOption.THREEDS.getValue() :
+                        ActionTracker.PaymentOption.REGULAR.getValue());
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
                 mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
@@ -956,7 +957,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             showAddAddressController();
             return;
         }
-
+        getPresenter().setLastCartRedirection(ActionTracker.LastRedirection.PAYPAL);
+        mActionTracker.startCheckoutEvent();
+        PaymentInfo.setFabricPaymentType(ActionTracker.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
         if (mActivity.isBraintreeInitialized()) {
@@ -976,7 +979,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             showAddAddressController();
             return;
         }
-
+        getPresenter().setLastCartRedirection(ActionTracker.LastRedirection.PAYPAL);
+        mActionTracker.startCheckoutEvent();
+        PaymentInfo.setFabricPaymentType(ActionTracker.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
         if (mActivity.isBraintreeInitialized()) {
@@ -999,9 +1004,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             showAddAddressController();
             return;
         }
-
+        getPresenter().setLastCartRedirection(ActionTracker.LastRedirection.MASTERPASS);
+        mActionTracker.startCheckoutEvent();
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
-
+        PaymentInfo.setFabricPaymentType(ActionTracker.PaymentOption.MASTERPASS.getValue());
         getRouter().pushController(RouterTransaction.with(MasterpassController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
@@ -1039,6 +1045,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                                 .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.SMS_VERIFICATION)
                                 .putString(BundleKeys.PHONE_KEY, mAddressPhoneNumber)
                                 .build();
+
+                        getPresenter().setLastCartRedirection(ActionTracker.LastRedirection.OURPAY_PHONE_VERIFIATION);
 
                         if (mPresenter.isTablet() && getBoolean(R.bool.is_ozsale_app)) {
                             GateKeeper.setRoot(mActivity.getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
@@ -1078,6 +1086,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void showNoCartItemsLayout() {
+        if (mPresenter.hasActiveCheckoutSession()) {
+            mActionTracker.checkoutJourney(ActionTracker.EventProgress.END.getValue());
+        }
+
         hidePaymentButtons();
         if (mNoCartItemsLayout != null) {
             mNoCartItemsLayout.setVisibility(View.VISIBLE);
@@ -1087,6 +1099,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void showCartItems() {
+        mActionTracker.addToCartJourneyViewCart();
+        
         showPaymentButtons();
         if (mNoCartItemsLayout != null) {
             mNoCartItemsLayout.setVisibility(View.GONE);
@@ -1129,6 +1143,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void ourpayPaymentSubmit() {
+        PaymentInfo.setFabricPaymentType(PaymentInfo.isThreeDSecureRequired() ?
+                ActionTracker.PaymentOption.OURPAY3DS.getValue() :
+                ActionTracker.PaymentOption.OURPAY.getValue());
         PaymentInfo.setPaymentType(PaymentInfo.TYPE_MYPAY);
         mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
     }
@@ -1174,14 +1191,15 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void onVisaCheckoutButtonClicked() {
-
         if (!isAddressValid()) {
 
             //push add new address fragment.
             showAddAddressController();
             return;
         }
-
+        getPresenter().setLastCartRedirection(ActionTracker.LastRedirection.VISACHECKOUT);
+        mActionTracker.startCheckoutEvent();
+        PaymentInfo.setFabricPaymentType(ActionTracker.PaymentOption.VCO.getValue());
         mVcoPresenter.payWithVisaCheckout(mValue.getSummary().getTotal());
     }
 

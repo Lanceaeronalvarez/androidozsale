@@ -38,11 +38,14 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static au.com.dealsdirect.service.event.ActionTracker.InviteType.CANCEL;
 
 /**
  * Created by Paul on 7/3/17.
@@ -114,6 +117,8 @@ public class InviteSendController extends BasePullToRefreshController implements
     String bannerImageUrl;
 
     ProgressDialog progress;
+
+    private String mInviteMethod = CANCEL;
 
     private TextWatcher mTextWatcher = new TextWatcher() {
         @Override
@@ -254,6 +259,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                     }
                 }
                 if (resolved) {
+                    mInviteMethod = ActionTracker.InviteType.TWITTER;
                     startActivity(tweetIntent);
                 } else {
                     Intent i = new Intent();
@@ -290,6 +296,8 @@ public class InviteSendController extends BasePullToRefreshController implements
                     ShareDialog shareDialog = new ShareDialog(mActivity);
                     shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
 
+                    mInviteMethod = ActionTracker.InviteType.FACEBOOK;
+
                 } catch (Exception e) {
 //                    GDebug.log("facebookSendInvite",e.getMessage());
                 }
@@ -306,7 +314,9 @@ public class InviteSendController extends BasePullToRefreshController implements
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
                 String messageWithInvite = message + " " + invitationLink;
 
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                mInviteMethod = ActionTracker.InviteType.SMS;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(mActivity);
 
                     Intent sendIntent = new Intent(Intent.ACTION_SEND);
@@ -314,11 +324,10 @@ public class InviteSendController extends BasePullToRefreshController implements
                     sendIntent.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
                     sendIntent.putExtra("sms_body", messageWithInvite);
 
-                    if (defaultSmsPackageName != null)
-                    {
+                    if (defaultSmsPackageName != null) {
                         sendIntent.setPackage(defaultSmsPackageName);
                     }
-                    mActivity.startActivity(sendIntent);
+                    startActivity(sendIntent);
                 } else {
                     Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
                     smsIntent.setType("vnd.android-dir/mms-sms");
@@ -340,11 +349,9 @@ public class InviteSendController extends BasePullToRefreshController implements
                 String messageWithInvite = message + " " + invitationLink;
 
                 if (invitationLink.isEmpty() || invitationLink.equals("")) {
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-
                             String message = mPersonalInvitationMessageEditText.getText().toString();
                             String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
                             String messageWithInvite = message + " " + invitationLink;
@@ -352,8 +359,8 @@ public class InviteSendController extends BasePullToRefreshController implements
                             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", " ", null));
                             emailIntent.putExtra(Intent.EXTRA_SUBJECT, inviteSubject);
                             emailIntent.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
+                            mInviteMethod = ActionTracker.InviteType.EMAIL;
                             startActivity(Intent.createChooser(emailIntent, "Send email..."));
-
                         }
                     }, 2000);
 
@@ -469,6 +476,7 @@ public class InviteSendController extends BasePullToRefreshController implements
 
     @Override
     protected void onDestroyView(@NonNull View view) {
+        mActionTracker.share(mInviteMethod, ActionTracker.ViewSource.INVITE);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }

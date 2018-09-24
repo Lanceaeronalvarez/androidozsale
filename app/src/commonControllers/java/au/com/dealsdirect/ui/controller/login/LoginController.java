@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -26,6 +25,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
@@ -35,6 +35,11 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static au.com.dealsdirect.service.event.ActionTracker.LoginType.FACEBOOK;
+import static au.com.dealsdirect.service.event.ActionTracker.LoginType.FORGOT_PASSWORD;
+import static au.com.dealsdirect.service.event.ActionTracker.LoginType.LOGIN;
+import static au.com.dealsdirect.service.event.ActionTracker.LoginType.NO_ACTION;
 
 public class LoginController extends BaseController implements LoginMvpView {
 
@@ -74,6 +79,8 @@ public class LoginController extends BaseController implements LoginMvpView {
     @BindView(R.id.controller_login_privacy_textview)
     TextView mPrivacyTextView;
 
+    private String mLoginMethod = NO_ACTION;
+    private boolean isLoginSuccess = false;
     private boolean isLoginTapped = false;
     private boolean mWillShowRegistration = false;
 
@@ -166,6 +173,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void onDestroyView(@NonNull View view) {
+        if (!mWillShowRegistration) mActionTracker.login(mLoginMethod, isLoginSuccess);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
@@ -176,7 +184,8 @@ public class LoginController extends BaseController implements LoginMvpView {
     }
 
     @Override
-    public void showLoginSuccessful(String loginTicket) {
+    public void showLoginSuccessful(String loginTicket, boolean isFacebookLogin) {
+        isLoginSuccess = true;
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.BACK, AppConstants.AUTH_FLAG.LOGIN);
     }
 
@@ -200,8 +209,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     }
 
     @Override
-    public void showLoginError(String message) {
-
+    public void showLoginError(String message, boolean isFacebookLogin) {
         mActivity.loginErrorHandler(message);
 
         isLoginTapped = false;
@@ -217,6 +225,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showForgotPassword() {
+        mLoginMethod = FORGOT_PASSWORD;
         getRouter().pushController(RouterTransaction.with(ForgotPasswordController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
@@ -230,13 +239,14 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @OnClick(R.id.controller_login_signup_text)
     void onSignUpClick() {
+        mLoginMethod = LOGIN;
         showRegistration();
     }
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookButtonClick() {
+        mLoginMethod = FACEBOOK;
         mPresenter.onFacebookLogin(mActivity, mCallbackManager, 0);
-
     }
 
     @OnClick(R.id.controller_login_forgot_password_text)

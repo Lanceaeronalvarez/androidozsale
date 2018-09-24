@@ -156,6 +156,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         super(dataManager, schedulerProvider, compositeDisposable);
         gNotification = new GNotification(getDataManager(), getSchedulerProvider(), getCompositeDisposable());
+        dataManager.resetAddToCartJourneyFlags();
     }
 
     @Override
@@ -639,7 +640,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void initFacebookAnalytics() {
-        FacebookSdk.setIsDebugEnabled(true);
+        FacebookSdk.setIsDebugEnabled(getDataManager().isDebugMode());
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
     }
 
@@ -649,20 +650,19 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         // Only activate analytics for release versions
         if (!getDataManager().isDebugMode()) {
 
-            // Fabric
-            Fabric.with(activityContext, new Crashlytics());
-            Fabric.with(activityContext, new Answers());
+
 
             // New Relic
             NewRelic.withApplicationToken(activityContext.getResources().getString(R.string.new_relic_app_token)).start(applicationContext);
-
-            // Facebook Events
-            initFacebookAnalytics();
-            FacebookSdk.setIsDebugEnabled(false);
-        } else {
-            initFacebookAnalytics();
-            FacebookSdk.setIsDebugEnabled(true);
         }
+
+        // Fabric
+        Fabric.with(activityContext, new Crashlytics());
+        Fabric.with(activityContext, new Answers());
+        // Facebook Events
+        initFacebookAnalytics();
+
+
     }
 
     @Override
@@ -875,6 +875,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                 return;
                             }
 
+
                             if (responseValue.isSuccess()) {
                                 getDataManager().acknowledgeAuth(responseValue.getTicket());
                                 // Call required post login api methods
@@ -920,7 +921,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         }
 
                         getMvpView().hideLoading();
-
+                        //fabric app event sign up reset new user.
+                        setIsNewUser(false);
                         //Remove login ticket
                         getDataManager().revokeAuth();
                         //Clear payment info

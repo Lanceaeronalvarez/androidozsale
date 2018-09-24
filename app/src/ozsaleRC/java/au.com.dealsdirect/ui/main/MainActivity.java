@@ -36,6 +36,8 @@ import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.braintreepayments.cardform.view.CardForm;
+import com.mysale.genie.profiler.Profiler;
+import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
 import com.visa.checkout.VisaPaymentSummary;
 
@@ -50,6 +52,9 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
+import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.event.ActionTrackerInterface;
+import au.com.dealsdirect.service.event.EventType;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
@@ -99,6 +104,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private static final String TAG = "MainActivity";
 
+    protected ActionTrackerInterface mActionTracker;
+
+    @Inject
+    ProfilerInterface mProfiler;
+
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
@@ -137,8 +147,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mIsViewAttached = true;
         getActivityComponent().inject(this);
+        mProfiler.setStartLogTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue());
 
         setUnBinder(ButterKnife.bind(this));
 
@@ -147,13 +159,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         // Init All analytics sdk
         mPresenter.initializeAnalytics(this, this.getApplication());
-
+        mActionTracker = getActivityComponent().getActionTracker();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         mMainController = MainController.newInstance();
         showSplashScreen();
 
         onNewIntent(getIntent());
-//        setUp();
+
+        setUp();
+
     }
 
     /**
@@ -188,6 +202,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onResume() {
         super.onResume();
         mPresenter.onAttach(this);
+        attachMainController();
         registerInternetCheckReceiver();
     }
 
@@ -422,6 +437,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             } else if (PaymentInfo.getOurpay() != null) {
                 PaymentInfo.getOurpay().setCanUse(false);
             }
+            mActionTracker.purchase(PaymentInfo.getFabricPaymentType(), mPresenter.getIsNewUser(), true);
+//            fabric app event sign up reset new user.
+            mPresenter.setIsNewUser(false);
 
             if (!mPresenter.isTablet()) {
                 mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
@@ -447,6 +465,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             Router currentRouter = getMainController().getHomeController().getCurrentRouter();
             Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
 
+            mActionTracker.purchase(PaymentInfo.getFabricPaymentType(), mPresenter.getIsNewUser(), false);
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
 
             if (currentController instanceof CheckoutMvpView) {
@@ -457,6 +476,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showCreatePaymentTransactionFailure(String errorMessage) {
+        mActionTracker.purchase(PaymentInfo.getFabricPaymentType(), mPresenter.getIsNewUser(), false);
         if (errorMessage != null) {
 
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
@@ -507,6 +527,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showGetPaymentMethodNonceSuccess(String nonce) {
         showLoadingDialog(getResources().getString(R.string.loading), false);
         PaymentInfo.setThreeDSecureCalled(true);
+        mPresenter.setLastCartRedirection(ActionTracker.LastRedirection.THREEDSECURE_OTP);
         ThreeDSecure.performVerification(getBraintreeFragment(), nonce, Double.toString(PaymentInfo.getCartCost()));
     }
 
@@ -638,6 +659,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public void logLoginTicket() {
+        mActionTracker.login(ActionTracker.LoginType.TICKET, true);
+    }
+
+    @Override
     public void callLoginTicket() {
         mPresenter.callLoginTicket();
     }
@@ -705,7 +731,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void setShopController(ShopsController shopsController) {
-        if (getMainController().getHomeController() != null) {
+        if (getMainController() != null && getMainController().getHomeController() != null) {
             getMainController().getHomeController().setShopRouterViewPagerDraggable();
         }
         mShopController = shopsController;
@@ -721,7 +747,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void splashShownCallback() {
-        Settings.getSupportedCountries();
         ScreenUtils.setStatusBarColor(this, R.color.status_bar);
 
         if (Settings.getIsMultiCountry() && mPresenter.defaultCountryId().isEmpty()) {
@@ -733,8 +758,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 Settings.getCountryWithId(mPresenter.defaultCountryId()) :
                 Settings.getDefaultCountry() ;
 
-         if (!Settings.getIsMultiCountry()) mPresenter.setCountry(Settings.getDefaultCountry());
-
+        mPresenter.setCountry(country);
         setAppCountries(country);
         setUpAfterCountrySet();
     }
@@ -1087,7 +1111,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         this.mSaleItemsController = mSaleItemsController;
     }
 
-    public void setAppCountries(Settings.Country selectedCountry){
+    public void setAppCountries(Settings.Country selectedCountry) {
         Settings.setCountry(selectedCountry);
+    }
+
+    public ActionTrackerInterface getActionTracker() {
+        return mActionTracker;
+    }
+
+    public ProfilerInterface getProfiler() {
+        return mProfiler;
     }
 }

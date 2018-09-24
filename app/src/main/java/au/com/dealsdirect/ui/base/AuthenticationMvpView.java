@@ -9,8 +9,8 @@ import android.support.annotation.StringRes;
  */
 public interface AuthenticationMvpView extends MvpView {
 
-    void showLoginSuccessful(String loginTicket);
+    void showLoginSuccessful(String loginTicket, boolean isFacebookLogin);
 
-    void showLoginError(String message);
+    void showLoginError(String message, boolean isFacebookLogin);
 
 }

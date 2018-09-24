@@ -71,10 +71,10 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
 
                 if (registerUserResponse.isSuccess()) {
                     getDataManager().acknowledgeAuth(registerUserResponse.getTicket());
-                    getMvpView().showLoginSuccessful(registerUserResponse.getTicket());
+                    getMvpView().showLoginSuccessful(registerUserResponse.getTicket(), false);
                     AppEventHelper.completedRegistration(AppConstants.API_REGISTER);
                 } else {
-                    getMvpView().showLoginError(registerUserResponse.getMessage());
+                    getMvpView().showLoginError(registerUserResponse.getMessage(), false);
                 }
 
             }
@@ -82,7 +82,7 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
-                getMvpView().showLoginError(t.getMessage());
+                getMvpView().showLoginError(t.getMessage(), false);
             }
         });
 

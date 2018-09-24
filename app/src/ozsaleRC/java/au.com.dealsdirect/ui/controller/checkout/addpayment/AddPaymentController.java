@@ -36,6 +36,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
@@ -183,21 +184,21 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
         mPayButton.setOnClickListener(action -> {
             onCardFormSubmit();
-            if(isFromCart) {
+            if (isFromCart) {
                 mCheckoutMvpView.setIsPaymentMethodChanged(true);
             }
         });
 
         mPaypalButton.setOnClickListener(action -> {
             onPaypalSubmit();
-            if(isFromCart) {
+            if (isFromCart) {
                 mCheckoutMvpView.setIsPaymentMethodChanged(true);
             }
         });
 
-        mPaypalCreditButton.setOnClickListener(action ->{
+        mPaypalCreditButton.setOnClickListener(action -> {
             onPaypalCreditSubmit();
-            if(isFromCart) {
+            if (isFromCart) {
                 mCheckoutMvpView.setIsPaymentMethodChanged(true);
             }
         });
@@ -316,7 +317,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mActivity.startPaypalPayment();
     }
 
-    private void onPaypalCreditSubmit(){
+    private void onPaypalCreditSubmit() {
         showLoading();
         mActivity.startPaypalCreditPayment(mCartTotalCost);
     }
@@ -401,11 +402,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @OnClick(R.id.bt_camera)
     void launchCamera() {
 
-        if (!mPresenter.isDebug()) {
-            Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
-                    .putCustomAttribute("Type", "Start"));
-        }
-
+        mActionTracker.CCScan(ActionTracker.EventProgress.START);
         mCardForm.scanCard(getActivity());
     }
 
@@ -414,10 +411,8 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         //This callback is called when successful CC scanning
 
         mCardForm.getCardEditText().setEnabled(false);
-        if (!mPresenter.isDebug()) {
-            Answers.getInstance().logCustom(new CustomEvent("Credit Cart Scanning")
-                    .putCustomAttribute("Type", "Success"));
-        }
+        mActionTracker.CCScan(ActionTracker.EventProgress.SUCCESS);
+
     }
 
     @Override

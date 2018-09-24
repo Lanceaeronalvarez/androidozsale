@@ -30,6 +30,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
@@ -43,6 +44,11 @@ import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
+
+import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.FACEBOOK;
+import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.NO_ACTION;
+import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.REGISTRATION;
+import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.VCO;
 
 /*
  * Created by Ayi on 05/06/2017.
@@ -124,6 +130,9 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @Nullable
     @BindView(R.id.partial_toolbar_left_view)
     TextView mLeftButton;
+
+    private String mRegisterMethod = NO_ACTION;
+    private boolean isRegisterSuccess = false;
 
     public static RegisterController newInstance() {
 
@@ -247,6 +256,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public void onDestroyView(View view) {
+        mActionTracker.signUp(mRegisterMethod, isRegisterSuccess);
 //        mPresenter.onDetach();
         super.onDestroyView(view);
     }
@@ -275,6 +285,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookLoginClick() {
+        mRegisterMethod = FACEBOOK;
         if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
                 (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {
 
@@ -296,12 +307,14 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
 
     @Override
-    public void showLoginSuccessful(String loginTicket) {
+    public void showLoginSuccessful(String loginTicket, boolean isFacebookLogin) {
+        isRegisterSuccess = true;
+        mPresenter.setIsNewUser(true);
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
 
     @Override
-    public void showLoginError(String message) {
+    public void showLoginError(String message, boolean isFacebookLogin) {
         mActivity.loginErrorHandler(message);
         mSignUpButton.setEnabled(true);
     }
@@ -319,11 +332,13 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public void showLoginVisaSuccess(String loginTicket) {
-        showLoginSuccessful(loginTicket);
+        isRegisterSuccess = true;
+        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
 
     @Override
     public void onVisaCheckoutButtonClicked() {
+        mRegisterMethod = VCO;
         mVcoPresenter.loginWithVisaCheckout();
     }
 
@@ -348,6 +363,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
     }
 
     private void onSignUpClicked() {
+        mRegisterMethod = REGISTRATION;
         if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
                 (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {
 

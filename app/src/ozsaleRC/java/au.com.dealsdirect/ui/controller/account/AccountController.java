@@ -430,6 +430,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mActivity.getMainController().getHomeController().removeBasketItemCount();
                 mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_in));
                 CookieUtils.getInstance().clear();
+                mPresenter.setActiveCheckoutSessionFalse();
 
                 //reset routers with unique user info
                 mActivity.getMainController().getHomeController().resetRouters();

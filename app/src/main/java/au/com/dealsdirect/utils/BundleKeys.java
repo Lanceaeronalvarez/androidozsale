@@ -19,13 +19,14 @@ public class BundleKeys {
     public static final String SALEITEMS_CATEGORY_MAP = "SaleItemsController.CATEGORY_SALEITEMS";
     public static final String SALEITEMS_SEARCH_QUERY = "SaleItemsController.SEARCH_SALEITEMS";
     public static final String SALEITEMS_CHIPS_FILTER = "SaleItemsController.CHIPS_FILTER";
-    public static final String SALEITEMS_FROM_CATEGORIES = "SaleItemsController.IS_FROM_CATEGORY";
     public static final String SALEITEMS_FROM_SHOP_SEARCH = "SaleItemsController.FROM_SHOP_SEARCH";
+    public static final String SALEITEMS_FROM_BANNER_SEARCH = "SaleItemsController.FROM_BANNER_SEARCH";
     public static final String SALEITEMS_FROM_CATEGORY_SEARCH = "SaleItemsController.FROM_CATEGORY_SEARCH";
     public static final String SALEITEMS_CATEGORY_ID = "SaleItemsController.SALEITEMS_CATEGORY_ID";
     public static final String SALEITEMS_CATEGORY_NAME = "SaleItemsController.SALEITEMS_CATEGORY_NAME";
     public static final String SALEITEMS_FROM_CATEGORY_DEEPLINK = "SaleItemsController.FROM_CATEGORY_LINK";
     public static final String SALEITEMS_KEY_CATEGORIES = "SaleItemsController.KEY_CATEGORIES";
+
 
     //sale item details
     public static final String SALEITEMDETAILS_KEY_POSITION = "KEY_POSITION";
@@ -37,6 +38,7 @@ public class BundleKeys {
     public static final String SALEITEMDETAILS_KEY_ITEM_PRICE = "KEY_SALE_PRICE";
     public static final String SALEITEMDETAILS_KEY_ITEM_OLD_PRICE = "KEY_SALE_OLD_PRICE";
     public static final String SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE = "KEY_IS_DEEP_LINKED_WITH_SALE";
+    public static final String SALEITEMDETAILS_KEY_SALE_ORIGIN = "KEY_SALE_ORIGIN";
 
     //search filters
     public static final String FACET_FILTER_TYPE = "FACET_FILTER_TYPE";

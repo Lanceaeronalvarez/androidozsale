@@ -11,7 +11,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.mysale.genie.profiler.Profiler;
+
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppLogger;
@@ -44,6 +47,14 @@ public class SplashScreenController extends BaseController {
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).getProfiler().setEndLogTime(
+                    ActionTracker.CustomEventType.CV_APPLAUNCH.getValue());
+
+            ((MainActivity) getActivity()).getActionTracker().CVAppLaunch(
+                    Profiler.getTotalTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue()));
+        }
 
         ScreenUtils.setStatusBarColor(mActivity,R.color.status_bar_splash);
 

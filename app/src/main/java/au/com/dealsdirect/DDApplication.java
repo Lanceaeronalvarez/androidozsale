@@ -19,6 +19,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.di.component.ApplicationComponent;
 import au.com.dealsdirect.di.component.DaggerApplicationComponent;
 import au.com.dealsdirect.di.module.ApplicationModule;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -39,6 +40,8 @@ public class DDApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Settings.getSupportedCountries();
 
         //Remove legacy cache and database
         removeLegacyData();

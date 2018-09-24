@@ -179,4 +179,38 @@ public interface PreferencesHelper {
     void setIsSortingEnabled(boolean isSortingEnabled);
 
     boolean getIsSortingEnabled();
+
+    void setLastRedirection(String lastRedirection);
+
+    String getLastRedirection();
+
+    void setIsNewUser(boolean isNewUser);
+
+    boolean getIsNewUser();
+
+    void setHasActiveCheckoutSession(boolean hasActiveCheckoutSession);
+
+    boolean hasActiveCheckoutSession();
+
+    void resetAddToCartJourneyFlags();
+
+    void setHasViewedSale(boolean hasViewedSale);
+
+    boolean hasViewedSale();
+
+    void setHasViewedProductCategory(boolean hasViewedProductCategory);
+
+    boolean hasViewedProductCategory();
+
+    void setHasViewedProduct(boolean hasViewedProduct);
+
+    boolean hasViewedProduct();
+
+    void setHasAddedToCart(boolean hasAddedToCart);
+
+    boolean hasAddedToCart();
+
+    void setHasViewedCart(boolean hasViewedCart);
+
+    boolean hasViewedCart();
 }

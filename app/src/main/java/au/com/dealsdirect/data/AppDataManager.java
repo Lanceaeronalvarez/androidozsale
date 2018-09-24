@@ -1033,6 +1033,91 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setLastRedirection(String lastRedirection) {
+        mPreferencesHelper.setLastRedirection(lastRedirection);
+    }
+
+    @Override
+    public String getLastRedirection() {
+        return mPreferencesHelper.getLastRedirection();
+    }
+
+    @Override
+    public void setIsNewUser(boolean isNewUser) {
+        mPreferencesHelper.setIsNewUser(isNewUser);
+    }
+
+    @Override
+    public boolean getIsNewUser() {
+        return mPreferencesHelper.getIsNewUser();
+    }
+
+    @Override
+    public void setHasActiveCheckoutSession(boolean hasActiveCheckoutSession) {
+        mPreferencesHelper.setHasActiveCheckoutSession(hasActiveCheckoutSession);
+    }
+
+    @Override
+    public boolean hasActiveCheckoutSession() {
+        return mPreferencesHelper.hasActiveCheckoutSession();
+    }
+
+    @Override
+    public void resetAddToCartJourneyFlags() {
+        mPreferencesHelper.resetAddToCartJourneyFlags();
+    }
+
+    @Override
+    public void setHasViewedSale(boolean hasViewedSale) {
+        mPreferencesHelper.setHasViewedSale(hasViewedSale);
+    }
+
+    @Override
+    public boolean hasViewedSale() {
+        return mPreferencesHelper.hasViewedSale();
+    }
+
+    @Override
+    public void setHasViewedProductCategory(boolean hasViewedProductCategory) {
+        mPreferencesHelper.setHasViewedProductCategory(hasViewedProductCategory);
+    }
+
+    @Override
+    public boolean hasViewedProductCategory() {
+        return mPreferencesHelper.hasViewedProductCategory();
+    }
+
+    @Override
+    public void setHasViewedProduct(boolean hasViewedProduct) {
+        mPreferencesHelper.setHasViewedProduct(hasViewedProduct);
+    }
+
+    @Override
+    public boolean hasViewedProduct() {
+        return mPreferencesHelper.hasViewedProduct();
+    }
+
+    @Override
+    public void setHasAddedToCart(boolean hasAddedToCart) {
+        mPreferencesHelper.setHasAddedToCart(hasAddedToCart);
+    }
+
+    @Override
+    public boolean hasAddedToCart() {
+        return mPreferencesHelper.hasAddedToCart();
+    }
+
+    @Override
+    public void setHasViewedCart(boolean hasViewedCart) {
+        mPreferencesHelper.setHasViewedCart(hasViewedCart);
+    }
+
+    @Override
+    public boolean hasViewedCart() {
+        return mPreferencesHelper.hasViewedCart();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }

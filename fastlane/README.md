@@ -80,6 +80,36 @@ fastlane fabric_deploy_ozsale_rc
 fastlane fabric_deploy_ozsale_test
 ```
 
+### fabric_deploy_singsale_rc
+```
+fastlane fabric_deploy_singsale_rc
+```
+
+### fabric_deploy_singsale_test
+```
+fastlane fabric_deploy_singsale_test
+```
+
+### fabric_deploy_cocosa_rc
+```
+fastlane fabric_deploy_cocosa_rc
+```
+
+### fabric_deploy_cocosa_test
+```
+fastlane fabric_deploy_cocosa_test
+```
+
+### fabric_deploy_nzsale_rc
+```
+fastlane fabric_deploy_nzsale_rc
+```
+
+### fabric_deploy_nzsale_test
+```
+fastlane fabric_deploy_nzsale_test
+```
+
 
 ----
 

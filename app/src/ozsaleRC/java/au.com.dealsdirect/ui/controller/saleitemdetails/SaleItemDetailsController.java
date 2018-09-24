@@ -36,6 +36,8 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.google.gson.Gson;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPagerAdapter;
+import com.mysale.genie.profiler.Profiler;
+import com.mysale.genie.utility.LegacyBaseResponseValue;
 import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -53,6 +55,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -62,6 +65,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -79,23 +83,6 @@ import static com.mysale.genie.utility.GenericEvent.Events.SALE_ITEM_DETAILS_VER
  */
 
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener, ViewTreeObserver.OnScrollChangedListener {
-
-    private final String KEY_POSITION = "KEY_POSITION";
-    private final String KEY_SKU_ID = "KEY_SKU_ID";
-    private final String KEY_SALE_ID = "KEY_SALE_ID";
-    private final String KEY_ITEM_IMAGE_ID = "KEY_IMAGE_ID";
-    private final String KEY_SEO_IDENTIFIER_ID = "KEY_SEO_IDENTIFIER";
-    private final String KEY_ITEM_NAME = "KEY_SALE_NAME";
-    private final String KEY_ITEM_PRICE = "KEY_SALE_PRICE";
-    private final String KEY_ITEM_OLD_PRICE = "KEY_SALE_OLD_PRICE";
-
-    private final String KEY_COUNTRY_ID = "KEY_COUNTRY_ID";
-    private final String KEY_LANGUAGE_ID = "KEY_LANGUAGE_ID";
-    private final String KEY_USER_GROUP = "KEY_USER_GROUP";
-    private final String KEY_GET_BIG_IMAGES = "KEY_GET_BIG_IMAGES";
-    private final String KEY_INCLUDE_PRICES = "KEY_INCLUDE_PRICES";
-
-    public final static String RESULT_EXTRA_CONTROLLER_ID = "SALE_ITEM_DETAILS_ID";
 
     @Inject
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
@@ -209,8 +196,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private int mFromPosition = -1;
     private int mToolbarVerticalOffset;
     private boolean isSoldOutCombined = true;
+    private int mAttempts = 0;
 
-    boolean checkOutLocated = false;
+    //default sales origin
+    private String mOrigin = ActionTracker.ViewSource.SALE;
 
     int[] checkoutLocation = new int[2];
     boolean isAnimating = false;
@@ -234,10 +223,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public SaleItemDetailsController(
             String seoIdentifierId, String imageUrl, String skuId, String saleId) {
         this(new BundleBuilder(new Bundle())
-                .putString("KEY_IMAGE_ID", imageUrl)
-                .putString("KEY_SEO_IDENTIFIER", seoIdentifierId)
-                .putString("KEY_SKU_ID", skuId)
-                .putString("KEY_SALE_ID", saleId)
+                .putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl)
+                .putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId)
+                .putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, skuId)
+                .putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID, saleId)
                 .build());
     }
 
@@ -247,22 +236,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     public SaleItemDetailsController(Bundle args) {
         super(args);
-        mSaleId = args.getString(KEY_SALE_ID);
-        mSkuId = args.getString(KEY_SKU_ID, "");
-        mItemImageUrl = args.getString(KEY_ITEM_IMAGE_ID);
-        mSeoIdentifierId = args.getString(KEY_SEO_IDENTIFIER_ID);
-        mSaleName = args.getString(KEY_ITEM_NAME);
-        mSalePrice = args.getString(KEY_ITEM_PRICE);
-        mSaleOldPrice = args.getString(KEY_ITEM_OLD_PRICE);
-        mFromPosition = args.getInt(KEY_POSITION);
+        mSaleId = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID);
+        mSkuId = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, "");
+        mItemImageUrl = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID);
+        mSeoIdentifierId = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID);
+        mSaleName = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME);
+        mSalePrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE);
+        mSaleOldPrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE);
+        mFromPosition = args.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
+        mOrigin = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, ActionTracker.ViewSource.SALE);
     }
 
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-
         View view = inflater.inflate(R.layout.controller_product_details, container, false);
-
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
@@ -278,6 +266,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        mActivity.getProfiler().setStartLogTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue());
         setUp(view);
     }
 
@@ -401,6 +390,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
 
+        mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue());
+        mActionTracker.CVItemDetails(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue()));
+
         Animation anim = AnimationUtils.loadAnimation(mActivity, R.anim.slide_to_bottom);
         anim.setDuration(200);
 
@@ -489,7 +481,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (!saleDetail.getSkuVariants().isEmpty()) {
             mSkuVariants = saleDetail.getSkuVariants();
-            for (GetSaleItemDetailsResponse skuVariant : saleDetail.getSkuVariants()) {
+            for (GetSaleItemDetailsResponse skuVariant : mSkuVariants) {
                 String skuId = skuVariant.getSkuId();
                 String size = skuVariant.getAttributes().getSize();
                 if (size != null && !size.isEmpty()) {
@@ -582,7 +574,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void showAddToCartResponse(Value cartDetailsResponse) {
         RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
-
+        mActionTracker.addToCartEvent(mOrigin, mAttempts);
+        mAttempts = 0;
         //notify bottom navigation view(checkout) with success.
         CartUtil.addValueToCart(1);
         mActivity.getMainController().getHomeController().updateBasketItemCount();
@@ -643,7 +636,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
-
+        mAttempts++;
         AddToCartRequest request = new AddToCartRequest();
         request.setSkuId(mSkuId);
         request.setItemName(mSaleName);

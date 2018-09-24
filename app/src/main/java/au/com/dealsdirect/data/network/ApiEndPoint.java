@@ -32,7 +32,7 @@ public final class ApiEndPoint {
 
     private static String getFormattedUrl(ApiService service, String url) {
 
-        HashMap<String, String> replaceStrings = new HashMap<String, String>();
+        HashMap<String, String> replaceStrings = new HashMap<>();
         replaceStrings.put(ACCOUNT_ID_DELIMETER, Settings.getSelectedCountry().accountId);
 
         Set<String> keySet = replaceStrings.keySet();

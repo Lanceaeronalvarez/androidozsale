@@ -44,7 +44,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
-
     @Override
     public void callCartContent() {
         if (!isCartAlreadyLoadedOnce() && isViewAttached()) {

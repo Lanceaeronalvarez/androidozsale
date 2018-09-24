@@ -4,8 +4,9 @@ package au.com.dealsdirect.di.module;
 import android.app.Activity;
 
 import com.bluelinelabs.conductor.Controller;
-
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.event.ActionTrackerInterface;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.base.VisaCheckoutPresenter;
@@ -374,6 +375,11 @@ public class ControllerModule {
     @Provides
     MainActivity provideActivity() {
         return ((MainActivity) mController.getActivity());
+    }
+
+    @Provides
+    ActionTrackerInterface provideActionTracker() {
+        return ((MainActivity) mController.getActivity()).getActionTracker();
     }
 
     @Provides

@@ -25,6 +25,7 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.mysale.genie.profiler.Profiler;
 import com.paginate.Paginate;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -41,6 +42,7 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -59,8 +61,10 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
+import static au.com.dealsdirect.service.event.ActionTracker.ClickType.BANNER_CLICK;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_BANNER_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_POSITION;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
@@ -76,7 +80,6 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 public class ShopsController extends BaseController implements ShopsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
 
     public static final String TAG = "ShopsController";
-    private static final String KEY_TEXT = "ShopController.KEY_TEXT";
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
     private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
     private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
@@ -196,6 +199,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+        mActivity.getProfiler().setStartLogTime(ActionTracker.CustomEventType.CV_SALEBANNERS.getValue());
         setUp(view);
     }
 
@@ -218,7 +222,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     protected void setUp(View view) {
 
         assert (mActivity) != null;
-        mActivity.getMainController().showBottomNav();
+        if (mActivity.getMainController() != null) mActivity.getMainController().showBottomNav();
         mActivity.setDraggableViewPager(true);
         hideKeyboard();
 
@@ -363,8 +367,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 .putString(SALEITEMS_HEADER_IMAGE, imageUrl)
                 .putInt(SALEITEMS_FROM_POSITION, position)
                 .putString(SALEITEMS_CATEGORY_MAP, null)
-                .putBoolean(SALEITEMS_FROM_SHOP_SEARCH, false)
+                .putBoolean(SALEITEMS_FROM_BANNER_SEARCH, true)
                 .build();
+
+        mActionTracker.clicksEvent(BANNER_CLICK, position);
 
         List<String> names = new ArrayList<>();
         names.add(bannerId + position);
@@ -440,6 +446,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @Override
     public void showShopBanners(GetBannerResponse getBannerResponses) {
+        mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_SALEBANNERS.getValue());
+        mActionTracker.CVSaleBanners(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_SALEBANNERS.getValue()));
+
         shopsControllerBannerRecyclerView.setVisibility(View.VISIBLE);
 
         loadingInProgress = false;

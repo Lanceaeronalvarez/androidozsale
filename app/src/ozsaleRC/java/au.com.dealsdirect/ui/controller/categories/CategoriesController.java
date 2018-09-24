@@ -125,6 +125,8 @@ public class CategoriesController extends BaseController
         mPresenter.callGetCategoryTree();
         mNoNetworkLayout.setOnClickListener((v) -> mPresenter.callGetCategoryTree());
         setUp(view);
+
+        mActionTracker.addToCartJourneyViewProductCategory();
     }
 
     @Override
@@ -195,8 +197,7 @@ public class CategoriesController extends BaseController
                 .putString(BundleKeys.SALEITEMS_TITLE, categoryKey)
                 .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, categoryKey)
                 .putString(BundleKeys.SALEITEMS_KEY_CATEGORIES, new Gson().toJson(mCategories))
-                .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, false)
-                .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORIES, true)
+                .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, true)
                 .build();
 
         mActivity.getCategoriesRouter().pushController(RouterTransaction.with(
