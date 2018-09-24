@@ -84,6 +84,7 @@ import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLA
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static au.com.dealsdirect.service.event.ActionTracker.ClickType.PRODUCT_CLICK;
+import static au.com.dealsdirect.utils.BundleKeys.COLOR_FACET_FILTER_TYPE;
 import static au.com.dealsdirect.utils.BundleKeys.PRICE_FACET_FILTER_TYPE;
 
 /**
@@ -796,7 +797,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private void addFacets() {
         mFacetFilters = mSearchFilterMvpView.parseFacets(mFacets);
         mFacetFilters.add(0, new Pair<String, String>(BundleKeys.CATEGORY_TREE_FACET, CATEGORY_FILTER_TYPE));
-        mFacetFilters.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, PRICE_FACET_FILTER_TYPE));
         if(mPresenter.isSortingEnabled()) mFacetFilters.add(mFacetFilters.size(), new Pair<String, String>(BundleKeys.SORT_FACETFILTER_NAME, "Sort"));
 
         mTabLayout.setTabCount(mFacetFilters.size());

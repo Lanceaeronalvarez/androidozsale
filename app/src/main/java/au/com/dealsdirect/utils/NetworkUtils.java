@@ -62,7 +62,6 @@ public final class NetworkUtils {
         return builder.addInterceptor(provideOfflineCacheInterceptor(ctx, CACHE_EXPIRATION, TimeUnit.HOURS))
                 .addNetworkInterceptor(provideCacheInterceptor())
                 .addInterceptor(provideReceivedCookiesInterceptor())
-                .addInterceptor(new GzipRequestInterceptor())
                 .build();
     }
 

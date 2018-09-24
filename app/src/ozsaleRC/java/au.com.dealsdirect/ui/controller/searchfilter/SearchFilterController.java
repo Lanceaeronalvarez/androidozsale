@@ -234,6 +234,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
                     }
                     mFacetFilters.add(new Pair<String, String>(BundleKeys.SIZES_FACETFILTER_NAME, SIZE_FACET_FILTER_TYPE));
                     break;
+                case BundleKeys.PRICE_FACETFILTER_NAME:
+                    mFacetFilters.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, PRICE_FACET_FILTER_TYPE));
+                    break;
                 case BundleKeys.COLORS_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                         GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
