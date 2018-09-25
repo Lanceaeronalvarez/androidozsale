@@ -45,6 +45,7 @@
 # Crashlytics
 -keep class com.crashlytics.** { *; }
 -keep class com.crashlytics.android.**
+-dontwarn com.crashlytics.android.core.**
 -keepattributes SourceFile,LineNumberTable
 
 # Braintree

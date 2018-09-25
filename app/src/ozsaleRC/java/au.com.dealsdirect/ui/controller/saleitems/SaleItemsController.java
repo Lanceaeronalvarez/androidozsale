@@ -84,8 +84,6 @@ import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLA
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static au.com.dealsdirect.service.event.ActionTracker.ClickType.PRODUCT_CLICK;
-import static au.com.dealsdirect.utils.BundleKeys.COLOR_FACET_FILTER_TYPE;
-import static au.com.dealsdirect.utils.BundleKeys.PRICE_FACET_FILTER_TYPE;
 
 /**
  * dp Created by Admin on 6/8/17.
