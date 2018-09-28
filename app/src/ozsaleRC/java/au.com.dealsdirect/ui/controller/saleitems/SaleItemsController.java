@@ -813,8 +813,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             if(mSelectedTitle.contains(mFacetFilters.get(i).second)) toggleTabSelection(i, true);
         }
 
-        TabLayout.Tab tab = mTabLayout.getTabAt(mCurrentTabPosition);
-        if(tab != null) tab.select();
+        toggleTabSelection(mCurrentTabPosition, true);
+        mSearchFilterMvpView.updateSelectedFacet(mCurrentTabPosition);
     }
 
     private void onSelectTab(TabLayout.Tab tab){

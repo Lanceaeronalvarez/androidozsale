@@ -218,6 +218,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mSizeList = new ArrayList<>();
         mColorList = new ArrayList<>();
         mFacetFilters = new ArrayList<>();
+        Pair<String, String> pricePair = new Pair<>(BundleKeys.PRICE_FACETFILTER_NAME, PRICE_FACET_FILTER_TYPE);
         for (int i = 0; i < facets.size(); i++) {
             switch (facets.get(i).getFacetName()) {
                 case BundleKeys.BRANDS_FACETFILTER_NAME:
@@ -235,20 +236,24 @@ public class SearchFilterController extends BaseController implements SearchFilt
                     mFacetFilters.add(new Pair<String, String>(BundleKeys.SIZES_FACETFILTER_NAME, SIZE_FACET_FILTER_TYPE));
                     break;
                 case BundleKeys.PRICE_FACETFILTER_NAME:
-                    mFacetFilters.add(new Pair<String, String>(BundleKeys.PRICE_FACETFILTER_NAME, PRICE_FACET_FILTER_TYPE));
+                    mFacetFilters.add(pricePair);
                     break;
                 case BundleKeys.COLORS_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
                         GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
                         mColorList.add(facetValue.getValue());
                     }
+                    if(!mFacetFilters.contains(pricePair)) {
+                        mFacetFilters.add(pricePair);
+                    }
                     mFacetFilters.add(new Pair<String, String>(BundleKeys.COLORS_FACETFILTER_NAME, COLOR_FACET_FILTER_TYPE));
                     break;
-
                 default:
                     break;
             }
         }
+        if(facets.size() == 0) mFacetFilters.add(pricePair);
+
         return mFacetFilters;
     }
 
@@ -289,6 +294,12 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mFacetsFrame.setVisibility(View.INVISIBLE);
         mSaleItemsView.enableSaleItemsScroll(true);
         mSaleItemsView.toggleTabSelection(mSaleItemsView.getSelectedPosition());
+    }
+
+    @Override
+    public void updateSelectedFacet(int position) {
+        mFacetItemsAdapter.setFilterType(getFacetFilterType(position));
+        mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
     }
 
     private void setupPriceFacet() {
@@ -418,9 +429,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
             mFacetItemsRecyclerView.setVisibility(View.GONE);
             mSeekbarLayout.setVisibility(View.VISIBLE);
         }
-
-        mFacetItemsAdapter.setFilterType(getFacetFilterType(position));
-        mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
+        updateSelectedFacet(position);
     }
 
     @Override

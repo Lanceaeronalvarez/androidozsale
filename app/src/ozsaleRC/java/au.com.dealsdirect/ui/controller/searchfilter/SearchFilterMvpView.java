@@ -38,4 +38,5 @@ public interface SearchFilterMvpView extends MvpView{
 
     void closeFacets();
 
+     void updateSelectedFacet(int position);
 }
