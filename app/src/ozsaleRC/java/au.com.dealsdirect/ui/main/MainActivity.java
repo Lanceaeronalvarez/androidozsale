@@ -202,7 +202,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onResume() {
         super.onResume();
         mPresenter.onAttach(this);
-        attachMainController();
         registerInternetCheckReceiver();
     }
 
