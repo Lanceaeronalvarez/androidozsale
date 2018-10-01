@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,6 +27,7 @@ import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRe
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.List;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.returns.newreturn.adapter.NewReturnOrdersAdapter;
 import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -143,7 +147,12 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     getString(R.string.return_request_submitted));
-            getRouter().popToTag(getString(R.string.current_returns_controller));
+
+            getRouter().pushController(RouterTransaction.with(
+                    CurrentReturnsController.newInstance())
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+
         } else {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,

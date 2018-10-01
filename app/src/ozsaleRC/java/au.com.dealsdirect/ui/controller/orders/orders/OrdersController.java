@@ -115,6 +115,8 @@ public class OrdersController extends BasePullToRefreshController implements Ord
             mActivity.getHomeController().getCurrentRouter().popToRoot();
             mActivity.getHomeController().showFirstTabController();
         });
+
+        mActivity.getMainController().setViewpagerDraggable(false);
     }
 
     @Override

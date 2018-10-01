@@ -174,9 +174,11 @@ public class ViewContactsController extends BaseController implements ViewContac
             mContactAdapter.replace(myContacts.getList());
             mViewContactsRecyclerViewContainer.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
+            mViewContactsAddNewMessage.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
         } else {
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mViewContactsRecyclerViewContainer.setVisibility(View.GONE);
+            mViewContactsAddNewMessage.setVisibility(View.VISIBLE);
         }
 
         int visibility = getResource().getBoolean(R.bool.contacts_toolbar_addmessage_visibility) ? View.VISIBLE : View.INVISIBLE;

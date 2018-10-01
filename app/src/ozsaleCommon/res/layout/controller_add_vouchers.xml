@@ -14,9 +14,19 @@
         layout="@layout/partial_toolbar_arrow" />
 
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_below="@+id/add_vouchers_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_vouchers_buttons"
+        android:orientation="vertical"
+        android:fillViewport="true"
+        android:overScrollMode="never">
+
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/add_vouchers_toolbar"
         android:layout_above="@+id/add_vouchers_buttons"
         android:orientation="vertical">
@@ -105,17 +115,21 @@
             <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
                 android:id="@+id/controller_recycler_view_promo_vouchers"
                 style="@style/RecyclerViewPagerVouchersStyle"
-                android:overScrollMode="never"
+                android:nestedScrollingEnabled="false"
                 app:rvp_singlePageFling="true"
                 app:rvp_triggerOffset="0.1" />
 
 
         </LinearLayout>
+
         <include layout="@layout/partial_no_voucher_placeholder_layout" />
 
 
-
     </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
 
     <include
         android:id="@+id/add_vouchers_buttons"

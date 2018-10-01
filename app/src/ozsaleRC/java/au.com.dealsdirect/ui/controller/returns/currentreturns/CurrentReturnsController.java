@@ -162,12 +162,11 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
         if (currentReturns != null && currentReturns.size() != 0) {
 
-            mCurrentReturnsRequestButton.setVisibility(View.GONE);
-            mCurrentReturnsRightOption.setVisibility(View.VISIBLE);
+            mCurrentReturnsRequestButton.setVisibility(View.VISIBLE);
+            mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
 
             mPlaceholderLayout.setVisibility(View.GONE);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
-            mCurrentReturnsRightOption.setVisibility(View.VISIBLE);
 
             mCurrentReturns = currentReturns;
 
@@ -290,9 +289,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
     };
 
     private void updateToolbar(){
-        if (mCurrentReturns == null || mCurrentReturns.size() == 0)
-            mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
-        else
-            mCurrentReturnsRightOption.setVisibility(View.VISIBLE);
+        mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
+        mCurrentReturnsRequestButton.setVisibility(View.VISIBLE);
     }
 }
