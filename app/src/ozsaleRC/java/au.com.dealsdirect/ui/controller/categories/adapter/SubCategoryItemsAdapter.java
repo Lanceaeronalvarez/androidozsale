@@ -81,6 +81,15 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                         mData.get(position).getId(),
                         mData.get(position).getName(),
                         mData.get(position).getKey());
+
+
+                View lastItemView = activity.getMainController().getPreviousSubcategoryItem();
+                if(lastItemView != null) {
+                    SubCategoriesAdapter.SubCategoriesViewHolder subCategoryItemViewHolder = new SubCategoriesAdapter.SubCategoriesViewHolder(lastItemView);
+                    subCategoryItemViewHolder.subCategoryCheckImageView.setVisibility(View.INVISIBLE);
+                    activity.getMainController().setPreviousSubcategoryItem(null);
+                }
+
             });
         }
     }

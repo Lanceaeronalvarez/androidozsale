@@ -51,6 +51,8 @@ public class MainController extends BaseController implements MainMvpView {
 
     private View mLastSelectedSubCategoryItem;
 
+    private View mPreviousSubcategoryItem;
+
     private String mChosenSubCategoryItemKey = "";
 
     @BindView(R.id.controller_home_bottom_nav)
@@ -165,6 +167,14 @@ public class MainController extends BaseController implements MainMvpView {
 
     public View getSelectedSubCategoryItem() {
         return mLastSelectedSubCategoryItem;
+    }
+
+    public void setPreviousSubcategoryItem(View view){
+        mPreviousSubcategoryItem = view;
+    }
+
+    public View getPreviousSubcategoryItem(){
+        return mPreviousSubcategoryItem;
     }
 
     public String getChosenCategoryItemKey() {

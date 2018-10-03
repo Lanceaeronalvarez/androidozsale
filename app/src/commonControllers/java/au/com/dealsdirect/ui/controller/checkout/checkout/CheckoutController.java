@@ -420,7 +420,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     protected void setUp(View view) {
         if (mActivity != null) {
             mActivity.getMainController().showBottomNav();
-            mActivity.setDraggableViewPager(false);
         }
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
@@ -512,6 +511,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         } else {
             showNoCartItemsLayout();
         }
+
+        mActivity.getMainController().setViewpagerDraggable(false);
     }
 
     @Override

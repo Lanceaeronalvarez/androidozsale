@@ -146,7 +146,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mActivity.getMainController().showBottomNav();
-        mActivity.setDraggableViewPager(false);
 
         createAccountItems();
 
@@ -467,6 +466,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mRightToolbarButton.setVisibility(View.VISIBLE);
+
+        mActivity.getMainController().setViewpagerDraggable(false);
     }
 
     @Override

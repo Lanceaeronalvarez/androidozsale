@@ -80,6 +80,24 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                     }
 
                     mainController.setChosenCategoryItemKey(mData.get(position).getKey());
+
+                    holder.subCategoryCheckImageView.setVisibility(View.VISIBLE);
+
+                    View previousItemView =mainController.getSelectedSubCategoryItem();
+                    if(previousItemView != null) {
+                        SubCategoryItemsAdapter.SubCategoryItemViewHolder subCategoryItemViewHolder = new SubCategoryItemsAdapter.SubCategoryItemViewHolder(previousItemView);
+                        subCategoryItemViewHolder.subCategoryCheck.setVisibility(View.GONE);
+                    }
+
+                    View lastItemView = mainController.getPreviousSubcategoryItem();
+                    if(lastItemView != null && !lastItemView.equals(holder.itemView)) {
+                        SubCategoriesViewHolder subCategoryItemViewHolder = new SubCategoriesViewHolder(lastItemView);
+                        subCategoryItemViewHolder.subCategoryCheckImageView.setVisibility(View.INVISIBLE);
+                    }
+
+                    mainController.setPreviousSubcategoryItem(holder.itemView);
+
+
                 });
 
             } else if (!subCategoryItems.isEmpty()) {

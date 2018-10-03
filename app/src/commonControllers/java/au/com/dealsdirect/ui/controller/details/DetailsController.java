@@ -195,6 +195,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         showLoading();
         mPresenter.loadUser(setUserDetailsRequest);
 
+        mActivity.getMainController().setViewpagerDraggable(false);
     }
 
     @Override

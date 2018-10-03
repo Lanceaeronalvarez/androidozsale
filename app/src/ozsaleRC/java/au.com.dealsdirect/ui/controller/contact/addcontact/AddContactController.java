@@ -17,16 +17,19 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -175,17 +178,42 @@ public class AddContactController extends BaseController implements AddContactMv
     @Override
     public void contactCreatedSwitchView(CreateContactResponse createContactResponse) {
         if (createContactResponse.getCreateContact().getResult()) {
-            if(mPresenter.isTablet() && getBoolean(R.bool.master_detail_enabled)){
+
+            String saleName = !ContactPreferenceHelper.getChosenOrder(mActivity).isEmpty() ? ContactPreferenceHelper.getChosenOrder(mActivity) : "";
+            int invoiceNo = !mChosenOptionInvoice.isEmpty() ? Integer.valueOf(mChosenOptionInvoice) : 0;
+
+            RouterTransaction routerTransaction = RouterTransaction.with(ViewContactHistoryController.newInstance(
+                    mChosenSubject,
+                    saleName,
+                    invoiceNo,
+                    mAddContactMessageField.getText().toString(),
+                    createContactResponse.getCreateContact().getValue()))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler());
+
+            if (mPresenter.isTablet() && getBoolean(R.bool.master_detail_enabled)) {
                 mViewContactsMvpView.getPresenter().loadContacts();
                 mViewContactsMvpView.getDisplayRouter().popToRoot();
+                GateKeeper.setRoot(mViewContactsMvpView.getDisplayRouter(), GateKeeper.Destination.CONTACT_HISTORY, routerTransaction);
             } else {
                 getRouter().popToRoot();
+                getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+                        mChosenSubject,
+                        saleName,
+                        invoiceNo,
+                        mAddContactMessageField.getText().toString(),
+                        createContactResponse.getCreateContact().getValue()))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+
             }
+
         } else {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     mActivity.getString(R.string.error_creating_message));
         }
+
     }
 
 }

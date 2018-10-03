@@ -136,11 +136,13 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
                     message.contains("SSLHandshakeException")) {
                 // Do not notify for these errors
                 return;
-            } else if (message.contains("Exception") || message.contains("null") ||
-                    message.contains("virtual method")) {
+            } else if (message.contains("Exception") || message.contains("virtual method")) {
 //                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
                 showSnackBar(getString(R.string.error), false);
-            } else {
+            } else if (message.contains("null")){
+                return;
+            }
+            else {
                 /*
                     4/6/18 - feature/andr-3308-registersubscriber
                     Disallow showing of No internet Connection on Socket Timeout Exception

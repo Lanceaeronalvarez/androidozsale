@@ -109,6 +109,8 @@ public class ViewContactsController extends BaseController implements ViewContac
 
         mActivity.getMainController().showBottomNav();
 
+        mActivity.getMainController().setViewpagerDraggable(false);
+
         setUp(view);
         mPresenter.loadContacts();
 
