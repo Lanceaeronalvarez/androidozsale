@@ -40,8 +40,6 @@ public interface SaleItemsMvpView extends MvpView{
 
     void toggleTabSelection(int tabPos, boolean isTabActive);
 
-    void toggleTabSelection(int tabPos);
-
-    int getSelectedPosition();
+    void toggleTabSelection();
 
 }

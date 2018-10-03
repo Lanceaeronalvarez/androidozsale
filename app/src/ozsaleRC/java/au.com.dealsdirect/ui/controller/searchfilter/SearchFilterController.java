@@ -293,7 +293,13 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mIsSearchFilterControllerActive = false;
         mFacetsFrame.setVisibility(View.INVISIBLE);
         mSaleItemsView.enableSaleItemsScroll(true);
-        mSaleItemsView.toggleTabSelection(mSaleItemsView.getSelectedPosition());
+        mSaleItemsView.toggleTabSelection();
+    }
+
+    @Override
+    public void updateSelectedFacet(int position) {
+        mFacetItemsAdapter.setFilterType(getFacetFilterType(position));
+        mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
     }
 
     @Override
