@@ -358,14 +358,14 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showSecondTabController() {
-        mActivity.setDraggableViewPager(true);
+        mActivity.setDraggableViewPager(false);
         setVisibleContainer(TAB_CATEGORIES_INDEX);
     }
 
     @Override
     public void showThirdTabController() {
         setVisibleContainer(TAB_ACCOUNT_INDEX);
-        mActivity.setDraggableViewPager(true);
+        mActivity.setDraggableViewPager(false);
         int size = mAccountsRouter.getBackstack().size();
 
         if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView) {
@@ -375,7 +375,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showFourthTabController() {
-        mActivity.setDraggableViewPager(true);
+        mActivity.setDraggableViewPager(false);
         setVisibleContainer(TAB_CONTACT_INDEX);
         if (!mActivity.isAuthorized()) {
             mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
@@ -397,7 +397,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showFifthTabController() {
-        mActivity.setDraggableViewPager(true);
+        mActivity.setDraggableViewPager(false);
         setVisibleContainer(TAB_CHECKOUT_INDEX);
         if (!mActivity.isAuthorized()) {
             mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
