@@ -181,7 +181,7 @@ android {
         }
 
         ooRC {
-            versionCode 30
+            versionCode 31
             versionName "0.9"
             applicationId "au.com.oo"
 
@@ -202,7 +202,7 @@ android {
         }
 
         ooTest {
-            versionCode 35
+            versionCode 36
             versionName "0.9"
             applicationId "au.com.oo.test"
 

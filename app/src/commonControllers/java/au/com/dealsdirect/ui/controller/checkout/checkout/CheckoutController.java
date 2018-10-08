@@ -15,9 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,13 +51,11 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
@@ -254,6 +250,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     private CompositeDisposable mClickListeners;
     private CompositeDisposable mChangeClickListeners;
+
+    private PaymentMethod mLastUserPaymentMethod;
 
     public static CheckoutController newInstance() {
         return new CheckoutController(
@@ -555,7 +553,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     }));
 
 
-
                     mButtonOurpay = mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                     if (mButtonOurpay != null) {
                         mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
@@ -756,11 +753,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mPaymentChangeView.setVisibility(View.GONE);
 
             showPaymentButtons();
-            mActivity.setPaymentMethodSelected(null);
+            mLastUserPaymentMethod = null;
             return;
 
         } else if (mActivity.getPaymentMethodSelected() == null) {
-            mActivity.setPaymentMethodSelected(paymentMethod);
+            mLastUserPaymentMethod = paymentMethod;
         }
 
         displayPaymentDetails();
@@ -871,6 +868,39 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public void setPaymentList(List<PaymentMethod> paymentList) {
         mPaymentList.clear();
         mPaymentList.addAll(paymentList);
+
+        PaymentMethod paymentMethod = getCompatiblePaymentType(mLastUserPaymentMethod,
+                                      mActivity.getPaymentMethodSelected(),
+                                      paymentList,
+                                      mSelectedDeliveryOption.getDeliveryOptions().get(0));
+        mActivity.setPaymentMethodSelected(paymentMethod);
+    }
+
+    private PaymentMethod getCompatiblePaymentType(PaymentMethod lastPaymentMethod,
+                                                   PaymentMethod selectedPaymentMethod,
+                                                   List<PaymentMethod> paymentMethodList,
+                                                   String deliveryOption) {
+
+        ArrayList<PaymentMethod> defaultPayments = new ArrayList();
+        if (selectedPaymentMethod != null) defaultPayments.add(selectedPaymentMethod);
+        if (lastPaymentMethod != null) defaultPayments.add(lastPaymentMethod);
+
+        switch (deliveryOption) {
+
+            case DeliveryOption.DELIVERY_OPTION_OURPAY_SELECT:
+
+                ArrayList<PaymentMethod> availablePaymentMethods = defaultPayments;
+                defaultPayments.addAll(paymentMethodList);
+
+                for (PaymentMethod method : availablePaymentMethods) {
+                    if (method.isCard()) return method;
+                }
+                break;
+
+            default:
+                return defaultPayments.size() > 0 ? defaultPayments.get(0) : null;
+        }
+        return null;
     }
 
     @Override
@@ -1101,7 +1131,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     private void showCartItems() {
         mActionTracker.addToCartJourneyViewCart();
-        
+
         showPaymentButtons();
         if (mNoCartItemsLayout != null) {
             mNoCartItemsLayout.setVisibility(View.GONE);

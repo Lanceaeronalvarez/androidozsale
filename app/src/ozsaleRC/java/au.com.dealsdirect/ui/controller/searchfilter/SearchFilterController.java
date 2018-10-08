@@ -302,12 +302,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
     }
 
-    @Override
-    public void updateSelectedFacet(int position) {
-        mFacetItemsAdapter.setFilterType(getFacetFilterType(position));
-        mFacetItemsAdapter.replaceData(mapFacetItemClicked(position));
-    }
-
     private void setupPriceFacet() {
         mOrigMaxValue = mPresenter.getSearchMaxPrice();
         mOrigMinValue = mSeekbar.getSelectedMinValue().intValue();

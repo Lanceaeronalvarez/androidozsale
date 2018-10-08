@@ -50,7 +50,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             getMvpView().showLoading();
         }
         fetchCartDetails();
-        fetchUserPaymentMethods();
     }
 
     @Override
@@ -89,6 +88,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                         getMvpView().hideNoNetworkLayout();
 
                         updateCart(responseValue);
+                        fetchUserPaymentMethods();
                         mFetchCartFinished = true;
 
                     }
@@ -186,6 +186,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
                         view.resetLoaders();
                         updateCart(responseValue);
+                        fetchUserPaymentMethods();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -372,6 +373,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                 GetCurrentOrder.ResponseValue responseValue = (GetCurrentOrder.ResponseValue) response;
                 if (responseValue.getD().isAuthenticated() && responseValue.getD().getResult()) {
                     updateCart(responseValue);
+                    fetchUserPaymentMethods();
                 }
             }
         });

@@ -8,6 +8,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class DeliveryOption {
+    public static final String DELIVERY_OPTION_STANDARD = "STANDARD";
+    public static final String DELIVERY_OPTION_OURPAY_SELECT = "OURPAYSELECT";
+    public static final String DELIVERY_OPTION_EXPRESS = "EXPRESS";
 
     @SerializedName(value = "DeliveryOptions")
     @Expose
