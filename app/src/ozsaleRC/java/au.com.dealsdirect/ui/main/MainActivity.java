@@ -23,6 +23,7 @@ import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.ThreeDSecure;
 import com.braintreepayments.api.exceptions.AuthenticationException;
 import com.braintreepayments.api.exceptions.AuthorizationException;
+import com.braintreepayments.api.exceptions.BraintreeError;
 import com.braintreepayments.api.exceptions.ConfigurationException;
 import com.braintreepayments.api.exceptions.DownForMaintenanceException;
 import com.braintreepayments.api.exceptions.ErrorWithResponse;
@@ -364,7 +365,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 //Call braintree client reset on error
                 performResetWithAuthFetch();
             }
+        } else {
+            hideLoading();
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getBrainTreeFieldErrorMessage(((ErrorWithResponse) error).getFieldErrors().get(0)));
         }
+    }
+
+    private String getBrainTreeFieldErrorMessage(BraintreeError error) {
+        BraintreeError err = error;
+        List<BraintreeError> fieldErrors = err.getFieldErrors();
+        while (fieldErrors != null && !fieldErrors.isEmpty()) {
+            if (fieldErrors.get(0) != null) {
+                err = fieldErrors.get(0);
+                fieldErrors = err.getFieldErrors();
+            } else {
+                break;
+            }
+        }
+        boolean hasMessage = !(err.getMessage() == null || err.getMessage().isEmpty());
+        return  hasMessage ? err.getMessage() : getString(R.string.an_error_has_occurred);
     }
 
     @Override

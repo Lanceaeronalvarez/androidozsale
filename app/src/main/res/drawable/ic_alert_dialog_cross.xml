@@ -6,7 +6,7 @@
     <path
         android:pathData="M18,18m-18,0a18,18 0,1 1,36 0a18,18 0,1 1,-36 0"
         android:strokeWidth="1"
-        android:fillColor="@color/colorAccent"
+        android:fillColor="@color/dialog_icon_negative"
         android:strokeColor="#00000000"/>
     <path
         android:pathData="M12.14,11.84L24.02,23.72"

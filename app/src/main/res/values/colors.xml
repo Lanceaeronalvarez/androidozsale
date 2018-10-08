@@ -14,6 +14,7 @@
     <color name="recyclerview_overscroll">@color/colorPrimary</color>
 
     <color name="dialog_background">#fafafa</color>
+    <color name="dialog_icon_negative">@color/colorAccent</color>
   
     <!-- EditText Theme -->
     <color name="bg_edit_text_ripple">#FFFFFF</color>

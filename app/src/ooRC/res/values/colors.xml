@@ -17,6 +17,7 @@
 
     <!-- Dialog Theme -->
     <color name="item_select_remove">#F29124</color>
+    <color name="dialog_icon_negative">@color/item_select_remove</color>
 
     <!--COLORS INSERTED HERE-->
 
