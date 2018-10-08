@@ -6,12 +6,12 @@ package au.com.dealsdirect.service.ourpay;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.TextView;
 
 import java.util.List;
@@ -21,12 +21,8 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.utils.PriceUtils;
 
-import static android.view.ViewTreeObserver.OnGlobalLayoutListener;
-
 @SuppressWarnings({"ResourceType"})
 public class OurpayGraph {
-
-    private OnGlobalLayoutListener mOnGlobalLayoutListener;
 
     /**
      * @param context            -  Get context to identify
@@ -34,7 +30,7 @@ public class OurpayGraph {
      * @return - return view as ui object
      */
 
-    public View generateGraph(final Context context, final List<GetCurrentOrderOurpay.PlannedTransaction> ourpayTransactions) {
+    public View generateGraph(final Context context, final List<GetCurrentOrderOurpay.PlannedTransaction> ourpayTransactions, final boolean hasCheckMark) {
         final LinearLayout rootViewLayout;
 
         rootViewLayout = new LinearLayout(context);
@@ -44,12 +40,12 @@ public class OurpayGraph {
         LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         rootViewLayout.setLayoutParams(LLParams);
 
-        generateRows(ourpayTransactions, context, rootViewLayout);
+        generateRows(ourpayTransactions, context, rootViewLayout, hasCheckMark);
 
         return rootViewLayout;
     }
 
-    private void generateRows(List<GetCurrentOrderOurpay.PlannedTransaction> ourpayTransactions, Context context, ViewGroup viewGroup) {
+    private void generateRows(List<GetCurrentOrderOurpay.PlannedTransaction> ourpayTransactions, Context context, ViewGroup viewGroup, boolean hasCheckMark) {
         LayoutInflater inflater = LayoutInflater.from(context);
         int transactionsCount = ourpayTransactions.size();
         for (int i = 0; i < ourpayTransactions.size(); i++) {
@@ -62,37 +58,28 @@ public class OurpayGraph {
 
             tempDate.setText(OurpayUtils.convertDateToTrimmedString(ourpayTransactions.get(i).getPlannedDate()));
 
-            if (ourpayTransactions.get(i).getState() == 2) {
-                tempPay.setText(R.string.paid);
-                checkImage.setVisibility(View.VISIBLE);
+            if (hasCheckMark) {
+                if (ourpayTransactions.get(i).getState() == 2) {
+                    tempPay.setText(R.string.paid);
+                    checkImage.setVisibility(View.VISIBLE);
+                } else {
+                    String formattedPriceString = PriceUtils.TEMP_CURRENCY_SIGN + String.format(Locale.ENGLISH, "%.2f", ourpayTransactions.get(i).getAmount());
+                    tempPay.setText(formattedPriceString);
+                    checkImage.setVisibility(View.INVISIBLE);
+                }
             } else {
                 String formattedPriceString = PriceUtils.TEMP_CURRENCY_SIGN + String.format(Locale.ENGLISH, "%.2f", ourpayTransactions.get(i).getAmount());
                 tempPay.setText(formattedPriceString);
-                checkImage.setVisibility(View.INVISIBLE);
+                checkImage.setVisibility(View.GONE);
             }
 
             viewGroup.addView(ourpayPanelRow);
 
-            mOnGlobalLayoutListener = new OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    if (circlesContainer.getMeasuredWidth() != 0) {
-                        circlesContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        circlesContainer.postDelayed(
-                                () -> generateProgressCircles(circlesContainer, context, circlesContainer.getMeasuredWidth(), transactionsCount), 1000);
-                    }
-                }
-            };
-
-            circlesContainer.getViewTreeObserver().addOnGlobalLayoutListener(mOnGlobalLayoutListener);
-
+            generateProgressCircles(circlesContainer, context, transactionsCount);
         }
     }
 
-    private void generateProgressCircles(ViewGroup circlesContainer, Context context, int width, int transactionsSize) {
-        int initialMargin = width - (context.getResources().getDimensionPixelSize(R.dimen.ourpay_circle_state_size) * transactionsSize);
-        int finalMargin = initialMargin / (transactionsSize - 1);
-
+    private void generateProgressCircles(ViewGroup circlesContainer, Context context, int transactionsSize) {
         for (int j = 0; j < transactionsSize; j++) {
             TextView panelCircleState = (TextView) LayoutInflater.from(context).inflate(R.layout.ourpay_panel_circle, circlesContainer, false);
             panelCircleState.setText(String.valueOf(j + 1));
@@ -103,15 +90,20 @@ public class OurpayGraph {
                 panelCircleState.setBackground(context.getResources().getDrawable(R.drawable.ourpay_circle_state_default));
             }
 
-            if (j > 0) {
-                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) panelCircleState.getLayoutParams();
-                lp.setMargins(finalMargin, 0, 0, 0);
-                panelCircleState.setLayoutParams(lp);
-            }
-
             circlesContainer.addView(panelCircleState);
+
+            if (j < transactionsSize - 1) {
+                Space space = new Space(context);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        1.0f
+                );
+                space.setLayoutParams(params);
+
+                circlesContainer.addView(space);
+            }
         }
 
     }
-
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/discountTab"
@@ -13,48 +13,36 @@
 
     <TextView
         android:id="@+id/dateTextView"
-        android:layout_width="60dp"
+        android:layout_width="@dimen/ourpay_date_label_width"
         android:layout_height="wrap_content"
         android:gravity="start|center_vertical"
         android:textColor="@color/ourpay_panel_dark_gray"
         android:textSize="@dimen/text_size_body"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imagelayout"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_alignParentLeft="true"
         tools:text="22 Sep" />
 
 
     <ImageView
         android:id="@+id/checkImage"
+        android:layout_toLeftOf="@+id/dollarValue"
         android:layout_width="@dimen/ourpay_panel_check_width"
         android:layout_height="@dimen/ourpay_panel_check_height"
         android:layout_marginEnd="@dimen/padding_default_half"
         android:contentDescription="checkImage"
         android:maxWidth="@dimen/ourpay_panel_check_width"
-        android:src="@drawable/ourpay_check"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/dollarValue"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imagelayout"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/ourpay_check" />
 
     <TextView
         android:id="@+id/dollarValue"
         fontPath="@string/font_app_bold"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/ourpay_price_label_width"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:textColor="@color/ourpay_panel_dark_gray"
         android:textSize="@dimen/text_size_body"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/checkImage"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.50"
+        android:textAlignment="gravity"
+        android:gravity="right"
         tools:ignore="MissingPrefix"
         tools:text="$1866.91" />
 
@@ -62,14 +50,12 @@
     <RelativeLayout
         android:id="@+id/imagelayout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/ourpay_circle_state_size"
+        android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/padding_default_half"
         android:layout_marginStart="@dimen/padding_default_half"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/checkImage"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/dateTextView"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_toRightOf="@+id/dateTextView"
+        android:layout_toLeftOf="@id/checkImage">
 
         <View
             android:id="@+id/ourpay_bg_bar"
@@ -88,10 +74,10 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:animateLayoutChanges="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true">
 
         </LinearLayout>
     </RelativeLayout>
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
 

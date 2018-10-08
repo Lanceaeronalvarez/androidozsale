@@ -83,7 +83,7 @@ public class OurpayPanel {
                 if (!templateTexts.equals("")) templateView.setVisibility(View.GONE);
                 templateView.setTag(templateTexts);
 
-                final View panelRows = getPanelRows(ourpay.getPlannedTransactions());
+                final View panelRows = getPanelRows(ourpay.getPlannedTransactions(), false);
                 mHolderInBorder.addView(panelRows);
 
                 templateView.setVisibility(View.GONE);
@@ -120,7 +120,7 @@ public class OurpayPanel {
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
                     mPanelHolder.addView(getTermsAndConditions(ourpay), 2);
                 }
-                View panelRows = getPanelRows(ourpay.getPlannedTransactions());
+                View panelRows = getPanelRows(ourpay.getPlannedTransactions(), false);
                 View panelTotalRow = getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getTotalAmount()));
                 mPanelHolder.addView(getCartAmountHeader(PriceUtils.getPriceStringValue(ourpay.getInitialAmount())), 0);
                 mHolderInBorder.addView(panelRows);
@@ -142,7 +142,7 @@ public class OurpayPanel {
                 mPanelHolder.addView(tv, 0);
             }
             mHolderInBorder.addView(getSuccessHeaderRow());
-            mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions()));
+            mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions(), true));
             mHolderInBorder.addView(getPanelRemainingRow(PriceUtils.getPriceStringValue(ourpay.getInitialAmount())));
 
             if (!mBaseActivity.getResources().getBoolean(R.bool.is_ozsale_app)) {
@@ -186,8 +186,8 @@ public class OurpayPanel {
         return header;
     }
 
-    private View getPanelRows(List<GetCurrentOrderOurpay.PlannedTransaction> transactions) {
-        return mOurpayGraph.generateGraph(mBaseActivity, transactions);
+    private View getPanelRows(List<GetCurrentOrderOurpay.PlannedTransaction> transactions, boolean hasCheckMark) {
+        return mOurpayGraph.generateGraph(mBaseActivity, transactions, hasCheckMark);
     }
 
     private View getCartAmountHeader(String amount) {
