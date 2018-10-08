@@ -181,6 +181,9 @@
     <dimen name="sale_item_image_padding_right">12dp</dimen>
     <dimen name="sale_item_image_padding_top">8dp</dimen>
     <dimen name="sale_item_image_height">200dp</dimen>
+    <dimen name="controller_sale_items_tab_height">40dp</dimen>
+    <!-- sum of filter tabs, search edittext and margins-->
+    <dimen name="collapsing_toolbar_height">90dp</dimen>
 
     <!-- Return -->
     <dimen name="return_card_height">450dp</dimen>
@@ -206,7 +209,6 @@
     <dimen name="ourpay_select_logo_height">20dp</dimen>
     <!--Ourpay Select Checkbox size-->
     <dimen name="ourpay_select_checkbox_size">20dp</dimen>
-    <dimen name="controller_sale_items_tab_height">40dp</dimen>
     <dimen name="ourpay_circle_state_size">20dp</dimen>
     <dimen name="ourpay_circle_state_size_half">10dp</dimen>
 

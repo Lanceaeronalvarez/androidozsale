@@ -51,10 +51,10 @@
             android:id="@+id/controller_sale_items_text_placeholder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:layout_marginTop="?attr/actionBarSize">
+            android:visibility="gone">
 
             <TextView
                 fontPath="@string/font_app_semibold"
@@ -100,11 +100,12 @@
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/controller_sale_collapsing_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="@dimen/collapsing_toolbar_height"
+                android:animateLayoutChanges="true"
+                android:background="@color/white"
                 android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"
-                android:animateLayoutChanges="true">
+                app:layout_scrollFlags="scroll|enterAlways">
 
                 <au.com.dealsdirect.ui.custom.AdaptiveTabLayout
                     android:id="@+id/controller_search_filter_tabs"
@@ -113,10 +114,9 @@
                     android:layout_height="@dimen/controller_sale_items_tab_height"
                     android:layout_gravity="bottom"
                     android:background="@color/white"
-                    app:tabMaxWidth="0dp"
                     android:minHeight="@dimen/controller_sale_items_tab_height"
                     android:visibility="gone"
-                    />
+                    app:tabMaxWidth="0dp" />
 
                 <au.com.dealsdirect.ui.custom.SearchEditText
                     android:id="@+id/partial_toolbar_field_title_edittext"
@@ -140,7 +140,7 @@
                     android:visibility="visible"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="0.5"
-                    app:layout_scrollFlags="scroll|enterAlways"/>
+                    app:layout_scrollFlags="scroll|enterAlways" />
 
             </android.support.design.widget.CollapsingToolbarLayout>
 
