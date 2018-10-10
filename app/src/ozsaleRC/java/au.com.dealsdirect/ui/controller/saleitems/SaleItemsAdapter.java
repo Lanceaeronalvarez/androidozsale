@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.saleitems;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,17 +31,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 
 public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.ViewHolder> {
-    private static final int SALE_ITEM_IMAGE_WIDTH = 225;
-    private static final int SALE_ITEM_IMAGE_HEIGHT = 360;
-    private static final int SCREEN_PADDING_MULTIPLIER = 15;
     private static final int SCREEN_TRANSITION_DELAY = 2000;
 
     private List<GetSaleItemsResponse.Products> mData;
     private Context mContext;
     private SaleItemsMvpPresenter mPresenter;
     private String mSaleId;
+    private int mColumnCount;
 
-    private int mComputedHeight = 0;
+    private Pair<Integer, Integer> mComputedPair;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -65,12 +64,13 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         @BindView(R.id.vh_sale_item_frame)
         FrameLayout layout;
 
-        ViewHolder(View view, int height) {
+        ViewHolder(View view, Pair<Integer, Integer> pair) {
             super(view);
             ButterKnife.bind(this, view);
 
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) layout.getLayoutParams();
-            params.height = height;
+            params.width = pair.first;
+            params.height = pair.second;
             layout.setLayoutParams(params);
         }
     }
@@ -86,18 +86,23 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         this.mPresenter = presenter;
         this.mSaleId = saleId;
 
-        // Dynamic Height Computation
-        int columns = mPresenter.isTablet() ? mContext.getResources().getInteger(R.integer.sale_items_tablet_column_count_portrait)
-                : mContext.getResources().getInteger(R.integer.sale_items_phone_column_count_portrait);
-        int screenWidth = (int) (ScreenUtils.getScreenWidth(mContext) / columns - (SCREEN_PADDING_MULTIPLIER * ScreenUtils.getScreenDensity(mContext)));
-        mComputedHeight = ImageUtils.getComputedBannerHeight(SALE_ITEM_IMAGE_WIDTH, SALE_ITEM_IMAGE_HEIGHT, screenWidth);
+        computeItemViewDimensions();
+    }
+
+    public void computeItemViewDimensions() {
+        ImageUtils.Grid gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width),
+                (int) getInteger(R.integer.item_image_height), (float) ScreenUtils.getScreenWidth(mContext), 3);
+        if(!mPresenter.isTablet()) gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width),
+                (int) getInteger(R.integer.item_image_height), (float) ScreenUtils.getScreenWidth(mContext), 3, 4);
+        mColumnCount = gridDefinition.getColumn();
+        mComputedPair = new Pair<>((int) gridDefinition.getItemWidth(),(int) gridDefinition.getItemHeight());
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.viewholder_sale_item, parent, false);
-        return new ViewHolder(view, mComputedHeight);
+        return new ViewHolder(view, mComputedPair);
     }
 
     @Override
@@ -162,5 +167,13 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
     public List<GetSaleItemsResponse.Products> getData() {
         return mData;
+    }
+
+    public int getColumnCount() {
+        return mColumnCount;
+    }
+
+    private float getInteger(int resId) {
+        return mContext.getResources().getInteger(resId);
     }
 }

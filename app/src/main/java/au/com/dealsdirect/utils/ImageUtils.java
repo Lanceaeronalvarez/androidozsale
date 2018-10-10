@@ -8,6 +8,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
+import android.util.Pair;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
@@ -24,6 +26,7 @@ public class ImageUtils {
 
     public static final String TAG = ImageUtils.class.getSimpleName();
     public static String IMAGE_SERVER_URL = "server_image_server_url";
+    private static final int NO_MAX_COLUMN = -1;
 
     public static abstract class ImageLoadedCallback {
 
@@ -153,7 +156,7 @@ public class ImageUtils {
 
     public static String appendBannerSizeUrl(String url, int width, int height) {
 
-        String bannerSize = String.format("_%dx%d", width , height);
+        String bannerSize = String.format("_%dx%d", width, height);
 
         if (!url.contains(".")) return url;
 
@@ -228,5 +231,48 @@ public class ImageUtils {
         ret[1] = top;
 
         return ret;
+    }
+
+    public static class Grid {
+        private int mColumn;
+        private float mItemWidth;
+        private float mItemHeight;
+
+        public Grid(int column, float width, float height) {
+            mColumn = column;
+            mItemWidth = width;
+            mItemHeight = height;
+        }
+
+        public int getColumn() {
+            return mColumn;
+        }
+
+        public float getItemWidth() {
+            return mItemWidth;
+        }
+
+        public float getItemHeight() {
+            return mItemHeight;
+        }
+    }
+
+    public static Grid getExactGridDefinition(int columnCount, float ratio, float canvasWidth) {
+        float width = canvasWidth / columnCount;
+        float height = width * ratio;
+        return new Grid(columnCount, width, height);
+    }
+
+    public static Grid getRangedGridDefinition(int proposedWidth, int proposedHeight, float canvasWidth, int minColumn) {
+        return getRangedGridDefinition(proposedWidth, proposedHeight, canvasWidth, minColumn, NO_MAX_COLUMN);
+    }
+
+    public static Grid getRangedGridDefinition(int proposedWidth, int proposedHeight,
+                                               float canvasWidth, int minColumn, int maxColumn) {
+        int computedColumn = Math.max((int) canvasWidth/proposedWidth, minColumn);
+        int actualMaxColumn = maxColumn == NO_MAX_COLUMN ?  computedColumn : maxColumn;
+        int finalColumnCount = Math.min(actualMaxColumn, computedColumn);
+        float ratio = (float) proposedHeight/proposedWidth;
+        return getExactGridDefinition(finalColumnCount, ratio, canvasWidth);
     }
 }

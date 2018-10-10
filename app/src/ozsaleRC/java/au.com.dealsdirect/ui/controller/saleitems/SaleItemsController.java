@@ -411,16 +411,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
 
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
-        boolean isLandscape = mActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        if (mPresenter.isTablet()) {
-            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getInteger(isLandscape ? R.integer.sale_items_tablet_column_count_landscape
-                            : R.integer.sale_items_tablet_column_count_portrait)));
-        } else {
-            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getInteger(isLandscape ? R.integer.sale_items_phone_column_count_landscape
-                            : R.integer.sale_items_phone_column_count_portrait)));
-        }
+        mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount()));
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
         mSaleItemsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -551,6 +542,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     void onBackClick() {
+        KeyboardUtils.hideSoftInput(mActivity);
         if (!mIsFilterClicked) {
             mIsFilterClicked = true;
             mActivity.onBackPressed();
@@ -625,7 +617,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             Controller searchFilterController = ControllerFactory.getInstance(GateKeeper.Destination.SEARCH_FILTER, bundle);
             mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
             GateKeeper.setRoot(mSearchFilterRouter, GateKeeper.Destination.SEARCH_FILTER, RouterTransaction.with(searchFilterController));
-            Completable.timer(DELETE_DELAY_MS, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showCollapsingToolbar);
+            showCollapsingToolbar();
             Completable.timer(DELETE_DELAY_MS, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showKeyboard);
         }
     }
@@ -709,10 +701,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 }
 
                 //Store Selected Filters
-                if(!brandNameFacetFilters.isEmpty()) mSelectedTitle.add(BundleKeys.BRANDS_FACET_FILTER_TYPE);
-                if(!colorFacetFilters.isEmpty()) mSelectedTitle.add(BundleKeys.COLOR_FACET_FILTER_TYPE);
-                if(!sizesFacetFilters.isEmpty()) mSelectedTitle.add(BundleKeys.SIZE_FACET_FILTER_TYPE);
-                if(!priceFacetFilters.isEmpty()) mSelectedTitle.add(BundleKeys.PRICE_FACET_FILTER_TYPE);
+                if (!brandNameFacetFilters.isEmpty())
+                    mSelectedTitle.add(BundleKeys.BRANDS_FACET_FILTER_TYPE);
+                if (!colorFacetFilters.isEmpty())
+                    mSelectedTitle.add(BundleKeys.COLOR_FACET_FILTER_TYPE);
+                if (!sizesFacetFilters.isEmpty())
+                    mSelectedTitle.add(BundleKeys.SIZE_FACET_FILTER_TYPE);
+                if (!priceFacetFilters.isEmpty())
+                    mSelectedTitle.add(BundleKeys.PRICE_FACET_FILTER_TYPE);
 
                 facetFilters.put(BundleKeys.BRANDS_FACETFILTER_NAME, brandNameFacetFilters);
                 facetFilters.put(BundleKeys.COLORS_FACETFILTER_NAME, colorFacetFilters);
@@ -910,17 +906,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mSaleItemsRecyclerView != null) {
             GridLayoutManager gridLayoutManager = (GridLayoutManager) mSaleItemsRecyclerView.getLayoutManager();
             int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
+            mSaleItemsAdapter.computeItemViewDimensions();
             mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
             gridLayoutManager.scrollToPosition(currentScrollPosition);
 
-            gridLayoutManager.setSpanCount(getInteger(isLandscape ? R.integer.sale_items_phone_column_count_landscape
-                    : R.integer.sale_items_phone_column_count_portrait));
-            if (mPresenter != null && mPresenter.isTablet()) {
-                gridLayoutManager.setSpanCount(getInteger(isLandscape ? R.integer.sale_items_tablet_column_count_landscape
-                        : R.integer.sale_items_tablet_column_count_portrait));
-            }
+            gridLayoutManager.setSpanCount(mSaleItemsAdapter.getColumnCount());
         }
-//        updateTabConfiguration();
     }
 
     @Override
