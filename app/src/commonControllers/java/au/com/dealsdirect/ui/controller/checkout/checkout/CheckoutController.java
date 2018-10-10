@@ -872,8 +872,17 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         PaymentMethod paymentMethod = getCompatiblePaymentType(mLastUserPaymentMethod,
                                       mActivity.getPaymentMethodSelected(),
                                       paymentList,
-                                      mSelectedDeliveryOption.getDeliveryOptions().get(0));
+                                      getSelectedDeliveryOption());
         mActivity.setPaymentMethodSelected(paymentMethod);
+    }
+
+    private String getSelectedDeliveryOption() {
+        if (mSelectedDeliveryOption != null &&
+                mSelectedDeliveryOption.getDeliveryOptions() != null &&
+                !mSelectedDeliveryOption.getDeliveryOptions().isEmpty()) {
+            return mSelectedDeliveryOption.getDeliveryOptions().get(0);
+        }
+        return "";
     }
 
     private PaymentMethod getCompatiblePaymentType(PaymentMethod lastPaymentMethod,
