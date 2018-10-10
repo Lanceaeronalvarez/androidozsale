@@ -178,10 +178,13 @@ public class OurpayPanel {
 
         textViewFirstPrice.setText(PriceUtils.getRpStringValue(ourpay.getFirstTransactionAmount()));
         textViewFirstMultiplier.setText(ourpay.getFirstTransactionText());
-        textViewPlannedPrice.setText(PriceUtils.getRpStringValue(ourpay.getPlannedTransactionAmount()));
+
         textViewPlannedMultiplier.setText(ourpay.getPlannedTransactionText());
         textViewPlannedMultiplier.setVisibility(ourpay.getPlannedTransactionText() == null ? View.GONE : View.VISIBLE);
-        textViewPlannedPrice.setVisibility(ourpay.getPlannedTransactionAmount() == 0 ? View.GONE : View.VISIBLE);
+
+        Double plannedTransactionAmount = ourpay.getPlannedTransactionAmount();
+        textViewPlannedPrice.setText(PriceUtils.getRpStringValue(plannedTransactionAmount));
+        textViewPlannedPrice.setVisibility(plannedTransactionAmount == null || plannedTransactionAmount == 0 ? View.GONE : View.VISIBLE);
 
         return header;
     }

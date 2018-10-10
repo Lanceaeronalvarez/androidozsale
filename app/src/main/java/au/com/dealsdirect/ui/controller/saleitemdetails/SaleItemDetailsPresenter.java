@@ -140,8 +140,8 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             ourpay.setBillingPeriod(ourpayDataResponse.getPayment().getBillingPeriod());
             ourpay.setTransactionCount(ourpayDataResponse.getPayment().getTransactionCount());
 
-            ourpay.setMinAmount(ourpayDataResponse.getPayment().getPaymentConditions().getMinAmountThreshold());
-            ourpay.setMaxAmount(ourpayDataResponse.getPayment().getPaymentConditions().getMaxAmountThreshold());
+            ourpay.setMinAmount(ourpayDataResponse.getPayment().getPaymentConditions().getMinAmountThreshold().doubleValue());
+            ourpay.setMaxAmount(ourpayDataResponse.getPayment().getPaymentConditions().getMaxAmountThreshold().doubleValue());
 
             ourpay.setInitialAmount(ourpayDataResponse.getSummary().getFirstTransactionAmount());
 

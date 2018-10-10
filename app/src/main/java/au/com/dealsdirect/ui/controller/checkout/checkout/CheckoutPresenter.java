@@ -246,8 +246,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             ourpay.setCanUse(getCurrentOrderOurpay.getSettings().getIsOurPayEnabled());
             ourpay.setErrorCode(getCurrentOrderOurpay.getReasonCode());
             ourpay.setTermsAndConditionsCheckboxState(getCurrentOrderOurpay.getSettings().getTermsAndConditions());
-            ourpay.setMinAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMinAmountThreshold());
-            ourpay.setMaxAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMaxAmountThreshold());
+            ourpay.setMinAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMinAmountThreshold().doubleValue());
+            ourpay.setMaxAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMaxAmountThreshold().doubleValue());
             ourpay.setFirstTransactionAmount(getCurrentOrderOurpay.getSummary().getFirstTransactionAmount());
             ourpay.setFirstTransactionText(getCurrentOrderOurpay.getSummary().getFirstTransactionText());
             ourpay.setPlannedTransactionAmount(getCurrentOrderOurpay.getSummary().getPlannedTransactionsAmount());
@@ -261,7 +261,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             try {
                 ourpay.setInitialAmount(getCurrentOrderOurpay.getSummary().getFirstTransactionAmount());
             } catch (Exception e) {
-                ourpay.setInitialAmount(0);
+                ourpay.setInitialAmount(0.0);
             }
 
             try {

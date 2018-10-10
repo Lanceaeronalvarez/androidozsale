@@ -47,8 +47,8 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
             ourpay.setCanUse(getCurrentOrderOurpay.getSettings().getIsOurPayEnabled());
             ourpay.setErrorCode(getCurrentOrderOurpay.getReasonCode());
             ourpay.setTermsAndConditionsCheckboxState(getCurrentOrderOurpay.getSettings().getTermsAndConditions());
-            ourpay.setMinAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMinAmountThreshold());
-            ourpay.setMaxAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMaxAmountThreshold());
+            ourpay.setMinAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMinAmountThreshold().doubleValue());
+            ourpay.setMaxAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMaxAmountThreshold().doubleValue());
 
             if (getCurrentOrderOurpay.getSummary().getDescription() != null) {
                 ourpay.setDetails(getCurrentOrderOurpay.getSummary().getDescription());
@@ -58,7 +58,7 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
             try {
                 ourpay.setInitialAmount(getCurrentOrderOurpay.getSummary().getFirstTransactionAmount());
             } catch (Exception e) {
-                ourpay.setInitialAmount(0);
+                ourpay.setInitialAmount(0.0);
             }
 
             try {
