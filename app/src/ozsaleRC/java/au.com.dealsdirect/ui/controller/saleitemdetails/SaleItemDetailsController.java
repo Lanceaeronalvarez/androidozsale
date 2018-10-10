@@ -277,6 +277,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void onOrientationChanged(Configuration newConfiguration) {
+        mProductDetailScrollView.scrollTo(0, 0);
+        stretchImageView();
         if (mOurpay != null) {
             showMyPayDetails(null, mOurpay);
         }
@@ -287,14 +289,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mRootView = ((ElasticDragDismissFrameLayout) view);
 
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mProductDetailsImageLayout.getLayoutParams();
-        int bottomNavHeight = mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight();
-
-        int screenAllowanceSize = mPresenter.isTablet() ? bottomNavHeight * 3: bottomNavHeight * 2  + (int) getDimension(R.dimen.margin_extra_small);
-        mDefaultHeight = ScreenUtils.getScreenHeight(mActivity) - screenAllowanceSize;
-
-        lp.height = mDefaultHeight;
-        mProductDetailsImageLayout.setLayoutParams(lp);
+        stretchImageView();
 
         //product info
         mProductName.setText(mSaleName);
@@ -348,9 +343,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             add(mMainContentLayout);
         }};
 
-        if(mPresenter.isTablet()) toggledViews.add(mAddToCartOverlay);
+        if (mPresenter.isTablet()) toggledViews.add(mAddToCartOverlay);
 
-        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(mPresenter.isTablet(),null,
+        mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(mPresenter.isTablet(), null,
                 toggledViews, loadImagesListener, new ArrayList<>(), 1, mProductSharedImage.getDrawable(), this);
         mProductImagesRv.setAdapter(new RecyclerViewPagerAdapter(mProductImagesRv, mSaleItemImagesAdapter));
         mProductImagesRv.setEnabled(false);
@@ -376,6 +371,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 .getString(R.string.base_html_template_footer);
 
         mProductDetailScrollView.getViewTreeObserver().addOnScrollChangedListener(this);
+    }
+
+    private void stretchImageView() {
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mProductDetailsImageLayout.getLayoutParams();
+        int bottomNavHeight = mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight();
+
+        int screenAllowanceSize = mPresenter.isTablet() ? bottomNavHeight * 3 : bottomNavHeight * 2 + (int) getDimension(R.dimen.margin_extra_small);
+        mDefaultHeight = ScreenUtils.getScreenHeight(mActivity) - screenAllowanceSize;
+
+        lp.height = mDefaultHeight;
+        mProductDetailsImageLayout.setLayoutParams(lp);
     }
 
     @Override
@@ -504,7 +510,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                     parent,
                                     false);
                     tv.setText(data.first);
-                    if(mSkuVariants.get(position).isSoldOut()) {
+                    if (mSkuVariants.get(position).isSoldOut()) {
                         tv.setBackground(getDrawable(R.drawable.bg_chips_soldout));
                         tv.setTextColor(getColor(R.color.bg_chips_soldout_text));
                     }
@@ -514,8 +520,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             };
 
             isSoldOutCombined = true;
-            for(GetSaleItemDetailsResponse response : mSkuVariants) {
-                if(!response.isSoldOut()) {
+            for (GetSaleItemDetailsResponse response : mSkuVariants) {
+                if (!response.isSoldOut()) {
                     isSoldOutCombined = false;
                     break;
                 }
@@ -535,7 +541,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
                     boolean isSizeSoldOut = saleDetail.getSkuVariants().get(selectedIndex).isSoldOut();
 
-                    if(isSizeSoldOut) return;
+                    if (isSizeSoldOut) return;
 
                     mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
                     mAddToCartButton.setEnabled(!isSizeSoldOut);
@@ -801,7 +807,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void onScrollChanged() {
-        if(isViewAttached()) {
+        if (isViewAttached()) {
             boolean isScrollGreater = mProductDetailScrollView.getScrollY() >= ScreenUtils.getScreenHeight(mActivity) -
                     (mProductDetailsTitleLayout.getBottom() + mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight());
             mProductDetailsToolbar.setVisibility(isScrollGreater && !mPresenter.isTablet() ? View.VISIBLE : View.GONE);
