@@ -722,6 +722,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (paymentMethod != null) {
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)
                     || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT)) {
+                selectStandardDeliveryOption();
                 mPresenter.setDeliveryOption(createStandardDeliveryOptionRequest());
                 return true;
             }
@@ -1256,6 +1257,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         return firstPaymentMethod;
     }
 
+    private void selectStandardDeliveryOption() {
+        for (DeliveryOption option : mDeliveryOptions) {
+            boolean isSelected = option.getDeliveryOptions().get(0).equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.STANDARD.toString());
+            option.setSelected(isSelected);
+        }
+    }
+
     private SetDeliveryOption.OptionParameters createStandardDeliveryOptionRequest() {
         DeliveryOption standardDeliveryOption = null;
 
@@ -1271,7 +1279,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
 
         standardDeliveryOption.setName(mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_DELIVERYOPTION_STANDARD_TITLE));
-        standardDeliveryOption.setSelected(true);
 
         SetDeliveryOption.OptionParameters optionParameters
                 = new SetDeliveryOption.OptionParameters(mDeliveryAddress != null ? mDeliveryAddress.id : "", "",
