@@ -16,7 +16,6 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
@@ -47,13 +46,11 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
-import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
-import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -160,6 +157,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mActivity.setShopController(this);
         mShopPtrLayout.setPtrHandler(this);
         mShopAppBarLayout.addOnOffsetChangedListener(this);
+        resetBannerLayout();
         super.onAttach(view);
     }
 
@@ -307,18 +305,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private void displayBanners() {
-        int bannerWidth = getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_width : R.integer.banner_mobile_width);
+        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales);
 
-        int computedColumnCount = ScreenUtils.getScreenWidth(mActivity) / bannerWidth;
-
-        int actualColumnCount = computedColumnCount > MAX_BANNERS ? MAX_BANNERS
-                : computedColumnCount;
-
-        actualColumnCount = mPresenter.isTablet() ? actualColumnCount : MOBILE_BANNER;
-
-        mLayoutManager = new GridLayoutManager(mActivity, actualColumnCount, GridLayoutManager.VERTICAL, false);
-
-        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, actualColumnCount);
+        mLayoutManager = new GridLayoutManager(
+                mActivity,
+                mBannersAdapter.getNumberOfColumns(),
+                GridLayoutManager.VERTICAL,
+                false);
 
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
@@ -797,6 +790,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void onOrientationChanged(Configuration newConfiguration) {
         super.onOrientationChanged(newConfiguration);
+        resetBannerLayout();
+    }
+
+    private void resetBannerLayout() {
         if (mBannersAdapter != null && shopsControllerBannerRecyclerView != null && mLayoutManager != null) {
             int currentScrollPosition = mLayoutManager.findFirstVisibleItemPosition();
             displayBanners();

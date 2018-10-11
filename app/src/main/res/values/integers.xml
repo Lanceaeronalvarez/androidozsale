@@ -9,4 +9,8 @@
     <integer name="banner_mobile_height">143</integer>
     <integer name="banner_tablet_width">313</integer>
     <integer name="banner_tablet_height">294</integer>
+    <integer name="banner_mobile_min_column_count">1</integer>
+    <integer name="banner_mobile_max_column_count">1</integer>
+    <integer name="banner_tablet_min_column_count">2</integer>
+    <integer name="banner_tablet_max_column_count">5</integer>
 </resources>

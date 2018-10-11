@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
-import com.mindorks.placeholderview.Utils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.ArrayList;
@@ -20,14 +19,10 @@ import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
-import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ImageUtils;
-import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.ScreenUtils;
-import au.com.dealsdirect.utils.ViewUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -43,30 +38,37 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     private List<GetBannerResponse.Banner> mSales;
     private Context mContext;
     private ShopsMvpPresenter mPresenter;
-    private int width;
-    private int height;
+    private int mWidth;
+    private int mHeight;
+    private int mNumberOfColumns;
 
     public BannersAdapter(
             Context context,
             ShopsMvpPresenter presenter,
-            List<GetBannerResponse.Group> sales,
-            int columnCount) {
+            List<GetBannerResponse.Group> sales) {
 
-        this.mGroups = sales;
-        this.mSales = new ArrayList<>();
+        mGroups = sales;
+        mSales = new ArrayList<>();
         for (GetBannerResponse.Group group : sales) {
             mSales.addAll(group.getBanners());
         }
-        this.mContext = context;
-        this.mPresenter = presenter;
+        mContext = context;
+        mPresenter = presenter;
 
-        width = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_width : R.integer.banner_mobile_width);
-        height = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_height : R.integer.banner_mobile_height);
+        mWidth = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_width : R.integer.banner_mobile_width);
+        mHeight = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_height : R.integer.banner_mobile_height);
+
+        int minColumns = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_min_column_count : R.integer.banner_mobile_min_column_count);
+        int maxColumns = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_max_column_count : R.integer.banner_mobile_max_column_count);
 
         if (!mContext.getResources().getBoolean(R.bool.is_ourpay_app)) {
             // Dynamic Height Computation
-            int screenWidth = mPresenter.isTablet() ? ScreenUtils.getScreenWidth(mContext) / columnCount : ScreenUtils.getScreenWidth(mContext);
-            mComputedHeight = ImageUtils.getComputedBannerHeight(width, height, screenWidth);
+            ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
+                    mWidth, mHeight,
+                    ScreenUtils.getScreenWidth(mContext),
+                    minColumns, maxColumns);
+            mNumberOfColumns = grid.getColumn();
+            mComputedHeight = (int) grid.getItemHeight();
             String orientation = ScreenUtils.getOrientation(mContext) == Configuration.ORIENTATION_LANDSCAPE ? "Landscape" : "Portrait";
             AppLogger.d(orientation + " Width: " + ScreenUtils.getScreenWidth(mContext) + " Height: " + mComputedHeight);
         }
@@ -136,7 +138,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         holder.name.setText(item.getDescription());
         String imgUrl;
 
-        imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), width, height);
+        imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), mWidth, mHeight);
 
 
         ImageUtils.loadImage(mContext, imgUrl, holder.image);
@@ -183,7 +185,8 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     public int getItemCount() {
         return mSales.size();
     }
-
+    
+    public int getNumberOfColumns() { return mNumberOfColumns; }
 
     public GetBannerResponse.Banner getItem(int position) {
         return position > 0 && mSales.size() > position ? mSales.get(position) : null;
