@@ -58,20 +58,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         mWidth = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_width : R.integer.banner_mobile_width);
         mHeight = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_height : R.integer.banner_mobile_height);
 
-        int minColumns = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_min_column_count : R.integer.banner_mobile_min_column_count);
-        int maxColumns = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_max_column_count : R.integer.banner_mobile_max_column_count);
-
-        if (!mContext.getResources().getBoolean(R.bool.is_ourpay_app)) {
-            // Dynamic Height Computation
-            ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
-                    mWidth, mHeight,
-                    ScreenUtils.getScreenWidth(mContext),
-                    minColumns, maxColumns);
-            mNumberOfColumns = grid.getColumn();
-            mComputedHeight = (int) grid.getItemHeight();
-            String orientation = ScreenUtils.getOrientation(mContext) == Configuration.ORIENTATION_LANDSCAPE ? "Landscape" : "Portrait";
-            AppLogger.d(orientation + " Width: " + ScreenUtils.getScreenWidth(mContext) + " Height: " + mComputedHeight);
-        }
+        setupDimensions();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -194,5 +181,22 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
     public List<GetBannerResponse.Group> getData() {
         return mGroups;
+    }
+
+    public void setupDimensions() {
+        int minColumns = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_min_column_count : R.integer.banner_mobile_min_column_count);
+        int maxColumns = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_max_column_count : R.integer.banner_mobile_max_column_count);
+
+        if (!mContext.getResources().getBoolean(R.bool.is_ourpay_app)) {
+            // Dynamic Height Computation
+            ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
+                    mWidth, mHeight,
+                    ScreenUtils.getScreenWidth(mContext),
+                    minColumns, maxColumns);
+            mNumberOfColumns = grid.getColumn();
+            mComputedHeight = (int) grid.getItemHeight();
+            String orientation = ScreenUtils.getOrientation(mContext) == Configuration.ORIENTATION_LANDSCAPE ? "Landscape" : "Portrait";
+            AppLogger.d(orientation + " Width: " + ScreenUtils.getScreenWidth(mContext) + " Height: " + mComputedHeight);
+        }
     }
 }

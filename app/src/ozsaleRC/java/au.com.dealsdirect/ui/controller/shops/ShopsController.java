@@ -305,7 +305,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private void displayBanners() {
-        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales);
+        if (mBannersAdapter == null) {
+            mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales);
+            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+        } else {
+            mBannersAdapter.setupDimensions();
+        }
 
         mLayoutManager = new GridLayoutManager(
                 mActivity,
@@ -314,7 +319,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 false);
 
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
-        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
     }
 
     private void setupPtrHeader() {
