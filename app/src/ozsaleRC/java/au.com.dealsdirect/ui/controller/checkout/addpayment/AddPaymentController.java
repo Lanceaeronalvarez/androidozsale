@@ -24,8 +24,6 @@ import com.braintreepayments.cardform.OnCardFormSubmitListener;
 import com.braintreepayments.cardform.utils.CardType;
 import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
 import com.visa.checkout.VisaCheckoutSdk;
@@ -45,7 +43,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
+import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.AppLogger;
@@ -99,7 +97,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
     public OurpayPanel ourpayPanel;
     private RelativeLayout mButtonOurpay;
-    private CustomToggleSwitch mOurpayTncCheckBox;
+    private OurPayToggleSwitch mOurpayTncCheckBox;
 
     public static AddPaymentController newInstance() {
         return new AddPaymentController(new BundleBuilder(new Bundle()).build());
@@ -369,10 +367,10 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                 mButtonOurpay.setOnClickListener(view -> onCardFormSubmit());
 
-                if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                    mOurpayTncCheckBox = (CustomToggleSwitch) mOurpayHolder.findViewById(R.id.ourpay_toggle_switch_tc);
-                    mOurpayTncCheckBox.setClickable(false);
-                }
+                mOurpayTncCheckBox = mOurpayHolder.findViewById(R.id.ourpay_toggle_switch_tc);
+                mOurpayTncCheckBox.setClickable(false);
+                OurpayPanel.TermsAndConditionStates termsAndConditionStatesState = OurpayPanel.TermsAndConditionStates.values()[value.getOurPaySelectTermsAndConditions()];
+                mOurpayTncCheckBox.setOurPayToggleSwitch(termsAndConditionStatesState);
 
                 ourpayPanel.getCartAmountHeader().setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
             }

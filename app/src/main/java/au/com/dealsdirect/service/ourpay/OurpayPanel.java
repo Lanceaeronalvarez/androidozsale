@@ -46,6 +46,12 @@ public class OurpayPanel {
     View mCartAmountHeader;
 
 
+    public enum TermsAndConditionStates {
+        DISABLED,
+        UNCHECKED,
+        CHECKED
+    }
+
     public OurpayPanel(BaseActivity activity) {
         this.mBaseActivity = activity;
         View view = activity.getLayoutInflater().inflate(R.layout.ourpay_panel_holder, null, false);

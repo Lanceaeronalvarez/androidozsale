@@ -68,7 +68,7 @@ import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
+import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
@@ -221,7 +221,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     TextView mDeliveryOptionOurpaySelectDescriptionTextView;
 
     private RelativeLayout mButtonOurpay;
-    private CustomToggleSwitch mCheckBoxOurpayTC;
+    private OurPayToggleSwitch mCheckBoxOurpayTC;
 
     private List<DeliveryOption> mDeliveryOptions;
     private DeliveryOption mSelectedDeliveryOption;
@@ -561,9 +561,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
                     mCheckBoxOurpayTC = mOurpayHolder.findViewById(R.id.ourpay_toggle_switch_tc);
                     if (mCheckBoxOurpayTC != null) {
-                        mCheckBoxOurpayTC.setVisibility(ourpay.getTermsAndConditionsCheckboxState() != OurPayTCDisabled ? View.VISIBLE : View.GONE);
-                        //set to yes if ourpay T&C == 2 (final int OurPayTCShowChecked = 2;)
-                        mCheckBoxOurpayTC.setCheckedTogglePosition(ourpay.getTermsAndConditionsCheckboxState() == OurPayTCShowChecked ? OurPayTCDisabled : OurPayTCShowUnchecked);
+                        OurpayPanel.TermsAndConditionStates termsAndConditionStatesState = OurpayPanel.TermsAndConditionStates.values()[ourpay.getTermsAndConditionsCheckboxState()];
+                        mCheckBoxOurpayTC.setOurPayToggleSwitch(termsAndConditionStatesState);
 
                     }
                     if (isOurPaySelectDeliveryMethod()) { // show ourpay select related summary
@@ -871,9 +870,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPaymentList.addAll(paymentList);
 
         PaymentMethod paymentMethod = getCompatiblePaymentType(mLastUserPaymentMethod,
-                                      mActivity.getPaymentMethodSelected(),
-                                      paymentList,
-                                      getSelectedDeliveryOption());
+                mActivity.getPaymentMethodSelected(),
+                paymentList,
+                getSelectedDeliveryOption());
         mActivity.setPaymentMethodSelected(paymentMethod);
         showMyPayDetails(mValue, mOurpay);
     }

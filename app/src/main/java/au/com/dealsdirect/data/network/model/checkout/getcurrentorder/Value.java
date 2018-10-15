@@ -49,6 +49,9 @@ public class Value {
     @SerializedName(value = "OurPay", alternate = {"ourPay"})
     @Expose
     private GetCurrentOrderOurpay ourpay;
+    @SerializedName(value = "OurPaySelect", alternate = {"ourPaySelect"})
+    @Expose
+    private GetOurPaySelect ourPaySelect;
 
     public boolean isEmpty() {
         return isEmpty;
@@ -120,5 +123,23 @@ public class Value {
 
     public GetCurrentOrderOurpay getOurpay() {
         return ourpay;
+    }
+
+    public GetOurPaySelect getOurPaySelect() {
+        return ourPaySelect;
+    }
+
+    public int getOurPaySelectTermsAndConditions() {
+        return ourPaySelect.getTermsAndConditions();
+    }
+
+    private static class GetOurPaySelect {
+        @SerializedName(value = "TermsAndConditions", alternate = {"termsAndConditions"})
+        @Expose
+        private int termsAndConditions;
+
+        private int getTermsAndConditions() {
+            return termsAndConditions;
+        }
     }
 }
