@@ -90,10 +90,8 @@ public class PaymentMethod implements Serializable {
     }
 
 
-    public boolean isCard() {
+    public boolean canUseOurPaySelect() {
         switch (paymentType.toLowerCase()) {
-            case PAYPAL:
-            case PAYPAL_CREDIT:
             case MASTERPASS:
             case VISA_CHECKOUT:
             case VISA_CHECKOUT_BRAINTREE:

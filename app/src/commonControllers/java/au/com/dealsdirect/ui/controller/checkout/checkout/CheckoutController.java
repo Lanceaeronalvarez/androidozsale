@@ -774,12 +774,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mPayButton.setVisibility(View.GONE);
                 mPaypalButton.setVisibility(View.VISIBLE);
                 mPaypalCreditButton.setVisibility(View.GONE);
-
-                if (mSelectedDeliveryOption != null && mSelectedDeliveryOption.getDeliveryOptions().get(0).equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.OURPAYSELECT.toString())) {
-                    //set valid payment method for OPS
-                    mActivity.setPaymentMethodSelected(findFirstPaymentMethodValidForOurpaySelect());
-                    paymentMethod = mActivity.getPaymentMethodSelected();
-                }
             } else {
                 showPaymentButtons();
                 mPaypalButton.setVisibility(View.GONE);
@@ -903,7 +897,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 defaultPayments.addAll(paymentMethodList);
 
                 for (PaymentMethod method : availablePaymentMethods) {
-                    if (method.isCard()) return method;
+                    if (method.canUseOurPaySelect()) return method;
                 }
                 break;
 
@@ -1242,19 +1236,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mActionTracker.startCheckoutEvent();
         PaymentInfo.setFabricPaymentType(ActionTracker.PaymentOption.VCO.getValue());
         mVcoPresenter.payWithVisaCheckout(mValue.getSummary().getTotal());
-    }
-
-
-    private PaymentMethod findFirstPaymentMethodValidForOurpaySelect() {
-        PaymentMethod firstPaymentMethod = null;
-        for (int i = 0; i < mPaymentList.size(); i++) {
-            PaymentMethod paymentMethod = mPaymentList.get(i);
-            if (!paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && !paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)
-                    && !paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT)) {
-                firstPaymentMethod = paymentMethod;
-            }
-        }
-        return firstPaymentMethod;
     }
 
     private void selectStandardDeliveryOption() {
