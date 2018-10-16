@@ -307,7 +307,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private void displayBanners() {
         if (mBannersAdapter == null) {
             mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales);
-            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         } else {
             mBannersAdapter.setupDimensions();
         }
@@ -319,6 +318,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 false);
 
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
+        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
     }
 
     private void setupPtrHeader() {
