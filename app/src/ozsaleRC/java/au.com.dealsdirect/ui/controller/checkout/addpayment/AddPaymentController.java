@@ -250,6 +250,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
+        mActivity.setDraggableViewPager(false);
         mPresenter.onAttach(this);
     }
 
