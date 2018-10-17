@@ -217,12 +217,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             });
         }
 
+        if (mVcoPresenter.isVisaCheckoutEnabled()) {
+            mVcoPresenter.setupVisaCheckout();
+        }
+
         if (isFromCart) {
-
-            if (mVcoPresenter.isVisaCheckoutEnabled()) {
-                mVcoPresenter.setupVisaCheckout();
-            }
-
             mMasterpassButton.setOnClickListener(action -> {
                 onMasterpassButtonClick();
                 mCheckoutMvpView.setIsPaymentMethodChanged(true);
@@ -230,7 +229,6 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
         } else {
             mMasterpassButton.setVisibility(View.GONE);
-            mVisaCheckoutButton.setVisibility(View.GONE);
             mPaypalCreditButton.setVisibility(View.GONE);
         }
 
@@ -278,11 +276,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     }
 
     private void checkVisiblePaymentButtons() {
-        mPayButton.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
-        mPaypalButton.setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
-        mMasterpassButton.setVisibility(!isFromCart || !mPresenter.isMasterPassEnabled() || mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
-        mVisaCheckoutButton.setVisibility(!isFromCart || mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
-        mPaypalCreditButton.setVisibility(!isFromCart || mIsOurpaySelectDeliveryMethod || !mPresenter.isPaypalCreditEnabled() ? View.GONE : View.VISIBLE);
+        mPaypalButton.setVisibility(isFromCart ? View.VISIBLE : View.GONE);
+        mMasterpassButton.setVisibility(isFromCart && mPresenter.isMasterPassEnabled() && !mIsOurpaySelectDeliveryMethod ? View.VISIBLE : View.GONE);
+        mPaypalCreditButton.setVisibility(isFromCart && mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
     }
 
     @Override
