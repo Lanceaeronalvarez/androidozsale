@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -23,6 +24,7 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderController;
+import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
@@ -87,9 +89,6 @@ public class AddContactController extends BaseController implements AddContactMv
 
     public AddContactController(Bundle args) {
         super(args);
-        if (!args.isEmpty()) {
-            mChosenSubject = args.getString(BundleKeys.CONTACT_SUBJECT);
-        }
     }
 
     @NonNull
@@ -111,6 +110,7 @@ public class AddContactController extends BaseController implements AddContactMv
     @Override
     protected void setUp(View view) {
         KeyboardUtils.setKeyboardAdjustPan(mActivity);
+
         if (!mPresenter.isTablet()) mActivity.getMainController().hideBottomNav();
 
         mAddContactToolbarRightOption.setVisibility(View.INVISIBLE);
@@ -120,14 +120,24 @@ public class AddContactController extends BaseController implements AddContactMv
         if(ContactPreferenceHelper.getChosenInvoice(mActivity).isEmpty()) {
             mAddContactOrderText.setText(getString(R.string.select_a_sale));
         } else {
-            mAddContactOrderText.setText(ContactPreferenceHelper.getChosenInvoice(mActivity) + " " + ContactPreferenceHelper.getChosenOrder(mActivity));
+            mAddContactOrderText.setText(ContactPreferenceHelper.getChosenInvoice(mActivity)
+                    + " " + ContactPreferenceHelper.getChosenOrder(mActivity));
         }
-        mAddContactSubjectText.setText(mChosenSubject);
+        String message = ContactPreferenceHelper.getContactMessage(mActivity);
+        if(!message.isEmpty()) {
+            mAddContactMessageField.setText(message);
+        }
+
+        mChosenSubject = ContactPreferenceHelper.getChosenSubject(mActivity);
+        if(!mChosenSubject.isEmpty()) {
+            mAddContactSubjectText.setText(ContactPreferenceHelper.getChosenSubject(mActivity));
+        }
 
         mAddContactMessageSend.setOnClickListener(v -> sendMessage());
     }
 
     private void sendMessage(){
+        ContactPreferenceHelper.clear(mActivity);
         hideKeyboard();
         mChosenOptionInvoice = ContactPreferenceHelper.getChosenInvoice(mActivity);
         CreateContactRequest createContactRequest = new CreateContactRequest();
@@ -153,14 +163,14 @@ public class AddContactController extends BaseController implements AddContactMv
 
     @Override
     public void onDestroyView(View view) {
-        ContactPreferenceHelper.clear(mActivity);
         KeyboardUtils.setKeyboardAdjustPan(mActivity);
+        ContactPreferenceHelper.setContactMessage(mActivity, mAddContactMessageField.getText().toString());
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
 
 
-    @OnClick(R.id.partial_toolbar_left_view)
+    @OnClick({R.id.partial_toolbar_left_view})
     void onBack() {
         mActivity.onBackPressed();
     }
@@ -213,7 +223,16 @@ public class AddContactController extends BaseController implements AddContactMv
                     mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     mActivity.getString(R.string.error_creating_message));
         }
-
     }
 
+    @OnClick(R.id.controller_add_contact_subject_container)
+    void addContact() {
+        RouterTransaction routerTransaction = RouterTransaction.with(ContactSelectSubjectController.newInstance())
+                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
+        if (mPresenter.isTablet()) {
+            GateKeeper.setRoot(getRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, routerTransaction);
+        } else {
+            GateKeeper.push(getRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        }
+    }
 }

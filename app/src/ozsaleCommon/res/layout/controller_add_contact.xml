@@ -44,7 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
                 android:textColor="@color/text_dark"
-                android:textSize="@dimen/text_size_body"/>
+                android:textSize="@dimen/text_size_body"
+                android:drawableRight="@drawable/ic_gray_chevron"/>
 
         </LinearLayout>
 
@@ -78,7 +79,8 @@
                 android:layout_weight="7"
                 android:textColor="@color/text_dark"
                 android:textSize="@dimen/text_size_body"
-                android:text="@string/select_a_sale"/>
+                android:text="@string/select_a_sale"
+                android:drawableRight="@drawable/ic_gray_chevron"/>
 
         </LinearLayout>
 

@@ -19,6 +19,8 @@ public class ContactPreferenceHelper {
 
     private static final String PREF_KEY_INVOICE = "invoice";
 
+    private static final String PREF_KEY_MESSAGE = "contact_us_message";
+
     public ContactPreferenceHelper() {}
 
     public static SharedPreferences getPreferences(Context context) {
@@ -30,6 +32,17 @@ public class ContactPreferenceHelper {
         return getPreferences(context).edit();
     }
 
+
+    public static void setContactMessage(Context context, String message) {
+        SharedPreferences.Editor editor = getPreferencesEditor(context);
+        editor.putString(PREF_KEY_MESSAGE, message);
+        editor.commit();
+        editor.apply();
+    }
+
+    public static String getContactMessage(Context context) {
+        return getPreferences(context).getString(PREF_KEY_MESSAGE, "");
+    }
 
     public static void setChosenInvoiceString(Context context, String invoice){
         SharedPreferences.Editor editor = getPreferencesEditor(context);
@@ -72,6 +85,7 @@ public class ContactPreferenceHelper {
         editor.remove(PREF_KEY_IS_SUBJECT);
         editor.remove(PREF_KEY_IS_ORDER);
         editor.remove(PREF_KEY_INVOICE);
+        editor.remove(PREF_KEY_MESSAGE);
         editor.commit();
         editor.apply();
     }

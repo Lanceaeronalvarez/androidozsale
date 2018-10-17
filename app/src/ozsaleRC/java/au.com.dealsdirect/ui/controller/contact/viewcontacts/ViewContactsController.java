@@ -28,6 +28,7 @@ import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.listener.ContactClickListener;
 import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
@@ -196,6 +197,7 @@ public class ViewContactsController extends BaseController implements ViewContac
 
     @OnClick(R.id.partial_toolbar_right_view)
     void addContact() {
+        ContactPreferenceHelper.clear(mActivity);
         RouterTransaction routerTransaction = RouterTransaction.with(ContactSelectSubjectController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
         if (mPresenter.isTablet()) {

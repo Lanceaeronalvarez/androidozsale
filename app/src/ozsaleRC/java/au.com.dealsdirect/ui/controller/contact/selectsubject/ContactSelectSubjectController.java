@@ -18,6 +18,8 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.selectsubject.adapter.ContactSubjectAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -96,18 +98,20 @@ public class ContactSelectSubjectController extends BaseController
 
     @Override
     public void onDestroyView(View view) {
+        if (!mPresenter.isTablet()) getRouter().popController(this);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
 
     @Override
     public void onContactSubjectItemSelected(String contactSubject) {
-
-        Bundle bundle = new Bundle();
-        bundle.putString(BundleKeys.CONTACT_SUBJECT, contactSubject);
-
-        GateKeeper.push(getRouter(), GateKeeper.Destination.ADD_CONTACT, bundle,
-                new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        ContactPreferenceHelper.setChosenSubjectString(mActivity, contactSubject);
+        if (getRouter().getControllerWithTag(AddContactController.TAG) == null) {
+            GateKeeper.push(getRouter(), AddContactController.TAG, GateKeeper.Destination.ADD_CONTACT,
+                    new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        } else {
+            getRouter().popCurrentController();
+        }
     }
 
     @Override
