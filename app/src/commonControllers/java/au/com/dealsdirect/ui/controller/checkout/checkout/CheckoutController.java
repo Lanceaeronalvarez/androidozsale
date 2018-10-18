@@ -719,7 +719,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
         if (paymentMethod != null) {
-            if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL) || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)
+            if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)
                     || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT)) {
                 selectStandardDeliveryOption();
                 mPresenter.setDeliveryOption(createStandardDeliveryOptionRequest());
