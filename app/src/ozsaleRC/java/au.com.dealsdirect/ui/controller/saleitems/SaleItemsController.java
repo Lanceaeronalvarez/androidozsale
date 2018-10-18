@@ -597,8 +597,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         mFromShopSearch = false;
-        mFromCategorySearch = false;
-
     }
 
     private void setupSearchFilters() {
