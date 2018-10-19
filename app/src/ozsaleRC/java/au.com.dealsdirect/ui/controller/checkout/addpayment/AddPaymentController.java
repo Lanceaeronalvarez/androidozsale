@@ -277,6 +277,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     }
 
     private void checkVisiblePaymentButtons() {
+        mPayButton.setVisibility(View.VISIBLE);
         mPaypalButton.setVisibility(isFromCart ? View.VISIBLE : View.GONE);
         mMasterpassButton.setVisibility(isFromCart && mPresenter.isMasterPassEnabled() && !mIsOurpaySelectDeliveryMethod ? View.VISIBLE : View.GONE);
         mPaypalCreditButton.setVisibility(isFromCart && mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
@@ -349,12 +350,13 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
 
             if (ourpay != null && isMyPayEnabled) {
-                OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
+                boolean isPaymentInvalid = paymentMethod.getPaymentType().equalsIgnoreCase(OurpayStateManager.CARD_MASTERPASS);
+                OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, isPaymentInvalid);
 
                 ourpayPanel = new OurpayPanel((BaseActivity) mActivity, getRouter());
                 mOurpayHolder.removeAllViews();
                 if (mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
-                    mOurpayHolder.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay(), isRowVisible -> {
+                    mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay, isRowVisible -> {
                         if (isRowVisible) {
                             new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
                         }

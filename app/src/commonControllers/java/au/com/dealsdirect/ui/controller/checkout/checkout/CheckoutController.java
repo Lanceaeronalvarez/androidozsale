@@ -437,7 +437,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             @Override
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                if (to instanceof CheckoutController && (mActivity != null && mActivity.isAuthorized()) || from instanceof AddPaymentController) {
+                if (to instanceof CheckoutController && (mActivity != null && mActivity.isAuthorized())) {
                     loadCart();
                 }
             }
@@ -541,12 +541,14 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
                 if (((MainActivity) getActivity()).getMainController().getHomeController().isCheckoutRouterVisible()) {
                     Log.d("ourpay", "checkout controller is visible");
-                    OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, paymentMethod);
+                    boolean isPaymentInvalid = paymentMethod.getPaymentType().equalsIgnoreCase(OurpayStateManager.CARD_MASTERPASS) ||
+                            paymentMethod.getPaymentType().equalsIgnoreCase(OurpayStateManager.CARD_PAYPAL);
+                    OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, isPaymentInvalid);
                     PaymentInfo.setOurpay(ourpay);
 
                     ourpayPanel = new OurpayPanel(mActivity, getRouter());
                     mOurpayHolder.removeAllViews();
-                    mOurpayHolder.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay(), isRowVisible -> {
+                    mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay, isRowVisible -> {
                         if (isRowVisible) {
                             new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
                         }

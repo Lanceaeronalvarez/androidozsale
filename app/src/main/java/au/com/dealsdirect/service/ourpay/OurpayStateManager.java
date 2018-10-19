@@ -67,8 +67,8 @@ public class OurpayStateManager {
 
     }
 
-    public static void setOurpayAccordingToPaymentMethod(Ourpay ourpay, PaymentMethod paymentMethod) {
-        if (paymentMethod != null && paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
+    public static void setOurpayAccordingToPaymentMethod(Ourpay ourpay, boolean isInvalidPayment) {
+        if (isInvalidPayment) {
             //"You can pay less with {0} now, but we don't support your current payment method for it. If you choose another payment method you could use it."
             ourpay.setState(ourpay.getState() | OurpayState.ERROR);
             ourpay.setDetails(OurpayTemplateText.KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD);
