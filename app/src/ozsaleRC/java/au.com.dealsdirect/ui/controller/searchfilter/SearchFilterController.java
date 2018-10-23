@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.searchfilter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +15,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
@@ -60,6 +64,14 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     public static final String TAG = SearchFilterController.class.getSimpleName();
     private static final int DEFAULT_PRICE_THRESHOLD = 200;
+    private static final String KEY_HAS_SAVED_INSTANCE = "SearchFilterController.KEY_HAS_SAVED_INSTANCE";
+    private static final String KEY_FACET_STRING = "KEY_FACET_STRING";
+    private static final String KEY_SORTING_STRING = "KEY_SORTING_STRING";
+    private static final String KEY_CATEGORY_STRING = "KEY_CATEGORY_STRING";
+    private static final String KEY_BRAND_LIST = "KEY_BRAND_LIST";
+    private static final String SALEITEMS_CATEGORY_MAP = "SALEITEMS_CATEGORY_MAP";
+    private static final String SALEITEMS_CHIPS_FILTER = "SALEITEMS_CHIPS_FILTER";
+
 
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mSaleItemsPresenter;
@@ -115,7 +127,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
     SubCategoriesAdapter mSubCategoriesAdapter;
     FacetItemsAdapter mFacetItemsAdapter;
     List<SearchChipModel> mSearchItemsList = new ArrayList<>();
-    SaleItemsMvpView mSaleItemsView;
+    private SaleItemsMvpView mSaleItemsView;
 
     ArrayList<String> mBrandList = new ArrayList<>();
     ArrayList<String> mSizeList = new ArrayList<>();
@@ -128,10 +140,12 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private boolean mHasSeekbarReset = false;
     private boolean mIsSearchFilterControllerActive = false;
     private String mCategoryKey;
+    private boolean mHasSavedInstance = false;
 
     Set<String> mCategoryKeys = new LinkedHashSet<>();
 
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
+    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     public static SearchFilterController newInstance() {
         return new SearchFilterController(new BundleBuilder(new Bundle()).build());
@@ -151,6 +165,38 @@ public class SearchFilterController extends BaseController implements SearchFilt
         String previousChipsString = args.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, "");
         mPreviousSearchChips =  previousChipsString.isEmpty() ? new ArrayList<>() :
                 JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {}.getType());
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_HAS_SAVED_INSTANCE, true);
+        outState.putString(KEY_FACET_STRING, new Gson().toJson(mFacets));
+        outState.putString(KEY_SORTING_STRING, new Gson().toJson(mSortingFacets));
+        outState.putString(KEY_CATEGORY_STRING, new Gson().toJson(mCategoryTree));
+        outState.putString(KEY_BRAND_LIST, new Gson().toJson(mBrandList));
+        outState.putString(SALEITEMS_CATEGORY_MAP, mCategoryKey);
+        outState.putString(SALEITEMS_CHIPS_FILTER, new Gson().toJson(mPreviousSearchChips));
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHasSavedInstance = savedInstanceState.getBoolean(KEY_HAS_SAVED_INSTANCE);
+        mFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_FACET_STRING,""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {}.getType());
+        mSortingFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_SORTING_STRING,""), new TypeToken<ArrayList<SortingResponse>>() {}.getType());
+        mCategoryTree = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_CATEGORY_STRING,""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {}.getType());
+        mBrandList = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_BRAND_LIST,""), new TypeToken<ArrayList<String>>() {}.getType());
+        mCategoryKey = savedInstanceState.getString(SALEITEMS_CATEGORY_MAP,"");
+        if(mCategoryKey != null && !mCategoryKey.isEmpty()) {
+            mCategoryKeys.add(mCategoryKey);
+        }
+
+        String previousChipsString = savedInstanceState.getString(SALEITEMS_CHIPS_FILTER,"");
+        mPreviousSearchChips =  previousChipsString.isEmpty() ? new ArrayList<>() :
+                JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {}.getType());
+
     }
 
     @Override
@@ -158,10 +204,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
         View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
 
-        Router router = mActivity.getSelectedBottomNavTab() == 0 ? mActivity.getHomeRouter() : mActivity.getCategoriesRouter();
+        mSaleItemsView = mActivity.getSaleItemsController();
 
-        Controller mSaleItemsController = router.getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
-        mSaleItemsView = (SaleItemsMvpView) mSaleItemsController;
         mSaleItemsPresenter.onAttach(mSaleItemsView);
         mPresenter.onAttach(this);
         return view;
@@ -178,6 +222,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         //create a category map from the categorytreeresponse in saleitems, else
         // use saleitemscontroller's category map if it is not empty else
+        mActivity.setSearchFilterController(this);
+
         if(mSaleItemsView.getCategoryMap().isEmpty()) {
             createCategoryMap(mCategoryTree);
         } else {
@@ -194,7 +240,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         setupPriceFacet();
 
-//      SETUP CATEGORIES
+        //      SETUP CATEGORIES
         mSubCategoriesAdapter = new SubCategoriesAdapter(mActivity, "", mCategoryTree, mPresenter, mCategoryMap, (int) getDimension(R.dimen.margin_small));
 
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
@@ -205,7 +251,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
         mFacetItemsAdapter.setSearchItemsList(mSearchItemsList);
-
 
         mOpaqueView.setOnClickListener(v -> closeFacets());
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
@@ -292,6 +337,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
     public void closeFacets() {
         mIsSearchFilterControllerActive = false;
         mFacetsFrame.setVisibility(View.INVISIBLE);
+        if (mSaleItemsView == null) mSaleItemsView = mActivity.getSaleItemsController();
         mSaleItemsView.enableSaleItemsScroll(true);
         mSaleItemsView.toggleTabSelection();
     }
@@ -532,9 +578,11 @@ public class SearchFilterController extends BaseController implements SearchFilt
     }
 
     private void createCategoryMap(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
-        for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
-            mCategoryMap.put(category.getKey(), category);
-            createCategoryMap(category.getChildren());
+        if (getCategoryTreeResponses != null || !getCategoryTreeResponses.isEmpty()) {
+            for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
+                mCategoryMap.put(category.getKey(), category);
+                createCategoryMap(category.getChildren());
+            }
         }
     }
 
@@ -599,5 +647,4 @@ public class SearchFilterController extends BaseController implements SearchFilt
     public void setFacetFilterItems(List<Pair<String,String>> mFacetFilters) {
         this.mFacetFilters = mFacetFilters;
     }
-
 }

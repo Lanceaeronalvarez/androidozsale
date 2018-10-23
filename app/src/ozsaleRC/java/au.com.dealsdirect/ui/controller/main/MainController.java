@@ -23,6 +23,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 
 /**
@@ -55,14 +56,19 @@ public class MainController extends BaseController implements MainMvpView {
 
     private String mChosenSubCategoryItemKey = "";
 
+    private boolean mHasSavedInstance = false;
+
     @BindView(R.id.controller_home_bottom_nav)
     AHBottomNavigation mBottomNavigationView;
 
     public static MainController newInstance() {
-
         return new MainController(
                 new BundleBuilder(new Bundle())
                         .build());
+    }
+
+    public static MainController newInstance(Bundle bundle) {
+        return new MainController(bundle);
     }
 
     public MainController(Bundle args) {
@@ -100,10 +106,15 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void setUp(View view) {
 
-        mHomeController = HomeController.newInstance();
+        mActivity.setMainController(this);
 
-        mBannerFiltersController = BannerFiltersController.newInstance();
-
+        if (!mHasSavedInstance) {
+            mHomeController = HomeController.newInstance();
+            mBannerFiltersController = BannerFiltersController.newInstance();
+        } else {
+            mHomeController = getHomeController();
+            mBannerFiltersController = getBannerFiltersController();
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -147,6 +158,18 @@ public class MainController extends BaseController implements MainMvpView {
         if (mHomeViewPager != null) {
             mHomeViewPager.setSwipeable(isDraggable);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
     public void hideBottomNav() {
@@ -197,4 +220,15 @@ public class MainController extends BaseController implements MainMvpView {
         return mBottomNavigationView;
     }
 
+    public void setHomeController(HomeController homeController) {
+        mHomeController = homeController;
+    }
+
+    public void setBannerFiltersController(BannerFiltersController bannerFiltersController) {
+        mBannerFiltersController = bannerFiltersController;
+    }
+
+    public BannerFiltersController getBannerFiltersController() {
+        return mBannerFiltersController;
+    }
 }

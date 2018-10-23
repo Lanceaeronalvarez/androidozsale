@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import au.com.dealsdirect.ui.controller.returns.newreturn.adapter.NewReturnOrder
 import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -73,6 +75,8 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
     @Inject
     NewReturnMvpPresenter<NewReturnMvpView> mPresenter;
+    private boolean mHasSavedInstance = false;
+    private int mSavedInvoiceNumber;
 
     public static NewReturnController newInstance(List returnItem) {
 
@@ -109,7 +113,26 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         mNewReturnToolbarRightOption.setImageDrawable(getDrawable(R.drawable.ic_check));
 
         showLoading();
-        mPresenter.getReturnOrderDetail(mReturnItem.getInvoiceNo());
+
+        if (mHasSavedInstance) {
+            mPresenter.getReturnOrderDetail(mSavedInvoiceNumber);
+        } else {
+            mPresenter.getReturnOrderDetail(mReturnItem.getInvoiceNo());
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+        if (mReturnItem != null) outState.putInt(BundleKeys.KEY_INVOICE_NUMBER, mReturnItem.getInvoiceNo());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+        if (savedInstanceState.containsKey(BundleKeys.KEY_INVOICE_NUMBER)) mSavedInvoiceNumber = savedInstanceState.getInt(BundleKeys.KEY_INVOICE_NUMBER);
     }
 
     @Override
@@ -184,7 +207,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     private void validateRequestReturnForm() {
 
         CreateReturnRequest createReturnRequest = new CreateReturnRequest();
-        createReturnRequest.invoiceNo = mReturnItem.getInvoiceNo().toString();
+        createReturnRequest.invoiceNo = mHasSavedInstance ? String.valueOf(mSavedInvoiceNumber) : mReturnItem.getInvoiceNo().toString();
         createReturnRequest.reason = mNewReturnCreateReasonField.getText().toString();
         createReturnRequest.items = getUpdateRequestList();
 

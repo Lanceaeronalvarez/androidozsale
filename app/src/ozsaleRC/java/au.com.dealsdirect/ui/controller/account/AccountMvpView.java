@@ -13,6 +13,8 @@ import au.com.dealsdirect.ui.controller.account.model.AccountItem;
 
 public interface AccountMvpView extends MvpView {
 
+    String TAG = "AccountController";
+
     void showAccountItems(List<AccountItem> accountItems);
 
     void showMyDetailsController();

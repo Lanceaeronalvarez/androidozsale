@@ -40,7 +40,6 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
     @Override
     public void loadSaleItemDetails(String seoIdentifierId) {
-        getMvpView().hideLoading();
 
         doApiCallForResponse(getDataManager().callGetSaleItemDetails(seoIdentifierId), new AppApiCallback() {
             @Override

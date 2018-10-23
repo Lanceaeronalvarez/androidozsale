@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.contact.addcontact;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -80,6 +81,7 @@ public class AddContactController extends BaseController implements AddContactMv
     private String mChosenSubject = "";
 
     private ViewContactsMvpView mViewContactsMvpView;
+    private boolean mHasSavedInstance = false;
 
     public static AddContactController newInstance() {
         return new AddContactController(
@@ -91,13 +93,32 @@ public class AddContactController extends BaseController implements AddContactMv
         super(args);
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BundleKeys.CONTACT_SUBJECT, mChosenSubject);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mChosenSubject = savedInstanceState.getString(BundleKeys.CONTACT_SUBJECT);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+    }
+
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_add_contact, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mViewContactsMvpView = ((ViewContactsMvpView) mActivity.getHomeController().getCurrentRouter().getControllerWithTag(ViewContactsMvpView.TAG));
+        if (mHasSavedInstance) {
+            mViewContactsMvpView = mActivity.getContactsController();
+            if (!mPresenter.isTablet()) mActivity.getMainController().hideBottomNav();
+        } else {
+            mViewContactsMvpView = ((ViewContactsMvpView) mActivity.getHomeController().getCurrentRouter().getControllerWithTag(ViewContactsMvpView.TAG));
+        }
         return view;
     }
 
@@ -169,6 +190,11 @@ public class AddContactController extends BaseController implements AddContactMv
         super.onDestroyView(view);
     }
 
+    @Override
+    protected void onActivityResumed(@NonNull Activity activity) {
+        super.onActivityResumed(activity);
+        if (mHasSavedInstance && !mPresenter.isTablet()) mActivity.getMainController().getHomeController().hideBottomNav();
+    }
 
     @OnClick({R.id.partial_toolbar_left_view})
     void onBack() {

@@ -255,6 +255,14 @@ public class RegisterController extends VisaCheckoutController implements Regist
     }
 
     @Override
+    protected void onAttach(@NonNull View view) {
+        if (!mPresenter.isTablet()) {
+            mActivity.getMainController().hideBottomNav();
+        }
+        super.onAttach(view);
+    }
+
+    @Override
     public void onDestroyView(View view) {
         mActionTracker.signUp(mRegisterMethod, isRegisterSuccess);
 //        mPresenter.onDetach();

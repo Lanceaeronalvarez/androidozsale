@@ -138,4 +138,7 @@ public class BundleKeys {
     //PopUp Root Destination Key
     public static final String KEY_POP_UP_HOST_DESTINATION = "PopUpHostController.Destination";
 
+    //SavedInstance
+    public static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";
+
 }

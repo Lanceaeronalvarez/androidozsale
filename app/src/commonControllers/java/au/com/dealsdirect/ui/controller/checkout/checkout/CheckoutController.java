@@ -252,6 +252,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private CompositeDisposable mChangeClickListeners;
 
     private PaymentMethod mLastUserPaymentMethod;
+    private boolean mHasSavedInstance = false;
 
     public static CheckoutController newInstance() {
         return new CheckoutController(
@@ -422,6 +423,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
 
+        mActivity.setCheckoutController(this);
+
         if (!mPresenter.isTablet()) {
             mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
             mRecyclerView.setAdapter(mAdapter);
@@ -446,6 +449,18 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (mVcoPresenter.isVisaCheckoutEnabled()) {
             mVcoPresenter.setupVisaCheckout();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
     @Override

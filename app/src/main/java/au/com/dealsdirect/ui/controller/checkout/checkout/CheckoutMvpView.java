@@ -23,6 +23,8 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface CheckoutMvpView extends MvpView {
 
+    String TAG = "CheckoutController";
+
     void loadCart();
 
     void showMyPayDetails(Value value, Ourpay ourpay);

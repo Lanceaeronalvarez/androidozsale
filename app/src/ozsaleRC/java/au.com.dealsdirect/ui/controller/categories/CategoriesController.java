@@ -1,9 +1,9 @@
 package au.com.dealsdirect.ui.controller.categories;
 
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.Gson;
@@ -34,6 +36,7 @@ import au.com.dealsdirect.ui.controller.categories.adapter.SubCategoriesAdapter;
 import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
+import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -86,6 +89,8 @@ public class CategoriesController extends BaseController
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
 
     private int searchTapCounter = 0;
+    private boolean mHasSavedInstance;
+    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     public static CategoriesController newInstance() {
         return new CategoriesController(
@@ -122,18 +127,49 @@ public class CategoriesController extends BaseController
         mActivity.setCategoriesRouter(getRouter());
         mActivity.setCategoriesController(this);
         hideKeyboard();
+        if (mHasSavedInstance) {
+            newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
+
+                @Override
+                public void onChangeStarted(@Nullable Controller to,
+                                            @Nullable Controller from, boolean isPush,
+                                            @NonNull ViewGroup container,
+                                            @NonNull ControllerChangeHandler handler) {
+
+                }
+
+                @Override
+                public void onChangeCompleted(@Nullable Controller to,
+                                              @Nullable Controller from, boolean isPush,
+                                              @NonNull ViewGroup container,
+                                              @NonNull ControllerChangeHandler handler) {
+
+                    if (from == null || mCategories == null) {
+                        mPresenter.callGetCategoryTree();
+                        mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                    }
+                }
+            };
+            getRouter().addChangeListener(newControllerChangeHandler);
+        }
+
         mPresenter.callGetCategoryTree();
+
         mNoNetworkLayout.setOnClickListener((v) -> mPresenter.callGetCategoryTree());
-        setUp(view);
 
         mActionTracker.addToCartJourneyViewProductCategory();
+
+        setUp(view);
     }
 
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
+        if (newControllerChangeHandler != null) {
+            getRouter().removeChangeListener(newControllerChangeHandler);
+            newControllerChangeHandler = null;
+        }
         super.onDestroyView(view);
-
     }
 
     @Override
@@ -145,6 +181,18 @@ public class CategoriesController extends BaseController
         mToolbarTitle.setText(mActivity.getResources().getString(R.string.browse));
         mSubCategoryItemClickListener = this;
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
     private void setupCategories() {

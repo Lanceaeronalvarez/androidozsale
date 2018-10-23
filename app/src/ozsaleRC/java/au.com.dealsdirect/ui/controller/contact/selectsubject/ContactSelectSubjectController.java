@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.contact.selectsubject;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +41,7 @@ public class ContactSelectSubjectController extends BaseController
 
     private List<String> myContactSubjects;
     private ContactSubjectAdapter mAdapter;
+    private boolean mHasSavedInstance = false;
 
 
     @Inject
@@ -88,7 +90,7 @@ public class ContactSelectSubjectController extends BaseController
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
         mActivity.setDraggableViewPager(false);
 
-        if (!mPresenter.isTablet()) mActivity.getMainController().hideBottomNav();
+        if (!mPresenter.isTablet()) mActivity.getMainController().getHomeController().hideBottomNav();
 
         mAdapter = new ContactSubjectAdapter(myContactSubjects, mPresenter);
 
@@ -97,10 +99,28 @@ public class ContactSelectSubjectController extends BaseController
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+    }
+
+    @Override
     public void onDestroyView(View view) {
         if (!mPresenter.isTablet()) getRouter().popController(this);
         mPresenter.onDetach();
         super.onDestroyView(view);
+    }
+
+    @Override
+    protected void onActivityResumed(@NonNull Activity activity) {
+        super.onActivityResumed(activity);
+        if (mHasSavedInstance && !mPresenter.isTablet()) mActivity.getMainController().getHomeController().hideBottomNav();
     }
 
     @Override

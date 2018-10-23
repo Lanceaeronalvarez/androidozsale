@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.home;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.util.Log;
@@ -16,7 +15,6 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
 import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -28,17 +26,11 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
-import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
-import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
@@ -75,6 +67,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     private static final int TAB_ACCOUNT_INDEX = 2;
     private static final int TAB_CONTACT_INDEX = 3;
     private static final int TAB_CHECKOUT_INDEX = 4;
+    private static final String KEY_CURRENT_INDEX = "KEY_CURRENT_INDEX";
+    private static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";
 
     @Inject
     HomeMvpPresenter<HomeMvpView> mPresenter;
@@ -114,12 +108,18 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     private AccountMvpView mAccountMvpView;
     private CheckoutMvpView mCheckoutMvpView;
-    private ViewContactsMvpView mViewContactsMvpView;
+    public ViewContactsMvpView mViewContactsMvpView;
     private AHBottomNavigation mBottomNavigationView;
 
-    private int currentVisibleIndex = 0;
+    public static int currentVisibleIndex = 0;
     private int previousVisibleIndex = 0;
     private boolean initNewBadge = false;
+
+    public int mSavedIndex;
+    private boolean mHasSavedStateInstance;
+    public static boolean mIsInitialSavedInstanceLoad;
+    public ViewContactsMvpView mViewContactsController;
+    private int mDefaultTab;
 
     public static HomeController newInstance() {
 
@@ -152,9 +152,16 @@ public class HomeController extends BaseController implements HomeMvpView {
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        initControllers(true);
+        mDefaultTab = mHasSavedStateInstance ? mSavedIndex : TAB_SHOP_INDEX;
 
+        mActivity.getMainController().setHomeController(this);
         mBottomNavigationView = mActivity.getMainController().getBottomNav();
+
+        if (!mHasSavedStateInstance) {
+            initControllers(true);
+        } else {
+            setInitialSavedInstanceControllers();
+        }
 
         mRouterContainerMapping = new HashMap<>();
         mRouterContainerMapping.put(TAB_SHOP_INDEX, new Pair<>(mShopRouter, mShopContainer));
@@ -162,13 +169,12 @@ public class HomeController extends BaseController implements HomeMvpView {
         mRouterContainerMapping.put(TAB_ACCOUNT_INDEX, new Pair<>(mAccountsRouter, mAccountsContainer));
         mRouterContainerMapping.put(TAB_CONTACT_INDEX, new Pair<>(mContactRouter, mContactContainer));
         mRouterContainerMapping.put(TAB_CHECKOUT_INDEX, new Pair<>(mCheckoutRouter, mCheckoutContainer));
-        setVisibleContainer(TAB_SHOP_INDEX);
+        setVisibleContainer(mDefaultTab);
 
-        mActivity.setHomeRouter(mShopRouter);
         AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
         mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-        mBottomNavigationView.setCurrentItem(TAB_SHOP_INDEX);
+        mBottomNavigationView.setCurrentItem(mDefaultTab);
         mBottomNavigationView.setDefaultBackgroundColor(getResources().getColor(R.color.bottom_nav_background));
         mBottomNavigationView.setAccentColor(getResources().getColor(R.color.bottom_nav_accent));
         mBottomNavigationView.setInactiveColor(getResources().getColor(R.color.bottom_nav_inactive));
@@ -199,34 +205,18 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (mPresenter.isAuthorized()) {
             mPresenter.callGetBasketItemsQuantity();
         }
-
-        mShopRouter.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
-            @Override
-            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                if (mBottomNavigationView == null) return;
-
-                if (to instanceof HomeController || to instanceof ShopsController) {
-                    mBottomNavigationView.setCurrentItem(TAB_SHOP_INDEX);
-                } else if (to instanceof CategoriesController) {
-                    mBottomNavigationView.setCurrentItem(TAB_CATEGORIES_INDEX);
-                } else if (to instanceof AccountController) {
-                    mBottomNavigationView.setCurrentItem(TAB_ACCOUNT_INDEX);
-                } else if (to instanceof ViewContactsController) {
-                    mBottomNavigationView.setCurrentItem(TAB_CONTACT_INDEX);
-                } else if (to instanceof CheckoutController) {
-                    mBottomNavigationView.setCurrentItem(TAB_CHECKOUT_INDEX);
-                }
-            }
-        });
+        
+        mBottomNavigationView.setCurrentItem(mDefaultTab);
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
-            if (!wasSelected) {
-                mActivity.getMainController().goToPage(MainController.SHOP_INDEX);
+            if (!wasSelected || mIsInitialSavedInstanceLoad) {
+
+                if (mIsInitialSavedInstanceLoad) {
+                    position = mSavedIndex;
+                } else {
+                    mActivity.getMainController().goToPage(MainController.SHOP_INDEX);
+                }
+
                 Controller checkoutController = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (position != TAB_CATEGORIES_INDEX && checkoutController instanceof PaymentSuccessController) {
                     mCheckoutRouter.popToRoot();
@@ -262,7 +252,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                         mShopRouter.popToRoot();
                         break;
                     case TAB_ACCOUNT_INDEX:
-                        mAccountMvpView.getDisplayRouter().popToRoot();
+                        mAccountsRouter.popToRoot();
                         break;
                     case TAB_CATEGORIES_INDEX:
                         mCategoriesRouter.popToRoot();
@@ -271,7 +261,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                         mContactRouter.popToRoot();
                         break;
                     case TAB_CHECKOUT_INDEX:
-                        mCheckoutMvpView.getDisplayRouter().popToRoot();
+                        mCheckoutRouter.popToRoot();
                         break;
                 }
             }
@@ -282,63 +272,121 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void initControllers(boolean includeShop) {
         if (includeShop) {
-            ShopsController shopsController = ShopsController.newInstance();
-            mActivity.setShopController(shopsController);
             mShopRouter = getChildRouter(mShopContainer);
+            ShopsController shopsController = ShopsController.newInstance();
             mShopRouter.setRoot(RouterTransaction.with(shopsController).tag(ShopsController.TAG));
+            mActivity.setShopController(shopsController);
         }
 
         mCategoriesRouter = getChildRouter(mCategoriesContainer);
         mCategoriesRouter.setRoot(RouterTransaction.with(ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES)));
-
-        resetContactsRouter();
-
-        resetAccountRouter();
 
         if (mPresenter.isTablet()) {
             mPopUpHostRouter = getChildRouter(mLoginHostContainer);
             mPopUpHostRouter.setPopsLastView(true);
         }
 
+        resetContactsRouter();
+
+        resetAccountRouter();
+
         resetCheckoutRouter();
 
+        mActivity.setHomeRouter(mShopRouter);
+    }
+
+    public void setInitialSavedInstanceControllers() {
+        mShopRouter = getChildRouter(mShopContainer);
+        mCategoriesRouter = getChildRouter(mCategoriesContainer);
+        mContactRouter = getChildRouter(mContactContainer);
+        mActivity.setContactRouter(mContactRouter);
+        mAccountsRouter = getChildRouter(mAccountsContainer);
+        mActivity.setAccountsRouter(mAccountsRouter);
+        mCheckoutRouter = getChildRouter(mCheckoutContainer);
+        mActivity.setCheckoutRouter(mCheckoutRouter);
+
+        if (mPresenter.isTablet()) {
+            mPopUpHostRouter = getChildRouter(mLoginHostContainer);
+            mPopUpHostRouter.setPopsLastView(true);
+        }
+
+        mViewContactsMvpView = mActivity.getContactsController();
+        mCheckoutMvpView = mActivity.getCheckoutController();
+        mAccountMvpView = mActivity.getAccountController();
+        mActivity.setHomeRouter(getRouter());
+    }
+
+    public void setSavedCurrentItem() {
+        if (mIsInitialSavedInstanceLoad) mBottomNavigationView.setCurrentItem(currentVisibleIndex);
+    }
+
+    public void showSplashSavedInstance(Router router){
+        if (!mActivity.hasShownSplash) {
+            if (mActivity.getHomeRouter() == null) {
+                mActivity.setHomeRouter(router);
+            }
+            mActivity.showSplashScreen();
+        }
     }
 
     public void resetContactsRouter() {
         mContactRouter = getChildRouter(mContactContainer);
         mActivity.setContactRouter(mContactRouter);
-        Controller contactsController = ControllerFactory.getInstance(GateKeeper.Destination.CONTACT_US);
-        mViewContactsMvpView = (ViewContactsMvpView) contactsController;
-        mContactRouter.setRoot(RouterTransaction.with(contactsController).tag(ViewContactsMvpView.TAG));
+        if (!mHasSavedStateInstance) {
+            Controller contactsController = ControllerFactory.getInstance(GateKeeper.Destination.CONTACT_US);
+            mViewContactsMvpView = (ViewContactsMvpView) contactsController;
+            mContactRouter.setRoot(RouterTransaction.with(contactsController).tag(ViewContactsMvpView.TAG));
+        }
     }
+
 
     public void resetCheckoutRouter() {
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
         mActivity.setCheckoutRouter(mCheckoutRouter);
-
-
-        if (!mPresenter.isTablet()) {
-            Controller checkoutController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
-            mCheckoutMvpView =  (CheckoutMvpView) checkoutController;
-            mCheckoutRouter.setRoot(RouterTransaction.with(checkoutController)
-                    .tag(getActivity().getResources().getString(R.string.checkout_controller)));
-        } else {
-            Controller checkoutHostController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST);
-            mCheckoutMvpView = (CheckoutMvpView) checkoutHostController;
-            mCheckoutRouter.setRoot(RouterTransaction.with(checkoutHostController)
-                    .tag(getActivity().getResources().getString(R.string.checkout_host_controller)));
+        if (!mHasSavedStateInstance) {
+            if (!mPresenter.isTablet()) {
+                Controller checkoutController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
+                mCheckoutRouter.setRoot(RouterTransaction.with(checkoutController)
+                        .tag(getActivity().getResources().getString(R.string.checkout_controller)));
+                mCheckoutMvpView = (CheckoutMvpView) checkoutController;
+            } else {
+                Controller checkoutHostController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST);
+                mCheckoutRouter.setRoot(RouterTransaction.with(checkoutHostController)
+                        .tag(getActivity().getResources().getString(R.string.checkout_host_controller)));
+                mCheckoutMvpView = (CheckoutMvpView) checkoutHostController;
+            }
         }
-
     }
 
     public void resetAccountRouter() {
         mAccountsRouter = getChildRouter(mAccountsContainer);
         mActivity.setAccountsRouter(mAccountsRouter);
-
         Controller accountController = ControllerFactory.getInstance(GateKeeper.Destination.ACCOUNT);
-        mAccountMvpView = (AccountMvpView) accountController;
         mAccountsRouter.setRoot(RouterTransaction.with(accountController));
+        mAccountMvpView = (AccountMvpView) accountController;
+    }
 
+    public ViewContactsMvpView getContactsController() {
+        return mViewContactsController;
+    }
+
+    public void setContactsController (ViewContactsMvpView viewContactsMvpView) {
+        mViewContactsController = viewContactsMvpView;
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_CURRENT_INDEX, currentVisibleIndex);
+        outState.putBoolean(KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mSavedIndex = savedInstanceState.getInt(KEY_CURRENT_INDEX);
+        mHasSavedStateInstance = savedInstanceState.getBoolean(KEY_HAS_SAVED_INSTANCE);
+        mIsInitialSavedInstanceLoad = savedInstanceState.getBoolean(KEY_HAS_SAVED_INSTANCE);
     }
 
     @Override
@@ -348,26 +396,31 @@ public class HomeController extends BaseController implements HomeMvpView {
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
             mActivity.setDraggableViewPager(controller instanceof ShopsController);
 
-            if (controller instanceof SaleItemsController) {
-                mActivity.onBackPressed();
+            if (!mIsInitialSavedInstanceLoad) {
+                if (controller instanceof SaleItemsController) {
+                    mShopRouter.popToRoot();
+                }
             }
         }
 
+        mIsInitialSavedInstanceLoad = false;
         setVisibleContainer(TAB_SHOP_INDEX);
     }
 
     @Override
     public void showSecondTabController() {
         mActivity.setDraggableViewPager(false);
+        mIsInitialSavedInstanceLoad = false;
         setVisibleContainer(TAB_CATEGORIES_INDEX);
     }
 
     @Override
     public void showThirdTabController() {
+        mIsInitialSavedInstanceLoad = false;
         setVisibleContainer(TAB_ACCOUNT_INDEX);
         mActivity.setDraggableViewPager(false);
-        int size = mAccountsRouter.getBackstack().size();
 
+        int size = mAccountsRouter.getBackstack().size();
         if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView) {
             ((AccountMvpView) mAccountsRouter.getBackstack().get(size - 1).controller()).initLoginDrawable();
         }
@@ -377,7 +430,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void showFourthTabController() {
         mActivity.setDraggableViewPager(false);
         setVisibleContainer(TAB_CONTACT_INDEX);
-        if (!mActivity.isAuthorized()) {
+        if (!mActivity.isAuthorized() && !mIsInitialSavedInstanceLoad) {
             mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
                 @Override
                 public void success() {
@@ -391,15 +444,26 @@ public class HomeController extends BaseController implements HomeMvpView {
                 }
             });
         } else {
-            mViewContactsMvpView.getPresenter().loadContacts();
+            if (mActivity.isAuthorized()) {
+                Controller controller = getCurrentControllerOnRouter(mContactRouter);
+                if (controller instanceof ViewContactsMvpView) {
+                    if (mViewContactsMvpView == null) {
+                        mViewContactsMvpView = mActivity.getContactsController();
+                    }
+
+                    mViewContactsMvpView.getPresenter().loadContacts();
+                }
+            }
         }
+
+        mIsInitialSavedInstanceLoad = false;
     }
 
     @Override
     public void showFifthTabController() {
         mActivity.setDraggableViewPager(false);
         setVisibleContainer(TAB_CHECKOUT_INDEX);
-        if (!mActivity.isAuthorized()) {
+        if (!mActivity.isAuthorized() && !mIsInitialSavedInstanceLoad) {
             mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
                 @Override
                 public void success() {
@@ -413,11 +477,14 @@ public class HomeController extends BaseController implements HomeMvpView {
                 }
             });
         } else { //should load cart everytime checkout is clicked on bottom nav
-            Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
-            if (controller instanceof CheckoutMvpView) {
-                ((CheckoutMvpView) controller).loadCart();
+            if (mActivity.isAuthorized()) {
+                Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
+                if (controller instanceof CheckoutMvpView) {
+                    mCheckoutMvpView.loadCart();
+                }
             }
         }
+        mIsInitialSavedInstanceLoad = false;
     }
 
     public boolean isAccountsActive() {

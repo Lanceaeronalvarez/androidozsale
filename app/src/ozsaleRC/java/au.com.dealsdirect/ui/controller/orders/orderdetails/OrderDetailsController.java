@@ -83,6 +83,20 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(PAYMENT_ITEM, new Gson().toJson(mOrderItem));
+        outState.putString(PAYMENT_REF_NO, mPaymentReferenceNo);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mOrderItem = new Gson().fromJson(savedInstanceState.getString(PAYMENT_ITEM, ""), GetPaymentsList.ResponseValue.PaymentItem.class);
+        mPaymentReferenceNo = savedInstanceState.getString(PAYMENT_REF_NO,"");
+    }
+
+    @Override
     protected void setUp(View view) {
         mOrderDetailsToolbarTitle.setText(getString(R.string.account_orders));
         mOrderDetailsRightOption.setImageDrawable(null);

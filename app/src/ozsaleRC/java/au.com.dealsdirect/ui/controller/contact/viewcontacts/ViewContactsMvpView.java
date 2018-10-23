@@ -21,4 +21,6 @@ public interface ViewContactsMvpView extends MvpView {
 
     Router getDisplayRouter();
 
+    void getViewContactsView(ViewContactsMvpView this);
+
 }

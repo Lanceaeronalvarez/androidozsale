@@ -34,6 +34,7 @@ import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubje
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -74,6 +75,9 @@ public class ViewContactsController extends BaseController implements ViewContac
 
     @Inject
     ViewContactsMvpPresenter<ViewContactsMvpView> mPresenter;
+
+    public ViewContactsMvpView viewContactsMvpView;
+    private boolean mHasSavedState;
 
     private Router mContactDetailRouter;
 
@@ -122,6 +126,8 @@ public class ViewContactsController extends BaseController implements ViewContac
 
         assert (mActivity) != null;
 
+        mActivity.setContactsController(this);
+
         if (mPresenter.isTablet()) {
             mContactDetailRouter = getChildRouter(mContactDetailContainer);
         }
@@ -159,6 +165,18 @@ public class ViewContactsController extends BaseController implements ViewContac
         }
 
         return super.handleBack();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHasSavedState = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
     @Override
@@ -294,6 +312,11 @@ public class ViewContactsController extends BaseController implements ViewContac
     @Override
     public Router getDisplayRouter() {
         return mPresenter.isTablet() ? mContactDetailRouter : getRouter();
+    }
+
+    @Override
+    public void getViewContactsView() {
+        mActivity.getMainController().getHomeController().setContactsController(this);
     }
 
 }

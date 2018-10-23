@@ -49,6 +49,7 @@ import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
@@ -127,12 +128,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private String mCategoryKey;
 
     private boolean mIsDeeplink = false;
+    private boolean mHasSavedInstance = false;
 
     private GridLayoutManager mLayoutManager;
 
-    private List<GetCategoryTreeResponse> mPreLoadedCategories;
-    private List<GetBannerResponse.Group> sales;
-    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap;
+    private List<GetCategoryTreeResponse> mPreLoadedCategories = new LinkedList<>();
+    private List<GetBannerResponse.Group> sales = new LinkedList<>();
+    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
 
     private boolean isRefreshShop = false;
 
@@ -145,6 +147,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private boolean mIsChangeInProgress = false;
     private ControllerChangeHandler.ControllerChangeListener mControllerChangeListener;
+    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     @Override
     protected void onAttach(@NonNull View view) {
@@ -213,6 +216,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
+        getRouter().removeChangeListener(newControllerChangeHandler);
+        newControllerChangeHandler = null;
         super.onDestroyView(view);
     }
 
@@ -220,19 +225,43 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     protected void setUp(View view) {
 
         assert (mActivity) != null;
-        if (mActivity.getMainController() != null) mActivity.getMainController().showBottomNav();
+
+        mActivity.setShopController(this);
+
         mActivity.setDraggableViewPager(true);
         hideKeyboard();
+
+        displayBanners();
+
+        if (mHasSavedInstance) {
+            newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
+
+                @Override
+                public void onChangeStarted(@Nullable Controller to,
+                                            @Nullable Controller from, boolean isPush,
+                                            @NonNull ViewGroup container,
+                                            @NonNull ControllerChangeHandler handler) {
+
+                }
+
+                @Override
+                public void onChangeCompleted(@Nullable Controller to,
+                                              @Nullable Controller from, boolean isPush,
+                                              @NonNull ViewGroup container,
+                                              @NonNull ControllerChangeHandler handler) {
+
+                    mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
+                    mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                }
+            };
+            getRouter().addChangeListener(newControllerChangeHandler);
+        }
 
         mSearchBarEditText.setFocusable(false);
         mSearchBarEditText.setOnClickListener(view1 -> {
             showProductList();
         });
         mSearchBarEditText.setHint(getResource().getString(R.string.search_tag));
-
-        mPreLoadedCategories = new LinkedList<>();
-        sales = new LinkedList<>();
-        mCategoryMap = new HashMap<>();
 
         mControllerChangeListener = new ControllerChangeHandler.ControllerChangeListener() {
             @Override
@@ -271,8 +300,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             }
         };
 
-        displayBanners();
-
         shopsControllerBannerRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBannersAdapter));
         shopsControllerBannerRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -287,7 +314,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             }
         });
 
-        if (sales.isEmpty()) {
+        if (sales.isEmpty() && !mHasSavedInstance) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
         } else {
@@ -299,9 +326,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         if (mPreLoadedCategories.size() == 0) {
             mPresenter.loadCategoryTree();
         }
+
         setupPtrHeader();
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
-
     }
 
     private void displayBanners() {
@@ -394,7 +421,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             // Check if sale is available
             //TODO: Need computation for date and time when sale response is cached
             if (isAvailable) {
-                mActivity.getHomeRouter().pushController(RouterTransaction.with(
+                getRouter().pushController(RouterTransaction.with(
                         new SaleItemsController(args))
                         .tag(mActivity.getString(R.string.sale_items_controller_tag))
                         .pushChangeHandler(new HorizontalChangeHandler())
@@ -476,6 +503,24 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void storeCategories(List<GetCategoryTreeResponse> categories) {
         mPreLoadedCategories = categories;
         createCategoryMap(mPreLoadedCategories);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_CATEGORY_ID, mCategoryID);
+        outState.putString(KEY_CATEGORY_NAME, mCategoryName);
+        outState.putString(KEY_CATEGORY_MAP, mCategoryKey);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCategoryID = savedInstanceState.getString(KEY_CATEGORY_ID);
+        mCategoryName = savedInstanceState.getString(KEY_CATEGORY_NAME);
+        mCategoryKey = savedInstanceState.getString(KEY_CATEGORY_MAP);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
 

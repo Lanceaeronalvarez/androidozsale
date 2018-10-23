@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
@@ -32,6 +33,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.mysale.genie.profiler.Profiler;
@@ -56,6 +59,7 @@ import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -200,6 +204,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     AHBottomNavigation mBottomNavView;
 
     private int mDefaultHeight;
+    private boolean mHasSavedInstance = false;
+    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     private int mCarouselPosition = 0;
     private static final int CAROUSEL_VELOCITY_THRESHOLD = 100;
@@ -232,6 +238,36 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleOldPrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE);
         mFromPosition = args.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
         mOrigin = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, ActionTracker.ViewSource.SALE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID, mSaleId);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, mSkuId);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, mItemImageUrl);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, mSeoIdentifierId);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, mSaleName);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, mSalePrice);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, mSaleOldPrice);
+        outState.putInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION, mFromPosition);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, mOrigin);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mSaleId = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID);
+        mSkuId = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID);
+        mItemImageUrl = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID);
+        mSeoIdentifierId = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID);
+        mSaleName = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME);
+        mSalePrice = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE);
+        mSaleOldPrice = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE);
+        mFromPosition = savedInstanceState.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
+        mOrigin = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
 
@@ -304,7 +340,30 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         ImageUtils.loadImage(mActivity, mItemImageUrl, mProductSharedImage);
 
-        mPresenter.loadSaleItemDetails(mSeoIdentifierId);
+        if (mHasSavedInstance) {
+            newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
+
+                @Override
+                public void onChangeStarted(@Nullable Controller to,
+                                            @Nullable Controller from, boolean isPush,
+                                            @NonNull ViewGroup container,
+                                            @NonNull ControllerChangeHandler handler) {
+
+                }
+
+                @Override
+                public void onChangeCompleted(@Nullable Controller to,
+                                              @Nullable Controller from, boolean isPush,
+                                              @NonNull ViewGroup container,
+                                              @NonNull ControllerChangeHandler handler) {
+                    mPresenter.loadSaleItemDetails(mSeoIdentifierId);
+                    mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                }
+            };
+            getRouter().addChangeListener(newControllerChangeHandler);
+        } else {
+            mPresenter.loadSaleItemDetails(mSeoIdentifierId);
+        }
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
         SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(mPresenter.isTablet(),
@@ -397,6 +456,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         KeyboardUtils.hideSoftInput(mActivity);
+        if (newControllerChangeHandler != null) {
+            getRouter().removeChangeListener(newControllerChangeHandler);
+            newControllerChangeHandler = null;
+        }
         ImageUtils.clearImage(mProductSharedImage);
         mProductDetailScrollView.setOnTouchListener(null);
         mPriceInfoButton.setOnClickListener(null);

@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacthistory;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistor
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -61,6 +63,7 @@ public class ViewContactHistoryController extends BaseController implements View
     private int mInvoiceNumber;
     private int mContactNumber;
     private String mContactSubject;
+    private boolean mHasSavedInstance = false;
 
     @Inject
     ViewContactHistoryPresenter<ViewContactHistoryMvpView> mPresenter;
@@ -89,6 +92,28 @@ public class ViewContactHistoryController extends BaseController implements View
         mTimeStamp = getArgs().getString(KEY_CONTACT_TIMESTAMP);
         mContactNumber = getArgs().getInt(KEY_CONTACT_NO);
         mContactSubject = getArgs().getString(KEY_CONTACT_SUBJECT);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_CONTACT_NAME, mSaleNameObject);
+        outState.putInt(KEY_CONTACT_INVOICE_NO, mInvoiceNumber);
+        outState.putString(KEY_CONTACT_TIMESTAMP, mTimeStamp);
+        outState.putInt(KEY_CONTACT_NO, mContactNumber);
+        outState.putString(KEY_CONTACT_SUBJECT, mContactSubject);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mSaleNameObject = savedInstanceState.getString(KEY_CONTACT_NAME);
+        mInvoiceNumber = savedInstanceState.getInt(KEY_CONTACT_INVOICE_NO);
+        mTimeStamp = savedInstanceState.getString(KEY_CONTACT_TIMESTAMP);
+        mContactNumber = savedInstanceState.getInt(KEY_CONTACT_NO);
+        mContactSubject = savedInstanceState.getString(KEY_CONTACT_SUBJECT);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
 
@@ -130,6 +155,12 @@ public class ViewContactHistoryController extends BaseController implements View
         KeyboardUtils.setKeyboardAdjustPan(mActivity);
         mPresenter.onDetach();
         super.onDestroyView(view);
+    }
+
+    @Override
+    protected void onActivityResumed(@NonNull Activity activity) {
+        super.onActivityResumed(activity);
+        if (mHasSavedInstance && !mPresenter.isTablet()) mActivity.getMainController().getHomeController().hideBottomNav();
     }
 
     @Override

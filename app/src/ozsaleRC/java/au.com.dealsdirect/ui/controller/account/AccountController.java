@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import android.app.Activity;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +97,9 @@ public class AccountController extends BaseController implements AccountMvpView,
     private boolean mIsLoginSuccessful;
     private String mChosenOption = "";
 
+    private boolean mHasSavedInstance = false;
+    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
+
     public static AccountController newInstance() {
         return new AccountController(
                 new BundleBuilder(new Bundle())
@@ -141,11 +146,36 @@ public class AccountController extends BaseController implements AccountMvpView,
         // Setup views here
         mDefaultChosenAccountOption = getString(R.string.account_details);
 
+        mActivity.setAccountController(this);
+
         if (mPresenter.isTablet()) {
             mAccountDetailRouter = getChildRouter(mAccountDetailContainer);
         }
 
-        mActivity.getMainController().showBottomNav();
+        if (mHasSavedInstance) {
+            newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
+
+                @Override
+                public void onChangeStarted(@Nullable Controller to,
+                                            @Nullable Controller from, boolean isPush,
+                                            @NonNull ViewGroup container,
+                                            @NonNull ControllerChangeHandler handler) {
+
+                }
+
+                @Override
+                public void onChangeCompleted(@Nullable Controller to,
+                                              @Nullable Controller from, boolean isPush,
+                                              @NonNull ViewGroup container,
+                                              @NonNull ControllerChangeHandler handler) {
+
+                    createAccountItems();
+                    mPresenter.loadAccountItems(mAccountItems);
+                    mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                }
+            };
+            getRouter().addChangeListener(newControllerChangeHandler);
+        }
 
         createAccountItems();
 
@@ -175,6 +205,18 @@ public class AccountController extends BaseController implements AccountMvpView,
         };
 
         getDisplayRouter().addChangeListener(mControllerChangeListener);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
     private void createAccountItems() {
@@ -227,6 +269,10 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void onDetach(View view) {
         mPresenter.onDetach();
         getDisplayRouter().removeChangeListener(mControllerChangeListener);
+        if (newControllerChangeHandler != null) {
+            getRouter().removeChangeListener(newControllerChangeHandler);
+            newControllerChangeHandler = null;
+        }
         super.onDetach(view);
     }
 
