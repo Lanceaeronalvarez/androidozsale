@@ -160,6 +160,12 @@ public abstract class BaseController extends RefWatchingController implements Mv
     }
 
     @Override
+    protected void onDestroyView(@NonNull View view) {
+        mControllerComponent = null;
+        super.onDestroyView(view);
+    }
+
+    @Override
     public void hideKeyboard() {
         if (mActivity != null) {
             mActivity.hideKeyboard();

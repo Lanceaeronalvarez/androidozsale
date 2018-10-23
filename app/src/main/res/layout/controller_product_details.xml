@@ -395,7 +395,7 @@
                                                 android:paddingTop="5dp"/>
 
 
-                                            <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
+                                            <android.support.v7.widget.RecyclerView
                                                 android:id="@+id/productImageRecyclerView"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="match_parent"
@@ -405,9 +405,7 @@
                                                 android:clipChildren="false"
                                                 android:clipToPadding="false"
                                                 android:paddingBottom="5dp"
-                                                android:paddingTop="5dp"
-                                                app:rvp_singlePageFling="true"
-                                                app:rvp_triggerOffset="0.05" />
+                                                android:paddingTop="5dp" />
 
                                             <android.support.v7.widget.RecyclerView
                                                 android:id="@+id/otherImagesRecyclerView"
