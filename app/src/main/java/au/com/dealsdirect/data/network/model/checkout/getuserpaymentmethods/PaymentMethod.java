@@ -93,8 +93,6 @@ public class PaymentMethod implements Serializable {
     public boolean canUseOurPaySelect() {
         switch (paymentType.toLowerCase()) {
             case MASTERPASS:
-            case VISA_CHECKOUT:
-            case VISA_CHECKOUT_BRAINTREE:
                 return false;
             default:
                 return true;

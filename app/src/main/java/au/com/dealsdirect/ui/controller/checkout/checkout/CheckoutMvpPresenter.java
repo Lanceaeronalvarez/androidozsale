@@ -43,4 +43,8 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     boolean isMasterPassEnabled();
 
     boolean isPaypalCreditEnabled();
+
+    boolean isPaypalEnabled();
+
+    boolean isVcoEnabled();
 }

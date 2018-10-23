@@ -315,6 +315,11 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
+    public boolean isPaypalEnabled() {
+        return getDataManager().isPaypalEnabled();
+    }
+
+    @Override
     public void updateCart(GetCurrentOrder.ResponseValue response) {
         if (!response.getD().isAuthenticated()) {
             getMvpView().triggerLoginTicket();
@@ -379,4 +384,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         });
     }
 
+    @Override
+    public boolean isVcoEnabled() {
+        return getDataManager().getIsVisaCheckoutEnabled();
+    }
 }

@@ -254,6 +254,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private PaymentMethod mLastUserPaymentMethod;
     private boolean mHasSavedInstance = false;
 
+    private List<View> mButtons = new ArrayList<View>() {{
+        add(mPayButton);
+        add(mPaypalButton);
+        add(mPaypalCreditButton);
+        add(mMasterpassButton);
+    }};
+
     public static CheckoutController newInstance() {
         return new CheckoutController(
                 new BundleBuilder(new Bundle())
@@ -547,17 +554,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
             boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
 
-            if (paymentMethod != null && paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT)) {
-                mOurpayHolder.removeAllViews();
-                return;
-            }
-
             if (ourpay != null && isMyPayEnabled && ourpay.isCanUse()) {
 
                 if (((MainActivity) getActivity()).getMainController().getHomeController().isCheckoutRouterVisible()) {
                     Log.d("ourpay", "checkout controller is visible");
-                    boolean isPaymentInvalid = paymentMethod.getPaymentType().equalsIgnoreCase(OurpayStateManager.CARD_MASTERPASS) ||
-                            paymentMethod.getPaymentType().equalsIgnoreCase(OurpayStateManager.CARD_PAYPAL);
+                    boolean isPaymentInvalid = paymentMethod == null ? false : (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS) ||
+                            paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) ||
+                            paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT);
                     OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, isPaymentInvalid);
                     PaymentInfo.setOurpay(ourpay);
 
@@ -736,8 +739,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
         if (paymentMethod != null) {
-            if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)
-                    || paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT)) {
+            if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)) {
                 selectStandardDeliveryOption();
                 mPresenter.setDeliveryOption(createStandardDeliveryOptionRequest());
                 return true;
@@ -1171,15 +1173,43 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     private void showPaymentButtons() {
         mButtonHolder.setVisibility(View.VISIBLE);
+        setPaymentButtonsVisibility(mButtons, View.GONE);
         checkVisiblePaymentButtons();
     }
 
+
+    private void setPaymentButtonsVisibility(List<View> buttons, int visibility) {
+        for(View button : buttons) {
+            button.setVisibility(visibility);
+        }
+    }
+
+    private List<View> getSupposedlyVisibleButtons() {
+        List<View> buttons = new ArrayList<>();
+        if (mActivity.getPaymentMethodSelected() != null) {
+            String paymentType = mActivity.getPaymentMethodSelected().getPaymentType();
+            if (!paymentType.equalsIgnoreCase(CARD_PAYPAL) ||
+                    !paymentType.equalsIgnoreCase(CARD_MASTERPASS)) {
+                buttons.add(mPayButton);
+            }
+            if (paymentType.equalsIgnoreCase(CARD_PAYPAL) && mPresenter.isPaypalEnabled()) {
+                buttons.add(mPaypalButton);
+            }
+        } else {
+            //no selected payment Method
+            buttons.add(mPayButton);
+            if (mPresenter.isPaypalEnabled()) buttons.add(mPaypalButton);
+            if (mPresenter.isVcoEnabled()) buttons.add(mVisaCheckoutButton);
+            if (!isOurPaySelectDeliveryMethod() && mPresenter.isMasterPassEnabled()) {
+                buttons.add(mMasterpassButton);
+            }
+        }
+        if (mPresenter.isPaypalCreditEnabled()) buttons.add(mPaypalCreditButton);
+        return buttons;
+    }
+
     private void checkVisiblePaymentButtons() {
-        mPayButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
-        mPaypalButton.setVisibility(isOurPaySelectDeliveryMethod() ? View.GONE : View.VISIBLE);
-        mMasterpassButton.setVisibility(!mPresenter.isMasterPassEnabled() || isOurPaySelectDeliveryMethod() || mActivity.getPaymentMethodSelected() != null ? View.GONE : View.VISIBLE);
-        mVisaCheckoutButton.setVisibility(isOurPaySelectDeliveryMethod() || mActivity.getPaymentMethodSelected() != null ? View.GONE : View.VISIBLE);
-        mPaypalCreditButton.setVisibility(isOurPaySelectDeliveryMethod() || !mPresenter.isPaypalCreditEnabled() ? View.GONE : View.VISIBLE);
+        setPaymentButtonsVisibility(getSupposedlyVisibleButtons(), View.VISIBLE);
     }
 
     @Override

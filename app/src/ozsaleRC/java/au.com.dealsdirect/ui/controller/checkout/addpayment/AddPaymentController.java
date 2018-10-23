@@ -125,7 +125,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        if (mIsOurpaySelectDeliveryMethod) {
+        if (isFromCart) {
             mPresenter.generateOurpay(mCurrentOrderValue);
         }
         setUp(view);
@@ -278,7 +278,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
     private void checkVisiblePaymentButtons() {
         mPayButton.setVisibility(View.VISIBLE);
-        mPaypalButton.setVisibility(isFromCart ? View.VISIBLE : View.GONE);
+        mPaypalButton.setVisibility(isFromCart && mPresenter.isPayPalEnabled() ? View.VISIBLE : View.GONE);
         mMasterpassButton.setVisibility(isFromCart && mPresenter.isMasterPassEnabled() && !mIsOurpaySelectDeliveryMethod ? View.VISIBLE : View.GONE);
         mPaypalCreditButton.setVisibility(isFromCart && mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
     }
@@ -350,7 +350,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
 
             if (ourpay != null && isMyPayEnabled) {
-                boolean isPaymentInvalid = paymentMethod.getPaymentType().equalsIgnoreCase(OurpayStateManager.CARD_MASTERPASS);
+                boolean isPaymentInvalid = paymentMethod == null ? false : paymentMethod.getPaymentType().equalsIgnoreCase(OurpayStateManager.CARD_MASTERPASS);
                 OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, isPaymentInvalid);
 
                 ourpayPanel = new OurpayPanel((BaseActivity) mActivity, getRouter());
