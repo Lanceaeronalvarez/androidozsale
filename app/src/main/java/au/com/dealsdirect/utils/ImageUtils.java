@@ -39,10 +39,9 @@ public class ImageUtils {
         Glide.with(context)
                 .load(url)
                 .asBitmap()
-                .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .skipMemoryCache(true)
-                .format(DecodeFormat.PREFER_RGB_565)
+                .format(DecodeFormat.PREFER_ARGB_8888)
                 .into(imageView);
     }
 
@@ -50,11 +49,10 @@ public class ImageUtils {
         Glide.with(context)
                 .load(url)
                 .asBitmap()
-                .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .skipMemoryCache(true)
                 .dontAnimate()
-                .format(DecodeFormat.PREFER_RGB_565)
+                .format(DecodeFormat.PREFER_ARGB_8888)
                 .into(imageView);
     }
 
@@ -64,10 +62,9 @@ public class ImageUtils {
                 .load(url)
                 .asBitmap()
                 .placeholder(placeholder)
-                .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .skipMemoryCache(true)
-                .format(DecodeFormat.PREFER_RGB_565)
+                .format(DecodeFormat.PREFER_ARGB_8888)
                 .listener(requestListener)
                 .into(imageView);
     }
@@ -89,25 +86,19 @@ public class ImageUtils {
                             return false;
                         }
                     })
-                    .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .priority(Priority.IMMEDIATE)
-                    .format(DecodeFormat.PREFER_RGB_565)
+                    .format(DecodeFormat.PREFER_ARGB_8888)
                     .into(imageView);
-        } else {
-
-            if (imageView != null) {
+        } else if (imageView != null) {
                 Glide.with(context)
                         .load(url)
                         .asBitmap()
-                        .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .priority(Priority.IMMEDIATE)
-                        .format(DecodeFormat.PREFER_RGB_565)
+                        .format(DecodeFormat.PREFER_ARGB_8888)
                         .into(imageView);
-            }
         }
-
     }
 
     public static void loadImage(Context context, String url, ImageView imageView, int width,
