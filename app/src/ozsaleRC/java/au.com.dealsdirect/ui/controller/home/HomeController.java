@@ -209,6 +209,11 @@ public class HomeController extends BaseController implements HomeMvpView {
         mBottomNavigationView.setCurrentItem(mDefaultTab);
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
+            if (!mActivity.getMainController().shouldBottomNavigationViewEnabled() ||
+                mActivity.getMainController().isHomeViewPagerDragging()) {
+                return false;
+            }
+            
             if (!wasSelected || mIsInitialSavedInstanceLoad) {
 
                 if (mIsInitialSavedInstanceLoad) {

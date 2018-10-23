@@ -328,9 +328,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mDragDismissListener
                 = new ElasticDragDismissFrameLayout.ElasticDragDismissCallback() {
             @Override
+            public void onDrag(float elasticOffset, float elasticOffsetPixels,
+                               float rawOffset, float rawOffsetPixels) {
+                mActivity.getMainController().setShouldBottomNavigationViewEnabled(false);
+            }
+
+            @Override
             public void onDragDismissed() {
+                mActivity.getMainController().setShouldBottomNavigationViewEnabled(true);
                 mProductDetailScrollView.scrollTo(0, 0);
                 mActivity.onBackPressed();
+            }
+
+            @Override
+            public void onCancel() {
+                mActivity.getMainController().setShouldBottomNavigationViewEnabled(true);
             }
         };
         mRootView.addListener(mDragDismissListener);

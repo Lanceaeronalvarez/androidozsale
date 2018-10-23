@@ -41,6 +41,12 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
 
         }
 
+        /**
+         * Called when dragging is released but has not exceeded the threshold dismiss distance.
+         */
+        public void onCancel() {
+
+        }
     }
 
     // configurable attribs
@@ -120,6 +126,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
             totalDrag = 0;
             draggingDown = draggingUp = false;
             dispatchDragCallback(0f, 0f, 0f, 0f);
+            dispatchCancelCallback();
         }
     }
 
@@ -231,6 +238,14 @@ public class ElasticDragDismissFrameLayout extends FrameLayout implements Nested
         if (callbacks != null && !callbacks.isEmpty()) {
             for (ElasticDragDismissCallback callback : callbacks) {
                 callback.onDragDismissed();
+            }
+        }
+    }
+
+    private void dispatchCancelCallback() {
+        if (callbacks != null && !callbacks.isEmpty()) {
+            for (ElasticDragDismissCallback callback : callbacks) {
+                callback.onCancel();
             }
         }
     }

@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -45,6 +46,7 @@ public class MainController extends BaseController implements MainMvpView {
 
     @BindView(R.id.home_viewpager)
     MainCustomViewPager mHomeViewPager;
+    private boolean mIsHomeViewPagerDragging = false;
 
     private HomeController mHomeController;
 
@@ -60,6 +62,7 @@ public class MainController extends BaseController implements MainMvpView {
 
     @BindView(R.id.controller_home_bottom_nav)
     AHBottomNavigation mBottomNavigationView;
+    private boolean mShouldBottomNavigationViewEnabled = true;
 
     public static MainController newInstance() {
         return new MainController(
@@ -100,6 +103,7 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
+        mHomeViewPager.setOnTouchListener(null);
         super.onDestroyView(view);
     }
 
@@ -152,6 +156,35 @@ public class MainController extends BaseController implements MainMvpView {
         mHomeViewPager.setCurrentItem(SHOP_INDEX);
         mHomeViewPager.setMyScroller();
 
+        mHomeViewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                        mIsHomeViewPagerDragging = false;
+                        break;
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_MOVE:
+                        mIsHomeViewPagerDragging = true;
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+    }
+
+    public boolean isHomeViewPagerDragging() {
+        return mIsHomeViewPagerDragging;
+    }
+
+    public boolean shouldBottomNavigationViewEnabled() {
+        return mShouldBottomNavigationViewEnabled;
+    }
+
+    public void setShouldBottomNavigationViewEnabled(boolean enabled) {
+        mShouldBottomNavigationViewEnabled = enabled;
     }
 
     public void setViewpagerDraggable(boolean isDraggable) {
