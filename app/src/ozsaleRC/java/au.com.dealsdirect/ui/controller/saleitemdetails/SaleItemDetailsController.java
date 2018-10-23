@@ -392,6 +392,20 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         super.onDestroyView(view);
     }
 
+    private void updatePriceDetails(GetSaleItemDetailsResponse saleDetail) {
+        //update Price
+        mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
+        mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
+
+        //update Images
+        List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
+        mSaleItemImagesAdapter.replaceData(qualitySaleImages);
+        mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
+
+        //update Ourpay
+        mPresenter.loadOurpayData(saleDetail);
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
@@ -417,8 +431,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mProductName.setText(name.trim());
         mProductBrand.setText(brandName.trim());
-        mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
-        mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
         if (personalisation != null) {
             mPersonalisationLayout.inflateForProductDetails(mActivity, new Gson().fromJson(
@@ -457,11 +469,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductAboutText.loadData(mHtmlHeader + productAbout + mHtmlFooter, "text/html; charset=UTF-8", null);
         }
 
-        List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
-
-        mSaleItemImagesAdapter.replaceData(qualitySaleImages);
-        mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
-
         mProductDescriptionText.startAnimation(anim);
         mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
                 "text/html; charset=UTF-8",
@@ -485,7 +492,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         });
 
-        if (!saleDetail.getSkuVariants().isEmpty()) {
+        if (saleDetail.getSkuVariants() != null && !saleDetail.getSkuVariants().isEmpty()) {
             mSkuVariants = saleDetail.getSkuVariants();
             for (GetSaleItemDetailsResponse skuVariant : mSkuVariants) {
                 String skuId = skuVariant.getSkuId();
@@ -539,7 +546,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
                     mSkuId = mProductSizes.get(selectedIndex).second;
 
-                    boolean isSizeSoldOut = saleDetail.getSkuVariants().get(selectedIndex).isSoldOut();
+                    boolean isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
 
                     if (isSizeSoldOut) return;
 
@@ -547,6 +554,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     mAddToCartButton.setEnabled(!isSizeSoldOut);
 
                     didSelectSize = true;
+
+                    updatePriceDetails(mSkuVariants.get(selectedIndex));
                 } else {
                     didSelectSize = false;
                 }
@@ -559,7 +568,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductPreviousPrice.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
         mProductPreviousPriceLabel.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
 
-        mPresenter.loadOurpayData(saleDetail);
+        updatePriceDetails(saleDetail);
     }
 
     private void toggleProductInfoWebView(String shippingPricing, boolean isNewPricing) {
