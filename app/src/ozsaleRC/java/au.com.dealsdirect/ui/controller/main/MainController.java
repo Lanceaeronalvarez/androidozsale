@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
+import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -51,6 +52,8 @@ public class MainController extends BaseController implements MainMvpView {
     private HomeController mHomeController;
 
     private BannerFiltersController mBannerFiltersController;
+
+    private CheckoutHostController mCheckoutHostController;
 
     private View mLastSelectedSubCategoryItem;
 
@@ -263,5 +266,13 @@ public class MainController extends BaseController implements MainMvpView {
 
     public BannerFiltersController getBannerFiltersController() {
         return mBannerFiltersController;
+    }
+
+    public void setCheckoutHostController(CheckoutHostController checkoutHostController) {
+        mCheckoutHostController = checkoutHostController;
+    }
+
+    public CheckoutHostController getCheckoutHostController() {
+        return mCheckoutHostController;
     }
 }

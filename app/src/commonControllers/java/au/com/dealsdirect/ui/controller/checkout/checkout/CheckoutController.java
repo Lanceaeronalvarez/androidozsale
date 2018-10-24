@@ -59,6 +59,7 @@ import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostMvpView;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
@@ -373,7 +374,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mVcoPresenter.onAttach(this);
 
         if (getBoolean(R.bool.is_tablet)) {
-            mCheckoutHostView = (CheckoutHostMvpView) mActivity.getCheckoutRouter().getControllerWithTag(getString(R.string.checkout_host_controller));
+            CheckoutHostController existingController = mActivity.getMainController().getCheckoutHostController();
+            if (!mHasSavedInstance || existingController == null) {
+                mCheckoutHostView = (CheckoutHostMvpView) mActivity.getCheckoutRouter().getControllerWithTag(getString(R.string.checkout_host_controller));
+            } else {
+                mCheckoutHostView = existingController;
+            }
         }
         return view;
     }

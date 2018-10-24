@@ -38,6 +38,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
@@ -78,6 +79,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     private CheckoutOrderAdapter mAdapter;
     private List<Item> mItemList = new ArrayList<>();
     private boolean mIsCheckoutHostUpdated;
+    private boolean mHasSavedInstance = false;
 
 
     public static CheckoutHostController newInstance() {
@@ -106,14 +108,21 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     protected void setUp(View view) {
+        mActivity.getMainController().setCheckoutHostController(this);
+
 //disable toolbar left and right buttons
         mToolbarLeftButton.setVisibility(View.INVISIBLE);
         mToolbarRightButton.setVisibility(View.INVISIBLE);
         mTitleTextView.setText(getString(R.string.account_orders));
 
-        mCheckoutDetailView = mCheckoutController = CheckoutController.newInstance();
-        mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
-        mCheckoutDetailRouter.setRoot(RouterTransaction.with(mCheckoutController).tag(getString(R.string.checkout_controller)));
+        if (!mHasSavedInstance) {
+            mCheckoutDetailView = mCheckoutController = CheckoutController.newInstance();
+            mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
+            mCheckoutDetailRouter.setRoot(RouterTransaction.with(mCheckoutController).tag(getString(R.string.checkout_controller)));
+        } else {
+            mCheckoutController = mActivity.getCheckoutController();
+            mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
+        }
 
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
         mRecyclerView.setAdapter(mAdapter);
@@ -130,6 +139,18 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
         return super.handleBack();
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
     @Override
