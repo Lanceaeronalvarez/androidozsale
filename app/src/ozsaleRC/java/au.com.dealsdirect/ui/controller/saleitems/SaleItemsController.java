@@ -476,33 +476,31 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mInitialLoad = true;
 
         /* bug/gen-8065_ozsale-reskin_bugfixing - dont load empty category on category link */
-        if (!mFromCategoryDeeplink && !mHasSavedInstance) {
-            mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
-        } else {
-            newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
+        newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
 
-                @Override
-                public void onChangeStarted(@Nullable Controller to,
-                                            @Nullable Controller from, boolean isPush,
-                                            @NonNull ViewGroup container,
-                                            @NonNull ControllerChangeHandler handler) {
+            @Override
+            public void onChangeStarted(@Nullable Controller to,
+                                        @Nullable Controller from, boolean isPush,
+                                        @NonNull ViewGroup container,
+                                        @NonNull ControllerChangeHandler handler) {
 
-                }
+            }
 
-                @Override
-                public void onChangeCompleted(@Nullable Controller to,
-                                              @Nullable Controller from, boolean isPush,
-                                              @NonNull ViewGroup container,
-                                              @NonNull ControllerChangeHandler handler) {
+            @Override
+            public void onChangeCompleted(@Nullable Controller to,
+                                          @Nullable Controller from, boolean isPush,
+                                          @NonNull ViewGroup container,
+                                          @NonNull ControllerChangeHandler handler) {
 
-                    if (!mFromCategoryDeeplink) {
-                        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
+                if (!mFromCategoryDeeplink) {
+                    mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
+                    if (mHasSavedInstance) {
                         mActivity.getMainController().getHomeController().setSavedCurrentItem();
                     }
                 }
-            };
-            getRouter().addChangeListener(newControllerChangeHandler);
-        }
+            }
+        };
+        getRouter().addChangeListener(newControllerChangeHandler);
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         hideKeyboard();
