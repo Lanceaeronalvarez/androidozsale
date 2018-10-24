@@ -254,13 +254,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private PaymentMethod mLastUserPaymentMethod;
     private boolean mHasSavedInstance = false;
 
-    private List<View> mButtons = new ArrayList<View>() {{
-        add(mPayButton);
-        add(mPaypalButton);
-        add(mPaypalCreditButton);
-        add(mMasterpassButton);
-    }};
-
     public static CheckoutController newInstance() {
         return new CheckoutController(
                 new BundleBuilder(new Bundle())
@@ -1173,7 +1166,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     private void showPaymentButtons() {
         mButtonHolder.setVisibility(View.VISIBLE);
-        setPaymentButtonsVisibility(mButtons, View.GONE);
+        setPaymentButtonsVisibility(getAllButtons(), View.GONE);
         checkVisiblePaymentButtons();
     }
 
@@ -1182,6 +1175,16 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         for(View button : buttons) {
             button.setVisibility(visibility);
         }
+    }
+
+    private List<View> getAllButtons() {
+        return new ArrayList<View>() {{
+            add(mPayButton);
+            add(mPaypalButton);
+            add(mPaypalCreditButton);
+            add(mMasterpassButton);
+            add(mVisaCheckoutButton);
+        }};
     }
 
     private List<View> getSupposedlyVisibleButtons() {
