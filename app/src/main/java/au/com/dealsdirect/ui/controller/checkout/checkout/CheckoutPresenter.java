@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.ApiEndPoint;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
@@ -14,6 +15,7 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
+import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPhoneVerification;
 import au.com.dealsdirect.service.ourpay.OurpayState;
@@ -139,6 +141,13 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                         }
 
                         if (responseValue.getD().getResult()) {
+                            for (int i = 0; i < responseValue.getUserPaymentMethods().size(); i++) {
+                                PaymentMethod paymentMethod = responseValue.getUserPaymentMethods().get(i);
+                                if (paymentMethod.getPaymentType().contains("VisaCheckout")) {
+                                    paymentMethod.setImageUrl(ApiEndPoint.API_VCO_ICON);
+                                }
+                                responseValue.getUserPaymentMethods().set(i,paymentMethod);
+                            }
                             getMvpView().setPaymentList(responseValue.getUserPaymentMethods());
                             getMvpView().showPaymentDetails(responseValue.getD().getValue().getLastPaymentMethod());
                             getMvpView().hideLoading();

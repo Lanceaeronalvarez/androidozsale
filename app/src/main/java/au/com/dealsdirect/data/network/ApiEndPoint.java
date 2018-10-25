@@ -18,6 +18,7 @@ public final class ApiEndPoint {
     private static final String API_VERSION = "api/v1/";
     private static final String HANDLER_PREFIX = "handler.ashx/";
     private static final String HANDLER_ASMX_PREFIX = "handler.ashx/";
+    public static final String API_VCO_ICON = "https://assets.secure.checkout.visa.com/VCO/images/acc_40x30_wht01.png";
 
     enum ApiService {
         legacy,

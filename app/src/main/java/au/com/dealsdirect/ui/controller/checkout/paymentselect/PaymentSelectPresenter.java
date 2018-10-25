@@ -2,7 +2,9 @@ package au.com.dealsdirect.ui.controller.checkout.paymentselect;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.ApiEndPoint;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
@@ -31,6 +33,14 @@ public class PaymentSelectPresenter<V extends PaymentSelectMvpView> extends Base
                 public void onSuccess(Object response) {
                     super.onSuccess(response);
                     if (((GetUserPaymentMethods.ResponseValue) response).getD().getResult()) {
+                        for (int i = 0; i < ((GetUserPaymentMethods.ResponseValue) response).getUserPaymentMethods().size(); i++) {
+                            PaymentMethod paymentMethod = ((GetUserPaymentMethods.ResponseValue) response).getUserPaymentMethods().get(i);
+                            if (paymentMethod.getPaymentType().contains("VisaCheckout")) {
+                                paymentMethod.setImageUrl(ApiEndPoint.API_VCO_ICON);
+                            }
+
+                            ((GetUserPaymentMethods.ResponseValue) response).getUserPaymentMethods().set(i,paymentMethod);
+                        }
                         getMvpView().showPaymentList(((GetUserPaymentMethods.ResponseValue) response).getUserPaymentMethods());
                     } else {
                         getMvpView().onError(((GetUserPaymentMethods.ResponseValue) response).getD().getMessage());
