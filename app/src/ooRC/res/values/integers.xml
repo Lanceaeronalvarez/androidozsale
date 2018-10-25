@@ -5,8 +5,8 @@
     <integer name="gender_option_visibility">2</integer>
     <integer name="banner_column_count_portrait">2</integer>
     <integer name="banner_column_count_landscape">2</integer>
-    <integer name="item_image_width">350</integer>
-    <integer name="item_image_height">540</integer>
+    <integer name="item_image_width">225</integer>
+    <integer name="item_image_height">360</integer>
     <integer name="banner_mobile_width">423</integer>
     <integer name="banner_mobile_height">143</integer>
     <integer name="banner_tablet_width">320</integer>

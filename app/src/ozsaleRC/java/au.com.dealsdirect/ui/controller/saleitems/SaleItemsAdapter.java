@@ -90,10 +90,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     public void computeItemViewDimensions() {
-        ImageUtils.Grid gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width),
-                (int) getInteger(R.integer.item_image_height), (float) ScreenUtils.getScreenWidth(mContext), 3);
-        if(!mPresenter.isTablet()) gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width),
-                (int) getInteger(R.integer.item_image_height), (float) ScreenUtils.getScreenWidth(mContext), 3, 4);
+        int screenDensity = (int) ScreenUtils.getScreenDensity(mContext);
+        ImageUtils.Grid gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width) * screenDensity,
+                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mContext), 3);
+        if(!mPresenter.isTablet()) gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width) * screenDensity,
+                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mContext), 3, 4);
         mColumnCount = gridDefinition.getColumn();
         mComputedPair = new Pair<>((int) gridDefinition.getItemWidth(),(int) gridDefinition.getItemHeight());
     }
