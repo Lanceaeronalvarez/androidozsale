@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
@@ -283,8 +284,6 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mPaypalCreditButton.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
     }
 
-    }
-
     @Override
     public void onCardFormSubmit() {
         hideKeyboard();
@@ -451,6 +450,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
     @Override
     public void onVisaCheckoutButtonClicked() {
-        mVcoPresenter.payWithVisaCheckout(Double.valueOf(mCartTotalCost));
+        if(isFromCart && !mCartTotalCost.isEmpty()) {
+            mVcoPresenter.payWithVisaCheckout(Double.valueOf(mCartTotalCost));
+        } else {
+            //TODO: should call Flow for addPaymentMethod
+            return;
+        }
     }
 }
