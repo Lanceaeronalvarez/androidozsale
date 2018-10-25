@@ -115,14 +115,16 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         mToolbarRightButton.setVisibility(View.INVISIBLE);
         mTitleTextView.setText(getString(R.string.account_orders));
 
-        if (!mHasSavedInstance) {
-            mCheckoutDetailView = mCheckoutController = CheckoutController.newInstance();
-            mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
+        mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
+
+        if (!mHasSavedInstance || mActivity.getCheckoutController() == null) {
+            mCheckoutController = CheckoutController.newInstance();
             mCheckoutDetailRouter.setRoot(RouterTransaction.with(mCheckoutController).tag(getString(R.string.checkout_controller)));
         } else {
             mCheckoutController = mActivity.getCheckoutController();
-            mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
         }
+
+        mCheckoutDetailView = mCheckoutController;
 
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
         mRecyclerView.setAdapter(mAdapter);
