@@ -144,13 +144,37 @@ public class CurrentReturnsController extends BasePullToRefreshController
 //            getCurrentReturnItems(mCurrentReturns);
         }
 
+        CurrentReturnsController currentController = this;
+        newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
+
+            @Override
+            public void onChangeStarted(@Nullable Controller to,
+                                        @Nullable Controller from, boolean isPush,
+                                        @NonNull ViewGroup container,
+                                        @NonNull ControllerChangeHandler handler) {
+
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to,
+                                          @Nullable Controller from, boolean isPush,
+                                          @NonNull ViewGroup container,
+                                          @NonNull ControllerChangeHandler handler) {
+                if (to == currentController) {
+                    updateToolbar();
+                }
+            }
+        };
         getRouter().addChangeListener(newControllerChangeHandler);
     }
 
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
-        getRouter().removeChangeListener(newControllerChangeHandler);
+        if (newControllerChangeHandler != null) {
+            getRouter().removeChangeListener(newControllerChangeHandler);
+            newControllerChangeHandler = null;
+        }
         super.onDestroyView(view);
     }
 
@@ -268,25 +292,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
         return new GetReturnDetailRequest(itemID);
     }
 
-    ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
-
-        @Override
-        public void onChangeStarted(@Nullable Controller to,
-                                    @Nullable Controller from, boolean isPush,
-                                    @NonNull ViewGroup container,
-                                    @NonNull ControllerChangeHandler handler) {
-
-        }
-
-        @Override
-        public void onChangeCompleted(@Nullable Controller to,
-                                      @Nullable Controller from, boolean isPush,
-                                      @NonNull ViewGroup container,
-                                      @NonNull ControllerChangeHandler handler) {
-
-            updateToolbar();
-        }
-    };
+    ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     private void updateToolbar(){
         mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);

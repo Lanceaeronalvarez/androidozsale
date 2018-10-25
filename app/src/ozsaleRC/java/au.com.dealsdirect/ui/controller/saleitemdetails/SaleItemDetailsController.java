@@ -353,6 +353,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         ImageUtils.loadImageImmediate(mActivity, mItemImageUrl, mProductSharedImage, null);
 
         if (mHasSavedInstance) {
+            SaleItemDetailsController currentController = this;
             newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
 
                 @Override
@@ -368,8 +369,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                               @Nullable Controller from, boolean isPush,
                                               @NonNull ViewGroup container,
                                               @NonNull ControllerChangeHandler handler) {
-                    mPresenter.loadSaleItemDetails(mSeoIdentifierId);
-                    mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                    if (to == currentController) {
+                        mPresenter.loadSaleItemDetails(mSeoIdentifierId);
+                        mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                    }
                 }
             };
             getRouter().addChangeListener(newControllerChangeHandler);

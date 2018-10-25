@@ -255,6 +255,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private PaymentMethod mLastUserPaymentMethod;
     private boolean mHasSavedInstance = false;
 
+    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
+
     public static CheckoutController newInstance() {
         return new CheckoutController(
                 new BundleBuilder(new Bundle())
@@ -417,6 +419,15 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
+    protected void onDestroyView(@NonNull View view) {
+        if (newControllerChangeHandler != null) {
+            getRouter().removeChangeListener(newControllerChangeHandler);
+            newControllerChangeHandler = null;
+        }
+        super.onDestroyView(view);
+    }
+
+    @Override
     public void onOrientationChanged(Configuration newConfiguration) {
         showMyPayDetails(mValue, mOurpay);
     }
@@ -438,7 +449,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
 
         //Code for returning to checkout, call reload
-        getRouter().addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+        CheckoutController currentController = this;
+        newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
 
@@ -446,11 +458,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             @Override
             public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                if (to instanceof CheckoutController && (mActivity != null && mActivity.isAuthorized())) {
+                if (to == currentController && (mActivity != null && mActivity.isAuthorized())) {
                     loadCart();
                 }
             }
-        });
+        };
+        getRouter().addChangeListener(newControllerChangeHandler);
 
         if (mVcoPresenter.isVisaCheckoutEnabled()) {
             mVcoPresenter.setupVisaCheckout();

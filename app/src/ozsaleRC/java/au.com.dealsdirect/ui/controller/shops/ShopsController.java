@@ -234,6 +234,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         displayBanners();
 
         if (mHasSavedInstance) {
+            ShopsController currentController = this;
             newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
 
                 @Override
@@ -249,9 +250,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                                               @Nullable Controller from, boolean isPush,
                                               @NonNull ViewGroup container,
                                               @NonNull ControllerChangeHandler handler) {
-
-                    mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
-                    mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                    if (to == currentController) {
+                        mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
+                        mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                    }
                 }
             };
             getRouter().addChangeListener(newControllerChangeHandler);

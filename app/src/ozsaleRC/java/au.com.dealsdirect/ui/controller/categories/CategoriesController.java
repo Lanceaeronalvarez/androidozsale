@@ -128,6 +128,7 @@ public class CategoriesController extends BaseController
         mActivity.setCategoriesController(this);
         hideKeyboard();
         if (mHasSavedInstance) {
+            CategoriesController currentController = this;
             newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
 
                 @Override
@@ -143,10 +144,11 @@ public class CategoriesController extends BaseController
                                               @Nullable Controller from, boolean isPush,
                                               @NonNull ViewGroup container,
                                               @NonNull ControllerChangeHandler handler) {
-
-                    if (from == null || mCategories == null) {
-                        mPresenter.callGetCategoryTree();
-                        mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                    if (to == currentController) {
+                        if (from == null || mCategories == null) {
+                            mPresenter.callGetCategoryTree();
+                            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                        }
                     }
                 }
             };

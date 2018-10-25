@@ -153,6 +153,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         if (mHasSavedInstance) {
+            AccountController currentController = this;
             newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
 
                 @Override
@@ -168,10 +169,11 @@ public class AccountController extends BaseController implements AccountMvpView,
                                               @Nullable Controller from, boolean isPush,
                                               @NonNull ViewGroup container,
                                               @NonNull ControllerChangeHandler handler) {
-
-                    createAccountItems();
-                    mPresenter.loadAccountItems(mAccountItems);
-                    mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                    if (to == currentController) {
+                        createAccountItems();
+                        mPresenter.loadAccountItems(mAccountItems);
+                        mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                    }
                 }
             };
             getRouter().addChangeListener(newControllerChangeHandler);

@@ -81,6 +81,7 @@ public class BannerFiltersController extends BaseController implements BannerFil
         mTitleText.setText(getResources().getString(R.string.category_title));
 
         if (mHasSavedInstance) {
+            BannerFiltersController currentController = this;
             newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
 
                 @Override
@@ -96,8 +97,10 @@ public class BannerFiltersController extends BaseController implements BannerFil
                                               @Nullable Controller from, boolean isPush,
                                               @NonNull ViewGroup container,
                                               @NonNull ControllerChangeHandler handler) {
-                    mPresenter.callGetCategoryTree();
-                    mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                    if (to == currentController) {
+                        mPresenter.callGetCategoryTree();
+                        mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                    }
                 }
             };
             getRouter().addChangeListener(newControllerChangeHandler);
