@@ -209,8 +209,10 @@ public class HomeController extends BaseController implements HomeMvpView {
         mBottomNavigationView.setCurrentItem(mDefaultTab);
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
-            if (!mActivity.getMainController().shouldBottomNavigationViewEnabled() ||
-                mActivity.getMainController().isHomeViewPagerDragging()) {
+            MainController mainController = mActivity.getMainController();
+
+            if (!mainController.shouldBottomNavigationViewEnabled() ||
+                            mainController.isHomeViewPagerDragging()) {
                 return false;
             }
             
@@ -219,7 +221,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 if (mIsInitialSavedInstanceLoad) {
                     position = mSavedIndex;
                 } else {
-                    mActivity.getMainController().goToPage(MainController.SHOP_INDEX);
+                    mainController.goToPage(MainController.SHOP_INDEX);
                 }
 
                 Controller checkoutController = getCurrentControllerOnRouter(mCheckoutRouter);

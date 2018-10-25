@@ -15,7 +15,7 @@ import java.lang.reflect.Field;
 
 public class MainCustomViewPager extends ViewPager {
 
-    private boolean isAllowSwiping = true;
+    private boolean mIsSwipingAllowed = true;
     public MainCustomViewPager(Context context) {
         super(context);
         setMyScroller();
@@ -34,7 +34,7 @@ public class MainCustomViewPager extends ViewPager {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         // Never allow swiping to switch between pages
-        if (this.isAllowSwiping) {
+        if (mIsSwipingAllowed) {
             try {
                 return super.onInterceptTouchEvent(event);
             } catch (IllegalArgumentException ex) {
@@ -48,7 +48,7 @@ public class MainCustomViewPager extends ViewPager {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // Never allow swiping to switch between pages
-        if (this.isAllowSwiping) {
+        if (mIsSwipingAllowed) {
             try {
                 return super.onTouchEvent(event);
 
@@ -84,8 +84,11 @@ public class MainCustomViewPager extends ViewPager {
         }
     }
 
-    public void setSwipeable(boolean isSwipeable){
-        this.isAllowSwiping  = isSwipeable;
+    public void setIsSwipeable(boolean isSwipeable){
+        mIsSwipingAllowed = isSwipeable;
     }
 
+    public boolean isSwipeable() {
+        return mIsSwipingAllowed;
+    }
 }

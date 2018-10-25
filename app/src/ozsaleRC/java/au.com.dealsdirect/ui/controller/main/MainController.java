@@ -162,16 +162,20 @@ public class MainController extends BaseController implements MainMvpView {
         mHomeViewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_UP:
-                        mIsHomeViewPagerDragging = false;
-                        break;
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_MOVE:
-                        mIsHomeViewPagerDragging = true;
-                        break;
-                    default:
-                        break;
+                if (mHomeViewPager.isSwipeable()) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_UP:
+                            mIsHomeViewPagerDragging = false;
+                            break;
+                        case MotionEvent.ACTION_DOWN:
+                        case MotionEvent.ACTION_MOVE:
+                            mIsHomeViewPagerDragging = true;
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    mIsHomeViewPagerDragging = false;
                 }
                 return false;
             }
@@ -192,7 +196,18 @@ public class MainController extends BaseController implements MainMvpView {
 
     public void setViewpagerDraggable(boolean isDraggable) {
         if (mHomeViewPager != null) {
-            mHomeViewPager.setSwipeable(isDraggable);
+            mHomeViewPager.setIsSwipeable(isDraggable);
+        }
+        if (!isDraggable) {
+            mIsHomeViewPagerDragging = false;
+        }
+    }
+
+    public boolean getViewpagerDraggable() {
+        if (mHomeViewPager != null) {
+            return mHomeViewPager.isSwipeable();
+        } else {
+            return false;
         }
     }
 
