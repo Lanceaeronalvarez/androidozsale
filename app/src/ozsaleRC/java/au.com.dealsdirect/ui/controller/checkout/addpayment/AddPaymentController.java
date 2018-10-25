@@ -278,9 +278,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
     private void checkVisiblePaymentButtons() {
         mPayButton.setVisibility(View.VISIBLE);
-        mPaypalButton.setVisibility(isFromCart && mPresenter.isPayPalEnabled() ? View.VISIBLE : View.GONE);
+        mPaypalButton.setVisibility(mPresenter.isPayPalEnabled() ? View.VISIBLE : View.GONE);
         mMasterpassButton.setVisibility(isFromCart && mPresenter.isMasterPassEnabled() && !mIsOurpaySelectDeliveryMethod ? View.VISIBLE : View.GONE);
-        mPaypalCreditButton.setVisibility(isFromCart && mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
+        mPaypalCreditButton.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
+    }
+
     }
 
     @Override
