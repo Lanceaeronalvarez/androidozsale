@@ -527,6 +527,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void loadCart() {
+        if (mPresenter == null || mActivity == null) return;
 
         if (mPresenter.checkIsLoggedIn()) {
             RxBus.instance().post(IntrospectionUtils.EVENT_CHECKOUT_SCREEN);

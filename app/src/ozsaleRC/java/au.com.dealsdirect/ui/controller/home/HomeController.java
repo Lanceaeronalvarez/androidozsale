@@ -350,7 +350,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void resetCheckoutRouter() {
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
         mActivity.setCheckoutRouter(mCheckoutRouter);
-        if (!mHasSavedStateInstance) {
+        if (!mHasSavedStateInstance || mActivity.getCheckoutController() == null) {
             if (!mPresenter.isTablet()) {
                 Controller checkoutController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
                 mCheckoutRouter.setRoot(RouterTransaction.with(checkoutController)
@@ -487,7 +487,11 @@ public class HomeController extends BaseController implements HomeMvpView {
             if (mActivity.isAuthorized()) {
                 Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (controller instanceof CheckoutMvpView) {
-                    mCheckoutMvpView.loadCart();
+                    if (mCheckoutMvpView == null) {
+                        resetCheckoutRouter();
+                    } else {
+                        mCheckoutMvpView.loadCart();
+                    }
                 }
             }
         }
