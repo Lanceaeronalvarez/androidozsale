@@ -548,8 +548,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
-        mPtrFrameLayout.setPullToRefresh(true); //default true
-
         mIsLoadingProgress = false;
 
         if (items.size() == 0 && mSaleItemsPageNumber != 0) {
