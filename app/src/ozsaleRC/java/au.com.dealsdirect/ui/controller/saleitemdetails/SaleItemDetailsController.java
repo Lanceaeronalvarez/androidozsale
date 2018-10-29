@@ -636,6 +636,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             //modify Initial state depending on the result of all variant's isSoldOut
             mAddToCartButton.setText(!mIsSoldOutCombined ? R.string.add_to_cart : R.string.sold_out);
             mAddToCartButton.setEnabled(!mIsSoldOutCombined);
+            mAddToCartButton.bringToFront();
 
             mSizesFlowLayout.setAdapter(mSizesAdapter);
 
@@ -651,6 +652,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
                     mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
                     mAddToCartButton.setEnabled(!isSizeSoldOut);
+                    mAddToCartButton.bringToFront();
 
                     mDidSelectSize = true;
 
