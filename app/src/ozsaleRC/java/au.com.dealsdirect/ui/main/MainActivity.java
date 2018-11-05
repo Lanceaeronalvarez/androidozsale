@@ -174,11 +174,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         if (!mAppHasSavedInstance) {
             mMainController = MainController.newInstance();
-            showSplashScreen();
-            onNewIntent(getIntent());
         }
 
-
+        splashShownCallback();
+        onNewIntent(getIntent());
 
         setUp();
 
@@ -789,28 +788,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void splashShownCallback() {
-        if (!mAppHasSavedInstance) {
-            ScreenUtils.setStatusBarColor(this, R.color.status_bar);
+        ScreenUtils.setStatusBarColor(this, R.color.status_bar);
 
-            if (Settings.getIsMultiCountry() && mPresenter.defaultCountryId().isEmpty()) {
-                if (!mIsShowingStrictConsentUI) mRouter.setRoot(RouterTransaction.with(new CountryController(true)));
-                return;
-            }
-
-            Settings.Country country = Settings.getIsMultiCountry() ?
-                    Settings.getCountryWithId(mPresenter.defaultCountryId()) :
-                    Settings.getDefaultCountry() ;
-
-            mPresenter.setCountry(country);
-            setAppCountries(country);
-            setUpAfterCountrySet();
-        } else {
-            if (!hasShownSplash) {
-                hasShownSplash = true;
-                if (getHomeRouter().getBackstackSize() > 1) getHomeRouter().popCurrentController();
-                getMainController().getHomeController().showBottomNav();
-            }
+        if (Settings.getIsMultiCountry() && mPresenter.defaultCountryId().isEmpty()) {
+            if (!mIsShowingStrictConsentUI) mRouter.setRoot(RouterTransaction.with(new CountryController(true)));
+            return;
         }
+
+        Settings.Country country = Settings.getIsMultiCountry() ?
+                Settings.getCountryWithId(mPresenter.defaultCountryId()) :
+                Settings.getDefaultCountry() ;
+
+        mPresenter.setCountry(country);
+        setAppCountries(country);
+        setUpAfterCountrySet();
     }
 
     public void setUpAfterCountrySet(){
