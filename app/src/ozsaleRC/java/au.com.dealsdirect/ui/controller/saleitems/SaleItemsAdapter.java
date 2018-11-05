@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -90,11 +91,14 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     public void computeItemViewDimensions() {
+
+        int orientation = mContext.getResources().getConfiguration().orientation;
+        boolean isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE;
         int screenDensity = (int) ScreenUtils.getScreenDensity(mContext);
         ImageUtils.Grid gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width) * screenDensity,
-                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mContext), 3);
+                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mContext),3);
         if(!mPresenter.isTablet()) gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width) * screenDensity,
-                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mContext), 3, 4);
+                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mContext), isLandscape ? 4 : 3, 4);
         mColumnCount = gridDefinition.getColumn();
         mComputedPair = new Pair<>((int) gridDefinition.getItemWidth(),(int) gridDefinition.getItemHeight());
     }
