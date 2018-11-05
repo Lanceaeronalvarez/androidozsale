@@ -215,6 +215,8 @@ public class GetBannerResponse {
             return title;
         }
 
+        public Boolean getIsClickable() { return isClickable; }
+
         public List<Banner> getBanners() {
             for (Banner banner : banners) {
                 banner.setGroup(this);

@@ -26,6 +26,7 @@ import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * dp Created by Admin on 6/7/17.
@@ -85,6 +86,8 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
                 layout.setLayoutParams(params);
             }
         }
+
+        Disposable subscription;
     }
 
     static class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -133,16 +136,22 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
             holder.overlay.setEnabled(false);
         }
 
-        RxView.clicks(holder.layout)
-            .throttleFirst(1000, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(action -> mPresenter.selectBanner(
-                    item.getDestinationId(),
-                    item.getDescription(),
-                    item.getId(),
-                    position,
-                    imgUrl,
-                    item.getIsAvailable()));
+        if (holder.subscription != null) {
+            holder.subscription.dispose();
+        }
+
+        if (item.getGroup().getIsClickable()) {
+            holder.subscription = RxView.clicks(holder.layout)
+                    .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(action -> mPresenter.selectBanner(
+                            item.getDestinationId(),
+                            item.getDescription(),
+                            item.getId(),
+                            position,
+                            imgUrl,
+                            item.getIsAvailable()));
+        }
     }
 
     @Override
@@ -170,6 +179,9 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
     @Override
     public void onViewRecycled(ViewHolder holder) {
+        if (holder.subscription != null) {
+            holder.subscription.dispose();
+        }
         ImageUtils.clearImage(holder.image);
         super.onViewDetachedFromWindow(holder);
     }
