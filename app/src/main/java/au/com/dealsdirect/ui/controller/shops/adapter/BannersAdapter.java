@@ -128,7 +128,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), mWidth, mHeight);
 
 
-        ImageUtils.loadImage(mContext, imgUrl, holder.image);
+        ImageUtils.loadImage(imgUrl, holder.image);
         if (!item.getIsAvailable()) {
             holder.overlay.setEnabled(false);
         }
@@ -166,6 +166,12 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         String title = position < getItemCount() ? mSales.get(position).getGroup().getTitle() : "";
 
         holder.headerText.setText(title == null ? "" : title);
+    }
+
+    @Override
+    public void onViewRecycled(ViewHolder holder) {
+        ImageUtils.clearImage(holder.image);
+        super.onViewDetachedFromWindow(holder);
     }
 
     @Override

@@ -76,7 +76,7 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<O
                 holder.productSizeTextView.setText(productSize);
             }
 
-            ImageUtils.loadImage(mContext, LegacyStringImageUtils.generateImageUrl(brandId, imageId, fileName),
+            ImageUtils.loadImage(LegacyStringImageUtils.generateImageUrl(brandId, imageId, fileName),
                     holder.productImageView);
 
         }

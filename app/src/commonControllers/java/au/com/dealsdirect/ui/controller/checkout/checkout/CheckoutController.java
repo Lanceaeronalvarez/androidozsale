@@ -822,9 +822,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             if (paymentMethod.getPaymentType().equalsIgnoreCase("VisaCheckoutBraintree") || paymentMethod.getPaymentType().equalsIgnoreCase("VisaCheckoutCyberSource")) {
                 paymentMethodImageUrl = visaCheckoutLogoUrl;
             }
-            ImageUtils.loadImage(mActivity
-                    , paymentMethodImageUrl
-                    , mPaymentLayout.findViewById(R.id.partial_checkout_payment_image));
+            ImageUtils.loadImage(paymentMethodImageUrl,
+                    mPaymentLayout.findViewById(R.id.partial_checkout_payment_image));
 
             mAddNewPaymentLayout.setVisibility(View.GONE);
             mPaymentLayout.setVisibility(View.VISIBLE);

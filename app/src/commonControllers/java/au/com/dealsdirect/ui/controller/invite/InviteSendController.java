@@ -42,6 +42,7 @@ import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -202,11 +203,7 @@ public class InviteSendController extends BasePullToRefreshController implements
         mTitleText.setText(getString(R.string.account_invite_friend));
         mRightView.setVisibility(View.INVISIBLE);
 
-
-        Glide.with(mActivity)
-                .load(R.drawable.invite_friend_vouchers_image)
-                .placeholder(R.drawable.invite_friend_vouchers_image)
-                .into(mImageView);
+        mImageView.setImageDrawable(mActivity.getDrawable(R.drawable.invite_friend_vouchers_image));
 
         String twitterLink = mPresenter.getFollowUsTwitterLink();
         String facebookLink = mPresenter.getFollowUsFbLink();

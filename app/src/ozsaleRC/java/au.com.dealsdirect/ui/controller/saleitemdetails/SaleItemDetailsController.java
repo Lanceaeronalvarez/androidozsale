@@ -350,7 +350,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mLoadImagesListener = this;
         mProductSharedImage.setTransitionName(getResources().getString(R.string.transition_sale_image_indexed, mFromPosition));
 
-        ImageUtils.loadImageImmediate(mActivity, mItemImageUrl, mProductSharedImage, null);
+        ImageUtils.loadImageImmediate(mItemImageUrl, mProductSharedImage, null);
 
         if (mHasSavedInstance) {
             SaleItemDetailsController currentController = this;

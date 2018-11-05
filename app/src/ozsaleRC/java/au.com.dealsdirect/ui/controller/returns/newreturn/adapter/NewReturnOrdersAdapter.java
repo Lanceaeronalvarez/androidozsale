@@ -109,7 +109,7 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
 
         String imageUrl = LegacyStringImageUtils.generateImageUrl(imageBrandId, imageId, imageFileName);
 
-        ImageUtils.loadImageImmediate(mContext, imageUrl, holder.newReturnItemImageView, null);
+        ImageUtils.loadImageImmediate(imageUrl, holder.newReturnItemImageView, null);
     }
 
     @Override

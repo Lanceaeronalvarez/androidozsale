@@ -123,9 +123,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
         String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
 
-//        ImageUtils.clearImage(mContext,holder.mSaleItemImage);
-
-        ImageUtils.loadImage(mContext, url, holder.image);
+        ImageUtils.loadImage(url, holder.image);
 
         holder.image.setTransitionName(mContext.getString(R.string.transition_sale_image_indexed, position));
 
@@ -148,6 +146,12 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                                 mData.get(position).getSkus().get(0).getId(),
                         mSaleId));
 
+    }
+
+    @Override
+    public void onViewRecycled(ViewHolder holder) {
+        ImageUtils.clearImage(holder.image);
+        super.onViewDetachedFromWindow(holder);
     }
 
     public void replaceData(List<GetSaleItemsResponse.Products> saleItems) {

@@ -64,7 +64,7 @@ public class ReturnDetailsAdapter extends RecyclerView.Adapter<ReturnDetailsView
         Log.d("itemiterator", "position = "+position+ "itemssize  = "+itemSize +" , brandid = "+brandId+" , imageid = "+imageId );
 
         String imageUrl = LegacyStringImageUtils.generateImageUrl(brandId,imageId,fileName);
-        ImageUtils.loadImage(mContext, imageUrl, holder.myReturnsDetailsProductImageView);
+        ImageUtils.loadImage(imageUrl, holder.myReturnsDetailsProductImageView);
 
 
         holder.myReturnsDetailsProductNameValueTextView.setText(mReturnDetailsList.get(position).getItem());
