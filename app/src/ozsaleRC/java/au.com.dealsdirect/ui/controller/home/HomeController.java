@@ -350,18 +350,21 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void resetCheckoutRouter() {
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
         mActivity.setCheckoutRouter(mCheckoutRouter);
+        Controller controller;
+        String tag;
+
         if (!mHasSavedStateInstance || mActivity.getCheckoutController() == null) {
             if (!mPresenter.isTablet()) {
-                Controller checkoutController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
-                mCheckoutRouter.setRoot(RouterTransaction.with(checkoutController)
-                        .tag(getActivity().getResources().getString(R.string.checkout_controller)));
-                mCheckoutMvpView = (CheckoutMvpView) checkoutController;
+                controller = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
+                tag = getActivity().getResources().getString(R.string.checkout_controller);
             } else {
-                Controller checkoutHostController = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST);
-                mCheckoutRouter.setRoot(RouterTransaction.with(checkoutHostController)
-                        .tag(getActivity().getResources().getString(R.string.checkout_host_controller)));
-                mCheckoutMvpView = (CheckoutMvpView) checkoutHostController;
+                controller = ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST);
+                tag = getActivity().getResources().getString(R.string.checkout_host_controller);
             }
+            mCheckoutRouter.setRoot(RouterTransaction.with(controller).tag(tag));
+            mCheckoutMvpView = (CheckoutMvpView) controller;
+        } else {
+            mCheckoutMvpView = mActivity.getCheckoutController();
         }
     }
 
@@ -487,11 +490,9 @@ public class HomeController extends BaseController implements HomeMvpView {
             if (mActivity.isAuthorized()) {
                 Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (controller instanceof CheckoutMvpView) {
-                    if (mCheckoutMvpView == null) {
-                        resetCheckoutRouter();
-                    } else {
-                        mCheckoutMvpView.loadCart();
-                    }
+                    if (mCheckoutMvpView == null) { resetCheckoutRouter(); }
+
+                    if (!mCheckoutMvpView.isCartLoading()) { mCheckoutMvpView.loadCart(); }
                 }
             }
         }

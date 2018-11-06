@@ -148,8 +148,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                                 }
                                 responseValue.getUserPaymentMethods().set(i,paymentMethod);
                             }
-                            getMvpView().setPaymentList(responseValue.getUserPaymentMethods());
                             getMvpView().showPaymentDetails(responseValue.getD().getValue().getLastPaymentMethod());
+                            getMvpView().setPaymentList(responseValue.getUserPaymentMethods());
                             getMvpView().hideLoading();
                             mFetchUserPaymentMethodsFinished = true;
 

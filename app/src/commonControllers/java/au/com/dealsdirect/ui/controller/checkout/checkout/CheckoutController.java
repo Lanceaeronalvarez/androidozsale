@@ -786,14 +786,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             showPaymentButtons();
             mLastUserPaymentMethod = null;
-            return;
-
-        } else if (mActivity.getPaymentMethodSelected() == null) {
+        } else {
             mLastUserPaymentMethod = paymentMethod;
         }
-
-        displayPaymentDetails();
-
     }
 
     private void displayPaymentDetails() {
@@ -900,6 +895,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 getSelectedDeliveryOption());
         mActivity.setPaymentMethodSelected(paymentMethod);
         showMyPayDetails(mValue, mOurpay);
+        displayPaymentDetails();
     }
 
     private String getSelectedDeliveryOption() {
