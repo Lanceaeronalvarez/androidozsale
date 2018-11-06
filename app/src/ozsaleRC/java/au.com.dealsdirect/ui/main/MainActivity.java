@@ -549,10 +549,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
 
-            if (currentController instanceof CheckoutHostController) {
-                ((CheckoutHostController) currentController).getDisplayRouter().popToRoot();
+            if (currentController instanceof  CheckoutHostController || currentController instanceof AddPaymentController) {
+                Router router = currentController instanceof CheckoutHostController ? ((CheckoutHostController) currentController).getDisplayRouter() : getCurrentRouter();
+                if (router.getBackstackSize() > 2) {
+                    router.popToRoot();
+                } else {
+                    router.handleBack();
+                }
             } else {
-                currentController.getRouter().popToRoot();
+                currentController.getRouter().handleBack();
             }
         }
     }
