@@ -20,14 +20,17 @@ public class BottomNavigationViewHelper {
             shiftingMode.setAccessible(true);
             shiftingMode.setBoolean(menuView, false);
             shiftingMode.setAccessible(false);
-            for (int i = 0; i < menuView.getChildCount(); i++) {
-                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
-                //noinspection RestrictedApi
-                item.setShiftingMode(false);
-                // set once again checked value, so view will be updated
-                //noinspection RestrictedApi
-                item.setChecked(item.getItemData().isChecked());
-            }
+//            as said here https://stackoverflow.com/questions/40176244/how-to-disable-bottomnavigationview-shift-mode
+//            you can use app:app:labelVisibilityMode="labeled" tag in xml to show bottomnavlabel
+//            for (int i = 0; i < menuView.getChildCount(); i++) {
+//                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+//                //noinspection RestrictedApi
+//                item.setShiftingMode(false);
+//                item.setShifting(false);
+//                // set once again checked value, so view will be updated
+//                //noinspection RestrictedApi
+//                item.setChecked(item.getItemData().isChecked());
+//            }
         } catch (NoSuchFieldException e) {
             Log.e("BNVHelper", "Unable to get shift mode field", e);
         } catch (IllegalAccessException e) {
