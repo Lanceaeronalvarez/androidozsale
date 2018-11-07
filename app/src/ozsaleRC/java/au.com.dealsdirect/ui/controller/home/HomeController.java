@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -419,6 +421,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         mIsInitialSavedInstanceLoad = false;
         setVisibleContainer(TAB_SHOP_INDEX);
+        containerWillBeDisplayed(mShopContainer);
     }
 
     @Override
@@ -433,6 +436,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         mActivity.setDraggableViewPager(false);
         mIsInitialSavedInstanceLoad = false;
         setVisibleContainer(TAB_CATEGORIES_INDEX);
+        containerWillBeDisplayed(mCategoriesContainer);
     }
 
     @Override
@@ -450,6 +454,8 @@ public class HomeController extends BaseController implements HomeMvpView {
                 ((BaseController) controller).refreshContents();
             }
         }
+
+        containerWillBeDisplayed(mAccountsContainer);
     }
 
     @Override
@@ -484,6 +490,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
 
         mIsInitialSavedInstanceLoad = false;
+        containerWillBeDisplayed(mContactContainer);
     }
 
     @Override
@@ -514,6 +521,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             }
         }
         mIsInitialSavedInstanceLoad = false;
+        containerWillBeDisplayed(mCheckoutContainer);
     }
 
     public boolean isAccountsActive() {
@@ -729,4 +737,12 @@ public class HomeController extends BaseController implements HomeMvpView {
                     .popChangeHandler(new HorizontalChangeHandler()));
         }
     }
+
+    private void containerWillBeDisplayed(ViewGroup container){
+        if (container != null) {
+            Animation fadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.splash_fade_in);
+            container.startAnimation(fadeIn);
+        }
+    }
+
 }

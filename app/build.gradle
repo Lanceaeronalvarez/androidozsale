@@ -730,7 +730,7 @@ dependencies {
     // photo view
     compile "com.github.chrisbanes:PhotoView:$rootProject.photoViewVersion"
     // bottom navigation
-    compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
+    compile 'com.aurelhubert:ahbottomnavigation:2.1.0'
     // circle indicator
     compile 'me.relex:circleindicator:1.2.2@aar'
 
