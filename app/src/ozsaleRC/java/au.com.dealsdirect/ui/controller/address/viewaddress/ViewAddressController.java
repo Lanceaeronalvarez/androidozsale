@@ -146,6 +146,12 @@ public class ViewAddressController extends BaseController implements ViewAddress
     }
 
     @Override
+    public void refreshContents() {
+        super.refreshContents();
+        mPresenter.loadAddresses();
+    }
+
+    @Override
     public void showAddresses(GetAddresses.ResponseValue responseValue) {
         Timber.d("ViewAddressController", "addresses response");
         if (responseValue.getD().getValue() != null) {

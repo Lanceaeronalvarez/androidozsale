@@ -411,6 +411,10 @@ public class HomeController extends BaseController implements HomeMvpView {
                     mShopRouter.popToRoot();
                 }
             }
+
+            if (controller instanceof BaseController) {
+                ((BaseController) controller).refreshContents();
+            }
         }
 
         mIsInitialSavedInstanceLoad = false;
@@ -419,6 +423,13 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showSecondTabController() {
+        if (mCategoriesRouter != null) {
+            Controller controller = getCurrentControllerOnRouter(mCategoriesRouter);
+            if (controller instanceof BaseController) {
+                ((BaseController) controller).refreshContents();
+            }
+        }
+
         mActivity.setDraggableViewPager(false);
         mIsInitialSavedInstanceLoad = false;
         setVisibleContainer(TAB_CATEGORIES_INDEX);
@@ -430,9 +441,14 @@ public class HomeController extends BaseController implements HomeMvpView {
         setVisibleContainer(TAB_ACCOUNT_INDEX);
         mActivity.setDraggableViewPager(false);
 
-        int size = mAccountsRouter.getBackstack().size();
-        if (mAccountsRouter.getBackstack().get(size - 1).controller() instanceof AccountMvpView) {
-            ((AccountMvpView) mAccountsRouter.getBackstack().get(size - 1).controller()).initLoginDrawable();
+        if (mAccountsRouter != null) {
+            Controller controller = getCurrentControllerOnRouter(mAccountsRouter);
+            if (controller instanceof AccountMvpView) {
+                ((AccountMvpView) controller).initLoginDrawable();
+            }
+            if (controller instanceof BaseController) {
+                ((BaseController) controller).refreshContents();
+            }
         }
     }
 
@@ -453,16 +469,17 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 }
             });
-        } else {
-            if (mActivity.isAuthorized()) {
-                Controller controller = getCurrentControllerOnRouter(mContactRouter);
-                if (controller instanceof ViewContactsMvpView) {
-                    if (mViewContactsMvpView == null) {
-                        mViewContactsMvpView = mActivity.getContactsController();
-                    }
-
-                    mViewContactsMvpView.getPresenter().loadContacts();
+        } else if (mActivity.isAuthorized() && mContactRouter != null) {
+            Controller controller = getCurrentControllerOnRouter(mContactRouter);
+            if (controller instanceof ViewContactsMvpView) {
+                if (mViewContactsMvpView == null) {
+                    mViewContactsMvpView = mActivity.getContactsController();
                 }
+
+                mViewContactsMvpView.getPresenter().loadContacts();
+            }
+            if (controller instanceof BaseController) {
+                ((BaseController) controller).refreshContents();
             }
         }
 
@@ -471,6 +488,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showFifthTabController() {
+        if (mCheckoutMvpView == null) { resetCheckoutRouter(); }
         mActivity.setDraggableViewPager(false);
         setVisibleContainer(TAB_CHECKOUT_INDEX);
         if (!mActivity.isAuthorized() && !mIsInitialSavedInstanceLoad) {
@@ -486,13 +504,12 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 }
             });
-        } else { //should load cart everytime checkout is clicked on bottom nav
-            if (mActivity.isAuthorized()) {
+        } else if (mActivity.isAuthorized()) {
+            if (!mCheckoutMvpView.isCartLoading()) { mCheckoutMvpView.loadCart(); }
+            if (mCheckoutRouter != null) {
                 Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
-                if (controller instanceof CheckoutMvpView) {
-                    if (mCheckoutMvpView == null) { resetCheckoutRouter(); }
-
-                    if (!mCheckoutMvpView.isCartLoading()) { mCheckoutMvpView.loadCart(); }
+                if (controller instanceof BaseController) {
+                    ((BaseController) controller).refreshContents();
                 }
             }
         }

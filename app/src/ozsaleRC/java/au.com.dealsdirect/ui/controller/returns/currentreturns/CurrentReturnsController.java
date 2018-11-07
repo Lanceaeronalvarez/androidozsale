@@ -108,6 +108,12 @@ public class CurrentReturnsController extends BasePullToRefreshController
     }
 
     @Override
+    public void refreshContents() {
+        super.refreshContents();
+        mPresenter.loadCurrentReturns();
+    }
+
+    @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);

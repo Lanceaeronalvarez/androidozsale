@@ -111,6 +111,12 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     }
 
     @Override
+    public void refreshContents() {
+        super.refreshContents();
+        mPresenter.fetchUserPaymentMethods();
+    }
+
+    @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);

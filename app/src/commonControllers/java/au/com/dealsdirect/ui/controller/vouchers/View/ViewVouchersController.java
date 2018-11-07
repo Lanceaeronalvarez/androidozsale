@@ -101,6 +101,12 @@ public class ViewVouchersController extends BaseController implements ViewVouche
     }
 
     @Override
+    public void refreshContents() {
+        super.refreshContents();
+        mPresenter.loadMyVouchers();
+    }
+
+    @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);

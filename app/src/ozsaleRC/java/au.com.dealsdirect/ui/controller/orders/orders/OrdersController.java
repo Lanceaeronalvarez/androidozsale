@@ -94,6 +94,12 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     }
 
     @Override
+    public void refreshContents() {
+        super.refreshContents();
+        mPresenter.loadOrders();
+    }
+
+    @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);

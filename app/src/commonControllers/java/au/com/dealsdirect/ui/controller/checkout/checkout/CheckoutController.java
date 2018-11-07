@@ -1242,6 +1242,14 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         hidePaymentButtons();
     }
 
+    @Override
+    public void refreshContents() {
+        super.refreshContents();
+        if (!mIsCartLoading) {
+            loadCart();
+        }
+    }
+
     private void ourpayPaymentSubmit() {
         PaymentInfo.setFabricPaymentType(PaymentInfo.isThreeDSecureRequired() ?
                 ActionTracker.PaymentOption.OURPAY3DS.getValue() :

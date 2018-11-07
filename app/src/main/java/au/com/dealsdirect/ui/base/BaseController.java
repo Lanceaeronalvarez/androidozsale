@@ -202,6 +202,10 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     }
 
+    public void refreshContents() {
+        // Override
+    }
+
     public Resources getResource() {
         return mActivity.getResources();
     }
