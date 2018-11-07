@@ -79,7 +79,11 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         holder.quantityLayout.setQuantity(item.qty);
         holder.quantityLayout.setAutoUpdateQuantity(false);
         holder.quantityLayout.setEditTextToNonEditable();
-        holder.subTotal.setText(PriceUtils.getPriceStringValue(item.getSubtotal()));
+
+        int subTotalVisibility = item.qty > 1 ? View.VISIBLE : View.GONE;
+        holder.subTotal.setVisibility(subTotalVisibility);
+        if (holder.subTotalLabel != null) { holder.subTotalLabel.setVisibility(subTotalVisibility); }
+        if(item.qty > 1) { holder.subTotal.setText(PriceUtils.getPriceStringValue(item.getSubtotal())); }
 
         holder.quantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
             @Override
@@ -124,6 +128,9 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         ProductQuantityLayout quantityLayout;
         @BindView(R.id.item_subtotal_price)
         TextView subTotal;
+        @Nullable
+        @BindView(R.id.item_checkout_subtotal_label)
+        TextView subTotalLabel;
         @Nullable
         @BindView(R.id.item_checkout_personalisation_layout)
         PersonalisationLayout personalisationLayout;
