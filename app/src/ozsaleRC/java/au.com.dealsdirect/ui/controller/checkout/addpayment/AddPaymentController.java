@@ -229,6 +229,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             });
 
         } else {
+            mVisaCheckoutButton.setVisibility(View.GONE);
             mMasterpassButton.setVisibility(View.GONE);
             mPaypalCreditButton.setVisibility(View.GONE);
         }
