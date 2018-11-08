@@ -125,6 +125,18 @@
                                     android:src="@drawable/ic_share"
                                     android:visibility="invisible" />
 
+                                <ImageView
+                                    android:id="@+id/product_details_image_animate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_gravity="center"
+                                    android:layout_marginBottom="@dimen/margin_small"
+                                    android:layout_marginTop="@dimen/margin_small"
+                                    android:paddingBottom="@dimen/margin_extra_small"
+                                    android:paddingTop="@dimen/margin_extra_small"
+                                    android:visibility="gone"/>
+
                             </RelativeLayout>
 
                         </FrameLayout>

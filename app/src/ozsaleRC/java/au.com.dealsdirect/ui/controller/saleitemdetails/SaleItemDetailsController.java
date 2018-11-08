@@ -171,7 +171,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     WebView mOldProductPricing;
     @BindView(R.id.main_layout)
     LinearLayout mMainContentLayout;
-
+    @BindView(R.id.product_details_image_animate)
     ImageView mImageViewToAnimate;
 
     int[] mSharedImageLocation;
@@ -800,31 +800,24 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             });
         } else {
             mPresenter.addToCart(request);
-            if (mSharedImageLocation != null) {
-                animateAddToCart();
-            }
+            if (mSharedImageLocation == null) { mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage); }
+            animateAddToCart();
         }
     }
 
     private void animateAddToCart() {
         mProductDetailScrollView.scrollTo(0, 0);
-        mImageViewToAnimate = mActivity.getMainController().getHomeController().getAddToCartImage();
 
         mImageViewToAnimate.setVisibility(View.VISIBLE);
-        mImageViewToAnimate.setX(mSharedImageLocation[0]);
-        mImageViewToAnimate.setY(mSharedImageLocation[1]);
-        mImageViewToAnimate.getLayoutParams().width = mSharedImageLocation[2];
-        mImageViewToAnimate.getLayoutParams().height = mSharedImageLocation[3];
         SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) mProductImagesRv
                 .findViewHolderForLayoutPosition(mProductImagesRvLayoutManager.findLastVisibleItemPosition());
 
         if (mImagesLoaded) {
+            if (vh == null) throw new AssertionError("Viewholder cannot be null");
             mImageViewToAnimate.setImageDrawable(vh.image.getDrawable());
         } else {
             mImageViewToAnimate.setImageDrawable(mProductSharedImage.getDrawable());
         }
-
-        mImageViewToAnimate.bringToFront();
 
         mBottomNavView = mActivity.getMainController().getHomeController().getBottomNavigationView();
         ArrayList<View> potentialViews = new ArrayList<View>();
@@ -836,13 +829,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         float origElevation = mBottomNavView.getElevation();
         mBottomNavView.setElevation(0);
 
+        mImageViewToAnimate
+                .getLocationOnScreen(mSharedImageLocation);
+
         ArcTranslateAnimation anim = new ArcTranslateAnimation(
-                700, Animation.ABSOLUTE,
-                mSharedImageLocation[0],
+                1000, Animation.ABSOLUTE,
+                (float) mSharedImageLocation[0],
                 Animation.ABSOLUTE,
-                mCheckoutLocation[0],
+                (float) mCheckoutLocation[0],
                 Animation.ABSOLUTE,
-                mCheckoutLocation[1]);
+                (float) mCheckoutLocation[1]);
 
         anim.setInterpolator(new LinearInterpolator());
         anim.setAnimationListener(new Animation.AnimationListener() {
@@ -865,7 +861,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         });
 
         mImageViewToAnimate.startAnimation(anim);
-
+        
     }
 
     private List<String> getQualityImages(List<String> images) {

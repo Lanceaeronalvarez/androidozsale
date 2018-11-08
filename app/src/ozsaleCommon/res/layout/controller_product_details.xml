@@ -75,7 +75,6 @@
                                     android:paddingBottom="@dimen/margin_extra_small"
                                     android:paddingTop="@dimen/margin_extra_small" />
 
-
                                 <android.support.v7.widget.RecyclerView
                                     android:id="@+id/productImageRecyclerView"
                                     android:layout_width="match_parent"
@@ -127,6 +126,18 @@
                                     android:paddingLeft="@dimen/margin_large"
                                     android:src="@drawable/ic_share"
                                     android:visibility="invisible" />
+
+                                <ImageView
+                                    android:id="@+id/product_details_image_animate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_gravity="center"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:paddingBottom="5dp"
+                                    android:paddingTop="5dp"
+                                    android:visibility="gone"/>
 
                             </RelativeLayout>
 
