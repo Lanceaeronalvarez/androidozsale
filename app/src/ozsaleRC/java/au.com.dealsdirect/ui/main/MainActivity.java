@@ -37,6 +37,7 @@ import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.braintreepayments.cardform.view.CardForm;
+import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
 import com.visa.checkout.VisaPaymentSummary;
@@ -174,6 +175,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         if (!mAppHasSavedInstance) {
             mMainController = MainController.newInstance();
+            mProfiler.setEndLogTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue());
+            mActionTracker.CVAppLaunch(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue()));
         }
 
         splashShownCallback();
