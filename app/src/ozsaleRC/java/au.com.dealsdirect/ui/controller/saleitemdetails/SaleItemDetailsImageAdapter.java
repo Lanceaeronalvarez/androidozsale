@@ -64,8 +64,28 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     private SaleItemDetailsMvpView mSaleItemDetailsView;
 
     public void replaceData(List<String> data) {
-        mData = data;
-        notifyDataSetChanged();
+        if (shouldUpdateData(mData, data)) {
+            mData = data;
+            notifyDataSetChanged();
+        }
+    }
+
+    private boolean shouldUpdateData(List<String> currentData, List<String> newData) {
+        if(currentData.size() == 0) {
+            return true;
+        }
+
+        if (currentData.size() != newData.size()) {
+            return true;
+        }
+
+        for(int i = 0; i < currentData.size(); i++) {
+            if(!currentData.get(i).equals(newData.get(i))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
