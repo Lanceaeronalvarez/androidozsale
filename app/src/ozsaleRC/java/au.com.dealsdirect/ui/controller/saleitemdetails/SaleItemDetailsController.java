@@ -154,7 +154,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mProductPreviousPriceLabel;
 
     @BindView(R.id.controller_image_frame_layout)
-    FrameLayout mProductDetailsImageLayout;
+    RelativeLayout mProductDetailsImageLayout;
     @BindView(R.id.controller_sale_details_toolbar)
     RelativeLayout mProductDetailsToolbar;
     @BindView(R.id.controller_product_details_title_description)
