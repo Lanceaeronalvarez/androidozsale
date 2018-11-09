@@ -809,6 +809,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductDetailScrollView.scrollTo(0, 0);
 
         mImageViewToAnimate.setVisibility(View.VISIBLE);
+        mImageViewToAnimate.bringToFront();
         SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) mProductImagesRv
                 .findViewHolderForLayoutPosition(mProductImagesRvLayoutManager.findLastVisibleItemPosition());
 

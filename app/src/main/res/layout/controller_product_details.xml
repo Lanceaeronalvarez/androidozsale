@@ -428,18 +428,6 @@
                                                 android:elevation="1dp"
                                                 />
 
-                                            <ImageView
-                                                android:id="@+id/product_details_image_animate"
-                                                android:layout_width="match_parent"
-                                                android:layout_height="match_parent"
-                                                android:layout_alignParentTop="true"
-                                                android:layout_gravity="center"
-                                                android:layout_marginBottom="10dp"
-                                                android:layout_marginTop="10dp"
-                                                android:paddingBottom="5dp"
-                                                android:paddingTop="5dp"
-                                                android:visibility="gone"/>
-
                                         </RelativeLayout>
 
                                     </FrameLayout>
@@ -1002,6 +990,18 @@
                 android:layout_marginRight="5dp"
                 android:enabled="false"
                 android:text="@string/add_to_basket" />
+
+            <ImageView
+                android:id="@+id/product_details_image_animate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:paddingBottom="@dimen/margin_extra_small"
+                android:paddingTop="@dimen/margin_extra_small"
+                android:visibility="gone"/>
 
         </android.support.design.widget.CoordinatorLayout>
 
