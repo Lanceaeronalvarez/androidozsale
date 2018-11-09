@@ -12,7 +12,7 @@
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_default"
+        android:background="@color/white"
         android:paddingBottom="@dimen/padding_default_half"
         android:paddingEnd="@dimen/padding_default"
         android:paddingStart="@dimen/padding_default"

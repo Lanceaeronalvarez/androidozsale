@@ -258,12 +258,10 @@ public class OurpayPanel {
     private View getPanelRemainingRow(String amount) {
 
         View footer = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_panel_row_footer, null, false);
-        footer.setBackground(mBaseActivity.getDrawable(R.drawable.ourpay_layout_remaining_balance_footer));
         TextView textViewAmount = (TextView) footer.findViewById(R.id.textView_amount_total);
         TextView textViewLabel = (TextView) footer.findViewById(R.id.textView_amount_label);
         textViewAmount.setText(amount);
-        textViewAmount.setTextColor(Color.parseColor("#FFE47C0B"));
-        textViewLabel.setText("Remaining Balance");
+        textViewLabel.setText("Total");
         return footer;
     }
 
