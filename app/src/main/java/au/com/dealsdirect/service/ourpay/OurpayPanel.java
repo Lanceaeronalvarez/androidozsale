@@ -73,7 +73,6 @@ public class OurpayPanel {
 
             if (0 != (ourpay.getState() & OurpayState.ERROR)) {
                 mHolderInBorder.addView(getTemplateText(ourpay.getDetails()));
-                mHolderInBorder.setBackground(mBaseActivity.getDrawable(R.drawable.ourpay_layout_border));
 
             } else {
 
@@ -112,7 +111,6 @@ public class OurpayPanel {
 
                 mHolderInBorder.addView(getTemplateText(
                         OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)));
-                mHolderInBorder.setBackground(mBaseActivity.getDrawable(R.drawable.ourpay_layout_border));
                 mPanelHolder.addView(getCartAmountHeader(""), 0);
             } else {
 

@@ -34,7 +34,6 @@ public class OurpayGraph {
         final LinearLayout rootViewLayout;
 
         rootViewLayout = new LinearLayout(context);
-        rootViewLayout.setBackgroundColor(Color.WHITE);
         rootViewLayout.setOrientation(LinearLayout.VERTICAL);
 
         LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -73,6 +72,7 @@ public class OurpayGraph {
                 checkImage.setVisibility(View.GONE);
             }
 
+            viewGroup.addView(generateLineView(context));
             viewGroup.addView(ourpayPanelRow);
 
             generateProgressCircles(circlesContainer, context, transactionsCount);
@@ -105,5 +105,17 @@ public class OurpayGraph {
             }
         }
 
+    }
+
+    private View generateLineView(Context context) {
+        View lineView = new View(context);
+        lineView.setBackgroundColor(context.getResources().getColor(R.color.border_regular));
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.height = 2;
+        lineView.setLayoutParams(layoutParams);
+        return lineView;
     }
 }
