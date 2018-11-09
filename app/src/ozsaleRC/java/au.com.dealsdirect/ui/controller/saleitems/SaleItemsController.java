@@ -469,6 +469,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mIsRecyclerViewScrollIdle = newState == 0;
                 if (newState != SCROLL_STATE_IDLE) {
                     hideKeyboard();
+                } else {
+                    // Snaps search bar to expanded or hidden depending on whether
+                    // t is halfway to 0 or 1
+                    float t = -mVerticalOffset / (float) mAppBar.getHeight();
+                    mAppBar.setExpanded(t < 0.5, true);
                 }
             }
         });
@@ -610,6 +615,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         onRefreshEnd();
     }
 
+    @Override
+    public void refreshContents() {
+        super.refreshContents();
+        mAppBar.setExpanded(true, true);
+    }
+
     void onBackClick() {
         KeyboardUtils.hideSoftInput(mActivity);
         if (!mIsFilterClicked) {
@@ -639,6 +650,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
+        mAppBar.setExpanded(true, false);
         mSearchFilterMvpView.closeFacets();
         mSaleItemsRecyclerView.smoothScrollToPosition(position);
 

@@ -409,7 +409,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             mActivity.setDraggableViewPager(controller instanceof ShopsController);
 
             if (!mIsInitialSavedInstanceLoad) {
-                if (controller instanceof SaleItemsController) {
+                if (controller instanceof SaleItemsController && currentVisibleIndex == TAB_SHOP_INDEX) {
                     mShopRouter.popToRoot();
                 }
             }
