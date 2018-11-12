@@ -287,10 +287,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                     ShareLinkContent content =
                             new ShareLinkContent.Builder()
                                     .setContentUrl(Uri.parse(invitationLink))
-                                    .setContentTitle(inviteSubject)
                                     .setImageUrl(Uri.parse(bannerImageUrl))
-                                    .setContentDescription(inviteMessage)
-                                    .setQuote(personalInvitation)
                                     .build();
                     ShareDialog shareDialog = new ShareDialog(mActivity);
                     shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
