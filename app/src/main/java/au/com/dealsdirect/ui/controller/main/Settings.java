@@ -70,7 +70,7 @@ public class Settings {
     }
 
     public static Country getDefaultCountry() {
-        return supportedCountries != null ? supportedCountries[0] : null;
+        return !getIsMultiCountry() ? supportedCountries[0] : null;
     }
 
     static void load(){
