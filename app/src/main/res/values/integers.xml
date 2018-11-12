@@ -13,4 +13,5 @@
     <integer name="banner_mobile_max_column_count">1</integer>
     <integer name="banner_tablet_min_column_count">2</integer>
     <integer name="banner_tablet_max_column_count">5</integer>
+    <integer name="animation_duration">800</integer>
 </resources>

@@ -15,6 +15,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -813,33 +814,45 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         SaleItemDetailsImageAdapter.ViewHolder vh = (SaleItemDetailsImageAdapter.ViewHolder) mProductImagesRv
                 .findViewHolderForLayoutPosition(mProductImagesRvLayoutManager.findLastVisibleItemPosition());
 
+        int productWidth;
+        int productHeight;
+
         if (mImagesLoaded) {
             if (vh == null) throw new AssertionError("Viewholder cannot be null");
             mImageViewToAnimate.setImageDrawable(vh.image.getDrawable());
+            productWidth = vh.image.getDrawable().getIntrinsicWidth();
+            productHeight = vh.image.getDrawable().getIntrinsicHeight();
         } else {
+            productWidth = mProductSharedImage.getDrawable().getIntrinsicWidth();
+            productHeight = mProductSharedImage.getDrawable().getIntrinsicHeight();
             mImageViewToAnimate.setImageDrawable(mProductSharedImage.getDrawable());
         }
+
+        mImageViewToAnimate.getLayoutParams().height = productHeight;
+        mImageViewToAnimate.getLayoutParams().width = productWidth;
 
         mBottomNavView = mActivity.getMainController().getHomeController().getBottomNavigationView();
         ArrayList<View> potentialViews = new ArrayList<View>();
         mBottomNavView.findViewsWithText(potentialViews, "checkout", View.FIND_VIEWS_WITH_TEXT);
-        // TODO - refactor magic number
         mCheckoutView = mBottomNavView.getViewAtPosition(4);
         mCheckoutView.getLocationOnScreen(mCheckoutLocation);
 
         float origElevation = mBottomNavView.getElevation();
         mBottomNavView.setElevation(0);
 
-        mImageViewToAnimate
-                .getLocationOnScreen(mSharedImageLocation);
+        mImageViewToAnimate.getLocationOnScreen(mSharedImageLocation);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+
+        int[] middle = {width, 0};
 
         ArcTranslateAnimation anim = new ArcTranslateAnimation(
-                1000, Animation.ABSOLUTE,
-                (float) mSharedImageLocation[0],
-                Animation.ABSOLUTE,
-                (float) mCheckoutLocation[0],
-                Animation.ABSOLUTE,
-                (float) mCheckoutLocation[1]);
+                getResource().getInteger(R.integer.animation_duration),
+                0, 0,
+                (float) middle[0], (float)middle[1],
+                (float) mCheckoutLocation[0], (float) mCheckoutLocation[1]);
 
         anim.setInterpolator(new LinearInterpolator());
         anim.setAnimationListener(new Animation.AnimationListener() {
