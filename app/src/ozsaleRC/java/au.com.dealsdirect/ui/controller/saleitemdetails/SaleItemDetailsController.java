@@ -322,7 +322,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     protected void setUp(View view) {
 
-        mRootView = ((ElasticDragDismissFrameLayout) view);
+        if (view instanceof ElasticDragDismissFrameLayout) {
+            mRootView = ((ElasticDragDismissFrameLayout) view);
+        }
 
         stretchImageView();
 
@@ -357,7 +359,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mActivity.getMainController().setShouldBottomNavigationViewEnabled(true);
             }
         };
-        mRootView.addListener(mDragDismissListener);
+        if (mRootView != null) {
+            mRootView.addListener(mDragDismissListener);
+        }
 
         mLoadImagesListener = this;
         mProductSharedImage.setTransitionName(getResources().getString(R.string.transition_sale_image_indexed, mFromPosition));
@@ -772,7 +776,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public boolean handleBack() {
         if (!isAnimating) {
             mProductDetailScrollView.scrollTo(0, 0);
-            mRootView.removeListener(mDragDismissListener);
+            if (mRootView != null) {
+                mRootView.removeListener(mDragDismissListener);
+            }
             mDragDismissListener = null;
             mProductImagesRv.setVisibility(View.GONE);
             return false;
