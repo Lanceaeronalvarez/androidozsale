@@ -335,6 +335,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
     }
 
     public void closeFacets() {
+        if(!isViewAttached()) return;
+
         mIsSearchFilterControllerActive = false;
         mFacetsFrame.setVisibility(View.INVISIBLE);
         if (mSaleItemsView == null) mSaleItemsView = mActivity.getSaleItemsController();
