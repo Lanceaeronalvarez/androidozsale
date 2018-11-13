@@ -7,16 +7,16 @@
     <string name="checkout_page_toolbar_title">Checkout</string>
     <string name="total">Grand Total</string>
     <string name="add_new_address">Add New Address</string>
-    <string name="invite_friend_guide">Invite your friends to join BA. Once your friends have
+    <string name="invite_friend_guide">Invite your friends to join buyinvite. Once your friends have
         joined through your invitation and made their first purchase you will instantly receive a
-        $20 BA voucher to use towards any future purchase.
+        voucher to use towards any future purchase.
     </string>
 
     <string name="add_new_voucher">Add Voucher</string>
 
-    <string name="vouchers_view_detail">Invite your friends to join Buyinvite. Once your friends have
+    <string name="vouchers_view_detail">Invite your friends to join buyinvite. Once your friends have
     joined through your invitation and made their first purchase you will instantly receive a
-    $20 voucher to use towards any future purchase. \n\nYou can apply any vouchers
+    voucher to use towards any future purchase. \n\nYou can apply any vouchers
         currently in your account when you checkout your order. \n
     </string>
 
