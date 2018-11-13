@@ -44,7 +44,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.Countrie
     @Override
     public void onBindViewHolder(CountriesViewHolder holder, int position) {
         if (mSelectedCountry.equals(mCountries.get(position).getShopCode()) || mSelectedCountry.equals(mCountries.get(position).getShopCode())) {
-            holder.mCountryText.setTextColor(context.getResources().getColor(R.color.colorAccent));
+            holder.mCountryText.setTextColor(context.getResources().getColor(R.color.country_select_active));
 
             if (holder.mCountryCheckIcon != null) {
                 holder.mCountryCheckIcon.setVisibility(View.VISIBLE);
@@ -56,7 +56,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.Countrie
         holder.itemView.setOnClickListener(v -> {
             notifyDataSetChanged();
             mPresenter.onCountryItemClick(mCountries.get(position));
-            holder.mCountryText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
+            holder.mCountryText.setTextColor(context.getResources().getColor(R.color.country_select_active));
         });
     }
 
