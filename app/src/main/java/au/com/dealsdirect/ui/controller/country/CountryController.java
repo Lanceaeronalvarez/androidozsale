@@ -21,6 +21,7 @@ import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -50,6 +51,7 @@ public class CountryController extends BasePullToRefreshController implements Co
 
     private CountryAdapter mAdapter;
     private boolean mIsAfterSplash;
+    private boolean mHasSavedInstance;
 
     public static CountryController newInstance() {
         return new CountryController(
@@ -66,6 +68,21 @@ public class CountryController extends BasePullToRefreshController implements Co
     public CountryController(Bundle args) {
         super(args);
         mIsAfterSplash = args.getBoolean(BUNDLE_CALLED_AFTER_SPLASH, false);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+        outState.putBoolean(BUNDLE_CALLED_AFTER_SPLASH, mIsAfterSplash);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+        mIsAfterSplash = savedInstanceState.getBoolean(BUNDLE_CALLED_AFTER_SPLASH);
+
     }
 
 
@@ -106,6 +123,10 @@ public class CountryController extends BasePullToRefreshController implements Co
         CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 Settings.getSelectedCountry().countryName);
+
+        if (mHasSavedInstance && mIsAfterSplash) {
+            mActivity.initializeMainController();
+        }
     }
 
     @Override

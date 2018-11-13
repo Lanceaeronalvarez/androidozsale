@@ -168,6 +168,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.onAttach(this);
 //        mPresenter.callGetTemplateTexts();
 
+        if (mAppHasSavedInstance && Settings.getIsMultiCountry() && !mPresenter.defaultCountryId().isEmpty()) {
+            Settings.Country country = Settings.getCountryWithId(mPresenter.defaultCountryId());
+            setAppCountries(country);
+        }
+
         // Init All analytics sdk
         mPresenter.initializeAnalytics(this, this.getApplication());
         mActionTracker = getActivityComponent().getActionTracker();
@@ -799,7 +804,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         ScreenUtils.setStatusBarColor(this, R.color.status_bar);
 
         if (Settings.getIsMultiCountry() && mPresenter.defaultCountryId().isEmpty()) {
-            if (!mIsShowingStrictConsentUI) mRouter.setRoot(RouterTransaction.with(new CountryController(true)));
+            if (!mIsShowingStrictConsentUI && !mAppHasSavedInstance) {
+                mRouter.setRoot(RouterTransaction.with(new CountryController(true)));
+            }
             return;
         }
 
@@ -831,12 +838,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.callGetAccountData();
 
         if (!mIsShowingStrictConsentUI && !mAppHasSavedInstance) {
-            mMainController = MainController.newInstance();
-            mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
+            initializeMainController();
         }
 
         callGCMRegisterSubscriber();
 
+    }
+
+    public void initializeMainController() {
+        mMainController = MainController.newInstance();
+        mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
     }
 
     public void callPublicSettings(){
