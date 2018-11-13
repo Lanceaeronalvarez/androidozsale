@@ -82,6 +82,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
     private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
     private static final String TEXT_ALL = "• All";
+    private static final int INITIAL_BANNER_COUNT = 100;
+
 
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
@@ -119,7 +121,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private boolean hasLoadedAllItems = false;
 
     private String bannerGroupType = "";
-    private int newBannerCount = 10;
+    private int newBannerCount = 50;
     private int bannerOffset = 0;
     private int bannerLimit = bannerOffset + newBannerCount;
 
@@ -286,7 +288,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
                 page++;
-                bannerOffset += newBannerCount; //load 10 banners every page
+                bannerOffset += newBannerCount;
                 bannerLimit = newBannerCount;
                 refresh();
             }
@@ -326,7 +328,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         if (sales.isEmpty() && !mHasSavedInstance) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, INITIAL_BANNER_COUNT));
         } else {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
             mBannersAdapter.replace(sales);
@@ -505,7 +507,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             }
         }
 
-        shopsControllerBannerRecyclerView.stopScroll();
         onRefreshEnd();
     }
 

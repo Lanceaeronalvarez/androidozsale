@@ -71,6 +71,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
     private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
     private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
+    private static final int INITIAL_BANNER_COUNT = 100;
 
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
@@ -98,7 +99,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
     private boolean loadingInProgress = false;
     private boolean hasLoadedAllItems = false;
 
-    private int newBannerCount = 10;
+    private int newBannerCount = 50;
     private int bannerOffset = 0;
     private int bannerLimit = bannerOffset + newBannerCount;
 
@@ -199,7 +200,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
                 page++;
-                bannerOffset += newBannerCount; //load 10 banners every page
+                bannerOffset += newBannerCount;
                 bannerLimit = newBannerCount;
                 refresh();
             }
@@ -232,7 +233,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
         if (sales.isEmpty()) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, bannerLimit));
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, INITIAL_BANNER_COUNT));
         } else {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
