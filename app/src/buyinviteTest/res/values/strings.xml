@@ -187,6 +187,7 @@
     <string name="font_app_regular">fonts/opensans/OpenSans-Regular.ttf</string>
     <string name="font_app_semibold">fonts/opensans/OpenSans-Semibold.ttf</string>
     <string name="font_app_semibold_italic">fonts/opensans/OpenSans-SemiboldItalic.ttf</string>
+    <string name="i_am_looking_for">Search</string>
 
 
 </resources>
