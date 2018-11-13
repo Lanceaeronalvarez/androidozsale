@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -212,6 +214,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private static final int CAROUSEL_VELOCITY_THRESHOLD = 100;
 
     private ElasticDragDismissFrameLayout.ElasticDragDismissCallback mDragDismissListener;
+
+    final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = new
+            ViewTreeObserver.OnScrollChangedListener() {
+
+                @Override
+                public void onScrollChanged() {
+                    SaleItemDetailsController.this.onScrollChanged(mProductDetailScrollView.getScrollY());
+                }
+            };
 
 
     public SaleItemDetailsController(
@@ -442,19 +453,33 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mHtmlFooter = mActivity.getResources()
                 .getString(R.string.base_html_template_footer);
 
-        mProductDetailScrollView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
-                    case MotionEvent.ACTION_MOVE:
-                        onScrollChanged();
-                        break;
-                    default:
-                        break;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mProductDetailScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    onScrollChanged(scrollY);
                 }
-                return false;
-            }
-        });
+            });
+        } else {
+            mProductDetailScrollView.setOnTouchListener(new View.OnTouchListener() {
+                private ViewTreeObserver observer;
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (observer == null) {
+                        observer = mProductDetailScrollView.getViewTreeObserver();
+                        observer.addOnScrollChangedListener(onScrollChangedListener);
+                    }
+                    else if (!observer.isAlive()) {
+                        observer.removeOnScrollChangedListener(onScrollChangedListener);
+                        observer = mProductDetailScrollView.getViewTreeObserver();
+                        observer.addOnScrollChangedListener(onScrollChangedListener);
+                    }
+
+                    return false;
+                }
+            });
+        }
     }
 
     private void stretchImageView() {
@@ -477,7 +502,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             newControllerChangeHandler = null;
         }
         ImageUtils.clearImage(mProductSharedImage);
-        mProductDetailScrollView.setOnTouchListener(null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mProductDetailScrollView.setOnScrollChangeListener((View.OnScrollChangeListener) null);
+        } else {
+            mProductDetailScrollView.setOnTouchListener(null);
+        }
         mPriceInfoButton.setOnClickListener(null);
         mOldPriceInfoButton.setOnClickListener(null);
         mProductImagesRv.setOnFlingListener(null);
@@ -912,9 +941,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mActivity.onBackPressed();
     }
 
-    public void onScrollChanged() {
+    public void onScrollChanged(int scrollY) {
         if (isViewAttached()) {
-            boolean isScrollGreater = mProductDetailScrollView.getScrollY() >= ScreenUtils.getScreenHeight(mActivity) -
+            boolean isScrollGreater = scrollY >= ScreenUtils.getScreenHeight(mActivity) -
                     (mProductDetailsTitleLayout.getBottom() + mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight());
             mProductDetailsToolbar.setVisibility(isScrollGreater && !mPresenter.isTablet() ? View.VISIBLE : View.GONE);
         }
