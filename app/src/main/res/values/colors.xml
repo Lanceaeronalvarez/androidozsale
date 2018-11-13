@@ -221,6 +221,6 @@
     <color name="bg_splash_color_center">@color/bg_splash</color>
     <color name="bg_splash_color_end">@color/bg_splash</color>
 
-    <color name="country_select_active">@color/text_extra_dark</color>
+    <color name="country_select_active">@color/colorAccent</color>
 
 </resources>
