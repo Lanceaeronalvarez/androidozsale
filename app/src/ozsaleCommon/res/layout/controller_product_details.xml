@@ -715,7 +715,7 @@
             <RelativeLayout
                 android:id="@+id/controller_sale_details_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="@dimen/sale_details_floating_header_height"
                 android:background="@color/white"
                 android:orientation="horizontal"
                 android:visibility="gone">
@@ -747,16 +747,17 @@
 
                     <TextView
                         android:id="@+id/toolbar_item_brand"
-                        fontPath="@string/font_app_semibold"
+                        fontPath="@string/font_app_bold"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:gravity="center_horizontal"
                         android:paddingLeft="@dimen/margin_tiny"
                         android:paddingRight="@dimen/margin_tiny"
+                        android:paddingTop="@dimen/margin_large"
                         android:singleLine="true"
                         android:textColor="@color/text_extra_dark"
-                        android:textSize="@dimen/text_size_headline3"
+                        android:textSize="@dimen/text_size_body"
                         tools:text="Havren and Nougat London" />
 
                     <TextView

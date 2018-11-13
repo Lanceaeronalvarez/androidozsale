@@ -72,6 +72,7 @@
     <dimen name="partial_toolbar_logo_width">170dp</dimen>
     <dimen name="tall_edit_text_height">144dp</dimen>
     <dimen name="sale_details_app_bar_height">90dp</dimen>
+    <dimen name="sale_details_floating_header_height">64dp</dimen>
 
     <!-- Placeholder -->
     <dimen name="placeholder_padding">@dimen/padding_default</dimen>
