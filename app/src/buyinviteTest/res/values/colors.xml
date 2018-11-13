@@ -135,7 +135,7 @@
 
     <color name="status_bar_splash">@color/colorAccent</color>
     <color name="bg_splash">@color/colorAccent</color>
-    <color name="bottom_nav_inactive">@color/text_extra_light</color>
+    <color name="bottom_nav_inactive">@color/text_medium</color>
 
     <color name="product_details_text_product_price">@color/text_extra_dark</color>
     <color name="product_details_text_product_sale_price">@color/text_light</color>
