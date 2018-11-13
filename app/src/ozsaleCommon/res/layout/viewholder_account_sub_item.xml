@@ -23,6 +23,7 @@
             android:layout_toLeftOf="@+id/row_viewholder_image_right"
             android:layout_alignParentLeft="true"
             tools:text="Men's"
+            android:layout_centerVertical="true"
             tools:ignore="MissingPrefix" />
 
 
