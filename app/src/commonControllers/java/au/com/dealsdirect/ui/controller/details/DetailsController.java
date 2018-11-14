@@ -260,10 +260,17 @@ public class DetailsController extends BasePullToRefreshController implements De
     public void saveUserDetails() {
         hideKeyboard();
 
+        if (mPresenter.isTablet() && !mActivity.isAuthorized()) {
+            CustomAlertDialog.showCustomAlertDialog(mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    getString(R.string.controller_user_details_login_prompt));
+            return;
+        }
+
         if (mPasswordText.getText().toString().isEmpty() || mPasswordText.getText().toString() == "") {
             CustomAlertDialog.showCustomAlertDialog(mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    "Please enter your password");
+                    getString(R.string.controller_user_details_enter_password));
             return;
         }
 

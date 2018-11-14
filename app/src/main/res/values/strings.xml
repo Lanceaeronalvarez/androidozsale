@@ -636,5 +636,7 @@
     <string name="toggle_notifications">Toggle Notifications</string>
     <string name="value">value</string>
     <string name="product_item_source_name">@string/app_name</string>
+    <string name="controller_user_details_enter_password">Please enter your password</string>
+    <string name="controller_user_details_login_prompt">Please login first</string>
 
 </resources>

@@ -40,17 +40,14 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         if (!isNeedAuthorization(context, option)) {
             showNoAuthenticationRequiredScreens(context, option);
         } else {
-            if (isTablet()) {
+            if (getDataManager().isAuthorized()) {
                 showAuthenticationRequiredScreens(context, option);
-                if (!getDataManager().isAuthorized()) {
-                    getMvpView().triggerLogin(option);
-                }
             } else {
-                if (getDataManager().isAuthorized()) {
-                    showAuthenticationRequiredScreens(context, option);
-                } else {
-                    getMvpView().triggerLogin(option);
+                if(getDataManager().isTablet()) {
+                    showAuthenticationRequiredScreens(context,
+                        context.getString(R.string.account_details));
                 }
+                getMvpView().triggerLogin(option);
             }
         }
     }
