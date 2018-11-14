@@ -21,6 +21,7 @@ import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -57,6 +58,9 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     @BindView(R.id.ourpay_panel_holder)
     ViewGroup mOurpayDetailsContainer;
+
+    @BindView(R.id.thank_you_for_shopping_textview)
+    TextView mThankyouTextview;
 
 
     public static PaymentSuccessController newInstance(String address, String price, String invoice, String delivery) {
@@ -111,6 +115,9 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         mPackageName = mPackageName.replace(".test", "");
         mAppUri = getString(R.string.app_uri_header) + mPackageName;
         mAppPlayStoreUri = getString(R.string.app_playstore_uri_header) + mPackageName;
+
+        String thankYouMessage = getResource().getString(R.string.thank_you_for_shopping) + " " + Settings.getSelectedCountry().siteName;
+        mThankyouTextview.setText(thankYouMessage);
 
         mPresenter.incrementPayCount();
     }

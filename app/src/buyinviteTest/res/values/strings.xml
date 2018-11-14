@@ -20,7 +20,7 @@
         currently in your account when you checkout your order. \n
     </string>
 
-    <string name="thank_you_for_shopping">Thank you for shopping with BA</string>
+    <string name="thank_you_for_shopping">Thank you for shopping with</string>
 
 
     <string name="base_html_template_header" formatted="false">
@@ -188,6 +188,7 @@
     <string name="font_app_semibold">fonts/opensans/OpenSans-Semibold.ttf</string>
     <string name="font_app_semibold_italic">fonts/opensans/OpenSans-SemiboldItalic.ttf</string>
     <string name="i_am_looking_for">Search</string>
+    <string name="ourpay_code_hint">Code</string>
 
 
 </resources>
