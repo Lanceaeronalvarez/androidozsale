@@ -418,6 +418,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             getRouter().removeChangeListener(newControllerChangeHandler);
             newControllerChangeHandler = null;
         }
+        mSaleItemsRecyclerView.setAdapter(null);
         super.onDestroyView(view);
     }
 

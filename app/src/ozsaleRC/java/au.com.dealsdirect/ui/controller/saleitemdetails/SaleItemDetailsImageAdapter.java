@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -30,6 +31,7 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
+import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,6 +64,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     };
     private SaleItemDetailsMvpView mSaleItemDetailsView;
+    private Activity mActivity;
 
     public void replaceData(List<String> data) {
         if (shouldUpdateData(mData, data)) {
@@ -105,7 +108,8 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
         public abstract void onPositionChanged(int position);
     }
 
-    public SaleItemDetailsImageAdapter(boolean isTablet,
+    public SaleItemDetailsImageAdapter(Activity activity,
+                                       boolean isTablet,
                                        View container,
                                        ArrayList<View> views,
                                        LoadImagesListener loadImagesListener,
@@ -113,6 +117,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                                        int viewType,
                                        Drawable placeholder, SaleItemDetailsMvpView saleItemDetailsMvpView) {
 
+        this.mActivity = activity;
         this.mIsTablet = isTablet;
         this.mContainerToToggle = container;
         this.mViewsToToggle = views != null ? views : new ArrayList<>();
@@ -191,7 +196,9 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
         ViewHolder vh = (ViewHolder) holder;
         switch (mViewType) {
             case 1:
-                ImageUtils.clearImage(vh.image);
+                if (!mActivity.isDestroyed()) {
+                    ImageUtils.clearImage(vh.image);
+                }
 
                 ScalableImageView scalableImageView = (ScalableImageView) vh.image;
                 RxBus.instance().unSubscribe(vh.eventBusSubscription);

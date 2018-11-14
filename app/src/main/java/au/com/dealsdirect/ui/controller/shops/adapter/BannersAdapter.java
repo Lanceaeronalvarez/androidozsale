@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.shops.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,14 +37,14 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     private int mComputedHeight = -1;
     private List<GetBannerResponse.Group> mGroups;
     private List<GetBannerResponse.Banner> mSales;
-    private Context mContext;
+    private Activity mActivity;
     private ShopsMvpPresenter mPresenter;
     private int mWidth;
     private int mHeight;
     private int mNumberOfColumns;
 
     public BannersAdapter(
-            Context context,
+            Activity activity,
             ShopsMvpPresenter presenter,
             List<GetBannerResponse.Group> sales) {
 
@@ -53,11 +53,11 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         for (GetBannerResponse.Group group : sales) {
             mSales.addAll(group.getBanners());
         }
-        mContext = context;
+        mActivity = activity;
         mPresenter = presenter;
 
-        mWidth = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_width : R.integer.banner_mobile_width);
-        mHeight = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_height : R.integer.banner_mobile_height);
+        mWidth = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_width : R.integer.banner_mobile_width);
+        mHeight = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_height : R.integer.banner_mobile_height);
 
         setupDimensions();
     }
@@ -182,7 +182,9 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         if (holder.subscription != null) {
             holder.subscription.dispose();
         }
-        ImageUtils.clearImage(holder.image);
+        if (!mActivity.isDestroyed()) {
+            ImageUtils.clearImage(holder.image);
+        }
         super.onViewDetachedFromWindow(holder);
     }
 
@@ -202,19 +204,19 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     }
 
     public void setupDimensions() {
-        int minColumns = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_min_column_count : R.integer.banner_mobile_min_column_count);
-        int maxColumns = mContext.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_max_column_count : R.integer.banner_mobile_max_column_count);
+        int minColumns = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_min_column_count : R.integer.banner_mobile_min_column_count);
+        int maxColumns = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_max_column_count : R.integer.banner_mobile_max_column_count);
 
-        if (!mContext.getResources().getBoolean(R.bool.is_ourpay_app)) {
+        if (!mActivity.getResources().getBoolean(R.bool.is_ourpay_app)) {
             // Dynamic Height Computation
             ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
                     mWidth, mHeight,
-                    ScreenUtils.getScreenWidth(mContext),
+                    ScreenUtils.getScreenWidth(mActivity),
                     minColumns, maxColumns);
             mNumberOfColumns = grid.getColumn();
             mComputedHeight = (int) grid.getItemHeight();
-            String orientation = ScreenUtils.getOrientation(mContext) == Configuration.ORIENTATION_LANDSCAPE ? "Landscape" : "Portrait";
-            AppLogger.d(orientation + " Width: " + ScreenUtils.getScreenWidth(mContext) + " Height: " + mComputedHeight);
+            String orientation = ScreenUtils.getOrientation(mActivity) == Configuration.ORIENTATION_LANDSCAPE ? "Landscape" : "Portrait";
+            AppLogger.d(orientation + " Width: " + ScreenUtils.getScreenWidth(mActivity) + " Height: " + mComputedHeight);
         }
     }
 }

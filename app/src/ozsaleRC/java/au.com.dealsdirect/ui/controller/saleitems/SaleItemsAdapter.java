@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +35,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private static final int SCREEN_TRANSITION_DELAY = 2000;
 
     private List<GetSaleItemsResponse.Products> mData;
-    private Context mContext;
+    private Activity mActivity;
     private SaleItemsMvpPresenter mPresenter;
     private String mSaleId;
     private int mColumnCount;
@@ -77,12 +77,12 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     public SaleItemsAdapter(
-            Context context,
+            Activity activity,
             List<GetSaleItemsResponse.Products> saleItems,
             SaleItemsMvpPresenter presenter,
             String saleId) {
 
-        this.mContext = context;
+        this.mActivity = activity;
         this.mData = saleItems;
         this.mPresenter = presenter;
         this.mSaleId = saleId;
@@ -92,13 +92,13 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
     public void computeItemViewDimensions() {
 
-        int orientation = mContext.getResources().getConfiguration().orientation;
+        int orientation = mActivity.getResources().getConfiguration().orientation;
         boolean isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE;
-        int screenDensity = (int) ScreenUtils.getScreenDensity(mContext);
+        int screenDensity = (int) ScreenUtils.getScreenDensity(mActivity);
         ImageUtils.Grid gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width) * screenDensity,
-                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mContext),3);
+                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mActivity),3);
         if(!mPresenter.isTablet()) gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width) * screenDensity,
-                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mContext), isLandscape ? 4 : 3, 4);
+                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mActivity), isLandscape ? 4 : 3, 4);
         mColumnCount = gridDefinition.getColumn();
         mComputedPair = new Pair<>((int) gridDefinition.getItemWidth(),(int) gridDefinition.getItemHeight());
     }
@@ -129,7 +129,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
         ImageUtils.loadImage(url, holder.image);
 
-        holder.image.setTransitionName(mContext.getString(R.string.transition_sale_image_indexed, position));
+        holder.image.setTransitionName(mActivity.getString(R.string.transition_sale_image_indexed, position));
 
         holder.soldout.setVisibility(saleItem.isSoldOut() ? View.VISIBLE : View.GONE);
 
@@ -154,7 +154,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
     @Override
     public void onViewRecycled(ViewHolder holder) {
-        ImageUtils.clearImage(holder.image);
+        if (!mActivity.isDestroyed()) {
+            ImageUtils.clearImage(holder.image);
+        }
         super.onViewDetachedFromWindow(holder);
     }
 
@@ -183,6 +185,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     private float getInteger(int resId) {
-        return mContext.getResources().getInteger(resId);
+        return mActivity.getResources().getInteger(resId);
     }
 }

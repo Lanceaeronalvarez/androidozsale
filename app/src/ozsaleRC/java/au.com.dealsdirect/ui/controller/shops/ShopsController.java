@@ -222,6 +222,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mPresenter.onDetach();
         getRouter().removeChangeListener(newControllerChangeHandler);
         newControllerChangeHandler = null;
+        shopsControllerBannerRecyclerView.setAdapter(null);
         super.onDestroyView(view);
     }
 

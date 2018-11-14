@@ -220,7 +220,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
                 @Override
                 public void onScrollChanged() {
-                    SaleItemDetailsController.this.onScrollChanged(mProductDetailScrollView.getScrollY());
+                    if (mProductDetailScrollView != null) {
+                        SaleItemDetailsController.this.onScrollChanged(mProductDetailScrollView.getScrollY());
+                    }
                 }
             };
 
@@ -397,7 +399,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
-        SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(mPresenter.isTablet(),
+        SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(mActivity, mPresenter.isTablet(),
                 mProductDetailScrollView, null, mLoadImagesListener, new ArrayList<>(), 2, null, this);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
         mOtherImagesRv.setVisibility(View.INVISIBLE);
@@ -418,7 +420,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (mPresenter.isTablet()) toggledViews.add(mAddToCartOverlay);
 
-        SaleItemDetailsImageAdapter mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(mPresenter.isTablet(), null,
+        SaleItemDetailsImageAdapter mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(mActivity, mPresenter.isTablet(), null,
                 toggledViews, mLoadImagesListener, new ArrayList<>(), 1, mProductSharedImage.getDrawable(), this);
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
         mProductImagesRv.setEnabled(false);
@@ -505,7 +507,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             getRouter().removeChangeListener(newControllerChangeHandler);
             newControllerChangeHandler = null;
         }
-        ImageUtils.clearImage(mProductSharedImage);
+        if (!mActivity.isDestroyed()) {
+            ImageUtils.clearImage(mProductSharedImage);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mProductDetailScrollView.setOnScrollChangeListener((View.OnScrollChangeListener) null);
         } else {
