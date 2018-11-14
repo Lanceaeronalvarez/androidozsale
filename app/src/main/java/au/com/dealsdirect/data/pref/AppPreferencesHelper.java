@@ -156,7 +156,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
                 .build();
 
         //Set default settings here
-        Prefs.putString(FB_SECRET, context.getResources().getString(R.string.facebook_app_secret));
         Prefs.putString(COUNTRY_ID, getCountryId());
         Prefs.putString(LANGUAGE_ID, getLanguageId());
         Prefs.putBoolean(DEBUG_MODE, context.getResources().getBoolean(R.bool.debug_mode));
@@ -390,7 +389,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getFbSecret() {
-        return Prefs.getString(FB_SECRET, "");
+        return Prefs.getString(FB_SECRET, mContext.getResources().getString(R.string.facebook_app_secret));
     }
 
     @Override
