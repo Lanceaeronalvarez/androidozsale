@@ -1,6 +1,5 @@
 <resources>
 
-
     <string name="font_app_black">fonts/lato/App-Font-Black.ttf</string>
     <string name="font_app_black_italic">fonts/lato/App-Font-BlackItalic.ttf</string>
     <string name="font_app_bold">fonts/lato/App-Font-Bold.ttf</string>

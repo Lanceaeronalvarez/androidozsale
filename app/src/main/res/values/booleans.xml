@@ -4,6 +4,7 @@
     <bool name="is_item_attribute_gone">false</bool>
     <bool name="is_checkout_orders_label_visible">false</bool>
     <bool name="is_item_details_split_enabled">false</bool>
+    <bool name="is_personalisation_grouped_style">false</bool>
 
     <!--APP SPECIFIC SETTINGS-->
     <bool name="is_ourpay_app">false</bool>

@@ -71,6 +71,7 @@ ext {
     debugDBVersion = '1.0.0'
     timberVersion = '4.5.1'
     guavaVersion = '22.0-android'
+    numberPickerVersion = '2.4.4'
 
     //Test dependencies
     junitVersion = '4.12'

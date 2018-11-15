@@ -4,6 +4,7 @@ package au.com.dealsdirect.data.network.model.saleitemdetails;
  * Created by Ayi on 5/29/18.
  */
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -12,139 +13,191 @@ import com.google.gson.annotations.SerializedName;
 
 public class Personalisation {
 
+    @SerializedName("$schema")
+    @Expose
+    private String schema = "";
+    @SerializedName("$id")
+    @Expose
+    private String id = "";
     @SerializedName("title")
     @Expose
-    private String title;
+    private String title = "";
     @SerializedName("description")
     @Expose
-    private String description;
-    @SerializedName("type")
+    private String description = "";
+    @SerializedName("property_order")
     @Expose
-    private String type;
+    private List<String> propertyOrder = new ArrayList<>();
     @SerializedName("properties")
     @Expose
-    private LinkedHashMap<String, Property> properties;
+    private LinkedHashMap<String, Property> properties = new LinkedHashMap<>();
     @SerializedName("required")
     @Expose
-    private List<String> required = null;
+    private List<String> required = new ArrayList<>();
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public List<String> getPropertyOrder() {
+        return propertyOrder;
     }
 
     public LinkedHashMap<String, Property> getProperties() {
         return properties;
     }
 
-    public void setProperties(LinkedHashMap<String, Property> properties) {
-        this.properties = properties;
-    }
-
     public List<String> getRequired() {
         return required;
     }
 
-    public void setRequired(List<String> required) {
-        this.required = required;
-    }
 
     public static class Property {
 
+        private String key = "";
         @SerializedName("title")
         @Expose
-        private String title;
+        private String title = "";
         @SerializedName("description")
         @Expose
-        private String description;
+        private String description = "";
         @SerializedName("watermark")
         @Expose
-        private String watermark;
+        private String watermark = "";
+        @SerializedName("control")
+        @Expose
+        private String control = "";
+        @SerializedName("enum_elements")
+        @Expose
+        private List<EnumElement> enumElements = new ArrayList<>();
         @SerializedName("type")
         @Expose
-        private String type;
+        private String type = "";
         @SerializedName("maxLength")
         @Expose
-        private Integer maxLength;
+        private Integer maxLength = -1;
         @SerializedName("pattern")
         @Expose
-        private String pattern;
+        private String pattern = "";
+        @SerializedName("sorting")
+        @Expose
+        private Integer sorting = -1;
+        @SerializedName("enum")
+        @Expose
+        private List<String> _enum = new ArrayList<>();
+        @SerializedName("format")
+        @Expose
+        private String format = "";
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
 
         public String getTitle() {
             return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
         }
 
         public String getDescription() {
             return description;
         }
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
         public String getWatermark() {
             return watermark;
         }
 
-        public void setWatermark(String watermark) {
-            this.watermark = watermark;
+        public String getControl() {
+            return control;
+        }
+
+        public List<EnumElement> getEnumElements() {
+            return enumElements;
         }
 
         public String getType() {
             return type;
         }
 
-        public void setType(String type) {
-            this.type = type;
-        }
-
         public Integer getMaxLength() {
             return maxLength;
-        }
-
-        public void setMaxLength(Integer maxLength) {
-            this.maxLength = maxLength;
         }
 
         public String getPattern() {
             return pattern;
         }
 
-        public void setPattern(String pattern) {
-            this.pattern = pattern;
+        public Integer getSorting() { return sorting; }
+
+        public List<String> getEnum() {
+            return _enum;
+        }
+
+        public String getFormat() {
+            return format;
+        }
+
+        public int getIndexOfEnumElementValue(String value) {
+            int maxIndex = maxLength > value.length() ? value.length() : maxLength;
+
+            for (EnumElement element : enumElements) {
+                String trimmedValue = value.substring(0, maxIndex);
+                String trimmedElementValue = element.getValue().substring(0, maxIndex);
+
+                if (trimmedValue.equals(trimmedElementValue)) return enumElements.indexOf(element);
+            }
+
+            return 0;
+        }
+
+    }
+
+    public class EnumElement {
+
+        @SerializedName("image_url")
+        @Expose
+        private String imageUrl = "";
+        @SerializedName("value")
+        @Expose
+        private String value = "";
+        @SerializedName("title")
+        @Expose
+        private String title = "";
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public String getTitle() {
+            return title;
         }
 
     }
 
     public static class CustomizableItemDetails {
 
-        @SerializedName("Key")
+        @SerializedName(value = "key", alternate = {"Key"})
         @Expose
         private String key = "";
-        @SerializedName("Value")
+        @SerializedName(value = "value", alternate = {"Value"})
         @Expose
         private String value = "";
 

@@ -5,6 +5,7 @@
     <bool name="is_checkout_orders_label_visible">true</bool>
     <bool name="is_item_details_split_enabled">false</bool>
     <bool name="is_quantity_spinner_loading">false</bool>
+    <bool name="is_personalisation_grouped_style">true</bool>
 
     <!--APP SPECIFIC SETTINGS-->
     <bool name="is_ourpay_app">false</bool>
