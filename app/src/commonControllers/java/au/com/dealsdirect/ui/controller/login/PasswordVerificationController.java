@@ -21,6 +21,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
@@ -93,7 +94,7 @@ public class PasswordVerificationController extends VisaCheckoutController imple
         mFilterButton.setVisibility(View.INVISIBLE);
 
         if(!mAccountExists) {
-            mAccountEmailGuide.setText(getResources().getString(R.string.new_vco_user_guide) + " " + mAccountEmail);
+            mAccountEmailGuide.setText(String.format(getResources().getString(R.string.new_vco_user_guide), Settings.getSelectedCountry().siteName) + " " + mAccountEmail);
         } else {
             mAccountEmailGuide.setText(getResources().getString(R.string.password_verification_guide) + " " + mAccountEmail);
         }
