@@ -631,6 +631,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (saleDetail.getSkuVariants() != null && !saleDetail.getSkuVariants().isEmpty()) {
             mSkuVariants = saleDetail.getSkuVariants();
+            mProductSizes.clear();
             for (GetSaleItemDetailsResponse skuVariant : mSkuVariants) {
                 String skuId = skuVariant.getSkuId();
                 String size = skuVariant.getAttributes().getSize();
@@ -727,6 +728,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showAddToCartResponse(Value cartDetailsResponse) {
+
+        if (mSharedImageLocation == null) {
+            mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
+        }
+        animateAddToCart();
+
         RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
         mActionTracker.addToCartEvent(mOrigin, mAttempts);
         mAttempts = 0;
@@ -828,9 +835,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     mActivity.getMainController().getHomeController().resetRouters();
                     mActivity.callGCMRegisterSubscriber();
                     mPresenter.addToCart(request);
-                    if (mSharedImageLocation != null) {
-                        new Handler().postDelayed(() -> animateAddToCart(), 1000);
-                    }
                 }
 
                 @Override
@@ -840,8 +844,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             });
         } else {
             mPresenter.addToCart(request);
-            if (mSharedImageLocation == null) { mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage); }
-            animateAddToCart();
         }
     }
 
@@ -856,8 +858,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         int productWidth;
         int productHeight;
 
-        if (mImagesLoaded) {
-            if (vh == null) throw new AssertionError("Viewholder cannot be null");
+        if (mImagesLoaded && vh != null) {
             mImageViewToAnimate.setImageDrawable(vh.image.getDrawable());
             productWidth = vh.image.getDrawable().getIntrinsicWidth();
             productHeight = vh.image.getDrawable().getIntrinsicHeight();
