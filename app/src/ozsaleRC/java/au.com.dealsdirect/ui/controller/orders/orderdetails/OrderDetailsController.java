@@ -1,7 +1,5 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +19,7 @@ import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -93,7 +91,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mOrderItem = new Gson().fromJson(savedInstanceState.getString(PAYMENT_ITEM, ""), GetPaymentsList.ResponseValue.PaymentItem.class);
-        mPaymentReferenceNo = savedInstanceState.getString(PAYMENT_REF_NO,"");
+        mPaymentReferenceNo = savedInstanceState.getString(PAYMENT_REF_NO, "");
     }
 
     @Override
@@ -130,12 +128,8 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     @Override
     public void showOrderTrackingWeb(String link) {
-        if(!link.isEmpty()) {
-            mActionTracker.CVOrderTrack(ActionTracker.ViewSource.ORDER_DETAILS);
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
-        } else {
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_order_tracking_message));
-        }
+        mActionTracker.CVOrderTrack(ActionTracker.ViewSource.ORDER_DETAILS);
+        ActivityLaunchUtil.launchActivity(mActivity, link, getString(R.string.no_order_tracking_message));
     }
 
     @OnClick(R.id.partial_toolbar_left_view)

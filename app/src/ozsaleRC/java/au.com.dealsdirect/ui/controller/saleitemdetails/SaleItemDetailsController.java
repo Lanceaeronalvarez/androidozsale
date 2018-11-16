@@ -1,13 +1,10 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -28,7 +25,6 @@ import android.view.animation.LinearInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -62,12 +58,11 @@ import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
-import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
@@ -443,7 +438,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductImagesRv.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_MOVE:
                         updateCarouselPageIndicator(getCarouselPosition());
                         break;
@@ -475,8 +470,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     if (observer == null) {
                         observer = mProductDetailScrollView.getViewTreeObserver();
                         observer.addOnScrollChangedListener(onScrollChangedListener);
-                    }
-                    else if (!observer.isAlive()) {
+                    } else if (!observer.isAlive()) {
                         observer.removeOnScrollChangedListener(onScrollChangedListener);
                         observer = mProductDetailScrollView.getViewTreeObserver();
                         observer.addOnScrollChangedListener(onScrollChangedListener);
@@ -622,8 +616,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(browserIntent);
+                ActivityLaunchUtil.launchActivity(mActivity, url);
                 return true;
             }
 
@@ -915,13 +908,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         });
 
         mImageViewToAnimate.startAnimation(anim);
-        
+
     }
 
     private List<String> getQualityImages(List<String> images) {
         List<String> qualityImages = new LinkedList<>();
         for (int i = 3; i < images.size(); i += 4) {
-                qualityImages.add(images.get(i));
+            qualityImages.add(images.get(i));
         }
         return qualityImages;
     }
