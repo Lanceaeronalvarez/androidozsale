@@ -238,7 +238,7 @@ public class PersonalisationLayout extends LinearLayout {
                 rowLabel.setTextColor(mBaseActivity.getResources().getColor(R.color.text_medium));
             } else {
                 rowErrorText.setVisibility(View.GONE);
-                rowEditText.setBackgroundResource(R.drawable.personalisation_section_background);
+                rowEditText.setBackgroundResource(R.color.transparent);
             }
 
             final Dialog dialog = new Dialog(getContext());
@@ -404,9 +404,8 @@ public class PersonalisationLayout extends LinearLayout {
                     onFocusChangeListener = (v, hasFocus) -> {
                         if (hasFocus) {
                             rowErrorText.setVisibility(View.GONE);
-
-                            v.setBackgroundResource(R.drawable.personalisation_section_background);
                         }
+                        v.setBackgroundResource(R.color.transparent);
                     };
 
                 }
