@@ -171,16 +171,18 @@ public class PersonalisationLayout extends LinearLayout {
             rowEditText.setHint(property.getWatermark().equals("") ? property.getTitle() : property.getWatermark());
 
             // Set edit text max number of characters and pattern checking
-            if (property.getPattern().equals("") && property.getMaxLength() != -1) {
+            if (!property.getControl().equals(TEXT_LIST)) {
+                if (property.getPattern().equals("") && property.getMaxLength() != -1) {
 
-                rowEditText.setFilters(new InputFilter[]{
-                        new InputFilter.LengthFilter(property.getMaxLength())});
+                    rowEditText.setFilters(new InputFilter[]{
+                            new InputFilter.LengthFilter(property.getMaxLength())});
 
-            } else if (!property.getPattern().equals("") && property.getMaxLength() != -1) {
+                } else if (!property.getPattern().equals("") && property.getMaxLength() != -1) {
 
-                rowEditText.setFilters(new InputFilter[]{
-                        new RegexInputFilter(property.getPattern()),
-                        new InputFilter.LengthFilter(property.getMaxLength())});
+                    rowEditText.setFilters(new InputFilter[]{
+                            new RegexInputFilter(property.getPattern()),
+                            new InputFilter.LengthFilter(property.getMaxLength())});
+                }
             }
 
             // Set edit text other controls for updated personalisation schema
@@ -440,11 +442,30 @@ public class PersonalisationLayout extends LinearLayout {
 
             String currentKey = iterator.next();
 
+            Personalisation.Property property = propertyHashMap.get(currentKey);
+
             EditText rowEditText = (EditText) findViewWithTag(currentKey);
 
-            String inputText = rowEditText != null ? rowEditText.getText().toString().trim() : "";
+            String inputText = rowEditText != null ? rowEditText.getText().toString().trim() : null;
 
-            personalizationData.put(currentKey, inputText);
+            switch (property.getControl()) {
+                case TEXT_LIST:
+                    List<Personalisation.EnumElement> enumElements = property.getEnumElements();
+                    for (Personalisation.EnumElement enumElement : enumElements) {
+                        String title = enumElement.getTitle();
+                        if (title.equals(inputText)) {
+                            inputText = enumElement.getValue();
+                            break;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            if (inputText != null && !inputText.isEmpty()) {
+                personalizationData.put(currentKey, inputText);
+            }
         }
 
         return personalizationData;
