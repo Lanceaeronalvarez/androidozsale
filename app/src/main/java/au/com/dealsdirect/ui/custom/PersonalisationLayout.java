@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.custom;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -258,7 +259,7 @@ public class PersonalisationLayout extends LinearLayout {
                         e.printStackTrace();
                     }
 
-                    new DatePickerDialog(getContext(),
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
                             R.style.DatePickerTheme,
                             (v, year, month, dayOfMonth) -> {
 
@@ -272,8 +273,14 @@ public class PersonalisationLayout extends LinearLayout {
                             },
                             cal.get(Calendar.YEAR),
                             cal.get(Calendar.MONTH),
-                            cal.get(Calendar.DAY_OF_MONTH))
-                            .show();
+                            cal.get(Calendar.DAY_OF_MONTH));
+                    datePickerDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            rowEditText.setBackgroundResource(R.color.transparent);
+                        }
+                    });
+                    datePickerDialog.show();
 
                     break;
                 case YEAR_PICKER:
@@ -286,6 +293,12 @@ public class PersonalisationLayout extends LinearLayout {
                     positiveButton.setOnClickListener(v -> {
                         editText.setText(String.valueOf(numberPicker.getValue()));
                         dialog.dismiss();
+                    });
+                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            rowEditText.setBackgroundResource(R.color.transparent);
+                        }
                     });
                     dialog.show();
 
@@ -301,6 +314,12 @@ public class PersonalisationLayout extends LinearLayout {
                         editText.setText(property.getEnumElements()
                                 .get(numberPicker.getValue()).getTitle());
                         dialog.dismiss();
+                    });
+                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            rowEditText.setBackgroundResource(R.color.transparent);
+                        }
                     });
                     dialog.show();
 
@@ -320,6 +339,12 @@ public class PersonalisationLayout extends LinearLayout {
                     recyclerView.setAdapter(new PersonalisationIconAdapter(mBaseActivity,
                             property.getEnumElements(), editText, dialog));
                     negativeButton.setOnClickListener(v -> dialog.dismiss());
+                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            rowEditText.setBackgroundResource(R.color.transparent);
+                        }
+                    });
                     dialog.show();
 
                     break;
