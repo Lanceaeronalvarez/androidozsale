@@ -311,7 +311,10 @@ public class PersonalisationLayout extends LinearLayout {
 
                     numberPicker.setMaxValue(property.getEnumElements().size() - 1);
                     numberPicker.setFormatter(value -> property.getEnumElements().get(value).getTitle());
-                    numberPicker.setValue(property.getIndexOfEnumElementValue(editText.getText().toString()));
+                    int index = property.getIndexOfEnumFromTitle(editText.getText().toString());
+                    if (index >= 0) {
+                        numberPicker.setValue(index);
+                    }
                     positiveButton.setOnClickListener(v -> {
                         editText.setText(property.getEnumElements()
                                 .get(numberPicker.getValue()).getTitle());
@@ -449,14 +452,7 @@ public class PersonalisationLayout extends LinearLayout {
 
             switch (property.getControl()) {
                 case TEXT_LIST:
-                    List<Personalisation.EnumElement> enumElements = property.getEnumElements();
-                    for (Personalisation.EnumElement enumElement : enumElements) {
-                        String title = enumElement.getTitle();
-                        if (title.equals(inputText)) {
-                            inputText = enumElement.getValue();
-                            break;
-                        }
-                    }
+                    inputText = property.getValueFromTitle(inputText);
                     break;
                 default:
                     break;

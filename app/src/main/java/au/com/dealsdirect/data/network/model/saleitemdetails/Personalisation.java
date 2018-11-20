@@ -151,19 +151,24 @@ public class Personalisation {
             return format;
         }
 
-        public int getIndexOfEnumElementValue(String value) {
-            int maxIndex = maxLength > value.length() ? value.length() : maxLength;
-
-            for (EnumElement element : enumElements) {
-                String trimmedValue = value.substring(0, maxIndex);
-                String trimmedElementValue = element.getValue().substring(0, maxIndex);
-
-                if (trimmedValue.equals(trimmedElementValue)) return enumElements.indexOf(element);
+        public int getIndexOfEnumFromTitle(String title) {
+            for (int i = 0; i < enumElements.size(); i++) {
+                Personalisation.EnumElement enumElement = enumElements.get(i);
+                if (title.equals(enumElement.getTitle())) {
+                    return i;
+                }
             }
-
-            return 0;
+            return -1;
         }
 
+        public String getValueFromTitle(String title) {
+            int index = getIndexOfEnumFromTitle(title);
+            if (index >= 0) {
+                return enumElements.get(index).getValue();
+            } else {
+                return null;
+            }
+        }
     }
 
     public class EnumElement {
