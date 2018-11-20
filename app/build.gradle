@@ -181,7 +181,7 @@ android {
         }
 
         ooRC {
-            versionCode 104
+            versionCode 105
             versionName "2.4.0"
             applicationId "au.com.oo"
 
@@ -197,12 +197,12 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "app_uri_hostname", "www.oo.com.au"
 
-            ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
+            ext.newRelicAppToken = "AA6269938ee23aef375c05484c8ba691eac5daf8f4"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ooTest {
-            versionCode 104
+            versionCode 105
             versionName "2.4.0"
             applicationId "au.com.oo.test"
 
@@ -218,7 +218,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "app_uri_hostname", "www.oo.com.au"
 
-            ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
+            ext.newRelicAppToken = "AA6269938ee23aef375c05484c8ba691eac5daf8f4"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
