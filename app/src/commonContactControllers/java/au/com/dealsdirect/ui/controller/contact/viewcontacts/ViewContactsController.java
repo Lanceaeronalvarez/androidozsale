@@ -161,7 +161,7 @@ public class ViewContactsController extends BasePullToRefreshController implemen
         int visibility = getResource().getBoolean(R.bool.contacts_toolbar_addmessage_visibility) ? View.VISIBLE : View.INVISIBLE;
         mViewContactsToolbarRightOption.setVisibility(visibility);
 
-        if (mPresenter.isTablet()) {
+        if (mPresenter.isTablet() || getBoolean(R.bool.master_detail_enabled)) {
             mViewContactsToolbarRightOption.setPadding(5, 5, 5, 5);
         } else {
             mViewContactsToolbarRightOption.setPadding(20, 20, 20, 20);

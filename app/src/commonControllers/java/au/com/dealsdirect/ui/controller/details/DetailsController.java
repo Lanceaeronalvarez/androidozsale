@@ -160,7 +160,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         mSaveUserDetailsButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
         mSaveUserDetailsButton.setVisibility(getBoolean(R.bool.is_ozsale_app) ? View.INVISIBLE : View.VISIBLE);
         mTitleTextView.setText(getString(R.string.account_details));
-        mToolbarLeftView.setVisibility(mPresenter.isTablet() ? View.INVISIBLE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(mPresenter.isTablet() && getBoolean(R.bool.master_detail_enabled) ? View.INVISIBLE : View.VISIBLE);
 
         if (getBoolean(R.bool.is_gender_enabled)) {
             List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
@@ -260,7 +260,8 @@ public class DetailsController extends BasePullToRefreshController implements De
     public void saveUserDetails() {
         hideKeyboard();
 
-        if (mPresenter.isTablet() && !mActivity.isAuthorized()) {
+        if (mPresenter.isTablet() && !mActivity.isAuthorized()
+                || getBoolean(R.bool.master_detail_enabled) && !mActivity.isAuthorized()) {
             CustomAlertDialog.showCustomAlertDialog(mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     getString(R.string.controller_user_details_login_prompt));

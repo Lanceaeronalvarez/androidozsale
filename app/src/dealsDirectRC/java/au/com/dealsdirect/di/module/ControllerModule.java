@@ -1,7 +1,10 @@
 package au.com.dealsdirect.di.module;
 
+import android.app.Activity;
+
 import com.bluelinelabs.conductor.Controller;
 
+import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.base.VisaCheckoutPresenter;
@@ -140,11 +143,18 @@ import dagger.Provides;
 public class ControllerModule {
 
     private Controller mController;
+    private BaseActivity mActivity;
 
-    public ControllerModule(Controller controller) {
-
+    public ControllerModule(Controller controller, Activity activity) {
         this.mController = controller;
+        this.mActivity = (BaseActivity) activity;
     }
+
+    @Provides
+    BaseActivity provideBaseActivity() {
+        return mActivity;
+    }
+
 
     @Provides
     SampleMvpPresenter<SampleMvpView> provideSamplePresenter(SamplePresenter<SampleMvpView> presenter) {

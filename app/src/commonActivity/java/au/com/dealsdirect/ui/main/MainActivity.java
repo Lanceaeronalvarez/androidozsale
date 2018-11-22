@@ -73,6 +73,7 @@ import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessMv
 import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -114,6 +115,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private MainController mMainController;
     private ShopsController mShopController;
     private CategoriesController mCategoriesController;
+    private CheckoutController mCheckoutController;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -174,20 +176,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
 
         mMainController = MainController.newInstance();
+        mContainer.setBackgroundColor(getResources().getColor(R.color.white));
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
 
-        if (!action.equals(Intent.ACTION_VIEW)) {
-
-            mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
-                    .popChangeHandler(new VerticalChangeHandler()));
-
-        } else {
-
-            mMainController = MainController.newInstance();
-            mRouter.setRoot(RouterTransaction.with(mMainController)
-                    .tag("Home"));
-
-        }
+        splashShownCallback();
 
         setUp();
 
@@ -211,6 +203,41 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             //If not logged in, call GetPublicAppSettings
             mPresenter.callGetPublicAppSettings();
         }
+
+    }
+
+    public void initializeMainController() {
+        mMainController = MainController.newInstance();
+        mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
+    }
+
+    public void setAppCountries(Settings.Country selectedCountry) {
+        Settings.setCountry(selectedCountry);
+    }
+
+    public void setUpAfterCountrySet(){
+
+        // Call API settings
+        mPresenter.callGetTemplateTexts();
+        mPresenter.callGetServerSettings();
+        mPresenter.callGetAppSettingsSection(this);
+        if (isAuthorized()) {
+            // If login ticket exist, call login ticket api to renew cookies and ticket
+            // GetAppSettings and GetPaymentToken will be called on success of this call
+            mPresenter.callLoginTicket();
+            mPresenter.callGetAppSettings();
+            mPresenter.callGetAppSettingsConsent(this);
+        } else {
+            mPresenter.callGetPublicAppSettings();
+        }
+
+        mPresenter.callGetAccountData();
+
+        if (!mIsShowingStrictConsentUI) {
+            initializeMainController();
+        }
+
+        callGCMRegisterSubscriber();
 
     }
 
@@ -251,11 +278,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             return;
         }
 
-        if (getHomeController() == null || getHomeController().getBottomNavigationView() == null) {
+        if (getHomeController() == null || getMainController().getBottomNav() == null) {
             return;
         }
 
-        if (mPresenter.isTablet() && getHomeController().isPopUpControllerVisible()) {
+        if (mPresenter.isTablet() && getHomeController().isPopUpControllerVisible()
+                || this.getResources().getBoolean(R.bool.master_detail_enabled)) {
             getHomeController().getPopUpHostRouter().handleBack();
         } else {
             Router currentRouter = getCurrentRouter();
@@ -453,7 +481,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             AppEventHelper.completedPurchase(PaymentInfo.getPaymentType(),
                     responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
                     Double.valueOf(responseValue.getD().getValue().getOrderInfoResult().getTotal()),
-                    getString(R.string.default_country_id));
+                    Settings.getDefaultCountry().countryId);
 
             mCheckoutRouter.pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
                     .pushChangeHandler(new HorizontalChangeHandler())
@@ -913,6 +941,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
+    public void logLoginTicket() {
+
+    }
+
+    @Override
     public void loginErrorHandler(String message) {
 
         if (mAuthHandler != null)
@@ -1112,4 +1145,17 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public HomeController getHomeController() {
         return getMainController().getHomeController();
     }
+
+    public void setCheckoutController(CheckoutController checkoutController) {
+        mCheckoutController = checkoutController;
+    }
+
+    public CheckoutController getCheckoutController() {
+        return mCheckoutController;
+    }
+
+    public void setMainController(MainController mainController) {
+        mMainController = mainController;
+    }
+
 }

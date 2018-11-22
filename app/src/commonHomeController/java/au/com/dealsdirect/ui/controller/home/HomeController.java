@@ -93,12 +93,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     @BindView(R.id.controller_fifth_frame)
     ViewGroup mFifthControllerContainer;
 
-    public AHBottomNavigation getBottomNavigationView() {
-        return mBottomNavigationView;
-    }
-
-    @BindView(R.id.controller_home_bottom_nav)
-    AHBottomNavigation mBottomNavigationView;
+    private AHBottomNavigation mBottomNavigationView;
 
     private HashMap<Integer,Pair<Router,ViewGroup>> mRouterContainerMapping;
 
@@ -156,6 +151,9 @@ public class HomeController extends BaseController implements HomeMvpView {
         mShopRouter = getChildRouter(mFirstControllerContainer);
         mActivity.setSaleItemsShopRouter(mShopRouter);
 
+        mActivity.getMainController().setHomeController(this);
+        mBottomNavigationView = mActivity.getMainController().getBottomNav();
+
         Log.d("deeplinking", "homecontroller onviewbound");
         if (!mShopRouter.hasRootController()) {
             ShopsController shopsController = new ShopsController();
@@ -180,9 +178,8 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
 
         if (!mCheckoutRouter.hasRootController()) {
-            GateKeeper.setRoot(mCheckoutRouter, GateKeeper.Destination.CHECKOUT,
-                    RouterTransaction.with(CheckoutController.newInstance()).tag(getActivity().getResources().getString(R.string.checkout_controller)));
             mActivity.setCheckoutRouter(mCheckoutRouter);
+            mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance()));
         }
         mRouterContainerMapping = new HashMap<>();
         mRouterContainerMapping.put(0, new Pair<>(mShopRouter,mFirstControllerContainer));
@@ -267,9 +264,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (controller instanceof CheckoutController) {
                     Log.d("ourpay", "home controller remove ourpay");
-                    ((CheckoutController) controller).setIsGraphVisible(false);
                     ((CheckoutController) controller).removeOurpayView();
-                    ((CheckoutController) controller).clearOurpayGraphBitmapsAndListeners();
                 }
             }
 
@@ -381,7 +376,8 @@ public class HomeController extends BaseController implements HomeMvpView {
 
 
     public void sendSaleItemToCheckout(Value getCurrentOrder) {
-        mCheckoutMvpView.getPresenter().updateCart(getCurrentOrder);
+//        mCheckoutMvpView.getPresenter().updateCart(getCurrentOrder);
+        mCheckoutMvpView.getPresenter().updateCartValues(getCurrentOrder);
     }
 
     @Override
@@ -451,7 +447,6 @@ public class HomeController extends BaseController implements HomeMvpView {
             Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
             if (controller instanceof CheckoutController) {
                 ((CheckoutController) controller).loadCart();
-                ((CheckoutController) controller).setIsGraphVisible(true);
             }
         }
     }
@@ -600,7 +595,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                     .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge))
                     .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
                     .build();
-            getBottomNavigationView().setNotification(notification, 4);
+            mBottomNavigationView.setNotification(notification, 4);
         }
     }
 
@@ -610,7 +605,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void removeBasketItemCount() {
-        getBottomNavigationView().setNotification("", 4);
+        mBottomNavigationView.setNotification("", 4);
     }
 
     private void proceedToController(int id) {

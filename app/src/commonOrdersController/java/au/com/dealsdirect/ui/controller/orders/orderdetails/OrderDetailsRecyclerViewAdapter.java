@@ -343,10 +343,6 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
         LinearLayout orderDetailLayout;
 
-        ImageView orderImage;
-        TextView productPrice;
-        TextView productSubtotal;
-
         TextView orderFirstNodeStatus;
         TextView orderSecondNodeStatus;
         TextView orderThirdNodeStatus;
@@ -364,10 +360,6 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             orderStockArrivedConnector = itemView.findViewById(R.id.connector_to_stock_arrived);
             orderPackedConnector = itemView.findViewById(R.id.connector_to_order_packed);
             orderDispatchedConnector = itemView.findViewById(R.id.connector_to_dispatched);
-
-            orderImage = (ImageView) itemView.findViewById(R.id.order_image);
-            productPrice = (TextView) itemView.findViewById(R.id.product_price);
-            productSubtotal = (TextView) itemView.findViewById(R.id.product_subtotal);
 
             orderDetailLayout = (LinearLayout) itemView.findViewById(R.id.product_list_order_detail);
 

@@ -47,6 +47,13 @@
                 tools:text="$19.00" />
 
             <TextView
+                android:id="@+id/item_checkout_subtotal_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subtotal_colon"
+                android:textColor="@color/text_medium" />
+
+            <TextView
                 android:id="@+id/item_subtotal_price"
                 fontPath="@string/font_app_semibold"
                 android:layout_width="wrap_content"

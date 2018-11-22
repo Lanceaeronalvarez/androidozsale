@@ -223,4 +223,7 @@
 
     <color name="country_select_active">@color/colorAccent</color>
 
+    <color name="bg_paypal_credit">#003087</color>
+    <color name="filter_tabs_text_selector">@color/text_dark</color>
+
 </resources>

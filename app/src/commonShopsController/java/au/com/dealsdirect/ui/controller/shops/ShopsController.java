@@ -218,16 +218,18 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             }
         };
 
-        mBannerClickListener = this;
-        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, new ArrayList(), mBannerClickListener);
-
-        if (getResources().getBoolean(R.bool.is_tablet)) {
-            mLayoutManager = new GridLayoutManager(mActivity, 2, GridLayoutManager.VERTICAL, false);
+        if (mBannersAdapter == null) {
+            mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales);
         } else {
-            mLayoutManager = new GridLayoutManager(mActivity, 1, GridLayoutManager.VERTICAL, false);
+            mBannersAdapter.setupDimensions();
         }
 
-        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, this);
+        mLayoutManager = new GridLayoutManager(
+                mActivity,
+                mBannersAdapter.getNumberOfColumns(),
+                GridLayoutManager.VERTICAL,
+                false);
+
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
 
@@ -331,6 +333,11 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isChangeInProgress() {
+        return false;
     }
 
     @OnClick(R.id.partial_toolbar_hamburger)

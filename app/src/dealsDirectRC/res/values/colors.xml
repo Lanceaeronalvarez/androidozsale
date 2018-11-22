@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="transparent">#00000000</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#F00065</color>
+
+    <color name="color_text_option">#F00065</color>
+    <color name="color_item_title">#466E87</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="dark_text">#99000000</color>
+    <color name="dark_icon">#99000000</color>
+    <color name="dialog_background">#fafafa</color>
+
+    <color name="filter_text_active">#00A6B4</color>
+    <color name="filter_text_inactive">#5F5F5F</color>
+
+    <color name="payment_success_order_text_color">#446E87</color>
+
+    <color name="bottom_nav_accent_color">#F00065</color>
+    <color name="bottom_nav_badge_color">#ffcc0000</color>
+
+    <color name="category_text_active">#F00065</color>
+    <color name="category_text_inactive">#707070</color>
+
+    <color name="cart_order_price_text_color">#454545</color>
+
+    <color name="progress_loader_stroke_color">#F00065</color>
+
+    <color name="border_gray">#E4E4E4</color>
+
+    <color name="gray_category_text">#707070</color>
+    <color name="gray_item_details">#466E87</color>
+    <color name="gray_title_text">#959595</color>
+    <color name="gray_field_text">#868686</color>
+    <color name="gray_field_label">#87939D</color>
+    <color name="dark_gray">#8c8c8c</color>
+    <color name="gray_description_text">#9E9E9E</color>
+    <color name="gray_generic_icon">#9E9E9E</color>
+    <color name="gray_sale_price">#919191</color>
+    <color name="gray_hint_text">#CACACA</color>
+    <color name="gray_border">#E7E7E7</color>
+    <color name="gray_filter_background">#FBFBFB</color>
+    <color name="gray_background">#FFFFFF</color>
+    <color name="gray_toolbar_border">#F2F2F2</color>
+    <color name="gray_active_field_text">#616161</color>
+    <color name="gray_inactive_field_text">#D0D0D0</color>
+    <color name="gray_address_title_text">#858585</color>
+    <color name="gray_address_subtitle_text">#454545</color>
+
+    <color name="tab_bar_background">#e7e7e7</color>
+    <color name="tab_bar_icon_inactive">#87939D</color>
+    <color name="tab_bar_icon_active">#F00065</color>
+    <color name="tab_bar_icon_hovered">#F00065</color>
+
+    <color name="app_skin">#FAFAF9</color>
+    <color name="toolbar_skin">#F00065</color>
+    <color name="toolbar_active_skin">#F00065</color>
+
+    <!--Search Edit Text Colors-->
+    <color name="search_edit_text_hint_color">#CCFFFFFF</color>
+    <color name="search_edit_text_color">@color/white</color>
+    <color name="search_edit_cursor_color">@color/white</color>
+
+    <!-- FB Button -->
+    <color name="fb_button_normal">#1A9DE9</color>
+    <color name="fb_button_pressed">#FF1583C2</color>
+
+    <!-- Button Theme -->
+    <color name="bg_button_ripple">#DBE1EA</color>
+    <color name="bg_button_default">#F00065</color>
+    <color name="bg_button_pressed">#FFB9004E</color>
+    <color name="bg_button_tutorial">#f5f4f4</color>
+    <color name="bg_button_tutorial_pressed">#ECECEC</color>
+
+    <!-- EditText Theme -->
+    <color name="bg_edit_text_ripple">#FFFFFF</color>
+    <color name="bg_edit_text_default">#ECECEC</color>
+    <color name="bg_edit_text_focused">#009BEC</color>
+
+    <!-- Chips Theme -->
+    <color name="bg_chips_ripple">#FFFFFF</color>
+    <color name="bg_chips_default">#F8FAFD</color>
+    <color name="bg_chips_default_border">#EDF0F5</color>
+    <color name="bg_chips_checked">#ED1167</color>
+    <color name="bg_chips_text">#FFFFFF</color>
+
+    <!-- Dialog Theme -->
+    <color name="bg_dialog_default">#FFFFFF</color>
+    <color name="semi_transparent">#99323232</color>
+
+    <color name="search_gray_opaque">#7e404040</color>
+
+
+    <color name="ourpay_gray">#FF898989</color>
+    <color name="ourpay_orange">#FFE47C0B</color>
+    <color name="ourpay_orange_dark">#FFAE5F0A</color>
+    <color name="ourpay_border_gray">#FFC7C7C7</color>
+    <color name="navy">#000080</color>
+    <color name="red">#FF0000</color>
+    <color name="bluegreen">#04b2b6</color>
+
+    <color name="snack_bar_color">@color/colorAccent</color>
+    <color name="pressed_logo">@color/bluegreen</color>
+    <color name="idle_logo">@color/colorAccent</color>
+
+    <color name="invite_clipboard">#FF8B8B8B</color>
+    <color name="invite_fb">#FF2D91DE</color>
+    <color name="invite_fb_pressed">#FF2D91DE</color>
+    <color name="invite_twitter">#FF00B5E9</color>
+    <color name="invite_twitter_pressed">#FF00B5E9</color>
+    <color name="invite_mail">#FFEA5757</color>
+    <color name="invite_mail_pressed">#FFEA5757</color>
+    <color name="invite_sms">#FF65D87F</color>
+    <color name="invite_sms_pressed">#FF65D87F</color>
+
+    <color name="item_select_remove">#466E87</color>
+    <color name="verify_resend_color">#000080</color>
+
+    <color name="contact_us_one">#C7E4ED</color>
+    <color name="contact_us_two">#EDC7D5</color>
+    <color name="contact_us_three">#CAEDC7</color>
+    <color name="contact_us_four">#D4C7ED</color>
+
+    <!--MyAccounts TB Background/panel color -->
+    <color name="menu_panel_gray">#4B6171</color>
+    <color name="menu_panel_gray_selected">#455B6A</color>
+
+    <color name="bg_paypal_credit">#003087</color>
+
+</resources>

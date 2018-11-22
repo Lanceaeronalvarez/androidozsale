@@ -138,8 +138,8 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 79
-            versionName "2.3.1"
+            versionCode 92
+            versionName "2.3.4"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -160,8 +160,8 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 82
-            versionName "2.3.1"
+            versionCode 92
+            versionName "2.3.4"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -223,8 +223,8 @@ android {
         }
 
         topbuyRC {
-            versionCode 87
-            versionName "2.3.1"
+            versionCode 106
+            versionName "2.3.3"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -244,8 +244,8 @@ android {
         }
 
         topbuyTest {
-            versionCode 82
-            versionName "2.3.0"
+            versionCode 106
+            versionName "2.3.3"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -464,6 +464,7 @@ android {
 
     sourceSets {
         dealsDirectRC {
+            res.srcDirs = ['src/dealsDirectRC/res']
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',
@@ -485,6 +486,7 @@ android {
         }
 
         dealsDirectTest {
+            res.srcDirs = ['src/dealsDirectRC/res']
             java.srcDirs = ['src/commonControllers/java/',
                             'src/commonHomeController/java/',
                             'src/commonCategoriesController/java/',

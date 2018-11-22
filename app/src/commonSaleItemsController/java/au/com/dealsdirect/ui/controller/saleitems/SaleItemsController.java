@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,6 +48,8 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsControlle
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.SearchEditText;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ChangeHandler;
@@ -429,14 +434,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         Log.d("deeplink", "sale items controller = " + mSaleId);
 
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
-        if (mPresenter.isTablet()) {
-            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getResources().getInteger(R.integer.sale_items_tablet_column_count)));
-        } else {
-            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getResources().getInteger(R.integer.sale_items_phone_column_count)));
-        }
-
+        mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount()));
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
 
         if (isFiltered || mSaleItems.isEmpty()) {
@@ -447,12 +445,12 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             Log.d("deeplink", "sale items controller = " + mSaleId);
 
             /* show popular products after filter with empty chips */
-            if (mCategoryKey.isEmpty() && (mSaleId == null || mSaleId.isEmpty()) && mChipFilters.isEmpty()) {
+            if (mCategoryKey.isEmpty() && (mSaleId.isEmpty() || (Objects.equals(mSaleId, ""))) && mChipFilters.isEmpty()) {
                 mPopularProductsHeader.setVisibility(View.VISIBLE);
             }
 
             /* set if still in search */
-            if (mCategoryKey.isEmpty() && (mSaleId == null || mSaleId.isEmpty())) {
+            if (mCategoryKey.isEmpty() && (mSaleId.isEmpty() || (Objects.equals(mSaleId, "")))) {
                 mIsSearch = true;
                 mFromShopSearch = true;
             }
@@ -678,10 +676,15 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             bundle.putString(SALEITEMDETAILS_KEY_ITEM_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
             bundle.putString(SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
 
-            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-                    .pushChangeHandler(new ChangeHandler().fadeChangeHandler())
-                    .popChangeHandler(new ChangeHandler().fadeChangeHandler()));
-
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .pushChangeHandler(new FadeChangeHandler())
+                        .popChangeHandler(new FadeChangeHandler()));
+            } else {
+                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .pushChangeHandler(new SharedArcFadePushChangeHandler())
+                        .popChangeHandler(new SharedArcFadePopChangeHandler()));
+            }
             mFromShopSearch = false;
             mFromCategorySearch = false;
         }
@@ -832,7 +835,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
         if (saleId != null) {
 
-            if (!saleId.isEmpty())
+            if (!saleId.isEmpty() || !(Objects.equals(saleId, "")))
                 saleIds.add(saleId);
         }
 

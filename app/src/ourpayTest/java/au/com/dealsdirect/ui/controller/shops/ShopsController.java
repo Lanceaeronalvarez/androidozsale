@@ -54,6 +54,7 @@ import butterknife.OnClick;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_POSITION;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_HEADER_IMAGE;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
@@ -294,7 +295,6 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             String imageUrl,
             boolean isAvailable) {
 
-
         Bundle args = new BundleBuilder(new Bundle())
                 .putString(SALEITEMS_TITLE, bannerTitle)
                 .putString(SALEITEMS_SALE_ID, saleId)
@@ -302,6 +302,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                 .putString(SALEITEMS_HEADER_IMAGE, imageUrl)
                 .putInt(SALEITEMS_FROM_POSITION, position)
                 .putString(SALEITEMS_CATEGORY_MAP, null)
+                .putBoolean(SALEITEMS_FROM_SHOP_SEARCH, false)
                 .build();
 
         if (mBannerClickCounter != 1) {

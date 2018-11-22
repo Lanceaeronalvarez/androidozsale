@@ -123,6 +123,8 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @BindView(R.id.partial_toolbar_left_view)
     ImageButton mLeftButton;
 
+    private boolean isRegisterSuccess = false;
+
     public static RegisterController newInstance() {
 
         return new RegisterController(
@@ -273,14 +275,15 @@ public class RegisterController extends VisaCheckoutController implements Regist
         }
     }
 
-
     @Override
-    public void showLoginSuccessful(String loginTicket) {
+    public void showLoginSuccessful(String loginTicket, boolean isFacebookLogin) {
+        isRegisterSuccess = true;
+        mPresenter.setIsNewUser(true);
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
 
     @Override
-    public void showLoginError(String message) {
+    public void showLoginError(String message, boolean isFacebookLogin) {
         mActivity.loginErrorHandler(message);
         mSignUpButton.setEnabled(true);
     }
@@ -298,7 +301,9 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public void showLoginVisaSuccess(String loginTicket) {
-        showLoginSuccessful(loginTicket);
+//        showLoginSuccessful(loginTicket);
+        isRegisterSuccess = true;
+        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
 
     @Override

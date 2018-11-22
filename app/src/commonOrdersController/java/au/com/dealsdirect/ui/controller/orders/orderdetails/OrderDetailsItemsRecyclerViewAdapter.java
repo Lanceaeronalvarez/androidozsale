@@ -81,8 +81,7 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
                 holder.productSize.setText(productSize);
             }
 
-            ImageUtils.loadImage(context,
-                    LegacyStringImageUtils.generateImageUrl(brandId, imageId, fileName),
+            ImageUtils.loadImage(LegacyStringImageUtils.generateImageUrl(brandId, imageId, fileName),
                     holder.orderImage);
 
         }
@@ -153,11 +152,11 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
 
             trackHereButton = (Button) itemView.findViewById(R.id.order_track_button);
 
-            productSubtotal = (TextView) itemView.findViewById(R.id.product_subtotal);
-            productPrice = (TextView) itemView.findViewById(R.id.product_price);
-            productSize = (TextView) itemView.findViewById(R.id.product_size);
+            productSubtotal = (TextView) itemView.findViewById(R.id.controller_order_details_item_subtotal_textview);
+            productPrice = (TextView) itemView.findViewById(R.id.controller_order_details_item_price_textview);
+            productSize = (TextView) itemView.findViewById(R.id.controller_order_details_item_size_textview);
 
-            orderImage = (ImageView) itemView.findViewById(R.id.order_image);
+            orderImage = (ImageView) itemView.findViewById(R.id.controller_order_details_item_imageview);
             orderDetailLayout = (LinearLayout) itemView.findViewById(R.id.product_list_order_detail);
 
             orderNumberValueTextView = (TextView) itemView.findViewById(R.id.order_number_text_value);
