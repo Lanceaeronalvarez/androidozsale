@@ -602,9 +602,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     if (isOurPaySelectDeliveryMethod()) { // show ourpay select related summary
                         mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount()));
                         mSummaryPayTodayTextView.setText(PriceUtils.getPriceStringValue(ourpay.getInitialAmount()));
-                        ourpayPanel.getCartAmountHeader().setVisibility(View.GONE);
-                    } else {
-                        ourpayPanel.getCartAmountHeader().setVisibility(View.VISIBLE);
                     }
 
                 } else {
