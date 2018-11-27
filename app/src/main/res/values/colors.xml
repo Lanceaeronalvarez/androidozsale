@@ -50,6 +50,10 @@
     <color name="bg_button_tutorial_pressed">#ECECEC</color>
     <color name="bg_button_disabled">@color/colorDisabled</color>
 
+    <color name="bg_button_pay_default">#65D87F</color>
+    <color name="bg_button_pay_pressed">#65D87F</color>
+    <color name="bg_button_pay_disabled">#65D87F</color>
+
     <color name="bg_join_now_btn_ripple">@color/white</color>
     <color name="bg_join_now_btn_default">#cacaca</color>
     <color name="bg_join_now_btn_pressed">#cacaca</color>
@@ -66,6 +70,7 @@
     <color name="mail_pressed">#FFEA5757</color>
     <color name="sms_default">#FF65D87F</color>
     <color name="sms_pressed">#FF65D87F</color>
+
 
 
     <!-- Text -->
