@@ -311,43 +311,17 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
             List<String> names = new ArrayList<>();
             names.add(bannerId + position);
-            if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
-
-                // Invoke login if no auth or not an open app
+            if (isAvailable) {
                 assert (mActivity) != null;
-                ((MainMvpView) mActivity).showLoginController(getRouter(), new AuthHandler() {
-                    @Override
-                    public void success() {
-                        mActivity.callGCMRegisterSubscriber();
-
-                        mActivity.getHomeRouter().pushController(RouterTransaction.with(
+                mActivity
+                        .getHomeRouter()
+                        .pushController(RouterTransaction.with(
                                 new SaleItemsController(args))
                                 .tag(mActivity.getString(R.string.sale_items_controller_tag))
                                 .pushChangeHandler(new HorizontalChangeHandler())
                                 .popChangeHandler(new HorizontalChangeHandler()));
-                    }
-
-                    @Override
-                    public void error() {
-
-                    }
-                });
             } else {
-
-// Check if sale is available
-                //TODO: Need computation for date and time when sale response is cached
-                if (isAvailable) {
-                    assert (mActivity) != null;
-                    mActivity
-                            .getHomeRouter()
-                            .pushController(RouterTransaction.with(
-                                    new SaleItemsController(args))
-                                    .tag(mActivity.getString(R.string.sale_items_controller_tag))
-                                    .pushChangeHandler(new HorizontalChangeHandler())
-                                    .popChangeHandler(new HorizontalChangeHandler()));
-                } else {
-                    DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
-                }
+                DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
             }
         }
     }
