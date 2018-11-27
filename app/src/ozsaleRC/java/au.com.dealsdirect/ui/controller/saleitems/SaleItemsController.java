@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -44,7 +43,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -55,7 +53,6 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
@@ -80,8 +77,6 @@ import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
-import io.reactivex.Completable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
@@ -118,6 +113,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean mIsFilterClicked = false;
     private boolean mIsSearchClicked = false;
     private String mCurrentTabName = "";
+    private String mPreviousTabName = "";
     private List<Pair<String, String>> mFacetFilters = new ArrayList();
     private List<String> mTabTitles = new ArrayList();
     private List<String> mSelectedTitle = new ArrayList<>();
@@ -502,6 +498,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
                         if (mHasSavedInstance) {
                             mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                        } else {
+                            showKeyboard();
                         }
                     }
                 }
@@ -614,6 +612,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSearchFilterMvpView.replaceCategoryTree(mCategoryTreeResponse);
 
         onRefreshEnd();
+
+        reselectTabIfFacetsAlreadyVisible();
     }
 
     @Override
@@ -695,14 +695,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     .putString(BundleKeys.KEY_SALE_ITEMS_TITLE, mSearchQuery)
                     .build();
 
-            Controller searchFilterController = ControllerFactory.getInstance(GateKeeper.Destination.SEARCH_FILTER, bundle);
+            GateKeeper.Destination destination;
+            if (mFromBannerSearch || mFromShopSearch) {
+                destination = GateKeeper.Destination.SEARCH_FILTER_FOR_SHOP;
+            } else {
+                destination = GateKeeper.Destination.SEARCH_FILTER_FOR_CATEGORY;
+            }
+
+            Controller searchFilterController = ControllerFactory.getInstance(destination, bundle);
             mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
-            GateKeeper.setRoot(mSearchFilterRouter, GateKeeper.Destination.SEARCH_FILTER, RouterTransaction.with(searchFilterController));
+            GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
         } else {
             mSearchFilterMvpView = mActivity.getSearchFilterController();
         }
         showCollapsingToolbar();
-        Completable.timer(DELETE_DELAY_MS, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(this::showKeyboard);
     }
 
     public void deactivateSearch() {
@@ -848,6 +854,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mInitialLoad) {
             //Remove selected state by default setup
             mCurrentTabName = "";
+            mPreviousTabName = "";
             toggleTabSelection(0, false);
 
             mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -903,6 +910,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private void onSelectTab(int tabPos) {
         hideKeyboard();
         mSearchFilterMvpView.showFacetItem(tabPos);
+        mPreviousTabName = mCurrentTabName;
         mCurrentTabName = mFacetFilters.get(tabPos).second;
         mSearchFilterMvpView.setSearchFilterControllerActive(true);
         mSearchFilterMvpView.updateSelectedFacet(tabPos);
@@ -928,6 +936,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void toggleTabSelection() {
+        mPreviousTabName = mCurrentTabName;
         mCurrentTabName = "";
         retainSelectedTabs();
     }
@@ -1021,5 +1030,25 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public boolean isFromCategories() {
         return mFromCategorySearch;
+    }
+
+    private void reselectTabIfFacetsAlreadyVisible() {
+        if (mSearchFilterMvpView.getIsFacetsVisible()) {
+            int tabPosition = -1;
+            int prevTabPosition = -1;
+            for (int i = 0; i < mFacetFilters.size(); i++) {
+                if (tabPosition == -1 && mFacetFilters.get(i).second.equals(mCurrentTabName)) {
+                    tabPosition = i;
+                }
+                if (prevTabPosition == -1 && mFacetFilters.get(i).second.equals(mPreviousTabName)) {
+                    prevTabPosition = i;
+                }
+            }
+            tabPosition = tabPosition == -1 ? prevTabPosition : tabPosition;
+            if (tabPosition >= 0) {
+                onSelectTab(tabPosition);
+                retainSelectedTabs();
+            }
+        }
     }
 }

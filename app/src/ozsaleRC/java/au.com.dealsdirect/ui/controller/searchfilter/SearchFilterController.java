@@ -649,4 +649,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
     public void setFacetFilterItems(List<Pair<String,String>> mFacetFilters) {
         this.mFacetFilters = mFacetFilters;
     }
+
+    @Override
+    public boolean getIsFacetsVisible() {
+        return mFacetsFrame.getVisibility() == View.VISIBLE;
+    }
 }
