@@ -411,7 +411,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         List<String> names = new ArrayList<>();
         names.add(bannerId + position);
-        if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
+        if (!mPresenter.isAuthorized()) {
             mActivity.showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
