@@ -150,7 +150,7 @@
 
     <!-- Ourpay -->
     <color name="ourpay_gray">#FF898989</color>
-    <color name="ourpay_orange">#FFE47C0B</color>
+    <color name="ourpay_orange">#F37325</color>
     <color name="ourpay_orange_dark">#FFAE5F0A</color>
     <color name="ourpay_border_gray">#FFC7C7C7</color>
     <color name="ourpay_circle_state_color_active">#FCBD12</color>
