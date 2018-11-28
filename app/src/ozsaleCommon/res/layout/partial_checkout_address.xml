@@ -38,7 +38,8 @@
                 android:layout_weight="9"
                 android:text="@string/add_new_address"
                 android:textColor="@color/row_checkout_text_light_color"
-                android:textSize="@dimen/text_size_body" />
+                android:textSize="@dimen/text_size_body"
+                android:layout_gravity="center_vertical"/>
 
             <ImageView
                 android:layout_width="0dp"
