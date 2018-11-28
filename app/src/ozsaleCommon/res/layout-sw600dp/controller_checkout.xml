@@ -28,6 +28,12 @@
             android:orientation="vertical"
             android:visibility="gone">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/controller_checkout_recyclerview_items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
             <include layout="@layout/partial_checkout_address" />
 
             <include layout="@layout/partial_checkout_delivery_options" />

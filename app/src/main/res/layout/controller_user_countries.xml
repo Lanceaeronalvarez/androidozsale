@@ -18,9 +18,9 @@
             fontPath="@string/font_app_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginBottom="@dimen/country_padding_bottom"
+            android:layout_marginLeft="@dimen/country_padding_left"
+            android:layout_marginTop="@dimen/country_padding_top"
             android:text="Select Country"
             android:textColor="@color/text_extra_dark"
             android:textSize="@dimen/text_size_body" />
