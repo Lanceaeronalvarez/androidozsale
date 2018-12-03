@@ -563,6 +563,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductName.setText(name.trim());
         mProductBrand.setText(brandName.trim());
 
+        mAddToCartButton.setText(!saleDetail.isSoldOut() ? R.string.add_to_cart : R.string.sold_out);
+        mAddToCartButton.setEnabled(!saleDetail.isSoldOut());
+        mAddToCartButton.bringToFront();
+
         if (personalisation != null) {
             mPersonalisationLayout.inflateForProductDetails(mActivity, new Gson().fromJson(
                     personalisation, Personalisation.class));
