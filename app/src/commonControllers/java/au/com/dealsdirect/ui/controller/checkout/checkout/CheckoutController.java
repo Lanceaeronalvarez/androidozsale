@@ -1166,11 +1166,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mNoCartItemsLayout.setVisibility(View.GONE);
         }
         mCheckoutContainer.setVisibility(View.VISIBLE);
-        int showOrdersLabel = getResources().getBoolean(R.bool.is_checkout_orders_label_visible) ? View.VISIBLE : View.GONE;
-
-        if (mOrdersLabel != null) {
-            mOrdersLabel.setVisibility(showOrdersLabel);
-        }
     }
 
     private void hidePaymentButtons() {
