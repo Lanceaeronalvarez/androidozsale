@@ -9,39 +9,20 @@
     android:elevation="1.5dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_huge"
+        android:layout_marginRight="@dimen/margin_huge"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_small"
         tools:ignore="UselessParent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center_vertical"
-            android:text="Pay less"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center"
-            android:text="today with"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:paddingTop="5dp"
-            android:src="@drawable/ourpay_logo_white"
-            tools:ignore="ContentDescription" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_ourpay_button"
+            android:layout_gravity="center_vertical"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"/>
     </LinearLayout>
 </RelativeLayout>
