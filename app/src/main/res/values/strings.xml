@@ -628,6 +628,7 @@
     <string name="my_subjects">MY SUBJECTS</string>
     <string name="dummy_text">dummy text</string>
     <string name="an_error_has_occurred">An error has occurred</string>
+    <string name="ourpay_order_schedule">ORDER PAYMENT SCHEDULE</string>
 
 
     <!--Country Id Mapping-->
