@@ -132,7 +132,7 @@
     <color name="tab_bar_icon_hovered">@color/colorAccent</color>
 
     <color name="bottom_nav_accent">@color/colorAccent</color>
-    <color name="bottom_nav_inactive">@color/text_extra_light</color>
+    <color name="bottom_nav_inactive">@color/text_medium</color>
     <color name="bottom_nav_badge">#ffcc0000</color>
     <color name="bottom_nav_background">@color/white</color>
 
@@ -181,6 +181,7 @@
     <color name="contact_us_two">#EDC7D5</color>
     <color name="contact_us_three">#CAEDC7</color>
     <color name="contact_us_four">#D4C7ED</color>
+    <color name="contact_us_text_black_color">@color/toolbar_text_dark</color>
 
     <!--MyAccounts TB Background/panel color -->
     <color name="menu_panel_gray">#4B6171</color>
@@ -230,5 +231,8 @@
 
     <color name="bg_paypal_credit">#003087</color>
     <color name="filter_tabs_text_selector">@color/text_dark</color>
+    <color name="checkout_summary_text_color">#C4C4C4</color>
+    <color name="checkout_voucher_view_color">#F2F2F2</color>
+    <color name="order_details_view_color">#f4f4f4</color>
 
 </resources>

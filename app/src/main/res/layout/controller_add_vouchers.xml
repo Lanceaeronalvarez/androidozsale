@@ -137,6 +137,8 @@
 
             </LinearLayout>
 
+            <include layout="@layout/partial_no_voucher_placeholder_layout"/>
+
             <include layout="@layout/partial_vouchers_buttons" />
         </LinearLayout>
     </ScrollView>

@@ -129,5 +129,9 @@
     <color name="menu_panel_gray_selected">#455B6A</color>
 
     <color name="bg_paypal_credit">#003087</color>
+    <color name="contact_history_username_text_color">#7e7e7e</color>
+    <color name="contact_history_subject_text_color">#d1d1d1</color>
+    <color name="contact_history_date_text_color">#b9b9b9</color>
+    <color name="contact_history_chat_background">@color/text_extra_light</color>
 
 </resources>

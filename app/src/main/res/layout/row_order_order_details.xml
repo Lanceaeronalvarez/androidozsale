@@ -248,7 +248,7 @@
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="0.5dp"
-                android:background="#f4f4f4"/>
+                android:background="@color/order_details_view_color"/>
 
             <Button
                 android:id="@+id/order_track_button"
@@ -293,7 +293,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_headline3"
-                android:text="Delivery Address:"/>
+                android:text="@string/order_delivery_address"
+                android:textColor="@color/text_medium"/>
 
             <TextView
                 android:id="@+id/delivery_text_view"
@@ -310,7 +311,7 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="0.5dp"
-            android:background="#f4f4f4"/>
+            android:background="@color/order_details_view_color"/>
 
 
         <RelativeLayout
@@ -326,7 +327,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_headline3"
-                android:text="Status:"/>
+                android:text="@string/order_status"
+                android:textColor="@color/text_medium"/>
 
             <TextView
                 android:id="@+id/status_text_view"
@@ -344,7 +346,7 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="0.5dp"
-            android:background="#f4f4f4"/>
+            android:background="@color/order_details_view_color"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -359,7 +361,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_headline3"
-                android:text="Order Date:"/>
+                android:text="@string/order_order_date"
+                android:textColor="@color/text_medium"/>
 
             <TextView
                 android:id="@+id/order_date_text_view"
@@ -376,7 +379,7 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="0.5dp"
-            android:background="#f4f4f4"/>
+            android:background="@color/order_details_view_color"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -390,8 +393,9 @@
                 android:id="@+id/estimated_delivery_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Estimated Delivery:"
-                android:textSize="@dimen/text_size_headline3"/>
+                android:text="@string/order_estimated_delivery"
+                android:textSize="@dimen/text_size_headline3"
+                android:textColor="@color/text_medium"/>
 
             <TextView
                 android:id="@+id/estimated_delivery_date_text_view"
@@ -409,7 +413,7 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="0.5dp"
-            android:background="#f4f4f4"/>
+            android:background="@color/order_details_view_color"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -425,7 +429,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_headline3"
                 android:paddingTop="10dp"
-                android:text="Credit Card Payment:"/>
+                android:text="@string/order_credit_card_payment"
+                android:textColor="@color/text_medium"/>
 
             <TextView
                 android:id="@+id/credit_card_payment_value"
@@ -447,7 +452,8 @@
                 android:textSize="@dimen/text_size_headline3"
                 android:layout_below="@id/credit_card_payment_label"
                 android:paddingTop="10dp"
-                android:text="Delivery Payment:"/>
+                android:text="@string/order_delivery_payment"
+                android:textColor="@color/text_medium"/>
 
             <TextView
                 android:id="@+id/delivery_amount_value"
@@ -470,7 +476,8 @@
                 android:layout_below="@+id/delivery_amount_label"
                 android:textSize="@dimen/text_size_headline3"
                 android:paddingTop="10dp"
-                android:text="Discount:"/>
+                android:text="@string/order_discount"
+                android:textColor="@color/text_medium"/>
 
             <TextView
                 android:id="@+id/discount_value"
@@ -493,7 +500,8 @@
                 android:layout_below="@+id/discount_label"
                 android:textSize="@dimen/text_size_headline3"
                 android:paddingTop="10dp"
-                android:text="Total Item Payment:"/>
+                android:text="@string/order_total_item_payment"
+                android:textColor="@color/text_medium"/>
 
             <TextView
                 android:id="@+id/total_item_payment_value"
@@ -512,7 +520,7 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="0.5dp"
-            android:background="#f4f4f4"/>
+            android:background="@color/order_details_view_color"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -526,8 +534,9 @@
                 android:id="@+id/total_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total:"
-                android:textSize="@dimen/text_size_headline3"/>
+                android:text="@string/order_total"
+                android:textSize="@dimen/text_size_headline3"
+                android:textColor="@color/text_medium"/>
 
             <TextView
                 fontPath="@string/font_app_bold"
@@ -544,7 +553,7 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="0.5dp"
-            android:background="#f4f4f4"/>
+            android:background="@color/order_details_view_color"/>
 
     </LinearLayout>
 

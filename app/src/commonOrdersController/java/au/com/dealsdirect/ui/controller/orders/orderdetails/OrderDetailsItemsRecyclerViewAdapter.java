@@ -160,8 +160,8 @@ public class OrderDetailsItemsRecyclerViewAdapter extends RecyclerView.Adapter<R
             orderDetailLayout = (LinearLayout) itemView.findViewById(R.id.product_list_order_detail);
 
             orderNumberValueTextView = (TextView) itemView.findViewById(R.id.order_number_text_value);
-            orderProductNameTextView = (TextView) itemView.findViewById(R.id.my_order_product_name);
-            orderProductQuantityTextView = (TextView) itemView.findViewById(R.id.productQuantityTextView);
+            orderProductNameTextView = (TextView) itemView.findViewById(R.id.controller_order_details_item_product_name_textview);
+            orderProductQuantityTextView = (TextView) itemView.findViewById(R.id.controller_order_details_item_quantity_textview);
 
             approvedDateGraphNodeImageView = (TextView) itemView.findViewById(R.id.order_date_graph_node);
             approvedDateValueTextView = (TextView) itemView.findViewById(R.id.order_date_value);

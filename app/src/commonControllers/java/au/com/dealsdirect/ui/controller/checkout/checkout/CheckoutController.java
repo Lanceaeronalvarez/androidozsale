@@ -707,7 +707,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             displayPaymentDetails();
             displayDeliveryOptionsUI(deliveryOptionName, deliveryOptionPrice);
         } else {
-            mDeliveryOptionRootLayout.setVisibility(View.GONE);
+            if (mDeliveryOptionRootLayout != null) { mDeliveryOptionRootLayout.setVisibility(View.GONE); }
             displayPaymentDetails();
         }
     }

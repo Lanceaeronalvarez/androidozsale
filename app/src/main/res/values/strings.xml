@@ -638,4 +638,15 @@
     <string name="controller_user_details_enter_password">Please enter your password</string>
     <string name="controller_user_details_login_prompt">Please login first</string>
 
+    <!--Order Details-->
+    <string name="order_delivery_address">Delivery Address:</string>
+    <string name="order_status">Status:</string>
+    <string name="order_order_date">Order Date:</string>
+    <string name="order_estimated_delivery">Estimated Delivery:</string>
+    <string name="order_credit_card_payment">Credit Card Payment:</string>
+    <string name="order_delivery_payment">Delivery Payment:</string>
+    <string name="order_discount">Discount:</string>
+    <string name="order_total_item_payment">Total Item Payment:</string>
+    <string name="order_total">Total:</string>
+
 </resources>

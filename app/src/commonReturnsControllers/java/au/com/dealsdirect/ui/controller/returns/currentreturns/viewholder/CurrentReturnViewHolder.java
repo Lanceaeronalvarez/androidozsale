@@ -15,7 +15,7 @@ import au.com.dealsdirect.R;
 
 public class CurrentReturnViewHolder extends RecyclerView.ViewHolder {
 
-    public CardView currentReturnProductItem;
+    public LinearLayout currentReturnProductItem;
 
     public TextView currentReturnsRequestNumberValueTextView;
     public TextView currentReturnsRequestProductNameValueTextView;
@@ -31,7 +31,7 @@ public class CurrentReturnViewHolder extends RecyclerView.ViewHolder {
     public CurrentReturnViewHolder(View itemView) {
         super(itemView);
 
-        currentReturnProductItem = (CardView) itemView.
+        currentReturnProductItem = (LinearLayout) itemView.
                 findViewById(R.id.view_holder_my_current_returns_row_container);
 
         currentReturnItemsRecyclerView = (RecyclerView) itemView.

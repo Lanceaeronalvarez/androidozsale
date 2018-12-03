@@ -98,13 +98,15 @@
             android:id="@+id/controller_add_contact_message_field"
             style="@style/Widget.AppCompat.Spinner.Underlined"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/margin_huge"
             android:layout_gravity="center"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="@dimen/margin_small"
             android:layout_weight="1"
             android:background="@drawable/bg_add_contact_message"
             android:hint="@string/write_a_message"
-            android:padding="10dp" />
+            android:textColorHint="@color/text_light"
+            android:padding="@dimen/margin_small"
+            android:textColor="@color/contact_us_text_black_color"/>
 
         <ImageButton
             android:id="@+id/controller_add_contact_message_send"

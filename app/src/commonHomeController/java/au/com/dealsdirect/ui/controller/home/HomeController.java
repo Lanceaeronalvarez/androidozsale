@@ -156,7 +156,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         Log.d("deeplinking", "homecontroller onviewbound");
         if (!mShopRouter.hasRootController()) {
-            ShopsController shopsController = new ShopsController();
+            ShopsController shopsController = ShopsController.newInstance();
             mActivity.setShopController(shopsController);
 //            mActivity.shopControllerCallback();
 
@@ -328,7 +328,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void initControllers(boolean includeShop) {
         if (includeShop) {
-            ShopsController shopsController = new ShopsController();
+            ShopsController shopsController = ShopsController.newInstance();
             mActivity.setShopController(shopsController);
             mShopRouter.setRoot(RouterTransaction.with(shopsController).tag(ShopsController.TAG));
         }

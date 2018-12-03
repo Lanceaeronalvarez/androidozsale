@@ -2,9 +2,12 @@ package au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthisto
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +46,7 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
         Object contactMessage = mCurrentContactsHistoryList.get(position).getText();
 
         String contactSubject = mCurrentContactsHistoryList.get(position).getSubject();
+        boolean isStaff = mCurrentContactsHistoryList.get(position).getIsStaff();
 
 
         String dateHeaderFormatOfItem = DateUtils.getTrimmedServerDateString(contactDate.toString());
@@ -62,6 +66,18 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
         }else{
 
             holder.contactHistoryDescriptionTextView.setText("");
+        }
+
+        holder.itemView.setSelected(isStaff);
+        holder.contactHistoryMessageTextView.setSelected(isStaff);
+
+        if (isStaff) {
+            FrameLayout.LayoutParams contactHistoryItemParams = (FrameLayout.LayoutParams) holder.contactHistoryItemContainer.getLayoutParams();
+            contactHistoryItemParams.gravity = Gravity.START;
+
+            LinearLayout.LayoutParams messageTextViewParams = (LinearLayout.LayoutParams) holder.contactHistoryMessageTextView.getLayoutParams();
+            messageTextViewParams.gravity = Gravity.START;
+
         }
 
 
