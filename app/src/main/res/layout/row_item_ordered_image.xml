@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/order_image_framelayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginRight="@dimen/margin_extra_small"
+    tools:ignore="MissingPrefix">
+
+    <ImageView
+        android:id="@+id/ordered_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@+id/overlay_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="@drawable/bg_overlay_image"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/ordered_image_text"
+        fontPath="@string/font_app_regular"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_body"
+        tools:text="+3" />
+
+</FrameLayout>

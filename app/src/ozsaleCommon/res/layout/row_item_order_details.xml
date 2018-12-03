@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -20,35 +19,22 @@
         android:id="@+id/order_item_details_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/controller_order_details_item_imageview"
         android:layout_below="@id/my_order_information_header"
+        android:layout_alignTop="@+id/controller_order_details_item_imageview"
         android:layout_marginLeft="@dimen/margin_extra_small"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/margin_extra_small"
         android:layout_toRightOf="@+id/controller_order_details_item_imageview"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/controller_order_details_item_product_name_textview"
-            fontPath="@string/font_app_bold"
+            fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/text_dark"
             android:textSize="@dimen/text_size_headline3"
             tools:ignore="HardcodedText"
             tools:text="Item Name" />
-
-        <TextView
-            android:id="@+id/controller_order_details_item_description_textview"
-            fontPath="@string/font_app_semibold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/controller_order_details_item_product_name_textview"
-            android:textColor="@color/text_medium"
-            android:textSize="@dimen/text_size_body"
-            tools:ignore="HardcodedText"
-            tools:text="1 Item" />
-
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -61,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/size"
                 android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_headline3"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -70,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_extra_small"
                 android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_headline3"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -88,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/quantity"
                 android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_headline3"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -97,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_extra_small"
                 android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_headline3"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -115,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/price_colon"
                 android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_headline3"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -124,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_extra_small"
                 android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_headline3"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -134,8 +120,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/margin_small">
+            android:layout_marginBottom="@dimen/margin_small"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/product_subtotal_indicator"
@@ -143,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/subtotal_colon"
                 android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_headline3"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -152,20 +138,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_extra_small"
                 android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_headline3"
+                android:textSize="@dimen/text_size_body"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
-
     </LinearLayout>
 
     <View
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/border_regular"
-        android:paddingTop="@dimen/margin_small"
-        android:layout_below="@id/order_item_details_layout"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_below="@id/controller_order_details_item_imageview"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:background="@color/border_regular" />
 
 </RelativeLayout>

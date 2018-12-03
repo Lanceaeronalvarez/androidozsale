@@ -9,8 +9,8 @@
     <string name="font_app_light">fonts/opensans/OpenSans-Light.ttf</string>
     <string name="font_app_light_italic">fonts/opensans/OpenSans-LightItalic.ttf</string>
     <string name="font_app_regular">fonts/opensans/OpenSans-Regular.ttf</string>
-    <string name="font_app_semibold">fonts/opensans/OpenSans-Semibold.ttf</string>
-    <string name="font_app_semibold_italic">fonts/opensans/OpenSans-SemiboldItalic.ttf</string>
+    <string name="font_app_semibold">fonts/opensans/OpenSans-SemiBold.ttf</string>
+    <string name="font_app_semibold_italic">fonts/opensans/OpenSans-SemiBoldItalic.ttf</string>
 
     <string name="error">error</string>
     <string name="dummy_text">dummy text</string>

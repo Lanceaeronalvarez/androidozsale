@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mysale.genie.utility.LegacyBaseResponseValue;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * dp Created by Admin on 11/9/16.
@@ -111,6 +112,13 @@ public class GetPaymentsList {
             @SerializedName("Tracker")
             @Expose
             private Tracker tracker;
+            @SerializedName("Items")
+            @Expose
+            private List<Item> items = null;
+
+            public List<Item> getItems() {
+                return items;
+            }
 
             public String getOrderID() {
                 return orderID;
@@ -219,6 +227,121 @@ public class GetPaymentsList {
             public void setDeliveryAmount(Double deliveryAmount) {
                 this.deliveryAmount = deliveryAmount;
             }
+        }
+
+        public class Item {
+
+            @SerializedName("ID")
+            @Expose
+            private String iD;
+            @SerializedName("ItemID")
+            @Expose
+            private String itemID;
+            @SerializedName("Item")
+            @Expose
+            private String item;
+            @SerializedName("Size")
+            @Expose
+            private String size;
+            @SerializedName("Qty")
+            @Expose
+            private Integer qty;
+            @SerializedName("Price")
+            @Expose
+            private Float price;
+            @SerializedName("Subtotal")
+            @Expose
+            private Float subtotal;
+            @SerializedName("BrandID")
+            @Expose
+            private String brandID;
+            @SerializedName("ImageID")
+            @Expose
+            private String imageID;
+            @SerializedName("FileName")
+            @Expose
+            private String fileName;
+
+            public String getID() {
+                return iD;
+            }
+
+            public void setID(String iD) {
+                this.iD = iD;
+            }
+
+            public String getItemID() {
+                return itemID;
+            }
+
+            public void setItemID(String itemID) {
+                this.itemID = itemID;
+            }
+
+            public String getItem() {
+                return item;
+            }
+
+            public void setItem(String item) {
+                this.item = item;
+            }
+
+            public String getSize() {
+                return size;
+            }
+
+            public void setSize(String size) {
+                this.size = size;
+            }
+
+            public Integer getQty() {
+                return qty;
+            }
+
+            public void setQty(Integer qty) {
+                this.qty = qty;
+            }
+
+            public Float getPrice() {
+                return price;
+            }
+
+            public void setPrice(Float price) {
+                this.price = price;
+            }
+
+            public Float getSubtotal() {
+                return subtotal;
+            }
+
+            public void setSubtotal(Float subtotal) {
+                this.subtotal = subtotal;
+            }
+
+            public String getBrandID() {
+                return brandID;
+            }
+
+            public void setBrandID(String brandID) {
+                this.brandID = brandID;
+            }
+
+            public String getImageID() {
+                return imageID;
+            }
+
+            public void setImageID(String imageID) {
+                this.imageID = imageID;
+            }
+
+            public String getFileName() {
+                return fileName;
+            }
+
+            public void setFileName(String fileName) {
+                this.fileName = fileName;
+            }
+
         }
 
         public static class Total {

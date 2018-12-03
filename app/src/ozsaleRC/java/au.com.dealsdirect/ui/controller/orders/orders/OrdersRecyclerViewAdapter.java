@@ -1,18 +1,22 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
-import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
+import android.app.Activity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -20,42 +24,69 @@ import butterknife.ButterKnife;
  * Created by smartwave on 22/06/2017.
  */
 
-public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecyclerViewAdapter.OrdersViewHolder> {
+public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public ArrayList<GetPaymentsList.ResponseValue.PaymentItem> mOrderList = new ArrayList<>();
-    Context mContext;
+    private ArrayList<GetPaymentsList.ResponseValue.PaymentItem> mPaymentItemList;
+    private Activity mActivity;
+    private OrderItemClickListener mClickListener;
 
-    public OrdersRecyclerViewAdapter(Context context, ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orderList) {
+    public static final int TITLE_VIEW_TYPE = 10;
+    public static final int DETAILS_VIEW_TYPE = 11;
 
-        this.mOrderList = orderList;
-        this.mContext = context;
+    private ArrayList<Object> mData;
+    private ArrayList<String> mReferenceNumbers;
+    private GetPaymentsList.ResponseValue.PaymentItem item;
+    private LinkedHashMap<String, Object> mLinkedHashMap;
+
+    private static final int ORDER_DATE_ACTIVE_STATE = 1;
+    private static final int ORDER_DATE_NEGATIVE_STATE = -1;
+    private static final int ORDER_STOCK_ARRIVED_ACTIVE_STATE = 2;
+    private static final int ORDER_STOCK_ARRIVED_NEGATIVE_STATE = -2;
+    private static final int ORDER_PACKED_ACTIVE_STATE = 3;
+    private static final int ORDER_PACKED_NEGATIVE_STATE = -3;
+    private static final int ORDER_DISPATCHED_ACTIVE_STATE = 4;
+    private static final int ORDER_DISPATCHED_NEGATIVE_STATE = -4;
+
+    public OrdersRecyclerViewAdapter(Activity mActivity,
+                                     OrderItemClickListener clickListener,
+                                     ArrayList<GetPaymentsList.ResponseValue.PaymentItem> paymentItems) {
+
+        this.mPaymentItemList = paymentItems;
+        this.mClickListener = clickListener;
+        this.mActivity = mActivity;
+        flattenData();
+        mReferenceNumbers = flattenReferenceNumber(mData);
     }
 
     @Override
-    public OrdersRecyclerViewAdapter.OrdersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_order_container, parent, false);
-
-        return new OrdersViewHolder(v);
+    public int getItemViewType(int position) {
+        //TODO: logic for determining what viewholder should be shown
+        return mData.get(position) instanceof GetPaymentsList.ResponseValue.PaymentItem ? TITLE_VIEW_TYPE : DETAILS_VIEW_TYPE;
     }
 
     @Override
-    public void onBindViewHolder(OrdersRecyclerViewAdapter.OrdersViewHolder viewHolder, final int position) {
-        Log.d("myorders", " on bind view holder = " + position);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TITLE_VIEW_TYPE) {
+            return new OrdersViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.row_order_container, parent, false));
+        }
+        return new OrderItemsViewholder(LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_orders, parent, false));
+    }
 
-        viewHolder.orderItemsRecyclerView.setAdapter(new OrdersItemRecyclerViewAdapter(
-                mOrderList.get(position).getPaymentReferenceNo(),
-                mOrderList.get(position).getOrders(),
-                mContext));
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
+        int viewType = getItemViewType(position);
 
-        GetPaymentsList.ResponseValue.Total total = mOrderList.get(position).getTotal();
-
-        viewHolder.cardPaymentText.setText(String.format(mContext.getString(R.string.dollar), String.valueOf(total.getCreditCardAmount())));
-        viewHolder.voucherPaymentText.setText(String.format(mContext.getString(R.string.dollar), String.valueOf(total.getDiscountAmount())));
-        viewHolder.totalPaymentText.setText(String.format(mContext.getString(R.string.dollar), String.valueOf(total.getTotalAmount())));
-
-        viewHolder.orderItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager
-                .VERTICAL, false));
-
+        if (viewType == TITLE_VIEW_TYPE) {
+            AppLogger.d("Orders Title Item Position: " + position);
+            item = (GetPaymentsList.ResponseValue.PaymentItem) mData.get(position);
+            ((OrdersViewHolder) viewHolder).orderNumberTextView.setText(String.valueOf(item.getPaymentReferenceNo()));
+        } else if (viewType == DETAILS_VIEW_TYPE) {
+            GetPaymentsList.ResponseValue.Order order = (GetPaymentsList.ResponseValue.Order) mData.get(position);
+            setOrderTrackData((OrderItemsViewholder) viewHolder, item, order);
+            ((OrderItemsViewholder) viewHolder).trackHereButton.setOnClickListener(v ->
+                    mClickListener.onOrderItemTrackingButtonClick(order.getLink(), null));
+        }
+        viewHolder.itemView.setOnClickListener(view -> mClickListener.onOrderItemClick(mReferenceNumbers.get(position)));
     }
 
     @Override
@@ -65,7 +96,31 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
 
     @Override
     public int getItemCount() {
-        return mOrderList.size();
+        return mData.size();
+    }
+
+    private ArrayList<String> flattenReferenceNumber(ArrayList<Object> data) {
+        ArrayList<String> referenceNumbers = new ArrayList<>();
+        GetPaymentsList.ResponseValue.PaymentItem item = new GetPaymentsList.ResponseValue.PaymentItem();
+
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i) instanceof GetPaymentsList.ResponseValue.PaymentItem) {
+                item = (GetPaymentsList.ResponseValue.PaymentItem) data.get(i);
+            }
+            referenceNumbers.add(String.valueOf(item.getPaymentReferenceNo()));
+        }
+        return referenceNumbers;
+    }
+
+    private void flattenData() {
+        mData = new ArrayList<>();
+
+        for (GetPaymentsList.ResponseValue.PaymentItem item : mPaymentItemList) {
+            mData.add(item);
+            for (int i = 0; i < item.getOrders().size(); i++) {
+                mData.add(item.getOrders().get(i));
+            }
+        }
     }
 
     @Override
@@ -75,27 +130,204 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
 
 
     public void replace(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orders) {
-        mOrderList = orders;
+        mPaymentItemList = orders;
         notifyDataSetChanged();
     }
 
     public static class OrdersViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.row_order_orders_recyclerview)
-        RecyclerView orderItemsRecyclerView;
+        @BindView(R.id.order_number_text_value)
+        TextView orderNumberTextView;
 
-        @BindView(R.id.row_order_card_payment_value)
-        TextView cardPaymentText;
-
-        @BindView(R.id.row_order_voucher_payment_value)
-        TextView voucherPaymentText;
-
-        @BindView(R.id.row_order_total_value)
-        TextView totalPaymentText;
+        @BindView(R.id.my_order_number_container)
+        RelativeLayout orderNumberContainerLayout;
 
         public OrdersViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public class OrderItemsViewholder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.order_image_recyclerview)
+        RecyclerView orderImagesRecyclerView;
+
+        @BindView(R.id.trackHereButton)
+        Button trackHereButton;
+
+        @BindView(R.id.order_date_graph_node)
+        View orderDateGraphNodeView;
+        @BindView(R.id.order_date_value)
+        TextView orderDateValueTextView;
+
+        @BindView(R.id.stock_arrived_graph_node)
+        View stockArrivedGraphNodeView;
+        @BindView(R.id.stock_arrived_value)
+        TextView stockArrivedValueTextView;
+
+        @BindView(R.id.order_packed_graph_node)
+        View orderPackedGraphNodeView;
+        @BindView(R.id.order_packed_value)
+        TextView orderPackedValueTextView;
+
+        @BindView(R.id.dispatched_graph_node)
+        View dispatchedGraphNodeTextView;
+        @BindView(R.id.dispatched_date_value)
+        TextView dispatchedDateValueTextView;
+
+        @BindView(R.id.tracker_first_node)
+        TextView orderFirstNodeStatusTextView;
+        @BindView(R.id.tracker_second_node)
+        TextView orderSecondNodeStatusTextView;
+        @BindView(R.id.tracker_third_node)
+        TextView orderThirdNodeStatusTextView;
+        @BindView(R.id.tracker_fourth_node)
+        TextView orderFourthNodeStatusTextView;
+
+        @BindView(R.id.connector_to_stock_arrived)
+        View orderStockArrivedConnector;
+        @BindView(R.id.connector_to_stock_arrived_2)
+        View orderStockArrivedConnector2;
+        @BindView(R.id.connector_to_order_packed)
+        View orderPackedConnector;
+        @BindView(R.id.connector_to_order_packed_2)
+        View orderPackedConnector2;
+        @BindView(R.id.connector_to_dispatched)
+        View orderDispatchedConnector;
+        @BindView(R.id.connector_to_dispatched_2)
+        View orderDispatchedConnector2;
+
+        @BindView(R.id.estimatedDeliveryTextView)
+        TextView estimatedDeliveryText;
+
+        public OrderItemsViewholder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+
+        }
+    }
+
+    public void setOrderTrackData(OrderItemsViewholder holder,
+                                  GetPaymentsList.ResponseValue.PaymentItem paymentItem,
+                                  GetPaymentsList.ResponseValue.Order order) {
+
+
+        GetPaymentsList.ResponseValue.Order orderItem = order;
+
+        String orderStatus = orderItem.getStatus();
+
+        String link = order.getLink();
+
+        holder.trackHereButton.setVisibility(link == null || link.isEmpty() ? View.GONE : View.VISIBLE);
+        holder.estimatedDeliveryText.setText(orderItem.getEstimatedDeliveryText());
+
+        holder.orderImagesRecyclerView.setAdapter(new OrderImageAdapter(mActivity, orderItem.getItems()));
+        holder.orderImagesRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        holder.orderImagesRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 1, RecyclerView.HORIZONTAL, false));
+
+        String approvedDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getApprovedDate());
+        String stockDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getStockDate());
+        String closeDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getClosedDate());
+        String dispatchDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getDispatchedDate());
+
+        int currentStep = orderItem.getTracker().getStep();
+        int colorActive = holder.itemView.getResources().getColor(R.color.colorAccent);
+        boolean isRefunded = orderStatus.toLowerCase().contains(mActivity.getString(R.string.refunded));
+        switch (currentStep) {
+            case ORDER_DATE_ACTIVE_STATE:
+                setupOrderDateNode(holder, colorActive);
+                break;
+
+            case ORDER_DATE_NEGATIVE_STATE:
+                setupOrderDateNode(holder, colorActive);
+
+                holder.orderFirstNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
+                holder.orderDateGraphNodeView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
+                if (isRefunded) {
+                    approvedDate += " Refunded";
+                }
+                break;
+
+            case ORDER_STOCK_ARRIVED_ACTIVE_STATE:
+                setupStockArrivedNode(holder, colorActive);
+                break;
+
+            case ORDER_STOCK_ARRIVED_NEGATIVE_STATE:
+                setupStockArrivedNode(holder, colorActive);
+
+                holder.orderSecondNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
+                holder.stockArrivedGraphNodeView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
+                if (isRefunded) {
+                    stockDate += " Refunded";
+                }
+
+                break;
+
+            case ORDER_PACKED_ACTIVE_STATE:
+                setupOrderPackedNode(holder, colorActive);
+                break;
+
+            case ORDER_PACKED_NEGATIVE_STATE:
+                setupOrderPackedNode(holder, colorActive);
+
+                holder.orderThirdNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
+                holder.orderPackedGraphNodeView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
+
+                if (isRefunded) {
+                    dispatchDate += " Refunded";
+                }
+
+                break;
+
+            case ORDER_DISPATCHED_ACTIVE_STATE:
+                setupDispatchNode(holder, colorActive);
+                break;
+
+            case ORDER_DISPATCHED_NEGATIVE_STATE:
+                setupDispatchNode(holder, colorActive);
+
+                holder.orderFourthNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
+                holder.dispatchedGraphNodeTextView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
+
+                if (isRefunded) {
+                    closeDate += " Refunded";
+                }
+
+                break;
+        }
+
+
+        holder.orderDateValueTextView.setText(approvedDate);
+        holder.stockArrivedValueTextView.setText(stockDate);
+        holder.dispatchedDateValueTextView.setText(closeDate);
+        holder.orderPackedValueTextView.setText(dispatchDate);
+    }
+
+    private void setupOrderDateNode(OrderItemsViewholder holder, int colorActive) {
+        holder.orderDateGraphNodeView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
+        holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
+        holder.orderStockArrivedConnector2.setBackgroundColor(colorActive);
+    }
+
+    private void setupStockArrivedNode(OrderItemsViewholder holder, int colorActive) {
+        setupOrderDateNode(holder, colorActive);
+
+        holder.stockArrivedGraphNodeView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
+        holder.orderPackedConnector.setBackgroundColor(colorActive);
+        holder.orderPackedConnector2.setBackgroundColor(colorActive);
+    }
+
+    private void setupOrderPackedNode(OrderItemsViewholder holder, int colorActive) {
+        setupStockArrivedNode(holder, colorActive);
+
+        holder.orderPackedGraphNodeView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
+        holder.orderDispatchedConnector.setBackgroundColor(colorActive);
+        holder.orderDispatchedConnector2.setBackgroundColor(colorActive);
+    }
+
+    private void setupDispatchNode(OrderItemsViewholder holder, int colorActive) {
+        setupOrderPackedNode(holder, colorActive);
+        holder.dispatchedGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
     }
 }
