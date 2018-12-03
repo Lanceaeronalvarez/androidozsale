@@ -54,6 +54,7 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpRepository;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.AdaptiveTabLayout;
@@ -87,7 +88,7 @@ import static au.com.dealsdirect.service.event.ActionTracker.ClickType.PRODUCT_C
  * dp Created by Admin on 6/8/17.
  */
 
-public class SaleItemsController extends BaseController implements SaleItemsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
+public class SaleItemsController extends BaseController implements SaleItemsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener, SearchFilterMvpRepository {
 
     public static final String TAG = SaleItemsController.class.getSimpleName();
     private static final long SEARCH_DELAY_MS = 1000; // milliseconds
@@ -308,7 +309,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void onAttach(@NonNull View view) {
-        mActivity.setSaleItemsController(this);
         mActivity.setDraggableViewPager(false);
         mPresenter.onAttach(this);
         mPtrFrameLayout.setPtrHandler(this);
@@ -432,7 +432,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
-        mActivity.setSaleItemsController(this);
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
@@ -611,6 +610,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSearchFilterMvpView.updateFacets(mFacets);
         mSearchFilterMvpView.replaceCategoryTree(mCategoryTreeResponse);
 
+        if (mCategoryMap.isEmpty()) {
+            createCategoryMap(mCategoryTreeResponse);
+        }
+
         onRefreshEnd();
 
         reselectTabIfFacetsAlreadyVisible();
@@ -683,7 +686,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void setupSearchFilters() {
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
-        if (!mSearchFilterRouter.hasRootController()) {
+        if (mSearchFilterMvpView == null) {
             Bundle bundle = new BundleBuilder(new Bundle())
                     .putString(BundleKeys.KEY_CATEGORY_STRING, new Gson().toJson(mCategoryTreeResponse))
                     .putString(BundleKeys.KEY_FACET_STRING, new Gson().toJson(mFacets))
@@ -693,6 +696,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     .putString(BundleKeys.KEY_SELECTED_FACETS, mPreviousSelectedFacetIndicesJsonString)
                     .putString(BundleKeys.SALEITEMS_CHIPS_FILTER, new Gson().toJson(mChipFilters))
                     .putString(BundleKeys.KEY_SALE_ITEMS_TITLE, mSearchQuery)
+                    .putBoolean(BundleKeys.KEY_HAS_DEFAULT_CATEGORY, !(mFromBannerSearch || mFromShopSearch))
                     .build();
 
             GateKeeper.Destination destination;
@@ -705,8 +709,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             Controller searchFilterController = ControllerFactory.getInstance(destination, bundle);
             mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
             GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
-        } else {
-            mSearchFilterMvpView = mActivity.getSearchFilterController();
+            mSearchFilterMvpView.setRepository(this);
         }
         showCollapsingToolbar();
     }
@@ -879,7 +882,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void addFacets() {
-        if (mSearchFilterMvpView == null) mSearchFilterMvpView = mActivity.getSearchFilterController();
+        if (mSearchFilterMvpView == null) {
+            setupSearchFilters();
+        }
         mFacetFilters = mSearchFilterMvpView.parseFacets(mFacets);
         mFacetFilters.add(0, new Pair<String, String>(BundleKeys.CATEGORY_TREE_FACET, CATEGORY_FILTER_TYPE));
         if (mPresenter.isSortingEnabled())
@@ -1050,5 +1055,26 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 retainSelectedTabs();
             }
         }
+    }
+
+    @Override
+    public void requestCategoryMap(RequestCategoryMapCompletion completion) {
+        completion.receivedCategoryMap(mCategoryMap);
+    }
+
+    @Override
+    public void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList) {
+        mPresenter.loadSaleItems(createSaleItemsRequest(categoryKeys, 0, chipsList));
+    }
+
+    @Override
+    public void facetsOpened() {
+        enableSaleItemsScroll(false);
+    }
+
+    @Override
+    public void facetsClosed() {
+        enableSaleItemsScroll(true);
+        toggleTabSelection();
     }
 }

@@ -62,6 +62,7 @@ public class BundleKeys {
     public static final String KEY_CATEGORY_STRING = "KEY_CATEGORY_STRING";
     public static final String KEY_SORTING_STRING = "KEY_SORTING_STRING";
     public static final String KEY_SALE_ITEMS_TITLE = "KEY_SALE_ITEMS_TITLE";
+    public static final String KEY_HAS_DEFAULT_CATEGORY = "KEY_HAS_DEFAULT_CATEGORY";
 
 
     //facet filters

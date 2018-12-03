@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -13,6 +14,12 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 
 public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends MvpPresenter<V> {
 
+    void setRepository(SearchFilterMvpRepository repository);
+
+    void requestCategoryMap();
+
+    void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList);
+
     void onFacetItemClicked(List<SearchChipModel> selectedChips);
 
     int getSearchMaxPrice();
@@ -21,4 +28,7 @@ public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends
 
     void selectCategory(GetCategoryTreeResponse category);
 
+    void facetsOpened();
+
+    void facetsClosed();
 }

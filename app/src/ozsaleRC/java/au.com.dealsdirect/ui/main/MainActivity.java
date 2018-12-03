@@ -75,7 +75,6 @@ import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
-import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
@@ -124,8 +123,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private MainController mMainController;
     private ShopsController mShopController;
     private CategoriesController mCategoriesController;
-    private SaleItemsController mSaleItemsController;
-    private SearchFilterController mSearchFilterController;
     private CheckoutController mCheckoutController;
     private ViewContactsController mContactsController;
     private AccountController mAccountController;
@@ -788,10 +785,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mMainController;
     }
 
-    public SaleItemsController getSaleItemsController() {
-        return mSaleItemsController;
-    }
-
     public ShopsController getShopController() {
         return mShopController;
     }
@@ -1175,18 +1168,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         .popChangeHandler(new VerticalChangeHandler()));
             }
         }
-    }
-
-    public void setSaleItemsController(SaleItemsController mSaleItemsController) {
-        this.mSaleItemsController = mSaleItemsController;
-    }
-
-    public SearchFilterController getSearchFilterController(){
-        return mSearchFilterController;
-    }
-
-    public void setSearchFilterController(SearchFilterController searchFilterController) {
-        mSearchFilterController = searchFilterController;
     }
 
     public void setAppCountries(Settings.Country selectedCountry) {
