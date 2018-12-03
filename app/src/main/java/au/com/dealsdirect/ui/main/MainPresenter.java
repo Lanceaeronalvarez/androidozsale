@@ -263,7 +263,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
             com.mysale.genie.utility.config.model.getappsettings.Value value = responseValue.d.getValue();
             if (value != null) {
-                getDataManager().setIsPaypalEnabled(value.getPayments().getPayPal().getEnabled());
+                getDataManager().setIsPaypalEnabled(value.getPayments().getBrainTree().getPayPalEnabled());
                 getDataManager().setIsMasterpassEnabled(value.getPayments().getMasterPass().getEnabled());
                 getDataManager().setIsAmexEnabled(value.getPayments().getAmExpress().getEnabled());
                 getDataManager().setIsKountEnabled(value.getPayments().getKount().getEnabled());
