@@ -18,7 +18,9 @@ import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -134,8 +136,9 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
         //delivery details
         //take the first address of the first item since all of the items have the same address
+        String date = DateUtils.getDateFromStringInFormat(orderDetails.getApprovedDate(), AppConstants.MP_DATE_TIME_FORMAT);
         mDeilveryAddressTextView.setText(orderDetails.getOrders().get(0).getDeliveryAddress());
-        mApprovedDateTextView.setText(orderDetails.getApprovedDate());
+        mApprovedDateTextView.setText(date);
 
         //set adapter
         mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(orderDetails));
