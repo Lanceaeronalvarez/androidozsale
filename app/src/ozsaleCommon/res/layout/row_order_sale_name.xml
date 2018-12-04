@@ -10,17 +10,17 @@
 
     <TextView
         android:id="@+id/sale_item_text_value"
-        fontPath="@string/font_app_semibold"
+        fontPath="@string/font_app_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/padding_default_half"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
-        android:layout_marginRight="@dimen/margin_extra_small"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_toRightOf="@id/order_number_text_identifier"
         android:textColor="@color/text_extra_dark"
-        android:textSize="@dimen/text_size_headline3"
+        android:textSize="@dimen/text_size_body"
         tools:ignore="HardcodedText"
         tools:text="Cotton On" />
 
