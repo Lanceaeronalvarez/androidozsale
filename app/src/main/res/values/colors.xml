@@ -234,5 +234,6 @@
     <color name="checkout_summary_text_color">#C4C4C4</color>
     <color name="checkout_voucher_view_color">#F2F2F2</color>
     <color name="order_details_view_color">#f4f4f4</color>
+    <color name="toolbar_fade_in_color">@color/white</color>
 
 </resources>

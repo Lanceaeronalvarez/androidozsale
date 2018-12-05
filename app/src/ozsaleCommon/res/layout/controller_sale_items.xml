@@ -97,7 +97,7 @@
                 android:animateLayoutChanges="true"
                 android:background="@color/white"
                 android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
+                app:contentScrim="@color/toolbar_fade_in_color"
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <au.com.dealsdirect.ui.custom.AdaptiveTabLayout
