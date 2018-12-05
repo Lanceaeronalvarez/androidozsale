@@ -32,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
@@ -111,6 +112,8 @@ public class PersonalisationLayout extends LinearLayout {
     }
 
     public void inflateForProductDetails(Context context, Personalisation personalisation) {
+
+        removeAllViews();
 
         setOrientation(VERTICAL);
 
@@ -464,6 +467,42 @@ public class PersonalisationLayout extends LinearLayout {
         }
 
         return personalizationData;
+    }
+
+    public void populateFieldsWithDataFromAddToCart(Map<String, String> data) {
+        if (mPersonalisation != null) {
+            LinkedHashMap<String, Personalisation.Property> propertyHashMap = mPersonalisation.getProperties();
+
+            Collection<String> keys = propertyHashMap.keySet();
+
+            // Using iterator instead of foreach avoids a ConcurrentModificationException
+            Iterator<String> iterator = keys.iterator();
+
+            while (iterator.hasNext()) {
+
+                String currentKey = iterator.next();
+
+                Personalisation.Property property = propertyHashMap.get(currentKey);
+
+                EditText rowEditText = (EditText) findViewWithTag(currentKey);
+
+                String currentData = data.get(currentKey);
+
+                if (currentData != null && !currentData.isEmpty()) {
+                    switch (property.getControl()) {
+                        case TEXT_LIST:
+                            int index = property.getEnum().indexOf(currentData);
+                            if (index >= 0) {
+                                rowEditText.setText(property.getEnumElements().get(index).getTitle());
+                            }
+                            break;
+                        default:
+                            rowEditText.setText(currentData);
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     public class PersonalisationIconAdapter extends RecyclerView.Adapter<PersonalisationIconAdapter.ViewHolder> {
