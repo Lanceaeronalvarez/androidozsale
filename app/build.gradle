@@ -54,7 +54,7 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 108
+            versionCode 109
             versionName "2.4.0"
             applicationId "au.com.buyinvite.bi"
 
@@ -75,7 +75,7 @@ android {
         }
 
         buyinviteTest {
-            versionCode 108
+            versionCode 109
             versionName "2.4.0"
             applicationId "au.com.buyinvite.bi.test"
 
@@ -181,7 +181,7 @@ android {
         }
 
         ooRC {
-            versionCode 108
+            versionCode 109
             versionName "2.4.0"
             applicationId "au.com.oo"
 
@@ -202,7 +202,7 @@ android {
         }
 
         ooTest {
-            versionCode 108
+            versionCode 109
             versionName "2.4.0"
             applicationId "au.com.oo.test"
 
