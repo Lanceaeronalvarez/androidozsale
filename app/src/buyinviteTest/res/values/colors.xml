@@ -103,8 +103,8 @@
     <color name="fb_default">#3b5998</color>
     <color name="fb_pressed">#8b9dc3</color>
 
-    <color name="bg_button_addcart_default">@color/colorAccent</color>
-    <color name="bg_button_addcart_pressed">@color/colorAccent</color>
+    <color name="bg_button_addcart_default">#65D87F</color>
+    <color name="bg_button_addcart_pressed">@color/bg_button_addcart_default</color>
     <color name="bg_button_copy_to_clipboard">#4F4F4F</color>
 
     <color name="bg_chips_selected">@color/colorAccent</color>
