@@ -55,13 +55,13 @@
 
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/border_regular"
-            android:layout_below="@id/my_order_information_header"
-            android:layout_marginLeft="@dimen/padding_default_half"
-            android:background="@color/background_default" />
-
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_regular"
+        android:layout_below="@id/my_order_information_header"
+        android:layout_marginLeft="@dimen/padding_default_half"
+        android:background="@color/background_default" />
 
 </LinearLayout>
