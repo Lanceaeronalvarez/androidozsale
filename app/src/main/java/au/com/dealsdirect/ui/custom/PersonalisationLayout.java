@@ -4,11 +4,16 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,13 +102,23 @@ public class PersonalisationLayout extends LinearLayout {
 
             View row = mBaseActivity.getLayoutInflater().inflate(R.layout.personalisation_checkout_row, null);
 
-            TextView keyTextView = (TextView) row.findViewById(R.id.personalisation_checkout_row_key);
+            TextView textView = (TextView) row.findViewById(R.id.personalisation_checkout_row);
 
-            TextView valueTextView = (TextView) row.findViewById(R.id.personalisation_checkout_row_value);
+            String textKey = details.getKey().concat(": ");
+            String text = textKey.concat(details.getValue());
 
-            keyTextView.setText(details.getKey().concat(": "));
+            Spannable spannable = new SpannableString(text);
+            spannable.setSpan(new StyleSpan(Typeface.BOLD),
+                    textKey.length(),
+                    text.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.text_dark)),
+                    textKey.length(),
+                    text.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            valueTextView.setText(details.getValue());
+
+            textView.setText(spannable, TextView.BufferType.SPANNABLE);
 
             addView(row);
         }
