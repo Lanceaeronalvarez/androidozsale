@@ -642,6 +642,7 @@
     <string name="controller_user_details_login_prompt">Please login first</string>
     <string name="delivery">Delivery:</string>
     <string name="order_sharp">Order #: %1s</string>
+    <string name="order">Order\n%1s</string>
 
 
     <!--Order Details-->
