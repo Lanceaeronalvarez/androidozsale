@@ -235,5 +235,7 @@
     <color name="checkout_voucher_view_color">#F2F2F2</color>
     <color name="order_details_view_color">#f4f4f4</color>
     <color name="toolbar_fade_in_color">@color/white</color>
+    <color name="refunded_state_color">@color/ourpay_red</color>
+
 
 </resources>

@@ -178,7 +178,7 @@
 
     <color name="language_selected">@color/colorPrimaryDark</color>
 
-    <color name="refunded_state_color">@color/ourpay_orange</color>
+    <color name="refunded_state_color">@color/ourpay_red</color>
 
     <color name="toggle_switch_positive">@color/tab_bar_icon_active</color>
 </resources>
