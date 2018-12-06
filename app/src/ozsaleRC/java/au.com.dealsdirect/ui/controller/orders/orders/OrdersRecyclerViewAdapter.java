@@ -157,22 +157,22 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         Button trackHereButton;
 
         @BindView(R.id.order_date_graph_node)
-        View orderDateGraphNodeView;
+        TextView orderDateGraphNodeView;
         @BindView(R.id.order_date_value)
         TextView orderDateValueTextView;
 
         @BindView(R.id.stock_arrived_graph_node)
-        View stockArrivedGraphNodeView;
+        TextView stockArrivedGraphNodeView;
         @BindView(R.id.stock_arrived_value)
         TextView stockArrivedValueTextView;
 
         @BindView(R.id.order_packed_graph_node)
-        View orderPackedGraphNodeView;
+        TextView orderPackedGraphNodeView;
         @BindView(R.id.order_packed_value)
         TextView orderPackedValueTextView;
 
         @BindView(R.id.dispatched_graph_node)
-        View dispatchedGraphNodeTextView;
+        TextView dispatchedGraphNodeTextView;
         @BindView(R.id.dispatched_date_value)
         TextView dispatchedDateValueTextView;
 
@@ -232,102 +232,44 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         String dispatchDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getDispatchedDate());
 
         int currentStep = orderItem.getTracker().getStep();
-        int colorActive = holder.itemView.getResources().getColor(R.color.colorAccent);
         boolean isRefunded = orderStatus.toLowerCase().contains(mActivity.getString(R.string.refunded));
-        switch (currentStep) {
-            case ORDER_DATE_ACTIVE_STATE:
-                setupOrderDateNode(holder, colorActive);
-                break;
+        String orderText = mActivity.getResources().getString(R.string.order);
+        for(int i = Math.abs(currentStep); i > 0; i--) {
+            boolean isCurrentStep = isRefunded && i == Math.abs(currentStep);
+            switch (i) {
+                case ORDER_DATE_ACTIVE_STATE:
+                    holder.orderDateGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
+                    holder.orderDateGraphNodeView.setText(isCurrentStep ? "" : String.valueOf(ORDER_DATE_ACTIVE_STATE));
+                    holder.orderFirstNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
+                    holder.orderFirstNodeStatusTextView.setText(String.format(String.format(orderText, orderStatus)));
+                    break;
 
-            case ORDER_DATE_NEGATIVE_STATE:
-                setupOrderDateNode(holder, colorActive);
+                case ORDER_STOCK_ARRIVED_ACTIVE_STATE:
+                    holder.stockArrivedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
+                    holder.stockArrivedGraphNodeView.setText(isCurrentStep ? "" : String.valueOf(ORDER_STOCK_ARRIVED_ACTIVE_STATE));
+                    holder.orderSecondNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
+                    holder.orderSecondNodeStatusTextView.setText(String.format(String.format(orderText, orderStatus)));
+                    break;
 
-                holder.orderFirstNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
-                holder.orderDateGraphNodeView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
-                if (isRefunded) {
-                    approvedDate += " Refunded";
-                }
-                break;
+                case ORDER_PACKED_ACTIVE_STATE:
+                    holder.orderPackedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
+                    holder.orderPackedGraphNodeView.setText(isCurrentStep ? "" : String.valueOf(ORDER_PACKED_ACTIVE_STATE));
+                    holder.orderThirdNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
+                    holder.orderThirdNodeStatusTextView.setText(String.format(String.format(orderText, orderStatus)));
+                    break;
 
-            case ORDER_STOCK_ARRIVED_ACTIVE_STATE:
-                setupStockArrivedNode(holder, colorActive);
-                break;
+                case ORDER_DISPATCHED_ACTIVE_STATE:
+                    holder.dispatchedGraphNodeTextView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
+                    holder.dispatchedGraphNodeTextView.setText(isCurrentStep ? "" : String.valueOf(ORDER_DISPATCHED_ACTIVE_STATE));
+                    holder.orderFourthNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
+                    holder.orderFourthNodeStatusTextView.setText(String.format(String.format(orderText, orderStatus)));
+                    break;
+            }
 
-            case ORDER_STOCK_ARRIVED_NEGATIVE_STATE:
-                setupStockArrivedNode(holder, colorActive);
-
-                holder.orderSecondNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
-                holder.stockArrivedGraphNodeView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
-                if (isRefunded) {
-                    stockDate += " Refunded";
-                }
-
-                break;
-
-            case ORDER_PACKED_ACTIVE_STATE:
-                setupOrderPackedNode(holder, colorActive);
-                break;
-
-            case ORDER_PACKED_NEGATIVE_STATE:
-                setupOrderPackedNode(holder, colorActive);
-
-                holder.orderThirdNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
-                holder.orderPackedGraphNodeView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
-
-                if (isRefunded) {
-                    dispatchDate += " Refunded";
-                }
-
-                break;
-
-            case ORDER_DISPATCHED_ACTIVE_STATE:
-                setupDispatchNode(holder, colorActive);
-                break;
-
-            case ORDER_DISPATCHED_NEGATIVE_STATE:
-                setupDispatchNode(holder, colorActive);
-
-                holder.orderFourthNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isRefunded ? R.color.refunded_state_color : R.color.text_medium));
-                holder.dispatchedGraphNodeTextView.setBackgroundResource(isRefunded ? R.drawable.bg_orders_refunded_state : R.drawable.bg_orders_negative_state);
-
-                if (isRefunded) {
-                    closeDate += " Refunded";
-                }
-
-                break;
+            holder.orderDateValueTextView.setText(approvedDate);
+            holder.stockArrivedValueTextView.setText(stockDate);
+            holder.dispatchedDateValueTextView.setText(closeDate);
+            holder.orderPackedValueTextView.setText(dispatchDate);
         }
-
-
-        holder.orderDateValueTextView.setText(approvedDate);
-        holder.stockArrivedValueTextView.setText(stockDate);
-        holder.dispatchedDateValueTextView.setText(closeDate);
-        holder.orderPackedValueTextView.setText(dispatchDate);
-    }
-
-    private void setupOrderDateNode(OrderItemsViewholder holder, int colorActive) {
-        holder.orderDateGraphNodeView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
-        holder.orderStockArrivedConnector.setBackgroundColor(colorActive);
-        holder.orderStockArrivedConnector2.setBackgroundColor(colorActive);
-    }
-
-    private void setupStockArrivedNode(OrderItemsViewholder holder, int colorActive) {
-        setupOrderDateNode(holder, colorActive);
-
-        holder.stockArrivedGraphNodeView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
-        holder.orderPackedConnector.setBackgroundColor(colorActive);
-        holder.orderPackedConnector2.setBackgroundColor(colorActive);
-    }
-
-    private void setupOrderPackedNode(OrderItemsViewholder holder, int colorActive) {
-        setupStockArrivedNode(holder, colorActive);
-
-        holder.orderPackedGraphNodeView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
-        holder.orderDispatchedConnector.setBackgroundColor(colorActive);
-        holder.orderDispatchedConnector2.setBackgroundColor(colorActive);
-    }
-
-    private void setupDispatchNode(OrderItemsViewholder holder, int colorActive) {
-        setupOrderPackedNode(holder, colorActive);
-        holder.dispatchedGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
     }
 }
