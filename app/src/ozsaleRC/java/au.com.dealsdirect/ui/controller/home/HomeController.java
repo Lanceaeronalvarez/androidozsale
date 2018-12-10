@@ -581,20 +581,29 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
     }
 
-    public void resetVisibleContainer() {
-        if (!(getCurrentRouter() ==  mAccountsRouter || getCurrentRouter() == mShopRouter)) {
-            mRouterContainerMapping.get(currentVisibleIndex).second.setVisibility(View.GONE);
-            if (currentVisibleIndex == previousVisibleIndex) {
-                previousVisibleIndex = 0;
+    public void goToPreviousContainerFromLogin(boolean isAuthorized) {
+        int newIndex;
+        if (isAuthorized) {
+            newIndex = currentVisibleIndex;
+        } else {
+            switch (currentVisibleIndex) {
+                case TAB_CHECKOUT_INDEX:
+                case TAB_CONTACT_INDEX:
+                    newIndex = previousVisibleIndex;
+                    break;
+                default:
+                    newIndex = currentVisibleIndex;
+                    break;
             }
-            mRouterContainerMapping.get(previousVisibleIndex).second.setVisibility(View.VISIBLE);
-            mBottomNavigationView.setCurrentItem(previousVisibleIndex, false);
-            currentVisibleIndex = previousVisibleIndex;
+        }
 
-        }
-        if (getCurrentRouter() == mShopRouter) {
-            showBottomNav();
-        }
+        setVisibleContainer(newIndex);
+
+        showBottomNav();
+    }
+
+    public void goBackToHomePage() {
+        showFirstTabController();
     }
 
     @Override

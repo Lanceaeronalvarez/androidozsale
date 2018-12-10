@@ -531,7 +531,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public boolean handleBack() {
         if (mAccountDetailRouter != null && mAccountDetailRouter.getBackstackSize() == 1) {
-            mActivity.getHomeController().resetVisibleContainer();
+            mActivity.getHomeController().goBackToHomePage();
             return true;
         }
 
