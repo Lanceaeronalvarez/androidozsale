@@ -13,6 +13,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.ArraySet;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
+import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.mysale.genie.profiler.Profiler;
@@ -46,6 +48,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -64,6 +67,7 @@ import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
@@ -186,7 +190,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private ArrayList<Pair<String, String>> mProductSizes = new ArrayList<>();
 
     private boolean mHasSizes = false;
-    private boolean mDidSelectSize = false;
+    private int mSelectedSizeIndex = -1;
     private int mFromPosition = -1;
     private int mToolbarVerticalOffset;
     private boolean mIsSoldOutCombined = true;
@@ -694,26 +698,37 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             mSizesFlowLayout.setAdapter(mSizesAdapter);
 
-            mSizesFlowLayout.setOnSelectListener(selectPosSet -> {
-                if (selectPosSet.size() != 0) {
-                    int selectedIndex = selectPosSet.iterator().next();
+            mSizesFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
+                @Override
+                public boolean onTagClick(View view, int position, FlowLayout parent) {
 
-                    mSkuId = mProductSizes.get(selectedIndex).second;
-
-                    boolean isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
-
-                    if (isSizeSoldOut) return;
-
-                    mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
-                    mAddToCartButton.setEnabled(!isSizeSoldOut);
-                    mAddToCartButton.bringToFront();
-
-                    mDidSelectSize = true;
-
-                    updatePriceDetails(mSkuVariants.get(selectedIndex));
-                } else {
-                    mDidSelectSize = false;
+                    return false;
                 }
+            });
+
+            mSizesFlowLayout.setOnSelectListener(selectPosSet -> {
+                if (selectPosSet.isEmpty()) {
+                    if (mSelectedSizeIndex >= 0) {
+                        mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(mSelectedSizeIndex));
+                    } else {
+                        return;
+                    }
+                } else {
+                    int selectedIndex = selectPosSet.iterator().next();
+                    mSelectedSizeIndex = selectedIndex;
+                }
+
+                mSkuId = mProductSizes.get(mSelectedSizeIndex).second;
+
+                boolean isSizeSoldOut = mSkuVariants.get(mSelectedSizeIndex).isSoldOut();
+
+                if (isSizeSoldOut) return;
+
+                mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
+                mAddToCartButton.setEnabled(!isSizeSoldOut);
+                mAddToCartButton.bringToFront();
+
+                updatePriceDetails(mSkuVariants.get(mSelectedSizeIndex));
             });
 
         }
@@ -821,7 +836,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         request.setPrice(Double.valueOf(mSalePrice.substring(1)));
         request.setPersonalizationData(mPersonalisationLayout.getDataForAddToCart());
 
-        boolean isSizeValid = !(mHasSizes && !mDidSelectSize);
+        boolean isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
 
         boolean isPersonalisationValid = mPersonalisationLayout.verifyRequiredFields();
 
