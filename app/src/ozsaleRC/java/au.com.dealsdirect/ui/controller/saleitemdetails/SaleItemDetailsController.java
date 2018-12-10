@@ -697,6 +697,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mAddToCartButton.bringToFront();
 
             mSizesFlowLayout.setAdapter(mSizesAdapter);
+            if (mSelectedSizeIndex >= 0) {
+                mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(mSelectedSizeIndex));
+            }
 
             mSizesFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
                 @Override
