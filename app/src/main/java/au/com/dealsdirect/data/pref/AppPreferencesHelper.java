@@ -244,7 +244,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getLegacyLanguageId() {
-        return Prefs.getString(LEGACY_COUNTRY_ID, "");
+        return Prefs.getString(LEGACY_LANGUAGE_ID, "");
     }
 
     @Override
