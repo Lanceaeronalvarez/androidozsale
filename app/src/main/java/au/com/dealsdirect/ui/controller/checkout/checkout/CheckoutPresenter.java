@@ -1,6 +1,11 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import android.os.Bundle;
+
 import com.androidnetworking.error.ANError;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 
 import java.util.ArrayList;
 
@@ -18,6 +23,7 @@ import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
+import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -99,7 +105,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                             return;
                         }
 
-                        if(!isCartAlreadyLoadedOnce()){
+                        if (!isCartAlreadyLoadedOnce()) {
                             getMvpView().showNoNetworkLayout();
                         }
 
@@ -232,7 +238,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
         try {
 
-            if (value!=null)
+            if (value != null)
                 ourpay.setUserAmount(value.getSummary().total);
 
             /* default */
@@ -288,6 +294,21 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         }
     }
 
+    @Override
+    public void facebookInitiatedCheckout(String paymentType, int numItems, double price) {
+        AppEventHelper.initiatedCheckout(paymentType, numItems, price, getDataManager().getCountryId());
+    }
+
+    @Override
+    public boolean isMasterPassEnabled() {
+        return getDataManager().isMasterpassEnabled();
+    }
+
+    @Override
+    public boolean isPaypalCreditEnabled() {
+        return getDataManager().isPaypalCreditEnabled();
+    }
+
     private void updateCart(GetCurrentOrder.ResponseValue response) {
 
         if (!isViewAttached()) {
@@ -304,7 +325,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
         if (response.getD().getResult()) {
 
-            if(!response.getD().getValue().isEmpty()) {
+            if (!response.getD().getValue().isEmpty()) {
                 Value value = response.getD().getValue();
 
                 getMvpView().storeCartDetails(value);
@@ -325,5 +346,4 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         }
 
     }
-
 }

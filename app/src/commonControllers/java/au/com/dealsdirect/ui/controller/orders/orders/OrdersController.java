@@ -36,7 +36,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mOrdersToolarTitle;
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mOrdersRightOption;
 
     @BindView(R.id.orders_recycler_view)
@@ -80,6 +80,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity,LinearLayoutManager.VERTICAL,false));
         mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> showOrderDetails(position)));
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity));
+        showLoading();
         mPresenter.loadOrders();
     }
 
@@ -113,7 +114,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick() {
         mActivity.onBackPressed();
     }

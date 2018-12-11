@@ -53,7 +53,7 @@ public class AddContactController extends BaseToolBarController implements AddCo
     private static final String KEY_INVOICE_NUMBER = "CONTACT_INVOICE_NUMBER";
 
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mAddContactToolbarRightOption;
 
     @BindView(R.id.partial_toolbar_arrow_title)
@@ -306,7 +306,7 @@ public class AddContactController extends BaseToolBarController implements AddCo
     }
 
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     void onBack() {
         mActivity.onBackPressed();
     }

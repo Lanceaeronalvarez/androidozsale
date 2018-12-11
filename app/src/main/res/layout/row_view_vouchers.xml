@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_app_light"
-            android:text="scheduledPlan"
+            android:text="value"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_xxlarge" />
 

@@ -58,7 +58,7 @@ public class ViewContactHistoryController extends BaseController implements View
     @BindView(R.id.contact_history_list_time_stamp)
     TextView mContactHistoryListTimeStamp;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mContactHistoryRightOption;
 
     @BindView(R.id.partial_toolbar_arrow_title)
@@ -160,7 +160,7 @@ public class ViewContactHistoryController extends BaseController implements View
         contactHistoryRecyclerView.setLayoutManager(layoutManager);
     }
 
-    @OnClick(R.id.partial_toolbar_arrow_view)
+    @OnClick(R.id.partial_toolbar_left_view)
     void onBackClick() {
         mActivity.onBackPressed();
     }

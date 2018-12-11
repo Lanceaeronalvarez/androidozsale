@@ -115,6 +115,8 @@
     <string name="forgot_password_guide">To reset your account password, enter the email address and
         we will send you the instruction
     </string>
+    <string name="password_verification_guide">Your email already exists on our site. Please enter your password for account </string>
+    <string name="new_vco_user_guide">Welcome! Please create a password for your dealsdirect.com.au account </string>
     <string name="send">send</string>
     <string name="email_address">Email Address</string>
     <string name="password_hint">******</string>

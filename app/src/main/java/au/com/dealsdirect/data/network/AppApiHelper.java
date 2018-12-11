@@ -3,6 +3,7 @@ package au.com.dealsdirect.data.network;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
+import com.mysale.genie.utility.config.model.getpublicpaymenttoken.GetPublicPaymentToken;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
 import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
@@ -61,6 +63,7 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
+import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
@@ -218,7 +221,8 @@ public class AppApiHelper implements ApiHelper {
         return Rx2AndroidNetworking.post(ApiEndPoint.ADD_TO_CART)
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
-                .build().getStringObservable();
+                .build()
+                .getStringObservable();
     }
 
     @Override
@@ -237,6 +241,15 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettings.RequestValue(countryId)))
                 .build()
                 .getObjectObservable(GetAppSettings.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetPublicPaymentToken.ResponseValue> callGetPublicPaymentToken(String countryId, String languageId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.GET_PUBLIC_PAYMENT_TOKEN)
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetPublicPaymentToken.RequestValue(countryId,languageId)))
+                .build()
+                .getObjectObservable(GetPublicPaymentToken.ResponseValue.class);
     }
 
     @Override
@@ -291,6 +304,15 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
                 .build()
                 .getObjectObservable(Logout.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<LoginVisa.ResponseValue> callLoginVisaCheckout(LoginVisa.RequestValue requestValue) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.VISA_CHECKOUT_LOGIN)
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValue))
+                .build()
+                .getObjectObservable(LoginVisa.ResponseValue.class);
     }
 
     @Override
@@ -447,6 +469,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionVco(CreatePaymentTransactionVco.RequestValue requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.CREATE_PAYMENT_TRANSACTION)
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(CreatePaymentTransaction.ResponseValue.class);
+    }
+
+    @Override
     public Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue requestValues) {
         return Rx2AndroidNetworking.post(ApiEndPoint.REMOVE_USER_PAYMENT_METHOD)
                 .addHeaders(mApiHeader.get())
@@ -558,9 +589,14 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<JSONObject> callRegisterSubscriber(HashMap<String, Object> param) {
+        /*
+            3/23/2018 - feature/android-3308-registersubscriber
+            added - doNotCacheResponse() to fresh call register subscriber
+         */
         return Rx2AndroidNetworking.get(ApiEndPoint.GCM_REGISTER_SUBSCRIBER)
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(param)
+                .doNotCacheResponse()
                 .build()
                 .getJSONObjectObservable();
     }

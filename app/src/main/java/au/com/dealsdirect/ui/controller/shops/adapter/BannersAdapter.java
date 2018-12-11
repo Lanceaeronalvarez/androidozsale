@@ -106,30 +106,34 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        GetBannerResponse item = mSales.get(position);
-        holder.name.setText(item.getDescription());
-        String imgUrl;
+        try {
+            GetBannerResponse item = mSales.get(position);
+            holder.name.setText(item.getDescription());
+            String imgUrl;
 
-        if (mPresenter.isTablet()) {
-            imgUrl = ImageUtils.getBannerTabletSize(item.getImage());
-            //AppLogger.d("IMG " + ImageUtils.getBannerTabletSize(item.getImage()));
-        } else {
-            imgUrl = ImageUtils.getBannerMobileSize(item.getImage());
+            if (mPresenter.isTablet()) {
+                imgUrl = ImageUtils.getBannerTabletSize(item.getImage());
+                //AppLogger.d("IMG " + ImageUtils.getBannerTabletSize(item.getImage()));
+            } else {
+                imgUrl = ImageUtils.getBannerMobileSize(item.getImage());
+            }
+
+            ImageUtils.loadImage(mContext, imgUrl, holder.image);
+            if (!item.getIsAvailable()) {
+                holder.overlay.setEnabled(false);
+            }
+
+            holder.layout.setOnClickListener(view ->
+                    mBannerClickListener.onBannerClicked(
+                            item.getDestinationID(),
+                            item.getDescription(),
+                            item.getId(),
+                            position,
+                            ImageUtils.getBannerMobileSize(item.getImage()),
+                            item.getIsAvailable()));
+        } catch (StringIndexOutOfBoundsException e){
+            e.printStackTrace();
         }
-
-        ImageUtils.loadImage(mContext, imgUrl, holder.image);
-        if (!item.getIsAvailable()) {
-            holder.overlay.setEnabled(false);
-        }
-
-        holder.layout.setOnClickListener(view ->
-                mBannerClickListener.onBannerClicked(
-                        item.getDestinationID(),
-                        item.getDescription(),
-                        item.getId(),
-                        position,
-                        ImageUtils.getBannerMobileSize(item.getImage()),
-                        item.getIsAvailable()));
     }
 
     @Override

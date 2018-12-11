@@ -6,6 +6,8 @@ package au.com.dealsdirect.ui.main;
 
 import android.content.Context;
 
+import com.visa.checkout.VisaPaymentSummary;
+
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.ui.base.BaseActivity;
@@ -22,9 +24,13 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void callGetAppSettingsSection(Context context);
 
+    void callGetPublicPaymentToken();
+
     void fetchBTAuthorization();
 
     void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken);
+
+    void createPaymentTransactionVco(VisaPaymentSummary visaPaymentSummary);
 
     void createPaymentMethod(String deviceData, String paymentNonce, String paymentType);
 
@@ -53,4 +59,6 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void initFacebookAnalytics();
 
     void initializeAnalytics(Context activityContext, Context applicationContext);
+
+    boolean isDebug();
 }

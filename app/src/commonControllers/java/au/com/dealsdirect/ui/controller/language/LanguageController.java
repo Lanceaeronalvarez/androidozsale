@@ -18,7 +18,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -36,10 +35,10 @@ public class LanguageController extends BasePullToRefreshController implements L
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleText;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mFilterView;
 
-    @BindView(R.id.partial_toolbar_arrow_view)
+    @BindView(R.id.partial_toolbar_left_view)
     ImageView mArrowImage;
 
     @BindView(R.id.controller_recycler_details)

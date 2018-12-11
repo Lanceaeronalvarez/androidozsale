@@ -3,6 +3,7 @@ package au.com.dealsdirect.utils.module;
 import android.os.Bundle;
 
 import com.bluelinelabs.conductor.Controller;
+import com.mysale.genie.utility.config.model.getappsettings.Checkout;
 
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
@@ -22,6 +23,7 @@ import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
@@ -66,7 +68,7 @@ public class ControllerFactory {
             case CATEGORIES:
                 return CategoriesController.newInstance();
             case CHECKOUT:
-                return new CheckoutController();
+                return CheckoutController.newInstance();
             case SALEITEMS:
                 return SaleItemsController.newInstance();
             case ACCOUNT:
@@ -75,6 +77,8 @@ public class ControllerFactory {
                 return RegisterController.newInstance();
             case FORGOT_PASSWORD:
                 return ForgotPasswordController.newInstance();
+            case PASSWORD_VERIFICATION:
+                return PasswordVerificationController.newInstance();
             case VIEW_VOUCHERS:
                 return ViewVouchersController.newInstance();
             case INVITE:
@@ -136,7 +140,7 @@ public class ControllerFactory {
             case CATEGORIES:
                 return new CategoriesController(bundle);
             case CHECKOUT:
-                return new CheckoutController();
+                return new CheckoutController(bundle);
             case SALEITEMS:
                 return new SaleItemsController(bundle);
             case ACCOUNT:
@@ -145,6 +149,8 @@ public class ControllerFactory {
                 return new RegisterController(bundle);
             case FORGOT_PASSWORD:
                 return new ForgotPasswordController(bundle);
+            case PASSWORD_VERIFICATION:
+                return new PasswordVerificationController(bundle);
             case ADD_VOUCHERS:
                 return new AddVouchersController(bundle);
             case PAYMENT_ADD:

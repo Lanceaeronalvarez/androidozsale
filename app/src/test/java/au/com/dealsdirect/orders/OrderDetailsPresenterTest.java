@@ -12,6 +12,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
+import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpView;
+import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresenter;
 import au.com.dealsdirect.utils.rx.TestSchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;

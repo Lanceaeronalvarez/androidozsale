@@ -10,4 +10,12 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface AddPaymentMvpPresenter <V extends MvpView> extends MvpPresenter<V> {
     boolean isDebug();
+
+    void facebookInitiatedCheckout(String paymentType,
+                                   int numItems,
+                                   double price);
+
+    boolean isMasterPassEnabled();
+
+    boolean isPaypalCreditEnabled();
 }

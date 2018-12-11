@@ -4,19 +4,30 @@ package au.com.dealsdirect.ui.controller.register;
  */
 
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
 
 import com.androidnetworking.error.ANError;
-import com.facebook.appevents.AppEventsConstants;
-import com.facebook.appevents.AppEventsLogger;
+import com.visa.checkout.Profile;
+import com.visa.checkout.PurchaseInfo;
+import com.visa.checkout.VisaPaymentSummary;
+
+import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
 import au.com.dealsdirect.ui.base.AuthenticationBasePresenter;
+import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
+import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.AppEventHelper;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -60,6 +71,7 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                         if (registerUserResponse.isSuccess()) {
                             getDataManager().acknowledgeAuth(registerUserResponse.getTicket());
                             getMvpView().showLoginSuccessful(registerUserResponse.getTicket());
+                            AppEventHelper.completedRegistration(AppConstants.API_REGISTER);
                         } else {
                             getMvpView().showLoginError(registerUserResponse.getMessage());
                         }
@@ -86,9 +98,5 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
 
     }
 
-    @Override
-    public void facebookRegisterAnalytics(Activity activity) {
-        AppEventsLogger logger = AppEventsLogger.newLogger(activity);
-        logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
-    }
+
 }

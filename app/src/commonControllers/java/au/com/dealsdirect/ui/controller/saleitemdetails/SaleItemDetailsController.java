@@ -45,7 +45,6 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
@@ -381,7 +380,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleItemImagesAdapter.replaceData(qualitySaleImages);
         mSaleItemImagesIndicatorAdapter.replaceData(qualitySaleImages);
 
-        mProductDescriptionText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mProductDescriptionText.startAnimation(anim);
         mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
                 "text/html; charset=UTF-8",
@@ -458,10 +456,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mAddToCartButton.setEnabled(true);
 
+
+    /* Should only set button to 'Sold Out' if sold out size is selected
         if (saleDetail.isSoldOut()) {
             mAddToCartButton.setEnabled(false);
             mAddToCartButton.setText("Sold Out");
         }
+    */
 
         if (saleDetail.getOriginalPrice().getValue() <= 0) {
             mProductPreviousPrice.setVisibility(View.GONE);
@@ -518,7 +519,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @OnClick(R.id.product_details_add_to_basket)
     void addToBasket() {
 
-        AddToCartRequest request = new AddToCartRequest(mSkuId);
+        AddToCartRequest request = new AddToCartRequest();
+        request.setSkuId(mSkuId);
+        request.setItemName(mSaleName);
+        request.setPrice(Double.valueOf(mSalePrice.substring(1)));
 
         if (hasSizes) {
             if (!didSelectSize) {

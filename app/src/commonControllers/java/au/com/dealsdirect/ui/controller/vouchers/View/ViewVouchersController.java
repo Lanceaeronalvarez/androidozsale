@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -42,10 +40,10 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
     @BindView(R.id.partial_toolbar_arrow_title)
     TextView mTitleText;
 
-    @BindView(R.id.partial_toolbar_filter_view)
+    @BindView(R.id.partial_toolbar_right_view)
     ImageView mFilterView;
 
-    @BindView(R.id.partial_toolbar_arrow_view)
+    @BindView(R.id.partial_toolbar_left_view)
     ImageView mArrowImage;
 
     @BindView(R.id.controller_text_vouchers_desc)
@@ -137,6 +135,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
         unusedVoucherHelper.attachToRecyclerView(mUnusedVouchersRecyclerView);
         usedVoucherHelper.attachToRecyclerView(mUsedVouchersRecyclerView);
 
+        showLoading();
         mPresenter.loadMyVouchers();
     }
 

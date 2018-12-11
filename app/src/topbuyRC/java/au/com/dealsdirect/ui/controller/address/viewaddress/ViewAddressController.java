@@ -94,14 +94,11 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
         super.onViewBound(view);
         setupSwipingBehavior();
         mToolbarTitle.setText(R.string.my_addresses);
-
         setUp(view);
     }
 
     @Override
     protected void setUp(View view) {
-        mPresenter.loadAddresses();
-
         mAddressList = new ArrayList<>();
         mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, this, mAddressList, mActivity, mDeliveryAddress, mPresenter);
 
@@ -138,6 +135,12 @@ public class ViewAddressController extends SwipeableBaseToolBarController implem
         mPresenter.onAttach(this);
 
         return view;
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        mPresenter.loadAddresses();
+        super.onAttach(view);
     }
 
     @Override
