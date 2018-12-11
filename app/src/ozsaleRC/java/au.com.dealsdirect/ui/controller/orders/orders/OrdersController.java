@@ -147,6 +147,11 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     }
 
     @Override
+    public void showOrderDetails(int position) {
+
+    }
+
+    @Override
     public void showOrderDetails(String referenceNumber) {
         getRouter().pushController(RouterTransaction.with(new OrderDetailsController(referenceNumber))
                 .pushChangeHandler(new HorizontalChangeHandler())

@@ -122,6 +122,11 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     }
 
     @Override
+    public void showOrderDetails(String referenceNumber) {
+
+    }
+
+    @Override
     public void showOrderDetails(int position) {
         String paymentRefNo = String.valueOf(mOrders.get(position).getPaymentReferenceNo());
         String jsonData = new Gson().toJson(mOrders.get(position));
