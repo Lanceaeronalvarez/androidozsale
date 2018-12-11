@@ -42,8 +42,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
 
     private static final String DEBUG_MODE = "app_debug_mode";
-    private static final String COUNTRY_ID = "server_country_id";
-    private static final String LANGUAGE_ID = "server_language_id";
+    private static final String COUNTRY_ID = "mysalecountryid";
+    private static final String LANGUAGE_ID = "languageId";
     private static final String LANGUAGE_LIST = "server_language_list";
     private static final String IS_MULTI_LANGUAGE = "server_multi_language";
     private static final String IS_MULTI_COUNTRY = "server_multi_country";
