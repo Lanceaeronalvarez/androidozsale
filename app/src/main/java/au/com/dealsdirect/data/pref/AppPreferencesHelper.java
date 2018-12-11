@@ -243,18 +243,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
-    public void setLegacyCountryId(String countryId) {
-        Prefs.putString(LEGACY_COUNTRY_ID, countryId);
-    }
-
-    @Override
     public String getLegacyLanguageId() {
         return Prefs.getString(LEGACY_COUNTRY_ID, "");
-    }
-
-    @Override
-    public void setLegacyLanguageId(String languageId) {
-        Prefs.putString(LEGACY_LANGUAGE_ID, languageId);
     }
 
     @Override
