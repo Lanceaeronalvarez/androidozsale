@@ -191,6 +191,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private boolean mHasSizes = false;
     private int mSelectedSizeIndex = -1;
+    private boolean mAllowSelectingSoldoutSizes = false;
     private int mFromPosition = -1;
     private int mToolbarVerticalOffset;
     private boolean mIsSoldOutCombined = true;
@@ -710,28 +711,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             });
 
             mSizesFlowLayout.setOnSelectListener(selectPosSet -> {
-                if (selectPosSet.isEmpty()) {
-                    if (mSelectedSizeIndex >= 0) {
-                        mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(mSelectedSizeIndex));
-                    } else {
-                        return;
-                    }
-                } else {
-                    int selectedIndex = selectPosSet.iterator().next();
-                    mSelectedSizeIndex = selectedIndex;
-                }
-
-                mSkuId = mProductSizes.get(mSelectedSizeIndex).second;
-
-                boolean isSizeSoldOut = mSkuVariants.get(mSelectedSizeIndex).isSoldOut();
-
-                if (isSizeSoldOut) return;
-
-                mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
-                mAddToCartButton.setEnabled(!isSizeSoldOut);
-                mAddToCartButton.bringToFront();
-
-                updatePriceDetails(mSkuVariants.get(mSelectedSizeIndex));
+                onSelectTag(selectPosSet.isEmpty() ? -1 : selectPosSet.iterator().next());
             });
 
         }
@@ -1016,5 +996,39 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             vhNew.image.setImageResource(R.drawable.circle_indicator_active);
         }
 
+    }
+
+    private void onSelectTag(int index) {
+        int selectedIndex = index;
+
+        // if selection is invalid, try reselecting previous index
+        if (index < 0) {
+            if (mSelectedSizeIndex >= 0) {
+                selectedIndex = mSelectedSizeIndex;
+            } else {
+                return;
+            }
+        }
+
+        boolean isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
+        if (isSizeSoldOut && !mAllowSelectingSoldoutSizes) {
+            // if current selection is sold out, try selecting previous index
+            onSelectTag(-1);
+            return;
+        }
+
+        // force selection - this prevents deselecting tags
+        mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(selectedIndex));
+
+        mSkuId = mProductSizes.get(selectedIndex).second;
+
+        mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
+        mAddToCartButton.setEnabled(!isSizeSoldOut);
+        mAddToCartButton.bringToFront();
+
+        if (selectedIndex != mSelectedSizeIndex) {
+            updatePriceDetails(mSkuVariants.get(selectedIndex));
+            mSelectedSizeIndex = selectedIndex;
+        }
     }
 }
