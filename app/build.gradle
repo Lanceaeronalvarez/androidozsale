@@ -182,7 +182,7 @@ android {
 
         ooRC {
             versionCode 110
-            versionName "2.4.0"
+            versionName "2.4.1"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -203,7 +203,7 @@ android {
 
         ooTest {
             versionCode 110
-            versionName "2.4.0"
+            versionName "2.4.1"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
