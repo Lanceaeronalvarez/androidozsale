@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.vouchers.View;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -24,45 +25,48 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
+import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
 
 /**
  * Created by Paul on 6/23/17.
  */
 
-public class ViewVouchersController extends BasePullToRefreshController implements ViewVouchersMvpView {
+public class ViewVouchersController extends BaseController implements ViewVouchersMvpView {
 
     @Inject
     ViewVouchersMvpPresenter<ViewVouchersMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mArrowImage;
+    View mArrowImage;
 
-    @BindView(R.id.controller_text_vouchers_desc)
+    @BindView(R.id.controller_view_voucher_desc_text)
     TextView mVouchersDescText;
 
-    @BindView(R.id.controller_text_used_voucher_indicator)
+    @BindView(R.id.controller_view_voucher_used_label)
     TextView mUsedVoucherIndicatorText;
 
-    @BindView(R.id.controller_recycler_view_used_vouchers)
-    RecyclerView mUsedVouchersRecyclerView;
+    @BindView(R.id.controller_view_voucher_used_recyclerviewpager)
+    RecyclerView mUsedVouchersRecyclerViewPager;
 
-    @BindView(R.id.controller_recycler_view_unused_vouchers)
-    RecyclerViewPager mUnusedVouchersRecyclerView;
+    @BindView(R.id.controller_view_voucher_unused_recyclerviewpager)
+    RecyclerViewPager mUnusedVouchersRecyclerViewPager;
 
-    @BindView(R.id.voucher_recycler_divider)
+    @BindView(R.id.controller_view_voucher_divider)
     View mDivider;
 
-    @BindView(R.id.controller_vouchers_root_layout)
-    LinearLayout mRootLayout;
+    @BindView(R.id.controller_view_voucher_layout)
+    NestedScrollView mRootLayout;
 
     @BindView(R.id.no_vouchers_placeholder)
     LinearLayout mNoVouchersLayout;
@@ -78,15 +82,12 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
     public static ViewVouchersController newInstance() {
         return new ViewVouchersController(
                 new BundleBuilder(new Bundle())
-                    .build());
+                        .build());
     }
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
-
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
-        fillContent(inflater.inflate(R.layout.controller_view_vouchers, container, false));
+        View view = inflater.inflate(R.layout.controller_view_vouchers, container, false);
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
@@ -100,6 +101,12 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
     }
 
     @Override
+    public void refreshContents() {
+        super.refreshContents();
+        mPresenter.loadMyVouchers();
+    }
+
+    @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
@@ -107,9 +114,9 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
 
     @Override
     protected void setUp(View view) {
-        showLoading();
-        mTitleText.setText("My Vouchers");
+        mTitleText.setText(getString(R.string.account_vouchers));
         mFilterView.setVisibility(View.INVISIBLE);
+        mArrowImage.setVisibility(mPresenter.isTablet() ? View.INVISIBLE : View.VISIBLE);
         mArrowImage.setOnClickListener(action -> {
             mActivity.onBackPressed();
         });
@@ -118,22 +125,13 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
         mUsedVouchersAdapter = new ViewVouchersRecyclerViewAdapter
                 (new ArrayList<>(), mActivity);
 
-        LinearLayoutManager unusedVouchersLayoutManager
-                = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager unusedVouchersLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager usedVouchersLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        LinearLayoutManager usedVouchersLayoutManager
-                = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-
-        mUnusedVouchersRecyclerView.setAdapter(mUnusedVouchersAdapter);
-        mUnusedVouchersRecyclerView.setLayoutManager(unusedVouchersLayoutManager);
-        mUsedVouchersRecyclerView.setAdapter(mUsedVouchersAdapter);
-        mUsedVouchersRecyclerView.setLayoutManager(usedVouchersLayoutManager);
-
-        SnapHelper unusedVoucherHelper = new PagerSnapHelper();
-        SnapHelper usedVoucherHelper = new PagerSnapHelper();
-
-        unusedVoucherHelper.attachToRecyclerView(mUnusedVouchersRecyclerView);
-        usedVoucherHelper.attachToRecyclerView(mUsedVouchersRecyclerView);
+        mUnusedVouchersRecyclerViewPager.setAdapter(mUnusedVouchersAdapter);
+        mUnusedVouchersRecyclerViewPager.setLayoutManager(unusedVouchersLayoutManager);
+        mUsedVouchersRecyclerViewPager.setAdapter(mUsedVouchersAdapter);
+        mUsedVouchersRecyclerViewPager.setLayoutManager(usedVouchersLayoutManager);
 
         showLoading();
         mPresenter.loadMyVouchers();
@@ -150,7 +148,8 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
         hideLoading();
         if (pair.first != null && pair.first.size() != 0) {
             mRootLayout.setVisibility(View.VISIBLE);
-            mUnusedVouchersRecyclerView.getLayoutManager().scrollToPosition(0);
+            mNoVouchersLayout.setVisibility(View.GONE);
+            mUnusedVouchersRecyclerViewPager.getLayoutManager().scrollToPosition(0);
 
             List<GetUserVoucherResponse.Voucher> usedVouchers = new ArrayList<>();
             List<GetUserVoucherResponse.Voucher> currentVouchers = new ArrayList<>();
@@ -167,7 +166,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
             }
 
             mUnusedVouchersAdapter.replace(currentVouchers);
-            mUnusedVouchersRecyclerView.setVisibility(View.VISIBLE);
+            mUnusedVouchersRecyclerViewPager.setVisibility(View.VISIBLE);
 
             mVouchersDescText.setVisibility(View.VISIBLE);
 
@@ -175,7 +174,7 @@ public class ViewVouchersController extends BasePullToRefreshController implemen
                 mUsedVouchersAdapter.replace(usedVouchers);
                 mDivider.setVisibility(View.VISIBLE);
                 mUsedVoucherIndicatorText.setVisibility(View.VISIBLE);
-                mUsedVouchersRecyclerView.setVisibility(View.VISIBLE);
+                mUsedVouchersRecyclerViewPager.setVisibility(View.VISIBLE);
             } else {
                 mDivider.setVisibility(View.GONE);
                 mUsedVoucherIndicatorText.setVisibility(View.GONE);

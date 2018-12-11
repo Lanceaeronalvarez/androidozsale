@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponse;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.List;
@@ -238,9 +239,8 @@ public class NewReturnController extends SwipeableBaseToolBarController implemen
     }
 
     @Override
-    public void finishCreateReturnRequest(CreateReturnRequestResponseBody createReturnRequest) {
-
-        if (createReturnRequest.getCreateReturnRequestResponse().getResult()) {
+    public void finishCreateReturnRequest(CreateReturnRequestResponse createReturnRequestResponse) {
+        if (createReturnRequestResponse.getResult()) {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
@@ -249,7 +249,6 @@ public class NewReturnController extends SwipeableBaseToolBarController implemen
 
         getRouter().popToTag(CurrentReturnsController.TAG);
         hideKeyboard();
-
     }
 
     @Override
@@ -268,6 +267,11 @@ public class NewReturnController extends SwipeableBaseToolBarController implemen
         mNewReturnOrderRecyclerView.setNestedScrollingEnabled(false);
 
         mNewReturnSubmitButton.setEnabled(true);
+    }
+
+    @Override
+    public void onReturnValueUpdated(String itemId, int position, int productQuantityValue, boolean isChecked) {
+
     }
 
     @Override

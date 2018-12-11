@@ -8,15 +8,15 @@
               android:orientation="vertical">
 
     <TextView
-        android:id="@+id/add_address_label"
+        android:id="@+id/row_add_address_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:textColor="@color/gray_active_field_text" />
+        android:textColor="@color/text_extra_dark" />
 
     <EditText
         style="@style/DDEditTextStyle"
-        android:id="@+id/add_address_value"
+        android:id="@+id/row_add_address_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="1"

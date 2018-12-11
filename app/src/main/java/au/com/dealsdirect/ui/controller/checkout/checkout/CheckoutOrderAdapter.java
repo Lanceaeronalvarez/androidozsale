@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.checkout.checkout;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
+import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
@@ -31,10 +33,12 @@ import butterknife.ButterKnife;
 public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdapter.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<Item> mData;
+    private List<Item> mData;
     private CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
+    private int resLayout;
+    private static final int MAX_ITEM_QTY = 5;
 
-    public CheckoutOrderAdapter(Context context,ArrayList<Item> data, CheckoutMvpPresenter<CheckoutMvpView> presenter) {
+    public CheckoutOrderAdapter(Context context, List<Item> data, CheckoutMvpPresenter<CheckoutMvpView> presenter) {
         this.mContext = context;
         this.mData = data;
         this.mPresenter = presenter;
@@ -53,7 +57,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         //   (1) fix when item.fileName is null
         if (item.fileName != null) {
             if (!item.fileName.isEmpty()) {
-                ImageUtils.loadImageDontAnimate(mContext, LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName), holder.image);
+                ImageUtils.loadImageDontAnimate(LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName), holder.image);
             }
         }
 
@@ -66,13 +70,20 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
             holder.sizeValue.setVisibility(View.VISIBLE);
             holder.sizeValue.setText(item.size);
         }
-        holder.colorText.setVisibility(View.INVISIBLE);
+        holder.colorText.setVisibility(View.GONE);
+
+        holder.personalisationLayout.inflateForCheckout(mContext, item.getCustomizableItemDetailsList());
 
         holder.price.setText(PriceUtils.getPriceStringValue(item.price));
-        holder.quantityLayout.setMax(5);
+        holder.quantityLayout.setMax(MAX_ITEM_QTY);
         holder.quantityLayout.setQuantity(item.qty);
         holder.quantityLayout.setAutoUpdateQuantity(false);
         holder.quantityLayout.setEditTextToNonEditable();
+
+        int subTotalVisibility = item.qty > 1 ? View.VISIBLE : View.GONE;
+        holder.subTotal.setVisibility(subTotalVisibility);
+        if (holder.subTotalLabel != null) { holder.subTotalLabel.setVisibility(subTotalVisibility); }
+        if(item.qty > 1) { holder.subTotal.setText(PriceUtils.getPriceStringValue(item.getSubtotal())); }
 
         holder.quantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
             @Override
@@ -87,14 +98,14 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         });
     }
 
-    public void replaceData(List<Item> items){
+    public void replaceData(List<Item> items) {
         mData = new ArrayList<>(items);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData != null ? mData.size() : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -115,6 +126,14 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         TextView price;
         @BindView(R.id.item_checkout_quantity)
         ProductQuantityLayout quantityLayout;
+        @BindView(R.id.item_subtotal_price)
+        TextView subTotal;
+        @Nullable
+        @BindView(R.id.item_checkout_subtotal_label)
+        TextView subTotalLabel;
+        @Nullable
+        @BindView(R.id.item_checkout_personalisation_layout)
+        PersonalisationLayout personalisationLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);

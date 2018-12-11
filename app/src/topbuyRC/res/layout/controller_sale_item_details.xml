@@ -20,7 +20,7 @@
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/controller_sale_item_detail_scrollview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:fillViewport="true">
@@ -32,6 +32,7 @@
                     android:background="@android:color/white"
                     android:clipChildren="false"
                     android:clipToPadding="false"
+                    android:descendantFocusability="blocksDescendants"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -134,7 +135,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text=""
-                                    android:textColor="@color/gray_hint_text"
+                                    android:textColor="@color/text_medium"
                                     android:textSize="@dimen/text_size_small" />
 
                             </LinearLayout>
@@ -162,7 +163,7 @@
                                     android:layout_gravity="right"
                                     android:maxLines="1"
                                     android:text=""
-                                    android:textColor="@color/gray_hint_text"
+                                    android:textColor="@color/text_medium"
                                     android:textSize="@dimen/text_size_small" />
 
                             </LinearLayout>
@@ -212,7 +213,7 @@
                                     android:paddingRight="16dp"
                                     android:paddingTop="10dp"
                                     android:text="sizes"
-                                    android:textColor="@color/gray_field_text"
+                                    android:textColor="@color/text_medium"
                                     android:textSize="@dimen/text_size_normal" />
 
                             </RelativeLayout>
@@ -237,6 +238,12 @@
 
                         </RelativeLayout>
 
+                        <au.com.dealsdirect.ui.custom.PersonalisationLayout
+                            android:id="@+id/product_details_personalisation_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
                         <LinearLayout
                             android:id="@+id/product_description_container"
                             android:layout_width="match_parent"
@@ -246,7 +253,7 @@
                             <WebView
                                 android:id="@+id/product_description_text"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 tools:ignore="WebViewLayout" />
 
@@ -271,7 +278,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="about"
-                                android:textColor="@color/gray_field_text"
+                                android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_normal" />
 
                             <!--<TextView-->
@@ -311,7 +318,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/return_policy"
-                                android:textColor="@color/gray_field_text"
+                                android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_normal" />
 
                             <WebView
@@ -341,7 +348,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/estimated_delivery"
-                                android:textColor="@color/gray_field_text"
+                                android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_normal" />
 
                             <WebView
@@ -371,7 +378,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="pricing"
-                                android:textColor="@color/gray_field_text"
+                                android:textColor="@color/text_medium"
                                 android:textSize="@dimen/text_size_normal" />
 
 

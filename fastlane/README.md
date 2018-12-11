@@ -8,25 +8,11 @@ Make sure you have the latest version of the Xcode command line tools installed:
 xcode-select --install
 ```
 
-## Choose your installation method:
-
-<table width="100%" >
-<tr>
-<th width="33%"><a href="http://brew.sh">Homebrew</a></th>
-<th width="33%">Installer Script</th>
-<th width="33%">RubyGems</th>
-</tr>
-<tr>
-<td width="33%" align="center">macOS</td>
-<td width="33%" align="center">macOS</td>
-<td width="33%" align="center">macOS or Linux with Ruby 2.0.0 or above</td>
-</tr>
-<tr>
-<td width="33%"><code>brew cask install fastlane</code></td>
-<td width="33%"><a href="https://download.fastlane.tools">Download the zip file</a>. Then double click on the <code>install</code> script (or run it in a terminal window).</td>
-<td width="33%"><code>sudo gem install fastlane -NV</code></td>
-</tr>
-</table>
+Install _fastlane_ using
+```
+[sudo] gem install fastlane -NV
+```
+or alternatively using `brew cask install fastlane`
 
 # Available Actions
 ### dd_build
@@ -69,9 +55,59 @@ fastlane fabric_deploy_oo_test
 fastlane fabric_deploy_lc_test
 ```
 
+### fabric_deploy_tb_rc
+```
+fastlane fabric_deploy_tb_rc
+```
+
 ### fabric_deploy_tb_test
 ```
 fastlane fabric_deploy_tb_test
+```
+
+### fabric_deploy_ourpay_test
+```
+fastlane fabric_deploy_ourpay_test
+```
+
+### fabric_deploy_ozsale_rc
+```
+fastlane fabric_deploy_ozsale_rc
+```
+
+### fabric_deploy_ozsale_test
+```
+fastlane fabric_deploy_ozsale_test
+```
+
+### fabric_deploy_singsale_rc
+```
+fastlane fabric_deploy_singsale_rc
+```
+
+### fabric_deploy_singsale_test
+```
+fastlane fabric_deploy_singsale_test
+```
+
+### fabric_deploy_cocosa_rc
+```
+fastlane fabric_deploy_cocosa_rc
+```
+
+### fabric_deploy_cocosa_test
+```
+fastlane fabric_deploy_cocosa_test
+```
+
+### fabric_deploy_nzsale_rc
+```
+fastlane fabric_deploy_nzsale_rc
+```
+
+### fabric_deploy_nzsale_test
+```
+fastlane fabric_deploy_nzsale_test
 ```
 
 

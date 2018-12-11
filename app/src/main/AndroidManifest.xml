@@ -28,45 +28,62 @@
         tools:replace="android:allowBackup"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".ui.main.MainActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:resizeableActivity="false">
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/SplashTheme"
+            android:configChanges="orientation|keyboard|screenSize"
+            android:resizeableActivity="false"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
+
+            <!-- Deep Linking -->
+
+            <intent-filter
+                android:label="@string/app_name">
+
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- Accepts URIs that begin with "http://www.dealsdirect.com.au/shop” -->
-                <!-- <data android:host="www.dealsdirect.com.au" -->
-                <!-- android:pathPrefix="/shop" -->
-                <!-- android:scheme="http"/> -->
-
+                <!-- DealsDirect -->
+                <!-- Accepts URIs that begin with "https://www.dealsdirect.com.au” -->
 
                 <!-- note that the leading "/" is required for pathPrefix -->
                 <!-- Accepts URIs that begin with "dealsdirect://ta” -->
-                <data
-                    android:host="*"
-                    android:pathPrefix="/"
-                    android:scheme="dealsdirect" />
 
-                <!-- IOS deep linking compliance -->
-                <!-- Sample:  au.com.dealsdirect.redirection://ta/action/7RyOu0kKFUuYPo38kWGTiw -->
+                <!-- Ozsale -->
+                <!-- Accepts URIs that begin with "https://www.ozsale.com.au” -->
                 <data
-                    android:host="*"
-                    android:pathPrefix="/"
-                    android:scheme="au.com.dealsdirect.redirection" />
+                    android:host="@string/app_uri_hostname"
+                    android:pathPrefix=""
+                    android:scheme="https"
+                    tools:ignore="AppLinkUrlError" />
+
+                <!--&lt;!&ndash; Email Smart Banners &ndash;&gt;-->
+                <!--<data-->
+                <!--android:host="em.dealsdirect.com.au"-->
+                <!--android:scheme="https" />-->
+
+                <!-- TB Deeplinking Data -->
+                <data
+                    android:host="www.topbuy.com.au"
+                    android:pathPrefix=""
+                    android:scheme="https"
+                    tools:ignore="AppLinkUrlError" />
+
             </intent-filter>
         </activity>
 

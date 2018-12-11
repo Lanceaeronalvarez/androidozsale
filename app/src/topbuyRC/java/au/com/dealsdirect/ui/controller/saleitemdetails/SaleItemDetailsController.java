@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.mysale.genie.utility.RxBus;
@@ -42,19 +43,23 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
@@ -100,6 +105,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     RelativeLayout mSizesContainer;
     @BindView(R.id.sizeList)
     TagFlowLayout mSizesFlowLayout;
+    @BindView(R.id.product_details_personalisation_layout)
+    PersonalisationLayout mPersonalisationLayout;
     @BindView(R.id.shipping_desc_container)
     LinearLayout mShippingContainer;
     @BindView(R.id.shipping_desc_text)
@@ -315,6 +322,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         Animation anim = AnimationUtils.loadAnimation(mActivity, R.anim.slide_to_bottom);
         anim.setDuration(200);
 
+        String personalisation = saleDetail.getPersonalisation();
         String deliveryInformation = saleDetail.getDeliveryInformation();
         String shippingInformation = saleDetail.getShippingInformation();
         String shippingPricing = saleDetail.getPricing();
@@ -333,6 +341,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             mDiscountLabel.setVisibility(View.VISIBLE);
             mDiscountLabel.setText(saleDetail.getLabelText());
+        }
+
+        if (personalisation != null) {
+            mPersonalisationLayout.inflateForProductDetails(mActivity, new Gson().fromJson(
+                    personalisation, Personalisation.class));
         }
 
         if (shippingInformation != null) {
@@ -461,7 +474,28 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductPreviousPrice.setVisibility(View.VISIBLE);
         }
 
-        mPresenter.generateOurpay(saleDetail);
+        mPresenter.loadOurpayData(saleDetail);
+    }
+
+    @Override
+    public void showAddToCartResponse(Value addToCartDetailsResponse) {
+        RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
+
+
+        CartUtil.addValueToCart(1);
+        mCartCounter.setText(CartUtil.getCartValue() + "");
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity,
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                mActivity.getString(R.string.add_to_cart_success));
+
+    }
+
+    @Override
+    public void showAddToCartResponseFailed() {
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                mActivity.getString(R.string.add_to_cart_failed));
     }
 
     @Override
@@ -474,6 +508,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     protected void onDestroyView(@NonNull View view) {
+        KeyboardUtils.hideSoftInput(mActivity);
         mProductDescriptionText.destroy();
         mProductAboutPricing.destroy();
         mProductAboutText.destroy();
@@ -495,20 +530,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void showAddToCartResponse(boolean val) {
-        RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
-
-        if (val) {
-            CartUtil.addValueToCart(1);
-            mCartCounter.setText(CartUtil.getCartValue() + "");
-            CustomAlertDialog.showCustomAlertDialog(
-                    mActivity,
-                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    mActivity.getString(R.string.add_to_cart_success));
-        }
-    }
-
-    @Override
     public void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay) {
 
     }
@@ -516,6 +537,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void onCallGetBasketItemsQuantity() {
         mCartCounter.setText(CartUtil.getCartValue() + "");
+    }
+
+    @Override
+    public int getVerticalOffset() {
+        return 0;
     }
 
     @Override
@@ -539,18 +565,24 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         request.setSkuId(mSkuId);
         request.setItemName(mSaleName);
         request.setPrice(Double.valueOf(mSalePrice.substring(1)));
+        request.setPersonalizationData(mPersonalisationLayout.getDataForAddToCart());
 
-        if (hasSizes) {
-            if (!didSelectSize) {
-                CustomAlertDialog.showCustomAlertDialog(
-                        mActivity,
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        mActivity.getString(R.string.please_select_size));
+        boolean isSizeValid = !(hasSizes && !didSelectSize);
 
-                mProductDetailScrollView.scrollTo(0, mProductDetailBottomCard.getTop());
-            } else {
-                verifyAddToCart(request);
-            }
+        boolean isPersonalisationValid = mPersonalisationLayout.verifyRequiredFields();
+
+        String personalisationError = !mPresenter.getPersonalisationErrorText().equals("") ?
+                mPresenter.getPersonalisationErrorText() :
+                mActivity.getString(R.string.please_fill_up_personalisation_details);
+
+        if (!isSizeValid || !isPersonalisationValid) {
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    !isSizeValid ? mActivity.getString(R.string.please_select_size) :
+                            personalisationError);
+
+            mProductDetailScrollView.scrollTo(0, mProductDetailBottomCard.getTop());
         } else {
             verifyAddToCart(request);
         }
@@ -574,13 +606,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
                     TypedArray title = mActivity.getResources().obtainTypedArray(R.array.account_title_array);
                     List<Integer> titles = new ArrayList<>();
-                    for(int i = 0; i < title.length(); i++) {
-                        titles.add(title.getResourceId(i,0));
+                    for (int i = 0; i < title.length(); i++) {
+                        titles.add(title.getResourceId(i, 0));
                     }
                     TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
                     List<Integer> drawables = new ArrayList<>();
-                    for(int i = 0; i < drawable.length(); i++) {
-                        drawables.add(drawable.getResourceId(i,0));
+                    for (int i = 0; i < drawable.length(); i++) {
+                        drawables.add(drawable.getResourceId(i, 0));
                     }
 
                     mAccountsPresenter.onAttach((AccountMvpView) GateKeeper.getCurrentControllerOnRouter(mActivity.getAccountsRouter()));

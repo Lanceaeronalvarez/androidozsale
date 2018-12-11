@@ -2,57 +2,220 @@
 <resources>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="padding_small">10dp</dimen>
+    <dimen name="padding_default">16dp</dimen>
+    <dimen name="padding_default_half">8dp</dimen>
     <dimen name="default_button_height">48dp</dimen>
-    <dimen name="product_details_bottom_padding">64dp</dimen>
+    <dimen name="default_viewholder_item_height">43dp</dimen>
+    <dimen name="label_space">3dp</dimen>
+    <dimen name="status_bar_height">24dp</dimen>
 
-    <dimen name="product_details_image_layout_height">420dp</dimen>
     <bool name="is_tablet">false</bool>
 
-    <dimen name="text_size_small">12sp</dimen>
-    <dimen name="text_size_medium">14sp</dimen>
-    <dimen name="text_size_large">16sp</dimen>
-    <dimen name="text_size_xlarge">18sp</dimen>
-    <dimen name="text_size_xxlarge">20sp</dimen>
-    <dimen name="text_size_xxxlarge">22sp</dimen>
-    <dimen name="text_size_xxxxlarge">24sp</dimen>
+    <!-- Font -->
+    <dimen name="text_size_title">24sp</dimen>
+    <dimen name="text_size_subtitle">24sp</dimen>
+    <dimen name="text_size_headline1">22sp</dimen>
+    <dimen name="text_size_headline2">20sp</dimen>
+    <dimen name="text_size_headline3">18sp</dimen>
+    <dimen name="text_size_body">16sp</dimen>
+    <dimen name="text_size_caption1">14sp</dimen>
+    <dimen name="text_size_caption2">12sp</dimen>
+    <dimen name="text_size_caption3">11sp</dimen>
 
     <dimen name="toolbar_height">64dp</dimen>
+    <dimen name="toolbar_widget_size">40dp</dimen>
     <dimen name="filter_bar_height">42dp</dimen>
     <dimen name="bottom_nav_height">56dp</dimen>
 
-    <dimen name="cell_height">320dp</dimen>
-    <dimen name="cell_image_height">200dp</dimen>
-    <dimen name="row_account_height">75dp</dimen>
+
+    <!-- General Margin -->
+    <dimen name="margin_tiny">2dp</dimen>
+    <dimen name="margin_extra_small">5dp</dimen>
+    <dimen name="margin_small">10dp</dimen>
+    <dimen name="margin_medium">15dp</dimen>
+    <dimen name="margin_large">20dp</dimen>
+    <dimen name="margin_extra_large">30dp</dimen>
+    <dimen name="margin_huge">40dp</dimen>
+    <dimen name="margin_extra_huge">60dp</dimen>
+
+    <dimen name="negative_margin_small">-10dp</dimen>
+
+    <!--General Radius-->
+    <dimen name="corner_radius_default">5dp</dimen>
+
+    <!-- EditText -->
+    <dimen name="edit_text_height">44dp</dimen>
+    <dimen name="edit_text_corner_radius">@dimen/corner_radius_default</dimen>
+    <dimen name="edit_text_padding">15dp</dimen>
+
+    <!-- Button -->
+    <dimen name="button_height_regular">48dp</dimen>
+    <dimen name="button_corner_radius">@dimen/corner_radius_default</dimen>
+    <dimen name="button_drawable_width">20dp</dimen>
+    <dimen name="button_drawable_height">20dp</dimen>
+    <dimen name="button_text_padding">10dp</dimen>
+    <dimen name="button_elevation">2.5dp</dimen>
 
     <dimen name="item_image_height">270dp</dimen>
     <dimen name="item_list_row_height">40dp</dimen>
 
-    <dimen name="edit_text_height">48dp</dimen>
+    <!-- Border Width-->
+    <dimen name="border_thin">0.25dp</dimen>
+    <dimen name="border_regular">1dp</dimen>
+    <dimen name="border_thick">2dp</dimen>
+    <dimen name="border_heavy">5dp</dimen>
+
+    <!-- Toolbar  -->
+    <dimen name="partial_toolbar_button_width">40dp</dimen>
+    <dimen name="partial_toolbar_button_height">40dp</dimen>
+    <dimen name="partial_toolbar_button_padding">10dp</dimen>
+    <dimen name="partial_toolbar_logo_width">170dp</dimen>
     <dimen name="tall_edit_text_height">144dp</dimen>
+    <dimen name="sale_details_app_bar_height">90dp</dimen>
+    <dimen name="sale_details_floating_header_height">64dp</dimen>
 
-    <dimen name="placeholder_imageview_margin"> 100dp </dimen>
-    <dimen name="voucher_container_width">240dp</dimen>
-    <dimen name="voucher_container_height">150dp</dimen>
-    <dimen name="voucher_padding">50dp</dimen>
-    <dimen name="voucher_text_padding">10dp</dimen>
+    <!-- Placeholder -->
+    <dimen name="placeholder_padding">@dimen/padding_default</dimen>
+    <dimen name="placeholder_icon_width">60dp</dimen>
+    <dimen name="placeholder_icon_height">60dp</dimen>
 
-    <dimen name="voucher_container_margin">20dp</dimen>
-    <dimen name="voucher_container_padding">20dp</dimen>
-
-    <dimen name="invite_friends_padding">5dp</dimen>
     <dimen name="invite_friends_image_width">22.5dp</dimen>
     <dimen name="invite_friends_image_height">20dp</dimen>
 
-    <dimen name="category_image_size">30dp</dimen>
-    <dimen name="category_background_size">70dp</dimen>
+    <!-- Shop -->
+    <dimen name="controller_shop_app_bar_height">90dp</dimen>
+    <dimen name="controller_shop_banner_margin">8dp</dimen>
+    <dimen name="banner_mobile_width">423dp</dimen>
+    <dimen name="banner_mobile_height">143dp</dimen>
+    <dimen name="banner_tablet_width">313dp</dimen>
+    <dimen name="banner_tablet_height">294dp</dimen>
+
+    <!-- Checkout -->
+    <dimen name="row_checkout_image_width">100dp</dimen>
+    <dimen name="row_checkout_image_height">130dp</dimen>
+    <dimen name="row_checkout_drawable_width">30dp</dimen>
+    <dimen name="row_checkout_drawable_height">30dp</dimen>
+
+    <!-- Contacts -->
+    <dimen name="contacts_edittext_height">64dp</dimen>
+    <dimen name="contact_chevron_width">25dp</dimen>
+    <dimen name="contact_chevron_height">25dp</dimen>
+    <dimen name="contact_subject_items_margin_start">60dp</dimen>
+    <dimen name="contact_order_items_margin_start">60dp</dimen>
+
+    <!-- Categories -->
+    <dimen name="category_image_width">30dp</dimen>
+    <dimen name="category_image_height">30dp</dimen>
+    <dimen name="category_width">100dp</dimen>
+    <dimen name="category_height">100dp</dimen>
+    <dimen name="category_background_width">70dp</dimen>
+    <dimen name="category_background_height">70dp</dimen>
     <dimen name="category_container_width">100dp</dimen>
-
-    <dimen name="return_card_height">450dp</dimen>
-    <dimen name="place_holder_padding">16dp</dimen>
-
     <dimen name="category_image_padding">15dp</dimen>
+    <dimen name="viewholder_subcategory_width">25dp</dimen>
+    <dimen name="viewholder_subcategory_height">25dp</dimen>
 
-    <dimen name="placeholder_icon_size">60dp</dimen>
-    <dimen name="corner_radius">5dp</dimen>
+    <!-- Facet Filters -->
+    <dimen name="row_facet_check_icon_width">30dp</dimen>
+    <dimen name="row_facet_check_icon_height">30dp</dimen>
+    <dimen name="row_facet_item_height">40dp</dimen>
+
+    <!-- Invite -->
+    <dimen name="invite_friends_padding">5dp</dimen>
+    <dimen name="invite_friends_vouchers_image_height">250dp</dimen>
+
+
+    <!-- Login -->
+    <dimen name="login_drawable_close_height">5dp</dimen>
+
+    <!-- Ourpay -->
+    <dimen name="ourpay_logo_width">100dp</dimen>
+    <dimen name="ourpay_logo_height">20dp</dimen>
+    <dimen name="ourpay_logo_width_summary">50dp</dimen>
+    <dimen name="ourpay_logo_height_summary">15dp</dimen>
+    <dimen name="ourpay_info_logo_width">25dp</dimen>
+    <dimen name="ourpay_info_logo_height">25dp</dimen>
+    <dimen name="ourpay_panel_bar_height">1.5dp</dimen>
+    <dimen name="ourpay_panel_check_width">20dp</dimen>
+    <dimen name="ourpay_panel_check_height">20dp</dimen>
+    <dimen name="ourpay_thank_you_logo_width">180dp</dimen>
+    <dimen name="ourpay_thank_you_logo_height">50dp</dimen>
+    <dimen name="ourpay_date_label_width">60dp</dimen>
+    <dimen name="ourpay_price_label_width">70dp</dimen>
+    <dimen name="margin_end_ourpay_panel_image">2dp</dimen>
+    <dimen name="margin_right_ourpay_panel_image">2dp</dimen>
+    <dimen name="margin_start_ourpay_panel_image">2dp</dimen>
+    <dimen name="margin_top_ourpay_panel_image">7dp</dimen>
+
+    <!-- Orders -->
+    <dimen name="order_image_width">85dp</dimen>
+    <dimen name="order_image_height">135dp</dimen>
+
+    <!-- Product Details -->
+    <dimen name="product_details_image_layout_height">420dp</dimen>
+    <dimen name="product_details_bottom_padding">64dp</dimen>
+    <dimen name="product_details_image_indicator">130dp</dimen>
+    <dimen name="product_detail_question_image_width">15dp</dimen>
+    <dimen name="product_detail_question_image_height">15dp</dimen>
+    <dimen name="product_details_review_fab_width">40dp</dimen>
+    <dimen name="product_details_review_fab_height">40dp</dimen>
+    <dimen name="product_details_subtitle_indent">3dp</dimen>
+
+    <!-- Quantity Widget -->
+    <dimen name="quantity_widget_loader_width">30dp</dimen>
+    <dimen name="quantity_widget_loader_height">20dp</dimen>
+    <dimen name="quantity_widget_image_width">30dp</dimen>
+    <dimen name="quantity_widget_image_height">30dp</dimen>
+
+    <!-- Search Filters -->
+    <dimen name="search_filter_tab_layout_height">35dp</dimen>
+    <dimen name="search_filter_imageview_width">25dp</dimen>
+    <dimen name="search_filter_imageview_height">25dp</dimen>
+    <dimen name="search_filter_triangle_image_view_width">25dp</dimen>
+    <dimen name="search_filter_triangle_image_height">25dp</dimen>
+    <dimen name="search_filter_range_margin_end">26dp</dimen>
+    <dimen name="viewholder_filter_subcategory_indent">25dp</dimen>
+
+    <!-- Sale Items -->
+    <dimen name="sale_item_image_padding_bottom">8dp</dimen>
+    <dimen name="sale_item_image_padding_left">12dp</dimen>
+    <dimen name="sale_item_image_padding_right">12dp</dimen>
+    <dimen name="sale_item_image_padding_top">8dp</dimen>
+    <dimen name="sale_item_image_height">200dp</dimen>
+    <dimen name="controller_sale_items_tab_height">40dp</dimen>
+    <!-- sum of filter tabs, search edittext and margins-->
+    <dimen name="collapsing_toolbar_height">90dp</dimen>
+
+    <!-- Return -->
+    <dimen name="return_card_height">450dp</dimen>
+    <dimen name="viewholder_return_order_image_height">100dp</dimen>
+    <dimen name="viewholder_return_order_image_width">70dp</dimen>
+    <dimen name="return_details_image_width">50dp</dimen>
+    <dimen name="return_details_image_height">100dp</dimen>
+    <dimen name="viewholder_return_order_checkbox_height">100dp</dimen>
+    <dimen name="new_return_edit_text_height">80dp</dimen>
+
+
+    <!-- Voucher -->
+    <dimen name="voucher_container_width">240dp</dimen>
+    <dimen name="voucher_container_height">150dp</dimen>
+    <dimen name="voucher_padding">50dp</dimen>
+    <dimen name="view_vouchers_padding">50dp</dimen>
+    <dimen name="voucher_text_padding">10dp</dimen>
+    <dimen name="text_size_voucher_title">34sp</dimen>
+
+
+    <!--Delivery Options-->
+    <dimen name="ourpay_select_logo_width">160dp</dimen>
+    <dimen name="ourpay_select_logo_height">20dp</dimen>
+
+    <!--Ourpay-->
+    <dimen name="ourpay_panel_corner_radius">10dp</dimen>
+
+    <!--Ourpay Select Checkbox size-->
+    <dimen name="ourpay_select_checkbox_size">20dp</dimen>
+    <dimen name="ourpay_circle_state_size">20dp</dimen>
+    <dimen name="ourpay_circle_state_size_half">10dp</dimen>
+
 </resources>

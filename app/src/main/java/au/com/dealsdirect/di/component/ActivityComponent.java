@@ -5,6 +5,7 @@ package au.com.dealsdirect.di.component;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.di.module.ActivityModule;
+import au.com.dealsdirect.service.event.ActionTrackerInterface;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import dagger.Component;
@@ -22,4 +23,6 @@ public interface ActivityComponent {
     CompositeDisposable getCompositeDisposable();
 
     SchedulerProvider getSchedulerProvider();
+
+    ActionTrackerInterface getActionTracker();
 }

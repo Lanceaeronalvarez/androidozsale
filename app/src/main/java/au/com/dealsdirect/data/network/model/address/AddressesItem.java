@@ -5,6 +5,7 @@ package au.com.dealsdirect.data.network.model.address;
  */
 
 public class AddressesItem {
+    public int addressNumericId;
     public String ID;
     public String CustomerID;
     public String Nickname;
@@ -30,6 +31,7 @@ public class AddressesItem {
     public boolean ReadOnly;
     public int Status;
     public boolean IsChanged;
+    private boolean isPinned;
 
     public String getFullAddress(){
         String addressDesc = AddressLines + ", ";
@@ -96,5 +98,20 @@ public class AddressesItem {
             return false;
         return AdditionalData != null ? AdditionalData.equals(that.AdditionalData) : that.AdditionalData == null;
 
+    }
+    public int getAddressNumericId() {
+        return addressNumericId;
+    }
+
+    public void setAddressNumericId(int addressNumericId) {
+        this.addressNumericId = addressNumericId;
+    }
+
+    public boolean isPinned() {
+        return isPinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        isPinned = pinned;
     }
 }

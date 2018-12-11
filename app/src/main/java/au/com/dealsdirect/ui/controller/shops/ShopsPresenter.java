@@ -43,9 +43,9 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
         doApiCallForResponse(getDataManager().callGetBanners(request, getOnlyFromNetwork), new AppApiCallback(){
             @Override
-            public void onSuccess(List<?> response) {
+            public void onSuccess(Object response) {
                 super.onSuccess(response);
-                getMvpView().showShopBanners((List<GetBannerResponse>) response);
+                getMvpView().showShopBanners((GetBannerResponse) response);
             }
 
             @Override
@@ -105,6 +105,16 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     @Override
     public boolean isAuthorized() {
         return getDataManager().isAuthorized();
+    }
+
+    @Override
+    public void selectBanner(String saleId, String bannerTitle, String bannerId, int position, String imageUrl, boolean isAvailable) {
+
+        if (!isViewAttached() || getMvpView().isChangeInProgress()) {
+            return;
+        }
+
+        getMvpView().onBannerClicked(saleId,bannerTitle,bannerId,position,imageUrl,isAvailable);
     }
 
 }

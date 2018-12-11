@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="#FFFFFF"
+    android:background="@color/background_default"
     android:orientation="vertical">
 
     <TextView
@@ -18,8 +18,8 @@
         android:fontFamily="@string/font_app_black"
         android:gravity="center_vertical"
         android:text="@string/select_a_sale"
-        android:textColor="@color/gray_description_text"
-        android:textSize="@dimen/text_size_xxlarge"
+        android:textColor="@color/text_description"
+        android:textSize="@dimen/text_size_headline2"
         tools:ignore="MissingPrefix" />
 
     <TextView
@@ -29,8 +29,8 @@
         android:fontFamily="@string/font_app_black"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/no_orders"
-        android:textColor="@color/gray_description_text"
-        android:textSize="@dimen/text_size_xxxlarge" />
+        android:textColor="@color/text_description"
+        android:textSize="@dimen/text_size_headline1" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_contact_select_order_recycler_view"

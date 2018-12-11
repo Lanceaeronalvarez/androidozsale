@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/background_default"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
@@ -20,29 +20,33 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:visibility="gone"
             android:text="home/office delivery"
-            android:textColor="@color/gray_title_text"
-            android:textSize="@dimen/text_size_xlarge" />
+            android:textColor="@color/text_light"
+            android:textSize="@dimen/text_size_headline3" />
 
-        <FrameLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/controller_addresses_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/address_office_delivery_subtitle">
+            android:layout_above="@+id/controller_address_button"
+            android:layout_below="@+id/address_office_delivery_subtitle"
+            android:overScrollMode="never" />
 
-            <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/view_addresses_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:overScrollMode="never" />
 
-        </FrameLayout>
-
-        <include layout="@layout/view_address_placeholder_layout"
-            android:visibility="gone"/>
-
+        <Button
+            android:id="@+id/controller_address_button"
+            style="@style/DDButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/padding_default"
+            android:text="@string/add_new_address"
+            android:visibility="visible"/>
 
     </RelativeLayout>
+
+    <include
+        layout="@layout/view_address_placeholder_layout"
+        android:visibility="gone" />
 
 </LinearLayout>

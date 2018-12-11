@@ -35,11 +35,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge"
+                android:textSize="@dimen/text_size_title"
                 tools:text="18" />
 
             <TextView
-                fontPath="@string/font_lato_light"
+                fontPath="@string/font_app_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/controller_payment_dashboard_active_text"
@@ -67,11 +67,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge"
+                android:textSize="@dimen/text_size_title"
                 tools:text="$200" />
 
             <TextView
-                fontPath="@string/font_lato_light"
+                fontPath="@string/font_app_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/controller_payment_dashboard_balance_text"
@@ -99,11 +99,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge"
+                android:textSize="@dimen/text_size_title"
                 tools:text="$300" />
 
             <TextView
-                fontPath="@string/font_lato_light"
+                fontPath="@string/font_app_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/controller_payment_dashboard_credit_text"
@@ -132,11 +132,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_xxxxxlarge"
+                android:textSize="@dimen/text_size_title"
                 tools:text="12" />
 
             <TextView
-                fontPath="@string/font_lato_light"
+                fontPath="@string/font_app_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/controller_payment_dashboard_delivery_text"

@@ -19,7 +19,7 @@
                     android:translateY="24.29998">
                     <path
                         android:pathData="M16.6 8.5999756L12 13.199976 7.4 8.5999756l-1.4 1.4 6 6.0000004 6 -6.0000004z"
-                        android:fillColor="@color/gray_field_text" />
+                        android:fillColor="@color/text_medium" />
                 </group>
             </group>
         </group>

@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/viewholder_return_detail_row_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp"
-    tools:ignore="MissingPrefix">
-    
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/viewholder_return_detail_row_container"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="10dp"
+              tools:ignore="MissingPrefix">
 
-    <!--<View-->
-    <!--android:id="@+id/new_returns_order_item_divider"-->
-    <!--android:visibility="visible"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0.5dp"-->
-    <!--android:background="#ededed"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +21,7 @@
             android:id="@+id/viewholder_return_detail_image_view"
             android:layout_width="100dp"
             android:layout_height="150dp"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -43,14 +36,14 @@
                 android:orientation="vertical">
 
                 <TextView
-                    fontPath="@string/font_app_bold"
                     android:id="@+id/viewholder_return_details_item_name"
+                    fontPath="@string/font_app_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray_field_text"
-                    android:textSize="@dimen/text_size_large"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_body"
                     tools:ignore="HardcodedText"
-                    tools:text="Philosophy Cotton Sleeveless Plain" />
+                    tools:text="Philosophy Cotton Sleeveless Plain"/>
 
 
                 <RelativeLayout
@@ -66,7 +59,7 @@
                         android:layout_height="wrap_content"
                         android:text="Items:"
                         android:textColor="#b7b7b7"
-                        android:textSize="@dimen/text_size_xlarge"
+                        android:textSize="@dimen/text_size_headline3"
                         tools:ignore="HardcodedText" />
 
 
@@ -80,8 +73,8 @@
                         android:layout_toRightOf="@+id/viewholder_returns_details_item_count_identifier"
 
                         tools:text="1"
-                        android:textColor="@color/gray_field_text"
-                        android:textSize="@dimen/text_size_xlarge"
+                        android:textColor="@color/text_medium"
+                        android:textSize="@dimen/text_size_headline3"
                         tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
@@ -94,12 +87,12 @@
                     android:layout_marginTop="2dp">
 
                     <TextView
-                        android:id="@+id/viewholder_returns_details_size_indentifier"
+                        android:id="@+id/viewholder_returns_details_size_identifier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Size:"
                         android:textColor="#b7b7b7"
-                        android:textSize="@dimen/text_size_xlarge"
+                        android:textSize="@dimen/text_size_headline3"
                         tools:ignore="HardcodedText" />
 
 
@@ -107,14 +100,14 @@
                         android:id="@+id/viewholder_returns_details_size_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/viewholder_returns_details_size_indentifier"
+                        android:layout_alignTop="@+id/viewholder_returns_details_size_identifier"
                         android:layout_marginLeft="4dp"
-                        android:layout_toEndOf="@+id/viewholder_returns_details_size_indentifier"
-                        android:layout_toRightOf="@+id/viewholder_returns_details_size_indentifier"
+                        android:layout_toEndOf="@+id/viewholder_returns_details_size_identifier"
+                        android:layout_toRightOf="@+id/viewholder_returns_details_size_identifier"
                         android:fontFamily="@string/font_app_regular"
                         tools:text="123"
-                        android:textColor="@color/gray_field_text"
-                        android:textSize="@dimen/text_size_xlarge"
+                        android:textColor="@color/text_medium"
+                        android:textSize="@dimen/text_size_headline3"
                         tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
@@ -132,7 +125,7 @@
                         android:layout_height="wrap_content"
                         android:text="Price:"
                         android:textColor="#b7b7b7"
-                        android:textSize="@dimen/text_size_xlarge"
+                        android:textSize="@dimen/text_size_headline3"
                         tools:ignore="HardcodedText" />
 
 
@@ -146,8 +139,8 @@
                         android:layout_toEndOf="@+id/viewholder_return_details_price_identifier"
                         android:layout_toRightOf="@+id/viewholder_return_details_price_identifier"
                         tools:text="12.00"
-                        android:textColor="@color/gray_field_text"
-                        android:textSize="@dimen/text_size_xlarge"
+                        android:textColor="@color/text_medium"
+                        android:textSize="@dimen/text_size_headline3"
                         tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
@@ -165,7 +158,7 @@
                         android:layout_height="wrap_content"
                         android:text="Subtotal:"
                         android:textColor="#b7b7b7"
-                        android:textSize="@dimen/text_size_xlarge"
+                        android:textSize="@dimen/text_size_headline3"
                         tools:ignore="HardcodedText" />
 
 
@@ -178,48 +171,11 @@
                         android:layout_toEndOf="@+id/viewholder_returns_details_subtotal_indentifier"
                         android:layout_toRightOf="@+id/viewholder_returns_details_subtotal_indentifier"
                         tools:text="123"
-                        android:textColor="@color/gray_field_text"
-                        android:textSize="@dimen/text_size_xlarge"
+                        android:textColor="@color/text_medium"
+                        android:textSize="@dimen/text_size_headline3"
                         tools:ignore="HardcodedText" />
 
                 </RelativeLayout>
-
-
-                <!--<RelativeLayout-->
-                <!--android:id="@+id/new_returns_order_item_tracking_info"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="2dp"-->
-                <!--android:layout_below="@+id/new_returns_order_item_status_info">-->
-
-                <!--<com.mysale.genie.views.custom.GenieTextView-->
-                <!--app:font="@string/fontname_lato"-->
-                <!--android:id="@+id/new_returns_order_item_tracking_identifier"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textColor="#b7b7b7"-->
-                <!--tools:text="Tracking:"-->
-                <!--android:textSize="@dimen/my_current_return_details_identifier_text_size"-->
-                <!--tools:ignore="HardcodedText"/>-->
-
-
-                <!--<com.mysale.genie.views.custom.GenieTextView-->
-                <!--app:font="@string/fontname_lato"-->
-                <!--android:id="@+id/new_returns_order_item_tracking_value"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textColor="#acacac"-->
-                <!--tools:text=""-->
-                <!--android:layout_marginLeft="2dp"-->
-                <!--android:textSize="@dimen/my_current_return_details_value_text_size"-->
-                <!--android:layout_toRightOf="@+id/new_returns_order_item_tracking_identifier"-->
-                <!--android:layout_toEndOf="@+id/new_returns_order_item_tracking_identifier"-->
-                <!--android:layout_alignTop="@+id/new_returns_order_item_tracking_identifier"-->
-                <!--tools:ignore="HardcodedText"/>-->
-
-                <!--</RelativeLayout>-->
-
-
             </LinearLayout>
 
         </RelativeLayout>

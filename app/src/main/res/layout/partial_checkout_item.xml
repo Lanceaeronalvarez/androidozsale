@@ -5,21 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp"
+    android:padding="@dimen/padding_default"
     tools:ignore="MissingPrefix">
 
     <ImageView
         android:id="@+id/item_checkout_image"
-        android:layout_width="100dp"
-        android:layout_height="130dp"
+        android:layout_width="@dimen/row_checkout_image_width"
+        android:layout_height="@dimen/row_checkout_image_height"
         tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="10dp"
-        android:paddingStart="10dp">
+        android:paddingLeft="@dimen/margin_small"
+        android:paddingStart="@dimen/margin_small">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,9 +31,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:textColor="#717171"
-                android:textSize="16sp"
-                tools:text="@string/test_product_name" />
+                android:textColor="@color/row_checkout_text_light_color"
+                android:textSize="@dimen/text_size_body"
+                tools:text="Philosophy (Runway) Cotton Sleeveless Plain" />
 
             <TextView
                 fontPath="@string/font_app_semibold"
@@ -42,16 +42,29 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="@color/cart_order_price_text_color"
-                android:textSize="@dimen/text_size_xxlarge"
+                android:textColor="@color/cart_text_order_price"
+                android:textSize="@dimen/text_size_headline2"
                 tools:text="$19.00" />
+
+            <TextView
+                android:id="@+id/item_subtotal_price"
+                fontPath="@string/font_app_semibold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_checkout_price"
+                android:layout_alignLeft="@id/item_checkout_price"
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_body"
+                android:visibility="gone"
+                tools:text="$19.00" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:paddingTop="@dimen/margin_small">
 
             <TextView
                 android:id="@+id/item_checkout_color_text"
@@ -64,7 +77,6 @@
                 android:id="@+id/item_checkout_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                
                 tools:text="Pink" />
         </LinearLayout>
 
@@ -86,13 +98,19 @@
                 tools:text="AU 14" />
         </LinearLayout>
 
+        <au.com.dealsdirect.ui.custom.PersonalisationLayout
+            android:id="@+id/item_checkout_personalisation_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
         <!--Insert Quantity Indicator here-->
 
         <au.com.dealsdirect.ui.custom.ProductQuantityLayout
             android:id="@+id/item_checkout_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="@dimen/margin_extra_small" />
 
     </LinearLayout>
 

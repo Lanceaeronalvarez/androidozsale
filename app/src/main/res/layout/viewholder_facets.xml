@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
+    android:layout_marginTop="@dimen/padding_default_half"
+    android:layout_marginBottom="@dimen/padding_default_half"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
@@ -15,15 +15,15 @@
 
         <RelativeLayout
             android:id="@+id/row_facets_image_container"
-            android:layout_width="@dimen/category_background_size"
-            android:layout_height="@dimen/category_background_size"
+            android:layout_width="@dimen/category_background_width"
+            android:layout_height="@dimen/category_background_height"
             android:background="@drawable/bg_facet_selector">
 
             <ImageView
                 android:id="@+id/row_facets_image"
-                android:layout_width="@dimen/category_image_size"
-                android:layout_height="@dimen/category_image_size"
-                android:layout_centerInParent="true"/>
+                android:layout_width="@dimen/category_image_width"
+                android:layout_height="@dimen/category_image_height"
+                android:layout_centerInParent="true" />
 
         </RelativeLayout>
 
@@ -36,7 +36,7 @@
             android:textColor="@color/colorAccent"
             android:layout_gravity="right"
             android:layout_marginTop="-10dp"
-            android:textSize="@dimen/text_size_xxxlarge"
+            android:textSize="@dimen/text_size_headline1"
             android:visibility="visible"
             android:text="•"/>
 
@@ -48,8 +48,8 @@
             android:layout_gravity="center"
             android:layout_marginTop="-10dp"
             android:gravity="center"
-            android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_caption1"
             tools:text="Category"/>
 
 

@@ -8,7 +8,7 @@
         android:translateY="2">
         <path
             android:pathData="M30.288497 14.992102A14.767024 14.779981 0 0 1 15.521473 29.772082 14.767024 14.779981 0 0 1 0.75444889 14.992102 14.767024 14.779981 0 0 1 15.521473 0.21212101 14.767024 14.779981 0 0 1 30.288497 14.992102Z"
-            android:fillColor="#f37325" />
+            android:fillColor="@color/colorPrimaryDark" />
         <group
             android:translateX="12"
             android:translateY="11">

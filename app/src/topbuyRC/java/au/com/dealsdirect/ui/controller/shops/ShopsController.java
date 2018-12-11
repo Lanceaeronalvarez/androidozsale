@@ -16,8 +16,10 @@ import au.com.dealsdirect.ui.base.BaseController;
  */
 
 public class ShopsController extends BaseController implements ShopsMvpView {
+
+
     @Override
-    public void showShopBanners(List<GetBannerResponse> getBannerResponses) {
+    public void showShopBanners(GetBannerResponse getBannerResponses) {
 
     }
 

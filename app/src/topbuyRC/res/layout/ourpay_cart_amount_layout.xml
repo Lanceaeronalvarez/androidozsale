@@ -16,7 +16,7 @@
         android:layout_alignParentStart="true"
         android:text="or"
         android:textColor="#676767"
-        android:textSize="@dimen/text_size_xxlarge"
+        android:textSize="@dimen/text_size_subtitle"
         android:textStyle="bold" />
 
     <TextView
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/cart_order_price_text_color"
-        android:textSize="@dimen/text_size_xxxlarge"
+        android:textSize="@dimen/text_size_title"
         android:textStyle="bold"
         tools:text="$25.00"
         android:layout_alignParentTop="true"

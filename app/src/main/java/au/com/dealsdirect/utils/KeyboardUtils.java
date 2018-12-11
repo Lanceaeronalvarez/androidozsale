@@ -23,6 +23,7 @@ public final class KeyboardUtils {
     }
 
     public static void showSoftInput(EditText edit, Context context) {
+        if(edit == null) return;
         edit.setFocusable(true);
         edit.setFocusableInTouchMode(true);
         edit.requestFocus();

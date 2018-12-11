@@ -8,15 +8,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
 
@@ -24,6 +27,7 @@ public class ImageUtils {
 
     public static final String TAG = ImageUtils.class.getSimpleName();
     public static String IMAGE_SERVER_URL = "server_image_server_url";
+    private static final int NO_MAX_COLUMN = -1;
 
     public static abstract class ImageLoadedCallback {
 
@@ -32,89 +36,91 @@ public class ImageUtils {
         }
     }
 
-    public static void loadImage(Context context, String url, ImageView imageView) {
-        Glide.with(context)
-                .load(url)
-                .asBitmap()
-                .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+    public static void loadImage(String url, ImageView imageView) {
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .skipMemoryCache(true)
-                .format(DecodeFormat.PREFER_RGB_565)
+                .format(DecodeFormat.PREFER_ARGB_8888);
+
+        Glide.with(imageView)
+                .asBitmap()
+                .apply(options)
+                .load(url)
                 .into(imageView);
     }
 
-    public static void loadImageDontAnimate(Context context, String url, ImageView imageView){
-        Glide.with(context)
-                .load(url)
-                .asBitmap()
-                .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+    public static void loadImageDontAnimate(String url, ImageView imageView) {
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .skipMemoryCache(true)
-                .dontAnimate()
-                .format(DecodeFormat.PREFER_RGB_565)
+                .format(DecodeFormat.PREFER_ARGB_8888)
+                .dontAnimate();
+
+        Glide.with(imageView)
+                .asBitmap()
+                .apply(options)
+                .load(url)
                 .into(imageView);
     }
 
-    public static void loadImageWithPlaceholder(Context context, String url, ImageView imageView, Drawable placeholder,
+    public static void loadImageWithPlaceholder(String url, ImageView imageView, Drawable placeholder,
                                                 RequestListener requestListener) {
-        Glide.with(context)
-                .load(url)
-                .asBitmap()
+        RequestOptions options = new RequestOptions()
                 .placeholder(placeholder)
-                .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .skipMemoryCache(true)
-                .format(DecodeFormat.PREFER_RGB_565)
+                .format(DecodeFormat.PREFER_ARGB_8888);
+
+        Glide.with(imageView)
+                .asBitmap()
+                .apply(options)
+                .load(url)
                 .listener(requestListener)
                 .into(imageView);
     }
 
-    public static void loadImageImmediate(Context context, String url, ImageView imageView, ImageLoadedCallback callback) {
+    public static void loadImageImmediate(String url, ImageView imageView, ImageLoadedCallback callback) {
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .skipMemoryCache(true)
+                .format(DecodeFormat.PREFER_ARGB_8888)
+                .priority(Priority.IMMEDIATE);
+
         if (callback != null) {
-            Glide.with(context)
-                    .load(url)
+            Glide.with(imageView)
                     .asBitmap()
-                    .listener(new RequestListener<String, Bitmap>() {
+                    .apply(options)
+                    .load(url)
+                    .listener(new RequestListener<Bitmap>() {
                         @Override
-                        public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                             return false;
                         }
 
                         @Override
-                        public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                             callback.onImageResourceReady();
                             return false;
                         }
                     })
-                    .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .priority(Priority.IMMEDIATE)
-                    .format(DecodeFormat.PREFER_RGB_565)
                     .into(imageView);
-        } else {
-
-            if (imageView != null) {
-                Glide.with(context)
-                        .load(url)
+        } else if (imageView != null) {
+                Glide.with(imageView)
                         .asBitmap()
-                        .encoder(new BitmapEncoder(Bitmap.CompressFormat.JPEG, 50))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .priority(Priority.IMMEDIATE)
-                        .format(DecodeFormat.PREFER_RGB_565)
+                        .apply(options)
+                        .load(url)
                         .into(imageView);
-            }
         }
-
     }
 
-    public static void loadImage(Context context, String url, ImageView imageView, int width,
+    public static void loadImage(String url, ImageView imageView, int width,
                                  int height) {
         if (url != null && !url.equals("")) {
             @SuppressLint("DefaultLocale") String sizeFormat =
                     String.format("?width=%d&height=%d", width, height);
             url = url + sizeFormat;
 
-            loadImage(context, url, imageView);
+            loadImage(url, imageView);
         }
     }
 
@@ -122,8 +128,7 @@ public class ImageUtils {
                                                     final ImageView imageView) {
         if (imageView.getMeasuredWidth() != 0 && imageView.getMeasuredHeight() != 0) {
 
-            loadImage(context,
-                    url,
+            loadImage(url,
                     imageView,
                     imageView.getMeasuredWidth(),
                     imageView.getMeasuredHeight());
@@ -135,8 +140,7 @@ public class ImageUtils {
                         public boolean onPreDraw() {
                             imageView.getViewTreeObserver()
                                     .removeOnPreDrawListener(this);
-                            loadImage(context,
-                                    url,
+                            loadImage(url,
                                     imageView,
                                     imageView.getMeasuredWidth(),
                                     imageView.getMeasuredHeight());
@@ -148,10 +152,14 @@ public class ImageUtils {
     }
 
     public static void clearImage(ImageView imageView) {
-        Glide.clear(imageView);
+        Glide.with(imageView).clear(imageView);
     }
 
-    private static String appendBannerSizeUrl(String url, String bannerSize) {
+    public static String appendBannerSizeUrl(String url, int width, int height) {
+
+        String bannerSize = String.format("_%dx%d", width, height);
+
+        if (!url.contains(".")) return url;
 
         String removedExtension = url.substring(0, url.lastIndexOf('.'));
 
@@ -164,14 +172,6 @@ public class ImageUtils {
         url = String.format("%s%s.%s", removedExtension, bannerSize, extension);
 
         return url;
-    }
-
-    public static String getBannerMobileSize(String url) {
-        return appendBannerSizeUrl(url, AppConstants.BANNER_SIZE_MOBILE);
-    }
-
-    public static String getBannerTabletSize(String url) {
-        return appendBannerSizeUrl(url, AppConstants.BANNER_SIZE_TABLET);
     }
 
     public static int getComputedBannerHeight(int width, int height, int screenWidth) {
@@ -232,5 +232,48 @@ public class ImageUtils {
         ret[1] = top;
 
         return ret;
+    }
+
+    public static class Grid {
+        private int mColumn;
+        private float mItemWidth;
+        private float mItemHeight;
+
+        public Grid(int column, float width, float height) {
+            mColumn = column;
+            mItemWidth = width;
+            mItemHeight = height;
+        }
+
+        public int getColumn() {
+            return mColumn;
+        }
+
+        public float getItemWidth() {
+            return mItemWidth;
+        }
+
+        public float getItemHeight() {
+            return mItemHeight;
+        }
+    }
+
+    public static Grid getExactGridDefinition(int columnCount, float ratio, float canvasWidth) {
+        float width = canvasWidth / columnCount;
+        float height = width * ratio;
+        return new Grid(columnCount, width, height);
+    }
+
+    public static Grid getRangedGridDefinition(int proposedWidth, int proposedHeight, float canvasWidth, int minColumn) {
+        return getRangedGridDefinition(proposedWidth, proposedHeight, canvasWidth, minColumn, NO_MAX_COLUMN);
+    }
+
+    public static Grid getRangedGridDefinition(int proposedWidth, int proposedHeight,
+                                               float canvasWidth, int minColumn, int maxColumn) {
+        int computedColumn = Math.max((int) canvasWidth/proposedWidth, minColumn);
+        int actualMaxColumn = maxColumn == NO_MAX_COLUMN ?  computedColumn : maxColumn;
+        int finalColumnCount = Math.min(actualMaxColumn, computedColumn);
+        float ratio = (float) proposedHeight/proposedWidth;
+        return getExactGridDefinition(finalColumnCount, ratio, canvasWidth);
     }
 }

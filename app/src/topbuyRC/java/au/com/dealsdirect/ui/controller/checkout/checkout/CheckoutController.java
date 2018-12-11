@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.braintreepayments.api.models.BraintreeRequestCodes;
@@ -41,6 +42,8 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
@@ -125,10 +128,10 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
     Button mPayButton;
     @BindView(R.id.partial_checkout_button_paypal)
     RelativeLayout mPaypalButton;
-    @BindView(R.id.partial_checkout_button_masterpass)
-    RelativeLayout mMasterpassButton;
     @BindView(R.id.partial_checkout_button_paypal_credit)
     RelativeLayout mPaypalCreditButton;
+    @BindView(R.id.partial_checkout_button_masterpass)
+    RelativeLayout mMasterpassButton;
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
     LinearLayout mOurpayHolder;
     @BindView(R.id.no_cart_items_layout)
@@ -188,7 +191,7 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
 
                     Bundle bundle = new Bundle();
                     bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
-                    bundle.putString(CART_TOTAL_COST, String.valueOf(mValue.getSummary().total));
+                    bundle.putString(CART_TOTAL_COST, String.valueOf(mValue.getSummary().getTotal()));
                     bundle.putString(PAYMENT_METHODS, new Gson().toJson(mPaymentList));
 
                     mActivity.setDraggableViewPager(false);
@@ -236,7 +239,7 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
                         .build());
     }
 
-    public CheckoutController(Bundle args) {
+    public CheckoutController(Bundle args){
         super(args);
     }
 
@@ -326,7 +329,7 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
     @Override
     public void onDetach(View view) {
         super.onDetach(view);
-        if (mClickListeners != null) {
+        if(mClickListeners != null) {
             mClickListeners.dispose();
         }
         mClickListeners = null;
@@ -339,7 +342,7 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
 
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL,false));
 
         mAddNewAddressLayout.setOnClickListener(mChangeClickListener);
         mAddNewPaymentLayout.setOnClickListener(mChangeClickListener);
@@ -471,6 +474,16 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
     }
 
     @Override
+    public void showCartDetailsOnChild(List<Item> items) {
+
+    }
+
+    @Override
+    public void showCartDetailsOnHost(List<Item> items) {
+
+    }
+
+    @Override
     public void showAddressDetails(DeliveryAddress deliveryAddress, List<DecorationInfoList> decorationInfoList) {
         mDeliveryAddress = deliveryAddress;
         if (!decorationInfoList.isEmpty()) {
@@ -494,12 +507,17 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
     }
 
     @Override
+    public void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail) {
+
+    }
+
+    @Override
     public void showPaymentDetails(PaymentMethod paymentMethod) {
 
         //update payment method selected
-        if (paymentMethod == null) {
+        if(paymentMethod == null){
             mActivity.setPaymentMethodSelected(null);
-        } else if (mActivity.getPaymentMethodSelected() == null) {
+        } else if(mActivity.getPaymentMethodSelected() == null){
             mActivity.setPaymentMethodSelected(paymentMethod);
         }
 
@@ -509,32 +527,35 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
         if (paymentMethod == null) {
             mPayButton.setVisibility(View.VISIBLE);
             mPaypalButton.setVisibility(View.VISIBLE);
-            mVisaCheckoutButton.setVisibility(View.VISIBLE);
 
-            if (mPresenter.isMasterPassEnabled()) {
-                mMasterpassButton.setVisibility(View.VISIBLE);
+            if (mPresenter.isPaypalCreditEnabled()){
+                mPaypalCreditButton.setVisibility(View.VISIBLE);
             }
 
-            if (mPresenter.isPaypalCreditEnabled()) {
-                mPaypalCreditButton.setVisibility(View.VISIBLE);
+            mVisaCheckoutButton.setVisibility(View.VISIBLE);
+
+            if(mPresenter.isMasterPassEnabled()) {
+                mMasterpassButton.setVisibility(View.VISIBLE);
             }
 
             mAddNewPaymentLayout.setVisibility(View.VISIBLE);
             mPaymentLayout.setVisibility(View.GONE);
             mPaymentChangeText.setVisibility(View.GONE);
 
+
+
         } else {
 
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
                 mPaypalButton.setVisibility(View.VISIBLE);
-                mPaypalCreditButton.setVisibility(View.GONE);
                 mPayButton.setVisibility(View.GONE);
                 mVisaCheckoutButton.setVisibility(View.GONE);
+                mPaypalCreditButton.setVisibility(View.GONE);
             } else {
                 mPayButton.setVisibility(View.VISIBLE);
                 mPaypalButton.setVisibility(View.GONE);
-                mPaypalCreditButton.setVisibility(View.GONE);
                 mVisaCheckoutButton.setVisibility(View.GONE);
+                mPaypalCreditButton.setVisibility(View.GONE);
             }
 
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setText(paymentMethod.getPaymentType());
@@ -564,26 +585,26 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
     @Override
     public void showSummaryDetails(Summary summary) {
         if (summary != null) {
-            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_subtotal)).setText(PriceUtils.getPriceStringValue(summary.subtotal));
-            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_shipping_fee)).setText(PriceUtils.getPriceStringValue(summary.delivery));
-            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher)).setText(PriceUtils.getPriceStringValue(summary.discount));
+            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_subtotal)).setText(PriceUtils.getPriceStringValue(summary.getSubtotal()));
+            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_shipping_fee)).setText(PriceUtils.getPriceStringValue(summary.getDelivery()));
+            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher)).setText(PriceUtils.getPriceStringValue(summary.getDiscount()));
 
-            if (summary.tax > 0) {
-                ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_tax)).setText(PriceUtils.getPriceStringValue(summary.tax));
+            if (summary.getTax() > 0) {
+                ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_tax)).setText(PriceUtils.getPriceStringValue(summary.getTax()));
                 mSummaryLayout.findViewById(R.id.partial_checkout_summary_tax_container).setVisibility(View.VISIBLE);
             } else
                 mSummaryLayout.findViewById(R.id.partial_checkout_summary_tax_container).setVisibility(View.GONE);
 
 
-            if (summary.discount > 0) {
-                ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher)).setText(PriceUtils.getPriceStringValue(summary.discount));
+            if (summary.getDiscount() > 0) {
+                ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher)).setText(PriceUtils.getPriceStringValue(summary.getDiscount()));
                 mIsVoucherAdded = true;
                 mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher_container).setVisibility(View.VISIBLE);
             } else {
                 mIsVoucherAdded = false;
                 mSummaryLayout.findViewById(R.id.partial_checkout_summary_voucher_container).setVisibility(View.GONE);
             }
-            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_total)).setText(PriceUtils.getPriceStringValue(summary.total));
+            ((TextView) mSummaryLayout.findViewById(R.id.partial_checkout_summary_total)).setText(PriceUtils.getPriceStringValue(summary.getTotal()));
         }
     }
 
@@ -598,7 +619,7 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
         //Set 3DS value
         if (value != null) {
             PaymentInfo.setThreeDSecureRequired(value.threeDSecureRequired);
-            PaymentInfo.setCartCost(value.getSummary().total);
+            PaymentInfo.setCartCost(value.getSummary().getTotal());
         }
 
         mValue = value;
@@ -615,7 +636,7 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
     public void updateCheckoutBadge() {
         Controller topController = GateKeeper.getCurrentControllerOnRouter(mActivity.getSaleItemsRouter());
         if (topController instanceof SaleItemDetailsController) {
-            mSaleItemDetailsPresenter.onAttach((SaleItemDetailsController) topController);
+            mSaleItemDetailsPresenter.onAttach((SaleItemDetailsController)topController);
             mSaleItemDetailsPresenter.callGetBasketItemsQuantity();
         } else if (topController instanceof SaleItemsController) {
             mSaleItemsPresenter.onAttach((SaleItemsController) topController);
@@ -635,12 +656,28 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
     }
 
     @Override
-    public boolean isViewPagerOnCheckout() {
-        try {
-            return mActivity.getMainController().getHomeViewPager().getCurrentItem() == 2;
-        } catch (NullPointerException e) {
-            return false;
-        }
+    public CheckoutMvpPresenter getPresenter() {
+        return null;
+    }
+
+    @Override
+    public boolean isOurPaySelectDeliveryMethod() {
+        return false;
+    }
+
+    @Override
+    public boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
+        return false;
+    }
+
+    @Override
+    public void showPromoCodeApplied(String promoCode, boolean isPromoCodeApplied) {
+
+    }
+
+    @Override
+    public Router getDisplayRouter() {
+        return null;
     }
 
     @Override
@@ -683,8 +720,8 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
 
     private void showAddPaymentMethodController() {
         Bundle bundle = new Bundle();
-//        bundle.putString(CART_TOTAL_COST, Double.toString(mValue.getSummary().total));
-        bundle.putDouble(CART_TOTAL_COST, mValue.getSummary().total);
+//        bundle.putString(CART_TOTAL_COST, Double.toString(mValue.getSummary().getTotal()));
+        bundle.putDouble(CART_TOTAL_COST, mValue.getSummary().getTotal());
         bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
 
         mActivity.setDraggableViewPager(false);
@@ -730,7 +767,7 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
             }
         }
     }
@@ -752,7 +789,7 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
             }
         }
     }
@@ -766,13 +803,12 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
         if (mActivity.isBraintreeInitialized()) {
-
             if (mActivity.getPaymentMethodSelected() == null) {
-                mActivity.startPaypalCreditPayment(String.valueOf(mValue.getSummary().total));
+                mActivity.startPaypalCreditPayment(String.valueOf(mValue.getSummary().getTotal()));
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
             }
         }
     }
@@ -790,7 +826,7 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
 
         mActivity.setDraggableViewPager(false);
         GateKeeper.push(getRouter(), GateKeeper.Destination.MASTERPASS, new VerticalChangeHandler(false), new VerticalChangeHandler());
-        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
     }
 
     private void onOurpayButtonClick() {
@@ -837,7 +873,7 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
 
         PaymentInfo.setPaymentType(PaymentInfo.TYPE_MYPAY);
         mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
 
     }
 
@@ -862,8 +898,8 @@ public class CheckoutController extends SwipeableVisaCheckoutController implemen
             return;
         }
 
-        mVcoPresenter.payWithVisaCheckout(mValue.getSummary().total);
-        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().total);
+        mVcoPresenter.payWithVisaCheckout(mValue.getSummary().getTotal());
+        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
     }
 
     private String formAddressDetails(DeliveryAddress deliveryAddress) {

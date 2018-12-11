@@ -1,7 +1,9 @@
 package au.com.dealsdirect.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.view.Window;
 import android.view.WindowManager;
 
 
@@ -44,5 +46,15 @@ public class ScreenUtils {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    public static int getOrientation(Context context) {
+        return context.getResources().getConfiguration().orientation;
+    }
+
+    public static void setStatusBarColor(Activity activity, int color){
+        Window window = activity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(activity.getResources().getColor(color));
     }
 }

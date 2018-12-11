@@ -15,6 +15,7 @@ public class PaymentInfo {
 
     private static boolean sThreeDSecureRequired = false;
     private static String sPaymentType = "";
+    private static String sFabricPaymentType = "";
     private static PaymentMethod sPaymentMethod = null;
     private static String sAuthorization = "";
     private static Double sCartCost = 0d;
@@ -36,6 +37,15 @@ public class PaymentInfo {
 
     public static void setPaymentType(String sPaymentType) {
         PaymentInfo.sPaymentType = sPaymentType;
+    }
+
+//    USED FOR PAYMENT TYPE MAPPING FOR FABRIC APP EVENTS
+    public static String getFabricPaymentType() {
+        return sFabricPaymentType;
+    }
+
+    public static void setFabricPaymentType(String sFabricPaymentType) {
+        PaymentInfo.sFabricPaymentType = sFabricPaymentType;
     }
 
     public static PaymentMethod getPaymentMethod() {

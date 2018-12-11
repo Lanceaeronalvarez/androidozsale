@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.main;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -32,12 +33,7 @@ import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.braintreepayments.cardform.view.CardForm;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.mysale.genie.utility.RxBus;
-import com.mysale.genie.utility.config.model.getappsettings.VisaCheckout;
-import com.newrelic.agent.android.NewRelic;
-import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.List;
@@ -47,9 +43,11 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
+import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayState;
@@ -58,7 +56,7 @@ import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.main.MainController;
-import au.com.dealsdirect.ui.controller.register.RegisterController;
+import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.tutorial.TutorialController;
@@ -72,7 +70,6 @@ import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
 import static au.com.dealsdirect.utils.BundleKeys.KEY_ADDRESS;
 import static au.com.dealsdirect.utils.BundleKeys.KEY_ESTIMATED_DELIVERY;
@@ -110,6 +107,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean mIsViewAttached = false;
     private int mVisaCheckoutActionType = -1;
 
+    private ProgressDialog mDeepLinkProgressDialog;
     AuthHandler mAuthHandler;
 
     @Override
@@ -130,9 +128,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         // Init All analytics sdk
         mPresenter.initializeAnalytics(this, this.getApplication());
 
+        String action = getIntent().getAction();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
-        mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
-                .popChangeHandler(new VerticalChangeHandler()));
+
+
+        if (!action.equals(Intent.ACTION_VIEW)) {
+            mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
+                    .popChangeHandler(new VerticalChangeHandler()));
+
+        } else {
+
+            splashShownCallback();
+        }
 
         setUp();
 
@@ -145,6 +152,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     mPresenter.callGCMNotificationEvent(getApplicationContext());
                 }
             }
+
             //If activity was launched via deep link
 //            else if (intent.hasExtra(GDeepLinkUtil.DEEP_LINK_INTENT_LAUNCHED)) {
 //                switchFragment(ShopProductDetailsFragment.newInstance(intent.getStringExtra(GDeepLinkUtil.KEY_DEEP_LINK_SEOIDENTIFIER)));
@@ -256,7 +264,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             default:
                 break;
         }
-
     }
 
     @Override
@@ -271,6 +278,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+
+        String url = intent.getData().toString();
+
+        showLoading();
+        /* call for getDeepLink data */
+        if (intent.getData() != null && !url.isEmpty())
+            mPresenter.getDeepLinkData(url);
+
     }
 
     @Override
@@ -353,7 +372,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 break;
         }
         hideKeyboard();
-
     }
 
 
@@ -574,7 +592,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             GateKeeper.push(getCheckoutRouter(), GateKeeper.Destination.PAYMENT_SUCCESS, bundle, new VerticalChangeHandler(), new VerticalChangeHandler());
 
             if (getMainController().getHomeController() != null)
-                getMainController().getHomeController().showCheckoutController();
+                getMainController().getHomeController().showFifthTabController();
 
         } else {
 
@@ -626,14 +644,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void startPaypalPayment() {
-
 //        PayPal.authorizeAccount(mBraintreeFragment);
         PayPalRequest request = new PayPalRequest();
         PayPal.requestBillingAgreement(mBraintreeFragment, request);
     }
 
-    public void startPaypalCreditPayment(String totalCartItems){
-        PayPalRequest request = new PayPalRequest(totalCartItems)
+    public void startPaypalCreditPayment(String totalCost) {
+        PayPalRequest request = new PayPalRequest(totalCost)
                 .offerCredit(true); // Offer PayPal Credit
         PayPal.requestOneTimePayment(mBraintreeFragment, request);
     }
@@ -641,6 +658,54 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void callApiSettings() {
         mPresenter.callApiSettings(this);
+    }
+
+    @Override
+    public void showStrictConsentUI() {
+
+    }
+
+    @Override
+    public void onClickAgreeStrictConsentUI() {
+
+    }
+
+    @Override
+    public void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
+        /* TB has no url type for sale items */
+        //getMainController().loadSaleItems("Home & Living>>>Decor & Accessories>>>Cushions");
+    }
+
+    @Override
+    public void deepLinkSales(String categoryName, String categoryId) {
+        /* TB has no url type for sales */
+    }
+
+    @Override
+    public void deepLinkSaleItemDetailsWithoutSale(String seoIdentifier, String skuId) {
+        ((MainController) mMainController).deepLinkProductDetails(seoIdentifier, skuId);
+    }
+
+    @Override
+    public void deepLinkSaleItemDetailsWithSale(String saleName, String encodedSaleId, String seoIdentifier, String skuId) {
+        /* TB has no url type for sales with sale */
+    }
+
+    @Override
+    public void deepLinkCategoryLink(String categoryName, String categoryIdentifier) {
+        getMainController().loadSaleItems(categoryName);
+
+    }
+
+
+    @Override
+    public void deeLinkMessageThread() {
+
+    }
+
+    @Override
+    public void deepLinkDefault() {
+        deepLinkSuceeded();
     }
 
     @Override
@@ -801,7 +866,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         Ourpay paymentSuccessOurpay = new Ourpay();
 
         try {
-            List<MyPayDetails.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
+            List<GetCurrentOrderOurpay.PlannedTransaction> transactions = responseValue.getD().getValue().getPlannedTransactions();
 
             paymentSuccessOurpay.setCanUse(true);
             paymentSuccessOurpay.setPlannedTransactions(transactions);
@@ -813,7 +878,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
             }
 
-            paymentSuccessOurpay.setAmount(remainingAmount);
+            paymentSuccessOurpay.setInitialAmount(remainingAmount);
             PaymentInfo.setOurpay(paymentSuccessOurpay);
         } catch (Exception e) {
 
@@ -856,5 +921,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         mRouter.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void saleItemsCallback() {
+        String action = getIntent().getAction();
+
+        if (action.equals(Intent.ACTION_VIEW)) {
+            onNewIntent(getIntent());
+
+        }
+    }
+
+    public void deepLinkSuceeded() {
+        if (mDeepLinkProgressDialog != null) {
+            mDeepLinkProgressDialog.dismiss();
+        }
     }
 }

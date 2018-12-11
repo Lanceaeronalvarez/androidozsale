@@ -39,47 +39,47 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
 
     @Override
     public void loadMyVouchers() {
-        GetUserVouchersRequest getUserVouchersRequest =
-                new GetUserVouchersRequest(getDataManager().getLanguageId());
+        if (getDataManager().isAuthorized()) {
+            GetUserVouchersRequest getUserVouchersRequest =
+                    new GetUserVouchersRequest(getDataManager().getLanguageId());
 
-        Observable.zip(wrapObservable(getDataManager().callGetUserVouchers(getUserVouchersRequest)),
-                        wrapObservable(getDataManager().callGetVouchers(getUserVouchersRequest)),
-                        new BiFunction<GetUserVoucherResponse, GetVouchersResponse, Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse>>() {
-            @Override
-            public Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> apply(@NonNull GetUserVoucherResponse getUserVoucherResponse, @NonNull GetVouchersResponse getVouchersResponse) throws Exception {
-                return new Pair<>(getUserVoucherResponse.d.getList(),getVouchersResponse);
-            }
-        })
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(action -> {
-                    if (!isViewAttached()) {
-                        return;
-                    }
+            Observable.zip(wrapObservable(getDataManager().callGetUserVouchers(getUserVouchersRequest)),
+                    wrapObservable(getDataManager().callGetVouchers(getUserVouchersRequest)),
+                    new BiFunction<GetUserVoucherResponse, GetVouchersResponse, Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse>>() {
+                        @Override
+                        public Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> apply(@NonNull GetUserVoucherResponse getUserVoucherResponse, @NonNull GetVouchersResponse getVouchersResponse) throws Exception {
+                            return new Pair<>(getUserVoucherResponse.d.getList(), getVouchersResponse);
+                        }
+                    })
+                    .observeOn(getSchedulerProvider().ui())
+                    .subscribe(action -> {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
-                    getMvpView().hideNoNetworkLayout();
-                    getMvpView().hideLoading();
+                        getMvpView().hideNoNetworkLayout();
+                        getMvpView().hideLoading();
 
-                    getMvpView().updateVoucherList(action);
-                },throwable -> {
-                    if (!isViewAttached()) {
-                        return;
-                    }
+                        getMvpView().updateVoucherList(action);
+                    }, throwable -> {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
-                    getMvpView().hideLoading();
+                        getMvpView().hideLoading();
 
-                    if(throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException){
-                        getMvpView().showNoNetworkLayout();
-                    }
+                        if (throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException) {
+                            getMvpView().showNoNetworkLayout();
+                        }
 
-                    getMvpView().onError(throwable.getMessage());
+                        getMvpView().onError(throwable.getMessage());
 
-                });
-
-
+                    });
+        }
 
     }
 
-    protected <T> Observable<T> wrapObservable(Observable<T> observable) {
+    private <T> Observable<T> wrapObservable(Observable<T> observable) {
         return observable.subscribeOn(getSchedulerProvider().io());
     }
 }

@@ -35,6 +35,7 @@ import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -103,14 +104,14 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @Inject
     AddVouchersMvpPresenter<AddVouchersMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mArrowImage;
+    View mArrowImage;
 
     @BindView(R.id.controller_button_add_voucher)
     Button mAddVoucherButton;
@@ -130,6 +131,12 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @BindView(R.id.partial_checkout_vouchers_button_apply)
     Button mButtonApply;
 
+    @BindView(R.id.no_vouchers_placeholder)
+    LinearLayout mPlaceholderLayout;
+
+    @BindView(R.id.controller_add_voucher_select_text)
+    TextView mSelectTextView;
+
     List<String> voucherIds = new LinkedList<>();
     List<String> tempVoucherIds = new LinkedList<>();
 
@@ -145,18 +152,22 @@ public class AddVouchersController extends BaseController implements AddVouchers
     private boolean mIsVoucherAdded = false;
     private boolean mIsNoDiscountApplied = false;
 
+    private CheckoutMvpView mCheckoutMvpView;
+
     public AddVouchersController(Bundle args) {
         super(args);
-        mVouchers = JsonUtils.convertStringToObject(args.getString(BundleKeys.VOUCHERS,""), new TypeToken<ArrayList<Voucher>>(){}.getType());
+        mVouchers = JsonUtils.convertStringToObject(args.getString(BundleKeys.VOUCHERS, ""), new TypeToken<ArrayList<Voucher>>() {
+        }.getType());
         mIsVoucherAdded = args.getBoolean(BundleKeys.IS_VOUCHER_ADDED);
         mIsNoDiscountApplied = args.getBoolean(BundleKeys.IS_CART_NO_DISCOUNT);
     }
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = inflater.inflate(R.layout.controller_add_vouchers,container,false);
+        View view = inflater.inflate(R.layout.controller_add_vouchers, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(getString(R.string.checkout_controller));
         return view;
     }
 
@@ -166,9 +177,9 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
         mSharedPreference = mActivity.getSharedPreferences("Voucher_Preference", Context.MODE_PRIVATE);
         Set<String> voucherSet = mSharedPreference.getStringSet("VOUCHER_SET", null);
-        if(voucherSet != null && !mIsNoDiscountApplied) {
+        if (voucherSet != null && !mIsNoDiscountApplied) {
             voucherIds.addAll(voucherSet);
-        }else{
+        } else {
             SharedPreferences.Editor editor = mSharedPreference.edit();
             voucherIds.clear();
             tempVoucherIds.clear();
@@ -188,7 +199,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
     protected void setUp(View view) {
 
 
-        mTitleText.setText("My Vouchers");
+        mTitleText.setText(getString(R.string.add_new_voucher));
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(action -> {
             mActivity.onBackPressed();
@@ -215,20 +226,15 @@ public class AddVouchersController extends BaseController implements AddVouchers
             }
         });
 
+        mVoucherListContainerLayout.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
+        mRecyclerView.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
+        mSelectTextView.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
+        mPlaceholderLayout.setVisibility(mVouchers.isEmpty() ? View.VISIBLE : View.GONE);
+        mButtonApply.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
+
         mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
-
-        SnapHelper helper = new PagerSnapHelper();
-        helper.attachToRecyclerView(mRecyclerView);
-
-        if (mVouchers.isEmpty()) {
-            mVoucherListContainerLayout.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.GONE);
-        } else {
-            mVoucherListContainerLayout.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-        }
 
         mAddVoucherButton.setOnClickListener(action -> {
             if (!mPromoCodeText.getText().toString().isEmpty()) {
@@ -247,10 +253,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
                                 mActivity.getString(R.string.please_input_promo_code));
             }
         });
-
-        if (mVouchers.isEmpty()){
-            mButtonApply.setVisibility(View.GONE);
-        }
     }
 
 
@@ -263,9 +265,9 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @Override
     public void onVouchersApplied(ApplyVouchersResponse applyVouchersResponseBody) {
 
-        String responseMessage = applyVouchersResponseBody.getValue().getMessage();
-        boolean responseResult = applyVouchersResponseBody.getValue().getResult();
-        boolean responseIsAuthenticated = applyVouchersResponseBody.getValue().isAuthenticated();
+        String responseMessage = applyVouchersResponseBody.getD().getMessage();
+        boolean responseResult = applyVouchersResponseBody.getD().getResult();
+        boolean responseIsAuthenticated = applyVouchersResponseBody.getD().isAuthenticated();
 
         if (responseMessage.isEmpty() && responseResult && responseIsAuthenticated) {
 
@@ -324,6 +326,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
             responseMessage = "cleared vouchers";
         }
 
+        mCheckoutMvpView.showPromoCodeApplied("", false);
         CustomAlertDialog.showCustomAlertDialog(
                 mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
@@ -357,6 +360,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
                     mActivity.getString(R.string.promo_code_applied)
             );
 
+            mCheckoutMvpView.showPromoCodeApplied(mTempVoucherPromoKey,true);
             voucherIds.add(mTempVoucherPromoKey);
             tempVoucherIds.add(mTempVoucherPromoKey);
 

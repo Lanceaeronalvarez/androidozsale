@@ -14,5 +14,4 @@ public interface CountryMvpView extends MvpView {
 
     void showSelectedCountryDialog(Country Country);
 
-    void onBackPress();
 }

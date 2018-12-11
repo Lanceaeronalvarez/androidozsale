@@ -155,6 +155,15 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
         return getDataManager().isTablet();
     }
 
+    @Override
+    public String getGdprTemplateTexts(String key) {
+        return "";
+    }
+
+    @Override
+    public boolean getGdprIsChecked(String key) {
+        return false;
+    }
 
 
 //    @Override
@@ -274,7 +283,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
                         jsonObject -> {
                             JSONObject resObj = jsonObject.getJSONObject("d");
                             boolean isSuccess = (resObj.getBoolean("IsAuthenticated") && resObj.getBoolean("Result"));
-                            onAuthSuccess(isSuccess, isSuccess? resObj.getJSONObject("Value").getString("Ticket"): "", resObj.getString("Message"));
+                            onAuthSuccess(isSuccess, isSuccess ? resObj.getJSONObject("Value").getString("Ticket") : "", resObj.getString("Message"));
                         },
 
                         throwable -> {
@@ -294,7 +303,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
             @Override
             public void onSuccess(LoginResult loginResult) {
                 fetchUserInfo(loginResult.getAccessToken());
-                if(isRegister == 1) {
+                if (isRegister == 1) {
                     AppEventHelper.completedRegistration(AppConstants.API_REGISTER_FACEBOOK);
                 }
             }
@@ -349,7 +358,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
         if (isFacebookDetailsComplete()) {
             loginViaFacebook(strEmail, strFirstName, strLastName, strFBUserID, strFBSignedRequest);
         } else {
-            getMvpView().showLoginError("Missing info from Facebook");
+            getMvpView().showLoginError("Missing info from Facebook", true);
         }
     }
 
@@ -416,10 +425,10 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
 
         if (isSuccess) {
             getDataManager().acknowledgeAuth(ticket);
-            getMvpView().showLoginSuccessful(ticket);
+            getMvpView().showLoginSuccessful(ticket, true);
         } else {
             getDataManager().revokeAuth();
-            getMvpView().showLoginError(errorMessage);
+            getMvpView().showLoginError(errorMessage, true);
         }
     }
 

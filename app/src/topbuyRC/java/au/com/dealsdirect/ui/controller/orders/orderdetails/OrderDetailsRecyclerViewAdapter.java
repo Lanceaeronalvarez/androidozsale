@@ -68,14 +68,9 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder vh, final int position) {
 
-        mItemsRecyclerView = (RecyclerView)
-                mView.findViewById(R.id.order_items_recyclerview);
+        mItemsRecyclerView = (RecyclerView) mView.findViewById(R.id.order_items_recyclerview);
 
-        mItemsRecyclerView.setAdapter(new OrderDetailsItemsRecyclerViewAdapter(
-                position,
-                mOrderDetails,
-                orderList,
-                context));
+        mItemsRecyclerView.setAdapter(new OrderDetailsItemsRecyclerViewAdapter(context, position, mOrderDetails, orderList));
 
         mItemsRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager
                 .VERTICAL, false));
@@ -306,10 +301,6 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             orderStockArrivedConnector = itemView.findViewById(R.id.my_order_product_order_date_graph_check_connector);
             orderPackedConnector = itemView.findViewById(R.id.my_order_product_stocked_arrived_graph_check_connector);
             orderDispatchedConnector = itemView.findViewById(R.id.my_order_product_packed_graph_check_connector);
-
-            orderImage = (ImageView) itemView.findViewById(R.id.order_image);
-            productPrice = (TextView) itemView.findViewById(R.id.product_price);
-            productSubtotal = (TextView) itemView.findViewById(R.id.product_subtotal);
 
             orderDetailLayout = (LinearLayout) itemView.findViewById(R.id.product_list_order_detail);
 

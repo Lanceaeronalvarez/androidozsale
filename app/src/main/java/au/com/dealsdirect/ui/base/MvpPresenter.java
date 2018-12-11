@@ -20,7 +20,19 @@ public interface MvpPresenter<V extends MvpView> {
 
     void handleApiError(ANError error);
 
+    void setLastCartRedirection(String lastRedirection);
+
+    boolean hasActiveCheckoutSession();
+
+    void setActiveCheckoutSessionFalse();
+
     boolean isTablet();
+
+    boolean isGdprDisabled();
+
+    void setIsNewUser(boolean isNewUser);
+
+    boolean getIsNewUser();
 
     void doApiCallForResponse(Observable observable, ApiCallback callback);
 

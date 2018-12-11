@@ -13,4 +13,13 @@ public interface CurrentReturnsMvpView extends MvpView {
     void showCurrentReturns(CurrentReturnResponseBody currentReturnResponseBody);
 
     void showCurrentReturnDetails(GetReturnDetailsResponseBody getReturnDetailsResponseBody);
+
+    void onCurrentReturnClickListener(int orderNumber,
+                                      int position,
+                                      String productName,
+                                      String productRequestStatus,
+                                      String productRAN,
+                                      String returnRequestDateFormat,
+                                      String isRequestApproved,
+                                      String returnId);
 }

@@ -3,6 +3,8 @@ package au.com.dealsdirect.ui.controller.details;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +23,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.custom.toggleswitch.BaseToggleSwitch;
+import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
@@ -40,7 +46,13 @@ public class DetailsController extends BasePullToRefreshController implements De
     @Inject
     DetailsMvpPresenter<DetailsMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_left_view)
+    View mToolbarLeftView;
+
+    @BindView(R.id.controller_details_consent_switch_layout)
+    ViewGroup mConsentSwitchesRootLayout;
+
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
 
     @BindView(R.id.partial_toolbar_right_view)
@@ -52,7 +64,7 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.controller_details_text_lastname)
     EditText mLastNameText;
 
-    @BindView(R.id.controller_details_text_dateOfBirth)
+    @BindView(R.id.controller_details_text_birthday)
     EditText mDateOfBirthText;
 
     @BindView(R.id.controller_details_spinner_gender)
@@ -64,17 +76,23 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.controller_details_text_password)
     EditText mPasswordText;
 
-    @BindView(R.id.controller_details_text_newPassword)
+    @BindView(R.id.controller_details_text_new_password)
     EditText mNewPasswordText;
 
-    @BindView(R.id.controller_details_text_confirmPassword)
+    @BindView(R.id.controller_details_text_confirm_password)
     EditText mConfirmPasswordText;
 
-    @BindView(R.id.controller_details_background)
-    LinearLayout background;
+    @Nullable
+    @BindView(R.id.register_emails_toggle)
+    CustomToggleSwitch mEmailsToggle;
+
+    @Nullable
+    @BindView(R.id.register_emails_text)
+    TextView mPromotionEmailsText;
 
     private Calendar mCalendar;
     private DatePickerDialog.OnDateSetListener onDateSetListener;
+    private BaseToggleSwitch.OnToggleSwitchChangeListener mOnToggleSwitchListener;
 //    private ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback mDragDismissCallback
 //            = new ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback() {
 //        @Override
@@ -104,7 +122,7 @@ public class DetailsController extends BasePullToRefreshController implements De
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = super.inflateView(inflater, container);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        setToolBarVisible(getResource().getBoolean(R.bool.details_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_user_details, container, false));
 
         getControllerComponent().inject(this);
@@ -122,18 +140,35 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     protected void setUp(View view) {
-        mSaveUserDetailsButton.setImageDrawable(
-                getResources().getDrawable(R.drawable.ic_check));
-        mTitleTextView.setText("Personal Details");
 
-//        ((ElasticHorizontalDragDismissFrameLayout)view).addListener(mDragDismissCallback);
+        mConsentSwitchesRootLayout.setVisibility(mPresenter.isGdprDisabled() ? View.GONE : View.VISIBLE);
 
+        if (mPromotionEmailsText != null) {
+            mPromotionEmailsText.setText(Html.fromHtml(mPresenter.getGdprTemplateTexts(
+                    AppPreferencesHelper.CONSENT_WITH_REGISTRATION_EMAILS_TEXT)));
+        }
 
-        List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
-        CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(mActivity,
-                R.layout.row_custom_spinner_drop_down,
-                list);
-        mGenderSpinner.setAdapter(customSpinnerAdapter);
+        if (mEmailsToggle != null && mPresenter.getGdprIsChecked(AppPreferencesHelper.CONSENT_EMAILS_CHECKED)) {
+            mOnToggleSwitchListener = new BaseToggleSwitch.OnToggleSwitchChangeListener() {
+                @Override
+                public void onToggleSwitchChangeListener(int position, boolean isChecked) {
+                    mPresenter.saveReceiveSales(position == 0);
+                }
+            };
+        }
+
+        mSaveUserDetailsButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check));
+        mSaveUserDetailsButton.setVisibility(getBoolean(R.bool.is_ozsale_app) ? View.INVISIBLE : View.VISIBLE);
+        mTitleTextView.setText(getString(R.string.account_details));
+        mToolbarLeftView.setVisibility(mPresenter.isTablet() ? View.INVISIBLE : View.VISIBLE);
+
+        if (getBoolean(R.bool.is_gender_enabled)) {
+            List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
+            CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(mActivity,
+                    R.layout.row_custom_spinner_drop_down,
+                    list);
+            mGenderSpinner.setAdapter(customSpinnerAdapter);
+        }
 
         mCalendar = Calendar.getInstance();
 
@@ -157,7 +192,10 @@ public class DetailsController extends BasePullToRefreshController implements De
             }
         });
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
+        showLoading();
         mPresenter.loadUser(setUserDetailsRequest);
+
+        mActivity.getMainController().setViewpagerDraggable(false);
     }
 
     @Override
@@ -174,19 +212,29 @@ public class DetailsController extends BasePullToRefreshController implements De
         mLastNameText.setText(value.getSurname());
         mEmailAddressText.setText(value.getEmail());
 
-        if (value.getDateOfBirth()!=null){
-            String day =  value.getDateOfBirth().getDay().toString();
+        if (mEmailsToggle != null && mPresenter.getGdprIsChecked(AppPreferencesHelper.CONSENT_EMAILS_CHECKED)) {
+//            POSITION 0 == YES
+            mEmailsToggle.removeOnToggleSwitchListener();
+            mEmailsToggle.setCheckedTogglePosition(value.getReceiveInvitations() ? 0 : 1);
+            mEmailsToggle.setOnToggleSwitchChangeListener(mOnToggleSwitchListener);
+        }
+
+
+        if (value.getDateOfBirth() != null) {
+            String day = value.getDateOfBirth().getDay().toString();
             String year = value.getDateOfBirth().getYear().toString();
-            String month = DateUtils.months[value.getDateOfBirth().getMonth()-1];
-            mDateOfBirthText.setText(month+" "+day+", "+year);
+            String month = DateUtils.months[value.getDateOfBirth().getMonth() - 1];
+            mDateOfBirthText.setText(month + " " + day + ", " + year);
         }
 
         int genderItem = 0;
-        if (!value.getGender()){
+        if (!value.getGender()) {
             genderItem = 1;
         }
 
-        mGenderSpinner.setSelection(genderItem);
+        if (getBoolean(R.bool.is_gender_enabled)) {
+            mGenderSpinner.setSelection(genderItem);
+        }
     }
 
     @Override
@@ -203,31 +251,43 @@ public class DetailsController extends BasePullToRefreshController implements De
                 message);
     }
 
+    @Override
+    public void onSaveReceiveSales(SaveReceiveSalesResponse saveReceiveSalesResponse) {
+        //TODO for future implementation
+    }
+
     @OnClick(R.id.partial_toolbar_right_view)
     public void saveUserDetails() {
         hideKeyboard();
 
+        if (mPresenter.isTablet() && !mActivity.isAuthorized()) {
+            CustomAlertDialog.showCustomAlertDialog(mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    getString(R.string.controller_user_details_login_prompt));
+            return;
+        }
+
         if (mPasswordText.getText().toString().isEmpty() || mPasswordText.getText().toString() == "") {
             CustomAlertDialog.showCustomAlertDialog(mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    "Please enter your password");
+                    getString(R.string.controller_user_details_enter_password));
             return;
         }
 
         String firstname = mFirstNameText.getText().toString();
         String lastname = mLastNameText.getText().toString();
-        boolean gender = mGenderSpinner.getSelectedItem().toString().equals("Male") ? true : false;
+        boolean gender = getBoolean(R.bool.is_gender_enabled) && mGenderSpinner.getSelectedItem().toString().equals("Male");
         String dateofbirth = mDateOfBirthText.getText().toString();
         String email = mEmailAddressText.getText().toString();
         String password = mPasswordText.getText().toString();
         String newpassword = mNewPasswordText.getText().toString();
         String confirmpassword = mConfirmPasswordText.getText().toString();
 
-        if (newpassword.equals(confirmpassword)){
+        if (newpassword.equals(confirmpassword)) {
             mPresenter.sendUserDetails(createUserDetailRequest(email, firstname, lastname, dateofbirth,
-                    gender, email, password, newpassword, confirmpassword ));
-        }else{
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,mActivity.getString(R.string.password_does_not_match));
+                    gender, email, password, newpassword, confirmpassword));
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, mActivity.getString(R.string.password_does_not_match));
         }
     }
 
@@ -235,6 +295,11 @@ public class DetailsController extends BasePullToRefreshController implements De
     public void onBackClick() {
         hideKeyboard();
         mActivity.onBackPressed();
+    }
+
+    @OnClick(R.id.controller_details_button)
+    public void saveChanges() {
+        saveUserDetails();
     }
 
     @Override

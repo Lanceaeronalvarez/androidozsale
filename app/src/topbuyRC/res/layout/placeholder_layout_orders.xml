@@ -5,7 +5,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     tools:ignore="MissingPrefix"
     android:visibility="visible">
@@ -17,8 +16,8 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="@dimen/placeholder_icon_size"
-            android:layout_height="@dimen/placeholder_icon_size"
+            android:layout_width="@dimen/placeholder_icon_width"
+            android:layout_height="@dimen/placeholder_icon_height"
             android:layout_gravity="center"
             android:src="@drawable/ic_orders_placeholder"/>
 
@@ -29,7 +28,7 @@
             fontPath="@string/font_app_medium"
             android:text="@string/welcome_to_my_orders"
             android:layout_gravity="center"
-            android:textSize="@dimen/text_size_xxxlarge"/>
+            android:textSize="@dimen/text_size_title"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,7 +40,7 @@
             android:layout_marginBottom="@dimen/default_button_height"
             android:paddingBottom="@dimen/default_button_height"
             android:layout_gravity="center"
-            android:textSize="@dimen/text_size_xlarge"/>
+            android:textSize="@dimen/text_size_headline1"/>
 
     </LinearLayout>
 

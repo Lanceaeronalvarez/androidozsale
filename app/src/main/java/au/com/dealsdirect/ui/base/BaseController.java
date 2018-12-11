@@ -2,18 +2,26 @@ package au.com.dealsdirect.ui.base;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.di.component.ControllerComponent;
 import au.com.dealsdirect.di.component.DaggerControllerComponent;
 import au.com.dealsdirect.di.module.ControllerModule;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.main.MainActivity;
 
 
@@ -21,6 +29,9 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Inject
     protected MainActivity mActivity;
+
+    @Inject
+    protected ActionTracker mActionTracker;
 
     private ControllerComponent mControllerComponent;
 
@@ -32,16 +43,17 @@ public abstract class BaseController extends RefWatchingController implements Mv
     }
 
     private ProgressDialog mProgressDialog;
-    
+
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         setHasOptionsMenu(false);
 
         mControllerComponent = DaggerControllerComponent.builder()
-                .controllerModule(new ControllerModule(this))
+                .controllerModule(new ControllerModule(this, getActivity()))
                 .activityComponent(((BaseActivity) getActivity()).getActivityComponent())
                 .build();
+
         mControllerComponent.inject(this);
 
         return super.onCreateView(inflater, container);
@@ -49,6 +61,9 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Override
     protected void onAttach(@NonNull View view) {
+        if (getActivity() instanceof MainActivity) {
+            this.mActivity = (MainActivity) getActivity();
+        }
         super.onAttach(view);
     }
 
@@ -114,6 +129,7 @@ public abstract class BaseController extends RefWatchingController implements Mv
         }
         mProgressDialog = null;
     }
+
     @Override
     public void onError(String message) {
         if (mActivity != null) {
@@ -138,7 +154,15 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Override
     public void onDetach(View view) {
+        /* gen-8065_ozsale-reskin_bugfixing - dismiss keyboard when changing screen fix */
+        hideKeyboard();
         super.onDetach(view);
+    }
+
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mControllerComponent = null;
+        super.onDestroyView(view);
     }
 
     @Override
@@ -172,4 +196,60 @@ public abstract class BaseController extends RefWatchingController implements Mv
     public boolean isViewAttached() {
         return isAttached();
     }
+
+
+    public void onOrientationChanged(Configuration newConfiguration) {
+
+    }
+
+    public void refreshContents() {
+        // Override
+    }
+
+    public Resources getResource() {
+        return mActivity.getResources();
+    }
+
+    public int getColor(@ColorRes int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return 0;
+        }
+        return mActivity.getResources().getColor(resId);
+    }
+
+    public float getDimension(@DimenRes int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return 0;
+        }
+        return mActivity.getResources().getDimension(resId);
+    }
+
+    public String getString(@StringRes int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return null;
+        }
+        return mActivity.getString(resId);
+    }
+
+    public Drawable getDrawable(@DrawableRes int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return null;
+        }
+        return mActivity.getDrawable(resId);
+    }
+
+    public int getInteger(int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return 0;
+        }
+        return mActivity.getResources().getInteger(resId);
+    }
+
+    public boolean getBoolean(int resId) {
+        if (mActivity == null || mActivity.getResources() == null) {
+            return false;
+        }
+        return mActivity.getResources().getBoolean(resId);
+    }
+
 }

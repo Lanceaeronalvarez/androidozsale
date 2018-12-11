@@ -14,7 +14,7 @@
         android:layout_gravity="center_vertical"
         android:padding="10dp"
         android:textColor="@color/colorAccent"
-        android:textSize="@dimen/text_size_large"
+        android:textSize="@dimen/text_size_body"
         tools:ignore="MissingPrefix"
         tools:text="Originals" />
 </FrameLayout>

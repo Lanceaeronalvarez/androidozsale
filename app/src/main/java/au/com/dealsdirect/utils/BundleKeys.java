@@ -19,20 +19,27 @@ public class BundleKeys {
     public static final String SALEITEMS_CATEGORY_MAP = "SaleItemsController.CATEGORY_SALEITEMS";
     public static final String SALEITEMS_SEARCH_QUERY = "SaleItemsController.SEARCH_SALEITEMS";
     public static final String SALEITEMS_CHIPS_FILTER = "SaleItemsController.CHIPS_FILTER";
-    public static final String SALEITEMS_FROM_CATEGORIES = "SaleItemsController.IS_FROM_CATEGORY";
     public static final String SALEITEMS_FROM_SHOP_SEARCH = "SaleItemsController.FROM_SHOP_SEARCH";
+    public static final String SALEITEMS_FROM_BANNER_SEARCH = "SaleItemsController.FROM_BANNER_SEARCH";
     public static final String SALEITEMS_FROM_CATEGORY_SEARCH = "SaleItemsController.FROM_CATEGORY_SEARCH";
+    public static final String SALEITEMS_CATEGORY_ID = "SaleItemsController.SALEITEMS_CATEGORY_ID";
+    public static final String SALEITEMS_CATEGORY_NAME = "SaleItemsController.SALEITEMS_CATEGORY_NAME";
+    public static final String SALEITEMS_FROM_CATEGORY_DEEPLINK = "SaleItemsController.FROM_CATEGORY_LINK";
+    public static final String SALEITEMS_KEY_CATEGORIES = "SaleItemsController.KEY_CATEGORIES";
+
 
     //sale item details
-    public static final String SALEITEMDETAILS_KEY_POSITION = "SALEITEMDETAILS_KEY_POSITION";
-    public static final String SALEITEMDETAILS_KEY_SKU_ID = "SALEITEMDETAILS_KEY_SKU_ID";
-    public static final String SALEITEMDETAILS_KEY_SALE_ID = "SALEITEMDETAILS_KEY_SALE_ID";
-    public static final String SALEITEMDETAILS_KEY_ITEM_IMAGE_ID = "SALEITEMDETAILS_KEY_IMAGE_ID";
-    public static final String SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID = "SALEITEMDETAILS_KEY_SEO_IDENTIFIER";
-    public static final String SALEITEMDETAILS_KEY_ITEM_NAME = "SALEITEMDETAILS_KEY_SALE_NAME";
-    public static final String SALEITEMDETAILS_KEY_ITEM_PRICE = "SALEITEMDETAILS_KEY_SALE_PRICE";
-    public static final String SALEITEMDETAILS_KEY_ITEM_OLD_PRICE = "SALEITEMDETAILS_KEY_SALE_OLD_PRICE";
-    
+    public static final String SALEITEMDETAILS_KEY_POSITION = "KEY_POSITION";
+    public static final String SALEITEMDETAILS_KEY_SKU_ID = "KEY_SKU_ID";
+    public static final String SALEITEMDETAILS_KEY_SALE_ID = "KEY_SALE_ID";
+    public static final String SALEITEMDETAILS_KEY_ITEM_IMAGE_ID = "KEY_IMAGE_ID";
+    public static final String SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID = "KEY_SEO_IDENTIFIER";
+    public static final String SALEITEMDETAILS_KEY_ITEM_NAME = "KEY_SALE_NAME";
+    public static final String SALEITEMDETAILS_KEY_ITEM_PRICE = "KEY_SALE_PRICE";
+    public static final String SALEITEMDETAILS_KEY_ITEM_OLD_PRICE = "KEY_SALE_OLD_PRICE";
+    public static final String SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE = "KEY_IS_DEEP_LINKED_WITH_SALE";
+    public static final String SALEITEMDETAILS_KEY_SALE_ORIGIN = "KEY_SALE_ORIGIN";
+
     //search filters
     public static final String FACET_FILTER_TYPE = "FACET_FILTER_TYPE";
     public static final String BRANDS_FACET_FILTER_TYPE = "brands";
@@ -63,7 +70,8 @@ public class BundleKeys {
     public static final String PAYMENT_METHODS = "payment_methods";
     public static final String IS_FROM_CART = "is_from_cart";
     public static final String CART_TOTAL_COST = "cart_total_cost";
-    public static final String ITEM_LIST_SIZE = "item_list_size";
+    public static final String IS_OURPAY_SELECT_DELIVERY_METHOD = "is_ourpay_select_delivery_method";
+    public static final String CURRENT_ORDER_VALUE = "current_order_value";
 
     //payment success
     public static final String KEY_ADDRESS = "Address";
@@ -80,7 +88,10 @@ public class BundleKeys {
 
     //legalities
     public static final String TEMPLATE_KEY = "TEMPLATE_KEY";
-    public static final String TITLE = "TITLE";
+    public static final String TEMPLATE_KEY_ABOUT_US = "aboutus";
+    public static final String TEMPLATE_KEY_PRIVACY = "PrivacyPolicy_Text";
+    public static final String TEMPLATE_KEY_TNC = "TermsAndConditions_Text";
+    public static final String LEGALITIES_TITLE = "LEGALITIES_TITLE";
 
     //Tutorial
     public static final String FROM_MY_ACCOUNTS = "FROM_MY_ACCOUNTS";
@@ -111,10 +122,23 @@ public class BundleKeys {
     public static final String KEY_RAN = "ReturnDetailsController.RAN";
     public static final String KEY_RETURN_ID = "ReturnDetailsController.RETURN_ID";
 
+    //Categories
+    public static final String CATEGORY_SHOP = "shop";
+
     //Password Verification
     public static final String KEY_ACCOUNT_EMAIL = "PasswordVerification.ACCOUNT_EMAIL";
     public static final String KEY_ACCOUNT_EXISTS = "PasswordVerification.ACCOUNT_EXISTS";
     public static final String KEY_LOGIN_VISA_REQUEST_DATA = "PasswordVerification.LOGIN_VISA_REQUEST_DATA";
+    
+    //DeliveryOptions
+    public static final String DELIVERY_OPTIONS_LIST = "DeliveryOptionsController.LIST";
+    public static final String DELIVERY_OPTIONS_DELIVERY_SERVICE_PACKAGE_DETAIL = "DeliveryOptionsController.DELIVERY_SERVICE_PACKAGE_DETAIL";
+    public static final String DELIVERY_OPTIONS_DELIVERY_ADDRESS_ID = "DeliveryOptionsController.DELIVERY_ADDRESS_ID";
 
+    //PopUp Root Destination Key
+    public static final String KEY_POP_UP_HOST_DESTINATION = "PopUpHostController.Destination";
+
+    //SavedInstance
+    public static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";
 
 }

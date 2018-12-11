@@ -1,8 +1,8 @@
 package au.com.dealsdirect.data.network;
 
 
-import com.mysale.genie.utility.LegacyBaseResponseValue;
 import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getpublicpaymenttoken.GetPublicPaymentToken;
@@ -14,6 +14,7 @@ import java.util.List;
 
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
@@ -31,10 +32,14 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.GetDeliveryServicePackageDetails;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -45,11 +50,15 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
+import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
+import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
+import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesRequest;
+import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
@@ -71,6 +80,8 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.Get
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
@@ -90,6 +101,7 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -120,7 +132,7 @@ public interface ApiHelper {
 
     Observable<SampleResponse> doSampleApiCall(SampleRequest request);
 
-    Observable<List<GetBannerResponse>> callGetBanners(GetBannerRequest getPublicSalesBannerRequest, boolean getOnlyFromNetwork);
+    Observable<GetBannerResponse> callGetBanners(GetBannerRequest getPublicSalesBannerRequest, boolean getOnlyFromNetwork);
 
     Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request);
 
@@ -128,14 +140,15 @@ public interface ApiHelper {
 
     Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId);
 
+    Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request);
+
     Observable<GetPublicSaleDetailsResponse> callGetPublicSaleDetails(GetPublicSaleDetailsRequest request);
 
-    Observable<GetPublicSaleItemsResponse> callGetPublicSaleItems(GetPublicSaleItemsRequest
-            getPublicSaleItemsRequest);
+    Observable<GetPublicSaleItemsResponse> callGetPublicSaleItems(GetPublicSaleItemsRequest getPublicSaleItemsRequest);
 
     Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest);
 
-    Observable<String> callAddItemToCart(AddToCartRequest requestValues);
+    Observable<AddToCartResponse.Response> callAddItemToCart(AddToCartRequest requestValues);
 
     // CONFIG API CALLS
     Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId);
@@ -148,10 +161,21 @@ public interface ApiHelper {
 
     Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId);
 
+    Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId);
+
+    Observable<GetConsentDataResponse> callGetConsentData(String countryId);
+
+    Observable<SaveConsentDataResponse> callSaveConsentData(String countryId);
+
+    Observable<SaveReceiveSalesResponse> callSaveReceiveSales(SaveReceiveSalesRequest saveReceiveSalesRequest);
+
+    Observable<GetAppSettingsConsent.ResponseValue> callGetPublicAppSettingsConsent(String countryId);
+
     Observable<GetContactsResponse> callGetContacts(String languageId);
 
     Observable<GetContactHistoryResponse.ResponseValue> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest);
 
+    Observable<AccountData> callGetAccountData();
     // LOGIN API CALLS
 
     Observable<LoginEmail.ResponseValue> callLoginViaEmail(LoginEmail.RequestValue requestValue);
@@ -197,7 +221,7 @@ public interface ApiHelper {
     Observable<GetVouchersResponse> callGetVouchers(GetUserVouchersRequest getUserVouchersRequest);
 
     Observable<GetUserVoucherResponse> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest);
-    
+
     Observable<ClearVouchersResponse> callGetClearVouchers(ClearVouchersRequest clearVouchersRequest);
 
     Observable<ApplyVouchersResponse> callGetApplyVouchers(ApplyVouchersRequest applyVouchersRequest);
@@ -208,26 +232,30 @@ public interface ApiHelper {
 
     // CHECKOUT API CALLS
     Observable<GetCurrentOrder.ResponseValue> callGetCurrentOrder(GetCurrentOrder.RequestValue model);
-    
+
     Observable<GetUserPaymentMethods.ResponseValue> callGetUserPaymentMethods(GetUserPaymentMethods.RequestValue model);
-    
+
     Observable<GetCurrentOrder.ResponseValue> callAdjustQuantityOrderItem(String url, AdjustOrderItem.RequestValue model);
-    
+
     Observable<CreatePaymentMethod.ResponseValue> callCreatePaymentMethod(CreatePaymentMethod.RequestValue model);
-    
+
     Observable<GetPaymentToken.ResponseValue> callGetPaymentToken(GetPaymentToken.RequestValue model);
-    
+
     Observable<GetCurrentOrder.ResponseValue> callApplyVouchers(ApplyVouchers.RequestValue model);
-    
+
     Observable<GetCurrentOrder.ResponseValue> callClearVouchers(ClearVouchers.RequestValue model);
 
     Observable<ClearOrder.ResponseValue> callClearOrder(ClearOrder.RequestValue model);
-    
+
     Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransaction(CreatePaymentTransaction.RequestValue model);
 
     Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionVco(CreatePaymentTransactionVco.RequestValue model);
-    
+
     Observable<RemoveUserPaymentMethod.ResponseValue> callRemoveUserPaymentMethod(RemoveUserPaymentMethod.RequestValue model);
+
+    Observable<GetDeliveryServicePackageDetails.ResponseValue> callGetDeliveryServicePackageDetails(GetDeliveryServicePackageDetails.RequestValue requestValue);
+
+    Observable<GetCurrentOrder.ResponseValue> callSetDeliveryOption(SetDeliveryOption setDeliveryOption);
 
     Observable<BasketQuantityResponse> callGetBasketItemsQuantity();
 
@@ -301,4 +329,6 @@ public interface ApiHelper {
 
     Observable<GetDeliveryServiceResponse> callGetDeliveryService();
 
+    // DEEPLINK
+    Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request);
 }

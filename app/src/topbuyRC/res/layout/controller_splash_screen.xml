@@ -12,7 +12,7 @@
         android:id="@+id/controller_splash_app_logo"
         android:layout_width="@dimen/splash_logo_size"
         android:layout_height="wrap_content"
-        android:padding="@dimen/screen_padding"
+        android:padding="@dimen/padding_default"
         android:layout_centerInParent="true"
         android:src="@drawable/splash_screen_logo"/>
 

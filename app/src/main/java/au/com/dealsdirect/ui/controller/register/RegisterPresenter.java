@@ -25,6 +25,7 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.main.MainPresenter;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.AppLogger;
@@ -41,8 +42,9 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
 
     @Override
     public void registerUser(String firstName, String lastName, String email, String password,
-                             boolean hasReadTermsAndCondition) {
+                             boolean tncAccepted, boolean emailsAccepted) {
 
+        getMvpView().showLoading();
         RegisterUserRequest registerUserRequest
                 = new RegisterUserRequest(
                 getDataManager().getLanguageId(),
@@ -55,47 +57,45 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                 "android",
                 "",
                 "00000000-0000-0000-0000-000000000000",
-                hasReadTermsAndCondition);
+                tncAccepted,
+                emailsAccepted);
 
-        getCompositeDisposable().add(getDataManager()
-                .callRegister(registerUserRequest)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new io.reactivex.functions.Consumer<RegisterUserResponse>() {
-                    @Override
-                    public void accept(RegisterUserResponse registerUserResponse) {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+        if (isGdprDisabled()) registerUserRequest.setToGdprDisabled();
 
-                        if (registerUserResponse.isSuccess()) {
-                            getDataManager().acknowledgeAuth(registerUserResponse.getTicket());
-                            getMvpView().showLoginSuccessful(registerUserResponse.getTicket());
-                            AppEventHelper.completedRegistration(AppConstants.API_REGISTER);
-                        } else {
-                            getMvpView().showLoginError(registerUserResponse.getMessage());
-                        }
-                    }
+        doApiCallForResponse(getDataManager().callRegister(registerUserRequest), new AppApiCallback(){
 
-                }, new io.reactivex.functions.Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                RegisterUserResponse registerUserResponse = (RegisterUserResponse) response;
 
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
-                        getMvpView().showLoginError(throwable.getMessage());
+                if (registerUserResponse.isSuccess()) {
+                    getDataManager().acknowledgeAuth(registerUserResponse.getTicket());
+                    getMvpView().showLoginSuccessful(registerUserResponse.getTicket(), false);
+                    AppEventHelper.completedRegistration(AppConstants.API_REGISTER);
+                } else {
+                    getMvpView().showLoginError(registerUserResponse.getMessage(), false);
+                }
 
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                }));
+            }
 
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                getMvpView().showLoginError(t.getMessage(), false);
+            }
+        });
+
+    }
+
+    @Override
+    public String getGdprTemplateTexts(String key) {
+        return getDataManager().getConsentTemplateTexts(key);
+    }
+
+    @Override
+    public boolean getGdprIsChecked(String key) {
+        return getDataManager().getAppSettingsConsentIsChecked(key);
     }
 
 

@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -32,37 +33,31 @@ public class LegalitiesController extends BasePullToRefreshController implements
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mFilterButton;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
-
-    String ourpayTermsAndConditionKey = "OurPayTermsAndConditions_Text";
 
     private String key;
 
     private String title;
 
-    public static final String TEMPLATE_KEY = "TEMPLATE_KEY";
-
-    public static final String TITLE = "TITLE";
-
     public LegalitiesController(String  key, String title) {
         this(new BundleBuilder(new Bundle())
-                .putString(TEMPLATE_KEY,key)
-                .putString(TITLE, title)
+                .putString(BundleKeys.TEMPLATE_KEY,key)
+                .putString(BundleKeys.LEGALITIES_TITLE, title)
                 .build());
     }
 
     public LegalitiesController(Bundle args) {
         super(args);
-        key = args.getString(TEMPLATE_KEY);
-        title = args.getString(TITLE);
+        key = args.getString(BundleKeys.TEMPLATE_KEY);
+        title = args.getString(BundleKeys.LEGALITIES_TITLE);
     }
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
+        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        setToolBarVisible(getResource().getBoolean(R.bool.legalities_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_legalities, container, false));
 
         getControllerComponent().inject(this);

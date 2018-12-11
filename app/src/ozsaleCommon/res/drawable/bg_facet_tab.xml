@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <selector>
+            <item android:state_selected="true">
+                <shape android:shape="rectangle">
+                    <stroke android:color="@color/bg_facets_border_checked" android:width="@dimen/border_regular"/>
+                    <solid android:color="@color/bg_facets_selected"/>
+                </shape>
+            </item>
+            <item android:state_selected="false">
+                <shape android:shape="rectangle">
+                    <stroke android:color="@color/bg_facets_border_default" android:width="@dimen/border_regular"/>
+                    <solid android:color="@color/bg_facets_default"/>
+                </shape>
+            </item>
+        </selector>
+    </item>
+</selector>

@@ -297,11 +297,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             shopTextView.setVisibility(View.VISIBLE);
             headerUnderline.setVisibility(View.VISIBLE);
 //            if (shopTextView.getAlpha() != 1f) {
-                AnimationEngine.Builder.animate(shopTextView).fadeIn().build().start();
-                AnimationEngine.Builder.animate(headerUnderline).fadeIn().build().start();
+            AnimationEngine.Builder.animate(shopTextView).fadeIn().build().start();
+            AnimationEngine.Builder.animate(headerUnderline).fadeIn().build().start();
 //            }
-
-
         }
     }
 

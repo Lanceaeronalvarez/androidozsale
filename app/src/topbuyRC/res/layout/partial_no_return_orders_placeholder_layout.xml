@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/place_holder_padding"
-    android:paddingRight="@dimen/place_holder_padding"
+    android:paddingLeft="@dimen/padding_default"
+    android:paddingRight="@dimen/padding_default"
     tools:ignore="MissingPrefix">
 
     <ImageView
-        android:layout_width="@dimen/placeholder_icon_size"
-        android:layout_height="@dimen/placeholder_icon_size"
+        android:layout_width="@dimen/placeholder_icon_width"
+        android:layout_height="@dimen/placeholder_icon_height"
         android:layout_gravity="center"
         android:src="@drawable/ic_orders_placeholder" />
 
@@ -27,5 +27,5 @@
         android:paddingBottom="@dimen/default_button_height"
         android:text="you have not added any orders for return."
         android:textColor="#9f9f9f"
-        android:textSize="@dimen/text_size_xlarge" />
+        android:textSize="@dimen/text_size_headline1" />
 </LinearLayout>

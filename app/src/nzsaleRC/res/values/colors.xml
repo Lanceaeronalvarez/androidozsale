@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/white</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">@color/colorPrimaryDark</color>
+    <color name="colorDisabled">#87939D</color>
+
+    <color name="colorSecondary">#1b1b1b</color>
+
+    <color name="recyclerview_overscroll">@color/colorSecondary</color>
+
+    <color name="status_bar">@color/bg_splash</color>
+    <color name="status_bar_splash">@color/bg_splash</color>
+
+    <!--Search Edit Text-->
+    <color name="search_edit_text_hint">#CCFFFFFF</color>
+    <color name="search_edit_text">@color/white</color>
+    <color name="search_edit_cursor">@color/white</color>
+
+    <!-- EditText Theme -->
+    <color name="bg_edit_text_ripple">#FFFFFF</color>
+    <color name="bg_edit_text_default">@color/colorSecondary</color>
+    <color name="bg_edit_text_focused">@color/colorAccent</color>
+    <color name="bg_search_edit_text">#f1f1f2</color>
+
+    <color name="search_gray_opaque">#7e404040</color>
+
+    <!-- Background -->
+    <color name="background_default">#EDEDED</color>
+
+    <color name="bg_dialog">@color/background_default</color>
+    <color name="bg_tab_bar">@color/toolbar_skin</color>
+    <color name="bg_splash">#353535</color>
+    <color name="bg_row_view_vouchers">@color/background_default</color>
+    <color name="bg_dialog_default">@color/background_default</color>
+    <color name="item_view_selected_color">#E4E4E4</color>
+
+    <!-- Buttons -->
+    <color name="bg_button_ripple">@color/white</color>
+    <color name="bg_button_default">@color/colorPrimaryDark</color>
+    <color name="bg_button_pressed">@color/colorPrimaryDark</color>
+
+    <color name="bg_join_now_btn_ripple">@color/white</color>
+    <color name="bg_join_now_btn_default">#cacaca</color>
+    <color name="bg_join_now_btn_pressed">#cacaca</color>
+
+    <color name="clipboard_default">#FF8B8B8B</color>
+    <color name="clipboard_pressed">#FF8B8B8B</color>
+    <color name="fb_default">#009BEC</color>
+    <color name="fb_pressed">#009BEC</color>
+    <color name="twitter_default">#FF00B5E9</color>
+    <color name="twitter_pressed">#FF00B5E9</color>
+    <color name="mail_default">#FFEA5757</color>
+    <color name="mail_pressed">#FFEA5757</color>
+    <color name="sms_default">#FF65D87F</color>
+    <color name="sms_pressed">#FF65D87F</color>
+
+    <color name="bg_button_tutorial">#f5f4f4</color>
+    <color name="bg_button_tutorial_pressed">#ECECEC</color>
+
+    <color name="bg_button_addcart_default">#65D87F</color>
+    <color name="bg_button_addcart_pressed">#65D87F</color>
+    <color name="bg_button_copy_to_clipboard">#212121</color>
+
+    <!-- Text -->
+    <color name="text_extra_dark">#000000</color>
+    <color name="text_dark">#616161</color>
+    <color name="text_medium">#787878</color>
+    <color name="text_light">#919191</color>
+    <color name="text_extra_light">#cacaca</color>
+    <color name="text_highlight">#65D87F</color>
+
+    <color name="text_label">#847E7E</color>
+    <color name="text_field">#323232</color>
+    <color name="text_hint">#8E8E93</color>
+
+    <color name="address_text_title">@color/text_light</color>
+    <color name="address_text_subtitle">@color/text_extra_dark</color>
+
+    <color name="filter_text_active">@color/colorAccent</color>
+    <color name="filter_text_inactive">@color/text_dark</color>
+
+    <color name="category_text_active">@color/colorAccent</color>
+    <color name="category_text_inactive">@color/text_light</color>
+
+    <color name="cart_text_order_price">@color/text_dark</color>
+    <color name="payment_success_text_order_name">@color/colorAccent</color>
+    <color name="product_details_text_product_price">@color/colorAccent</color>
+    <color name="product_details_text_product_sale_price">@color/text_light</color>
+    <color name="language_selected">@color/colorAccent</color>
+
+    <!-- Border -->
+    <color name="border_light">#FBFBFB</color>
+    <color name="border_regular">#E7E7E7</color>
+
+    <!-- Chips Theme -->
+    <color name="bg_chips_ripple">#FFFFFF</color>
+    <color name="bg_chips_default">@color/white</color>
+    <color name="bg_chips_selected">@color/colorAccent</color>
+    <color name="bg_chips_border_default">@color/border_regular</color>
+    <color name="bg_chips_border_checked">@color/colorAccent</color>
+    <color name="bg_chips_text">#FFFFFF</color>
+    <color name="bg_chips_border_soldout">#e4e4e4</color>
+    <color name="bg_chips_soldout_fill">#F6F6F6</color>
+    <color name="bg_chips_soldout_text">#959595</color>
+
+    <!-- Facets Theme -->
+    <color name="bg_facets_selected">#353535</color>
+    <color name="bg_facets_default">@color/white</color>
+    <color name="bg_facets_border_checked">#353535</color>
+    <color name="bg_facets_border_default">#f1f1f1</color>
+
+    <!-- Icon -->
+    <color name="icon_snack_bar">@color/colorAccent</color>
+    <color name="icon_default">#919191</color>
+
+    <color name="tab_bar_icon_inactive">@color/colorDisabled</color>
+    <color name="tab_bar_icon_active">@color/colorAccent</color>
+    <color name="tab_bar_icon_hovered">@color/colorAccent</color>
+
+    <color name="bottom_nav_accent">@color/colorAccent</color>
+    <color name="bottom_nav_inactive">@color/text_extra_light</color>
+    <color name="bottom_nav_background">@color/toolbar_skin</color>
+
+    <color name="progress_loader_stroke">@color/colorAccent</color>
+
+    <color name="product_details_back_arrow">@color/icon_default</color>
+    <color name="login_close_tint">@color/icon_default</color>
+    <color name="product_details_indicator_active">@color/colorAccent</color>
+
+    <!-- Toolbar -->
+    <color name="toolbar_skin">@color/white</color>
+    <color name="toolbar_active_skin">#f9f9f9</color>
+    <color name="toolbar_border">@color/border_light</color>
+
+    <!-- Ourpay -->
+    <color name="ourpay_gray">#FF898989</color>
+    <color name="ourpay_orange">#FFE47C0B</color>
+    <color name="ourpay_orange_dark">#FFAE5F0A</color>
+    <color name="ourpay_border_gray">#FFC7C7C7</color>
+    <color name="ourpay_navy">#000080</color>
+    <color name="ourpay_red">#FF0000</color>
+    <color name="ourpay_verify_resend">#000080</color>
+
+    <!-- Orders -->
+    <color name="bg_order_node">#323232</color>
+
+    <!-- ViewHolder -->
+    <color name="viewholder_text_remove">@color/text_highlight</color>
+
+    <!--Join Now-->
+    <color name="join_now_text_color">@color/white</color>
+
+    <color name="refunded_state_color">@color/ourpay_orange</color>
+
+
+</resources>

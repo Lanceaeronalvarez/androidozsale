@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /*
  * Created by Ayi on 18/05/2017.
@@ -16,6 +17,8 @@ import java.util.Date;
 public class DateUtils {
 
     public static String[] months = new DateFormatSymbols().getMonths();
+
+    public static final String GMT_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     public static String convertStartEndDateToString(String startString, String endString) {
         @SuppressLint("SimpleDateFormat")
@@ -160,6 +163,14 @@ public class DateUtils {
 
     public static Date dateFromServerDateString(String dateString) {
 
+        if (checkIfGmtFormat(dateString)) {
+            try {
+                return new SimpleDateFormat(GMT_FORMAT, Locale.getDefault()).parse(dateString);
+            } catch (ParseException e) {
+                return Calendar.getInstance().getTime();
+            }
+        }
+
         String longString = "";
         try {
             longString = (String) dateString.subSequence(dateString.indexOf("(") + 1, dateString.indexOf("+"));
@@ -173,6 +184,18 @@ public class DateUtils {
         cal.setTimeInMillis(ms);
 
         return cal.getTime();
+    }
+
+    public static boolean checkIfGmtFormat(String dateString) {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat apiDateFormat = new SimpleDateFormat(GMT_FORMAT);
+
+        try {
+            apiDateFormat.parse(dateString);
+            return true;
+        } catch (ParseException | NullPointerException e) {
+            return false;
+        }
     }
 
     public static String getDateForOrderProgress(String dateString){
@@ -190,7 +213,7 @@ public class DateUtils {
     public static String getDateForContactMessages(String dateString) {
         if (null != dateString
                 && !dateString.equalsIgnoreCase("null")
-                && dateString.length() > 0) {
+                && !dateString.isEmpty()) {
             Date date = dateFromServerDateString(dateString);
 
             return (String) DateFormat.format("MMM dd", date);//(String) date.toString().subSequence(4, date.toString().indexOf("GMT"));
@@ -219,6 +242,19 @@ public class DateUtils {
             android.text.format.DateFormat.format("MM dd, yyyy", date);
 
             return (String) DateFormat.format("MMMM dd, yyyy", date);//(String) date.toString().subSequence(4, date.toString().indexOf("GMT"));
+        } else {
+            return "";
+        }
+    }
+
+    public static String getTrimmedServerDateStringOrders(String dateString) {
+        if (null != dateString
+                && !dateString.equalsIgnoreCase("null")
+                && dateString.length() > 0) {
+            Date date = dateFromServerDateString(dateString);
+            android.text.format.DateFormat.format(AppConstants.MP2_DATE_FORMAT, date);
+
+            return (String) DateFormat.format(AppConstants.MP2_DATE_FORMAT, date);//(String) date.toString().subSequence(4, date.toString().indexOf("GMT"));
         } else {
             return "";
         }

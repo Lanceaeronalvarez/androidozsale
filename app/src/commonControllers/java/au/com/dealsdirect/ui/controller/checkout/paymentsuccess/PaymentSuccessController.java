@@ -21,9 +21,10 @@ import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
@@ -36,114 +37,87 @@ import timber.log.Timber;
 
 public class PaymentSuccessController extends BaseController implements PaymentSuccessMvpView {
 
-    private static final String KEY_ADDRESS = "Address";
-    private static final String KEY_PRICE = "Price";
-    private static final String KEY_SHIPPING_FEE = "Shipping";
-    private static final String KEY_INVOICE = "Invoice";
-    private static final String KEY_INVOICE_NUMBER = "InvoiceNumber";
-    private static final String KEY_ESTIMATED_DELIVERY = "EstimatedDelivery";
     private static final int KEY_PLANNED_TRANSACTION_STATE_PAID = 2;
 
     @Inject
     PaymentSuccessMvpPresenter<PaymentSuccessMvpView> mPresenter;
 
-
-    @BindView(R.id.fragment_payment_success_address)
-    TextView mAddress;
-    @BindView(R.id.fragment_payment_success_price)
-    TextView mPriceTextView;
-    @BindView(R.id.fragment_payment_success_address_orderno)
-    TextView mOrderNumber;
-    @BindView(R.id.fragment_payment_success_estimated_delivery)
-    TextView mEstimatedDelivery;
-    @BindView(R.id.payment_ourpay_success_detail_container)
-    LinearLayout mPaymentOurpaySuccessDetailContainer;
-    @BindView(R.id.payment_success_table_container)
-    LinearLayout mPaymentSuccessTableContainer;
     @BindView(R.id.payment_success_order_number)
-    TextView mPaymentSuccessOrderNumber;
+    TextView mOrderNumberTextView;
 
     //rate us strings
-    private String appPlayStoreUri;
-    private String packageName;
-    private String appUri;
+    private String mAppPlayStoreUri;
+    private String mPackageName;
+    private String mAppUri;
 
     private String mAddressString;
     private double mPrice;
     private double mShippingFee;
-    private String mTotalPriceString;
     private String mInvoiceString;
     private String mEstimatedDeliveryString;
 
     @BindView(R.id.ourpay_panel_holder)
-    LinearLayout mLLOurpay;
+    ViewGroup mOurpayDetailsContainer;
+
+    @BindView(R.id.thank_you_for_shopping_textview)
+    TextView mThankyouTextview;
 
 
     public static PaymentSuccessController newInstance(String address, String price, String invoice, String delivery) {
 
         return new PaymentSuccessController(
                 new BundleBuilder(new Bundle())
-                        .putString(KEY_ADDRESS, address)
-                        .putString(KEY_PRICE, price)
-                        .putString(KEY_INVOICE, invoice)
-                        .putString(KEY_ESTIMATED_DELIVERY, delivery)
+                        .putString(BundleKeys.KEY_ADDRESS, address)
+                        .putString(BundleKeys.KEY_PRICE, price)
+                        .putString(BundleKeys.KEY_INVOICE, invoice)
+                        .putString(BundleKeys.KEY_ESTIMATED_DELIVERY, delivery)
                         .build());
     }
 
     public PaymentSuccessController(CreatePaymentTransaction.ResponseValue responseValue) {
 
         this(new BundleBuilder(new Bundle())
-                .putString(KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
-                .putDouble(KEY_PRICE,  responseValue.getD().getValue().getOrderInfoResult().getTotal())
-                .putDouble(KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
-                .putString(KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()): responseValue.getD().getValue().getInvoiceNo())
-                .putString(KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
+                .putString(BundleKeys.KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
+                .putDouble(BundleKeys.KEY_PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal())
+                .putDouble(BundleKeys.KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
+                .putString(BundleKeys.KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()) : responseValue.getD().getValue().getInvoiceNo())
+                .putString(BundleKeys.KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
                 .build());
     }
 
     public PaymentSuccessController(Bundle args) {
         super(args);
-        mAddressString = args.getString(KEY_ADDRESS, "");
-        mPrice = args.getDouble(KEY_PRICE);
-        mShippingFee = args.getDouble(KEY_SHIPPING_FEE);
-        mInvoiceString = args.getString(KEY_INVOICE, "");
-        mEstimatedDeliveryString = args.getString(KEY_ESTIMATED_DELIVERY, "");
+        mAddressString = args.getString(BundleKeys.KEY_ADDRESS, "");
+        mPrice = args.getDouble(BundleKeys.KEY_PRICE);
+        mShippingFee = args.getDouble(BundleKeys.KEY_SHIPPING_FEE);
+        mInvoiceString = args.getString(BundleKeys.KEY_INVOICE, "");
+        mEstimatedDeliveryString = args.getString(BundleKeys.KEY_ESTIMATED_DELIVERY, "");
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        mPaymentSuccessOrderNumber.setText(mInvoiceString);
-        mPaymentOurpaySuccessDetailContainer.setVisibility(View.VISIBLE);
-
         if (PaymentInfo.getOurpay() != null && PaymentInfo.getOurpay().isCanUse()) {
-            mPaymentSuccessTableContainer.setVisibility(View.GONE);
-            getTotalPayment(PaymentInfo.getOurpay());
             mPresenter.generateOurpay();
-        }else{
-            double totalPayment = mShippingFee+mPrice;
-            mPaymentSuccessTableContainer.setVisibility(View.GONE);
-            mPriceTextView.setText(PriceUtils.getPriceStringValue(totalPayment));
         }
-        mEstimatedDelivery.setVisibility(View.GONE);
+
         setUp(view);
     }
 
     @Override
     protected void setUp(View view) {
-        mAddress.setText(mAddressString);
-        mOrderNumber.setText(mInvoiceString);
-        mEstimatedDelivery.setText(Html.fromHtml(mEstimatedDeliveryString).toString());
+        mOrderNumberTextView.setText(mInvoiceString);
 
-        packageName = getActivity().getPackageName();
+        mPackageName = getActivity().getPackageName();
 
         //Remove test postfix
-        packageName = packageName.replace(".test", "");
-        appUri = "market://details?id=" + packageName;
-        appPlayStoreUri = "http://play.google.com/store/apps/details?id=" + packageName;
+        mPackageName = mPackageName.replace(".test", "");
+        mAppUri = getString(R.string.app_uri_header) + mPackageName;
+        mAppPlayStoreUri = getString(R.string.app_playstore_uri_header) + mPackageName;
 
-//        MyVouchersFragment.clearVouchers();
+        String thankYouMessage = getResource().getString(R.string.thank_you_for_shopping) + " " + Settings.getSelectedCountry().siteName;
+        mThankyouTextview.setText(thankYouMessage);
 
         mPresenter.incrementPayCount();
     }
@@ -162,10 +136,10 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         super.onDetach(view);
     }
 
-    public void rateApp() {
+    private void rateApp() {
 
         try {
-            Uri uri = Uri.parse(appUri);
+            Uri uri = Uri.parse(mAppUri);
             Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
 
             goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
@@ -174,7 +148,7 @@ public class PaymentSuccessController extends BaseController implements PaymentS
                 mActivity.startActivity(goToMarket);
             } catch (ActivityNotFoundException e) {
                 mActivity.startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(appPlayStoreUri)));
+                        Uri.parse(mAppPlayStoreUri)));
             }
 
         } catch (Exception exception) {
@@ -198,31 +172,40 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     @Override
     public void showOurpay() {
+        mOurpayDetailsContainer.setVisibility(View.VISIBLE);
         PaymentInfo.getOurpay().setState(OurpayState.POSTCART);
         if (PaymentInfo.getOurpay() != null) {
             OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) getActivity());
-            mLLOurpay.removeAllViews();
-            mLLOurpay.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay()));
+            mOurpayDetailsContainer.removeAllViews();
+            mOurpayDetailsContainer.addView(ourpayPanel.generatePanel(PaymentInfo.getOurpay()));
         }
     }
 
+    @Override
+    public boolean handleBack() {
+        PaymentInfo.resetPaymentInfo();
+
+        mActivity.setShopsAsVisibleContainer();
+        mActivity.getHomeController().resetCheckoutRouter();
+
+        return true;
+    }
 
     @OnClick(R.id.partial_continue_shopping_button)
     void onContinueShoppingClick() {
-        PaymentInfo.resetPaymentInfo();
-
-        getRouter().popToTag("CheckoutController");
-        ((MainActivity) getActivity()).setShopsAsVisibleContainer();
+        mActivity.onBackPressed();
     }
 
-    public void getTotalPayment(Ourpay ourpay){
+    //    Unused function, price table container is hidden.
+    //    *May be used in the future
+    private void getTotalPayment(Ourpay ourpay) {
         double totalPayment = 0;
-        for (int i = 0; i < ourpay.getPlannedTransactions().size(); i++){
-            if(ourpay.getPlannedTransactions().get(i).getState()==KEY_PLANNED_TRANSACTION_STATE_PAID){
-                totalPayment =+ ourpay.getPlannedTransactions().get(i).getAmount();
+        for (int i = 0; i < ourpay.getPlannedTransactions().size(); i++) {
+            if (ourpay.getPlannedTransactions().get(i).getState() == KEY_PLANNED_TRANSACTION_STATE_PAID) {
+                totalPayment = ourpay.getPlannedTransactions().get(i).getAmount();
             }
         }
 
-        mPriceTextView.setText(Double.toString(totalPayment));
+//        mPriceTextView.setText(Double.toString(totalPayment));
     }
 }

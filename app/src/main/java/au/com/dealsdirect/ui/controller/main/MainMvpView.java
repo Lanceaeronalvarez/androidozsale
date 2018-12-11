@@ -2,9 +2,6 @@ package au.com.dealsdirect.ui.controller.main;
 
 import android.view.View;
 
-import java.util.List;
-
-import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 

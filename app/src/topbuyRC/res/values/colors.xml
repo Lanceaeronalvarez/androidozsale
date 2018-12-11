@@ -25,9 +25,10 @@
 
 
     <!--Search Edit Text Colors-->
-    <color name="search_edit_text_hint_color">@color/text_gray</color>
-    <color name="search_edit_text_color">@color/text_gray</color>
-    <color name="search_edit_cursor_color">@color/colorAccent</color>
+    <color name="search_edit_text_hint">@color/text_gray</color>
+    <color name="search_edit_text">@color/text_gray</color>
+    <color name="search_edit_cursor">@color/bluegreen</color>
+
     <!-- Button Theme -->
     <color name="bg_button_ripple">#DBE1EA</color>
     <color name="bg_button_default">#04b2b6</color>
@@ -41,7 +42,7 @@
     <!-- Chips Theme -->
     <color name="bg_chips_ripple">#FFFFFF</color>
     <color name="bg_chips_default">#FFFFFF</color>
-    <color name="bg_chips_default_border">#EDF0F5</color>
+    <color name="bg_chips_default_border">#B8B8B8</color>
     <color name="bg_chips_checked">@color/bluegreen</color>
     <color name="bg_chips_text">#FFFFFF</color>
 

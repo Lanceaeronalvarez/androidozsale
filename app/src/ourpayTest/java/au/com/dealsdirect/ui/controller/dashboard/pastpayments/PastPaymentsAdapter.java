@@ -24,36 +24,34 @@ import butterknife.ButterKnife;
 public class PastPaymentsAdapter extends RecyclerView.Adapter<PastPaymentsAdapter.ViewHolder> {
 
     Context mContext;
-    DashboardController mController;
     List<PastPayment> mData;
     String mLastMonth = "";
 
-    public PastPaymentsAdapter(DashboardController controller, List<PastPayment> data) {
-        this.mController = controller;
+    public PastPaymentsAdapter(List<PastPayment> data) {
         this.mData = data;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.row_past_payment_month_header)
+        @BindView(R.id.vh_payment_month_header)
         TextView header;
 
-        @BindView(R.id.row_past_payment_day)
+        @BindView(R.id.viewholder_payment_day)
         TextView day;
 
-        @BindView(R.id.row_past_payment_month)
+        @BindView(R.id.viewholder_payment_month)
         TextView month;
 
-        @BindView(R.id.row_past_payment_title)
+        @BindView(R.id.viewholder_payment_title)
         TextView title;
 
-        @BindView(R.id.row_past_payment_id)
+        @BindView(R.id.viewholder_payment_id)
         TextView id;
 
-        @BindView(R.id.row_past_payment_card_number)
+        @BindView(R.id.viewholder_payment_card_number)
         TextView card;
 
-        @BindView(R.id.row_past_payment_value)
+        @BindView(R.id.viewholder_payment_value)
         TextView value;
 
         ViewHolder(View view) {
@@ -66,7 +64,7 @@ public class PastPaymentsAdapter extends RecyclerView.Adapter<PastPaymentsAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_past_payment, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_payment_item, parent, false);
         return new ViewHolder(view);
     }
 

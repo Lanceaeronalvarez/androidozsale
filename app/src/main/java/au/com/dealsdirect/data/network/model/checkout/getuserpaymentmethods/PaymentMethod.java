@@ -21,6 +21,17 @@ public class PaymentMethod implements Serializable {
     @Expose
     private String imageUrl;
 
+    public static final String PAYPAL = "paypal";
+    public static final String PAYPAL_CREDIT = "paypalcredit";
+    public static final String MASTERPASS = "masterpass";
+    public static final String VISA_CHECKOUT = "visacheckout";
+    public static final String VISA_CHECKOUT_BRAINTREE = "visacheckoutbraintree";
+    public static final String PAY = "pay";
+
+    private boolean isPinned;
+
+    private int id;
+
     public String getPaymentType() {
         return paymentType;
     }
@@ -53,6 +64,22 @@ public class PaymentMethod implements Serializable {
         this.imageUrl = imageUrl;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean isPinned() {
+        return isPinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        isPinned = pinned;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj instanceof PaymentMethod &&
@@ -60,5 +87,15 @@ public class PaymentMethod implements Serializable {
                 ((PaymentMethod) obj).getDescription().equals(description) &&
                 ((PaymentMethod) obj).getToken().equals(token) &&
                 ((PaymentMethod) obj).getImageUrl().equals(imageUrl);
+    }
+
+
+    public boolean canUseOurPaySelect() {
+        switch (paymentType.toLowerCase()) {
+            case MASTERPASS:
+                return false;
+            default:
+                return true;
+        }
     }
 }

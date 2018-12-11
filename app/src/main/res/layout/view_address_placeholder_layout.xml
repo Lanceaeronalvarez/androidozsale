@@ -5,9 +5,11 @@
     android:id="@+id/no_addresses_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:paddingLeft="@dimen/place_holder_padding"
-    android:paddingRight="@dimen/place_holder_padding"
+    android:layout_centerInParent="true"
+    android:gravity="center"
+    android:background="@color/background_default"
+    android:paddingLeft="@dimen/placeholder_padding"
+    android:paddingRight="@dimen/placeholder_padding"
     android:visibility="visible"
     tools:ignore="MissingPrefix">
 
@@ -15,33 +17,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="@dimen/placeholder_icon_size"
-            android:layout_height="@dimen/placeholder_icon_size"
+            android:layout_width="@dimen/placeholder_icon_width"
+            android:layout_height="@dimen/placeholder_icon_height"
             android:layout_gravity="center"
+            android:visibility="@integer/no_items_placeholder_icon_visibility"
             android:src="@drawable/ic_address_placeholder" />
 
         <TextView
-            fontPath="@string/font_app_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/welcome_to_my_address"
-            android:textSize="@dimen/text_size_xxxlarge" />
+            android:text="@string/welcome_remark_title_address"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_headline1" />
 
         <TextView
             fontPath="@string/font_app_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:text="@string/you_currently_do_not_have_any_addresses"
-            android:textColor="#9f9f9f"
-            android:textSize="@dimen/text_size_xlarge" />
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/welcome_remark_subtitle_address"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_headline3" />
 
     </LinearLayout>
 

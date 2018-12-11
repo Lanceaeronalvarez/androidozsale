@@ -29,7 +29,6 @@ import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
-import static au.com.dealsdirect.utils.BundleKeys.ITEM_LIST_SIZE;
 
 /*
  * Created by smartwave on 30/06/2017.
@@ -43,14 +42,17 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
     @BindView(R.id.payment_select_recyclerview)
     RecyclerView mRecyclerView;
     @BindView(R.id.no_payment_method_placeholder)
-    LinearLayout mNoPaymentPlaceholder;
+    RelativeLayout mNoPaymentPlaceholder;
 
     private PaymentSelectAdapter mAdapter;
 
     private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
     private boolean isFromCart = false;
     private String mCartTotalCost;
-    private int mItemListSize;
+
+    public static PaymentSelectController newInstance() {
+        return new PaymentSelectController(new BundleBuilder(new Bundle()).build());
+    }
 
     public PaymentSelectController(Bundle args) {
         super(args);
@@ -63,7 +65,6 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
         }
         isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
-        mItemListSize = args.getInt(BundleKeys.ITEM_LIST_SIZE,-1);
     }
 
     @Override
@@ -160,6 +161,11 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
     }
 
     @Override
+    public void removePaymentFailed() {
+
+    }
+
+    @Override
     protected void setUp(View view) {
         if (!isFromCart) {
             showPaymentMethodsPlaceholder(false);
@@ -195,7 +201,6 @@ public class PaymentSelectController extends SwipeableBaseToolBarController impl
                 new BundleBuilder(new Bundle())
                 .putBoolean(BundleKeys.IS_FROM_CART,isFromCart)
                 .putDouble(BundleKeys.CART_TOTAL_COST, mCartTotalCost.isEmpty()? 0 : Double.parseDouble(mCartTotalCost))
-                .putInt(ITEM_LIST_SIZE,mItemListSize)
                 .build()
                 ,new VerticalChangeHandler()
                 ,new VerticalChangeHandler());

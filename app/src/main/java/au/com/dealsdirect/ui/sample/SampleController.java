@@ -58,12 +58,13 @@ public class SampleController extends BasePullToRefreshController implements Sam
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
 
         // Assign super call in a view variable to inflate pull to refresh
-        View view = super.inflateView(inflater, container);
+        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
+
 
         // Call fillContent and fillToolbar with corresponding layout files
         // NOTE: No need to fillToolbar if screen does not have a toolbar
+        setToolBarVisible(getResource().getBoolean(R.bool.sample_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_sample, container, false));
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
 
         // Inject UI via butter knife
         getControllerComponent().inject(this);

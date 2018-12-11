@@ -40,25 +40,25 @@
 
                 <TextView
                     android:id="@+id/controller_payment_details_title"
-                    fontPath="@string/font_lato_bold"
+                    fontPath="@string/font_app_bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerInParent="true"
                     android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/text_size_xxxxlarge"
+                    android:textSize="@dimen/text_size_subtitle"
                     tools:ignore="MissingPrefix"
                     tools:text="ozsale" />
 
                 <TextView
                     android:id="@+id/controller_payment_details_id"
-                    fontPath="@string/font_lato_regular"
+                    fontPath="@string/font_app_regular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/controller_payment_details_title"
                     android:layout_centerInParent="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_xxxlarge"
+                    android:textSize="@dimen/text_size_headline1"
                     tools:ignore="MissingPrefix"
                     tools:text="95068491" />
 
@@ -101,7 +101,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_gray"
+        android:background="@color/background_default"
         android:overScrollMode="never"
         android:descendantFocusability="blocksDescendants"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">

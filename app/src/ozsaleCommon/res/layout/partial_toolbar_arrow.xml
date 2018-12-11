@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/toolbar_skin"
+    android:contentInsetEnd="0dp"
+    android:contentInsetLeft="0dp"
+    android:contentInsetRight="0dp"
+    android:contentInsetStart="0dp"
+    app:contentInsetEnd="0dp"
+    app:contentInsetLeft="0dp"
+    app:contentInsetRight="0dp"
+    app:contentInsetStart="0dp"
+    tools:ignore="MissingPrefix">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/partial_toolbar_left_view"
+            fontPath="@string/font_app_regular"
+            android:layout_width="@dimen/partial_toolbar_button_width"
+            android:layout_height="@dimen/partial_toolbar_button_height"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="@dimen/margin_extra_small"
+            android:src="@drawable/ic_pink_chevron"
+            android:text="@string/back"
+            android:textColor="@color/toolbar_text_medium"
+            android:textSize="@dimen/text_size_caption1" />
+
+        <TextView
+            android:id="@+id/partial_toolbar_title"
+            fontPath="@string/font_app_semibold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:layout_toRightOf="@+id/partial_toolbar_left_view"
+            android:layout_toLeftOf="@+id/partial_toolbar_right_view"
+            android:singleLine="true"
+            android:textColor="@color/toolbar_text_dark"
+            android:textSize="@dimen/text_size_headline2"
+            tools:text="Title" />
+
+
+        <ImageButton
+            android:id="@+id/partial_toolbar_right_view"
+            android:layout_width="@dimen/partial_toolbar_button_width"
+            android:layout_height="@dimen/partial_toolbar_button_height"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:background="@drawable/bg_toolbar_button"
+            android:visibility="invisible"
+            android:scaleType="fitCenter"
+            android:padding="@dimen/margin_small"
+            android:src="@drawable/ic_account_logout" />
+
+    </RelativeLayout>
+
+    <View style="@style/horizontalBorderView"/>
+
+</android.support.v7.widget.Toolbar>

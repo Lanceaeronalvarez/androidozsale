@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:id="@+id/partial_checkout_address_container_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="10dp">
+        android:paddingLeft="@dimen/padding_default"
+        android:paddingRight="@dimen/padding_default"
+        android:paddingTop="@dimen/margin_small">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:text="@string/your_current_delivery_address"
-            android:textColor="@color/gray_title_text"
-            />
+            android:text="@string/my_current_delivery_address"
+            android:textColor="@color/text_light" />
 
         <TextView
             android:id="@+id/partial_checkout_address_change"
@@ -29,8 +29,8 @@
             android:layout_weight="1"
             android:gravity="end"
             android:text="@string/change"
-            android:textColor="@color/gray_item_details"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_highlight"
+            android:textSize="@dimen/text_size_body"
             android:visibility="gone" />
 
     </LinearLayout>
@@ -39,20 +39,19 @@
         android:id="@+id/partial_checkout_address_new_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="16sp"
-        android:layout_marginRight="16sp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_chips_rounded"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@drawable/bg_edit_text_plain"
         android:clickable="true"
-        android:padding="15dp">
+        android:padding="@dimen/padding_default">
 
         <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_gray_chevron"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_gray_chevron" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -61,9 +60,8 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:text="@string/add_new_address"
-            android:textColor="@color/gray_field_text"
-            android:textSize="16sp"
-            />
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_body" />
     </RelativeLayout>
 
     <LinearLayout
@@ -77,37 +75,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="15dp">
+            android:padding="@dimen/padding_default">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:src="@drawable/ic_home_delivery"/>
+                android:layout_width="@dimen/margin_extra_large"
+                android:layout_height="@dimen/margin_extra_large"
+                android:paddingBottom="@dimen/margin_extra_small"
+                android:paddingLeft="@dimen/margin_extra_small"
+                android:paddingRight="@dimen/margin_extra_small"
+                android:src="@drawable/ic_home_delivery" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingStart="10dp">
+                android:paddingLeft="@dimen/margin_small"
+                android:paddingStart="@dimen/margin_small">
 
                 <TextView
                     android:id="@+id/partial_checkout_address_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray_field_text"
-                    android:textSize="@dimen/text_size_xxlarge"
-                    tools:text="Mary Doe"/>
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_headline2"
+                    tools:text="Mary Doe" />
 
                 <TextView
                     android:id="@+id/partial_checkout_address_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray_field_text"
-                    tools:text="Pharmacy Warringah, Shop 4123, Broovale, NSW, 2100, Australia, +0123 123 123"/>
+                    android:textColor="@color/text_medium"
+                    tools:text="Pharmacy Warringah, Shop 4123, Broovale, NSW, 2100, Australia, +0123 123 123" />
 
             </LinearLayout>
 
@@ -115,9 +113,9 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="16dp"
-            android:background="#F2F2F2"/>
+            android:layout_height="@dimen/border_thin"
+            android:layout_marginLeft="@dimen/padding_default"
+            android:background="@color/toolbar_border" />
     </LinearLayout>
 
 </LinearLayout>

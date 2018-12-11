@@ -22,11 +22,14 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Router;
 
+import javax.inject.Inject;
+
 import au.com.dealsdirect.DDApplication;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.component.ActivityComponent;
 import au.com.dealsdirect.di.component.DaggerActivityComponent;
 import au.com.dealsdirect.di.module.ActivityModule;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.CommonUtils;
@@ -133,12 +136,13 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
                     message.contains("SSLHandshakeException")) {
                 // Do not notify for these errors
                 return;
-            } else if (message.contains("Exception") || message.contains("null") ||
-                    message.contains("virtual method")) {
+            } else if (message.contains("Exception") || message.contains("virtual method")) {
 //                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
                 showSnackBar(getString(R.string.error), false);
-            } else {
-
+            } else if (message.contains("null")){
+                return;
+            }
+            else {
                 /*
                     4/6/18 - feature/andr-3308-registersubscriber
                     Disallow showing of No internet Connection on Socket Timeout Exception
@@ -163,7 +167,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         mSnackbar = Snackbar.make(findViewById(android.R.id.content),
                 message, indefinite ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
         View sbView = mSnackbar.getView();
-        sbView.setBackgroundColor(ContextCompat.getColor(this, R.color.snack_bar_color));
+        sbView.setBackgroundColor(ContextCompat.getColor(this, R.color.icon_snack_bar));
         sbView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
         sbView.getLayoutParams().height = Math.round(getResources().getDimension(R.dimen.bottom_nav_height));
         TextView textView = (TextView) sbView

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activered"
-    android:padding="@dimen/screen_padding"
+    android:padding="@dimen/padding_default"
     android:id="@+id/controller_tutorial_child_container"
     tools:ignore="MissingPrefix">
 
@@ -21,7 +21,7 @@
             tools:text="test header"
             android:textColor="#FFFFFF"
             fontPath="@string/font_app_medium"
-            android:textSize="@dimen/text_size_xxxxlarge" />
+            android:textSize="@dimen/text_size_title" />
 
         <View
             android:id="@+id/header_underline"

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * dp Created by Admin on 1/3/17.
  */
-public class GetCategoryTreeResponse implements Parcelable{
+public class GetCategoryTreeResponse implements Parcelable {
 
     String payload;
     String nodeType;
@@ -17,9 +17,10 @@ public class GetCategoryTreeResponse implements Parcelable{
     String name;
     String key;
     int count;
+    boolean isSelected;
     List<GetCategoryTreeResponse> children;
 
-    public GetCategoryTreeResponse(){
+    public GetCategoryTreeResponse() {
 
     }
 
@@ -30,20 +31,25 @@ public class GetCategoryTreeResponse implements Parcelable{
         name = in.readString();
         key = in.readString();
         count = in.readInt();
+        isSelected = in.readByte() != 0;
         children = in.createTypedArrayList(GetCategoryTreeResponse.CREATOR);
     }
 
     public static final Creator<GetCategoryTreeResponse> CREATOR = new Creator<GetCategoryTreeResponse>() {
-        @Override public GetCategoryTreeResponse createFromParcel(Parcel in) {
+        @Override
+        public GetCategoryTreeResponse createFromParcel(Parcel in) {
             return new GetCategoryTreeResponse(in);
         }
 
-        @Override public GetCategoryTreeResponse[] newArray(int size) {
+        @Override
+        public GetCategoryTreeResponse[] newArray(int size) {
             return new GetCategoryTreeResponse[size];
         }
     };
 
-    public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -57,7 +63,10 @@ public class GetCategoryTreeResponse implements Parcelable{
         return key;
     }
 
-    public void setId(String id) { this.id = id; }
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setKey(String key) {
         this.key = key;
     }
@@ -78,17 +87,20 @@ public class GetCategoryTreeResponse implements Parcelable{
         this.children = children;
     }
 
-    @Override public int describeContents() {
+    @Override
+    public int describeContents() {
         return 0;
     }
 
-    @Override public void writeToParcel(Parcel parcel, int i) {
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(payload);
         parcel.writeString(nodeType);
         parcel.writeString(id);
         parcel.writeString(name);
         parcel.writeString(key);
         parcel.writeInt(count);
+        parcel.writeByte((byte) (isSelected ? 1 : 0));
         parcel.writeTypedList(children);
     }
 
@@ -110,5 +122,13 @@ public class GetCategoryTreeResponse implements Parcelable{
 
     public static Creator<GetCategoryTreeResponse> getCREATOR() {
         return CREATOR;
+    }
+
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
     }
 }

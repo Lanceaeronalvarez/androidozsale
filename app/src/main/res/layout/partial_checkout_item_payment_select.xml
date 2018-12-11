@@ -9,40 +9,35 @@
 
     <ImageView
         android:id="@+id/partial_checkout_payment_image"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="18dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:layout_width="@dimen/margin_extra_large"
+        android:layout_height="@dimen/margin_extra_large"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:paddingLeft="@dimen/margin_extra_small"
+        android:paddingRight="@dimen/margin_extra_small"
         android:src="@drawable/ic_my_vouchers" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        android:paddingTop="2dp">
+        android:layout_marginLeft="@dimen/margin_small"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/partial_checkout_payment_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:textColor="@color/gray_title_text"
-            android:textSize="@dimen/text_size_xxlarge"
+            android:layout_marginRight="@dimen/padding_default"
+            android:textColor="@color/text_light"
+            android:textSize="@dimen/text_size_headline2"
             tools:text="Master Card" />
 
         <TextView
             android:id="@+id/partial_checkout_payment_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="16dp"
-            android:textColor="@color/gray_field_text"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginRight="@dimen/padding_default"
+            android:textColor="@color/text_medium"
             tools:text="card ending in 02/16" />
 
         <TextView
@@ -50,8 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/remove"
-            android:textColor="@color/gray_item_details"
-            android:textSize="@dimen/text_size_xxlarge"
+            android:textColor="@color/text_highlight"
+            android:textSize="@dimen/text_size_headline2"
             android:visibility="gone" />
 
         <View

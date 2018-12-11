@@ -3,6 +3,7 @@ package au.com.dealsdirect.data.network.model.checkout.getcurrentorder;
  * Created by CodeineBot on 1/6/17.
  */
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -11,40 +12,52 @@ import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 
 public class Value {
 
-    @SerializedName("SaleID")
+    @SerializedName(value = "SaleID", alternate = {"saleID"})
     public String saleID;
-    @SerializedName("Items")
+    @SerializedName(value = "Items", alternate = {"items"})
     public List<Item> items = null;
-    @SerializedName("ItemsCount")
+    @SerializedName(value = "ItemsCount", alternate = {"itemsCount"})
     public Integer itemsCount;
-    @SerializedName("Vouchers")
+    @SerializedName(value = "Vouchers", alternate = {"vouchers"})
     public List<Voucher> vouchers = null;
-    @SerializedName("Summary")
+    @SerializedName(value = "Summary", alternate = {"summary"})
     public Summary summary;
-    @SerializedName("IsAgeRestricted")
+    @SerializedName(value = "IsAgeRestricted", alternate = {"isAgeRestricted"})
     public Boolean isAgeRestricted;
-    @SerializedName("DeliveryAddress")
+    @SerializedName(value = "DeliveryAddress", alternate = {"deliveryAddress"})
     public DeliveryAddress deliveryAddress;
-    @SerializedName("DecorationInfoList")
+    @SerializedName(value = "DecorationInfoList", alternate = {"decorationInfoList"})
     public List<DecorationInfoList> decorationInfoList = null;
-    @SerializedName("LastPaymentMethod")
+    @SerializedName(value = "DeliveryOptions", alternate = {"deliveryOptions"})
+    @Expose
+    private List<DeliveryOption> deliveryOptions = null;
+    @SerializedName(value = "LastPaymentMethod", alternate = {"lastPaymentMethod"})
     public String lastPaymentMethod;
-    @SerializedName("MyPayDetails")
-    public MyPayDetails myPayDetails;
-    @SerializedName("ThreeDSecureRequired")
+    @SerializedName(value = "ThreeDSecureRequired", alternate = {"threeDSecureRequired"})
     public Boolean threeDSecureRequired;
-    @SerializedName("PhoneVerification")
+    @SerializedName(value = "PhoneVerification", alternate = {"phoneVerification"})
     public PhoneVerification phoneVerification;
-    @SerializedName("PickupPointsEnabled")
+    @SerializedName(value = "PickupPointsEnabled", alternate = {"pickupPointsEnabled"})
     public Boolean pickupPointsEnabled;
-    @SerializedName("NotificationMessage")
-    public Object notificationMessage;
+    @SerializedName(value = "NotificationMessage", alternate = {"notificationMessage"})
+    private String notificationMessage;
+    @SerializedName(value = "DeliveryServicePackageDetail", alternate = {"deliveryServicePackageDetail"})
+    @Expose
+    private DeliveryServicePackageDetail deliveryServicePackageDetail;
+    @SerializedName(value = "IsEmpty", alternate = {"isEmpty"})
+    public boolean isEmpty = false;
+    @SerializedName(value = "OurPay", alternate = {"ourPay"})
+    @Expose
+    private GetCurrentOrderOurpay ourpay;
+    @SerializedName(value = "OurPaySelect", alternate = {"ourPaySelect"})
+    @Expose
+    private GetOurPaySelect ourPaySelect;
 
     public boolean isEmpty() {
         return isEmpty;
     }
 
-    public Object getNotificationMessage() {
+    public String getNotificationMessage() {
         return notificationMessage;
     }
 
@@ -58,10 +71,6 @@ public class Value {
 
     public Boolean getThreeDSecureRequired() {
         return threeDSecureRequired;
-    }
-
-    public MyPayDetails getMyPayDetails() {
-        return myPayDetails;
     }
 
     public String getLastPaymentMethod() {
@@ -100,6 +109,37 @@ public class Value {
         return saleID;
     }
 
-    @SerializedName("IsEmpty")
-    public boolean isEmpty = false;
+    public List<DeliveryOption> getDeliveryOptions() {
+        return deliveryOptions;
+    }
+
+    public void setDeliveryOptions(List<DeliveryOption> deliveryOptions) {
+        this.deliveryOptions = deliveryOptions;
+    }
+
+    public DeliveryServicePackageDetail getDeliveryServicePackageDetail() {
+        return deliveryServicePackageDetail;
+    }
+
+    public GetCurrentOrderOurpay getOurpay() {
+        return ourpay;
+    }
+
+    public GetOurPaySelect getOurPaySelect() {
+        return ourPaySelect;
+    }
+
+    public int getOurPaySelectTermsAndConditions() {
+        return ourPaySelect.getTermsAndConditions();
+    }
+
+    private static class GetOurPaySelect {
+        @SerializedName(value = "TermsAndConditions", alternate = {"termsAndConditions"})
+        @Expose
+        private int termsAndConditions;
+
+        private int getTermsAndConditions() {
+            return termsAndConditions;
+        }
+    }
 }

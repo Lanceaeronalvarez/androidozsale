@@ -1,0 +1,710 @@
+package au.com.dealsdirect.ui.controller.shops;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toolbar;
+
+import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.paginate.Paginate;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
+import au.com.dealsdirect.ui.controller.shops.listener.BannerClickListener;
+import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
+import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.ui.main.MainMvpView;
+import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DialogUtils;
+import au.com.dealsdirect.utils.PaginateUtils;
+import butterknife.BindView;
+import butterknife.OnClick;
+
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_POSITION;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_HEADER_IMAGE;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
+
+
+/**
+ * dp Created by Admin on 6/6/17.
+ */
+
+public class ShopsController extends BasePullToRefreshController implements ShopsMvpView, BannerClickListener {
+
+    public static final String TAG = "ShopsController";
+    private static final String KEY_TEXT = "ShopController.KEY_TEXT";
+    private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
+    private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
+    private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
+    private static final int INITIAL_BANNER_COUNT = 100;
+
+    @Inject
+    ShopsMvpPresenter<ShopsMvpView> mPresenter;
+
+    @BindView(R.id.controller_shop_banner_recycler)
+    RecyclerView shopsControllerBannerRecyclerView;
+
+    @BindView(R.id.partial_toolbar_search_icon)
+    ImageButton shopsControllerSearchView;
+
+    @BindView(R.id.partial_toolbar_hamburger)
+    ImageButton mShopsControllerHamburgerView;
+
+    @BindView(R.id.partial_toolbar_logo)
+    ImageView mShopsControllerToolbarLogo;
+
+    @BindView(R.id.partial_toolbar_logo_title_view)
+    TextView mShopsControllerToolbarTextView;
+
+    private BannersAdapter mBannersAdapter;
+    private Paginate.Callbacks mPaginateCallbacks;
+    private Paginate mPaginateManager;
+
+    private int page = 0;
+    private boolean loadingInProgress = false;
+    private boolean hasLoadedAllItems = false;
+
+    private int newBannerCount = 50;
+    private int bannerOffset = 0;
+    private int bannerLimit = bannerOffset + newBannerCount;
+
+    private String mCategoryID;
+    private String mCategoryName;
+    private String mCategoryKey;
+    private String bannerGroupType = "";
+
+    private GridLayoutManager mLayoutManager;
+
+    private List<GetCategoryTreeResponse> mPreLoadedCategories;
+    private List<GetBannerResponse.Group> sales;
+    private Map<String, List<GetCategoryTreeResponse>> mCategoryMap;
+
+    private View child;
+    private RelativeLayout item;
+    private ImageView rightOption;
+
+    private int mBannerClickCounter = 0;
+    private boolean isRefreshShop = false;
+    private int mPaginateManagerCounter = 0;
+
+    BannerClickListener mBannerClickListener;
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        mPresenter.onAttach(this);
+        assert (mActivity) != null;
+
+        mActivity.getMainController().setViewpagerDraggable(true);
+        mBannerClickCounter = 0;
+        mActivity.setShopController(this);
+        super.onAttach(view);
+    }
+
+    public static ShopsController newInstance() {
+        return new ShopsController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
+    public ShopsController() {
+
+    }
+
+    public ShopsController(Bundle args) {
+        super(args);
+        mCategoryID = getArgs().getString(KEY_CATEGORY_ID);
+        mCategoryName = getArgs().getString(KEY_CATEGORY_NAME);
+        mCategoryKey = getArgs().getString(KEY_CATEGORY_MAP);
+    }
+
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        View view = super.inflateView(inflater, container, ToolBarType.LOGO);
+
+        setToolBarVisible(getResource().getBoolean(R.bool.shop_toolbar_visibility));
+        fillContent(inflater.inflate(R.layout.controller_shop, container, false));
+
+        getControllerComponent().inject(this);
+        mPresenter.onAttach(this);
+
+        return view;
+    }
+
+    @Override
+    protected void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        setUp(view);
+    }
+
+    @Override
+    public void onDetach(View view) {
+        hideLoading();
+        super.onDetach(view);
+    }
+
+    @Override
+    protected void onDestroyView(@NonNull View view) {
+        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
+
+    @Override
+    protected void setUp(View view) {
+
+        assert (mActivity) != null;
+        mActivity.getMainController().showBottomNav();
+        mActivity.setDraggableViewPager(true);
+        hideKeyboard();
+
+        mPreLoadedCategories = new LinkedList<>();
+        sales = new LinkedList<>();
+        mCategoryMap = new HashMap<>();
+
+        mPaginateCallbacks = new Paginate.Callbacks() {
+            @Override
+            public void onLoadMore() {
+                // Load next page of data (e.g. network or database)
+                page++;
+                bannerOffset += newBannerCount;
+                bannerLimit = newBannerCount;
+                refresh();
+            }
+
+            @Override
+            public boolean isLoading() {
+                // Indicate whether new page loading is in progress or not
+                return loadingInProgress;
+            }
+
+            @Override
+            public boolean hasLoadedAllItems() {
+                // Indicate whether all data (pages) are loaded or not
+                return hasLoadedAllItems;
+            }
+        };
+
+        mBannerClickListener = this;
+        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, new ArrayList(), mBannerClickListener);
+
+        if (getResources().getBoolean(R.bool.is_tablet)) {
+            mLayoutManager = new GridLayoutManager(mActivity, 2, GridLayoutManager.VERTICAL, false);
+        } else {
+            mLayoutManager = new GridLayoutManager(mActivity, 1, GridLayoutManager.VERTICAL, false);
+        }
+
+        mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales, this);
+        shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
+        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+
+        if (sales.isEmpty()) {
+            shopsControllerBannerRecyclerView.setVisibility(View.GONE);
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, INITIAL_BANNER_COUNT));
+        } else {
+            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+
+            mBannersAdapter.replace(sales);
+            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
+        }
+
+        if (mPreLoadedCategories.size() == 0) {
+            mPresenter.loadCategoryTree();
+        }
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+
+        String action = mActivity.getIntent().getAction();
+        if (action.equals(Intent.ACTION_VIEW)) {
+            Log.d("deeplinking", "shopscontroller deeplinking");
+        }
+
+    }
+
+    @Override
+    public void refresh() {
+        loadingInProgress = true;
+        mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, bannerLimit));
+    }
+
+    @Override
+    public void unBindPaginate() {
+        if (mPaginateManager != null) {
+            mPaginateManager.unbind();
+        }
+    }
+
+    @Override
+    public void onBannerClicked(
+            String saleId,
+            String bannerTitle,
+            String bannerId,
+            int position,
+            String imageUrl,
+            boolean isAvailable) {
+
+        Log.d("shopscontroller", "bannerTitle = " + bannerTitle + " , saleid = " + saleId + " , bannerId = " + bannerId + " , imageurl = " + imageUrl + " , position = " + position);
+
+        Bundle args = new BundleBuilder(new Bundle())
+                .putString(SALEITEMS_TITLE, bannerTitle)
+                .putString(SALEITEMS_SALE_ID, saleId)
+                .putString(SALEITEMS_BANNER_ID, bannerId)
+                .putString(SALEITEMS_HEADER_IMAGE, imageUrl)
+                .putInt(SALEITEMS_FROM_POSITION, position)
+                .putString(SALEITEMS_CATEGORY_MAP, null)
+                .build();
+
+        if (mBannerClickCounter != 1) {
+            mBannerClickCounter = +1;
+
+
+            List<String> names = new ArrayList<>();
+            names.add(bannerId + position);
+            if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
+
+                // Invoke login if no auth or not an open app
+                assert (mActivity) != null;
+                ((MainMvpView) mActivity).showLoginController(getRouter(), new AuthHandler() {
+                    @Override
+                    public void success() {
+                        mActivity.callGCMRegisterSubscriber();
+
+                        mActivity.getHomeRouter().pushController(RouterTransaction.with(
+                                new SaleItemsController(args))
+                                .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                                .pushChangeHandler(new HorizontalChangeHandler())
+                                .popChangeHandler(new HorizontalChangeHandler()));
+                    }
+
+                    @Override
+                    public void error() {
+
+                    }
+                });
+            } else {
+
+// Check if sale is available
+                //TODO: Need computation for date and time when sale response is cached
+                if (isAvailable) {
+                    assert (mActivity) != null;
+                    mActivity
+                            .getHomeRouter()
+                            .pushController(RouterTransaction.with(
+                                    new SaleItemsController(args))
+                                    .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                                    .pushChangeHandler(new HorizontalChangeHandler())
+                                    .popChangeHandler(new HorizontalChangeHandler()));
+                } else {
+                    DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
+                }
+            }
+        }
+    }
+
+    @OnClick(R.id.partial_toolbar_hamburger)
+    void onClickHamburger() {
+        assert (mActivity) != null;
+        mActivity.setRootViewpagerItem(0);
+    }
+
+    @OnClick(R.id.partial_toolbar_logo)
+    void onClickLogo() {
+        shopsControllerBannerRecyclerView.smoothScrollToPosition(0);
+        shopsControllerBannerRecyclerView.postDelayed(() -> shopsControllerBannerRecyclerView.scrollToPosition(0), 500);
+    }
+
+    @SuppressWarnings({"ConstantConditions", "deprecation"})
+    @OnClick(R.id.partial_toolbar_search_icon)
+    void onSearchClick() {
+
+        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString("SaleItemsController.KEY_TITLE", "")
+                .putString("SaleItemsController.SEARCH_KEY", "")
+                .putBoolean("SaleItemsController.FROM_SHOP_SEARCH", true)
+                .build();
+        Router router = getRouter();
+
+        router.pushController(RouterTransaction.with(
+                new SaleItemsController(saleItemBundle))
+                .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                .pushChangeHandler(new SimpleChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
+    }
+
+    @Override
+    public void showShopBanners(GetBannerResponse getBannerResponses) {
+        shopsControllerBannerRecyclerView.setVisibility(View.VISIBLE);
+
+        loadingInProgress = false;
+
+        if (page == 0 || isRefreshShop) {
+            mBannersAdapter.replace(getBannerResponses.getGroups());
+            if (mPaginateManager != null) {
+                mPaginateManager.unbind();
+            }
+            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
+            isRefreshShop = false;
+        } else {
+
+            mBannersAdapter.addAll(getBannerResponses.getGroups());
+
+            if (getBannerResponses.getGroups().isEmpty()) {
+                hasLoadedAllItems = true;
+            }
+        }
+
+        sales = mBannersAdapter.getData();
+        onRefreshEnd();
+    }
+
+    @Override
+    public void storeCategories(List<GetCategoryTreeResponse> categories) {
+        mPreLoadedCategories = categories;
+        createCategoryMap(mPreLoadedCategories);
+    }
+
+
+    private Animation inFromRightAnimation() {
+
+        Animation inFromRight = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, +1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        inFromRight.setDuration(200);
+        inFromRight.setInterpolator(new AccelerateInterpolator());
+        return inFromRight;
+    }
+
+
+    private Animation outToRightAnimation() {
+        Animation outtoRight = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, +1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        outtoRight.setDuration(200);
+        outtoRight.setInterpolator(new AccelerateInterpolator());
+        return outtoRight;
+    }
+
+
+    @Override
+    public void onError(String message) {
+        super.onError(message);
+
+        bannerOffset -= newBannerCount;
+        bannerLimit = newBannerCount;
+        page--;
+
+        loadingInProgress = false;
+        if (mBannersAdapter != null) {
+            mBannersAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void createCategoryMap(List<GetCategoryTreeResponse> categories) {
+
+        for (GetCategoryTreeResponse i : categories) {
+
+            if (i.getChildren() != null) {
+                mCategoryMap.put("shop", categories);
+
+                int childrenSize = i.getChildren().size();
+                if (childrenSize != 0) {
+
+                    addToMap(i.getChildren());
+                }
+                mCategoryMap.put(i.getKey(), i.getChildren());
+
+            }
+        }
+
+        mPreLoadedCategories = fillCategoryContent();
+    }
+
+    private void addToMap(List<GetCategoryTreeResponse> list) {
+
+        for (GetCategoryTreeResponse i : list) {
+
+            int childrenSize = i.getChildren().size();
+            if (childrenSize != 0) {
+                addToMap(i.getChildren());
+            }
+
+            mCategoryMap.put(i.getKey(), i.getChildren());
+        }
+    }
+
+    private List<GetCategoryTreeResponse> fillCategoryContent() {
+        return mCategoryMap.get("shop");
+    }
+
+    public void goToItemsFromCategories(Bundle bundle) {
+        //noinspection ConstantConditions
+        getRouter().pushController(RouterTransaction.with(
+                new SaleItemsController(bundle))
+                .tag(getResources().getString(R.string.sale_items_controller_tag))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse) {
+        mPresenter.onAttach(this);
+
+        isRefreshShop = true;
+        mCategoryName = getCategoryTreeResponse.getName();
+        mCategoryID = getCategoryTreeResponse.getId();
+
+
+        if (shopsControllerBannerRecyclerView != null) {
+            shopsControllerBannerRecyclerView.setVisibility(View.GONE);
+        }
+
+        if (getCategoryTreeResponse.getKey() != null) {
+
+            Log.d("deeplinker", "get categorytreeresponse is not null = "+getCategoryTreeResponse.getKey()+" , "+getCategoryTreeResponse.getId());
+            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getKey(), getCategoryTreeResponse.getId(), 0, 0));
+            if (mShopsControllerToolbarLogo != null) {
+                mShopsControllerToolbarLogo.setVisibility(View.GONE);
+            }
+            mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
+            mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
+            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
+            shopsControllerSearchView.setVisibility(View.INVISIBLE);
+            mActivity.setIsFromCategories(true);
+        } else {
+            Log.d("deeplinker", "get categorytreeresponse is null");
+
+            assert (mActivity) != null;
+            mActivity.setIsFromCategories(false);
+            loadShopBanners();
+        }
+    }
+
+    public void goToCategoryLink(String categoryKey, String categoryId){
+        Log.d("deeplinkers", "category is not null = "+categoryId);
+
+        if (categoryKey != null) {
+
+            CategoriesController categoriesController = ((MainActivity)getActivity()).getCategoriesController();
+            String categoryMapKey = categoriesController.getCategoryKey(categoryId);
+
+            mCategoryKey = categoryMapKey;
+            mCategoryID = categoryMapKey;
+
+            Log.d("deeplinkers", "1 category id = "+categoryId+ "  , category key = "+categoryMapKey);
+
+            Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                    .putString(SALEITEMS_TITLE, categoryKey)
+                    .putString(SALEITEMS_CATEGORY_MAP, categoryMapKey)
+                    .putBoolean(SALEITEMS_FROM_CATEGORY_DEEPLINK, true)
+                    .build();
+
+            getRouter().pushController(RouterTransaction.with(
+                    new SaleItemsController(saleItemBundle))
+                    .tag(getResources().getString(R.string.sale_items_controller_tag))
+                    .pushChangeHandler(new SimpleChangeHandler())
+                    .popChangeHandler(new FadeChangeHandler()));
+
+        } else {
+            Log.d("deeplinkers", "category is null");
+
+            assert (mActivity) != null;
+            loadShopBanners();
+        }
+    }
+
+    /* Deep Link Sales */
+    public void goToSales(String categoryKey, String categoryId) {
+        Log.d("deeplinkers", "category is not null");
+
+        if (categoryKey != null) {
+            Log.d("deeplinkers", "category is not null");
+            mCategoryKey = categoryKey;
+            mCategoryID = categoryId;
+
+            mPresenter.loadShopsBanner(createBannerRequest(categoryKey, categoryId, 0, 0));
+            mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
+            mShopsControllerToolbarTextView.setText(getCategoryParentKey(categoryKey));
+            mShopsControllerToolbarLogo.setVisibility(View.GONE);
+            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
+            shopsControllerSearchView.setVisibility(View.INVISIBLE);
+
+        } else {
+            Log.d("deeplinkers", "category is null");
+
+            assert (mActivity) != null;
+            loadShopBanners();
+        }
+    }
+
+//
+//    @SuppressWarnings({"deprecation", "ConstantConditions"})
+//    public void showSearchToolbar() {
+//        if (shopsControllerSearchView != null)
+//            shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+//
+//        mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
+//
+//        //noinspection ConstantConditions
+//        item = (RelativeLayout) getToolbar();
+//
+//        //noinspection ConstantConditions
+//        child = mActivity.getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
+//        item.addView(child);
+//
+//        child.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
+//        rightOption = (ImageView) child.findViewById(R.id.partial_toolbar_search_right_option);
+//        rightOption.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
+//
+//        EditText searchField = (EditText) child.findViewById(R.id.partial_toolbar_search_field);
+//        searchField.setActivated(true);
+//        searchField.setFocusable(true);
+//
+////        if (searchField.requestFocus()) {
+////            KeyboardUtils.showSoftInput(searchField, mActivity);
+////        }
+//
+//        //noinspection deprecation
+//        rightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+//        rightOption.animate().rotation(360).setDuration(200).start();
+//
+//        searchField.setOnEditorActionListener((v, actionId, event) -> {
+//            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+//                performSearch(searchField.getText().toString());
+//                return true;
+//            }
+//            return false;
+//        });
+
+//        mShopsControllerToolbarLogo.setVisibility(View.GONE);
+//    }
+
+//    public void hideSearchToolbar() {
+//        child.startAnimation(outToRightAnimation());
+//        item.removeView(child);
+//
+//        //noinspection deprecation,ConstantConditions
+//        shopsControllerSearchView.setImageDrawable(
+//                getResources().getDrawable(R.drawable.ic_search));
+//        rightOption.animate().rotation(-360).setDuration(200).start();
+//        mShopsControllerHamburgerView.animate().rotation(0).setDuration(200).start();
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            //noinspection ConstantConditions
+//            mActivity.dismissKeyboardShortcutsHelper();
+//        }
+//
+//        Handler handler = new Handler();
+//        handler.postDelayed(() -> {
+//                    mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+//                }, 300);
+//    }
+
+    public String getCategoryParentKey(String saleCategoryKey) {
+        return saleCategoryKey + " • All";
+    }
+
+    public void loadShopBanners() {
+        if (isAttached()) {
+            mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
+            mShopsControllerToolbarTextView.setVisibility(View.GONE);
+            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_action_menu));
+            shopsControllerSearchView.setVisibility(View.VISIBLE);
+        }
+        GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
+        mPresenter.loadShopsBanner(createBannerRequest(shopCategory.getKey(), shopCategory.getId(), 0, 0));
+    }
+
+    public void goToSaleItemsFromCategorySearch() {
+
+        Bundle saleItemBundle = new BundleBuilder(new Bundle())
+                .putString("SaleItemsController.KEY_TITLE", "")
+                .putString("SaleItemsController.SEARCH_KEY", "")
+                .putBoolean("SaleItemsController.FROM_CATEGORY_SEARCH", true)
+                .build();
+
+        getRouter().pushController(RouterTransaction.with(
+                new SaleItemsController(saleItemBundle))
+                .tag(getResources().getString(R.string.sale_items_controller_tag))
+                .pushChangeHandler(new SimpleChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
+
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        shopsControllerBannerRecyclerView.setVisibility(View.GONE);
+        isRefreshShop = true;
+        bannerOffset = 0;
+        mPresenter.loadShopsBanner(createBannerRequest(mCategoryName, mCategoryID, bannerOffset, newBannerCount), true);
+    }
+
+    private GetBannerRequest createBannerRequest(String categoryName, String categoryId, int bannerOffset, int bannerLimit) {
+        int lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
+        GetBannerResponse.Banner lastVisibleBanner = mBannersAdapter.getItem(lastVisiblePos);
+        String newGroupType = lastVisibleBanner != null ? lastVisibleBanner.getGroup().getType() : "";
+        if (!newGroupType.equals("") && !newGroupType.equals(bannerGroupType)) bannerOffset = 10;
+        bannerGroupType = newGroupType;
+
+        GetBannerRequest getBannerRequest = new GetBannerRequest();
+        if (!bannerGroupType.equals("")) {
+            getBannerRequest.setOffset(String.valueOf(bannerOffset));
+            getBannerRequest.setLastGroupType(bannerGroupType);
+        }
+        getBannerRequest.setLimit(String.valueOf(bannerLimit));
+
+        if (categoryId != null && !categoryId.isEmpty()) {
+            getBannerRequest.setCategory(categoryId);
+            getBannerRequest.setCategoryId(categoryId);
+        }
+
+        return getBannerRequest;
+    }
+
+    public void deepLinkSaleItems(Bundle bundle) {
+        Router router = getRouter();
+
+        router.pushController(RouterTransaction.with(
+                new SaleItemsController(bundle))
+                .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                .pushChangeHandler(new SimpleChangeHandler())
+                .popChangeHandler(new FadeChangeHandler()));
+
+    }
+
+}

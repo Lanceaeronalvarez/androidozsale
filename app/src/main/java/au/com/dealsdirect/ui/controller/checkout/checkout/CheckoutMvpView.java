@@ -1,14 +1,19 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import com.bluelinelabs.conductor.Router;
+
 import java.util.List;
 
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -18,11 +23,21 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface CheckoutMvpView extends MvpView {
 
+    String TAG = "CheckoutController";
+
+    void loadCart();
+
     void showMyPayDetails(Value value, Ourpay ourpay);
 
     void showCartDetails(List<Item> items);
 
+    void showCartDetailsOnChild(List<Item> items);
+
+    void showCartDetailsOnHost(List<Item> items);
+
     void showAddressDetails(DeliveryAddress deliveryAddress, List<DecorationInfoList> decorationInfoList);
+
+    void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail);
 
     void showPaymentDetails(PaymentMethod paymentMethod);
 
@@ -42,6 +57,14 @@ public interface CheckoutMvpView extends MvpView {
 
     void setCartIsLoading(boolean val);
 
-    boolean isViewPagerOnCheckout();
+    CheckoutMvpPresenter getPresenter();
+
+    boolean isOurPaySelectDeliveryMethod();
+
+    boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged);
+
+    void showPromoCodeApplied(String promoCode, boolean isPromoCodeApplied);
+
+    Router getDisplayRouter();
 
 }

@@ -3,7 +3,6 @@ package au.com.dealsdirect.utils.module;
 import android.os.Bundle;
 
 import com.bluelinelabs.conductor.Controller;
-import com.mysale.genie.utility.config.model.getappsettings.Checkout;
 
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
@@ -11,26 +10,31 @@ import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressControlle
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
+import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderController;
+import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
+import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
+import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
+import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.facetfilter.FacetFilterController;
@@ -65,10 +69,14 @@ public class ControllerFactory {
                 return DetailsController.newInstance();
             case LOGIN:
                 return LoginController.newInstance();
+            case POP_UP_HOST:
+                return PopUpHostController.newInstance();
             case CATEGORIES:
                 return CategoriesController.newInstance();
             case CHECKOUT:
                 return CheckoutController.newInstance();
+            case CHECKOUT_HOST:
+                return CheckoutHostController.newInstance();
             case SALEITEMS:
                 return SaleItemsController.newInstance();
             case ACCOUNT:
@@ -84,7 +92,7 @@ public class ControllerFactory {
             case INVITE:
                 return InviteSendController.newInstance();
             case ORDERS:
-                return new OrdersController();
+                return OrdersController.newInstance();
             case CURRENT_RETURNS:
                 return CurrentReturnsController.newInstance();
             case RETURN_ORDERS:
@@ -105,10 +113,12 @@ public class ControllerFactory {
                 break;
             case ADD_CONTACT:
                 return AddContactController.newInstance();
+            case CONTACT_SELECT_SUBJECT:
+                return ContactSelectSubjectController.newInstance();
             case PAYMENT_SELECT:
-                break;
+                return PaymentSelectController.newInstance();
             case PAYMENT_ADD:
-                break;
+                return AddPaymentController.newInstance();
             case PAYMENT_SUCCESS:
                 break;
             case MASTERPASS:
@@ -121,6 +131,10 @@ public class ControllerFactory {
                 break;
             case LANGUAGE:
                 return LanguageController.newInstance();
+            case COUNTRY:
+                return CountryController.newInstance();
+            case NOTIFICATION:
+                return NotificationController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
             default:
@@ -137,10 +151,14 @@ public class ControllerFactory {
                 return new DetailsController(bundle);
             case LOGIN:
                 return new LoginController(bundle);
+            case POP_UP_HOST:
+                return new PopUpHostController(bundle);
             case CATEGORIES:
                 return new CategoriesController(bundle);
             case CHECKOUT:
                 return new CheckoutController(bundle);
+            case CHECKOUT_HOST:
+                return new CheckoutHostController(bundle);
             case SALEITEMS:
                 return new SaleItemsController(bundle);
             case ACCOUNT:
@@ -162,7 +180,7 @@ public class ControllerFactory {
             case MASTERPASS:
                 return new MasterpassController(bundle);
             case ORDERS:
-                return new OrdersController();
+                return new OrdersController(bundle);
             case CURRENT_RETURNS:
                 return CurrentReturnsController.newInstance();
             case RETURN_ORDERS:
@@ -173,10 +191,16 @@ public class ControllerFactory {
                 return new AddNewAddressController(bundle);
             case CONTACT_US:
                 return ViewContactsController.newInstance();
+            case FACET_FILTER:
+                return new FacetFilterController(bundle);
             case CONTACT_HISTORY:
                 return new ViewContactHistoryController(bundle);
             case ADD_CONTACT:
                 return new AddContactController(bundle);
+            case CONTACT_SELECT_SUBJECT:
+                return new ContactSelectSubjectController(bundle);
+            case CONTACT_SELECT_ORDER:
+                return new ContactSelectOrderController(bundle);
             case SMS_VERIFICATION:
                 return new OurpaySMSVerificationController(bundle);
             case LEGALITIES:
@@ -185,8 +209,10 @@ public class ControllerFactory {
                 return new SearchFilterController(bundle);
             case LANGUAGE:
                 return LanguageController.newInstance();
-            case FACET_FILTER:
-                return new FacetFilterController(bundle);
+            case COUNTRY:
+                return CountryController.newInstance();
+            case NOTIFICATION:
+                return NotificationController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
             default:
@@ -254,10 +280,6 @@ public class ControllerFactory {
         if (controller instanceof LegalitiesController) {
             return GateKeeper.Destination.LEGALITIES;
 	    }
-
-        if (controller instanceof FacetFilterController) {
-            return GateKeeper.Destination.FACET_FILTER;
-        }
 
         return GateKeeper.Destination.EMPTY;
     }

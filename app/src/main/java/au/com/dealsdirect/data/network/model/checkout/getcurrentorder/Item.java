@@ -5,6 +5,10 @@ package au.com.dealsdirect.data.network.model.checkout.getcurrentorder;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
+import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
+
 public class Item {
 
     public String getId() {
@@ -51,26 +55,32 @@ public class Item {
         return saleID;
     }
 
-    @SerializedName("ID")
+    public List<Personalisation.CustomizableItemDetails> getCustomizableItemDetailsList() {
+        return customizableItemDetailsList;
+    }
+
+    @SerializedName(value = "ID", alternate = {"id"})
     public String id;
-    @SerializedName("ItemID")
+    @SerializedName(value = "ItemID", alternate = {"itemID"})
     public String itemID;
-    @SerializedName("Item")
+    @SerializedName(value = "Item", alternate = {"item"})
     public String item;
-    @SerializedName("Size")
+    @SerializedName(value = "Size", alternate = {"size"})
     public String size;
-    @SerializedName("Qty")
+    @SerializedName(value = "Qty", alternate = {"qty"})
     public Integer qty;
-    @SerializedName("Price")
+    @SerializedName(value = "Price", alternate = {"price"})
     public double price;
-    @SerializedName("Subtotal")
+    @SerializedName(value = "Subtotal", alternate = {"subtotal"})
     public double subtotal;
-    @SerializedName("BrandID")
+    @SerializedName(value = "BrandID", alternate = {"brandID"})
     public String brandID;
-    @SerializedName("ImageID")
+    @SerializedName(value = "ImageID", alternate = {"imageID"})
     public String imageID;
-    @SerializedName("FileName")
+    @SerializedName(value = "FileName", alternate = {"fileName"})
     public String fileName;
-    @SerializedName("SaleID")
+    @SerializedName(value = "SaleID", alternate = {"saleID"})
     public String saleID;
+    @SerializedName(value = "CustomizableItemDetails", alternate = {"customizableItemDetails"})
+    private List<Personalisation.CustomizableItemDetails> customizableItemDetailsList;
 }

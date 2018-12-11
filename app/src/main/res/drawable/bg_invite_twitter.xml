@@ -7,7 +7,7 @@
             <item android:state_enabled="true">
                 <shape android:shape="rectangle">
                     <corners android:radius="5dp"/>
-                    <solid android:color="@color/invite_twitter"/>
+                    <solid android:color="@color/twitter_default"/>
                 </shape>
             </item>
 
@@ -15,7 +15,7 @@
 
                 <shape android:shape="rectangle">
                     <corners android:radius="5dp"/>
-                    <solid android:color="@color/invite_twitter_pressed"/>
+                    <solid android:color="@color/twitter_pressed"/>
                 </shape>
             </item>
 

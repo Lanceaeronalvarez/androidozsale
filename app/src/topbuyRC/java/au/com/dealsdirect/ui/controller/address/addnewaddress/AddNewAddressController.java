@@ -98,12 +98,12 @@ public class AddNewAddressController extends SwipeableBaseToolBarController impl
                     dynamicView = inflater.inflate(R.layout.add_new_address_edit_text, container, false);
                     setDynamicViewsProperties(dynamicView, info);
                     deliveryInfoPlaceholder.addView(dynamicView);
-                    mViewMap.put(info, dynamicView.findViewById(R.id.add_address_value));
+                    mViewMap.put(info, dynamicView.findViewById(R.id.row_add_address_value));
                 } else if (info.Type.equalsIgnoreCase("select")) {
                     dynamicView = inflater.inflate(R.layout.add_new_address_spinner, container, false);
                     setDynamicViewsProperties(dynamicView, info);
                     deliveryInfoPlaceholder.addView(dynamicView);
-                    mViewMap.put(info, dynamicView.findViewById(R.id.add_address_spinner));
+                    mViewMap.put(info, dynamicView.findViewById(R.id.row_add_address_spinner));
                 }
             }
         }
@@ -117,8 +117,8 @@ public class AddNewAddressController extends SwipeableBaseToolBarController impl
         switch (infoList.Type.toLowerCase()) {
             case "text":
             case "numeric":
-                EditText editTextValue = (EditText) dynamicView.findViewById(R.id.add_address_value);
-                TextView textViewLabel = (TextView) dynamicView.findViewById(R.id.add_address_label);
+                EditText editTextValue = (EditText) dynamicView.findViewById(R.id.row_add_address_value);
+                TextView textViewLabel = (TextView) dynamicView.findViewById(R.id.row_add_address_label);
 
                 //Set input type
                 if (infoList.getDataType() !=null && (infoList.getDataType().equalsIgnoreCase("phone") || infoList.getType().equalsIgnoreCase("numeric"))) {
@@ -137,13 +137,13 @@ public class AddNewAddressController extends SwipeableBaseToolBarController impl
 
                 break;
             case "select":
-                TextView textViewLabel2 = (TextView) dynamicView.findViewById(R.id.add_address_label);
+                TextView textViewLabel2 = (TextView) dynamicView.findViewById(R.id.row_add_address_label);
                 textViewLabel2.setText(StringUtils.toTitleCase(infoList.Label));
 
                 ArrayAdapter<String> signatureOnDeliveryAdapter = new ArrayAdapter<>(mActivity,
                         R.layout.add_new_address_spinner_text, infoList.Options);
 
-                Spinner signatureOnDeliverySpinner = (Spinner) dynamicView.findViewById(R.id.add_address_spinner);
+                Spinner signatureOnDeliverySpinner = (Spinner) dynamicView.findViewById(R.id.row_add_address_spinner);
                 signatureOnDeliverySpinner.setAdapter(signatureOnDeliveryAdapter);
 
                 //Add asterisk to required fields

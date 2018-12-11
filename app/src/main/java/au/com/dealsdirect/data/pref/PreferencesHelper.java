@@ -1,7 +1,10 @@
 package au.com.dealsdirect.data.pref;
 
 
+import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
+
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+
 import java.util.HashSet;
 
 public interface PreferencesHelper {
@@ -117,7 +120,25 @@ public interface PreferencesHelper {
 
     int getVisaCheckoutProviderType();
 
+    void setPersonalisationTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
+
+    String getPersonalisationTemplateTexts();
+
+    void setConsentTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
+
+    String getConsentTemplateTexts(String key);
+
+    void setAppSettingsConsent(GetAppSettingsConsent.ResponseValue value);
+
+    String getAppSettingsConsentText(String key);
+
+    int getAppSettingsConsentMode();
+
+    boolean getAppSettingsConsentIsChecked(String key);
+
     void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
+
+    void setDeliveryOptionsTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value);
 
     void setEventUserId(String userId);
 
@@ -147,7 +168,49 @@ public interface PreferencesHelper {
 
     String getPublicPaymentType();
 
+    void setIsNotificationsEnabled(boolean isNotificationsEnabled);
+
+    boolean getIsNotificationsEnabled();
+
     void setIsPaypalCreditEnabled(boolean isPaypalCreditEnabled);
 
     boolean isPaypalCreditEnabled();
+
+    void setIsSortingEnabled(boolean isSortingEnabled);
+
+    boolean getIsSortingEnabled();
+
+    void setLastRedirection(String lastRedirection);
+
+    String getLastRedirection();
+
+    void setIsNewUser(boolean isNewUser);
+
+    boolean getIsNewUser();
+
+    void setHasActiveCheckoutSession(boolean hasActiveCheckoutSession);
+
+    boolean hasActiveCheckoutSession();
+
+    void resetAddToCartJourneyFlags();
+
+    void setHasViewedSale(boolean hasViewedSale);
+
+    boolean hasViewedSale();
+
+    void setHasViewedProductCategory(boolean hasViewedProductCategory);
+
+    boolean hasViewedProductCategory();
+
+    void setHasViewedProduct(boolean hasViewedProduct);
+
+    boolean hasViewedProduct();
+
+    void setHasAddedToCart(boolean hasAddedToCart);
+
+    boolean hasAddedToCart();
+
+    void setHasViewedCart(boolean hasViewedCart);
+
+    boolean hasViewedCart();
 }

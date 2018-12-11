@@ -10,7 +10,11 @@ import com.google.gson.annotations.SerializedName;
 public class GetBannerRequest {
 
     @Expose
-    @SerializedName("offset")
+    @SerializedName("lastGroupType")
+    private String lastGroupType;
+
+    @Expose
+    @SerializedName("lastGroupOffset")
     private String offset;
 
     @Expose
@@ -22,19 +26,15 @@ public class GetBannerRequest {
     private String category;
 
     @Expose
+    @SerializedName("saleCategoryID")
+    private String saleCategoryId;
+
+    @Expose
     @SerializedName("categoryId")
     private String categoryId;
 
-    public String getOffset() {
-        return offset;
-    }
-
     public void setOffset(String offset) {
         this.offset = offset;
-    }
-
-    public String getLimit() {
-        return limit;
     }
 
     public void setLimit(String limit) {
@@ -49,11 +49,15 @@ public class GetBannerRequest {
         this.category = category;
     }
 
-    public String getCategoryId() {
-        return categoryId;
-    }
-
     public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public void setSaleCategoryId(String saleCategoryId) {
+        this.saleCategoryId = saleCategoryId;
+    }
+
+    public void setLastGroupType(String lastGroupType) {
+        this.lastGroupType = lastGroupType;
     }
 }

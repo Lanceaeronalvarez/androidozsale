@@ -43,11 +43,10 @@ public class PastPaymentsController extends BaseController implements PastPaymen
 
     DashboardController mParentController;
 
-    public static PastPaymentsController newInstance(DashboardController parentController, ArrayList<PastPayment> pastPayments) {
+    public static PastPaymentsController newInstance(ArrayList<PastPayment> pastPayments) {
 
         return new PastPaymentsController(
                 new BundleBuilder(new Bundle())
-                        .putSerializable(KEY_CONTROLLER, parentController)
                         .putParcelableArrayList(KEY_PLANS, pastPayments)
                         .build());
     }
@@ -77,10 +76,9 @@ public class PastPaymentsController extends BaseController implements PastPaymen
 
     @Override
     protected void setUp(View view) {
-        mParentController = (DashboardController) getArgs().getSerializable(KEY_CONTROLLER);
         mPastPayments = getArgs().getParcelableArrayList(KEY_PLANS);
 
-        mAdapter = new PastPaymentsAdapter(mParentController, mPastPayments);
+        mAdapter = new PastPaymentsAdapter(mPastPayments);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
     }

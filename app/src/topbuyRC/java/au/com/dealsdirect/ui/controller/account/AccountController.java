@@ -26,12 +26,12 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -291,7 +291,7 @@ public class AccountController extends BaseController implements AccountMvpView 
                 GateKeeper.Destination.LEGALITIES,
                 new BundleBuilder(new Bundle())
                         .putString(BundleKeys.TEMPLATE_KEY, key)
-                        .putString(BundleKeys.TITLE, getResources().getString(option))
+                        .putString(BundleKeys.LEGALITIES_TITLE, getResources().getString(option))
                         .build(),
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
@@ -328,7 +328,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 //                mActivity.getMainController().getHomeController().removeBasketItemCount();
 
 //                commented. in iOS when logging out, it stays on my accounts.
-//                ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
+//                ((MainActivity) getActivity()).getMainController().getHomeController().showFirstTabController();
 
                 //reset routers with unique user info
 //                mActivity.getMainController().getHomeController().resetRouters();

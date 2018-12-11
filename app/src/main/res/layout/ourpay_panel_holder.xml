@@ -7,9 +7,10 @@
               android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearlayout_placeholder_boredered"
+        android:id="@+id/linearlayout_placeholder_bordered"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/ourpay_layout_border"
         android:orientation="vertical">
 
     </LinearLayout>

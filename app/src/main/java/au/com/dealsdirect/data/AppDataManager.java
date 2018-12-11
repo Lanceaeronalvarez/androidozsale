@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getpublicpaymenttoken.GetPublicPaymentToken;
@@ -23,6 +24,7 @@ import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
+import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
@@ -40,10 +42,14 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
+import au.com.dealsdirect.data.network.model.checkout.GetDeliveryServicePackageDetails;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -54,11 +60,15 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
+import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
+import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
+import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesRequest;
+import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
@@ -80,6 +90,8 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.Get
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
@@ -99,6 +111,7 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -156,7 +169,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<List<GetBannerResponse>> callGetBanners(GetBannerRequest getBannerRequest, boolean getOnlyFromNetwork) {
+    public Observable<GetBannerResponse> callGetBanners(GetBannerRequest getBannerRequest, boolean getOnlyFromNetwork) {
         return mApiHelper.callGetBanners(getBannerRequest, getOnlyFromNetwork);
     }
 
@@ -177,6 +190,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request) {
+        return mApiHelper.callGetOurpayData(request);
+    }
+
+    @Override
     public Observable<GetPublicSaleItemsResponse> callGetPublicSaleItems(
             GetPublicSaleItemsRequest getPublicSaleItemsRequest) {
         return mApiHelper.callGetPublicSaleItems(getPublicSaleItemsRequest);
@@ -189,7 +207,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<String> callAddItemToCart(AddToCartRequest requestValues) {
+    public Observable<AddToCartResponse.Response> callAddItemToCart(AddToCartRequest requestValues) {
         return mApiHelper.callAddItemToCart(requestValues);
     }
 
@@ -205,6 +223,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Observable<GetPublicPaymentToken.ResponseValue> callGetPublicPaymentToken(String countryId, String languageId) {
+
         return mApiHelper.callGetPublicPaymentToken(countryId, languageId);
     }
 
@@ -219,6 +238,31 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId) {
+        return mApiHelper.callGetAppSettingsConsent(countryId);
+    }
+
+    @Override
+    public Observable<GetConsentDataResponse> callGetConsentData(String countryId) {
+        return mApiHelper.callGetConsentData(countryId);
+    }
+
+    @Override
+    public Observable<SaveConsentDataResponse> callSaveConsentData(String countryId) {
+        return mApiHelper.callSaveConsentData(countryId);
+    }
+
+    @Override
+    public Observable<SaveReceiveSalesResponse> callSaveReceiveSales(SaveReceiveSalesRequest saveReceiveSalesRequest) {
+        return mApiHelper.callSaveReceiveSales(saveReceiveSalesRequest);
+    }
+
+    @Override
+    public Observable<GetAppSettingsConsent.ResponseValue> callGetPublicAppSettingsConsent(String countryId) {
+        return mApiHelper.callGetPublicAppSettingsConsent(countryId);
+    }
+
+    @Override
     public Observable<GetContactsResponse> callGetContacts(String languageId) {
         return mApiHelper.callGetContacts(languageId);
     }
@@ -226,6 +270,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetContactHistoryResponse.ResponseValue> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest) {
         return mApiHelper.callGetContactHistory(getContactHistoryRequest);
+    }
+
+    @Override
+    public Observable<AccountData> callGetAccountData() {
+        return mApiHelper.callGetAccountData();
     }
 
     @Override
@@ -392,6 +441,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<GetDeliveryServicePackageDetails.ResponseValue> callGetDeliveryServicePackageDetails(GetDeliveryServicePackageDetails.RequestValue requestValue) {
+        return mApiHelper.callGetDeliveryServicePackageDetails(requestValue);
+    }
+
+    @Override
+    public Observable<GetCurrentOrder.ResponseValue> callSetDeliveryOption(SetDeliveryOption setDeliveryOption) {
+        return mApiHelper.callSetDeliveryOption(setDeliveryOption);
+    }
+
+    @Override
     public Observable<BasketQuantityResponse> callGetBasketItemsQuantity() {
         return mApiHelper.callGetBasketItemsQuantity();
     }
@@ -518,6 +577,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetDeliveryServiceResponse> callGetDeliveryService() {
         return mApiHelper.callGetDeliveryService();
+    }
+
+    @Override
+    public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request) {
+        return mApiHelper.callGetDeepLinkData(request);
     }
 
     @Override
@@ -832,10 +896,55 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setPersonalisationTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        mPreferencesHelper.setPersonalisationTemplateTexts(value);
+    }
+
+    @Override
+    public String getPersonalisationTemplateTexts() {
+        return mPreferencesHelper.getPersonalisationTemplateTexts();
+    }
+
+    @Override
+    public void setConsentTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        mPreferencesHelper.setConsentTemplateTexts(value);
+    }
+
+    @Override
+    public String getConsentTemplateTexts(String key) {
+        return mPreferencesHelper.getConsentTemplateTexts(key);
+    }
+
+    @Override
+    public void setAppSettingsConsent(GetAppSettingsConsent.ResponseValue value) {
+        mPreferencesHelper.setAppSettingsConsent(value);
+    }
+
+    @Override
+    public String getAppSettingsConsentText(String key) {
+        return mPreferencesHelper.getAppSettingsConsentText(key);
+    }
+
+    @Override
+    public int getAppSettingsConsentMode() {
+        return mPreferencesHelper.getAppSettingsConsentMode();
+    }
+
+    @Override
+    public boolean getAppSettingsConsentIsChecked(String key) {
+        return mPreferencesHelper.getAppSettingsConsentIsChecked(key);
+    }
+
+    @Override
     public void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
         Log.d("Checkout", "set my pay template texts");
         mPreferencesHelper.setMyPayTemplateTexts(value);
 
+    }
+
+    @Override
+    public void setDeliveryOptionsTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        mPreferencesHelper.setDeliveryOptionsTemplateTexts(value);
     }
 
     @Override
@@ -894,6 +1003,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setIsNotificationsEnabled(boolean isNotificationsEnabled) {
+        mPreferencesHelper.setIsNotificationsEnabled(isNotificationsEnabled);
+    }
+
+    @Override
+    public boolean getIsNotificationsEnabled() {
+        return mPreferencesHelper.getIsNotificationsEnabled();
+    }
+
+    @Override
     public void setIsPaypalCreditEnabled(boolean isPaypalCreditEnabled) {
         mPreferencesHelper.setIsPaypalCreditEnabled(isPaypalCreditEnabled);
     }
@@ -901,6 +1020,101 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean isPaypalCreditEnabled() {
         return mPreferencesHelper.isPaypalCreditEnabled();
+    }
+
+    @Override
+    public void setIsSortingEnabled(boolean isSortingEnabled) {
+        mPreferencesHelper.setIsSortingEnabled(isSortingEnabled);
+    }
+
+    @Override
+    public boolean getIsSortingEnabled() {
+        return mPreferencesHelper.getIsSortingEnabled();
+    }
+
+    @Override
+    public void setLastRedirection(String lastRedirection) {
+        mPreferencesHelper.setLastRedirection(lastRedirection);
+    }
+
+    @Override
+    public String getLastRedirection() {
+        return mPreferencesHelper.getLastRedirection();
+    }
+
+    @Override
+    public void setIsNewUser(boolean isNewUser) {
+        mPreferencesHelper.setIsNewUser(isNewUser);
+    }
+
+    @Override
+    public boolean getIsNewUser() {
+        return mPreferencesHelper.getIsNewUser();
+    }
+
+    @Override
+    public void setHasActiveCheckoutSession(boolean hasActiveCheckoutSession) {
+        mPreferencesHelper.setHasActiveCheckoutSession(hasActiveCheckoutSession);
+    }
+
+    @Override
+    public boolean hasActiveCheckoutSession() {
+        return mPreferencesHelper.hasActiveCheckoutSession();
+    }
+
+    @Override
+    public void resetAddToCartJourneyFlags() {
+        mPreferencesHelper.resetAddToCartJourneyFlags();
+    }
+
+    @Override
+    public void setHasViewedSale(boolean hasViewedSale) {
+        mPreferencesHelper.setHasViewedSale(hasViewedSale);
+    }
+
+    @Override
+    public boolean hasViewedSale() {
+        return mPreferencesHelper.hasViewedSale();
+    }
+
+    @Override
+    public void setHasViewedProductCategory(boolean hasViewedProductCategory) {
+        mPreferencesHelper.setHasViewedProductCategory(hasViewedProductCategory);
+    }
+
+    @Override
+    public boolean hasViewedProductCategory() {
+        return mPreferencesHelper.hasViewedProductCategory();
+    }
+
+    @Override
+    public void setHasViewedProduct(boolean hasViewedProduct) {
+        mPreferencesHelper.setHasViewedProduct(hasViewedProduct);
+    }
+
+    @Override
+    public boolean hasViewedProduct() {
+        return mPreferencesHelper.hasViewedProduct();
+    }
+
+    @Override
+    public void setHasAddedToCart(boolean hasAddedToCart) {
+        mPreferencesHelper.setHasAddedToCart(hasAddedToCart);
+    }
+
+    @Override
+    public boolean hasAddedToCart() {
+        return mPreferencesHelper.hasAddedToCart();
+    }
+
+    @Override
+    public void setHasViewedCart(boolean hasViewedCart) {
+        mPreferencesHelper.setHasViewedCart(hasViewedCart);
+    }
+
+    @Override
+    public boolean hasViewedCart() {
+        return mPreferencesHelper.hasViewedCart();
     }
 
     @Override

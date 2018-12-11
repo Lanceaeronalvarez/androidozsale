@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.vouchers.View;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +24,13 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
     private HashMap<Integer,String> voucherColorStateCollection = new HashMap<>();
     private List<GetUserVoucherResponse.Voucher> vouchersList;
-    private Context context;
+    private Context mContext;
+    private static final float UNUSED_VOUCHER_OVERLAY = 0.21f;
 
     public ViewVouchersRecyclerViewAdapter(List<GetUserVoucherResponse.Voucher> vouchersList,
                                            Context context) {
         this.vouchersList = vouchersList;
-        this.context = context;
+        this.mContext = context;
 
     }
 
@@ -46,7 +46,13 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
     public void onBindViewHolder(ViewVouchersViewHolder holder, int position) {
         GetUserVoucherResponse.Voucher voucher =vouchersList.get(position);
         Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(voucher.getDiscountLeft());
-        if(m.find()) {
+
+        holder.mVoucherName.setText(voucher.getFullname());
+
+        boolean hasMatch = m.find();
+        boolean hasSpent = voucher.getDiscountLeft().equalsIgnoreCase(mContext.getString(R.string.already_spent));
+
+        if(hasMatch) {
             Double doubleValue = Double.parseDouble(m.group(1));
             String mUseBefore = voucher.getExpired();
             Float voucherAmount = Float.parseFloat(m.group(1));
@@ -55,29 +61,34 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
             String formattedVoucherValue = df.format(voucherAmount);
 
-
             String voucherCostWithCurrency = PriceUtils.getVoucherStringValue(formattedVoucherValue);
             holder.mVouchersItemCostText.setText(voucherCostWithCurrency);
             holder.mVouchersItemCostText.setVisibility(View.VISIBLE);
             holder.mVouchersAlreadySpent.setVisibility(View.GONE);
-            holder.mVouchersItemDescText.setText(mUseBefore);
+            holder.mVouchersItemExpiresOnText.setText(mUseBefore);
+            holder.mVouchersItemDescText.setText(voucher.getFullname());
             holder.mVouchersItemValue.setVisibility(View.VISIBLE);
-            holder.mVouchersLayout.setBackground(holder.mVouchersLayout.getContext().getDrawable(R.drawable.bg_voucher_item));
+            holder.mActivatedValue.setText(String.valueOf(hasMatch));
+            holder.mPurchasedValue.setText(String.valueOf(hasSpent));
+            holder.mVouchersLayout.setBackground(mContext.getResources().getDrawable(R.drawable.bg_voucher_item));
 
         } else {
 
-            if(voucher.getDiscountLeft().equalsIgnoreCase("already spent")) {
+            if(hasSpent) {
                 holder.mVouchersItemCostText.setVisibility(View.GONE);
                 holder.mVouchersAlreadySpent.setVisibility(View.VISIBLE);
+                holder.mPurchasedValue.setText(String.valueOf(hasSpent));
             } else {
                 holder.mVouchersItemCostText.setText(voucher.getDiscountLeft());
+                holder.mPurchasedValue.setText(String.valueOf(hasSpent));
             }
 
             holder.mVouchersItemExpiresOnText.setText(voucher.getExpired());
             holder.mVouchersItemDescText.setText(voucher.getFullname());
             holder.mVouchersItemValue.setVisibility(View.GONE);
             holder.mVouchersLayout.setBackground(holder.mVouchersLayout.getContext().getDrawable(R.drawable.bg_voucher_item));
-            holder.mVouchersLayout.setAlpha(0.21f);
+            holder.mVouchersLayout.setAlpha(UNUSED_VOUCHER_OVERLAY);
+            holder.mActivatedValue.setText(String.valueOf(hasMatch));
         }
 
     }

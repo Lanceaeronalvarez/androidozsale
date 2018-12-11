@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_default"
     android:orientation="vertical">
 
     <include layout="@layout/partial_toolbar_arrow" />
@@ -24,14 +24,28 @@
             android:id="@+id/controller_checkout_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/controller_checkout_orders_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_weight="4"
+                android:paddingLeft="@dimen/padding_default"
+                android:paddingRight="@dimen/padding_default"
+                android:paddingTop="@dimen/margin_small"
+                android:text="@string/checkout_order_label"
+                android:textAllCaps="true"
+                android:textColor="@color/text_dark"
+                android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/controller_checkout_recyclerview_items"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+                android:layout_height="wrap_content" />
 
             <include layout="@layout/partial_checkout_address" />
 

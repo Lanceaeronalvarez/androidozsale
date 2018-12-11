@@ -10,4 +10,6 @@ public interface ReturnOrdersMvpPresenter<V extends ReturnOrdersMvpView> extends
 
     void loadOrders();
 
+    void selectReturnOrderItem(au.com.dealsdirect.data.network.model.returns.returnorders.List returnOrder);
+
 }

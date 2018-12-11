@@ -14,6 +14,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.LoggingBehavior;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.config.api.GetAppSettings;
+import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
@@ -27,32 +28,46 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.country.Country;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
+import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
-import au.com.dealsdirect.data.network.model.ourpaydashboard.Payment;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppEventHelper;
+import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.CookieUtils;
+import au.com.dealsdirect.utils.DeepLinkUrlType;
+import au.com.dealsdirect.data.pref.AppPreferencesHelper;
+import au.com.dealsdirect.utils.GdprUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.fabric.sdk.android.Fabric;
+import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+import okhttp3.Cookie;
 
 public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> implements MainMvpPresenter<V> {
 
@@ -68,6 +83,37 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_OURPAY_TC_TEXT = "_OurPayTC_text"; // Using web's template text for hyper link
     public static final String KEY_OURPAY_TC_VALIDATION_FAILED = "_OurPayTCValidationFailed";
     public static final String KEY_PAYMENT_SCHEDULE = "_PaymentSchedule";
+    public static final String KEY_PERSONALISATION_VALIDATION = "_PleaseFillPersonalization";
+
+    //    DELIVERY OPTIONS/OURPAY SELECT
+    public static final String KEY_DELIVERYOPTION_OPS_FREE = "_Free";
+    public static final String KEY_DELIVERYOPTION_OPS_TITLE = "_DeliveryOption_OURPAYSELECT_Title";
+    public static final String KEY_DELIVERYOPTION_OPS_DESCRIPTION = "_DeliveryOption_OURPAYSELECT_Description";
+
+    public static final String KEY_DELIVERYOPTION_EXPRESS_TITLE = "_DeliveryOption_EXPRESS_Title";
+    public static final String KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION = "_DeliveryOption_EXPRESS_Description";
+    public static final String KEY_DELIVERYOPTION_STANDARD_TITLE = "_DeliveryOption_STANDARD_Title";
+
+    public static final String KEY_OURPAY_OPS_DESCRIPTION_REMAINING = "_Ops_description_remaining";
+    public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE = "_Ops_info_remaining_before_purchase";
+    public static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY = "_Ops_info_remaining_before_purchase_free_delivery";
+
+    public static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
+    public static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
+
+    /* June 22, 2018 - GDPR Template Text Keys */
+    public static final String KEY_CONSENT_CONTINUE_TEXT = "_consentContinueText";
+    public static final String KEY_CONSENT_WITH_REGISTRATION_TERMS_TEXT = "_consentWithTCText";
+    public static final String KEY_CONSENT_WITH_REGISTRATION_EMAILS_TEXT = "_consentWithEmailsText";
+    public static final String KEY_CONSENT_WITH_REGISTRATION_TERMS_WARNING = "_consentWithRegistrationTermsWarning";
+    public static final String KEY_CONSENT_SHORT_TEXT = "ConsentShortTextPTNameV1";
+    public static final String KEY_CONSENT_FULL_TEXT = "ConsentFullTextPTNameV1";
+    public static final String KEY_CONSENT_TERMS_AND_CONDITION = "TermsAndConditions_Text";
+
+    static final String KEY_DEEP_LINK_SALES = "DEEPLINK_SALES";
+    static final String KEY_DEEP_LINK_SALE_ITEMS = "DEEPLINK_SALE_ITEMS";
+    static final String KEY_DEEP_LINK_SALE_CATEGORY = "DEEPLINK_SALE_CATEGORY";
+    static final String KEY_DEEP_LINK_SALES_CATEGORY = "DEEPLINK_SALES_CATEGORY";
 
     private static String[] templateTextsKeys = {
             KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT, //0
@@ -79,8 +125,29 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_OURPAY_THANK_YOU_TEXT, //6
             KEY_OURPAY_TC_TEXT, //7
             KEY_OURPAY_TC_VALIDATION_FAILED, //8
-            KEY_PAYMENT_SCHEDULE //9
+            KEY_PAYMENT_SCHEDULE, //9
+            KEY_DELIVERYOPTION_OPS_FREE,
+            KEY_DELIVERYOPTION_OPS_TITLE,
+            KEY_DELIVERYOPTION_OPS_DESCRIPTION,
+            KEY_DELIVERYOPTION_EXPRESS_TITLE,
+            KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION,
+            KEY_DELIVERYOPTION_STANDARD_TITLE,
+            KEY_OURPAY_OPS_DESCRIPTION_REMAINING,
+            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE,
+            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
+            KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
+            KEY_OURPAY_OPS_TNC_HEADER,
+            KEY_OURPAY_OPS_TNC_BODY,
+            KEY_PERSONALISATION_VALIDATION, //10
+            KEY_CONSENT_CONTINUE_TEXT,
+            KEY_CONSENT_WITH_REGISTRATION_TERMS_TEXT,
+            KEY_CONSENT_WITH_REGISTRATION_EMAILS_TEXT,
+            KEY_CONSENT_WITH_REGISTRATION_TERMS_WARNING,
+            KEY_CONSENT_SHORT_TEXT,
+            KEY_CONSENT_FULL_TEXT,
+            KEY_CONSENT_TERMS_AND_CONDITION
     };
+
 
     @Inject
     public MainPresenter(DataManager dataManager,
@@ -89,6 +156,14 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         super(dataManager, schedulerProvider, compositeDisposable);
         gNotification = new GNotification(getDataManager(), getSchedulerProvider(), getCompositeDisposable());
+        dataManager.resetAddToCartJourneyFlags();
+    }
+
+    @Override
+    public void doApiCallForResponse(Observable observable, ApiCallback callback) {
+        super.doApiCallForResponse(observable, callback);
+
+//        checkConsentCookie();
     }
 
     @Override
@@ -151,7 +226,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void callGetPublicPaymentToken() {
         getCompositeDisposable().add(getDataManager()
-                .callGetPublicPaymentToken(getDataManager().getCountryId(),getDataManager().getLanguageId())
+                .callGetPublicPaymentToken(getDataManager().getCountryId(), getDataManager().getLanguageId())
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetPublicPaymentToken.ResponseValue>() {
@@ -198,7 +273,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
                 getDataManager().setIsPaypalCreditEnabled(value.getPayments().getBrainTree().isPaypalCreditEnabled());
 
-                if(value.getPayments().getVisaCheckout() != null){
+                if (value.getPayments().getVisaCheckout() != null) {
                     getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());
                     // force true meanwhile
 //                    getDataManager().setIsVisaCheckoutEnabled(true);
@@ -207,7 +282,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     getDataManager().setVisaCheckoutProviderType(value.getPayments().getVisaCheckout().getVisaCheckoutProviderType());
                 }
             }
-
         }
     };
 
@@ -229,6 +303,18 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         }
     };
 
+    private Consumer<AccountData> mAccountDataCallback = new Consumer<AccountData>() {
+        @Override
+        public void accept(AccountData accountData) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            if (accountData != null) {
+                getDataManager().setIsSortingEnabled(accountData.getSorting().getIsEnabled());
+            }
+        }
+    };
 
     @Override
     public void callGetAppSettingsSection(Context context) {
@@ -311,6 +397,120 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                            }
 
                 ));
+    }
+
+    @Override
+    public void callGetAppSettingsConsent(Context context) {
+        doApiCallForResponse(getDataManager().callGetAppSettingsConsent(
+                getDataManager().getCountryId()), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+
+                GetAppSettingsConsent.ResponseValue mapper = (GetAppSettingsConsent.ResponseValue) response;
+
+                getDataManager().setAppSettingsConsent(mapper);
+
+                checkConsentCookie();
+            }
+        });
+    }
+
+    @Override
+    public void callGetPublicAppSettingsConsent(Context context) {
+        doApiCallForResponse(getDataManager().callGetPublicAppSettingsConsent(
+                getDataManager().getCountryId()), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+
+                GetAppSettingsConsent.ResponseValue mapper = (GetAppSettingsConsent.ResponseValue) response;
+
+                getDataManager().setAppSettingsConsent(mapper);
+
+                checkConsentCookie();
+            }
+        });
+    }
+
+    @Override
+    public void checkConsentCookie() {
+
+        int consentMode = getDataManager().getAppSettingsConsentMode();
+
+        if (consentMode != GdprUtils.SOFT_MODE && consentMode != GdprUtils.STRICT_MODE) return;
+
+        boolean hasConsentCookie = false;
+        String csCookieValue = "";
+        String k0 = "";
+        String k1 = "";
+        String k2 = "";
+
+        int prevMode = -1;
+
+        for (Iterator<Cookie> it = CookieUtils.getInstance().getCookieIterator(); it.hasNext(); ) {
+
+            Cookie cookie = it.next();
+
+            hasConsentCookie = cookie.name().contains("cs") &&
+                    cookie.value().equals(Integer.toString(consentMode));
+
+            if (hasConsentCookie) {
+                csCookieValue = cookie.value();
+
+                String[] parts = csCookieValue.split("&");
+                for (String part : parts) {
+                    int chartAt = part.indexOf("=");
+                    String finalValue = part.substring(chartAt);
+                    if (finalValue.contains("k0")) {
+                        k0 = finalValue;
+                    } else if (finalValue.contains("k1")) {
+                        k1 = finalValue;
+                    } else if (finalValue.contains("k2")) {
+                        k2 = finalValue;
+                    }
+                }
+
+                break;
+            }
+        }
+
+        String cookiePageTemplateName = k1;
+        String settingPageTemplateName = getDataManager().getAppSettingsConsentText(
+                AppPreferencesHelper.CONSENT_FULL_TEXT);
+
+        if (!hasConsentCookie || !cookiePageTemplateName.equals(settingPageTemplateName)) {
+            callGetConsentData();
+        }
+    }
+
+    @Override
+    public void callGetConsentData() {
+        doApiCallForResponse(getDataManager().callGetConsentData(getDataManager().getCountryId()),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+
+                        GetConsentDataResponse mapper = (GetConsentDataResponse) response;
+
+                        if (mapper.getShowConsentRequired()) {
+                            showStrictConsentUI();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void callSaveConsentData() {
+        doApiCallForResponse(getDataManager().callSaveConsentData(getDataManager().getCountryId()),
+                new AppApiCallback() {
+                });
+    }
+
+    @Override
+    public void showStrictConsentUI() {
+        getMvpView().showStrictConsentUI();
     }
 
     @Override
@@ -399,6 +599,17 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public String defaultCountryId() {
+        return getDataManager().getCountryId();
+    }
+
+    @Override
+    public void setCountry(Settings.Country country) {
+        getDataManager().setCountryId(country.countryId);
+        getDataManager().setLanguageId(country.languageId);
+    }
+
+    @Override
     public void callGCMNotificationEvent(Context context) {
         gNotification.callNotificationEvent(context);
     }
@@ -409,11 +620,27 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         callGetPublicAppSettings();
         callGetPublicPaymentToken();
         callGetAppSettingsSection(context);
+        callGetAppSettingsConsent(context);
+        callGetAccountData();
+    }
+
+    @Override
+    public void callGetAccountData() {
+        getCompositeDisposable().add(getDataManager()
+                .callGetAccountData()
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(mAccountDataCallback, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        AppLogger.d(throwable.getMessage());
+                    }
+                }));
     }
 
     @Override
     public void initFacebookAnalytics() {
-        FacebookSdk.setIsDebugEnabled(true);
+        FacebookSdk.setIsDebugEnabled(getDataManager().isDebugMode());
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
     }
 
@@ -423,20 +650,49 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         // Only activate analytics for release versions
         if (!getDataManager().isDebugMode()) {
 
-            // Fabric
-            Fabric.with(activityContext, new Crashlytics());
-            Fabric.with(activityContext, new Answers());
+
 
             // New Relic
             NewRelic.withApplicationToken(activityContext.getResources().getString(R.string.new_relic_app_token)).start(applicationContext);
-
-            // Facebook Events
-            initFacebookAnalytics();
-            FacebookSdk.setIsDebugEnabled(false);
-        } else {
-            initFacebookAnalytics();
-            FacebookSdk.setIsDebugEnabled(true);
         }
+
+        // Fabric
+        Fabric.with(activityContext, new Crashlytics());
+        Fabric.with(activityContext, new Answers());
+        // Facebook Events
+        initFacebookAnalytics();
+
+
+    }
+
+    @Override
+    public void getDeepLinkData(String url) {
+
+        doApiCallForResponse(getDataManager().callGetDeepLinkData(new DeepLinkDataRequest(url)),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        DeepLinkDataResponse deepLinkDataResponse = ((DeepLinkDataResponse) response);
+                        deepLinkData(deepLinkDataResponse);
+
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                    }
+                });
+    }
+
+    @Override
+    public void deepLinkMessageThread() {
+
+    }
+
+    @Override
+    public void deepLinkSaleItems() {
+
     }
 
     @Override
@@ -494,8 +750,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     }
                 })
         );
-
-
     }
 
 
@@ -554,8 +808,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     }
                 })
         );
-
-
     }
 
 
@@ -623,10 +875,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                 return;
                             }
 
+
                             if (responseValue.isSuccess()) {
                                 getDataManager().acknowledgeAuth(responseValue.getTicket());
                                 // Call required post login api methods
-                                getMvpView().loginSuccessMethods();
                             } else {
                                 //On login ticket fail, call logout and go back to shop
                                 callLogout(null);
@@ -669,7 +921,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         }
 
                         getMvpView().hideLoading();
-
+                        //fabric app event sign up reset new user.
+                        setIsNewUser(false);
                         //Remove login ticket
                         getDataManager().revokeAuth();
                         //Clear payment info
@@ -717,6 +970,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(getTemplateTextsResponse -> {
                     getDataManager().setMyPayTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                    getDataManager().setDeliveryOptionsTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                    getDataManager().setPersonalisationTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                    getDataManager().setConsentTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
 
                 }, throwable -> {
@@ -762,5 +1018,84 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     public boolean getIsMyPayEnabled() {
         return getDataManager().getIsMyPayEnabled();
+    }
+
+    /* May 11, 2018 - Deep Link to Sale Category */
+    private void deepLinkSaleCategory(String categoryName, String categoryIdentifier) {
+        getMvpView().deepLinkSales(categoryName, categoryIdentifier);
+    }
+
+    /* May 11, 2018 - Deep Link to Sale Search */
+    private void deepLinkSaleSearch(String saleName, String saleIdentifier) {
+        getMvpView().deepLinkSaleItems(saleName, saleIdentifier, "");
+       /* Not yet supported */
+    }
+
+    /* May 11, 2018 - Deep Link to Category Link */
+    private void deepLinkCategoryLink(String seoFriendlyName, String encodedCategoryData) {
+        getMvpView().deepLinkCategoryLink(seoFriendlyName, encodedCategoryData);
+    }
+
+    /* May 11, 2018 - Deep Link to Product link with sale */
+    private void deepLinkProductLinkWithSale(String saleName, String encodedSaleId, String seoProductName, String encodedMasterSkuIdentifier) {
+        getMvpView().deepLinkSaleItemDetailsWithSale(saleName, encodedSaleId, seoProductName, encodedMasterSkuIdentifier);
+    }
+
+    /* May 11, 2018 - Deep Link to Product Link without sale */
+    private void deepLinkProductLinkWithoutSale(String seoProductName, String encodedSkuIdentifier) {
+        getMvpView().deepLinkSaleItemDetailsWithoutSale(seoProductName, encodedSkuIdentifier);
+    }
+
+
+    /* May 11, 2018 -  Deep Link Data from Json Object */
+    private void deepLinkData(DeepLinkDataResponse deepLinkDataResponse) {
+
+        String urlType = "";
+        if (deepLinkDataResponse.getUrlType() != null)
+            urlType = deepLinkDataResponse.getUrlType();
+
+        switch (urlType) {
+            case DeepLinkUrlType.CATEGORY_LINK: {
+                String seoFriendlyName = deepLinkDataResponse.getMeta().getSeoFriendlyCategoryName();
+                String encodedCategoryData = deepLinkDataResponse.getMeta().getCategoryIdentifier();
+                deepLinkCategoryLink(seoFriendlyName, encodedCategoryData);
+
+                break;
+            }
+            case DeepLinkUrlType.PRODUCT_LINK_WITH_SALE: {
+                String saleName = deepLinkDataResponse.getMeta().getSaleName();
+                String encodedSaleId = deepLinkDataResponse.getMeta().getEncodedSaleId();
+                String seoProductName = deepLinkDataResponse.getMeta().getSeoProductName();
+                String encodedMasterSkuIdentifier = deepLinkDataResponse.getMeta().getEncodedMasterSkuIdentifier();
+                deepLinkProductLinkWithSale(saleName, encodedSaleId, seoProductName, encodedMasterSkuIdentifier);
+
+                break;
+            }
+            case DeepLinkUrlType.PRODUCT_LINK_WITHOUT_SALE: {
+                String seoProductName = deepLinkDataResponse.getMeta().getSeoProductName();
+                String encodedSkuIdentifier = deepLinkDataResponse.getMeta().getEncodedMasterSkuIdentifier();
+                deepLinkProductLinkWithoutSale(seoProductName, encodedSkuIdentifier);
+
+                break;
+            }
+            case DeepLinkUrlType.SALE_CATEGORY: {
+                String categoryName = deepLinkDataResponse.getMeta().getCategoryName();
+                String categoryIdentifier = deepLinkDataResponse.getMeta().getCategoryIdentifier();
+                deepLinkSaleCategory(categoryName, categoryIdentifier);
+
+                break;
+            }
+            case DeepLinkUrlType.SALE_SEARCH: {
+                String saleName = deepLinkDataResponse.getMeta().getSaleName();
+                String saleIdentifier = deepLinkDataResponse.getMeta().getSaleIdentifier();
+                deepLinkSaleSearch(saleName, saleIdentifier);
+
+                break;
+            }
+            default: {
+
+                getMvpView().deepLinkDefault();
+            }
+        }
     }
 }

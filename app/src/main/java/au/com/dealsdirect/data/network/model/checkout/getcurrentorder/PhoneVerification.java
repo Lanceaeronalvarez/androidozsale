@@ -6,9 +6,9 @@ package au.com.dealsdirect.data.network.model.checkout.getcurrentorder;
 import com.google.gson.annotations.SerializedName;
 
 public class PhoneVerification {
-    @SerializedName("IsRequired")
+    @SerializedName(value = "IsRequired", alternate = {"isRequired"})
     public Boolean isRequired;
-    @SerializedName("Fields")
+    @SerializedName(value = "Fields", alternate = {"fields"})
     public Fields fields;
 
     public Boolean getRequired() {

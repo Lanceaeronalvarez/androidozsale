@@ -11,12 +11,16 @@ public class ApplyVouchersResponse {
 
     public static class Response extends LegacyBaseResponseValue {
 
+        public Value getValue() {
+            return value;
+        }
+
         @SerializedName("Value")
         @Expose
         public Value value;
     }
 
-    public Response getValue() {
+    public Response getD() {
         return d;
     }
 }

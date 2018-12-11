@@ -35,7 +35,7 @@ public class LegalitiesController extends SwipeableBaseToolBarController impleme
     public LegalitiesController(Bundle args) {
         super(args);
         key = args.getString(BundleKeys.TEMPLATE_KEY);
-        title = args.getString(BundleKeys.TITLE);
+        title = args.getString(BundleKeys.LEGALITIES_TITLE);
     }
 
     @Override

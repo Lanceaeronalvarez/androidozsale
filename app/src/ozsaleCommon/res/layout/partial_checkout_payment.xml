@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_extra_small"
+    android:layout_marginTop="@dimen/margin_extra_small"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <TextView
+        fontPath="@string/font_app_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_default_half"
+        android:paddingEnd="@dimen/padding_default"
+        android:paddingStart="@dimen/padding_default"
+        android:textSize="@dimen/text_size_caption2"
+        android:text="@string/payment_method"
+        android:textColor="@color/text_medium" />
+
+    <FrameLayout
+        android:id="@+id/partial_checkout_payment_container_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_account_item"
+        android:clickable="true"
+        android:padding="@dimen/padding_default">
+
+        <LinearLayout
+            android:id="@+id/partial_checkout_payment_new_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:text="@string/add_new_payment_method"
+                android:textColor="@color/row_checkout_text_light_color"
+                android:textSize="@dimen/text_size_body" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_gray_chevron" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/partial_checkout_payment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <include layout="@layout/partial_checkout_item_payment_select" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <!--dummy view-->
+    <View
+        android:id="@+id/partial_checkout_payment_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+</LinearLayout>

@@ -12,12 +12,13 @@ public class ArcTranslateAnimation extends Animation {
     private OPoint start;
     private OPoint end;
     private OPoint middle;
-    private final float mFromXValue;
-    private final float mToXValue;
-    private final float mYValue;
-    private final int mFromXType;
-    private final int mToXType;
-    private final int mYType;
+    private float mFromXValue = 0.0f;
+    private float mToXValue = 0.0f;
+    private float mYValue = 0.0f;
+    private int mFromXType = ABSOLUTE;
+    private int mToXType = ABSOLUTE;
+    private int mYType = ABSOLUTE;
+    private boolean hasControlPoint;
 
     /**
      * A translation along an arc defined by three points and a Bezier Curve
@@ -33,6 +34,7 @@ public class ArcTranslateAnimation extends Animation {
     public ArcTranslateAnimation(long duration, int fromXType, float fromXValue,
                                  int toXType, float toXValue, int yType, float yValue){
         setDuration(duration);
+        hasControlPoint = false;
 
         mFromXValue = fromXValue;
         mToXValue = toXValue;
@@ -42,6 +44,16 @@ public class ArcTranslateAnimation extends Animation {
         mToXType = toXType;
         mYType = yType;
 
+    }
+
+    public ArcTranslateAnimation(long duration, float startX,
+                                 float startY, float middleX, float middleY, float endX, float endY){
+        setDuration(duration);
+        hasControlPoint = true;
+
+        start = new OPoint(startX, startY);
+        end = new OPoint(endX, endY);
+        middle = new OPoint(middleX, middleY);
     }
 
     /** Calculate the position on a quadratic bezier curve given three points
@@ -62,7 +74,6 @@ public class ArcTranslateAnimation extends Animation {
     protected void applyTransformation(float interpolatedTime, Transformation t) {
         float dx = calcBezier(interpolatedTime, start.x, middle.x, end.x);
         float dy = calcBezier(interpolatedTime, start.y, middle.y, end.y);
-        Log.d("dx,dy", dx+","+dy);
 
         t.getMatrix().setScale(1 - interpolatedTime,1 - interpolatedTime);
         t.getMatrix().postRotate(interpolatedTime * 45, 100, 100);
@@ -72,13 +83,25 @@ public class ArcTranslateAnimation extends Animation {
     @Override
     public void initialize(int width, int height, int parentWidth, int parentHeight) {
         super.initialize(width, height, parentWidth, parentHeight);
-        float startX = resolveSize(mFromXType, mFromXValue, width, parentWidth);
-        float endX = resolveSize(mToXType, mToXValue, width, parentWidth);
-        float middleY = resolveSize(mYType, mYValue, width, parentWidth);
-        float middleX = startX + ((endX-startX)/2);
-        start = new OPoint(startX, 0);
-        end = new OPoint(endX, middleY * 1.1f);
-        middle = new OPoint(middleX, 0);
+        if (!hasControlPoint) {
+            float startX = resolveSize(mFromXType, mFromXValue, width, parentWidth);
+            float endX = resolveSize(mToXType, mToXValue, width, parentWidth);
+            float endY = resolveSize(mYType, mYValue, width, parentWidth);
+            float middleX = startX + ((endX-startX)/2);
+            start = new OPoint(startX, 0);
+            end = new OPoint(endX, endY * 1.1f);
+            middle = new OPoint(middleX, 0);
+        } else {
+            float startX = resolveSize(ABSOLUTE, start.x, width, parentWidth);
+            float startY = resolveSize(ABSOLUTE, start.y, height, parentHeight);
+            float midX = resolveSize(ABSOLUTE, middle.x, width, parentWidth);
+            float midY = resolveSize(ABSOLUTE, middle.y, height, parentHeight);
+            float endX = resolveSize(ABSOLUTE, end.x, width, parentWidth);
+            float endY = resolveSize(ABSOLUTE, end.y, height, parentHeight);
+            start = new OPoint(startX, startY);
+            middle = new OPoint(midX, midY);
+            end = new OPoint(endX, endY);
+        }
     }
 
     public class OPoint

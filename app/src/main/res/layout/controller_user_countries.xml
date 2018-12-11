@@ -3,8 +3,10 @@
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@color/background_default"
     tool:ignore="MissingPrefix">
 
     <LinearLayout
@@ -20,13 +22,37 @@
             android:layout_marginLeft="13dp"
             android:layout_marginTop="18dp"
             android:text="Select Country"
-            android:textColor="@color/gray_active_field_text"
-            android:textSize="@dimen/text_size_large" />
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_body" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/controller_recycler_details"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_default"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch
+            android:id="@+id/register_emails_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:textToggleLeft="Yes"
+            app:textToggleRight="No"/>
+
+        <TextView
+            android:id="@+id/register_emails_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin_small"
+            android:textSize="@dimen/text_size_caption1"
+            tools:text="I agree to receive promotional emails"/>
 
     </LinearLayout>
 

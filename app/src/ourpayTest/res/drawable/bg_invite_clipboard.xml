@@ -6,7 +6,7 @@
 
             <item android:state_enabled="true">
                 <shape android:shape="rectangle">
-                    <corners android:radius="30dp"/>
+                    <corners android:radius="@dimen/button_corner_radius"/>
                     <solid android:color="#FF8B8B8B"/>
                 </shape>
             </item>
@@ -14,7 +14,7 @@
             <item android:state_enabled="true" android:state_pressed="true">
 
                 <shape android:shape="rectangle">
-                    <corners android:radius="30dp"/>
+                    <corners android:radius="@dimen/button_corner_radius"/>
                     <solid android:color="#FF8B8B8B"/>
                 </shape>
             </item>

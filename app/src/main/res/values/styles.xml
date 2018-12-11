@@ -5,15 +5,18 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorAccent</item>
+        <item name="android:colorEdgeEffect">@color/recyclerview_overscroll</item>
     </style>
 
     <!--Floating activity theme -->
     <style name="App_Theme_Translucent" parent="AppTheme">
+
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
-
 
     <style name="DatePickerTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/colorAccent</item>
@@ -21,39 +24,73 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="horizontalBorderView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/border_thin</item>
+        <item name="android:background">@color/border_regular</item>
+    </style>
+
+    <style name="verticalBorderView" parent="horizontalBorderView">
+        <item name="android:layout_width">@dimen/border_thin</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="parentLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/background_default</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
     <style name="DDButtonStyle">
-        <item name="android:layout_height">@dimen/default_button_height</item>
+        <item name="android:layout_height">@dimen/button_height_regular</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/bg_button_rounded</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:textSize">@dimen/text_size_xxlarge</item>
+        <item name="android:padding">@dimen/margin_small</item>
+        <item name="android:textSize">@dimen/text_size_headline2</item>
+    </style>
+
+    <style name="DDJoinNowButtonStyle" parent="DDButtonStyle">
+        <item name="android:background">@drawable/bg_button_join_now</item>
+    </style>
+
+    <style name="DDButtonPayCart" parent="DDButtonStyle">
+        <item name="android:background">@drawable/bg_button_rounded</item>
     </style>
 
     <style name="DDTutorialButtonStyle">
-        <item name="android:layout_height">@dimen/default_button_height</item>
+        <item name="android:layout_height">@dimen/button_height_regular</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/bg_tutorial_button_rounded</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:padding">15dp</item>
-        <item name="android:textSize">@dimen/text_size_xlarge</item>
+        <item name="android:textSize">@dimen/text_size_headline3</item>
     </style>
 
     <style name="DDEditTextStyle">
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="android:height">@dimen/edit_text_height</item>
-        <item name="android:textColor">@color/gray_active_field_text</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:layout_height">@dimen/edit_text_height</item>
+        <item name="android:textColor">@color/text_extra_dark</item>
         <item name="android:padding">15dp</item>
         <item name="android:background">@drawable/bg_edit_text_rounded</item>
-        <item name="android:textColorHint">@color/gray_inactive_field_text</item>
+        <item name="android:textColorHint">@color/text_extra_light</item>
     </style>
 
+    <style name="TextViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:lines">1</item>
+        <item name="android:textColor">@color/category_text_selector</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+    </style>
     <style name="DDSpinnerTextStyle">
-        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
         <item name="android:height">@dimen/edit_text_height</item>
-        <item name="android:textColor">@color/gray_title_text</item>
+        <item name="android:textColor">@color/text_light</item>
         <item name="android:background">@drawable/bg_drop_down_rounded</item>
-        <item name="android:textColorHint">@color/gray_field_label</item>
+        <item name="android:textColorHint">@color/text_medium</item>
     </style>
 
     <style name="AppearDialog" parent="Base.Theme.AppCompat.Light.Dialog" >
@@ -70,9 +107,67 @@
     </style>
 
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabIndicatorColor">@color/bluegreen</item>
+        <item name="tabIndicatorColor">@color/colorAccent</item>
         <item name="tabBackground">?android:attr/selectableItemBackground</item>
         <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+        <item name="tabTextAppearance">@android:style/TextAppearance.Widget.TabWidget</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- Search bar visibility -->
+    <bool name="shop_searchbar_visibility">true</bool>
+
+    <!-- Tool bar visibility -->
+    <bool name="shop_toolbar_visibility">true</bool>
+    <bool name="saleItems_toolbar_visibility">true</bool>
+    <bool name="sample_toolbar_visibility">true</bool>
+    <bool name="contacts_toolbar_visibility">true</bool>
+    <bool name="address_toolbar_visibility">true</bool>
+    <bool name="details_toolbar_visibility">true</bool>
+    <bool name="languages_toolbar_visibility">true</bool>
+    <bool name="countries_toolbar_visibility">true</bool>
+    <bool name="orders_toolbar_visibility">true</bool>
+    <bool name="vouchers_toolbar_visibility">true</bool>
+    <bool name="returns_toolbar_visibility">true</bool>
+    <bool name="payselect_toolbar_visibility">true</bool>
+    <bool name="invite_toolbar_visibility">true</bool>
+    <bool name="legalities_toolbar_visibility">true</bool>
+    <bool name="login_toolbar_visibility">false</bool>
+
+
+    <!-- Tool bar accessory visibility -->
+    <bool name="contacts_toolbar_addmessage_visibility">true</bool>
+
+    <style name="RecyclerViewPagerVouchersStyle" >
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingLeft">@dimen/voucher_padding</item>
+        <item name="android:paddingRight">@dimen/voucher_padding</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="DDEditTextSearchBar" parent="DDEditTextStyle" >
+        <item name="android:background">@drawable/bg_edit_text_plain</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:height">@dimen/edit_text_height</item>
+        <item name="android:textColor">@color/text_medium</item>
+        <item name="android:padding">@dimen/margin_small</item>
+    </style>
+
+
+    <style name="DDEditTextStyleNoBorder" parent="DDEditTextStyle">
+        <item name="android:background">@drawable/bg_edit_text_plain</item>
+    </style>
+
+    <integer name="sale_items_threshold">4</integer>
+
+    <bool name="is_account_invite_visible">false</bool>
+    <bool name="is_account_contact_visible">false</bool>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:statusBarColor">@color/status_bar_splash</item>
     </style>
 
 </resources>

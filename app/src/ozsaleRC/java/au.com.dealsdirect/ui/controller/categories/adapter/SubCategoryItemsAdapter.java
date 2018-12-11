@@ -1,0 +1,132 @@
+package au.com.dealsdirect.ui.controller.categories.adapter;
+
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
+import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
+import au.com.dealsdirect.ui.main.MainActivity;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * dp Created by Admin on 6/25/17.
+ */
+
+public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryItemsAdapter.SubCategoryItemViewHolder> {
+
+
+    private List<GetCategoryTreeResponse> mData = new ArrayList<>();
+    private SubCategoryItemClickListener mCategoryAdapterClickListener;
+    private int lastPosition = -1;
+    private boolean mAnimateInsert = true;
+
+    private SubCategoryItemViewHolder mLastSelectedViewHolder = null;
+
+    public SubCategoryItemsAdapter(
+            List<GetCategoryTreeResponse> data,
+            SubCategoryItemClickListener subCategoryItemClickListener,
+            boolean animateInsert) {
+
+        mData = data;
+        mCategoryAdapterClickListener = subCategoryItemClickListener;
+        mAnimateInsert = animateInsert;
+    }
+
+    @Override
+    public SubCategoryItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_subcategory_item, parent, false);
+        SubCategoryItemViewHolder vh = new SubCategoryItemViewHolder(view);
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(SubCategoryItemViewHolder holder, int position) {
+
+        MainActivity activity = ((MainActivity) holder.itemView.getContext());
+        setAnimation(holder.itemView, position);
+
+        if (!mData.isEmpty()) {
+
+            holder.itemView.setActivated(false);
+            holder.subCategoryTitle.setText(mData.get(position).getName());
+
+            holder.itemView.setOnClickListener(view -> {
+                if (mLastSelectedViewHolder != null) {
+                    mLastSelectedViewHolder.subCategoryCheck.setVisibility(View.INVISIBLE);
+                }
+
+                View previousItemView = activity.getMainController().getSelectedSubCategoryItem();
+                if(previousItemView != null) {
+                    SubCategoryItemViewHolder subCategoryItemViewHolder = new SubCategoryItemViewHolder(previousItemView);
+                    subCategoryItemViewHolder.subCategoryCheck.setVisibility(View.GONE);
+                }
+
+                activity.getMainController().setSelectedSubCategoryItem(holder.itemView);
+                holder.subCategoryCheck.setVisibility(View.VISIBLE);
+                mLastSelectedViewHolder = holder;
+
+                mCategoryAdapterClickListener.onSubCategoryItemClicked(
+                        mData.get(position).getId(),
+                        mData.get(position).getName(),
+                        mData.get(position).getKey());
+
+
+                View lastItemView = activity.getMainController().getPreviousSubcategoryItem();
+                if(lastItemView != null) {
+                    SubCategoriesAdapter.SubCategoriesViewHolder subCategoryItemViewHolder = new SubCategoriesAdapter.SubCategoriesViewHolder(lastItemView);
+                    subCategoryItemViewHolder.subCategoryCheckImageView.setVisibility(View.INVISIBLE);
+                    activity.getMainController().setPreviousSubcategoryItem(null);
+                }
+
+            });
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return mData != null ? mData.size() : 0;
+    }
+
+    public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
+        mData = new ArrayList<>(getCategoryTreeResponses);
+        notifyDataSetChanged();
+    }
+
+    static class SubCategoryItemViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.viewholder_subcategory_item_name)
+        TextView subCategoryTitle;
+
+        @BindView(R.id.viewholder_subcategory_item_check)
+        ImageView subCategoryCheck;
+
+        boolean isSelected = false;
+
+        public SubCategoryItemViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+
+        }
+    }
+
+
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition && mAnimateInsert) {
+            Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R.anim.slide_to_bottom);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
+}

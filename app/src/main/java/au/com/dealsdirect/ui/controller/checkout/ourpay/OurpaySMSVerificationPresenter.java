@@ -103,7 +103,7 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
         VerificationCodeConfirmRequest verificationCodeConfirmRequest = new VerificationCodeConfirmRequest();
         verificationCodeConfirmRequest.setCountryID(getDataManager().getCountryId());
         verificationCodeConfirmRequest.setLanguageID(getDataManager().getLanguageId());
-        verificationCodeConfirmRequest.setPhone(String.format("%s%s", countryCode, phone));
+        verificationCodeConfirmRequest.setPhone(String.format("+%s%s", countryCode, phone));
         verificationCodeConfirmRequest.setCode(code);
 
         getCompositeDisposable().add(getDataManager()
@@ -131,5 +131,10 @@ public class OurpaySMSVerificationPresenter<V extends OurpaySMSVerificationMvpVi
                         }
                     }
                 }));
+    }
+
+    @Override
+    public String getCountryId() {
+        return getDataManager().getCountryId();
     }
 }

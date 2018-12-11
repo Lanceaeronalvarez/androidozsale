@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -12,14 +12,14 @@
         android:clipToPadding="false">
 
         <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/controller_home_frame"
+            android:id="@+id/controller_first_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/controller_home_bottom_nav"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/controller_accounts_frame"
+            android:id="@+id/controller_second_frame"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -27,7 +27,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/controller_contacts_frame"
+            android:id="@+id/controller_third_frame"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -35,7 +35,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/controller_invites_frame"
+            android:id="@+id/controller_fourth_frame"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -43,18 +43,12 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/controller_checkout_frame"
+            android:id="@+id/controller_fifth_frame"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/controller_home_bottom_nav"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-        <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
-            android:id="@+id/controller_home_bottom_nav"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_nav_height"
-            android:layout_alignParentBottom="true" />
 
         <ImageView
             android:id="@+id/product_details_add_to_cart"
@@ -66,4 +60,11 @@
 
     </RelativeLayout>
 
-</RelativeLayout>
+    <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
+        android:id="@+id/login_host_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        />
+
+</FrameLayout>

@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.visa.checkout.Profile;
-import com.visa.checkout.PurchaseInfo;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,9 +19,9 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
-import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
@@ -59,7 +57,7 @@ public class PasswordVerificationController extends VisaCheckoutController imple
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mFilterButton;
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
     @BindView(R.id.controller_password_verification_edittext)
     EditText mPassword;
@@ -93,10 +91,10 @@ public class PasswordVerificationController extends VisaCheckoutController imple
     @Override
     protected void setUp(View view) {
         mTitleTextView.setText("Password Verification");
-        mFilterButton.setVisibility(View.GONE);
+        mFilterButton.setVisibility(View.INVISIBLE);
 
         if(!mAccountExists) {
-            mAccountEmailGuide.setText(getResources().getString(R.string.new_vco_user_guide) + " " + mAccountEmail);
+            mAccountEmailGuide.setText(String.format(getResources().getString(R.string.new_vco_user_guide), Settings.getSelectedCountry().siteName) + " " + mAccountEmail);
         } else {
             mAccountEmailGuide.setText(getResources().getString(R.string.password_verification_guide) + " " + mAccountEmail);
         }

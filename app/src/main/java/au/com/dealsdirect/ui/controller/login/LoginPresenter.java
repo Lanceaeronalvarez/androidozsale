@@ -46,9 +46,9 @@ public class LoginPresenter<V extends LoginMvpView> extends AuthenticationBasePr
 
                                    if (responseValue.isSuccess()) {
                                        getDataManager().acknowledgeAuth(responseValue.getTicket());
-                                       getMvpView().showLoginSuccessful(responseValue.getTicket());
+                                       getMvpView().showLoginSuccessful(responseValue.getTicket(),false);
                                    } else {
-                                       getMvpView().showLoginError(responseValue.getMessage());
+                                       getMvpView().showLoginError(responseValue.getMessage(),false);
                                    }
                                }
 
@@ -60,7 +60,7 @@ public class LoginPresenter<V extends LoginMvpView> extends AuthenticationBasePr
                             }
 
                             getMvpView().hideLoading();
-                            getMvpView().showLoginError(throwable.getMessage());
+                            getMvpView().showLoginError(throwable.getMessage(),false);
 
                             // handle load accounts error here
                             if (throwable instanceof ANError) {

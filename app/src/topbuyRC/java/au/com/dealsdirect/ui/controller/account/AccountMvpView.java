@@ -1,0 +1,48 @@
+package au.com.dealsdirect.ui.controller.account;
+
+import java.util.List;
+
+import au.com.dealsdirect.ui.base.MvpView;
+
+/**
+ * dp Created by Admin on 6/6/17.
+ */
+
+public interface AccountMvpView extends MvpView {
+
+    void showAccountItems(List<Integer> accountItems, List<Integer> accountImages);
+
+    void showMyDetailsController();
+
+    void showMyAddressesController();
+
+    void showMyOrders();
+
+    void showMyVouchers();
+
+    void showMyReturns();
+
+    void showMyPaymentsController();
+
+    void showLanguage();
+
+    void showContactUs();
+
+    void showTutorial();
+
+    void showInviteAFriend();
+
+    void showCountry();
+
+    void showLegalities(String key, int option);
+
+    void triggerLogin(int option);
+
+    void triggerLogout();
+
+    void initLoginDrawable();
+
+    boolean isChangeInProgress();
+
+    int getBackstackSize();
+}

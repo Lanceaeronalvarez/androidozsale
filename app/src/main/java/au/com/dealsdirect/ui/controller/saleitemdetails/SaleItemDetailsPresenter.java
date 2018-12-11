@@ -2,10 +2,18 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import com.androidnetworking.error.ANError;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.ApiCallback;
+import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
+import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayError;
@@ -14,6 +22,7 @@ import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.CurrencyUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -31,81 +40,84 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
     @Override
     public void loadSaleItemDetails(String seoIdentifierId) {
-        getMvpView().hideLoading();
 
-        getCompositeDisposable().add(getDataManager()
-                .callGetSaleItemDetails(seoIdentifierId)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(response -> {
+        doApiCallForResponse(getDataManager().callGetSaleItemDetails(seoIdentifierId), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                GetSaleItemDetailsResponse getSaleItemDetailsResponse = (GetSaleItemDetailsResponse) response;
 
-                    if (!isViewAttached()) {
-                        return;
+                if (response != null) {
+                    getMvpView().showSaleDetails(getSaleItemDetailsResponse);
+                }
+
+                getMvpView().hideLoading();
+
+                AppEventHelper.viewedContent(getSaleItemDetailsResponse.getSkuId(), getSaleItemDetailsResponse.getName(),
+                        getSaleItemDetailsResponse.getPrice().getValue(), getDataManager().getCountryId());
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                getMvpView().hideLoading();
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void loadOurpayData(final GetSaleItemDetailsResponse value) {
+        doApiCallForResponse(getDataManager().callGetOurpayData(OurpayDataRequest.init(
+                CurrencyUtil.getCurrency(getDataManager().getCountryId()), value.getPrice().getValue())),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+
+                        generateOurpay(value, (OurpayDataResponse) response);
                     }
-
-                    if (response != null)
-                        getMvpView().showSaleDetails(response);
-
-                    getMvpView().hideLoading();
-
-                    AppEventHelper.viewedContent(response.getSkuId(), response.getName(),
-                            response.getPrice().getValue(), getDataManager().getCountryId());
-
-                }, throwable -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    getMvpView().hideLoading();
-//                    getMvpView().onError(throwable.getMessage());
-
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                    }
-                }));
-
+                });
     }
 
     @Override
     public void addToCart(AddToCartRequest requestValues) {
         getMvpView().showLoading();
 
-        getCompositeDisposable().add(getDataManager()
-                .callAddItemToCart(requestValues)
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(response -> {
+        doApiCallForResponse(getDataManager()
+                .callAddItemToCart(requestValues), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
 
-                    if (!isViewAttached()) {
-                        return;
-                    }
+                getMvpView().showAddToCartResponse(((AddToCartResponse.Response) response).getValue());
 
-                    getMvpView().hideLoading();
+                AppEventHelper.addedToCart(requestValues.getSkuId(), requestValues.getItemName(),
+                        requestValues.getPrice(), getDataManager().getCountryId());
+            }
 
-                    getMvpView().showAddToCartResponse(true);
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
 
-                    AppEventHelper.addedToCart(requestValues.getSkuId(), requestValues.getItemName(),
-                            requestValues.getPrice(), getDataManager().getCountryId());
+                getMvpView().hideLoading();
+                getMvpView().onError(throwable.getMessage());
+                getMvpView().showAddToCartResponseFailed();
 
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
 
-                }, throwable -> {
-
-                    if (!isViewAttached()) {
-                        return;
-                    }
-
-                    getMvpView().hideLoading();
-                    getMvpView().onError(throwable.getMessage());
-
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                    }
-                }));
+            }
+        });
 
     }
 
@@ -115,34 +127,43 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
-    public void generateOurpay(GetSaleItemDetailsResponse value) {
+    public void generateOurpay(GetSaleItemDetailsResponse value, OurpayDataResponse ourpayDataResponse) {
         Ourpay ourpay = new Ourpay();
 
         try {
             ourpay.setState(OurpayState.PRECART);
 
-            ourpay.setUserAmount(value.getPrice().getValue());
+            ourpay.setDescription(ourpayDataResponse.getSummary().getDescription());
+            ourpay.setTotalAmount(value.getPrice().getValue());
             ourpay.setCanUse(true);
-            ourpay.setBillingPeriod(value.getPaymentPlan().getBillingPeriod());
-            ourpay.setTransactionCount(value.getPaymentPlan().getTransactionCount());
+            ourpay.setBillingPeriod(ourpayDataResponse.getPayment().getBillingPeriod());
+            ourpay.setTransactionCount(ourpayDataResponse.getPayment().getTransactionCount());
 
-            ourpay.setMinAmount(value.getPaymentConditions().minAmountThreshold);
-            ourpay.setMaxAmount(value.getPaymentConditions().maxAmountThreshold);
+            ourpay.setMinAmount(ourpayDataResponse.getPayment().getPaymentConditions().getMinAmountThreshold().doubleValue());
+            ourpay.setMaxAmount(ourpayDataResponse.getPayment().getPaymentConditions().getMaxAmountThreshold().doubleValue());
 
-            ourpay.setAmount(value.getMyPayAmount());
+            ourpay.setInitialAmount(ourpayDataResponse.getSummary().getFirstTransactionAmount());
 
-            ourpay.setPlannedTransactions(value.getBillingAgreement().getPlannedTransactions());
+            ourpay.setPlannedTransactions(ourpayDataResponse.getPayment().getBillingAgreement().getPlannedTransactions());
+            ourpay.setPlannedTransactionText(ourpayDataResponse.getSummary().getPlannedTransactionsText());
+            ourpay.setPlannedTransactionAmount(ourpayDataResponse.getSummary().getPlannedTransactionsAmount());
+            ourpay.setFirstTransactionText(ourpayDataResponse.getSummary().getFirstTransactionText());
+            ourpay.setFirstTransactionAmount(ourpayDataResponse.getSummary().getFirstTransactionAmount());
 
-            if (OurpayStateManager.isPriceOutOfRange(ourpay)){
+            if (ourpayDataResponse.getSummary().getDescription() != null) {
+                ourpay.setDetails(ourpayDataResponse.getSummary().getDescription());
+            }
+
+            if (OurpayStateManager.isPriceOutOfRange(ourpay)) {
                 ourpay.setState(ourpay.getState() | OurpayState.ERROR);
                 ourpay.setCanUse(false);
                 ourpay.setErrorCode(OurpayError.AMOUNT_OUT_OF_RANGE);
-            }else{
-                if (ourpay.getPlannedTransactions() == null){
+            } else {
+                if (ourpay.getPlannedTransactions() == null) {
                     ourpay.setState(OurpayState.DISABLED);
                 }
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ourpay.setState(OurpayState.DISABLED);
         }
 
@@ -153,29 +174,33 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
     @Override
     public void callGetBasketItemsQuantity() {
-        getCompositeDisposable().add(getDataManager()
-                .callGetBasketItemsQuantity()
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(basketQuantityResponse -> {
-                    if (!isViewAttached()) {
-                        return;
-                    }
-                    CartUtil.setValueToCart(basketQuantityResponse.getItemQuantity());
-                    getMvpView().onCallGetBasketItemsQuantity();
-                }, throwable -> {
-                    if (!isViewAttached()) {
-                        return;
-                    }
 
-                    getMvpView().onError(throwable.getMessage());
+        doApiCallForResponse(getDataManager().callGetBasketItemsQuantity(), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                super.onSuccess(o);
 
-                    // handle load accounts error here
-                    if (throwable instanceof ANError) {
-                        ANError anError = (ANError) throwable;
-                        handleApiError(anError);
-                    }
-                })
-        );
+                CartUtil.setValueToCart(((BasketQuantityResponse) o).getItemQuantity());
+                getMvpView().onCallGetBasketItemsQuantity();
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                getMvpView().onError(throwable.getMessage());
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
+    }
+
+    @Override
+    public String getPersonalisationErrorText() {
+        return getDataManager().getPersonalisationTemplateTexts();
     }
 }

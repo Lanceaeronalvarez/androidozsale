@@ -40,7 +40,7 @@ import butterknife.BindView;
  * Created by Ayi on 05/06/2017.
  */
 
-public class DashboardController extends BaseController implements DashboardMvpView, Serializable {
+public class DashboardController extends BaseController implements DashboardMvpView {
 
     public static final String TAG = "DashboardController";
 
@@ -109,20 +109,22 @@ public class DashboardController extends BaseController implements DashboardMvpV
 
     @Override
     protected void setUp(View view) {
+
+        mActivity.getMainController().showBottomNav();
         mPresenter.loadAll();
 
-        mTabTitles = new String[]{getString(R.string.payment_plans), getString(R.string.scheduled_plans), getString(R.string.past_payments)};
+        mTabTitles = new String[]{ mActivity.getString(R.string.payment_plans), mActivity.getString(R.string.scheduled_plans), mActivity.getString(R.string.past_payments)};
         mAdapter = new RouterPagerAdapter(this) {
             @Override
             public void configureRouter(@NonNull Router router, int position) {
                 if (!router.hasRootController()) {
-                    Controller page = PaymentPlansController.newInstance(DashboardController.this, mPaymentPlans);
+                    Controller page = PaymentPlansController.newInstance(mPaymentPlans);
                     switch (position) {
                         case 1:
-                            page = ScheduledPlansController.newInstance(DashboardController.this, mScheduledPlans);
+                            page = ScheduledPlansController.newInstance(mScheduledPlans);
                             break;
                         case 2:
-                            page = PastPaymentsController.newInstance(DashboardController.this, mPastPayments);
+                            page = PastPaymentsController.newInstance(mPastPayments);
                             break;
                     }
                     router.setRoot(RouterTransaction.with(page));
@@ -146,7 +148,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
         };
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager, true);
-        TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, getString(R.string.font_lato_light));
+        TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, mActivity.getString(R.string.font_app_light));
     }
 
     @Override
@@ -197,18 +199,18 @@ public class DashboardController extends BaseController implements DashboardMvpV
     @Override
     public void refreshPager() {
         if (mPaymentPlans != null && mScheduledPlans != null && mPastPayments != null) {
-            mTabTitles = new String[]{getString(R.string.payment_plans), getString(R.string.scheduled_plans), getString(R.string.past_payments)};
+            mTabTitles = new String[]{mActivity.getString(R.string.payment_plans), mActivity.getString(R.string.scheduled_plans), mActivity.getString(R.string.past_payments)};
             mAdapter = new RouterPagerAdapter(this) {
                 @Override
                 public void configureRouter(@NonNull Router router, int position) {
                     if (!router.hasRootController()) {
-                        Controller page = PaymentPlansController.newInstance(DashboardController.this, mPaymentPlans);
+                        Controller page = PaymentPlansController.newInstance(mPaymentPlans);
                         switch (position) {
                             case 1:
-                                page = ScheduledPlansController.newInstance(DashboardController.this, mScheduledPlans);
+                                page = ScheduledPlansController.newInstance(mScheduledPlans);
                                 break;
                             case 2:
-                                page = PastPaymentsController.newInstance(DashboardController.this, mPastPayments);
+                                page = PastPaymentsController.newInstance(mPastPayments);
                                 break;
                         }
                         router.setRoot(RouterTransaction.with(page));
@@ -232,7 +234,7 @@ public class DashboardController extends BaseController implements DashboardMvpV
             };
             mViewPager.setAdapter(mAdapter);
             mTabLayout.setupWithViewPager(mViewPager, true);
-            TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, getString(R.string.font_lato_light));
+            TabLayoutUtils.setupWithCustomFont(getActivity(), mTabLayout, mTabTitles, mActivity.getString(R.string.font_app_light));
         }
     }
 

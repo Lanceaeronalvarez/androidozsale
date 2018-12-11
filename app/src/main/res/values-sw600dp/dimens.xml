@@ -2,22 +2,13 @@
 <resources>
     <bool name="is_tablet">true</bool>
 
-    <!--commented. not needed anymore-->
-    <!--<dimen name="text_size_small">15sp</dimen>-->
-    <!--<dimen name="text_size_medium">20sp</dimen>-->
-    <!--<dimen name="text_size_large">22sp</dimen>-->
-    <!--<dimen name="text_size_xlarge">24sp</dimen>-->
-    <!--<dimen name="text_size_xxlarge">26sp</dimen>-->
-    <!--<dimen name="text_size_xxxlarge">28sp</dimen>-->
-    <!--<dimen name="text_size_xxxxlarge">30sp</dimen>-->
-
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
-    <dimen name="screen_padding">24dp</dimen>
+    <dimen name="padding_default">24dp</dimen>
     <dimen name="default_button_height">48dp</dimen>
     <dimen name="product_details_bottom_padding">64dp</dimen>
 
@@ -34,15 +25,12 @@
 
     <dimen name="edit_text_height">48dp</dimen>
     <dimen name="tall_edit_text_height">144dp</dimen>
+    <dimen name="sale_details_app_bar_height">120dp</dimen>
 
     <dimen name="placeholder_imageview_margin"> 100dp </dimen>
-    <dimen name="voucher_container_width">420dp</dimen>
-    <dimen name="voucher_container_height">260dp</dimen>
-    <dimen name="voucher_padding">100dp</dimen>
     <dimen name="voucher_text_padding">16dp</dimen>
 
-    <dimen name="voucher_container_margin">20dp</dimen>
-    <dimen name="voucher_container_padding">20dp</dimen>
+    <dimen name="view_vouchers_padding">70dp</dimen>
 
     <dimen name="invite_friends_padding">5dp</dimen>
     <dimen name="invite_friends_image_width">22.5dp</dimen>
@@ -62,10 +50,12 @@
     <dimen name="cartview_y_adjustment">40dp</dimen>
 
     <dimen name="category_image_size">60dp</dimen>
-    <dimen name="category_background_size">100dp</dimen>
+    <dimen name="category_background_height">100dp</dimen>
     <dimen name="category_container_width">150dp</dimen>
 
     <dimen name="return_card_height">500dp</dimen>
     <dimen name="category_image_padding">25dp</dimen>
+    <dimen name="login_host_padding_top">100dp</dimen>
+    <dimen name="login_host_padding_bottom">100dp</dimen>
 
 </resources>

@@ -438,11 +438,11 @@ public class InviteSendController extends SwipeableBaseToolBarController impleme
         });
 
         mPersonalInvitationLinkEditText.setOnFocusChangeListener((view1, b) -> {
-            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.gray_active_field_text));
+            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.text_extra_dark));
         });
 
         mPersonalInvitationMessageEditText.setOnFocusChangeListener((view1, b) -> {
-            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.gray_inactive_field_text));
+            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.text_extra_light));
         });
 
         mPresenter.start();

@@ -1,10 +1,12 @@
 package au.com.dealsdirect.ui.controller.country;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import butterknife.ButterKnife;
  * Created by Admin on 12/18/17.
  */
 
-public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountriesViewHolder> {
 
     private List<Country> mCountries;
     private String mSelectedCountry;
@@ -33,22 +35,28 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CountriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_user_language, parent, false);
         CountryAdapter.CountriesViewHolder vh = new CountryAdapter.CountriesViewHolder(view, mPresenter);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(mSelectedCountry.equals(mCountries.get(position).getShopCode()) || mSelectedCountry == mCountries.get(position).getShopCode()) {
-            ((CountriesViewHolder) holder).mCountryText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
-        }
-        ((CountryAdapter.CountriesViewHolder) holder).mCountryText.setText(mCountries.get(position).getCountry());
+    public void onBindViewHolder(CountriesViewHolder holder, int position) {
+        if (mSelectedCountry.equals(mCountries.get(position).getShopCode()) || mSelectedCountry.equals(mCountries.get(position).getShopCode())) {
+            holder.mCountryText.setTextColor(context.getResources().getColor(R.color.country_select_active));
 
-        ((CountryAdapter.CountriesViewHolder) holder).itemView.setOnClickListener(v ->{
+            if (holder.mCountryCheckIcon != null) {
+                holder.mCountryCheckIcon.setVisibility(View.VISIBLE);
+            }
+
+        }
+        holder.mCountryText.setText(mCountries.get(position).getCountry());
+
+        holder.itemView.setOnClickListener(v -> {
+            notifyDataSetChanged();
             mPresenter.onCountryItemClick(mCountries.get(position));
-            ((CountryAdapter.CountriesViewHolder) holder).mCountryText.setTextColor(context.getResources().getColor(R.color.filter_text_active));
+            holder.mCountryText.setTextColor(context.getResources().getColor(R.color.country_select_active));
         });
     }
 
@@ -64,13 +72,13 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        if (mCountries!=null)
+        if (mCountries != null)
             return mCountries.size();
         return 0;
     }
 
 
-    public void replaceData(List<Country> countries, String selectedCountry){
+    public void replaceData(List<Country> countries, String selectedCountry) {
         mCountries = countries;
         mSelectedCountry = selectedCountry;
     }
@@ -78,6 +86,10 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     static class CountriesViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.row_text_language)
         TextView mCountryText;
+
+        @Nullable
+        @BindView(R.id.row_check_icon)
+        ImageView mCountryCheckIcon;
 
         CountryMvpPresenter mPresenter;
 

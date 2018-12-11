@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:clickable="true"
+    android:paddingTop="@dimen/padding_default_half"
+    android:paddingBottom="@dimen/padding_default_half">
+
+    <ImageView
+        android:id="@+id/ourpay_select_delivery_option_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:src="@drawable/ic_check"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_default"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/ourpay_select_delivery_option_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/ourpay_select_delivery_option_price_text_view"
+                tools:text="4 free deliveries"/>
+
+            <TextView
+                android:id="@id/ourpay_select_delivery_option_price_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                tools:text="$9.99"/>
+        </RelativeLayout>
+
+        <View style="@style/horizontalBorderView"
+            android:layout_marginTop="@dimen/margin_extra_small"/>
+    </LinearLayout>
+</LinearLayout>

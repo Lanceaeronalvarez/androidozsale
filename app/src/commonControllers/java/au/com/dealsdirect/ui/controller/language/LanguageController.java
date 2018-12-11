@@ -32,14 +32,14 @@ public class LanguageController extends BasePullToRefreshController implements L
     @Inject
     LanguageMvpPresenter<LanguageMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mArrowImage;
+    View mArrowImage;
 
     @BindView(R.id.controller_recycler_details)
     RecyclerView mRecyclerView;
@@ -71,9 +71,9 @@ public class LanguageController extends BasePullToRefreshController implements L
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
+        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        setToolBarVisible(getResource().getBoolean(R.bool.languages_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_user_languages, container, false));
 
         getControllerComponent().inject(this);
@@ -101,7 +101,7 @@ public class LanguageController extends BasePullToRefreshController implements L
 
     @Override
     protected void setUp(View view) {
-        mTitleText.setText("Language");
+        mTitleText.setText(getResources().getString(R.string.account_language));
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setOnClickListener(v -> {
             onBackPress();

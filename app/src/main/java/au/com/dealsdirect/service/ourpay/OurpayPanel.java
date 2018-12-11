@@ -8,7 +8,6 @@ import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,8 +18,9 @@ import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -28,7 +28,7 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 
 /**
- *dp  Created on 8/4/17.
+ * dp  Created on 8/4/17.
  */
 
 public class OurpayPanel {
@@ -39,45 +39,56 @@ public class OurpayPanel {
     Router mRouter;
     OurpayGraph mOurpayGraph = new OurpayGraph();
 
+    public View getCartAmountHeader() {
+        return mCartAmountHeader;
+    }
+
+    View mCartAmountHeader;
+
+
+    public enum TermsAndConditionStates {
+        DISABLED,
+        UNCHECKED,
+        CHECKED
+    }
 
     public OurpayPanel(BaseActivity activity) {
         this.mBaseActivity = activity;
         View view = activity.getLayoutInflater().inflate(R.layout.ourpay_panel_holder, null, false);
         mPanelHolder = (LinearLayout) view.findViewById(R.id.linearLayout_placeholder);
-        mHolderInBorder = (LinearLayout) view.findViewById(R.id.linearlayout_placeholder_boredered);
+        mHolderInBorder = (LinearLayout) view.findViewById(R.id.linearlayout_placeholder_bordered);
     }
 
     public OurpayPanel(BaseActivity activity, Router router) {
-        this.mBaseActivity = activity;
+        this(activity);
         this.mRouter = router;
-
-        View view = activity.getLayoutInflater().inflate(R.layout.ourpay_panel_holder, null, false);
-        mPanelHolder = (LinearLayout) view.findViewById(R.id.linearLayout_placeholder);
-        mHolderInBorder = (LinearLayout) view.findViewById(R.id.linearlayout_placeholder_boredered);
     }
 
-    public View generatePanel(Ourpay ourpay){
+    public View generatePanel(Ourpay ourpay) {
         return generatePanel(ourpay, null);
     }
 
-    public View generatePanel(Ourpay ourpay, OurpayCallback callback){
-        if (0 != (ourpay.getState() & OurpayState.PRECART)){
+    public View generatePanel(Ourpay ourpay, OurpayCallback callback) {
+        if (0 != (ourpay.getState() & OurpayState.PRECART)) {
 
-            if (0 != (ourpay.getState() & OurpayState.ERROR)){
+            if (0 != (ourpay.getState() & OurpayState.ERROR)) {
                 mHolderInBorder.addView(getTemplateText(ourpay.getDetails()));
-                mHolderInBorder.setBackground(mBaseActivity.getDrawable(R.drawable.ourpay_layout_border));
 
-            }else{
+            } else {
 
                 View header = getPanelHeader(ourpay);
-                final View panelRows = getPanelRows(ourpay.getPlannedTransactions());
                 mHolderInBorder.addView(header);
 
                 LinearLayout headerHolder = (LinearLayout) header.findViewById(R.id.linearLayout_header);
-                final View templateView = getTemplateText(OurpayTemplateText
-                        .getTemplateText(mBaseActivity, ourpay));
 
+                String templateTexts = ourpay.getDescription();
+                final View templateView = getTemplateText(templateTexts);
                 headerHolder.addView(templateView, headerHolder.getChildCount() - 1);
+
+                if (!templateTexts.equals("")) templateView.setVisibility(View.GONE);
+                templateView.setTag(templateTexts);
+
+                final View panelRows = getPanelRows(ourpay.getPlannedTransactions(), false);
                 mHolderInBorder.addView(panelRows);
 
                 templateView.setVisibility(View.GONE);
@@ -85,18 +96,21 @@ public class OurpayPanel {
 
                 header.setOnClickListener(view -> {
                     panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                    templateView.setVisibility(templateView.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                    if(callback != null) callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
+                    if (!templateView.getTag().equals("")) {
+                        templateView.setVisibility(templateView.getVisibility() == View.GONE ?
+                                View.VISIBLE : View.GONE);
+                    }
+                    if (callback != null)
+                        callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
                 });
 
             }
-        }else if (0 != (ourpay.getState() & OurpayState.ONCART)) {
+        } else if (0 != (ourpay.getState() & OurpayState.ONCART)) {
 
             if (0 != (ourpay.getState() & OurpayState.ERROR)) {
 
                 mHolderInBorder.addView(getTemplateText(
                         OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)));
-                mHolderInBorder.setBackground(mBaseActivity.getDrawable(R.drawable.ourpay_layout_border));
                 mPanelHolder.addView(getCartAmountHeader(""), 0);
             } else {
 
@@ -105,34 +119,40 @@ public class OurpayPanel {
                 View header = getPanelHeader(ourpay);
                 mHolderInBorder.addView(header);
 
-                mPanelHolder.addView(getTemplateText(
-                        OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)), 1);
+                mPanelHolder.addView(getTemplateText(ourpay.getDescription()), 1);
 
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
                     mPanelHolder.addView(getTermsAndConditions(ourpay), 2);
                 }
-                View panelRows = getPanelRows(ourpay.getPlannedTransactions());
-                View panelTotalRow = getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getUserAmount()));
-                mPanelHolder.addView(getCartAmountHeader(PriceUtils.getPriceStringValue(ourpay.getAmount())), 0);
+                View panelRows = getPanelRows(ourpay.getPlannedTransactions(), false);
+                View panelTotalRow = getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getTotalAmount()));
+                mPanelHolder.addView(getCartAmountHeader(PriceUtils.getPriceStringValue(ourpay.getInitialAmount())), 0);
                 mHolderInBorder.addView(panelRows);
                 mHolderInBorder.addView(panelTotalRow);
 
                 header.setOnClickListener(view -> {
                     panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                     panelTotalRow.setVisibility(panelTotalRow.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                    if(callback != null) callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
+                    if (callback != null)
+                        callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
                 });
             }
         } else if (0 != (ourpay.getState() & OurpayState.POSTCART)) {
 
-            TextView tv = (TextView) getTemplateText(
-                    OurpayTemplateText.getTemplateText(mBaseActivity, ourpay));
-            tv.setGravity(Gravity.CENTER_HORIZONTAL);
-            mPanelHolder.addView(tv, 0);
+            String templateText = OurpayTemplateText.getTemplateText(mBaseActivity, ourpay);
+            if (!templateText.isEmpty()) {
+                TextView tv = (TextView) getTemplateText(templateText);
+                tv.setGravity(Gravity.CENTER_HORIZONTAL);
+                mPanelHolder.addView(tv, 0);
+            }
             mHolderInBorder.addView(getSuccessHeaderRow());
-            mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions()));
-            mHolderInBorder.addView(getPanelRemainingRow(PriceUtils.getPriceStringValue(ourpay.getAmount())));
-            mPanelHolder.addView(getThankYouFooter());
+            mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions(), true));
+            mHolderInBorder.addView(getPanelRemainingRow(PriceUtils.getPriceStringValue(ourpay.getInitialAmount())));
+
+            if (!mBaseActivity.getResources().getBoolean(R.bool.is_ozsale_app)) {
+                mPanelHolder.addView(getThankYouFooter());
+            }
+
         }
 
         return mPanelHolder;
@@ -144,7 +164,7 @@ public class OurpayPanel {
         TextView textView = (TextView) view.findViewById(R.id.textView_template);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             textView.setText(Html.fromHtml(message, Html.FROM_HTML_MODE_COMPACT));
-        }else{
+        } else {
             textView.setText(Html.fromHtml(message));
         }
 
@@ -155,38 +175,45 @@ public class OurpayPanel {
 
         View header = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_panel_header, null, false);
 
-        TextView textViewPrice = (TextView) header.findViewById(R.id.ourpay_panel_header_price);
-        TextView textViewCount = (TextView) header.findViewById(R.id.ourpay_panel_header_transaction);
+        TextView textViewFirstPrice = (TextView) header.findViewById(R.id.ourpay_panel_header_first_price);
+        TextView textViewFirstMultiplier = (TextView) header.findViewById(R.id.ourpay_panel_header_first_text);
+        TextView textViewPlannedPrice = (TextView) header.findViewById(R.id.ourpay_panel_header_planned_price);
+        TextView textViewPlannedMultiplier = (TextView) header.findViewById(R.id.ourpay_panel_header_planned_text);
 
-        textViewPrice.setText(PriceUtils.getRpStringValue(ourpay.getAmount()));
-        textViewCount.setText(Integer.toString(ourpay.getTransactionCount()));
+        textViewFirstPrice.setText(PriceUtils.getRpStringValue(ourpay.getFirstTransactionAmount()));
+        textViewFirstMultiplier.setText(ourpay.getFirstTransactionText());
+
+        textViewPlannedMultiplier.setText(ourpay.getPlannedTransactionText());
+        textViewPlannedMultiplier.setVisibility(ourpay.getPlannedTransactionText() == null ? View.GONE : View.VISIBLE);
+
+        Double plannedTransactionAmount = ourpay.getPlannedTransactionAmount();
+        textViewPlannedPrice.setText(PriceUtils.getRpStringValue(plannedTransactionAmount));
+        textViewPlannedPrice.setVisibility(plannedTransactionAmount == null || plannedTransactionAmount == 0 ? View.GONE : View.VISIBLE);
 
         return header;
     }
 
-    private View getPanelRows(List<MyPayDetails.PlannedTransaction> transactions) {
-
-        return mOurpayGraph.generateGraph(mBaseActivity, transactions);
+    private View getPanelRows(List<GetCurrentOrderOurpay.PlannedTransaction> transactions, boolean hasCheckMark) {
+        return mOurpayGraph.generateGraph(mBaseActivity, transactions, hasCheckMark);
     }
 
     private View getCartAmountHeader(String amount) {
-        View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_cart_amount_layout, null, false);
+        mCartAmountHeader = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_cart_amount_layout, null, false);
 
-        TextView textViewAmount = (TextView) view.findViewById(R.id.textView_amount);
+        TextView textViewAmount = (TextView) mCartAmountHeader.findViewById(R.id.textView_amount);
         if (amount.length() > 0) {
-
             textViewAmount.setText(amount);
         } else {
             textViewAmount.setVisibility(View.GONE);
         }
 
-        return view;
+        return mCartAmountHeader;
     }
 
     private View getButton() {
         View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_button, null, false);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) mBaseActivity.getResources().getDimension(R.dimen.default_button_height));
+                (int) mBaseActivity.getResources().getDimension(R.dimen.button_height_regular));
         view.setLayoutParams(layoutParams);
 
         return view;
@@ -195,37 +222,24 @@ public class OurpayPanel {
     private View getTermsAndConditions(Ourpay ourpay) {
         View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_terms_and_conditions, null, false);
 
-        CheckBox cb = (CheckBox) view.findViewById(R.id.ourpay_checkbox_tc);
+        CustomToggleSwitch toggleSwitch = (CustomToggleSwitch) view.findViewById(R.id.ourpay_toggle_switch_tc);
         TextView textViewTC = (TextView) view.findViewById(R.id.ourpay_text_tc);
 
         textViewTC.setText(Html.fromHtml(OurpayTemplateText.getText(mBaseActivity, ourpay.getTermsAndConditionsText())));
         textViewTC.setOnClickListener(view1 -> {
-
-            if (mRouter.getBackstackSize()==1){
-
-                String ourpayTermsAndConditionKey = "OurPayTermsAndConditions_Text";
-                Bundle bundle = new Bundle();
-                bundle.putString("templateKey", ourpayTermsAndConditionKey);
-
-                ((MainActivity)mBaseActivity).setDraggableViewPager(false);
-                GateKeeper.push(mRouter,GateKeeper.Destination.LEGALITIES,
-                        new BundleBuilder(new Bundle())
-                                .putString(BundleKeys.TEMPLATE_KEY, ourpayTermsAndConditionKey)
-                                .putString(BundleKeys.TITLE, "My Basket")
-                                .build(),
-                        new VerticalChangeHandler(false),
-                        new VerticalChangeHandler());
-
-            }
+            ((MainActivity) mBaseActivity).setDraggableViewPager(false);
+            GateKeeper.push(mRouter, GateKeeper.Destination.LEGALITIES,
+                    new BundleBuilder(new Bundle())
+                            .putString(BundleKeys.TEMPLATE_KEY, OurpayTemplateText.KEY_OPS_TNC_FULL_TEXT)
+                            .putString(BundleKeys.LEGALITIES_TITLE, mBaseActivity.getString(R.string.my_basket))
+                            .build(),
+                    new VerticalChangeHandler(false),
+                    new VerticalChangeHandler());
 
         });
 
-
-        if (ourpay.getTermsAndConditionsCheckboxState() == 1) {
-            cb.setChecked(false);
-        } else if (ourpay.getTermsAndConditionsCheckboxState() == 2) {
-            cb.setChecked(true);
-        }
+        // TODO: Check ourpay.getTermsAndConditionsCheckboxState() for default state for toggleSwitch
+        // This behavior is TBD so for now we will copy legacy which has no default state
 
         return view;
     }
@@ -244,16 +258,14 @@ public class OurpayPanel {
     private View getPanelRemainingRow(String amount) {
 
         View footer = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_panel_row_footer, null, false);
-        footer.setBackground(mBaseActivity.getDrawable(R.drawable.ourpay_layout_remaining_balance_footer));
         TextView textViewAmount = (TextView) footer.findViewById(R.id.textView_amount_total);
         TextView textViewLabel = (TextView) footer.findViewById(R.id.textView_amount_label);
         textViewAmount.setText(amount);
-        textViewAmount.setTextColor(Color.parseColor("#FFE47C0B"));
-        textViewLabel.setText("Remaining Balance");
+        textViewLabel.setText("Total");
         return footer;
     }
 
-    private View getSuccessHeaderRow(){
+    private View getSuccessHeaderRow() {
 
         View header = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_post_cart_panel_header, null, false);
         return header;
@@ -265,11 +277,11 @@ public class OurpayPanel {
         return view;
     }
 
-    public void clearOurpayGraphBitmapsAndListeners(){
-        mOurpayGraph.clearOurpayGraphBitmapsAndListeners();
+    public void clearOurpayGraphBitmapsAndListeners() {
+//        mOurpayGraph.clearOurpayGraphBitmapsAndListeners();
     }
 
-    public void setIsGraphVisible(boolean isVisible){
-        mOurpayGraph.setIsGraphVisible(isVisible);
+    public void setIsGraphVisible(boolean isVisible) {
+//        mOurpayGraph.setIsGraphVisible(isVisible);
     }
 }

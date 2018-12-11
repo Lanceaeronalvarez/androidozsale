@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/background_default"
     tools:ignore="MissingPrefix">
 
     <include android:id="@+id/controller_invite_layout_title"
@@ -32,7 +32,7 @@
             android:text="@string/invite_friend_guide"
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:lineSpacingExtra="5dp"
-            android:textSize="@dimen/text_size_large" />
+            android:textSize="@dimen/text_size_body" />
 
     </LinearLayout>
 
@@ -46,6 +46,6 @@
         android:gravity="center"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:text="send an invite"
-        android:textSize="@dimen/text_size_xxlarge" />
+        android:textSize="@dimen/text_size_headline2" />
 
 </RelativeLayout>

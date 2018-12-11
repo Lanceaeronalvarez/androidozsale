@@ -11,11 +11,20 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface ShopsMvpView extends MvpView {
 
-    void showShopBanners(List<GetBannerResponse> getBannerResponses);
+    void showShopBanners(GetBannerResponse getBannerResponses);
 
     void storeCategories(List<GetCategoryTreeResponse> categories);
 
     void refresh();
 
     void unBindPaginate();
+
+    void onBannerClicked(String saleId,
+                         String bannerTitle,
+                         String bannerId,
+                         int position,
+                         String imageUrl,
+                         boolean isAvailable);
+
+    boolean isChangeInProgress();
 }

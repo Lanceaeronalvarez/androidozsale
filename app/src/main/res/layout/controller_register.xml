@@ -8,14 +8,18 @@
     android:fillViewport="true"
     android:orientation="vertical"
     android:overScrollMode="never"
-    tools:ignore="MissingPrefix">
+    tools:ignore="MissingPrefix"
+    android:background="@color/background_default">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/transparent"
         android:orientation="vertical"
-        android:padding="@dimen/screen_padding">
+        android:padding="@dimen/padding_default">
+
+        <include layout="@layout/partial_toolbar_arrow"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -53,8 +57,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/first_name"
-            android:textColor="@color/dark_text"
-            android:textSize="@dimen/text_size_medium"/>
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_caption1"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/controller_register_forename_container"
@@ -81,8 +85,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/last_name"
-            android:textColor="@color/dark_text"
-            android:textSize="@dimen/text_size_medium"/>
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_caption1"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/controller_register_surname_container"
@@ -110,8 +114,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/email_address"
-            android:textColor="@color/dark_text"
-            android:textSize="@dimen/text_size_medium"/>
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_caption1"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/controller_register_email_container"
@@ -139,8 +143,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/password"
-            android:textColor="@color/dark_text"
-            android:textSize="@dimen/text_size_medium"/>
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_caption1"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/controller_register_password_container"
@@ -175,7 +179,7 @@
                 fontPath="@string/font_app_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_medium"
+                android:textSize="@dimen/text_size_caption1"
                 android:checked="true"
                 android:textColor="@color/filter_text_inactive"
                 android:layout_marginLeft="-5dp"
@@ -186,7 +190,7 @@
                 fontPath="@string/font_app_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_medium"
+                android:textSize="@dimen/text_size_caption1"
                 android:textColor="@color/tab_bar_icon_active"
                 android:text="Terms and Conditions" />
         </LinearLayout>
@@ -198,12 +202,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/join_now"
-            android:textSize="@dimen/text_size_xlarge"/>
+            android:textSize="@dimen/text_size_headline3"/>
 
         <RelativeLayout
-            android:id="@+id/facebook_login_button"
+            android:id="@+id/controller_login_fb_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/default_button_height"
+            android:layout_height="@dimen/button_height_regular"
             android:layout_marginTop="10dp"
             android:background="@drawable/login_default_button"
             android:clickable="true"
@@ -233,12 +237,12 @@
                     android:text="@string/sign_in_with_facebook"
                     android:layout_marginStart="10dp"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_xlarge"/>
+                    android:textSize="@dimen/text_size_headline3"/>
             </LinearLayout>
         </RelativeLayout>
 
         <com.visa.checkout.widget.VisaCheckoutButton
-            android:id="@+id/button_visacheckout"
+            android:id="@+id/button_visa_checkout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/default_button_height"
             android:layout_marginTop="10dp"
@@ -258,8 +262,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/already_a_member"
-                android:textColor="@color/dark_text"
-                android:textSize="@dimen/text_size_medium"/>
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_caption1"/>
 
             <TextView
                 android:id="@+id/controller_register_login_text"
@@ -272,7 +276,7 @@
                 android:text="@string/log_in"
                 android:textAllCaps="true"
                 android:textColor="@color/bg_button_default"
-                android:textSize="@dimen/text_size_medium"/>
+                android:textSize="@dimen/text_size_caption1"/>
 
             <TextView
                 fontPath="@string/font_app_medium"
@@ -281,9 +285,58 @@
                 android:paddingEnd="0dp"
                 android:paddingStart="5dp"
                 android:text="@string/here"
-                android:textColor="@color/dark_text"
-                android:textSize="@dimen/text_size_medium"/>
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_caption1"/>
 
         </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:visibility="gone">
+
+            <au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch
+                android:id="@+id/controller_register_tnc_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_small"
+                app:textToggleLeft="Yes"
+                app:textToggleRight="No"/>
+
+            <TextView
+                android:id="@+id/controller_register_tnc_text"
+                android:layout_toRightOf="@+id/controller_register_tnc_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/padding_small"
+                android:layout_alignBottom="@+id/controller_register_tnc_toggle"
+                android:layout_alignTop="@+id/controller_register_tnc_toggle"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/text_size_caption1"
+                tools:text="I agree to the Terms and Conditions"/>
+
+            <au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch
+                android:id="@+id/controller_register_emails_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/controller_register_tnc_toggle"
+                app:textToggleLeft="Yes"
+                app:textToggleRight="No"/>
+
+            <TextView
+                android:id="@+id/controller_register_emails_text"
+                android:layout_toRightOf="@+id/controller_register_emails_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/padding_small"
+                android:layout_alignBottom="@+id/controller_register_emails_toggle"
+                android:layout_alignTop="@+id/controller_register_emails_toggle"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/text_size_caption1"
+                tools:text="I agree to receive promotional emails"/>
+
+        </RelativeLayout>
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="is_item_attribute_gone">true</bool>
+    <bool name="is_checkout_orders_label_visible">true</bool>
+    <bool name="is_item_details_split_enabled">false</bool>
+    <bool name="is_quantity_spinner_loading">false</bool>
+
+    <!--APP SPECIFIC SETTINGS-->
+    <bool name="is_ourpay_app">false</bool>
+    <bool name="is_ozsale_app">true</bool>
+    <bool name="master_detail_enabled">true</bool>
+    <bool name="language_check_enabled">true</bool>
+    <bool name="is_gender_enabled">false</bool>
+    <bool name="is_oo_app">true</bool>
+    <bool name="is_category_all_enabled">false</bool>
+
+</resources>

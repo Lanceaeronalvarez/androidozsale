@@ -10,13 +10,13 @@
     android:padding="20dp">
 
     <TextView
-        fontPath="@string/font_lato_bold"
+        fontPath="@string/font_app_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/payment_schedule"
         android:textColor="@color/edit_text_label"
-        android:textSize="@dimen/text_size_large"
+        android:textSize="@dimen/text_size_body"
         tools:ignore="MissingPrefix" />
 
     <LinearLayout
@@ -93,7 +93,7 @@
             android:background="@android:color/transparent"
             android:gravity="center"
             android:textColor="@color/edit_text_content"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             tools:text="feb 01" />
 
         <View
@@ -108,7 +108,7 @@
             android:background="@android:color/transparent"
             android:gravity="center"
             android:textColor="@color/edit_text_content"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             tools:text="feb 14" />
 
         <View
@@ -123,7 +123,7 @@
             android:background="@android:color/transparent"
             android:gravity="center"
             android:textColor="@color/edit_text_content"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             tools:text="feb 28" />
 
         <View
@@ -138,7 +138,7 @@
             android:background="@android:color/transparent"
             android:gravity="center"
             android:textColor="@color/edit_text_content"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             tools:text="mar 14" />
 
     </LinearLayout>
@@ -153,12 +153,12 @@
 
         <TextView
             android:id="@+id/controller_payment_details_schedule_value1"
-            fontPath="@string/font_lato_bold"
+            fontPath="@string/font_app_bold"
             android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/edit_text_label"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             tools:ignore="MissingPrefix"
             tools:text="@string/_25" />
 
@@ -169,12 +169,12 @@
 
         <TextView
             android:id="@+id/controller_payment_details_schedule_value2"
-            fontPath="@string/font_lato_bold"
+            fontPath="@string/font_app_bold"
             android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/edit_text_label"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             tools:ignore="MissingPrefix"
             tools:text="@string/_25" />
 
@@ -185,12 +185,12 @@
 
         <TextView
             android:id="@+id/controller_payment_details_schedule_value3"
-            fontPath="@string/font_lato_bold"
+            fontPath="@string/font_app_bold"
             android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/edit_text_label"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             tools:ignore="MissingPrefix"
             tools:text="@string/_25" />
 
@@ -201,12 +201,12 @@
 
         <TextView
             android:id="@+id/controller_payment_details_schedule_value4"
-            fontPath="@string/font_lato_bold"
+            fontPath="@string/font_app_bold"
             android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/edit_text_label"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             tools:ignore="MissingPrefix"
             tools:text="@string/_25" />
 

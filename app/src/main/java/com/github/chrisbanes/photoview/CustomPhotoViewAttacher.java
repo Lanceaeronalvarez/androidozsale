@@ -30,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.OverScroller;
 
 /**
- * The component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
+ * The au.com.dealsdirect.di.component of {@link PhotoView} which does the work allowing for zooming, scaling, panning, etc.
  * It is made public in case you need to subclass something other than {@link ImageView} and still
  * gain the functionality that {@link PhotoView} offers
  */
@@ -912,6 +912,10 @@ public class CustomPhotoViewAttacher implements View.OnTouchListener,
                 Compat.postOnAnimation(mImageView, this);
             }
         }
+    }
+
+    public boolean isScaling(){
+        return mScaleDragDetector.isScaling();
     }
 }
 

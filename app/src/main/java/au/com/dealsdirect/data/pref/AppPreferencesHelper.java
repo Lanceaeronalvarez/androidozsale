@@ -6,7 +6,12 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.mysale.genie.utility.Prefs;
+import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashSet;
 
@@ -18,6 +23,7 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse
 import au.com.dealsdirect.di.ApplicationContext;
 import au.com.dealsdirect.di.PreferenceInfo;
 import au.com.dealsdirect.service.fcm.GNotification;
+import au.com.dealsdirect.ui.controller.main.Settings;
 
 
 @Singleton
@@ -54,7 +60,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PAYMENT_KOUNT_ENABLED = "app_kount_enabled";
     private static final String PAYMENT_KOUNT_MERCHANT_ID = "app_kount_merchant_id";
     private static final String PAYMENT_MYPAY_ENABLED = "app_mypay_enabled";
-    private static final String IS_PAYPAL_CREDIT_ENABLED = "server_paypal_credit";
+    private static final String PAYMENT_PAYPAL_CREDIT_ENABLED = "app_paypal_credit_enabled";
 
 
     private static final String PUBLIC_PAYMENT_TOKEN = "PUBLIC_PAYMENT_TOKEN";
@@ -79,6 +85,20 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String VCO_APIKEY = "VCO_APIKEY";
     private static final String VCO_APIURL = "VCO_APIURL";
     private static final String VCO_PROVIDERTYPE = "VCO_PROVIDERTYPE";
+
+    //    DELIVERY OPTIONS/OURPAY SELECT
+    public static final String KEY_DELIVERYOPTION_OPS_FREE = "_Free";
+    private static final String KEY_DELIVERYOPTION_OPS_TITLE = "_DeliveryOption_OURPAYSELECT_Title";
+    private static final String KEY_DELIVERYOPTION_OPS_DESCRIPTION = "_DeliveryOption_OURPAYSELECT_Description";
+    private static final String KEY_DELIVERYOPTION_EXPRESS_TITLE = "_DeliveryOption_EXPRESS_Title";
+    private static final String KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION = "_DeliveryOption_EXPRESS_Description";
+    private static final String KEY_DELIVERYOPTION_STANDARD_TITLE = "_DeliveryOption_STANDARD_Title";
+    private static final String KEY_OURPAY_OPS_DESCRIPTION_REMAINING = "_Ops_description_remaining";
+    private static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE = "_Ops_info_remaining_before_purchase";
+    private static final String KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY = "_Ops_info_remaining_before_purchase_free_delivery";
+    private static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
+    private static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
+
     private static final String SEARCH_MAX_PRICE = "app_search_max_price";
     private static final String ACCESS_ANONYMOUS_ENABLED = "app_anonymous_enabled";
     private static final String FB_SECRET = "fb_secret";
@@ -87,6 +107,41 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String EVENT_USER_ID = "event_user_id";
     private static final String COOKIES = "network_cookies";
 
+    /* PERSONALISATION */
+    private static final String PERSONALISATION_VALIDATION = "PERSONALISATION_VALIDATION";
+
+    /* NOTIFICATIONS */
+    private static final String KEY_NOTIFICATIONS_ENABLED = "KEY_NOTIFICATIONS_ENABLED";
+
+    /* GDPR */
+    public static final String CONSENT_CONTINUE_TEXT = "_consentContinueText";
+    public static final String CONSENT_WITH_REGISTRATION_TERMS_TEXT = "_consentWithTCText";
+    public static final String CONSENT_WITH_REGISTRATION_EMAILS_TEXT = "_consentWithEmailsText";
+    public static final String CONSENT_WITH_REGISTRATION_TERMS_WARNING = "_consentWithRegistrationTermsWarning";
+    public static final String CONSENT_SHORT_TEMPLATE_TEXT = "ConsentShortTextPTNameV1";
+    public static final String CONSENT_FULL_TEMPLATE_TEXT = "ConsentFullTextPTNameV1";
+    public static final String CONSENT_TERMS_AND_CONDITION = "TermsAndConditions_Text";
+
+    public static final String CONSENT_SHORT_TEXT = "ShortTextPTName";
+    public static final String CONSENT_FULL_TEXT = "FullTextPTName";
+    public static final String CONSENT_MODE = "Mode";
+    public static final String CONSENT_TNC_CHECKED = "RegAgreementTermsAndConditionCheckboxTicked";
+    public static final String CONSENT_EMAILS_CHECKED = "RegAgreementReceiveEmailsCheckboxTicked";
+
+    /*ACCOUNT DATA*/
+    public static final String ACCOUNT_DATA_SORTING = "AccountDataSorting";
+
+    /* Fabric App Events */
+    private static final String LAST_REDIRECTION = "LAST_REDIRECTION_SCREEN";
+    private static final String IS_NEW_USER = "IS_NEW_USER";
+    private static final String HAS_ACTIVE_CHECKOUT_SESSION = "HAS_ACTIVE_CHECKOUT_SESSION";
+
+    // AddToCart Journey
+    private static final String HAS_VIEWED_SALE = "HAS_VIEWED_SALE";
+    private static final String HAS_VIEWED_PRODUCT_CATEGORY = "HAS_VIEWED_PRODUCT_CATEGORY";
+    private static final String HAS_VIEWED_PRODUCT = "HAS_VIEWED_PRODUCT";
+    private static final String HAS_ADDED_TO_CART = "HAS_CLICKED_ADD_TO_CART";
+    private static final String HAS_VIEWED_CART = "HAS_CLICKED_VIEW_CART";
 
     private Context mContext;
 
@@ -98,13 +153,11 @@ public class AppPreferencesHelper implements PreferencesHelper {
                 .setContext(context)
                 .setMode(ContextWrapper.MODE_PRIVATE)
                 .setPrefsName(prefFileName)
-                .setUseDefaultSharedPreference(true)
                 .build();
 
         //Set default settings here
-        Prefs.putString(FB_SECRET, context.getResources().getString(R.string.facebook_app_secret));
-        Prefs.putString(COUNTRY_ID, context.getResources().getString(R.string.default_country_id));
-        Prefs.putString(LANGUAGE_ID, context.getResources().getString(R.string.default_language_id));
+        Prefs.putString(COUNTRY_ID, getCountryId());
+        Prefs.putString(LANGUAGE_ID, getLanguageId());
         Prefs.putBoolean(DEBUG_MODE, context.getResources().getBoolean(R.bool.debug_mode));
         setUserAgent();
     }
@@ -167,7 +220,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getCountryId() {
-        return Prefs.getString(COUNTRY_ID, "");
+        return Prefs.getString(COUNTRY_ID, Settings.getDefaultCountry() != null ?
+                Settings.getDefaultCountry().countryId : "");
     }
 
     @Override
@@ -177,7 +231,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getLanguageId() {
-        return Prefs.getString(LANGUAGE_ID, "");
+        return Prefs.getString(LANGUAGE_ID, Settings.getDefaultCountry() != null ?
+                Settings.getDefaultCountry().languageId : "");
     }
 
     @Override
@@ -334,7 +389,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getFbSecret() {
-        return Prefs.getString(FB_SECRET, "");
+        return Prefs.getString(FB_SECRET, mContext.getResources().getString(R.string.facebook_app_secret));
     }
 
     @Override
@@ -423,6 +478,56 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
+    public void setPersonalisationTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        Prefs.putString(PERSONALISATION_VALIDATION, value.getPersonalisationValidation());
+    }
+
+    @Override
+    public String getPersonalisationTemplateTexts() {
+        return Prefs.getString(PERSONALISATION_VALIDATION, "");
+    }
+
+    @Override
+    public void setConsentTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        Prefs.putString(CONSENT_CONTINUE_TEXT, value.getConsentContinueText());
+        Prefs.putString(CONSENT_FULL_TEMPLATE_TEXT, value.getConsentFullTextPTNameV1());
+        Prefs.putString(CONSENT_SHORT_TEMPLATE_TEXT, value.getConsentShortTextPTNameV1());
+        Prefs.putString(CONSENT_TERMS_AND_CONDITION, value.getTermsAndConditionsText());
+        Prefs.putString(CONSENT_WITH_REGISTRATION_TERMS_TEXT, value.getConsentWithTCText());
+        Prefs.putString(CONSENT_WITH_REGISTRATION_EMAILS_TEXT, value.getConsentWithEmailsText());
+        Prefs.putString(CONSENT_WITH_REGISTRATION_TERMS_WARNING, value.getConsentWithRegistrationTermsWarning());
+    }
+
+    @Override
+    public String getConsentTemplateTexts(String key) {
+        return Prefs.getString(key, "");
+    }
+
+    @Override
+    public void setAppSettingsConsent(GetAppSettingsConsent.ResponseValue value) {
+        Prefs.putString(CONSENT_SHORT_TEXT, value.getShortTextPTName());
+        Prefs.putString(CONSENT_FULL_TEXT, value.getFullTextPTName());
+        Prefs.putInt(CONSENT_MODE, value.getMode());
+        Prefs.putBoolean(CONSENT_TNC_CHECKED, value.isRegAgreementTermsAndConditionCheckboxTicked());
+        Prefs.putBoolean(CONSENT_EMAILS_CHECKED, value.isRegAgreementReceiveEmailsCheckboxTicked());
+    }
+
+    @Override
+    public String getAppSettingsConsentText(String key) {
+        return Prefs.getString(key, "");
+    }
+
+    @Override
+    public int getAppSettingsConsentMode() {
+        return Prefs.getInt(CONSENT_MODE, -1);
+    }
+
+    @Override
+    public boolean getAppSettingsConsentIsChecked(String key) {
+        return Prefs.getBoolean(key, false);
+    }
+
+    @Override
     public void setMyPayTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
         Log.d("Template", "= " + value.getOurPayTCValidationFailed() + " , " + value.getCheckoutMyPayPayInvalidPaymentMethod() + " , " + value.getMyPayDetailsMobileApp());
         Prefs.putString(MYPAY_EXCEED_LIMIT, value.getCheckoutMyPayPayExceedLimit());
@@ -435,6 +540,24 @@ public class AppPreferencesHelper implements PreferencesHelper {
         Prefs.putString(MYPAY_TC, value.getOurPayTC_text());
         Prefs.putString(MYPAY_TC_VALIDATION_FAILED, value.getOurPayTCValidationFailed());
         Prefs.putString(MYPAY_PAYMENT_SCHEDULE, value.getPaymentSchedule());
+    }
+
+    @Override
+    public void setDeliveryOptionsTemplateTexts(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        Prefs.putString(KEY_DELIVERYOPTION_OPS_FREE, value.getDeliveryOptionOPSFree());
+        Prefs.putString(KEY_DELIVERYOPTION_OPS_TITLE, value.getDeliveryOptionOPSTitle());
+        Prefs.putString(KEY_DELIVERYOPTION_OPS_DESCRIPTION, value.getDeliveryOptionOPSDescription());
+
+        Prefs.putString(KEY_DELIVERYOPTION_EXPRESS_TITLE, value.getDeliveryOptionExpressTitle());
+        Prefs.putString(KEY_DELIVERYOPTION_EXPRESS_DESCRIPTION, value.getDeliveryOptionExpressDescription());
+        Prefs.putString(KEY_DELIVERYOPTION_STANDARD_TITLE, value.getDeliveryOptionStandardTitle());
+
+        Prefs.putString(KEY_OURPAY_OPS_DESCRIPTION_REMAINING, value.getDeliveryOptionOPSDescriptionRemaining());
+        Prefs.putString(KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE, value.getDeliveryOptionOPSInfoBeforePurchase());
+        Prefs.putString(KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY, value.getDeliveryOptionOPSInfoBeforeFreeDelivery());
+
+        Prefs.putString(KEY_OURPAY_OPS_TNC_HEADER, value.getDeliveryOptionOPSTncHeader());
+        Prefs.putString(KEY_OURPAY_OPS_TNC_BODY, value.getDeliveryOptionOPSTncBody());
     }
 
     @Override
@@ -497,13 +620,122 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
+    public void setIsNotificationsEnabled(boolean isNotificationsEnabled) {
+        Prefs.putBoolean(KEY_NOTIFICATIONS_ENABLED, isNotificationsEnabled);
+    }
+
+    @Override
+    public boolean getIsNotificationsEnabled() {
+        return Prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, true);
+    }
+
+    @Override
     public void setIsPaypalCreditEnabled(boolean isPaypalCreditEnabled) {
-        Prefs.putBoolean(IS_PAYPAL_CREDIT_ENABLED, isPaypalCreditEnabled);
+        Prefs.putBoolean(PAYMENT_PAYPAL_CREDIT_ENABLED, isPaypalCreditEnabled);
     }
 
     @Override
     public boolean isPaypalCreditEnabled() {
-        return Prefs.getBoolean(IS_PAYPAL_CREDIT_ENABLED, true);
+        return Prefs.getBoolean(PAYMENT_PAYPAL_CREDIT_ENABLED, false);
+    }
+
+    @Override
+    public void setIsSortingEnabled(boolean isSortingEnabled) {
+        Prefs.putBoolean(ACCOUNT_DATA_SORTING, isSortingEnabled);
+    }
+
+    @Override
+    public boolean getIsSortingEnabled() {
+        return Prefs.getBoolean(ACCOUNT_DATA_SORTING, true);
+    }
+
+    @Override
+    public void setLastRedirection(String lastRedirection) {
+        Prefs.putString(LAST_REDIRECTION, lastRedirection);
+    }
+
+    @Override
+    public String getLastRedirection() {
+        return Prefs.getString(LAST_REDIRECTION, "");
+    }
+
+    @Override
+    public void setIsNewUser(boolean isNewUser) {
+        Prefs.putBoolean(IS_NEW_USER, isNewUser);
+    }
+
+    @Override
+    public boolean getIsNewUser() {
+        return Prefs.getBoolean(IS_NEW_USER, false);
+    }
+
+    @Override
+    public void setHasActiveCheckoutSession(boolean hasActiveCheckoutSession) {
+        Prefs.putBoolean(HAS_ACTIVE_CHECKOUT_SESSION, hasActiveCheckoutSession);
+    }
+
+    @Override
+    public boolean hasActiveCheckoutSession() {
+        return Prefs.getBoolean(HAS_ACTIVE_CHECKOUT_SESSION, false);
+    }
+
+    @Override
+    public void resetAddToCartJourneyFlags() {
+        setHasViewedSale(false);
+        setHasViewedProductCategory(false);
+        setHasViewedProduct(false);
+        setHasAddedToCart(false);
+        setHasViewedCart(false);
+    }
+
+    @Override
+    public void setHasViewedSale(boolean hasViewedSale) {
+        Prefs.putBoolean(HAS_VIEWED_SALE, hasViewedSale);
+    }
+
+    @Override
+    public boolean hasViewedSale() {
+        return Prefs.getBoolean(HAS_VIEWED_SALE, false);
+    }
+
+    @Override
+    public void setHasViewedProductCategory(boolean hasViewedProductCategory) {
+        Prefs.putBoolean(HAS_VIEWED_PRODUCT_CATEGORY, hasViewedProductCategory);
+    }
+
+    @Override
+    public boolean hasViewedProductCategory() {
+        return Prefs.getBoolean(HAS_VIEWED_PRODUCT_CATEGORY, false);
+    }
+
+    @Override
+    public void setHasViewedProduct(boolean hasViewedProduct) {
+        Prefs.putBoolean(HAS_VIEWED_PRODUCT, hasViewedProduct);
+    }
+
+    @Override
+    public boolean hasViewedProduct() {
+        return Prefs.getBoolean(HAS_VIEWED_PRODUCT, false);
+    }
+
+    @Override
+    public void setHasAddedToCart(boolean hasAddedToCart) {
+        Prefs.putBoolean(HAS_ADDED_TO_CART, hasAddedToCart);
+    }
+
+    @Override
+    public boolean hasAddedToCart() {
+        return Prefs.getBoolean(HAS_ADDED_TO_CART, false);
+    }
+
+    @Override
+    public void setHasViewedCart(boolean hasViewedCart) {
+        Prefs.putBoolean(HAS_VIEWED_CART, hasViewedCart);
+    }
+
+    @Override
+    public boolean hasViewedCart() {
+        return Prefs.getBoolean(HAS_VIEWED_CART, false);
     }
 
     public void setEventUserId(String userId) {

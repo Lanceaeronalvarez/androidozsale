@@ -4,8 +4,10 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 
 import java.util.List;
 
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.MyPayDetails;
+import javax.annotation.Nullable;
+
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.PhoneVerification;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 
 
 /*
@@ -14,165 +16,196 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.PhoneVerif
 
 public class Ourpay {
 
-    private boolean canUse = false;
-    private double amount = 0;
-    private double userAmount = 0;
-    private String details = "";
-    private double minAmount;
-    private double maxAmount;
-    private String errorCode;
-    private int transactionCount = 0;
-    private int billingPeriod = 0;
-    private List<MyPayDetails.PlannedTransaction> plannedTransactions;
-    private int termsAndConditionsCheckboxState = 0;
-    private int state = 0;
-    private PaymentMethodNonce paymentMethodNonce;
-    private String termsAndConditionsText = "";
-    private PhoneVerification ourpayPhoneVerification;
+    private boolean mCanUse = false;
+    private Double mInitialAmount = null;
+    private Double mTotalAmount = null;
+    private String mDetails = "";
+    private Double mMinAmount;
+    private Double mMaxAmount;
+    private String mErrorCode;
+    private int mTransactionCount = 0;
+    private int mBillingPeriod = 0;
+    private List<GetCurrentOrderOurpay.PlannedTransaction> mPlannedTransactions;
+    private int mTermsAndConditionsCheckboxState = 0;
+    private int mState = 0;
+    private PaymentMethodNonce mPaymentMethodNonce;
+    private String mTermsAndConditionsText = "";
+    private PhoneVerification mOurpayPhoneVerification;
+    private String mDescription = "";
+    private Double mFirstTransactionAmount = null;
+    private Double mPlannedTransactionAmount = null;
+    private String mFirstTransactionText = "";
+    private String mPlannedTransactionText = "";
 
     public Ourpay() {
 
     }
 
-    public Ourpay(Ourpay ourpay) {
-        this.canUse = ourpay.canUse;
-        this.amount = ourpay.amount;
-        this.userAmount = ourpay.userAmount;
-        this.details = ourpay.details;
-        this.minAmount = ourpay.minAmount;
-        this.maxAmount = ourpay.maxAmount;
-        this.errorCode = ourpay.errorCode;
-        this.transactionCount = ourpay.transactionCount;
-        this.billingPeriod = ourpay.billingPeriod;
-        this.plannedTransactions = ourpay.plannedTransactions;
-        this.termsAndConditionsCheckboxState = ourpay.termsAndConditionsCheckboxState;
-        this.state = ourpay.state;
-        this.paymentMethodNonce = ourpay.paymentMethodNonce;
-        this.termsAndConditionsText = ourpay.termsAndConditionsText;
-        this.ourpayPhoneVerification = ourpay.ourpayPhoneVerification;
-    }
-
     public boolean isCanUse() {
-        return canUse;
+        return mCanUse;
     }
 
-    public double getAmount() {
-        return amount;
+    public Double getInitialAmount() {
+        return mInitialAmount;
     }
 
-    public double getUserAmount() {
-        return userAmount;
+    public Double getTotalAmount() {
+        return mTotalAmount;
     }
 
     public String getDetails() {
-        return details;
+        return mDetails;
     }
 
-    public double getMinAmount() {
-        return minAmount;
+    public Double getMinAmount() {
+        return mMinAmount;
     }
 
-    public double getMaxAmount() {
-        return maxAmount;
+    public Double getMaxAmount() {
+        return mMaxAmount;
     }
 
     public String getErrorCode() {
-        return errorCode;
+        return mErrorCode;
     }
 
     public int getTransactionCount() {
-        return transactionCount;
+        return mTransactionCount;
     }
 
     public int getBillingPeriod() {
-        return billingPeriod;
+        return mBillingPeriod;
     }
 
-    public List<MyPayDetails.PlannedTransaction> getPlannedTransactions() {
-        return plannedTransactions;
+    public List<GetCurrentOrderOurpay.PlannedTransaction> getPlannedTransactions() {
+        return mPlannedTransactions;
     }
 
     public int getTermsAndConditionsCheckboxState() {
-        return termsAndConditionsCheckboxState;
+        return mTermsAndConditionsCheckboxState;
     }
 
     public void setCanUse(boolean canUse) {
-        this.canUse = canUse;
+        mCanUse = canUse;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setInitialAmount(@Nullable Double initialAmount) {
+        mInitialAmount = initialAmount;
     }
 
-    public void setUserAmount(double userAmount) {
-        this.userAmount = userAmount;
+    public void setTotalAmount(@Nullable Double totalAmount) {
+        mTotalAmount = totalAmount;
     }
 
     public void setDetails(String details) {
-        this.details = details;
+        mDetails = details;
     }
 
-    public void setMinAmount(double minAmount) {
-        this.minAmount = minAmount;
+    public void setMinAmount(@Nullable Double minAmount) {
+        mMinAmount = minAmount;
     }
 
-    public void setMaxAmount(double maxAmount) {
-        this.maxAmount = maxAmount;
+    public void setMaxAmount(@Nullable Double maxAmount) {
+        mMaxAmount = maxAmount;
     }
 
     public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
+        mErrorCode = errorCode;
     }
 
     public void setTransactionCount(int transactionCount) {
-        this.transactionCount = transactionCount;
+        mTransactionCount = transactionCount;
     }
 
     public void setBillingPeriod(int billingPeriod) {
-        this.billingPeriod = billingPeriod;
+        mBillingPeriod = billingPeriod;
     }
 
-    public void setPlannedTransactions(List<MyPayDetails.PlannedTransaction> plannedTransactions) {
-        this.plannedTransactions = plannedTransactions;
+    public void setPlannedTransactions(List<GetCurrentOrderOurpay.PlannedTransaction> plannedTransactions) {
+        mPlannedTransactions = plannedTransactions;
     }
 
     public void setTermsAndConditionsCheckboxState(int termsAndConditionsCheckboxState) {
-        this.termsAndConditionsCheckboxState = termsAndConditionsCheckboxState;
+        mTermsAndConditionsCheckboxState = termsAndConditionsCheckboxState;
     }
 
     public int getState() {
-        return state;
+        return mState;
     }
 
     public void setState(int state) {
-        this.state = state;
+        mState = state;
     }
 
     public PaymentMethodNonce getPaymentMethodNonce() {
-        return paymentMethodNonce;
+        return mPaymentMethodNonce;
     }
 
     public void setPaymentMethodNonce(PaymentMethodNonce paymentMethodNonce) {
-        this.paymentMethodNonce = paymentMethodNonce;
+        mPaymentMethodNonce = paymentMethodNonce;
     }
 
     public String getTermsAndConditionsText() {
-        return termsAndConditionsText;
+        return mTermsAndConditionsText;
     }
 
     public void setTermsAndConditionsText(String termsAndConditionsText) {
-        this.termsAndConditionsText = termsAndConditionsText;
+        mTermsAndConditionsText = termsAndConditionsText;
     }
 
     public PhoneVerification getOurpayPhoneVerification() {
-        return ourpayPhoneVerification;
+        return mOurpayPhoneVerification;
     }
 
     public void setOurpayPhoneVerification(PhoneVerification ourpayPhoneVerification) {
-        this.ourpayPhoneVerification = ourpayPhoneVerification;
+        mOurpayPhoneVerification = ourpayPhoneVerification;
     }
 
     public boolean isPhoneVerificationRequired() {
-        return (ourpayPhoneVerification != null && ourpayPhoneVerification.getRequired());
+        return (mOurpayPhoneVerification != null && mOurpayPhoneVerification.getRequired());
     }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+
+    public void setFirstTransactionAmount(@Nullable Double firstTransactionAmount) {
+        mFirstTransactionAmount = firstTransactionAmount;
+    }
+
+    public void setPlannedTransactionAmount(@Nullable Double plannedTransactionAmount) {
+        mPlannedTransactionAmount = plannedTransactionAmount;
+    }
+
+    public void setFirstTransactionText(String firstTransactionText) {
+        mFirstTransactionText = firstTransactionText;
+    }
+
+    public void setPlannedTransactionText(String plannedTransactionText) {
+        mPlannedTransactionText = plannedTransactionText;
+    }
+
+    public Double getFirstTransactionAmount() {
+        return mFirstTransactionAmount;
+    }
+
+    public Double getPlannedTransactionAmount() {
+        return mPlannedTransactionAmount;
+    }
+
+    public String getFirstTransactionText() {
+        return mFirstTransactionText;
+    }
+
+    public String getPlannedTransactionText() {
+        return mPlannedTransactionText;
+    }
+
+    public void setDescription(String description) {
+
+        mDescription = description;
+    }
+
+
 }

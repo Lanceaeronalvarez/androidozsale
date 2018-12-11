@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    fontPath="@string/font_app_regular"
+    android:id="@+id/tab_title"
+    android:layout_width="match_parent"
+    android:textSize="@dimen/text_size_headline3"
+    android:textColor="@color/filter_tabs_text_selector"
+    android:gravity="center"
+    android:layout_height="match_parent"
+    tools:ignore="MissingPrefix"
+    />

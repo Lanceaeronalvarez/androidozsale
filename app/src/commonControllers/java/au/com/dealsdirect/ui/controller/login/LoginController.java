@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +25,21 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static au.com.dealsdirect.service.event.ActionTracker.LoginType.FACEBOOK;
+import static au.com.dealsdirect.service.event.ActionTracker.LoginType.FORGOT_PASSWORD;
+import static au.com.dealsdirect.service.event.ActionTracker.LoginType.LOGIN;
+import static au.com.dealsdirect.service.event.ActionTracker.LoginType.NO_ACTION;
 
 public class LoginController extends BaseController implements LoginMvpView {
 
@@ -40,18 +49,40 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Inject
     LoginMvpPresenter<LoginMvpView> mPresenter;
 
-    @BindView(R.id.email)
+    @BindView(R.id.toolbar_title_login)
+    Toolbar mToolbar;
+    @BindView(R.id.partial_toolbar_title)
+    TextView mToolbarTitle;
+    @BindView(R.id.controller_login_email_edittext)
     EditText mEmailEditText;
-    @BindView(R.id.password)
+    @BindView(R.id.controller_login_password_edittext)
     EditText mPasswordEditText;
-    @BindView(R.id.login_button)
+    @BindView(R.id.controller_login_button)
     Button mLoginButton;
-    @BindView(R.id.fragment_login_signup_text)
+    @BindView(R.id.controller_login_signup_text)
     TextView mSignUpTextView;
     @BindView(R.id.controller_login_forgot_password_text)
     TextView mForgotPasswordTextView;
+    @BindView(R.id.partial_toolbar_left_view)
+    View mLeftButton;
 
+    @Nullable
+    @BindView(R.id.controller_login_legalities_container)
+    ViewGroup mLegalitiesContainer;
+    @Nullable
+    @BindView(R.id.controller_login_about_us_textview)
+    TextView mAboutUsTextView;
+    @Nullable
+    @BindView(R.id.controller_login_tnc_textview)
+    TextView mTncTextView;
+    @Nullable
+    @BindView(R.id.controller_login_privacy_textview)
+    TextView mPrivacyTextView;
+
+    private String mLoginMethod = NO_ACTION;
+    private boolean isLoginSuccess = false;
     private boolean isLoginTapped = false;
+    private boolean mWillShowRegistration = false;
 
     private CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
@@ -74,9 +105,20 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void onAttach(@NonNull View view) {
-        assert (mActivity) != null;
-        mActivity.getMainController().hideBottomNav();
+        if (!mPresenter.isTablet()) {
+            mActivity.getMainController().hideBottomNav();
+        }
+
         super.onAttach(view);
+    }
+
+    @Override
+    public void onDetach(View view) {
+        if (!mPresenter.isTablet() && !mWillShowRegistration) {
+            mActivity.getMainController().showBottomNav();
+        }
+
+        super.onDetach(view);
     }
 
     @NonNull
@@ -104,6 +146,11 @@ public class LoginController extends BaseController implements LoginMvpView {
     protected void setUp(View view) {
         mActivity.setDraggableViewPager(false);
 
+        boolean shouldToolbarBeVisible = mActivity.getResources().getBoolean(R.bool.login_toolbar_visibility);
+
+        mToolbar.setVisibility(shouldToolbarBeVisible ? View.VISIBLE : View.GONE);
+        mToolbarTitle.setText(mActivity.getResources().getString(R.string.login_title));
+
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,37 +162,54 @@ public class LoginController extends BaseController implements LoginMvpView {
                 isLoginTapped = true;
             }
         });
+
+        if (mLegalitiesContainer != null) {
+            mAboutUsTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_ABOUT_US, getString(R.string.account_about_us)));
+            mTncTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
+            mPrivacyTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_PRIVACY, getString(R.string.account_privacy)));
+        }
     }
 
 
     @Override
     protected void onDestroyView(@NonNull View view) {
+        if (!mWillShowRegistration) mActionTracker.login(mLoginMethod, isLoginSuccess);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
 
-    @OnClick(R.id.controller_login_close_icon)
+    @OnClick({R.id.partial_toolbar_right_view, R.id.controller_login_close_icon})
     void onCloseIconClick() {
         mActivity.onBackPressed();
     }
 
     @Override
-    public void showLoginSuccessful(String loginTicket) {
+    public void showLoginSuccessful(String loginTicket, boolean isFacebookLogin) {
+        isLoginSuccess = true;
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.BACK, AppConstants.AUTH_FLAG.LOGIN);
     }
 
     @Override
     public boolean handleBack() {
-        if(!mActivity.isAuthorized()) {
-            mActivity.getMainController().getHomeController().resetVisibleContainer();
+        if (mPresenter.isTablet()) {
+            if (!mActivity.isAuthorized()) {
+                mActivity.getMainController().getHomeController().resetVisibleContainer();
+            }
+            mActivity.getHomeController().resetVisibleContainer();
+
+            return true;
         }
+
+        mActivity.getHomeController().resetVisibleContainer();
+
         hideKeyboard();
+
         return super.handleBack();
+
     }
 
     @Override
-    public void showLoginError(String message) {
-
+    public void showLoginError(String message, boolean isFacebookLogin) {
         mActivity.loginErrorHandler(message);
 
         isLoginTapped = false;
@@ -153,6 +217,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showRegistration() {
+        mWillShowRegistration = true;
         getRouter().pushController(RouterTransaction.with(RegisterController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
@@ -160,6 +225,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showForgotPassword() {
+        mLoginMethod = FORGOT_PASSWORD;
         getRouter().pushController(RouterTransaction.with(ForgotPasswordController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
@@ -171,15 +237,16 @@ public class LoginController extends BaseController implements LoginMvpView {
         mPresenter.loginViaEmail(email, password);
     }
 
-    @OnClick(R.id.fragment_login_signup_text)
+    @OnClick(R.id.controller_login_signup_text)
     void onSignUpClick() {
+        mLoginMethod = LOGIN;
         showRegistration();
     }
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookButtonClick() {
+        mLoginMethod = FACEBOOK;
         mPresenter.onFacebookLogin(mActivity, mCallbackManager, 0);
-
     }
 
     @OnClick(R.id.controller_login_forgot_password_text)
@@ -187,8 +254,26 @@ public class LoginController extends BaseController implements LoginMvpView {
         showForgotPassword();
     }
 
+    @OnClick(R.id.partial_toolbar_left_view)
+    public void onBackPress() {
+        mActivity.onBackPressed();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void onLegalitiesClicked(String key, String title) {
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .putString(BundleKeys.TEMPLATE_KEY, key)
+                .putString(BundleKeys.LEGALITIES_TITLE, title)
+                .build();
+
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.LEGALITIES,
+                bundle,
+                new HorizontalChangeHandler(false),
+                new HorizontalChangeHandler());
     }
 }

@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:textColor="#707070"
-                    android:textSize="@dimen/text_size_xlarge"
+                    android:textSize="@dimen/text_size_headline1"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText"/>
 
@@ -94,7 +94,7 @@
                     android:maxLines="1"
                     android:layout_marginTop="-5dp"
                     android:textColor="@color/cart_order_price_text_color"
-                    android:textSize="@dimen/text_size_xxxlarge"
+                    android:textSize="@dimen/text_size_title"
                     tools:ignore="HardcodedText" />
 
             </LinearLayout>
@@ -145,7 +145,7 @@
                     android:background="@drawable/bg_orders_graph_active_state"
                     android:gravity="center"
                     android:text=""
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/text_medium"
                     tools:ignore="ContentDescription" />
 
                 <!--<ImageView-->
@@ -174,7 +174,7 @@
                     android:background="@drawable/bg_orders_graph_empty_state"
                     android:gravity="center"
                     android:text="2"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/text_medium"
                     tools:ignore="ContentDescription" />
 
                 <View
@@ -195,7 +195,7 @@
                     android:background="@drawable/bg_orders_graph_empty_state"
                     android:gravity="center"
                     android:text="3"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/text_medium"
                     tools:ignore="ContentDescription" />
 
                 <View
@@ -216,7 +216,7 @@
                     android:background="@drawable/bg_orders_graph_empty_state"
                     android:gravity="center"
                     android:text="4"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="@color/text_medium"
                     tools:ignore="ContentDescription" />
 
                 <!--<View-->
@@ -247,7 +247,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:text="Order Date"
-                        android:textColor="@color/gray_field_text"
+                        android:textColor="@color/text_medium"
                         android:textSize="12sp"
                         tools:ignore="HardcodedText" />
 

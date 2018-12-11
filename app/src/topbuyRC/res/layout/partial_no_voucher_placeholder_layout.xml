@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:paddingLeft="@dimen/place_holder_padding"
-    android:paddingRight="@dimen/place_holder_padding"
+    android:paddingLeft="@dimen/padding_default"
+    android:paddingRight="@dimen/padding_default"
     android:visibility="visible"
     tools:ignore="MissingPrefix">
 
@@ -41,7 +41,7 @@
             android:paddingBottom="@dimen/default_button_height"
             android:text="you currently do not have any vouchers."
             android:textColor="#D0D0D0"
-            android:textSize="@dimen/text_size_xlarge" />
+            android:textSize="@dimen/text_size_headline1" />
 
     </LinearLayout>
 

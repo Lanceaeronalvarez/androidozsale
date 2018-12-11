@@ -48,12 +48,12 @@
                         fontPath="@string/font_app_regular"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/screen_padding"
+                        android:layout_margin="@dimen/padding_default"
                         android:gravity="center"
                         android:lineSpacingExtra="5dp"
                         android:text="@string/my_vouchers_view_detail"
                         android:textAlignment="center"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="@dimen/text_size_headline3" />
 
                 </LinearLayout>
 
@@ -65,8 +65,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/screen_padding"
-                        android:layout_marginRight="@dimen/screen_padding"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:layout_marginRight="@dimen/padding_default"
                         android:orientation="horizontal">
 
                         <RelativeLayout
@@ -107,7 +107,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:textColor="@color/white"
                                     android:text="Follow us on Twitter"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_headline2" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -148,7 +148,7 @@
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Like us on Facebook"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_headline2" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -161,9 +161,9 @@
                     android:focusable="false"
                     android:focusableInTouchMode="true"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/screen_padding"
-                    android:paddingRight="@dimen/screen_padding"
-                    android:paddingTop="@dimen/screen_padding">
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:paddingTop="@dimen/padding_default">
 
                     <TextView
                         fontPath="@string/font_app_medium"
@@ -171,7 +171,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:text="@string/send_personal_invite_text"
-                        android:textColor="@color/gray_active_field_text"
+                        android:textColor="@color/text_medium"
                         android:textIsSelectable="false" />
 
 
@@ -186,8 +186,8 @@
                         android:inputType="textMultiLine"
                         android:maxLines="4"
                         android:minLines="4"
-                        android:textColor="@color/gray_active_field_text"
-                        android:textSize="@dimen/text_size_xlarge" />
+                        android:textColor="@color/text_medium"
+                        android:textSize="@dimen/text_size_headline1" />
 
 
                 </LinearLayout>
@@ -197,7 +197,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/screen_padding">
+                    android:padding="@dimen/padding_default">
 
                     <TextView
                         fontPath="@string/font_app_medium"
@@ -205,7 +205,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:text="Invitation link"
-                        android:textColor="@color/gray_active_field_text"/>
+                        android:textColor="@color/text_medium"/>
 
 
                     <RelativeLayout
@@ -232,9 +232,9 @@
                             android:paddingRight="43dp"
                             android:paddingTop="15dp"
                             android:singleLine="true"
-                            android:textColor="@color/gray_inactive_field_text"
-                            android:textColorHint="@color/gray_inactive_field_text"
-                            android:textSize="@dimen/text_size_xlarge"/>
+                            android:textColor="@color/text_medium"
+                            android:textColorHint="@color/text_medium"
+                            android:textSize="@dimen/text_size_headline1"/>
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -247,9 +247,9 @@
                         android:id="@+id/controller_send_invite_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/screen_padding"
-                        android:layout_marginLeft="@dimen/screen_padding"
-                        android:layout_marginRight="@dimen/screen_padding"
+                        android:layout_marginBottom="@dimen/padding_default"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:layout_marginRight="@dimen/padding_default"
                         android:layout_marginTop="10dp"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -293,7 +293,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:textColor="@color/white"
                                     android:text="Copy link to clipboard"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_headline2" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -308,8 +308,8 @@
                             android:paddingLeft="@dimen/invite_friends_padding"
                             android:paddingRight="@dimen/invite_friends_padding"
                             android:text="or"
-                            android:textColor="@color/gray_active_field_text"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textColor="@color/text_medium"
+                            android:textSize="@dimen/text_size_headline2" />
 
                         <RelativeLayout
                             android:id="@+id/invite_friend_facebook_button"
@@ -348,7 +348,7 @@
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Facebook"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_headline2" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -389,7 +389,7 @@
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Twitter"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_headline2" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -431,7 +431,7 @@
                                     android:paddingLeft="@dimen/invite_friends_padding"
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:text="Invite your friends on Email"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_headline2" />
 
                             </LinearLayout>
                         </RelativeLayout>
@@ -472,7 +472,7 @@
                                     android:paddingRight="@dimen/invite_friends_padding"
                                     android:textColor="@color/white"
                                     android:text="Invite your friends on SMS"
-                                    android:textSize="@dimen/text_size_large" />
+                                    android:textSize="@dimen/text_size_headline2" />
 
                             </LinearLayout>
 

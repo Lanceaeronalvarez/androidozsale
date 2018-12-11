@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <selector>
+
+            <item android:state_checked="true" android:state_enabled="true">
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/edit_text_corner_radius"/>
+                    <solid android:color="@color/bg_chips_selected"/>
+                    <stroke android:width="@dimen/border_thin" android:color="@color/bg_chips_border_checked"/>
+                </shape>
+            </item>
+
+            <item android:state_checked="false" android:state_enabled="true">
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/edit_text_corner_radius"/>
+                    <solid android:color="@color/bg_chips_default"/>
+                    <stroke android:width="@dimen/border_thin" android:color="@color/bg_chips_border_default"/>
+                </shape>
+            </item>
+
+        </selector>
+    </item>
+</selector>

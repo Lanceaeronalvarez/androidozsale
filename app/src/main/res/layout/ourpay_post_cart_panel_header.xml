@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:id="@+id/linearLayout_header"
@@ -17,7 +18,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="@dimen/margin_small"
             android:gravity="center">
 
             <TextView
@@ -25,8 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="@dimen/text_size_large"
-                android:text="Here's your payment schedule"/>
+                android:textSize="@dimen/text_size_body"
+                android:text="@string/here_s_your_payment_schedule"/>
 
         </RelativeLayout>
 
@@ -37,24 +38,24 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:visibility="gone"
-            android:paddingBottom="8dp"
-            android:paddingLeft="10dp">
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small">
 
             <TextView
                 android:id="@+id/ourpay_panel_header_remaining_credit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Remaining Credit"
-                android:textSize="25sp"/>
+                android:text="@string/remaining_credit"
+                android:textSize="@dimen/text_size_title"/>
 
             <TextView
                 android:id="@+id/ourpay_panel_header_remaining_credit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="$35.00"
-                android:textColor="#eb5424"
-                android:textSize="25sp"
+                android:layout_marginLeft="@dimen/margin_small"
+                tools:text="$35.00"
+                android:textColor="@color/ourpay_red"
+                android:textSize="@dimen/text_size_title"
                 android:textStyle="bold"/>
 
 
@@ -62,8 +63,8 @@
 
             <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#FFD3D4D4"
+            android:layout_height="@dimen/border_thin"
+            android:background="@color/border_regular"
             />
     </LinearLayout>
 

@@ -38,11 +38,15 @@ android {
             zipAlignEnabled true
 
             resValue "bool", "debug_mode", "false"
+            aaptOptions.cruncherEnabled = true
+            ext.alwaysUpdateBulidId = true
         }
 
         // Always use debug variant during development
         debug {
             resValue "bool", "debug_mode", "true"
+            aaptOptions.cruncherEnabled = false
+            ext.alwaysUpdateBulidId = false
         }
     }
 
@@ -50,13 +54,12 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 4
-            versionName "0.9"
+            versionCode 104
+            versionName "2.4.0"
             applicationId "au.com.buyinvite.bi"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.22/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            buildConfigField "String", "APP_NAME", "\"buyinvite\""
+            buildConfigField "boolean", "IS_TEST", "false"
 
             resValue "string", "app_name", "buyinvite"
             def facebookAppId = "391019637656000"
@@ -65,44 +68,82 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "153472458025053"
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
-            resValue "string", "default_country_id", "BA"
-            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.buyinvite.com.au"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         buyinviteTest {
-            versionCode 6
-            versionName "0.9"
+            versionCode 104
+            versionName "2.4.0"
             applicationId "au.com.buyinvite.bi.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            buildConfigField "String", "APP_NAME", "\"buyinvite\""
+            buildConfigField "boolean", "IS_TEST", "true"
 
             resValue "string", "app_name", "buyinvite Test"
-            def facebookAppId = "171448406947803"
+            def facebookAppId = "391019637656000"
             resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "df91ab6a34e678773a41839b88d18cdb"
+            resValue "string", "facebook_app_secret", "1dea9436118690813bcc315ecfc28705"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "153472458025053"
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
-            resValue "string", "default_country_id", "BA"
-            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.buyinvite.com.au"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
+
+        cocosaRC {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "uk.co.cocosa"
+
+            buildConfigField "String", "APP_NAME", "\"cocosa\""
+            buildConfigField "boolean", "IS_TEST", "false"
+
+            resValue "string", "app_name", "Cocosa"
+            def facebookAppId = "1455477634704544"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "8b8c0b64fa8ac9dc5b4835a68a356bf7"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "10357598833"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=2686522639"
+            resValue "string", "app_uri_hostname", "www.cocosa.com.au"
+
+            ext.newRelicAppToken = "AA29d6653b62c988db6cf1de11f5f6c98ca7a2b0c4"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
+
+        cocosaTest {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "uk.co.cocosatest"
+
+            buildConfigField "String", "APP_NAME", "\"cocosa\""
+            buildConfigField "boolean", "IS_TEST", "true"
+
+            resValue "string", "app_name", "Cocosa Test"
+            def facebookAppId = "1455477634704544"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "8b8c0b64fa8ac9dc5b4835a68a356bf7"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "10357598833"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=2686522639"
+            resValue "string", "app_uri_hostname", "www.cocosa.com.au"
+
+            ext.newRelicAppToken = "AA29d6653b62c988db6cf1de11f5f6c98ca7a2b0c4"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         dealsDirectRC {
-            versionCode 91
-            versionName "2.3.3"
+            versionCode 79
+            versionName "2.3.1"
             applicationId "au.com.dealsdirect"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.22/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            buildConfigField "String", "APP_NAME", "\"dealsdirect\""
+            buildConfigField "boolean", "IS_TEST", "false"
 
             resValue "string", "app_name", "DealsDirect"
             def facebookAppId = "1650094968544406"
@@ -111,22 +152,20 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "default_country_id", "DA"
-            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
 
         dealsDirectTest {
-            versionCode 90
-            versionName "2.3.2"
+            versionCode 82
+            versionName "2.3.1"
             applicationId "au.com.dealsdirect.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
+            buildConfigField "String", "APP_NAME", "\"dealsdirect\""
+            buildConfigField "boolean", "IS_TEST", "true"
 
             resValue "string", "app_name", "DealsDirect Test"
             def facebookAppId = "1658400667713836"
@@ -135,21 +174,19 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "default_country_id", "DA"
-            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ooRC {
-            versionCode 11
-            versionName "0.9"
+            versionCode 105
+            versionName "2.4.0"
             applicationId "au.com.oo"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.oo.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.oo.com.au/papi/public/v3.22/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
+            buildConfigField "String", "APP_NAME", "\"oo\""
+            buildConfigField "boolean", "IS_TEST", "false"
 
             resValue "string", "app_name", "OO"
             def facebookAppId = "1654976038100746"
@@ -158,44 +195,40 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "10357598833"
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
-            resValue "string", "default_country_id", "OA"
-            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.oo.com.au"
 
-            ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            ext.newRelicAppToken = "AA6269938ee23aef375c05484c8ba691eac5daf8f4"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ooTest {
-            versionCode 15
-            versionName "0.9"
+            versionCode 105
+            versionName "2.4.0"
             applicationId "au.com.oo.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-oo-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"25D201EB-9A1C-4045-90B6-E6A9F122C7CB\""
+            buildConfigField "String", "APP_NAME", "\"oo\""
+            buildConfigField "boolean", "IS_TEST", "true"
 
             resValue "string", "app_name", "OO Test"
-            def facebookAppId = "317133352116634"
+            def facebookAppId = "600738863393881"
             resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "e0fecfa7b794941aca88ed0840e50d6c"
+            resValue "string", "facebook_app_secret", "576ebf7aba3f1488605eb8d8886911f6"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "10357598833"
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
-            resValue "string", "default_country_id", "OA"
-            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.oo.com.au"
 
-            ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            ext.newRelicAppToken = "AA6269938ee23aef375c05484c8ba691eac5daf8f4"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         topbuyRC {
-            versionCode 106
-            versionName "2.3.3"
+            versionCode 87
+            versionName "2.3.1"
             applicationId "au.com.topbuy"
 
-            buildConfigField "String", "API_ROOT", "\"https://www.topbuy.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.topbuy.com.au/papi/public/v3.22/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
+            buildConfigField "String", "APP_NAME", "\"topbuy\""
+            buildConfigField "boolean", "IS_TEST", "false"
 
             resValue "string", "app_name", "TopBuy"
             def facebookAppId = "1544909069170785"
@@ -204,21 +237,19 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "47143367223"
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
-            resValue "string", "default_country_id", "TA"
-            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.topbuy.com.au"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         topbuyTest {
-            versionCode 107
-            versionName "2.3.2"
+            versionCode 82
+            versionName "2.3.0"
             applicationId "au.com.topbuy.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-topbuy-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://geniemobileappsclientapi.herokuapp.com/sandbox/public/v3.22/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"909E0AC5-908A-4A73-8E5C-5312DEEBD24C\""
+            buildConfigField "String", "APP_NAME", "\"topbuy\""
+            buildConfigField "boolean", "IS_TEST", "true"
 
             resValue "string", "app_name", "TopBuy Test"
             def facebookAppId = "1544909372504088"
@@ -227,85 +258,378 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "47143367223"
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
-            resValue "string", "default_country_id", "TA"
-            resValue "string", "default_language_id", "EN"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ourpayTest {
-            versionCode 1
+            versionCode 4
             versionName "0.9"
             applicationId "au.com.ourpay.test"
 
-            buildConfigField "String", "API_ROOT", "\"https://genie-ui-dealsdirect-pre.mysaledev.com/\""
-            buildConfigField "String", "API_LEGACY", "\"https://api.mysaledev.com/public/v3.22/\""
+            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
+            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
             buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
 
-            // Undefined values for Ourpay
             resValue "string", "app_name", "Ourpay Test"
-            def facebookAppId = ""
+            def facebookAppId = "1650094968544406"
             resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", ""
+            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", ""
-            resValue "string", "new_relic_app_token", ""
-            resValue "string", "twitter_user_id", ""
-            resValue "string", "default_country_id", "DA"
-            resValue "string", "default_language_id", "EN"
+            resValue "string", "fb_page_id", "257280167216"
+            resValue "string", "new_relic_app_token", "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "asjdasldkalsnasdT"
-            resValue "string", "new_relic_app_token",  ext.newRelicAppToken
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
+        ozsaleRC {
+            versionCode 27
+            versionName "0.9"
+            applicationId "au.com.ozsale"
+
+            buildConfigField "String", "APP_NAME", "\"ozsale\""
+            buildConfigField "boolean", "IS_TEST", "false"
+
+            resValue "string", "app_name", "Ozsale"
+            def facebookAppId = "421544284547550"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "f08401cb63ac18241e51e2184d8cd80a"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "160420993982663"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
+            resValue "string", "app_uri_hostname", "www.ozsale.com.au"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+
+        }
+
+        ozsaleTest {
+            versionCode 20
+            versionName "0.9"
+            applicationId "au.com.ozsale.test"
+
+            buildConfigField "String", "APP_NAME", "\"ozsale\""
+            buildConfigField "boolean", "IS_TEST", "true"
+
+            resValue "string", "app_name", "Ozsale Test"
+            def facebookAppId = "437865102935987"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "5c6326d03e5d2ba866ecada5b206b6d6"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "160420993982663"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
+            resValue "string", "app_uri_hostname", "www.ozsale.com.au"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+
+        }
+
+        singsaleRC {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "sg.com.singsale"
+
+            buildConfigField "String", "APP_NAME", "\"singsale\""
+            buildConfigField "boolean", "IS_TEST", "false"
+
+            resValue "string", "app_name", "Singsale"
+            def facebookAppId = "213701285425668"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "586750a24521ba339ff775ff2d729eb8"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "181383195228374"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=524844978"
+            resValue "string", "app_uri_hostname", "www.singsale.com.sg"
+
+            ext.newRelicAppToken = "AA7859bf063d467b13d1118979fb839dec128eb88a"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+
+        }
+
+        singsaleTest {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "sg.com.singsaletest"
+
+            buildConfigField "String", "APP_NAME", "\"singsale\""
+            buildConfigField "boolean", "IS_TEST", "true"
+
+            resValue "string", "app_name", "Singsale"
+            def facebookAppId = "213701285425668"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "586750a24521ba339ff775ff2d729eb8"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "181383195228374"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=524844978"
+            resValue "string", "app_uri_hostname", "www.singsale.com.sg"
+
+            ext.newRelicAppToken = "AA7859bf063d467b13d1118979fb839dec128eb88a"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
+
+        nzsaleRC {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "nz.co.nzsale"
+
+            buildConfigField "String", "APP_NAME", "\"nzsale\""
+            buildConfigField "boolean", "IS_TEST", "false"
+
+            resValue "string", "app_name", "Nzsale"
+            def facebookAppId = "122094841270614"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "c427c4000b760c98c818350619930764"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "293974924171"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=61630958"
+            resValue "string", "app_uri_hostname", "www.nzsale.co.nz"
+
+            ext.newRelicAppToken = "AAfebece95884f3f5bc6acaacb76d02440c0f7eb85"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+
+        }
+
+        nzsaleTest {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "nz.co.nzsaletest"
+
+            buildConfigField "String", "APP_NAME", "\"nzsale\""
+            buildConfigField "boolean", "IS_TEST", "true"
+
+            resValue "string", "app_name", "Nzsale Test"
+            def facebookAppId = "122094841270614"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "c427c4000b760c98c818350619930764"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "293974924171"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=61630958"
+            resValue "string", "app_uri_hostname", "www.nzsale.co.nz"
+
+            ext.newRelicAppToken = "AAfebece95884f3f5bc6acaacb76d02440c0f7eb85"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+
+        }
+
+        mysaleRC {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "my.mysale.mysale"
+
+            buildConfigField "String", "APP_NAME", "\"mysale\""
+            buildConfigField "boolean", "IS_TEST", "false"
+
+            resValue "string", "app_name", "Mysale"
+            def facebookAppId = "485479254797079"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "fee7b274d99b23eca0c283d48b2f453a"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "161478120632146"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=524892602"
+            resValue "string", "app_uri_hostname", "www.mysale.ph"
+
+            ext.newRelicAppToken = "AAfb90a146f4b17ba00df83492608b2d7057e99e16"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
+
+        mysaleTest {
+            versionCode 101
+            versionName "1.14.0"
+            applicationId "my.mysale.mysaletest"
+
+            buildConfigField "String", "APP_NAME", "\"mysale\""
+            buildConfigField "boolean", "IS_TEST", "true"
+
+            resValue "string", "app_name", "Mysale Test"
+            def facebookAppId = "485479254797079"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "fee7b274d99b23eca0c283d48b2f453a"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "161478120632146"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=524892602"
+            resValue "string", "app_uri_hostname", "www.mysale.ph"
+
+            ext.newRelicAppToken = "AAfb90a146f4b17ba00df83492608b2d7057e99e16"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
 
     }
 
     sourceSets {
         dealsDirectRC {
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonRegisterController/java',
+                            'src/commonSaleItemDetailsController/java/',
+                            'src/commonSaleItemsController/java/',
+                            'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
+                            'src/commonReturnsControllers/java/',
+                            'src/commonShopsController/java/',
+                            'src/commonOrdersController/java',
+                            'src/commonMainController/java/',
+                            'src/commonAccountController/java',
+                            'src/commonPaymentsController/java',
+                            'src/commonAddressController/java',
+                            'src/commonActivity/java/',
+                            'src/dealsDirectRC/java/',
+                            'src/main/java/']
         }
 
         dealsDirectTest {
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java/']
+            java.srcDirs = ['src/commonControllers/java/',
+                            'src/commonHomeController/java/',
+                            'src/commonCategoriesController/java/',
+                            'src/commonRegisterController/java',
+                            'src/commonSaleItemDetailsController/java/',
+                            'src/commonSaleItemsController/java/',
+                            'src/commonSearchFilterController/java/',
+                            'src/commonContactControllers/java/',
+                            'src/commonRegisterController/java',
+                            'src/commonReturnsControllers/java/',
+                            'src/commonOrdersController/java',
+                            'src/commonShopsController/java/',
+                            'src/commonMainController/java/',
+                            'src/commonAccountController/java',
+                            'src/commonAddressController/java',
+                            'src/commonPaymentsController/java',
+                            'src/commonActivity/java/',
+                            'src/dealsDirectRC/java/',
+                            'src/main/java/']
         }
 
         ooRC {
-            res.srcDir 'src/ooTest/res/'
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java/']
+            res.srcDirs = ['src/ooRC/res', 'src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
         }
 
         ooTest {
-            res.srcDir 'src/ooTest/res/'
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java/']
+            res.srcDirs = ['src/ooRC/res', 'src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
         }
 
         buyinviteRC {
-            res.srcDir 'src/buyinviteTest/res/'
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java/']
+            res.srcDirs = ['src/buyinviteTest/res/', 'src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+            'src/commonControllers/java/',
+            'src/main/java/']
         }
 
         buyinviteTest {
-            java.srcDirs = ['src/commonControllers/java/', 'src/commonActivity/java/', 'src/main/java']
+            res.srcDirs = ['src/buyinviteTest/res/', 'src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
         }
 
         ourpayTest {
-            java.srcDirs = ['src/ourpayTest/java/', 'src/commonControllers/java/', 'src/main/java/']
+            java.srcDirs = ['src/ourpayTest/java/',
+                            'src/commonControllers/java/',
+                            'src/commonRegisterController/java',
+                            'src/commonSaleItemDetailsController/java/',
+                            'src/commonOrdersController/java',
+                            'src/commonContactControllers/java/',
+                            'src/commonAddressController',
+                            'src/commonReturnsControllers/java/',
+                            'src/commonPaymentsController/java',
+                            'src/commonAccountController/java',
+                            'src/main/java/']
         }
 
         topbuyTest {
-            res.srcDir 'src/topbuyRC/res/'
             java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
         }
 
         topbuyRC {
-            res.srcDir 'src/topbuyRC/res/'
             java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
+        }
+
+
+        ozsaleRC {
+            res.srcDirs = ['src/ozsaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        ozsaleTest {
+            res.srcDirs = ['src/ozsaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        singsaleRC {
+            res.srcDirs = ['src/singsaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        singsaleTest {
+            res.srcDirs = ['src/singsaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        cocosaRC {
+            res.srcDirs = ['src/cocosaRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        cocosaTest {
+            res.srcDirs = ['src/cocosaRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        nzsaleRC {
+            res.srcDirs = ['src/nzsaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        nzsaleTest {
+            res.srcDirs = ['src/nzsaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        mysaleRC {
+            res.srcDirs = ['src/mysaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        mysaleTest {
+            res.srcDirs = ['src/mysaleRC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
         }
 
         main {
             java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/resources']
         }
     }
 
@@ -324,10 +648,6 @@ android {
 
     dataBinding {
         enabled = true
-    }
-
-    dexOptions {
-        javaMaxHeapSize "4g"
     }
 }
 
@@ -349,6 +669,8 @@ dependencies {
     compile "com.android.support:design:$rootProject.supportLibrary"
     compile "com.android.support:support-vector-drawable:$rootProject.supportLibrary"
     compile "com.android.support:animated-vector-drawable:$rootProject.supportLibrary"
+
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
     // font
     compile "uk.co.chrisjenx:calligraphy:$rootProject.calligraphyVersion"
@@ -401,17 +723,22 @@ dependencies {
 
     // recycler view pager
     compile "com.github.lsjwzh.RecyclerViewPager:lib:$rootProject.recyclerViewPagerVersion"
+    // advanced recyclerview
+    implementation ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar')
     // flow layout
     compile "com.zhy:flowlayout-lib:$rootProject.flowLayoutVersion"
     // photo view
     compile "com.github.chrisbanes:PhotoView:$rootProject.photoViewVersion"
     // bottom navigation
-    compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
+    compile 'com.aurelhubert:ahbottomnavigation:2.1.0'
     // circle indicator
     compile 'me.relex:circleindicator:1.2.2@aar'
 
     // glide
     compile "com.github.bumptech.glide:glide:$rootProject.glideVersion"
+
+    // picker
+    compile "com.shawnlin:number-picker:$rootProject.numberPickerVersion"
 
     // guava
     compile "com.google.guava:guava:$rootProject.guavaVersion"
@@ -433,6 +760,9 @@ dependencies {
     //viewpager indicator
     compile 'me.relex:circleindicator:1.2.2@aar'
 
+    // sticky headers
+    compile "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
+
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     testCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
@@ -451,7 +781,7 @@ dependencies {
     }
 
     // Answers
-    compile('com.crashlytics.sdk.android:answers:1.3.13@aar') {
+    compile('com.crashlytics.sdk.android:answers:1.4.2@aar') {
         transitive = true
     }
 
@@ -473,8 +803,10 @@ dependencies {
     compile project(path: ':genie-utility')
     compile project(path: ':genie-animation')
     compile project(path: ':genie-views')
+    compile project(path: ':genie-profiler')
     compile project(path: ':CardForm')
     compile project(path: ':ptr-lib')
+
 
 }
 

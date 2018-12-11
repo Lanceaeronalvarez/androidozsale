@@ -67,6 +67,65 @@ public class GetTemplateTextsResponse {
         @Expose
         private String paymentSchedule;
 
+        @SerializedName("_Free")
+        @Expose
+        private String deliveryOptionOPSFree;
+        @SerializedName("_DeliveryOption_OURPAYSELECT_Title")
+        @Expose
+        private String deliveryOptionOPSTitle;
+        @SerializedName("_DeliveryOption_OURPAYSELECT_Description")
+        @Expose
+        private String deliveryOptionOPSDescription;
+        @SerializedName("_DeliveryOption_EXPRESS_Title")
+        @Expose
+        private String deliveryOptionExpressTitle;
+        @SerializedName("_DeliveryOption_EXPRESS_Description")
+        @Expose
+        private String deliveryOptionExpressDescription;
+        @SerializedName("_DeliveryOption_STANDARD_Title")
+        @Expose
+        private String deliveryOptionStandardTitle;
+        @SerializedName("_Ops_description_remaining")
+        @Expose
+        private String deliveryOptionOPSDescriptionRemaining;
+        @SerializedName("_Ops_info_remaining_before_purchase")
+        @Expose
+        private String deliveryOptionOPSInfoBeforePurchase;
+        @SerializedName("_Ops_info_remaining_before_purchase_free_delivery")
+        @Expose
+        private String deliveryOptionOPSInfoBeforeFreeDelivery;
+        @SerializedName("_OurPaySelectTermsAndConditionsHeader")
+        @Expose
+        private String deliveryOptionOPSTncHeader;
+        @SerializedName("_OurPaySelectTermsAndConditionsBody")
+        @Expose
+        private String deliveryOptionOPSTncBody;
+        @SerializedName("_PleaseFillPersonalization")
+        @Expose
+        private String personalisationValidation;
+
+        @SerializedName("_consentContinueText")
+        @Expose
+        private String consentContinueText;
+        @SerializedName("_consentWithTCText")
+        @Expose
+        private String consentWithTCText;
+        @SerializedName("_consentWithEmailsText")
+        @Expose
+        private String consentWithEmailsText;
+        @SerializedName("_consentWithRegistrationTermsWarning")
+        @Expose
+        private String consentWithRegistrationTermsWarning;
+        @SerializedName("ConsentShortTextPTNameV1")
+        @Expose
+        private String consentShortTextPTNameV1;
+        @SerializedName("ConsentFullTextPTNameV1")
+        @Expose
+        private String consentFullTextPTNameV1;
+        @SerializedName("TermsAndConditions_Text")
+        @Expose
+        private String termsAndConditionsText;
+
         public String getCheckoutMyPayPayExceedLimit() {
             return checkoutMyPayPayExceedLimit;
         }
@@ -145,6 +204,82 @@ public class GetTemplateTextsResponse {
 
         public void setPaymentSchedule(String paymentSchedule) {
             this.paymentSchedule = paymentSchedule;
+        }
+
+        public String getDeliveryOptionOPSFree() {
+            return deliveryOptionOPSFree;
+        }
+
+        public String getDeliveryOptionOPSTitle() {
+            return deliveryOptionOPSTitle;
+        }
+
+        public String getDeliveryOptionOPSDescription() {
+            return deliveryOptionOPSDescription;
+        }
+
+        public String getDeliveryOptionExpressTitle() {
+            return deliveryOptionExpressTitle;
+        }
+
+        public String getDeliveryOptionExpressDescription() {
+            return deliveryOptionExpressDescription;
+        }
+
+        public String getDeliveryOptionStandardTitle() {
+            return deliveryOptionStandardTitle;
+        }
+
+        public String getDeliveryOptionOPSDescriptionRemaining() {
+            return deliveryOptionOPSDescriptionRemaining;
+        }
+
+        public String getDeliveryOptionOPSInfoBeforePurchase() {
+            return deliveryOptionOPSInfoBeforePurchase;
+        }
+
+        public String getDeliveryOptionOPSInfoBeforeFreeDelivery() {
+            return deliveryOptionOPSInfoBeforeFreeDelivery;
+        }
+
+        public String getDeliveryOptionOPSTncHeader() {
+            return deliveryOptionOPSTncHeader;
+        }
+
+        public String getDeliveryOptionOPSTncBody() {
+            return deliveryOptionOPSTncBody;
+        }
+
+        public String getPersonalisationValidation() {
+            return personalisationValidation;
+        }
+
+        public String getConsentContinueText() {
+            return consentContinueText;
+        }
+
+        public String getConsentWithTCText() {
+            return consentWithTCText;
+        }
+
+        public String getConsentWithEmailsText() {
+            return consentWithEmailsText;
+        }
+
+        public String getConsentWithRegistrationTermsWarning() {
+            return consentWithRegistrationTermsWarning;
+        }
+
+        public String getConsentShortTextPTNameV1() {
+            return consentShortTextPTNameV1;
+        }
+
+        public String getConsentFullTextPTNameV1() {
+            return consentFullTextPTNameV1;
+        }
+
+        public String getTermsAndConditionsText() {
+            return termsAndConditionsText;
         }
     }
 }

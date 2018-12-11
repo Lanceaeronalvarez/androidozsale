@@ -3,7 +3,7 @@
     <string name="category_default">shop</string>
     <string name="sorry_default_text">sorry, no product matches with </string>
     <string name="tap_to_retry">Tap to retry</string>
-    <string name="thank_you_for_shopping">Thank you for shopping with TopBuy</string>
+    <string name="thank_you_for_shopping">Thank you for shopping with</string>
     <string name="my_vouchers">my vouchers</string>
     <string name="value">value</string>
     <string name="my_vouchers_view_detail">Invite your friends to join TOPBUY. Once your friend have
@@ -33,6 +33,7 @@
 
     <string name="invite_friends">invite friends</string>
 
+    <string name="your_current_delivery_address">your current delivery address</string>
     <string name="your_cart_is_currently_empty">your cart is currently empty</string>
     <string name="you_have_not_added_any_items_in_your_shopping_cart">you have not added any items
         in your shopping cart
@@ -137,6 +138,7 @@
     <string name="account_tnc">terms &amp; conditions</string>
     <string name="account_tutorial">tutorial</string>
     <string name="account_logout">logout</string>
+    <string name="personalise">personalise</string>
 
     <string-array name="account_title_array">
         <item>@string/account_orders</item>

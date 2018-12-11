@@ -17,12 +17,12 @@
 
         <TextView
             android:id="@+id/row_payment_schedule_day"
-            fontPath="@string/font_lato_semibold"
+            fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
             android:textColor="@color/edit_text_label"
-            android:textSize="@dimen/text_size_xxxlarge"
+            android:textSize="@dimen/text_size_headline1"
             tools:ignore="MissingPrefix"
             tools:text="12" />
 
@@ -33,7 +33,7 @@
             android:layout_below="@id/row_payment_schedule_day"
             android:paddingBottom="20dp"
             android:textColor="#adadad"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_body"
             tools:text="Jan" />
 
         <View
@@ -62,18 +62,18 @@
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@id/row_payment_schedule_card_image"
             android:textColor="#adadad"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textSize="@dimen/text_size_headline3"
             tools:text="95068491" />
 
         <TextView
             android:id="@+id/row_payment_schedule_value"
-            fontPath="@string/font_lato_semibold"
+            fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:textColor="@color/edit_text_label"
-            android:textSize="@dimen/text_size_xxxlarge"
+            android:textSize="@dimen/text_size_headline1"
             tools:ignore="MissingPrefix"
             tools:text="$100" />
 

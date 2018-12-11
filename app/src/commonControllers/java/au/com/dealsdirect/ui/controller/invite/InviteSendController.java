@@ -38,10 +38,15 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
+import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
+import butterknife.OnClick;
+
+import static au.com.dealsdirect.service.event.ActionTracker.InviteType.CANCEL;
 
 /**
  * Created by Paul on 7/3/17.
@@ -55,55 +60,55 @@ public class InviteSendController extends BasePullToRefreshController implements
     @BindView(R.id.controller_send_invite_root)
     View mRoot;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
-    @BindView(R.id.partial_toolbar_right_view)
-    ImageView mFilterView;
-
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mArrowImage;
+    View mLeftView;
 
-    @BindView(R.id.controller_send_invite_container)
+    @BindView(R.id.partial_toolbar_right_view)
+    ImageView mRightView;
+
+    @BindView(R.id.controller_invite_buttons_layout)
     LinearLayout mSendInvitationContainer;
 
-    @BindView(R.id.invite_friends_sms_button)
+    @BindView(R.id.controller_invite_sms_button)
     RelativeLayout mMessageSendInvitationLayout;
 
-    @BindView(R.id.invite_friends_email_button)
+    @BindView(R.id.controller_invite_email_button)
     RelativeLayout mMailSendInvitationLayout;
 
-    @BindView(R.id.invite_friend_twitter_button)
+    @BindView(R.id.controller_invite_twitter_button)
     RelativeLayout mTwitterSendInvitationLayout;
 
-    @BindView(R.id.invite_friend_facebook_button)
+    @BindView(R.id.controller_invite_facebook_button)
     RelativeLayout mFacebookSendInvitationLayout;
 
-    @BindView(R.id.invite_friend_twitter_follow_us_button_layout)
+    @BindView(R.id.controller_invite_follow_us_layout)
     RelativeLayout mTwitterFollowUsContainer;
 
-    @BindView(R.id.invite_friend_facebook_like_us_on_facebook_button_layout)
+    @BindView(R.id.controller_invite_like_us_layout)
     RelativeLayout mFacebookLikeUsContainer;
 
-    @BindView(R.id.controller_send_invite_edit_text_personal_invitation)
+    @BindView(R.id.controller_invite_personal_invitation_link_edittext)
     EditText mPersonalInvitationMessageEditText;
 
-    @BindView(R.id.controller_send_invite_edit_text_deals_direct_link)
+    @BindView(R.id.controller_invite_invitation_link_edittext)
     EditText mPersonalInvitationLinkEditText;
 
-    @BindView(R.id.invite_friend_clipboard_button)
+    @BindView(R.id.controller_invite_clipboard_button)
     RelativeLayout mClipboardButton;
 
-    @BindView(R.id.invite_friend_clipboard_text)
+    @BindView(R.id.controller_invite_clipboard_text)
     TextView mClipboardText;
 
     @BindView(R.id.invite_friend_clipboard_image)
     ImageView mClipboardImage;
 
-    @BindView(R.id.controller_invite_image_vouchers)
+    @BindView(R.id.controller_invite_vouchers_imageview)
     ImageView mImageView;
 
-    @BindView(R.id.controller_send_invite_layout_select_order_option)
+    @BindView(R.id.controller_invite_invitation_link_layout)
     RelativeLayout mSendInviteLinkLayout;
 
     GetInviteResponse.Value inviteBody;
@@ -113,6 +118,8 @@ public class InviteSendController extends BasePullToRefreshController implements
     String bannerImageUrl;
 
     ProgressDialog progress;
+
+    private String mInviteMethod = CANCEL;
 
     private TextWatcher mTextWatcher = new TextWatcher() {
         @Override
@@ -150,9 +157,9 @@ public class InviteSendController extends BasePullToRefreshController implements
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
+        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        setToolBarVisible(getResource().getBoolean(R.bool.invite_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_invite_send, container, false));
 
         getControllerComponent().inject(this);
@@ -187,15 +194,16 @@ public class InviteSendController extends BasePullToRefreshController implements
         assert mActivity != null;
         mActivity.getMainController().showBottomNav();
 
-        mTitleText.setText("Invite Friends");
-        mFilterView.setVisibility(View.INVISIBLE);
-        mArrowImage.setVisibility(View.INVISIBLE);
+        mActivity.getMainController().setViewpagerDraggable(false);
 
+        if(mPresenter.isTablet()){
+            mLeftView.setVisibility(View.INVISIBLE);
+        }
 
-        Glide.with(mActivity)
-                .load(R.drawable.invite_friend_vouchers_medium)
-                .placeholder(R.drawable.invite_friend_vouchers_medium)
-                .into(mImageView);
+        mTitleText.setText(getString(R.string.account_invite_friend));
+        mRightView.setVisibility(View.INVISIBLE);
+
+        mImageView.setImageDrawable(mActivity.getDrawable(R.drawable.invite_friend_vouchers_image));
 
         String twitterLink = mPresenter.getFollowUsTwitterLink();
         String facebookLink = mPresenter.getFollowUsFbLink();
@@ -250,6 +258,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                     }
                 }
                 if (resolved) {
+                    mInviteMethod = ActionTracker.InviteType.TWITTER;
                     startActivity(tweetIntent);
                 } else {
                     Intent i = new Intent();
@@ -278,13 +287,12 @@ public class InviteSendController extends BasePullToRefreshController implements
                     ShareLinkContent content =
                             new ShareLinkContent.Builder()
                                     .setContentUrl(Uri.parse(invitationLink))
-                                    .setContentTitle(inviteSubject)
                                     .setImageUrl(Uri.parse(bannerImageUrl))
-                                    .setContentDescription(inviteMessage)
-                                    .setQuote(personalInvitation)
                                     .build();
                     ShareDialog shareDialog = new ShareDialog(mActivity);
                     shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
+
+                    mInviteMethod = ActionTracker.InviteType.FACEBOOK;
 
                 } catch (Exception e) {
 //                    GDebug.log("facebookSendInvite",e.getMessage());
@@ -302,7 +310,9 @@ public class InviteSendController extends BasePullToRefreshController implements
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
                 String messageWithInvite = message + " " + invitationLink;
 
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                mInviteMethod = ActionTracker.InviteType.SMS;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(mActivity);
 
                     Intent sendIntent = new Intent(Intent.ACTION_SEND);
@@ -310,11 +320,10 @@ public class InviteSendController extends BasePullToRefreshController implements
                     sendIntent.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
                     sendIntent.putExtra("sms_body", messageWithInvite);
 
-                    if (defaultSmsPackageName != null)
-                    {
+                    if (defaultSmsPackageName != null) {
                         sendIntent.setPackage(defaultSmsPackageName);
                     }
-                    mActivity.startActivity(sendIntent);
+                    startActivity(sendIntent);
                 } else {
                     Intent smsIntent = new Intent(android.content.Intent.ACTION_VIEW);
                     smsIntent.setType("vnd.android-dir/mms-sms");
@@ -336,11 +345,9 @@ public class InviteSendController extends BasePullToRefreshController implements
                 String messageWithInvite = message + " " + invitationLink;
 
                 if (invitationLink.isEmpty() || invitationLink.equals("")) {
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-
                             String message = mPersonalInvitationMessageEditText.getText().toString();
                             String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
                             String messageWithInvite = message + " " + invitationLink;
@@ -348,8 +355,8 @@ public class InviteSendController extends BasePullToRefreshController implements
                             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", " ", null));
                             emailIntent.putExtra(Intent.EXTRA_SUBJECT, inviteSubject);
                             emailIntent.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
+                            mInviteMethod = ActionTracker.InviteType.EMAIL;
                             startActivity(Intent.createChooser(emailIntent, "Send email..."));
-
                         }
                     }, 2000);
 
@@ -447,18 +454,25 @@ public class InviteSendController extends BasePullToRefreshController implements
         });
 
         mPersonalInvitationLinkEditText.setOnFocusChangeListener((view1, b) -> {
-            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.gray_active_field_text));
+            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.text_extra_dark));
         });
 
         mPersonalInvitationMessageEditText.setOnFocusChangeListener((view1, b) -> {
-            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.gray_inactive_field_text));
+            mPersonalInvitationLinkEditText.setTextColor(getResources().getColor(R.color.text_extra_light));
         });
 
         mPresenter.start();
     }
 
+    @OnClick(R.id.partial_toolbar_left_view)
+    public void onBackClick() {
+        hideKeyboard();
+        mActivity.onBackPressed();
+    }
+
     @Override
     protected void onDestroyView(@NonNull View view) {
+        mActionTracker.share(mInviteMethod, ActionTracker.ViewSource.INVITE);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }

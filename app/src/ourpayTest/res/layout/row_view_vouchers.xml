@@ -7,74 +7,88 @@
     tools:ignore="MissingPrefix">
 
     <LinearLayout
-        android:id="@+id/row_layout_vouchers"
+        android:id="@+id/row_view_vouchers_layout"
         android:layout_width="@dimen/voucher_container_width"
         android:layout_height="@dimen/voucher_container_height"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
+        android:background="@color/row_background_color"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin"
-        tools:ignore="UselessParent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/bg_voucher_item">
+        tools:ignore="UselessParent">
+
 
         <TextView
-            android:id="@+id/row_text_vouchers_item_cost_value"
-            android:layout_width="wrap_content"
+            android:id="@+id/row_view_voucher_name_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/row_view_voucher_cost_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_app_light"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_xxxxlarge"
-            android:textStyle="bold"
-            android:layout_gravity="right"/>
+            android:textSize="@dimen/text_size_subtitle"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/row_text_vouchers_item_already_spent"
+            android:id="@+id/row_view_voucher_already_spent_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_app_light"
             android:maxLines="2"
-            android:text="Already\nSpent"
+            android:text="@string/already_spent"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_xxxlarge"
+            android:textSize="@dimen/text_size_headline1"
             android:textStyle="bold"
-            android:visibility="gone"
-            android:layout_gravity="right"/>
+            android:visibility="gone" />
 
         <TextView
-            android:id="@+id/row_text_label_value"
+            android:id="@+id/row_view_voucher_value_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_app_light"
-            android:text="scheduledPlan"
+            android:text="@string/scheduled_plans"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_xxlarge"
-            android:layout_gravity="right"/>
+            android:textSize="@dimen/text_size_headline2" />
 
         <TextView
-            android:id="@+id/row_text_vouchers_item_desc"
+            android:id="@+id/row_view_voucher_desc_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/margin_extra_small"
             android:fontFamily="@string/font_app_light"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small"
-            tools:text="voucher good for use until,"
-            android:layout_gravity="right"/>
+            android:textSize="@dimen/text_size_caption2"
+            android:text="@string/voucher_good_for_use_until" />
 
         <TextView
-            android:id="@+id/row_text_vouchers_item_expires_on_value"
+            android:id="@+id/row_view_voucher_expiry_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:fontFamily="@string/font_app_light"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_small"
-            tools:text="January 15"
-            android:layout_gravity="right"/>
+            android:textSize="@dimen/text_size_caption2" />
+
+        <TextView
+            android:id="@+id/row_view_voucher_purchased_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/row_view_voucher_activated_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
     </LinearLayout>
 

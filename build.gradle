@@ -20,6 +20,15 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.gradle.build-scan' version '1.16'
+}
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
+}
+
 allprojects {
     repositories {
         jcenter()
@@ -40,12 +49,12 @@ task clean(type: Delete) {
 ext {
     // Sdk and tools
     minSdkVersion = 21
-    targetSdkVersion = 25
-    compileSdkVersion = 25
+    targetSdkVersion = 26
+    compileSdkVersion = 26
     buildToolsVersion = '26.0.2'
 
     // App dependencies
-    supportLibrary = '25.3.1'
+    supportLibrary = '26.0.2'
     gsonVersion = '2.8.1'
     calligraphyVersion = '2.2.0'
 
@@ -62,6 +71,7 @@ ext {
     debugDBVersion = '1.0.0'
     timberVersion = '4.5.1'
     guavaVersion = '22.0-android'
+    numberPickerVersion = '2.4.4'
 
     //Test dependencies
     junitVersion = '4.12'
@@ -74,7 +84,7 @@ ext {
     paginateVersion = '0.5.1'
 
     //Image Loading
-    glideVersion = '3.8.0'
+    glideVersion = '4.3.1'
     photoViewVersion = '2.0.0'
 
     flowLayoutVersion = '1.0.3'
@@ -85,6 +95,7 @@ ext {
 
     gcmVersion = '11.8.0'
     crystalRangeSeekbarVersion = '1.1.1'
+    stickyHeadersVersion = '0.4.3@aar'
 
     //transactiontoolarge logger
     tooLargeToolVersion = '0.1.3'

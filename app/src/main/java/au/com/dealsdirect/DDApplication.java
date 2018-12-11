@@ -19,6 +19,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.di.component.ApplicationComponent;
 import au.com.dealsdirect.di.component.DaggerApplicationComponent;
 import au.com.dealsdirect.di.module.ApplicationModule;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -39,6 +40,8 @@ public class DDApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Settings.getSupportedCountries();
 
         //Remove legacy cache and database
         removeLegacyData();
@@ -79,14 +82,14 @@ public class DDApplication extends Application {
         return mApplicationComponent;
     }
 
-    // Needed to replace the component with a test specific one
+    // Needed to replace the au.com.dealsdirect.di.component with a test specific one
     public void setComponent(ApplicationComponent applicationComponent) {
         mApplicationComponent = applicationComponent;
     }
 
     private void initFonts() {
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/App-Font-Regular.ttf")
+                .setDefaultFontPath(getString(R.string.font_app_regular))
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
@@ -111,7 +114,8 @@ public class DDApplication extends Application {
             Timber.d("CLEAN_LEGACY", "delete preferences");
 
             this.getSharedPreferences("MainActivity", Context.MODE_PRIVATE).edit().clear().apply();
-            this.getSharedPreferences("MyPrefsFile", Context.MODE_PRIVATE).edit().clear().apply();
+//            do not clear prefs so as users do not get logged out when updating to new app
+//            this.getSharedPreferences("MyPrefsFile", Context.MODE_PRIVATE).edit().clear().apply();
             this.getSharedPreferences("RateThisApp", Context.MODE_PRIVATE).edit().clear().apply();
 
             //Remove Cache folder and image cache

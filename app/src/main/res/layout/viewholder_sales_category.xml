@@ -13,8 +13,8 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="@dimen/category_background_size"
-            android:layout_height="@dimen/category_background_size"
+            android:layout_width="@dimen/category_background_width"
+            android:layout_height="@dimen/category_background_width"
             android:background="@drawable/bg_category_item_inactive">
 
             <ImageView
@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:textColor="@color/gray_title_text"
+                android:textColor="@color/text_light"
                 android:textSize="20sp"
                 tools:text="A" />
 
@@ -50,8 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center_horizontal"
-            android:textColor="@color/gray_field_text"
-            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_caption1"
             tools:text="Mens" />
 
     </LinearLayout>

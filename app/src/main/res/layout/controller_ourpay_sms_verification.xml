@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_default"
     android:clickable="true"
     android:orientation="vertical">
 
@@ -23,8 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:text="@string/confirm_your_phone_number"
-            android:textColor="@color/dark_gray"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_body"
             android:textStyle="bold"/>
 
         <TextView
@@ -38,7 +39,7 @@
             android:layout_height="wrap_content">
 
             <ProgressBar
-                android:id="@+id/ourpay_progress_extension"
+                android:id="@+id/controller_ourpay_progress_extension"
                 android:layout_width="50dp"
                 android:layout_height="43dp"
                 android:layout_marginTop="15dp"
@@ -46,18 +47,18 @@
                 android:padding="10dp"/>
 
             <EditText
-                android:id="@+id/ourpay_edittext_extension"
+                android:id="@+id/controller_ourpay_edittext_extension"
                 android:layout_width="50dp"
                 android:layout_height="43dp"
                 android:layout_marginTop="15dp"
-                android:textColor="@color/dark_text"
+                android:textColor="@color/text_extra_dark"
                 android:background="@drawable/ourpay_phone_extension_background"
                 android:enabled="false"
                 android:gravity="center"
                 android:visibility="invisible"/>
 
             <EditText
-                android:id="@+id/ourpay_edittext_phone"
+                android:id="@+id/controller_ourpay_edittext_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -83,7 +84,7 @@
                 android:layout_alignParentStart="true"
                 android:paddingTop="5dp"
                 android:text="@string/invalid_phone_number"
-                android:textColor="@color/red"
+                android:textColor="@color/ourpay_red"
                 android:textSize="12sp"
                 android:visibility="gone"/>
 
@@ -95,7 +96,7 @@
                 android:layout_alignParentRight="true"
                 android:paddingTop="5dp"
                 android:text="@string/resend_code"
-                android:textColor="@color/verify_resend_color"
+                android:textColor="@color/ourpay_verify_resend"
                 android:textSize="12sp"/>
 
         </RelativeLayout>
@@ -109,13 +110,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enter_your_code_below"
-            android:textColor="@color/dark_gray"
-            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_body"
             android:textStyle="bold"/>
 
 
         <EditText
-            android:id="@+id/ourpay_edittext_code"
+            android:id="@+id/controller_ourpay_edittext_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -124,7 +125,7 @@
             android:focusableInTouchMode="true"
             android:gravity="center"
             android:maxLength="6"
-            android:hint="xxxx"
+            android:hint="@string/ourpay_code_hint"
             android:inputType="phone"
             android:padding="10dp"/>
 
@@ -135,7 +136,7 @@
             android:layout_gravity="center"
             android:paddingTop="5dp"
             android:text="@string/invalid_code"
-            android:textColor="@color/red"
+            android:textColor="@color/ourpay_red"
             android:textSize="12sp"
             android:visibility="gone"/>
 

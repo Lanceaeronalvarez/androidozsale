@@ -41,7 +41,6 @@ public class HomePresenter<V extends HomeMvpView> extends BasePresenter<V> imple
                     }
 
                     getMvpView().hideLoading();
-                    getMvpView().onError(throwable.getMessage());
 
                     // handle load accounts error here
                     if (throwable instanceof ANError) {

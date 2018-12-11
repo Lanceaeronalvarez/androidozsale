@@ -11,4 +11,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface OrderDetailsMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
     void loadOrderDetails(GetOrderPaymentDetails.RequestValues requestValues);
+
+    void showTrackingWeb(String link);
 }

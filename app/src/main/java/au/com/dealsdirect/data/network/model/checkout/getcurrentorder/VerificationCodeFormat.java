@@ -6,33 +6,33 @@ package au.com.dealsdirect.data.network.model.checkout.getcurrentorder;
 import com.google.gson.annotations.SerializedName;
 
 public class VerificationCodeFormat {
-    @SerializedName("Label")
+    @SerializedName(value = "Label", alternate = {"label"})
     public String label;
-    @SerializedName("Name")
+    @SerializedName(value = "Name", alternate = {"name"})
     public String name;
-    @SerializedName("Type")
+    @SerializedName(value = "Type", alternate = {"type"})
     public String type;
-    @SerializedName("DataType")
+    @SerializedName(value = "DataType", alternate = {"dataType"})
     public String dataType;
-    @SerializedName("Class")
+    @SerializedName(value = "Class", alternate = {"class"})
     public String _class;
-    @SerializedName("Value")
+    @SerializedName(value = "Value", alternate = {"value"})
     public Object value;
-    @SerializedName("MaxLength")
+    @SerializedName(value = "MaxLength", alternate = {"maxLength"})
     public Integer maxLength;
-    @SerializedName("MinLength")
-    public Integer minLength;
-    @SerializedName("Validate")
+    @SerializedName(value = "MinLength", alternate = {"minLength"})
+    public Object minLength;
+    @SerializedName(value = "Validate", alternate = {"validate"})
     public String validate;
-    @SerializedName("ReadOnly")
+    @SerializedName(value = "ReadOnly", alternate = {"readOnly"})
     public Boolean readOnly;
-    @SerializedName("WithoutComma")
+    @SerializedName(value = "WithoutComma", alternate = {"withoutComma"})
     public Boolean withoutComma;
-    @SerializedName("Options")
+    @SerializedName(value = "Options", alternate = {"options"})
     public Object options;
-    @SerializedName("Regexp")
+    @SerializedName(value = "Regexp", alternate = {"regexp"})
     public String regexp;
-    @SerializedName("ValidateConsistency")
+    @SerializedName(value = "ValidateConsistency", alternate = {"validateConsistency"})
     public Boolean validateConsistency;
 
 }

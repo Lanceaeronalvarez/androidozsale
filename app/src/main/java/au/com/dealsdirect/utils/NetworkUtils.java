@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.androidnetworking.common.ANConstants;
+import com.androidnetworking.interceptors.GzipRequestInterceptor;
 import com.androidnetworking.interceptors.HttpLoggingInterceptor;
 import com.androidnetworking.utils.Utils;
 import com.mysale.genie.utility.Prefs;
@@ -26,6 +27,8 @@ import okhttp3.Response;
 
 
 public final class NetworkUtils {
+    public static final String NET_WIFI_STATE_CHANGE = "android.net.wifi.STATE_CHANGE";
+    public static final String NET_CONNECTIVITY_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
 
     private static int CACHE_EXPIRATION = 21; //hours
 

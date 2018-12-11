@@ -18,9 +18,12 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.country.Country;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by Admin on 12/18/17.
@@ -28,22 +31,27 @@ import butterknife.BindView;
 
 public class CountryController extends BasePullToRefreshController implements CountryMvpView {
 
+    public static final String TAG = "CountryController";
+    private static final String BUNDLE_CALLED_AFTER_SPLASH = "BUNDLE_CALLED_AFTER_SPLASH";
+
     @Inject
     CountryMvpPresenter<CountryMvpView> mPresenter;
 
-    @BindView(R.id.partial_toolbar_arrow_title)
+    @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mFilterView;
 
     @BindView(R.id.partial_toolbar_left_view)
-    ImageView mArrowImage;
+    View mArrowImage;
 
     @BindView(R.id.controller_recycler_details)
     RecyclerView mRecyclerView;
 
     private CountryAdapter mAdapter;
+    private boolean mIsAfterSplash;
+    private boolean mHasSavedInstance;
 
     public static CountryController newInstance() {
         return new CountryController(
@@ -51,8 +59,30 @@ public class CountryController extends BasePullToRefreshController implements Co
                         .build());
     }
 
+    public CountryController(boolean calledAfterSplash) {
+        this(new BundleBuilder(new Bundle())
+                .putBoolean(BUNDLE_CALLED_AFTER_SPLASH, calledAfterSplash)
+                .build());
+    }
+
     public CountryController(Bundle args) {
         super(args);
+        mIsAfterSplash = args.getBoolean(BUNDLE_CALLED_AFTER_SPLASH, false);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+        outState.putBoolean(BUNDLE_CALLED_AFTER_SPLASH, mIsAfterSplash);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+        mIsAfterSplash = savedInstanceState.getBoolean(BUNDLE_CALLED_AFTER_SPLASH);
+
     }
 
 
@@ -83,27 +113,30 @@ public class CountryController extends BasePullToRefreshController implements Co
 
     @Override
     public void showSelectedCountryDialog(Country country) {
+        Settings.Country selectedCountry = Settings.getCountryWithId(country.getShopCode());
+        mActivity.setAppCountries(selectedCountry);
+        mPresenter.setCountry(country);
+
+        mActivity.setUpAfterCountrySet();
+
         mActivity.callApiSettings();
         CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                country.getCountry());
-        mPresenter.setCountry(country);
+                Settings.getSelectedCountry().countryName);
 
-        onBackPress();
-    }
-
-    @Override
-    public void onBackPress() {
-        mActivity.onBackPressed();
+        if (mHasSavedInstance && mIsAfterSplash) {
+            mActivity.initializeMainController();
+        }
     }
 
     @Override
     protected void setUp(View view) {
         mTitleText.setText("Country");
         mFilterView.setVisibility(View.INVISIBLE);
-        mArrowImage.setOnClickListener(v -> {
-            onBackPress();
-        });
+
+        if (mIsAfterSplash){
+            mArrowImage.setVisibility(View.INVISIBLE);
+        }
 
         mAdapter = new CountryAdapter(new ArrayList<>(), mActivity, mPresenter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
@@ -112,16 +145,22 @@ public class CountryController extends BasePullToRefreshController implements Co
         mPresenter.getUserCountries();
     }
 
+    @OnClick(R.id.partial_toolbar_left_view)
+    public void onBackClick() {
+        mActivity.onBackPressed();
+    }
+
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container);
+        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
 
-        fillToolbar(inflater.inflate(R.layout.partial_toolbar_arrow, container, false));
+        setToolBarVisible(getResource().getBoolean(R.bool.countries_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_user_countries, container, false));
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
         return view;
     }
+
 }

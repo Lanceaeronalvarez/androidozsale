@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_default"
     android:orientation="vertical">
 
     <include
@@ -34,7 +34,7 @@
                 android:focusableInTouchMode="true"
                 android:text="@string/subject"
                 android:textColor="@color/contact_us_text_selector"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_body" />
 
             <TextView
                 android:id="@+id/controller_add_contact_subject_text"
@@ -47,7 +47,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_border" />
+            android:background="@color/border_regular" />
 
         <LinearLayout
             android:id="@+id/controller_add_contact_order_container"
@@ -67,7 +67,7 @@
                 android:focusableInTouchMode="true"
                 android:text="@string/sale"
                 android:textColor="@color/contact_us_text_selector"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_body" />
 
             <TextView
                 android:id="@+id/controller_add_contact_order_text"
@@ -80,15 +80,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_border" />
+            android:background="@color/border_regular" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/controller_add_contact_message_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:background="@color/gray_background"
+        android:layout_height="@dimen/contacts_edittext_height"
+        android:background="@color/background_default"
         android:orientation="horizontal"
         android:padding="8dp"
         android:layout_alignParentBottom="true"
@@ -120,7 +120,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@id/controller_add_contact_message_container"
-        android:background="@color/gray_border" />
+        android:background="@color/border_regular" />
 
     <FrameLayout
         android:id="@+id/controller_add_contact_selector_container"

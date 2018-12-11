@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_gray"
+    android:background="@color/background_default"
     android:overScrollMode="never"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -24,7 +24,7 @@
             android:paddingTop="10dp">
 
             <TextView
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -32,7 +32,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/first_name"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="MissingPrefix" />
 
             <EditText
@@ -42,10 +42,10 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
-                android:hint="@string/first_name"
                 android:background="@android:color/transparent"
+                android:hint="@string/first_name"
                 android:textColor="@color/edit_text_content"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_body" />
 
             <View
                 android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                 android:background="@color/border_gray" />
 
             <TextView
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -63,7 +63,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/last_name"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="MissingPrefix" />
 
             <EditText
@@ -73,10 +73,10 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
-                android:hint="@string/last_name"
                 android:background="@android:color/transparent"
+                android:hint="@string/last_name"
                 android:textColor="@color/edit_text_content"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_body" />
 
             <View
                 android:layout_width="match_parent"
@@ -86,7 +86,7 @@
                 android:background="@color/border_gray" />
 
             <TextView
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -94,21 +94,21 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/date_of_birth"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="MissingPrefix" />
 
             <EditText
-                android:id="@+id/controller_details_text_dateOfBirth"
+                android:id="@+id/controller_details_text_birthday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
-                android:hint="@string/date_of_birth"
                 android:background="@android:color/transparent"
+                android:hint="@string/date_of_birth"
                 android:inputType="date"
                 android:textColor="@color/edit_text_content"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_body" />
 
             <View
                 android:layout_width="match_parent"
@@ -118,7 +118,36 @@
                 android:background="@color/border_gray" />
 
             <TextView
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/gender"
+                android:textColor="@color/edit_text_label"
+                android:textSize="@dimen/text_size_body"
+                tools:ignore="MissingPrefix" />
+
+            <Spinner
+                android:id="@+id/controller_details_spinner_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:background="#00000000"
+                android:entries="@array/genders" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/border_gray" />
+
+            <TextView
+                fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -126,7 +155,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/email_address"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="MissingPrefix" />
 
             <EditText
@@ -136,11 +165,11 @@
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
-                android:hint="@string/email_address"
                 android:background="@android:color/transparent"
+                android:hint="@string/email_address"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/edit_text_content"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_body" />
 
             <View
                 android:layout_width="match_parent"
@@ -150,7 +179,7 @@
                 android:background="@color/border_gray" />
 
             <TextView
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -158,7 +187,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/password"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="MissingPrefix" />
 
             <EditText
@@ -172,7 +201,7 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:textColor="@color/edit_text_content"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_body" />
 
             <View
                 android:layout_width="match_parent"
@@ -182,7 +211,7 @@
                 android:background="@color/border_gray" />
 
             <TextView
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -190,11 +219,11 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/new_password"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="MissingPrefix" />
 
             <EditText
-                android:id="@+id/controller_details_text_newPassword"
+                android:id="@+id/controller_details_text_new_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -204,7 +233,7 @@
                 android:hint="@string/new_password"
                 android:inputType="textPassword"
                 android:textColor="@color/edit_text_content"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_body" />
 
             <View
                 android:layout_width="match_parent"
@@ -214,7 +243,7 @@
                 android:background="@color/border_gray" />
 
             <TextView
-                fontPath="@string/font_lato_bold"
+                fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -222,11 +251,11 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/confirm_password"
                 android:textColor="@color/edit_text_label"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_body"
                 tools:ignore="MissingPrefix" />
 
             <EditText
-                android:id="@+id/controller_details_text_confirmPassword"
+                android:id="@+id/controller_details_text_confirm_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -236,7 +265,17 @@
                 android:hint="@string/confirm_password"
                 android:inputType="textPassword"
                 android:textColor="@color/edit_text_content"
-                android:textSize="@dimen/text_size_large" />
+                android:textSize="@dimen/text_size_body" />
+
+            <!--button in ozsale rc not needed so visibility is gone-->
+            <Button
+                android:id="@+id/controller_details_button"
+                style="@style/DDButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_default"
+                android:text="@string/save_changes"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

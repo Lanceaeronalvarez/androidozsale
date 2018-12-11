@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/viewholder_subcategory_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/viewholder_subcategory_height">
+
+        <TextView
+            android:id="@+id/viewholder_subcategory_title"
+            fontPath="@string/font_app_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/category_text_selector"
+            android:textSize="@dimen/text_size_headline3"
+            android:layout_gravity="left|center_vertical"
+            tools:ignore="MissingPrefix"
+            tools:text="Category" />
+
+        <ImageView
+            android:id="@+id/viewholder_subcategory_check"
+            android:layout_width="@dimen/row_facet_check_icon_width"
+            android:layout_height="@dimen/row_facet_check_icon_height"
+            android:layout_gravity="right|center_vertical"
+            android:visibility="visible"
+            android:src="@drawable/ic_check"/>
+
+    </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/viewholder_subcategory_items_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:overScrollMode="never" />
+
+</LinearLayout>

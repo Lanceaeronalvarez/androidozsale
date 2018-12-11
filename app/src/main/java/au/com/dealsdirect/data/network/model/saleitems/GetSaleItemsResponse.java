@@ -334,4 +334,12 @@ public class GetSaleItemsResponse implements Serializable {
         }
     }
 
+    public ArrayList<Facets> getFacets() {
+        return facets;
+    }
+
+    public void setFacets(ArrayList<Facets> facets) {
+        this.facets = facets;
+    }
+
 }

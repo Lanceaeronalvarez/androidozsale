@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="@color/gray_title_text"
+                android:textColor="@color/text_medium"
                 android:textStyle="bold"
                 tools:text="$9"/>
 
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="@color/gray_title_text"
+                android:textColor="@color/text_medium"
                 android:textStyle="bold"
 
                 tools:text="$9"/>
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="@color/gray_title_text"
+                android:textColor="@color/text_medium"
                 android:textStyle="bold"
                 tools:text="$9"/>
 
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textColor="@color/gray_title_text"
+                android:textColor="@color/text_medium"
                 android:textStyle="bold"
 
                 tools:text="$9"/>
@@ -146,7 +146,7 @@
             android:layout_weight="1"
             android:text="@string/total"
             android:textColor="#919191"
-            android:textSize="@dimen/text_size_medium"/>
+            android:textSize="@dimen/text_size_headline3"/>
 
         <TextView
             android:id="@+id/partial_checkout_summary_total"
@@ -157,7 +157,7 @@
             android:gravity="end"
             android:textStyle="bold"
             android:textColor="@color/cart_order_price_text_color"
-            android:textSize="@dimen/text_size_medium"
+            android:textSize="@dimen/text_size_headline3"
             tools:text="$27"/>
 
     </LinearLayout>

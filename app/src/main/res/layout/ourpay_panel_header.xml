@@ -11,14 +11,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/ourpay_layout_header_border"
         android:orientation="vertical">
 
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="@dimen/margin_small">
 
             <TextView
                 android:id="@+id/ourpay_text"
@@ -26,15 +25,15 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginRight="5dp"
-                android:text="Pay less today with"
-                android:textColor="#FF898989"
-                android:textSize="@dimen/text_size_large" />
+                android:layout_marginRight="@dimen/margin_extra_small"
+                android:text="@string/pay_less_today_with"
+                android:textColor="@color/ourpay_gray"
+                android:textSize="@dimen/text_size_body" />
 
             <ImageView
                 android:id="@+id/ourpay_logo"
-                android:layout_width="130dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/ourpay_logo_width"
+                android:layout_height="@dimen/ourpay_logo_height"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/ourpay_text"
                 android:layout_toRightOf="@+id/ourpay_text"
@@ -42,8 +41,8 @@
 
             <ImageView
                 android:id="@+id/info_logo"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="@dimen/ourpay_info_logo_width"
+                android:layout_height="@dimen/ourpay_info_logo_height"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:scaleType="fitXY"
@@ -56,42 +55,56 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="-10dp"
             android:orientation="horizontal"
-            android:paddingBottom="8dp"
-            android:paddingLeft="10dp">
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small">
 
             <TextView
-                android:id="@+id/ourpay_panel_header_price"
+                android:id="@+id/ourpay_panel_header_first_price"
                 fontPath="@string/font_app_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$35.00"
-                android:textColor="#eb5424"
-                android:textSize="25sp"
+                android:textColor="@color/ourpay_panel_header_price"
+                android:textSize="@dimen/text_size_title"
                 android:textStyle="bold"
-                tools:ignore="MissingPrefix" />
+                tools:ignore="MissingPrefix"
+                tools:text="$35.00" />
 
             <TextView
+                android:id="@+id/ourpay_panel_header_first_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5sp"
-                android:text="x"
-                android:textColor="#eb5424"
-                android:textSize="15sp" />
+                android:textColor="@color/ourpay_panel_header_price"
+                android:textSize="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                tools:text="Today" />
 
             <TextView
-                android:id="@+id/ourpay_panel_header_transaction"
+                android:id="@+id/ourpay_panel_header_planned_price"
+                fontPath="@string/font_app_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4"
-                android:textColor="#eb5424"
-                android:textSize="20sp" />
+                android:textColor="@color/ourpay_panel_header_price"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold"
+                tools:ignore="MissingPrefix"
+                tools:text="$35.00" />
+
+            <TextView
+                android:id="@+id/ourpay_panel_header_planned_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/ourpay_panel_header_price"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_tiny"
+                android:textSize="@dimen/margin_large"
+                tools:text="x4" />
 
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#FFD3D4D4" />
+            android:layout_height="@dimen/border_regular" />
     </LinearLayout>
 
 

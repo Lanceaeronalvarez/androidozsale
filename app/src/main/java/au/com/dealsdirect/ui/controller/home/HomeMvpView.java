@@ -11,15 +11,17 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface HomeMvpView extends MvpView {
 
-    void showShopController();
+    void showFirstTabController();
 
-    void showAccountController();
+    void showSecondTabController();
 
-    void showContactController();
+    void showThirdTabController();
 
-    void showInviteController();
+    void showFourthTabController();
 
-    void showCheckoutController();
+    void showFifthTabController();
 
     void updateBasketItemCount();
+
+    boolean isPopUpControllerVisible();
 }

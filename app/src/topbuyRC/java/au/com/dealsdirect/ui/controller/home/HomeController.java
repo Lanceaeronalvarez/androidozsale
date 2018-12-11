@@ -22,34 +22,40 @@ public class HomeController extends BaseController implements HomeMvpView {
         return null;
     }
 
+
     @Override
-    public void showShopController() {
+    public void showFirstTabController() {
 
     }
 
     @Override
-    public void showAccountController() {
+    public void showSecondTabController() {
 
     }
 
     @Override
-    public void showContactController() {
+    public void showThirdTabController() {
 
     }
 
     @Override
-    public void showInviteController() {
+    public void showFourthTabController() {
 
     }
 
     @Override
-    public void showCheckoutController() {
+    public void showFifthTabController() {
 
     }
 
     @Override
     public void updateBasketItemCount() {
 
+    }
+
+    @Override
+    public boolean isPopUpControllerVisible() {
+        return false;
     }
 
     public HomeMvpPresenter<HomeMvpView> getPresenter() {

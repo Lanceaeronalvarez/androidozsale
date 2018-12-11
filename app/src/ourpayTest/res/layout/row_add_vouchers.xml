@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:padding="@dimen/padding_default"
     tools:ignore="MissingPrefix">
 
     <LinearLayout
@@ -34,8 +34,8 @@
                 fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_xxxxlarge"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_size_subtitle"
                 android:textStyle="bold"
                 tools:text="$10" />
 
@@ -44,9 +44,9 @@
                 fontPath="@string/font_app_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_small"
+                android:layout_marginTop="@dimen/padding_default_half"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption2"
                 tools:text="voucher good for use until " />
 
             <TextView
@@ -54,9 +54,8 @@
                 fontPath="@string/font_app_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_small"
+                android:textSize="@dimen/text_size_caption2"
                 tools:text="January 15" />
 
         </LinearLayout>

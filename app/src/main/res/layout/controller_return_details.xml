@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@color/background_default">
 
     <RelativeLayout
         android:id="@+id/controller_return_details_container"
@@ -30,7 +30,7 @@
                 android:paddingTop="20dp"
                 android:text="@string/order_numbersign"
                 android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_size_xlarge"
+                android:textSize="@dimen/text_size_headline3"
                 tools:ignore="MissingPrefix" />
 
 
@@ -59,7 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="20dp"
-                    android:background="@color/gray_field_label" />
+                    android:background="@color/text_medium" />
 
                 <RelativeLayout
                     android:id="@+id/controller_return_details_bottom_info"
@@ -81,7 +81,7 @@
                             android:fontFamily="@string/font_app_medium"
                             android:text="Request Date:"
                             android:textColor="#5c5c5c"
-                            android:textSize="@dimen/text_size_large"
+                            android:textSize="@dimen/text_size_body"
                             tools:ignore="HardcodedText" />
 
 
@@ -95,7 +95,7 @@
                             android:fontFamily="@string/font_app_medium"
                             android:text="12/08/16"
                             android:textColor="#1b1b1b"
-                            android:textSize="@dimen/text_size_large"
+                            android:textSize="@dimen/text_size_body"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
@@ -104,7 +104,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_below="@id/controller_return_details_item_date_info"
-                        android:background="@color/gray_field_label">
+                        android:background="@color/text_medium">
 
                     </View>
 
@@ -123,7 +123,7 @@
                             android:fontFamily="@string/font_app_medium"
                             android:text="Approved:"
                             android:textColor="#5c5c5c"
-                            android:textSize="@dimen/text_size_large"
+                            android:textSize="@dimen/text_size_body"
                             tools:ignore="HardcodedText" />
 
 
@@ -137,7 +137,7 @@
                             android:fontFamily="@string/font_app_bold"
                             android:text="---"
                             android:textColor="#1b1b1b"
-                            android:textSize="@dimen/text_size_large"
+                            android:textSize="@dimen/text_size_body"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
@@ -146,7 +146,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_below="@id/controller_return_details_item_is_approved_info"
-                        android:background="@color/gray_field_label">
+                        android:background="@color/text_medium">
 
                     </View>
 
@@ -164,7 +164,7 @@
                             android:fontFamily="@string/font_app_medium"
                             android:text="Status:"
                             android:textColor="#5c5c5c"
-                            android:textSize="@dimen/text_size_large"
+                            android:textSize="@dimen/text_size_body"
                             tools:ignore="HardcodedText" />
 
 
@@ -178,7 +178,7 @@
                             android:fontFamily="@string/font_app_medium"
                             android:text="---"
                             android:textColor="#1b1b1b"
-                            android:textSize="@dimen/text_size_large"
+                            android:textSize="@dimen/text_size_body"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
@@ -188,7 +188,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_below="@id/controller_return_details_item_status_info"
-                        android:background="@color/gray_field_label">
+                        android:background="@color/text_medium">
 
                     </View>
 
@@ -207,7 +207,7 @@
                             android:fontFamily="@string/font_app_medium"
                             android:text="RAN:"
                             android:textColor="#5c5c5c"
-                            android:textSize="@dimen/text_size_large"
+                            android:textSize="@dimen/text_size_body"
                             tools:ignore="HardcodedText" />
 
 
@@ -221,7 +221,7 @@
                             android:fontFamily="@string/font_app_bold"
                             android:text="Pending"
                             android:textColor="#1b1b1b"
-                            android:textSize="@dimen/text_size_large"
+                            android:textSize="@dimen/text_size_body"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>

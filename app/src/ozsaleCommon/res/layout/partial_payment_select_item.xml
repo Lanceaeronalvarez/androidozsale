@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/controller_payment_select_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_checkout_options"
+    tools:ignore="MissingPrefix">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/controller_payment_select_container"
+        android:layout_alignTop="@+id/controller_payment_select_container"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8" />
+
+        <TextView
+            android:id="@+id/controller_address_delete_text"
+            fontPath="@string/font_app_regular"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:gravity="center"
+            android:text="@string/delete"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_body"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/controller_payment_select_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_default">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/partial_checkout_payment_image"
+                android:layout_width="@dimen/margin_extra_large"
+                android:layout_height="@dimen/margin_extra_large"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_my_vouchers" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/partial_checkout_payment_image"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/partial_checkout_payment_name"
+                    fontPath="@string/font_app_semibold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_extra_dark"
+                    android:textSize="@dimen/text_size_body"
+                    tools:text="Master Card" />
+
+                <TextView
+                    android:id="@+id/partial_checkout_payment_details"
+                    fontPath="@string/font_app_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_body"
+                    tools:text="card ending in 02/16" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </FrameLayout>
+
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_below="@id/controller_payment_select_container" />
+</RelativeLayout>

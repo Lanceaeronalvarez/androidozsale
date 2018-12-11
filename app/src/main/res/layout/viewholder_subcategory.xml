@@ -21,8 +21,8 @@
             fontPath="@string/font_app_heavy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gray_category_text"
-            android:textSize="@dimen/text_size_xlarge"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_headline3"
             android:textStyle="bold"
             tools:ignore="MissingPrefix"
             tools:text="Category" />
@@ -50,6 +50,6 @@
         android:layout_height="0.9dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="15dp"
-        android:background="@color/gray_border" />
+        android:background="@color/border_regular" />
 
 </LinearLayout>

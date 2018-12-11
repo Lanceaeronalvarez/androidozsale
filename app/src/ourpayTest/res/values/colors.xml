@@ -4,7 +4,7 @@
     <color name="colorPrimaryAlpha">#CCFDBB16</color>
     <color name="colorPrimaryDark">#F37325</color>
     <color name="colorAccent">#FDBB16</color>
-    <color name="colorBlueDark">#1E303E</color>
+    <color name="colorBlueDark">#323232</color>
     <color name="colorBlueDarkAlpha">#1A1E303E</color>
     <color name="colorInactive">#929292</color>
     <color name="colorInactiveAlpha">#AA6F6E6E</color>
@@ -12,7 +12,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
 
-    <color name="bg_gray">#F8F8F8</color>
+    <color name="background_default">#F8F8F8</color>
 
     <color name="border_gray">#EBEBEB</color>
 
@@ -42,9 +42,6 @@
     <color name="dark_icon">#99000000</color>
     <color name="dialog_background">#fafafa</color>
 
-    <color name="filter_text_active">#F86903</color>
-    <color name="filter_text_inactive">#5F5F5F</color>
-
     <color name="cart_order_price_text_color">#DE5C00</color>
 
     <color name="progress_loader_stroke_color">#616161</color>
@@ -52,13 +49,13 @@
     <color name="bottom_nav_accent_color">@color/colorPrimaryDark</color>
     <color name="bottom_nav_badge_color">@color/colorPrimaryDark</color>
 
-    <color name="category_text_active">@color/colorPrimaryDark</color>
+    <color name="category_text_active">@color/black</color>
     <color name="category_text_inactive">#707070</color>
 
     <color name="gray_category_text">#707070</color>
     <color name="gray_item_details">#466E87</color>
     <color name="gray_title_text">#959595</color>
-    <color name="gray_field_text">#868686</color>
+    <color name="text_medium">@color/colorBlueDark</color>
     <color name="gray_field_label">#87939D</color>
     <color name="dark_gray">#616161</color>
     <color name="gray_description_text">#9E9E9E</color>
@@ -74,7 +71,7 @@
     <color name="gray_address_title_text">#858585</color>
     <color name="gray_address_subtitle_text">#454545</color>
 
-    <color name="tab_bar_background">#e7e7e7</color>
+    <color name="tab_bar_background">#f8f8f8</color>
     <color name="tab_bar_icon_inactive">#87939D</color>
     <color name="tab_bar_icon_active">@color/colorPrimaryDark</color>
     <color name="tab_bar_icon_hovered">@color/colorPrimaryDark</color>
@@ -82,6 +79,19 @@
     <color name="app_skin">#FAFAF9</color>
     <color name="toolbar_skin">@color/colorPrimary</color>
     <color name="toolbar_active_skin">@color/colorPrimary</color>
+
+    <color name="back_arrow_color">#5f5f60</color>
+
+
+    <!--OURPAY DASHBOARDS-->
+    <color name="payment_month_header_color">#adadad</color>
+
+    <!--EDIT TEXT-->
+    <color name="edittext_hint_color">#CCFFFFFF</color>
+
+    <!--PRODUCT DETAILS COLORS-->
+    <color name="product_details_name_price_container_bg">#abffffff</color>
+
 
     <!-- Button Theme -->
     <color name="bg_edit_text_focused">@color/colorPrimary</color>
@@ -104,7 +114,7 @@
     <color name="ourpay_orange_dark">#D98221</color>
     <color name="ourpay_border_gray">#FFC7C7C7</color>
 
-    <color name="invite_fb">#009BEC</color>
+    <color name="invite_fb">#2D91DE</color>
     <color name="invite_fb_pressed">#339EF0</color>
     <color name="invite_twitter">#00B5E9</color>
     <color name="invite_twitter_pressed">#10C4F8</color>
@@ -115,4 +125,8 @@
 
     <color name="item_select_remove">#F29124</color>
     <color name="verify_resend_color">#90BF0A</color>
+
+    <color name="splash_background_color">@color/transparent</color>
+
+    <color name="close_icon_color">@color/white</color>
 </resources>
