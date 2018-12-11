@@ -99,8 +99,6 @@
         <body>"]]>
     </string>
 
-    <string name="twitter_user_id">twitter://user?user_id=14730691</string>
-    <string name="fb_page_id">153472458025053</string>
     <string name="close">Close</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="see_todays_sale">See Today\'s Sales</string>

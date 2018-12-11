@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/partial_checkout_voucher_container_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:clickable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="@string/voucher"
+            android:textColor="@color/gray_title_text" />
+
+        <TextView
+            android:id="@+id/partial_checkout_voucher_change"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="@string/change"
+            android:textColor="@color/gray_field_text"
+            android:textSize="@dimen/text_size_xlarge"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/partial_checkout_voucher_new_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="16sp"
+        android:layout_marginRight="16sp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_chips_rounded"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/placeholder_add_new_voucher_text"
+            android:textColor="@color/gray_field_text"
+            android:textSize="@dimen/text_size_xlarge"/>
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_gray_chevron"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/partial_checkout_voucher_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:src="@drawable/ic_my_vouchers"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp">
+
+                <TextView
+                    android:id="@+id/partial_checkout_voucher_value_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray_field_text"
+                    android:textSize="@dimen/text_size_xxlarge"
+                    tools:text="$5 voucher"/>
+
+                <TextView
+                    android:id="@+id/partial_checkout_voucher_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray_field_text"
+                    tools:text="voucher will expire on 12/25/16"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="16dp"
+            android:background="@color/checkout_voucher_view_color"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_default"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/promo_code"
+            android:textColor="@color/row_checkout_text_light_color"
+            android:textSize="@dimen/text_size_body" />
+
+        <TextView
+            android:id="@+id/partial_checkout_voucher_promo_code_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textColor="@color/colorAccent"
+            tools:text="H27AEJALS" />
+    </LinearLayout>
+
+</LinearLayout>

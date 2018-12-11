@@ -103,7 +103,6 @@ public class OurpayPanel {
                     if (callback != null)
                         callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
                 });
-
             }
         } else if (0 != (ourpay.getState() & OurpayState.ONCART)) {
 
@@ -115,27 +114,21 @@ public class OurpayPanel {
             } else {
 
                 mPanelHolder.addView(getButton(), 0);
-
-                View header = getPanelHeader(ourpay);
-                mHolderInBorder.addView(header);
-
                 mPanelHolder.addView(getTemplateText(ourpay.getDescription()), 1);
-
                 if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
                     mPanelHolder.addView(getTermsAndConditions(ourpay), 2);
                 }
+
+                mPanelHolder.addView(getOrderScheduleView(),3);
+
                 View panelRows = getPanelRows(ourpay.getPlannedTransactions(), false);
                 View panelTotalRow = getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getTotalAmount()));
                 mPanelHolder.addView(getCartAmountHeader(PriceUtils.getPriceStringValue(ourpay.getInitialAmount())), 0);
                 mHolderInBorder.addView(panelRows);
                 mHolderInBorder.addView(panelTotalRow);
 
-                header.setOnClickListener(view -> {
-                    panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                    panelTotalRow.setVisibility(panelTotalRow.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                    if (callback != null)
-                        callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
-                });
+                panelRows.setVisibility(View.VISIBLE);
+                panelTotalRow.setVisibility(View.VISIBLE);
             }
         } else if (0 != (ourpay.getState() & OurpayState.POSTCART)) {
 
@@ -274,6 +267,11 @@ public class OurpayPanel {
     private View getThankYouFooter() {
         View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_thankyou, null, false);
 
+        return view;
+    }
+
+    private View getOrderScheduleView(){
+        View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_order_schedule,null,false);
         return view;
     }
 

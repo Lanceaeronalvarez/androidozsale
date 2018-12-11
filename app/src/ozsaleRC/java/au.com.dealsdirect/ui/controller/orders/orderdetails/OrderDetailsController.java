@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,17 +11,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
-import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -46,22 +47,35 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     @BindView(R.id.order_details_recyclerview)
     RecyclerView mRecyclerView;
 
-    GetPaymentsList.ResponseValue.PaymentItem mOrderItem;
+    @BindView(R.id.delivery_price_text_view)
+    TextView mDeliveryPriceTextValue;
+
+    @BindView(R.id.voucher_payment_text_view)
+    TextView mVoucherPaymentTextView;
+
+    @BindView(R.id.credit_card_payment_text_view)
+    TextView mCreditCardPaymentTextView;
+
+    @BindView(R.id.total_text_view)
+    TextView mTotalTextView;
+
+    @BindView(R.id.delivery_address_text_view)
+    TextView mDeilveryAddressTextView;
+
+    @BindView(R.id.approved_date_text_view)
+    TextView mApprovedDateTextView;
 
     String mPaymentReferenceNo;
 
-    public OrderDetailsController(String paymentItemString, String paymentRefNo, int position) {
+    public OrderDetailsController(String paymentRefNo) {
         this(new BundleBuilder(new Bundle())
-                .putString(PAYMENT_ITEM, paymentItemString)
                 .putString(PAYMENT_REF_NO, paymentRefNo)
-                .putInt(SELECTED_ITEM, position)
                 .build());
     }
 
 
     public OrderDetailsController(Bundle args) {
         super(args);
-        mOrderItem = new Gson().fromJson(args.getString(PAYMENT_ITEM, ""), GetPaymentsList.ResponseValue.PaymentItem.class);
         mPaymentReferenceNo = args.getString(PAYMENT_REF_NO, "");
     }
 
@@ -83,14 +97,12 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(PAYMENT_ITEM, new Gson().toJson(mOrderItem));
         outState.putString(PAYMENT_REF_NO, mPaymentReferenceNo);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mOrderItem = new Gson().fromJson(savedInstanceState.getString(PAYMENT_ITEM, ""), GetPaymentsList.ResponseValue.PaymentItem.class);
         mPaymentReferenceNo = savedInstanceState.getString(PAYMENT_REF_NO, "");
     }
 
@@ -114,16 +126,25 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     public void showOrderDetails(GetOrderPaymentDetails.ResponseValue response) {
         GetOrderPaymentDetails.ResponseValue.Value orderDetails = response.getD().getValue();
 
-        if (mOrderItem != null) {
-            mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(
-                    orderDetails,
-                    mOrderItem.getPaymentReferenceNo(),
-                    mOrderItem.getOrders(),
-                    mOrderItem.getTotal(),
-                    mActivity,
-                    mPresenter));
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        }
+        mOrderDetailsToolbarTitle.setText(String.format(getString(R.string.order_sharp), String.valueOf(orderDetails.getPaymentReferenceNo())));
+
+        //price breakdown
+        mDeliveryPriceTextValue.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getDeliveryAmount()));
+        mVoucherPaymentTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getDiscountAmount()));
+        mCreditCardPaymentTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getCreditCardAmount()));
+        mTotalTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getTotalAmounExclVat()));
+
+        //delivery details
+        //take the first address of the first item since all of the items have the same address
+        String date = DateUtils.getDateFromStringInFormat(orderDetails.getApprovedDate(), AppConstants.MP_DATE_TIME_FORMAT);
+        mDeilveryAddressTextView.setText(orderDetails.getOrders().get(0).getDeliveryAddress());
+        mApprovedDateTextView.setText(date);
+
+        //set adapter
+        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(orderDetails));
+        mRecyclerView.addItemDecoration(new OrderDetailItemDecorator());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
     }
 
     @Override

@@ -50,6 +50,10 @@
     <color name="bg_button_tutorial_pressed">#ECECEC</color>
     <color name="bg_button_disabled">@color/colorDisabled</color>
 
+    <color name="bg_button_pay_default">#65D87F</color>
+    <color name="bg_button_pay_pressed">#65D87F</color>
+    <color name="bg_button_pay_disabled">#65D87F</color>
+
     <color name="bg_join_now_btn_ripple">@color/white</color>
     <color name="bg_join_now_btn_default">#cacaca</color>
     <color name="bg_join_now_btn_pressed">#cacaca</color>
@@ -66,6 +70,7 @@
     <color name="mail_pressed">#FFEA5757</color>
     <color name="sms_default">#FF65D87F</color>
     <color name="sms_pressed">#FF65D87F</color>
+
 
 
     <!-- Text -->
@@ -127,7 +132,7 @@
     <color name="tab_bar_icon_hovered">@color/colorAccent</color>
 
     <color name="bottom_nav_accent">@color/colorAccent</color>
-    <color name="bottom_nav_inactive">@color/text_extra_light</color>
+    <color name="bottom_nav_inactive">@color/text_medium</color>
     <color name="bottom_nav_badge">#ffcc0000</color>
     <color name="bottom_nav_background">@color/white</color>
 
@@ -145,7 +150,7 @@
 
     <!-- Ourpay -->
     <color name="ourpay_gray">#FF898989</color>
-    <color name="ourpay_orange">#FFE47C0B</color>
+    <color name="ourpay_orange">#F37325</color>
     <color name="ourpay_orange_dark">#FFAE5F0A</color>
     <color name="ourpay_border_gray">#FFC7C7C7</color>
     <color name="ourpay_circle_state_color_active">#FCBD12</color>
@@ -176,6 +181,7 @@
     <color name="contact_us_two">#EDC7D5</color>
     <color name="contact_us_three">#CAEDC7</color>
     <color name="contact_us_four">#D4C7ED</color>
+    <color name="contact_us_text_black_color">@color/toolbar_text_dark</color>
 
     <!--MyAccounts TB Background/panel color -->
     <color name="menu_panel_gray">#4B6171</color>
@@ -224,5 +230,12 @@
     <color name="country_select_active">@color/colorAccent</color>
 
     <color name="bg_paypal_credit">#003087</color>
+    <color name="filter_tabs_text_selector">@color/text_dark</color>
+    <color name="checkout_summary_text_color">#C4C4C4</color>
+    <color name="checkout_voucher_view_color">#F2F2F2</color>
+    <color name="order_details_view_color">#f4f4f4</color>
+    <color name="toolbar_fade_in_color">@color/white</color>
+    <color name="refunded_state_color">@color/ourpay_red</color>
+
 
 </resources>

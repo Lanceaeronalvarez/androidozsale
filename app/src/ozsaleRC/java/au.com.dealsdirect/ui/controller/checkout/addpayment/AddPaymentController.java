@@ -372,8 +372,6 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 mOurpayTncCheckBox.setClickable(false);
                 OurpayPanel.TermsAndConditionStates termsAndConditionStatesState = OurpayPanel.TermsAndConditionStates.values()[value.getOurPaySelectTermsAndConditions()];
                 mOurpayTncCheckBox.setOurPayToggleSwitch(termsAndConditionStatesState);
-
-                ourpayPanel.getCartAmountHeader().setVisibility(mIsOurpaySelectDeliveryMethod ? View.GONE : View.VISIBLE);
             }
         }
     }

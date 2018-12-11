@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_extra_small">
+
+    <TextView
+        android:id="@+id/textView_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ourpay_order_schedule"
+        android:textColor="@color/ourpay_panel_dark_gray"
+        android:textSize="@dimen/text_size_caption1"
+        android:layout_marginTop="@dimen/margin_large"/>
+
+</RelativeLayout>

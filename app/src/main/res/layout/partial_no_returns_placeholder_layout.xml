@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/welcome_to_my_returns"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/text_extra_dark"
         android:textSize="@dimen/text_size_headline1" />
 
     <TextView

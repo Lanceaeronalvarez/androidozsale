@@ -28,6 +28,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
@@ -229,7 +230,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
         mVoucherListContainerLayout.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
         mRecyclerView.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
         mSelectTextView.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
-        mPlaceholderLayout.setVisibility(mVouchers.isEmpty() ? View.VISIBLE : View.GONE);
+        mPlaceholderLayout.setVisibility((mVouchers.isEmpty() && !BuildConfig.APP_NAME.equalsIgnoreCase("dealsdirect")) ? View.VISIBLE : View.GONE);
         mButtonApply.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
 
         mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);

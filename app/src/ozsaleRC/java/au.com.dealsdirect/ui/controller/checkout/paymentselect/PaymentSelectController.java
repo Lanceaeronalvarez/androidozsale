@@ -172,7 +172,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
             showPaymentMethodsPlaceholder(!hasPaymentMethod);
 
         } else {
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.an_error_has_occurred));
             removePaymentFailed();
         }
     }

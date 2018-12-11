@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -45,9 +47,10 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsControlle
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.SearchEditText;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.ChangeHandler;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
@@ -62,19 +65,15 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_POSITION;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SALE_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SKU_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_NAME;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CHIPS_FILTER;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORIES;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
 /**
- * a
  * dp Created by Admin on 6/8/17.
  */
 
@@ -89,8 +88,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     private String mCategoryKey = "";
     private String mCategoryForTitle = "";
     private String mSearchQuery = "";
-    private String mCategoryName = "";
-    private String mCategoryId = "";
 
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
     private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
@@ -139,7 +136,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     private boolean mFromShopSearch = false;
     private boolean mFromCategorySearch = false;
     private boolean mIsSearchActive = false;
-    private boolean mFromCategoryDeeplink = false;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
 
@@ -196,6 +192,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     public static SaleItemsController newInstance() {
 
+
         return new SaleItemsController(new BundleBuilder(new Bundle()).build());
     }
 
@@ -203,49 +200,40 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     public SaleItemsController(Bundle args) {
         super(args);
 
-        if (args.containsKey(SALEITEMS_TITLE)) {
-            mTitle = getArgs().getString(SALEITEMS_TITLE, "");
+        if (args.containsKey(BundleKeys.SALEITEMS_TITLE)) {
+            mTitle = getArgs().getString(BundleKeys.SALEITEMS_TITLE, "");
             mTitle = mTitle.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT);
         }
-        if (args.containsKey(SALEITEMS_SALE_ID))
-            mSaleId = getArgs().getString(SALEITEMS_SALE_ID, "");
-        if (args.containsKey(SALEITEMS_CATEGORY_MAP))
-            mCategoryKey = getArgs().getString(SALEITEMS_CATEGORY_MAP, "");
-        if (args.containsKey(SALEITEMS_CHIPS_FILTER))
-            mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+        if (args.containsKey(BundleKeys.SALEITEMS_SALE_ID))
+            mSaleId = getArgs().getString(BundleKeys.SALEITEMS_SALE_ID, "");
+        if (args.containsKey(BundleKeys.SALEITEMS_CATEGORY_MAP))
+            mCategoryKey = getArgs().getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
+        if (args.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER))
+            mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
             }.getType());
-        if (args.containsKey(SALEITEMS_FROM_SHOP_SEARCH))
-            mFromShopSearch = getArgs().getBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
-        if (args.containsKey(SALEITEMS_FROM_CATEGORY_SEARCH))
-            mFromCategorySearch = getArgs().getBoolean(SALEITEMS_FROM_CATEGORY_SEARCH, true);
-        if (args.containsKey(SALEITEMS_FROM_CATEGORIES)) {
-            mIsFromCategory = getArgs().getBoolean(SALEITEMS_FROM_CATEGORIES, true);
-        }
-        if (args.containsKey(SALEITEMS_CATEGORY_ID)) {
-            mCategoryId = getArgs().getString(SALEITEMS_CATEGORY_ID, "");
-        }
-        if (args.containsKey(SALEITEMS_CATEGORY_NAME)) {
-            mCategoryName = getArgs().getString(SALEITEMS_CATEGORY_NAME, "");
-        }
-        if (args.containsKey(SALEITEMS_FROM_CATEGORY_DEEPLINK)) {
-            mFromCategoryDeeplink = getArgs().getBoolean(SALEITEMS_FROM_CATEGORY_DEEPLINK, false);
+        if (args.containsKey(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH))
+            mFromShopSearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, true);
+        if (args.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH))
+            mFromCategorySearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, true);
+        if (args.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORIES)) {
+            mIsFromCategory = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORIES, true);
         }
 
     }
 
     public void onPassFiltersData(Bundle args) {
 
-        if (args.containsKey(SALEITEMS_SALE_ID))
-            mSaleId = args.getString(SALEITEMS_SALE_ID, "");
-        if (args.containsKey(SALEITEMS_CATEGORY_MAP))
-            mCategoryKey = args.getString(SALEITEMS_CATEGORY_MAP, "");
+        if (args.containsKey(BundleKeys.SALEITEMS_SALE_ID))
+            mSaleId = args.getString(BundleKeys.SALEITEMS_SALE_ID, "");
+        if (args.containsKey(BundleKeys.SALEITEMS_CATEGORY_MAP))
+            mCategoryKey = args.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
         if (!mCategoryKey.isEmpty()) {
             mCategoryForTitle = mCategoryKey.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT);
         } else {
             mCategoryForTitle = "";
         }
-        if (args.containsKey(SALEITEMS_CHIPS_FILTER)) {
-            mChipFilters = JsonUtils.convertStringToObject(args.getString(SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+        if (args.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
+            mChipFilters = JsonUtils.convertStringToObject(args.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
             }.getType());
         }
 
@@ -276,10 +264,9 @@ public class SaleItemsController extends BasePullToRefreshController implements 
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        View view = super.inflateView(inflater, container);
 
-        View view = super.inflateView(inflater, container, ToolBarType.TITLE);
-
-        setToolBarVisible(getResource().getBoolean(R.bool.saleItems_toolbar_visibility));
+        fillToolbar(inflater.inflate(R.layout.partial_toolbar_field_title, container, false));
         fillContent(inflater.inflate(R.layout.controller_sale_items, container, false));
 
         getControllerComponent().inject(this);
@@ -393,7 +380,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         super.onDestroyView(view);
-
     }
 
     @Override
@@ -426,15 +412,11 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             }
         };
 
-        Log.d("deeplink", "sale items controller = " + mSaleId);
-
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
         if (mPresenter.isTablet()) {
-            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getResources().getInteger(R.integer.sale_items_tablet_column_count)));
+            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 4));
         } else {
-            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,
-                    getResources().getInteger(R.integer.sale_items_phone_column_count)));
+            mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
         }
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
@@ -442,9 +424,7 @@ public class SaleItemsController extends BasePullToRefreshController implements 
         if (isFiltered || mSaleItems.isEmpty()) {
             showLoading();
 
-            Log.d("deeplinking", "category key = "+mCategoryKey+ " , " +mCategoryId);
             mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleId, page, mChipFilters));
-            Log.d("deeplink", "sale items controller = " + mSaleId);
 
             /* show popular products after filter with empty chips */
             if (mCategoryKey.isEmpty() && (mSaleId == null || mSaleId.isEmpty()) && mChipFilters.isEmpty()) {
@@ -667,7 +647,6 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             names.add(getResources().getString(R.string.transition_sale_image_indexed, position));
             mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
-
             Bundle bundle = new Bundle();
             bundle.putInt(SALEITEMDETAILS_KEY_POSITION, position);
             bundle.putString(SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl);
@@ -678,9 +657,16 @@ public class SaleItemsController extends BasePullToRefreshController implements 
             bundle.putString(SALEITEMDETAILS_KEY_ITEM_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
             bundle.putString(SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
 
-            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
-                    .pushChangeHandler(new ChangeHandler().fadeChangeHandler())
-                    .popChangeHandler(new ChangeHandler().fadeChangeHandler()));
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .pushChangeHandler(new FadeChangeHandler())
+                        .popChangeHandler(new FadeChangeHandler()));
+            } else {
+                getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .pushChangeHandler(new SharedArcFadePushChangeHandler())
+                        .popChangeHandler(new SharedArcFadePopChangeHandler()));
+            }
+
 
             mFromShopSearch = false;
             mFromCategorySearch = false;

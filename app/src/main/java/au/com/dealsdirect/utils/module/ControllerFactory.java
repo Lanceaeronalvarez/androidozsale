@@ -125,7 +125,8 @@ public class ControllerFactory {
                 return MasterpassController.newInstance();
             case ORDER_DETAILS:
                 break;
-            case SEARCH_FILTER:
+            case SEARCH_FILTER_FOR_SHOP:
+            case SEARCH_FILTER_FOR_CATEGORY:
                 return SearchFilterController.newInstance();
             case LEGALITIES:
                 break;
@@ -205,7 +206,8 @@ public class ControllerFactory {
                 return new OurpaySMSVerificationController(bundle);
             case LEGALITIES:
                 return new LegalitiesController(bundle);
-            case SEARCH_FILTER:
+            case SEARCH_FILTER_FOR_SHOP:
+            case SEARCH_FILTER_FOR_CATEGORY:
                 return new SearchFilterController(bundle);
             case LANGUAGE:
                 return LanguageController.newInstance();

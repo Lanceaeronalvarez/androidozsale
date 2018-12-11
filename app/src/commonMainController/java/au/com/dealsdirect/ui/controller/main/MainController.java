@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -24,6 +25,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -42,11 +44,16 @@ public class MainController extends BaseController implements MainMvpView {
 
     private String mChosenSubCategoryItemKey = "";
 
+    private CheckoutHostController mCheckoutHostController;
+
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
     @BindView(R.id.home_viewpager)
     MainCustomViewPager mHomeViewPager;
+
+    @BindView(R.id.controller_home_bottom_nav)
+    AHBottomNavigation mBottomNavigationView;
 
     private HomeController mHomeController;
     private CategoriesController mCategoriesController;
@@ -95,6 +102,8 @@ public class MainController extends BaseController implements MainMvpView {
 
     @Override
     protected void setUp(View view) {
+
+        mActivity.setMainController(this);
 
         mHomeController = HomeController.newInstance();
         mCategoriesController = CategoriesController.newInstance();
@@ -163,7 +172,7 @@ public class MainController extends BaseController implements MainMvpView {
     public void setViewpagerDraggable(boolean isDraggable) {
 
         if (mHomeViewPager != null) {
-            mHomeViewPager.setSwipeable(isDraggable);
+            mHomeViewPager.setIsSwipeable(isDraggable);
         }
     }
 
@@ -221,4 +230,19 @@ public class MainController extends BaseController implements MainMvpView {
         return mHomeViewPager;
     }
 
+    public void setCheckoutHostController(CheckoutHostController checkoutHostController) {
+        mCheckoutHostController = checkoutHostController;
+    }
+
+    public CheckoutHostController getCheckoutHostController() {
+        return mCheckoutHostController;
+    }
+
+    public void setHomeController(HomeController homeController) {
+        mHomeController = homeController;
+    }
+
+    public AHBottomNavigation getBottomNav() {
+        return mBottomNavigationView;
+    }
 }

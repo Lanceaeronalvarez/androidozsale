@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -230,12 +231,13 @@ public class PaymentSelectController extends BasePullToRefreshController impleme
 
     @OnClick(R.id.partial_toolbar_right_view)
     public void onAddPaymentMethod() {
+        String mCartTotal = mValue == null ? "" : Double.toString(mValue.getSummary().getTotal());
         GateKeeper.push(getRouter(),
                 GateKeeper.Destination.PAYMENT_ADD,
                 new BundleBuilder(new Bundle())
                         .putBoolean(BundleKeys.IS_FROM_CART, isFromCart)
                         .putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, mIsOurpaySelectDeliveryMethod)
-                        .putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().getTotal()))
+                        .putString(BundleKeys.CART_TOTAL_COST, mCartTotal)
                         .putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mValue, Value.class))
                         .build()
                 , new HorizontalChangeHandler()

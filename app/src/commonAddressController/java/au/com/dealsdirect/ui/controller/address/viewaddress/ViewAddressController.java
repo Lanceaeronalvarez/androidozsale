@@ -105,7 +105,7 @@ public class ViewAddressController extends BasePullToRefreshController implement
         mPresenter.loadAddresses();
 
         mViewAddressToolarTitle.setText("My Addresses");
-        if (mPresenter.isTablet()) {
+        if (mPresenter.isTablet() || getBoolean(R.bool.master_detail_enabled)) {
             mViewAddressRightOption.setPadding(5, 5, 5, 5);
         } else {
             mViewAddressRightOption.setPadding(20, 20, 20, 20);

@@ -21,6 +21,7 @@ public class ContactHistoryViewHolder extends RecyclerView.ViewHolder{
     TextView contactHistoryItemTimeStampTextView;
     TextView contactHistoryDescriptionTextView;
     TextView contactHistoryMessageTextView;
+    LinearLayout contactHistoryItemContainer;
 
     public ContactHistoryViewHolder(View itemView) {
         super(itemView);
@@ -45,6 +46,9 @@ public class ContactHistoryViewHolder extends RecyclerView.ViewHolder{
 
         contactHistoryMessageTextView = (TextView) itemView
                 .findViewById(R.id.my_contact_history_row_message_text_view);
+
+        contactHistoryItemContainer = itemView
+                .findViewById(R.id.my_contact_history_item_container_layout);
 
     }
 }

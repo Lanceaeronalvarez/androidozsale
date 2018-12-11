@@ -41,7 +41,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_medium"
                     android:textSize="@dimen/text_size_caption2"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
 
 
                 <android.support.v7.widget.RecyclerView

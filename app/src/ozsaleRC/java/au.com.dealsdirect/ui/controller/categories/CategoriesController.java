@@ -320,7 +320,8 @@ public class CategoriesController extends BaseController
         //remove SHOP from categories
         GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
         for (GetCategoryTreeResponse response : categories) {
-            if (response.getName().equalsIgnoreCase(CATEGORY_SHOP)) {
+            String key = response.getKey();
+            if (key == null || key.isEmpty()) {
                 shopCategory = response;
                 break;
             }

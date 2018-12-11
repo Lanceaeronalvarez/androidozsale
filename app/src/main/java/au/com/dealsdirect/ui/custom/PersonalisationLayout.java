@@ -4,11 +4,16 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
@@ -96,13 +102,23 @@ public class PersonalisationLayout extends LinearLayout {
 
             View row = mBaseActivity.getLayoutInflater().inflate(R.layout.personalisation_checkout_row, null);
 
-            TextView keyTextView = (TextView) row.findViewById(R.id.personalisation_checkout_row_key);
+            TextView textView = (TextView) row.findViewById(R.id.personalisation_checkout_row);
 
-            TextView valueTextView = (TextView) row.findViewById(R.id.personalisation_checkout_row_value);
+            String textKey = details.getKey().concat(": ");
+            String text = textKey.concat(details.getValue());
 
-            keyTextView.setText(details.getKey().concat(": "));
+            Spannable spannable = new SpannableString(text);
+            spannable.setSpan(new StyleSpan(Typeface.BOLD),
+                    textKey.length(),
+                    text.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.text_dark)),
+                    textKey.length(),
+                    text.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            valueTextView.setText(details.getValue());
+
+            textView.setText(spannable, TextView.BufferType.SPANNABLE);
 
             addView(row);
         }
@@ -111,6 +127,8 @@ public class PersonalisationLayout extends LinearLayout {
     }
 
     public void inflateForProductDetails(Context context, Personalisation personalisation) {
+
+        removeAllViews();
 
         setOrientation(VERTICAL);
 
@@ -311,7 +329,10 @@ public class PersonalisationLayout extends LinearLayout {
 
                     numberPicker.setMaxValue(property.getEnumElements().size() - 1);
                     numberPicker.setFormatter(value -> property.getEnumElements().get(value).getTitle());
-                    numberPicker.setValue(property.getIndexOfEnumElementValue(editText.getText().toString()));
+                    int index = property.getIndexOfEnumFromTitle(editText.getText().toString());
+                    if (index >= 0) {
+                        numberPicker.setValue(index);
+                    }
                     positiveButton.setOnClickListener(v -> {
                         editText.setText(property.getEnumElements()
                                 .get(numberPicker.getValue()).getTitle());
@@ -449,14 +470,7 @@ public class PersonalisationLayout extends LinearLayout {
 
             switch (property.getControl()) {
                 case TEXT_LIST:
-                    List<Personalisation.EnumElement> enumElements = property.getEnumElements();
-                    for (Personalisation.EnumElement enumElement : enumElements) {
-                        String title = enumElement.getTitle();
-                        if (title.equals(inputText)) {
-                            inputText = enumElement.getValue();
-                            break;
-                        }
-                    }
+                    inputText = property.getValueFromTitle(inputText);
                     break;
                 default:
                     break;
@@ -468,6 +482,42 @@ public class PersonalisationLayout extends LinearLayout {
         }
 
         return personalizationData;
+    }
+
+    public void populateFieldsWithDataFromAddToCart(Map<String, String> data) {
+        if (mPersonalisation != null) {
+            LinkedHashMap<String, Personalisation.Property> propertyHashMap = mPersonalisation.getProperties();
+
+            Collection<String> keys = propertyHashMap.keySet();
+
+            // Using iterator instead of foreach avoids a ConcurrentModificationException
+            Iterator<String> iterator = keys.iterator();
+
+            while (iterator.hasNext()) {
+
+                String currentKey = iterator.next();
+
+                Personalisation.Property property = propertyHashMap.get(currentKey);
+
+                EditText rowEditText = (EditText) findViewWithTag(currentKey);
+
+                String currentData = data.get(currentKey);
+
+                if (currentData != null && !currentData.isEmpty()) {
+                    switch (property.getControl()) {
+                        case TEXT_LIST:
+                            int index = property.getEnum().indexOf(currentData);
+                            if (index >= 0) {
+                                rowEditText.setText(property.getEnumElements().get(index).getTitle());
+                            }
+                            break;
+                        default:
+                            rowEditText.setText(currentData);
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     public class PersonalisationIconAdapter extends RecyclerView.Adapter<PersonalisationIconAdapter.ViewHolder> {

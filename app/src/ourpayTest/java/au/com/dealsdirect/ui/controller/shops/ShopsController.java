@@ -54,6 +54,7 @@ import butterknife.OnClick;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_POSITION;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_HEADER_IMAGE;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
@@ -294,7 +295,6 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             String imageUrl,
             boolean isAvailable) {
 
-
         Bundle args = new BundleBuilder(new Bundle())
                 .putString(SALEITEMS_TITLE, bannerTitle)
                 .putString(SALEITEMS_SALE_ID, saleId)
@@ -302,6 +302,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
                 .putString(SALEITEMS_HEADER_IMAGE, imageUrl)
                 .putInt(SALEITEMS_FROM_POSITION, position)
                 .putString(SALEITEMS_CATEGORY_MAP, null)
+                .putBoolean(SALEITEMS_FROM_SHOP_SEARCH, false)
                 .build();
 
         if (mBannerClickCounter != 1) {
@@ -310,43 +311,17 @@ public class ShopsController extends BasePullToRefreshController implements Shop
 
             List<String> names = new ArrayList<>();
             names.add(bannerId + position);
-            if (!mPresenter.isAccessAnonymousEnabled() && !mPresenter.isAuthorized()) {
-
-                // Invoke login if no auth or not an open app
+            if (isAvailable) {
                 assert (mActivity) != null;
-                ((MainMvpView) mActivity).showLoginController(getRouter(), new AuthHandler() {
-                    @Override
-                    public void success() {
-                        mActivity.callGCMRegisterSubscriber();
-
-                        mActivity.getHomeRouter().pushController(RouterTransaction.with(
+                mActivity
+                        .getHomeRouter()
+                        .pushController(RouterTransaction.with(
                                 new SaleItemsController(args))
                                 .tag(mActivity.getString(R.string.sale_items_controller_tag))
                                 .pushChangeHandler(new HorizontalChangeHandler())
                                 .popChangeHandler(new HorizontalChangeHandler()));
-                    }
-
-                    @Override
-                    public void error() {
-
-                    }
-                });
             } else {
-
-// Check if sale is available
-                //TODO: Need computation for date and time when sale response is cached
-                if (isAvailable) {
-                    assert (mActivity) != null;
-                    mActivity
-                            .getHomeRouter()
-                            .pushController(RouterTransaction.with(
-                                    new SaleItemsController(args))
-                                    .tag(mActivity.getString(R.string.sale_items_controller_tag))
-                                    .pushChangeHandler(new HorizontalChangeHandler())
-                                    .popChangeHandler(new HorizontalChangeHandler()));
-                } else {
-                    DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
-                }
+                DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
             }
         }
     }

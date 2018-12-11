@@ -1,6 +1,6 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <shape android:shape="rectangle">
+        <shape android:shape="oval">
             <corners android:radius="@dimen/margin_tiny" />
             <solid android:color="@color/refunded_state_color" />
         </shape>

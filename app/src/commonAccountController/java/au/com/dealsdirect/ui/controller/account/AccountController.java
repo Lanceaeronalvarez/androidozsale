@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.account;
 
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -121,7 +122,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         mActivity.getMainController().showBottomNav();
         mActivity.setDraggableViewPager(false);
 
-
         TypedArray title = mActivity.getResources().obtainTypedArray(R.array.account_title_array);
         titles = new ArrayList<>();
         for (int i = 0; i < title.length(); i++) {
@@ -135,6 +135,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         mPresenter.loadAccountItems(titles, drawables);
 
         mTitleTextView.setText(R.string.my_account);
+        mTitleTextView.setTextColor(getResource().getColor(R.color.white));
         mLeftToolbarButton.setVisibility(View.INVISIBLE);
 
         initLoginDrawable();
@@ -304,6 +305,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void initLoginDrawable() {
+        mRightToolbarButton.setBackgroundColor(getResource().getColor(R.color.colorAccent));
         if (mPresenter.isAuthorized()) {
             mRightToolbarButton.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_account_logout));
 

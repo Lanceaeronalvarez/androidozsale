@@ -13,5 +13,5 @@ public interface OrdersMvpView extends MvpView {
 
     void showOrders(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orders);
 
-    void showOrderDetails(int position);
+    void showOrderDetails(String referenceNumber);
 }

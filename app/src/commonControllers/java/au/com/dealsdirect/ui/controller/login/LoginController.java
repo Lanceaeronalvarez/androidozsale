@@ -191,7 +191,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public boolean handleBack() {
-        if (mPresenter.isTablet()) {
+        if (mPresenter.isTablet() && getBoolean(R.bool.master_detail_enabled)) {
             if (!mActivity.isAuthorized()) {
                 mActivity.getMainController().getHomeController().resetVisibleContainer();
             }

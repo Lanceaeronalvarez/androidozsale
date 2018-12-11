@@ -47,7 +47,7 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         PaymentMethod item = mData.get(position);
 
-        ImageUtils.loadImage(mActivity, item.getImageUrl(), vh.cardImageView);
+        ImageUtils.loadImage(item.getImageUrl(), vh.cardImageView);
 
         vh.nameTextView.setText(item.getPaymentType());
         vh.detailsText.setText(item.getDescription());

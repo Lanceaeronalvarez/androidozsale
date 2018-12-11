@@ -44,6 +44,8 @@ public final class AppConstants {
 
     public static final String MP_TIME_FORMAT = "hh:mm a";
 
+    public static final String MP_DATE_TIME_FORMAT = "dd/MM/yyyy hh:mm a";
+
     public static final String API_REGISTER = "Registration";
     public static final String API_REGISTER_FACEBOOK = "LoginFacebook";
 

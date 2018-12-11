@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.searchfilter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
-import com.bluelinelabs.conductor.Router;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -36,9 +33,6 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpPresenter;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
@@ -72,9 +66,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private static final String SALEITEMS_CATEGORY_MAP = "SALEITEMS_CATEGORY_MAP";
     private static final String SALEITEMS_CHIPS_FILTER = "SALEITEMS_CHIPS_FILTER";
 
-
-    @Inject
-    SaleItemsMvpPresenter<SaleItemsMvpView> mSaleItemsPresenter;
 
     @Inject
     SearchFilterMvpPresenter<SearchFilterMvpView> mPresenter;
@@ -127,7 +118,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
     SubCategoriesAdapter mSubCategoriesAdapter;
     FacetItemsAdapter mFacetItemsAdapter;
     List<SearchChipModel> mSearchItemsList = new ArrayList<>();
-    private SaleItemsMvpView mSaleItemsView;
 
     ArrayList<String> mBrandList = new ArrayList<>();
     ArrayList<String> mSizeList = new ArrayList<>();
@@ -140,6 +130,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private boolean mHasSeekbarReset = false;
     private boolean mIsSearchFilterControllerActive = false;
     private String mCategoryKey;
+    private boolean mHasDefaultCategoryKey = false;
     private boolean mHasSavedInstance = false;
 
     Set<String> mCategoryKeys = new LinkedHashSet<>();
@@ -161,6 +152,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
         if(mCategoryKey != null && !mCategoryKey.isEmpty()) {
             mCategoryKeys.add(mCategoryKey);
         }
+        mHasDefaultCategoryKey = args.getBoolean(BundleKeys.KEY_HAS_DEFAULT_CATEGORY, false);
 
         String previousChipsString = args.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, "");
         mPreviousSearchChips =  previousChipsString.isEmpty() ? new ArrayList<>() :
@@ -204,9 +196,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
         View view = inflater.inflate(R.layout.controller_search_filter, container, false);
         getControllerComponent().inject(this);
 
-        mSaleItemsView = mActivity.getSaleItemsController();
-
-        mSaleItemsPresenter.onAttach(mSaleItemsView);
         mPresenter.onAttach(this);
         return view;
     }
@@ -222,12 +211,10 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         //create a category map from the categorytreeresponse in saleitems, else
         // use saleitemscontroller's category map if it is not empty else
-        mActivity.setSearchFilterController(this);
 
-        if(mSaleItemsView.getCategoryMap().isEmpty()) {
+        mPresenter.requestCategoryMap();
+        if(mCategoryMap.isEmpty()) {
             createCategoryMap(mCategoryTree);
-        } else {
-            mCategoryMap = mSaleItemsView.getCategoryMap();
         }
 
         if (mFacets != null) {
@@ -241,7 +228,21 @@ public class SearchFilterController extends BaseController implements SearchFilt
         setupPriceFacet();
 
         //      SETUP CATEGORIES
-        mSubCategoriesAdapter = new SubCategoriesAdapter(mActivity, "", mCategoryTree, mPresenter, mCategoryMap, (int) getDimension(R.dimen.margin_small));
+        mSubCategoriesAdapter = new SubCategoriesAdapter(mActivity, "", mCategoryTree, (int) getDimension(R.dimen.margin_small));
+        mSubCategoriesAdapter.setOnClickListener(new SubCategoriesAdapter.OnClickCategoryListener() {
+            @Override
+            public void onClick(String categoryItemKey) {
+                mPresenter.requestCategoryMap();
+                GetCategoryTreeResponse categoryItem = mCategoryMap.get(categoryItemKey);
+                if (categoryItem != null) {
+                    boolean isSelected = !categoryItem.isSelected();
+                    categoryItem.setSelected(isSelected);
+                    mPresenter.selectCategory(categoryItem);
+                    mSubCategoriesAdapter.setSelectedCategories(mCategoryKeys);
+                }
+            }
+        });
+
 
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
@@ -339,9 +340,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         mIsSearchFilterControllerActive = false;
         mFacetsFrame.setVisibility(View.INVISIBLE);
-        if (mSaleItemsView == null) mSaleItemsView = mActivity.getSaleItemsController();
-        mSaleItemsView.enableSaleItemsScroll(true);
-        mSaleItemsView.toggleTabSelection();
+        mPresenter.facetsClosed();
     }
 
     @Override
@@ -370,7 +369,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
                     }
                 }
 
-                mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, 0, mSearchItemsList));
+                mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList);
 
                 onResetPriceRange();
             }
@@ -408,7 +407,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
                 mHasSeekbarReset = false;
 
-                mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, 0, mSearchItemsList));
+                mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList);
 
             }
         });
@@ -455,7 +454,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
     public void showFacetItem(int position) {
         hideKeyboard();
         mFacetsFrame.setVisibility(View.VISIBLE);
-        mSaleItemsView.enableSaleItemsScroll(false);
 
         if (getFacetFilterType(position) != BundleKeys.PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
 
@@ -478,11 +476,12 @@ public class SearchFilterController extends BaseController implements SearchFilt
             mSeekbarLayout.setVisibility(View.VISIBLE);
         }
         updateSelectedFacet(position);
+        mPresenter.facetsOpened();
     }
 
     @Override
     public void updateFacetItemToFilters(List<SearchChipModel> selectedChips) {
-        mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, 0, selectedChips));
+        mPresenter.requestUpdate(mCategoryKeys, selectedChips);
     }
 
     @Override
@@ -502,6 +501,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
     @Override
     public void replaceCategoryTree(List<GetCategoryTreeResponse> categoryTree) {
         mSubCategoriesAdapter.replaceData(categoryTree);
+        mSubCategoriesAdapter.setSelectedCategories(mCategoryKeys);
     }
 
     @Override
@@ -524,10 +524,10 @@ public class SearchFilterController extends BaseController implements SearchFilt
             }
         }
 
-        if (mSaleItemsView.isFromCategories() && mCategoryKeys.size() == 0) {
+        if (mHasDefaultCategoryKey && mCategoryKeys.size() == 0) {
             mCategoryKeys.add(mCategoryKey);
         }
-        mSaleItemsPresenter.loadSaleItems(mSaleItemsView.createSaleItemsRequest(mCategoryKeys, 0, mSearchItemsList));
+        mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList);
     }
 
     @Override
@@ -648,5 +648,20 @@ public class SearchFilterController extends BaseController implements SearchFilt
     @Override
     public void setFacetFilterItems(List<Pair<String,String>> mFacetFilters) {
         this.mFacetFilters = mFacetFilters;
+    }
+
+    @Override
+    public boolean getIsFacetsVisible() {
+        return mFacetsFrame.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
+    public void onReceiveCategoryMap(Map<String, GetCategoryTreeResponse> categoryMap) {
+        mCategoryMap = categoryMap;
+    }
+
+    @Override
+    public void setRepository(SearchFilterMvpRepository repository) {
+        mPresenter.setRepository(repository);
     }
 }

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/my_contact_history_recycler_row_item_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:clickable="true">
+
+
+    <LinearLayout
+        android:id="@+id/my_contact_history_item_container_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@drawable/bg_contact_history_item"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_extra_small">
+
+
+        <RelativeLayout
+            android:id="@+id/my_contact_history_row_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/my_contact_history_row_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:id="@+id/contact_history_item_user_image"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_tab_contact"
+                    android:visibility="gone"/>
+
+
+                <TextView
+                    android:id="@+id/my_contact_history_username_row_text_view"
+                    android:layout_toRightOf="@+id/contact_history_item_user_image"
+                    android:layout_alignRight="@+id/my_contact_history_row_subject_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Usernametest Userlatnametest"
+                    android:textSize="16sp"
+                    android:singleLine="true"
+                    android:textColor="@color/contact_history_username_text_color"
+                    android:visibility="gone"/>
+
+
+                <TextView
+                    android:id="@+id/my_contact_history_row_subject_text_view"
+                    android:layout_toRightOf="@+id/contact_history_item_user_image"
+                    android:layout_below="@+id/my_contact_history_row_date_stamp_text_view"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:text="Message subject"
+                    android:textColor="@color/contact_history_subject_text_color"
+                    android:visibility="gone"/>
+
+
+                <TextView
+                    android:id="@+id/my_contact_history_row_date_stamp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12sp"
+                    android:text=""
+                    android:textColor="@color/contact_history_date_text_color"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/my_contact_history_row_time_stamp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/my_contact_history_row_date_stamp_text_view"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12sp"
+                    android:text=""
+                    android:textColor="@color/contact_history_date_text_color"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/my_contact_history_row_message_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxEms="15"
+                android:text=""
+                android:textColor="@color/contact_history_text_selector"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

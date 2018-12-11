@@ -50,7 +50,8 @@ public final class ApiEndPoint {
             case productDetails: microServiceUrl = "api/shop/product/v1/accounts/";break;
             case setting: microServiceUrl = "api/shop/settings/v1/";break;
             case eventing: microServiceUrl = "api/shop/eventing/v1/";break;
-            case legacy: microServiceUrl = BuildConfig.IS_TEST ? "Public/V3.23/" : "papi/public/v3.23/";break;
+            case legacy: microServiceUrl = BuildConfig.IS_TEST ? "Public/"+ Settings.getSelectedCountry().apiVersion +"/"
+                    : "papi/public/"+ Settings.getSelectedCountry().apiVersion +"/";break;
             case genie: microServiceUrl = HANDLER_PREFIX;break;
         }
 

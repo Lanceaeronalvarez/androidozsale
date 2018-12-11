@@ -1,100 +1,109 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
-import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
-import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.ImageUtils;
+import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 /**
  * Created by smartwave on 22/06/2017.
  */
 
-public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderDetailsRecyclerViewAdapter.OrdersViewHolder> {
+public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private GetOrderPaymentDetails.ResponseValue.Value mOrderDetails;
+    private ArrayList<Object> mData;
 
-    private ArrayList<GetPaymentsList.ResponseValue.Order> mOrderList = new ArrayList<>();
-    private GetPaymentsList.ResponseValue.Total mTotal;
+    public static final int VIEW_TYPE_SALE_NAME = 100;
+    public static final int VIEW_TYPE_SALE_DETAILS = 101;
 
-    private Context mContext;
-    private int mPaymentReferenceNo;
+    public OrderDetailsRecyclerViewAdapter(GetOrderPaymentDetails.ResponseValue.Value orderDetails) {
+        mData = dataTransformation(orderDetails);
+    }
 
-    private OrderDetailsMvpPresenter<OrderDetailsMvpView> mPresenter;
-
-    public OrderDetailsRecyclerViewAdapter(
-            GetOrderPaymentDetails.ResponseValue.Value orderDetails,
-            int paymentReferenceNo,
-            ArrayList<GetPaymentsList.ResponseValue.Order> orderList,
-            GetPaymentsList.ResponseValue.Total total,
-            Context context,
-            OrderDetailsMvpPresenter<OrderDetailsMvpView> presenter) {
-
-        this.mOrderList = orderList;
-        this.mContext = context;
-        this.mPaymentReferenceNo = paymentReferenceNo;
-        this.mOrderDetails = orderDetails;
-        this.mTotal = total;
-        this.mPresenter = presenter;
+    public ArrayList<Object> dataTransformation(GetOrderPaymentDetails.ResponseValue.Value orderDetails) {
+        ArrayList<Object> data = new ArrayList<>();
+        for (GetOrderPaymentDetails.ResponseValue.Order order : orderDetails.getOrders()) {
+            data.add(order.getDescription());
+            for (GetOrderPaymentDetails.ResponseValue.Item item : order.getItems()) {
+                data.add(item);
+            }
+        }
+        return data;
     }
 
     @Override
-    public OrdersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_order_order_details, parent, false);
-        OrdersViewHolder holder = new OrdersViewHolder(v);
-        return holder;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v;
+        switch (viewType) {
+            case VIEW_TYPE_SALE_NAME:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_order_sale_name, parent, false);
+                return new OrderSaleName(v);
+            default:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_order_details, parent, false);
+                return new OrderDetailsItemViewHolder(v);
+        }
     }
 
     @Override
-    public void onBindViewHolder(OrdersViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == VIEW_TYPE_SALE_NAME) {
+            ((OrderSaleName) holder).saleName.setText(String.valueOf(mData.get(0)));
+        } else {
+            setOrderDetailsViewHolderData((OrderDetailsItemViewHolder) holder, (GetOrderPaymentDetails.ResponseValue.Item) mData.get(position));
+        }
 
-        holder.mItemsRecyclerView.setAdapter(new OrderDetailsItemsRecyclerViewAdapter(
-                mContext,
-                position,
-                mOrderDetails,
-                mOrderList));
+    }
 
-        holder.mItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager
-                .VERTICAL, false));
+    @Override
+    public int getItemViewType(int position) {
+        int viewType = 0;
+        if (mData.get(position) instanceof GetOrderPaymentDetails.ResponseValue.Item) {
+            viewType = VIEW_TYPE_SALE_DETAILS;
+        } else {
+            viewType = VIEW_TYPE_SALE_NAME;
+        }
+        return viewType;
+    }
 
-        holder.orderNumberTextView.setText(String.valueOf(mPaymentReferenceNo));
+    public void setOrderDetailsViewHolderData(OrderDetailsItemViewHolder holder, GetOrderPaymentDetails.ResponseValue.Item item) {
 
-        GetPaymentsList.ResponseValue.Order item = mOrderList.get(position);
 
-        String approvedTime = DateUtils.getTimeFromDateString(item.getTracker().getApprovedDate());
+        String brandId = item.getBrandID();
+        String imageId = item.getImageID();
+        String fileName = item.getFileName();
+        int orderItemCount = item.getQty();
+        String productSize = item.getSize();
 
-        holder.orderStatusTextView.setText(item.getStatus());
+        holder.productPriceTextView.setText(PriceUtils.getPriceStringValue(item.getPrice()));
 
-        String orderDateValue = DateUtils.getTrimmedServerDateStringOrders(item.getTracker().getApprovedDate());
+        if (productSize != null) {
+            holder.productSizeTextView.setText(productSize);
+        }
 
-        holder.orderDateTextView.setText(orderDateValue + " " + approvedTime);
+        ImageUtils.loadImage(LegacyStringImageUtils.generateImageUrl(brandId, imageId, fileName),
+                holder.productImageView);
 
-        holder.deliveryTextValue.setText(mOrderDetails.getOrders().get(position).getDeliveryAddress());
 
-        holder.trackHereTextView.setOnClickListener(v -> mPresenter.showTrackingWeb(item.getLink()));
+        holder.productNameTextView.setText(item.getItem());
+        holder.productQuantityTextView.setText(String.valueOf(orderItemCount));
+        holder.productSubtotalTextView.setText(PriceUtils.getPriceStringValue(Double.valueOf(item.getSubTotal().getItemsAmount())));
     }
 
     @Override
     public int getItemCount() {
-        return mOrderList == null ? 0 : mOrderList.size();
+        return mData.size();
     }
 
     @Override
@@ -103,31 +112,37 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<OrderD
     }
 
 
-    public void replace(ArrayList<GetPaymentsList.ResponseValue.Order> orders) {
-        mOrderList = new ArrayList<>(orders);
-        notifyDataSetChanged();
+    static class OrderSaleName extends RecyclerView.ViewHolder {
+        @BindView(R.id.sale_item_text_value)
+        TextView saleName;
+
+        public OrderSaleName(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
     }
 
-    static class OrdersViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.order_items_recyclerview)
-        RecyclerView mItemsRecyclerView;
+    static class OrderDetailsItemViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.delivery_text_view)
-        TextView deliveryTextValue;
+        @BindView(R.id.controller_order_details_item_product_name_textview)
+        TextView productNameTextView;
 
-        @BindView(R.id.order_date_text_view)
-        TextView orderDateTextView;
+        @BindView(R.id.controller_order_details_item_quantity_textview)
+        TextView productQuantityTextView;
 
-        @BindView(R.id.status_text_view)
-        TextView orderStatusTextView;
+        @BindView(R.id.controller_order_details_item_price_textview)
+        TextView productPriceTextView;
 
-        @BindView(R.id.controller_order_track_here_text)
-        TextView trackHereTextView;
+        @BindView(R.id.controller_order_details_item_size_textview)
+        TextView productSizeTextView;
 
-        @BindView(R.id.order_number_text_view)
-        TextView orderNumberTextView;
+        @BindView(R.id.controller_order_details_item_subtotal_textview)
+        TextView productSubtotalTextView;
 
-        public OrdersViewHolder(View itemView) {
+        @BindView(R.id.controller_order_details_item_imageview)
+        ImageView productImageView;
+
+        public OrderDetailsItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

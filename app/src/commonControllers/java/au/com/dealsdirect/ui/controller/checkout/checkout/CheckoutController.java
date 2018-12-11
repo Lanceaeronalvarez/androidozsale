@@ -26,7 +26,9 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.models.BraintreeRequestCodes;
+import com.braintreepayments.api.models.PayPalRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -106,10 +108,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
 
-    @Nullable
     @BindView(R.id.controller_checkout_recyclerview_items)
     RecyclerView mRecyclerView;
-
 
     @BindView(R.id.partial_checkout_address_container_layout)
     ViewGroup mAddressContainerLayout;
@@ -375,7 +375,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.onAttach(this);
         mVcoPresenter.onAttach(this);
 
-        if (getBoolean(R.bool.is_tablet)) {
+        if (getBoolean(R.bool.is_tablet) && getBoolean(R.bool.master_detail_enabled)) {
             CheckoutHostController existingController = mActivity.getMainController().getCheckoutHostController();
             if (!mHasSavedInstance || existingController == null) {
                 mCheckoutHostView = (CheckoutHostMvpView) mActivity.getCheckoutRouter().getControllerWithTag(getString(R.string.checkout_host_controller));
@@ -442,7 +442,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         mActivity.setCheckoutController(this);
 
-        if (!mPresenter.isTablet()) {
+        if (!mPresenter.isTablet() || !getBoolean(R.bool.master_detail_enabled)) {
+            mRecyclerView.setVisibility(View.VISIBLE);
             mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
@@ -601,9 +602,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     if (isOurPaySelectDeliveryMethod()) { // show ourpay select related summary
                         mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount()));
                         mSummaryPayTodayTextView.setText(PriceUtils.getPriceStringValue(ourpay.getInitialAmount()));
-                        ourpayPanel.getCartAmountHeader().setVisibility(View.GONE);
-                    } else {
-                        ourpayPanel.getCartAmountHeader().setVisibility(View.VISIBLE);
                     }
 
                 } else {
@@ -709,7 +707,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             displayPaymentDetails();
             displayDeliveryOptionsUI(deliveryOptionName, deliveryOptionPrice);
         } else {
-            mDeliveryOptionRootLayout.setVisibility(View.GONE);
+            if (mDeliveryOptionRootLayout != null) { mDeliveryOptionRootLayout.setVisibility(View.GONE); }
             displayPaymentDetails();
         }
     }
@@ -1168,11 +1166,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mNoCartItemsLayout.setVisibility(View.GONE);
         }
         mCheckoutContainer.setVisibility(View.VISIBLE);
-        int showOrdersLabel = getResources().getBoolean(R.bool.is_checkout_orders_label_visible) ? View.VISIBLE : View.GONE;
-
-        if (mOrdersLabel != null) {
-            mOrdersLabel.setVisibility(showOrdersLabel);
-        }
     }
 
     private void hidePaymentButtons() {

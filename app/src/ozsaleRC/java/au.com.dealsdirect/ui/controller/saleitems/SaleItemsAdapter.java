@@ -140,7 +140,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
         RxView.clicks(holder.itemView)
                 .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> mPresenter.loadProductDetails(
                         holder,
                         position,

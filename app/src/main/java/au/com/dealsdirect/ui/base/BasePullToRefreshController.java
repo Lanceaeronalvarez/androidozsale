@@ -119,7 +119,7 @@ public abstract class BasePullToRefreshController extends BaseController impleme
         addOverScrollListener(mContentLayout);
     }
 
-    private void fillToolbar(View view) {
+    public void fillToolbar(View view) {
         mToolBarView = view;
         mToolbarFrameLayout.addView(view);
     }

@@ -63,6 +63,9 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @Inject
     VisaCheckoutMvpPresenter<VisaCheckoutMvpView> mVcoPresenter;
 
+    @BindView(R.id.controller_register_consent_switch_layout)
+    ViewGroup mConsentSwitchesRootLayout;
+
     @BindView(R.id.partial_toolbar_title)
     TextView mToolBarTitle;
 
@@ -123,6 +126,8 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @BindView(R.id.partial_toolbar_left_view)
     ImageButton mLeftButton;
 
+    private boolean isRegisterSuccess = false;
+
     public static RegisterController newInstance() {
 
         return new RegisterController(
@@ -161,6 +166,8 @@ public class RegisterController extends VisaCheckoutController implements Regist
         //mPresenter.loadSample(new SampleRequest());
 
         mToolBarTitle.setText(getResources().getString(R.string.register_title));
+
+        mConsentSwitchesRootLayout.setVisibility(mPresenter.isGdprDisabled() ? View.GONE : View.VISIBLE);
 
         mActivity.setDraggableViewPager(false);
 
@@ -234,10 +241,28 @@ public class RegisterController extends VisaCheckoutController implements Regist
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    @OnClick(R.id.controller_register_close_icon)
+    @Override
+    protected void onAttach(@NonNull View view) {
+        if (!mPresenter.isTablet()) {
+            mActivity.getMainController().hideBottomNav();
+        }
+        super.onAttach(view);
+    }
+
+    @Override
+    public void onDestroyView(View view) {
+//        mPresenter.onDetach();
+        super.onDestroyView(view);
+    }
+
+    @OnClick(R.id.partial_toolbar_right_view)
     void onCloseIconClick() {
         getRouter().popToRoot(new VerticalChangeHandler());
-        mActivity.getHomeController().resetVisibleContainer();
+    }
+
+    @OnClick(R.id.partial_toolbar_left_view)
+    void onBackArrowClick() {
+        onBackIconClick();
     }
 
     @OnClick(R.id.controller_register_back_icon)
@@ -254,33 +279,32 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookLoginClick() {
-        if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
-                (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {
+        if ((mTermsCheck != null && !mTermsCheck.isChecked())) {
 
             String templateTextError = mPresenter.getGdprTemplateTexts(
                     AppPreferencesHelper.CONSENT_WITH_REGISTRATION_TERMS_WARNING);
 
-            if (templateTextError == null || templateTextError.equals("")) {
+            if ((templateTextError == null || templateTextError.equals(""))
+                    && !mPresenter.isGdprDisabled()) {
                 onError(R.string.please_accept_terms_and_conditions);
             } else {
                 onError(templateTextError);
             }
 
-        } else if (mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == -1) {
-            onError(R.string.please_select_an_option_for_promotional_emails);
         } else {
             mPresenter.onFacebookLogin(mActivity, mCallbackManager, 1);
         }
     }
 
-
     @Override
-    public void showLoginSuccessful(String loginTicket) {
+    public void showLoginSuccessful(String loginTicket, boolean isFacebookLogin) {
+        isRegisterSuccess = true;
+        mPresenter.setIsNewUser(true);
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
 
     @Override
-    public void showLoginError(String message) {
+    public void showLoginError(String message, boolean isFacebookLogin) {
         mActivity.loginErrorHandler(message);
         mSignUpButton.setEnabled(true);
     }
@@ -298,7 +322,8 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public void showLoginVisaSuccess(String loginTicket) {
-        showLoginSuccessful(loginTicket);
+        isRegisterSuccess = true;
+        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
 
     @Override
@@ -327,28 +352,23 @@ public class RegisterController extends VisaCheckoutController implements Regist
     }
 
     private void onSignUpClicked() {
-        if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
-                (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {
+        if ((mTermsCheck != null && !mTermsCheck.isChecked())) {
 
             String templateTextError = mPresenter.getGdprTemplateTexts(
                     AppPreferencesHelper.CONSENT_WITH_REGISTRATION_TERMS_WARNING);
 
-            if (templateTextError == null || templateTextError.equals("")) {
+            if ((templateTextError == null || templateTextError.equals(""))
+                    && !mPresenter.isGdprDisabled()) {
                 onError(R.string.please_accept_terms_and_conditions);
             } else {
                 onError(templateTextError);
             }
 
-        } else if (mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == -1) {
-            onError(R.string.please_select_an_option_for_promotional_emails);
         } else if (isFormEmpty()) {
             onError(R.string.please_fill_out_the_form);
         } else {
 
-            boolean tncAccepted = (mTermsCheck != null && mTermsCheck.isChecked()) ||
-                    (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() == 0);
-
-            boolean emailsAccepted = mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == 0;
+            boolean tncAccepted = (mTermsCheck != null && mTermsCheck.isChecked());
 
             mPresenter.registerUser(
                     mRegisterForenameField.getText().toString(),
@@ -356,7 +376,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
                     mRegisterEmailField.getText().toString(),
                     mRegisterPasswordField.getText().toString(),
                     tncAccepted,
-                    emailsAccepted);
+                    true);
         }
     }
 }

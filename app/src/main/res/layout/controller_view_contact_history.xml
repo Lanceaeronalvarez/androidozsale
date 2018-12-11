@@ -67,7 +67,9 @@
             android:layout_weight="1"
             android:background="@drawable/bg_add_contact_message"
             android:hint="@string/write_a_message"
-            android:padding="10dp" />
+            android:textColorHint="@color/text_medium"
+            android:padding="10dp"
+            android:textColor="@color/contact_us_text_black_color"/>
 
         <ImageButton
             android:id="@+id/controller_view_contacts_history_reply_button"

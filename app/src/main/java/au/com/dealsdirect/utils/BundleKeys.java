@@ -26,6 +26,7 @@ public class BundleKeys {
     public static final String SALEITEMS_CATEGORY_NAME = "SaleItemsController.SALEITEMS_CATEGORY_NAME";
     public static final String SALEITEMS_FROM_CATEGORY_DEEPLINK = "SaleItemsController.FROM_CATEGORY_LINK";
     public static final String SALEITEMS_KEY_CATEGORIES = "SaleItemsController.KEY_CATEGORIES";
+    public static final String SALEITEMS_FROM_CATEGORIES = "SaleItemsController.FROM_CATEGORIES";
 
 
     //sale item details
@@ -61,6 +62,7 @@ public class BundleKeys {
     public static final String KEY_CATEGORY_STRING = "KEY_CATEGORY_STRING";
     public static final String KEY_SORTING_STRING = "KEY_SORTING_STRING";
     public static final String KEY_SALE_ITEMS_TITLE = "KEY_SALE_ITEMS_TITLE";
+    public static final String KEY_HAS_DEFAULT_CATEGORY = "KEY_HAS_DEFAULT_CATEGORY";
 
 
     //facet filters

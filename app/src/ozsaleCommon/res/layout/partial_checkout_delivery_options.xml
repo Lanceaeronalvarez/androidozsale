@@ -33,7 +33,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="9"
-            android:visibility="visible">
+            android:visibility="visible"
+            android:layout_gravity="center_vertical">
 
             <FrameLayout
                 android:layout_width="match_parent"

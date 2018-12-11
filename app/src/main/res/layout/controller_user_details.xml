@@ -256,6 +256,31 @@
 
         </android.support.v4.widget.NestedScrollView>
 
+        <LinearLayout
+            android:id="@+id/controller_details_consent_switch_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_default">
+
+            <au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch
+                android:id="@+id/register_emails_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:textToggleLeft="Yes"
+                app:textToggleRight="No" />
+
+            <TextView
+                android:id="@+id/register_emails_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/margin_small"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/text_size_caption1"
+                tools:text="I agree to receive promotional emails" />
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/controller_details_button"
             style="@style/DDButtonStyle"

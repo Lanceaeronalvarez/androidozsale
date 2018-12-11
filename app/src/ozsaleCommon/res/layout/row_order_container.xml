@@ -4,127 +4,64 @@
     android:id="@+id/my_order_row_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_large"
-    android:layout_marginTop="@dimen/margin_large"
-    android:orientation="vertical"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/row_order_orders_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:nestedScrollingEnabled="false"
-        android:overScrollMode="never"
-        android:paddingLeft="@dimen/margin_medium"
-        android:paddingRight="@dimen/margin_medium" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/border_regular"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/margin_small"
-        android:visibility="gone"
-
-        android:background="@color/border_regular" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:drawableEnd="@drawable/ic_gray_chevron"
-        android:paddingEnd="@dimen/margin_extra_small"
-        android:text="@string/track_here_capitalize"
-        android:textColor="@color/text_dark"
-        android:visibility="gone"
-        android:textSize="@dimen/text_size_body" />
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/border_regular"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:background="@color/border_regular" />
-
     <RelativeLayout
+        android:id="@+id/my_order_number_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin">
+        android:paddingStart="@dimen/padding_default"
+        android:paddingEnd="@dimen/padding_default">
 
-        <TextView
-            android:id="@+id/row_order_card_payment_label"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/my_order_information_header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
-            android:text="@string/credit_card_payment"
-            android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_body" />
+            android:layout_marginBottom="@dimen/margin_small">
 
-        <TextView
-            android:id="@+id/row_order_card_payment_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/row_order_card_payment_label"
-            android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_body"
-            tools:text="$93.00" />
+            <TextView
+                android:id="@+id/order_number_text_identifier"
+                fontPath="@string/font_app_semibold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_sharp_colon"
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_headline3"
+                tools:ignore="HardcodedText" />
 
-        <TextView
-            android:id="@+id/row_order_voucher_payment_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/row_order_card_payment_label"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"
-            android:text="@string/voucher_payment"
-            android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_body" />
+            <TextView
+                android:id="@+id/order_number_text_value"
+                fontPath="@string/font_app_semibold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_toRightOf="@id/order_number_text_identifier"
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_headline3"
+                tools:ignore="HardcodedText"
+                tools:text="204400890" />
 
-        <TextView
-            android:id="@+id/row_order_voucher_payment_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/row_order_voucher_payment_label"
-            android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_body"
-            tools:text="$93.00" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_disclosure_indicator" />
 
-        <TextView
-            android:id="@+id/row_order_total_label"
-            fontPath="@string/font_app_semibold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/row_order_voucher_payment_label"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"
-            android:text="@string/total"
-            android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_headline3" />
-
-        <TextView
-            android:id="@+id/row_order_total_value"
-            fontPath="@string/font_app_semibold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/row_order_total_label"
-            android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_headline3"
-            tools:text="$186.00" />
-
+        </RelativeLayout>
 
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_regular"
+        android:layout_below="@id/my_order_information_header"
+        android:layout_marginLeft="@dimen/padding_default_half"
+        android:background="@color/background_default" />
 
 </LinearLayout>

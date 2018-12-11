@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.ScalableImageView;
@@ -39,12 +42,12 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     Drawable mPlaceholder;
     RequestListener mRequestListener = new RequestListener() {
         @Override
-        public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
             return false;
         }
 
         @Override
-        public boolean onResourceReady(Object resource, Object model, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
+        public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
             mLoadImagesListener.imagesLoaded();
             return false;
         }
@@ -113,10 +116,10 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                 if (mData.size() != 0) {
                     String url = mData.get(position);
                     if (position == 0) {
-                        ImageUtils.loadImageWithPlaceholder(mContext, url, vh.image, mPlaceholder, mRequestListener);
+                        ImageUtils.loadImageWithPlaceholder(url, vh.image, mPlaceholder, mRequestListener);
                     } else {
                         ImageUtils.clearImage(vh.image);
-                        ImageUtils.loadImage(mContext, url, vh.image);
+                        ImageUtils.loadImage(url, vh.image);
                     }
 
                     ScalableImageView scalableImageView = (ScalableImageView) vh.image;

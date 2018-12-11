@@ -48,14 +48,6 @@ public class SplashScreenController extends BaseController {
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).getProfiler().setEndLogTime(
-                    ActionTracker.CustomEventType.CV_APPLAUNCH.getValue());
-
-            ((MainActivity) getActivity()).getActionTracker().CVAppLaunch(
-                    Profiler.getTotalTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue()));
-        }
-
         ScreenUtils.setStatusBarColor(mActivity,R.color.status_bar_splash);
 
         setUp(view);

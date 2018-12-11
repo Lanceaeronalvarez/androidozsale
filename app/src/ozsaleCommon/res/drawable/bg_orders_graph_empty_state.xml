@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle">
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="false" android:state_activated="false">
+        <shape android:shape="oval">
             <corners android:radius="@dimen/margin_tiny" />
-            <solid android:color="#cecece"/>
+            <solid android:color="#959595"/>
         </shape>
     </item>
-</layer-list>
+    <!--@color/ourpay_orange-->
+    <item android:state_selected="true" android:state_activated="true">
+        <shape android:shape="oval">
+            <corners android:radius="@dimen/margin_tiny" />
+            <solid android:color="@color/ourpay_orange"/>
+        </shape>
+    </item>
+</selector>

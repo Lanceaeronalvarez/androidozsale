@@ -18,5 +18,6 @@
     <bool name="contacts_toolbar_addmessage_visibility">false</bool>
     <bool name="is_account_invite_visible">true</bool>
     <bool name="is_account_contact_visible">false</bool>
+    <bool name="is_category_all_enabled">false</bool>
 
 </resources>

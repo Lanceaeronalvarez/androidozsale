@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_medium"
                     android:textSize="@dimen/text_size_headline2"
-		    android:visibility="gone"
+		            android:visibility="gone"
                     tools:text="$5 voucher" />
 
                 <TextView

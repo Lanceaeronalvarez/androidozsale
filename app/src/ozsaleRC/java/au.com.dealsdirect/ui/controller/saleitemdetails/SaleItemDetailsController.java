@@ -45,6 +45,7 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -210,6 +211,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private ElasticDragDismissFrameLayout.ElasticDragDismissCallback mDragDismissListener;
 
+    private Map<String, String> mSavedPersonalizationData;
+
     final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = new
             ViewTreeObserver.OnScrollChangedListener() {
 
@@ -304,6 +307,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void onDetach(View view) {
+        mSavedPersonalizationData = mPersonalisationLayout.getDataForAddToCart();
         super.onDetach(view);
     }
 
@@ -535,6 +539,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         //update Ourpay
         mPresenter.loadOurpayData(saleDetail);
+
+        String personalisation = saleDetail.getPersonalisation();
+        if (personalisation != null) {
+            Map<String, String> data = mPersonalisationLayout.getDataForAddToCart();
+            mPersonalisationLayout.inflateForProductDetails(mActivity, new Gson().fromJson(
+                    personalisation, Personalisation.class));
+            mPersonalisationLayout.populateFieldsWithDataFromAddToCart(data);
+        } else {
+            mPersonalisationLayout.setVisibility(View.GONE);
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -563,9 +577,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductName.setText(name.trim());
         mProductBrand.setText(brandName.trim());
 
+        mAddToCartButton.setText(!saleDetail.isSoldOut() ? R.string.add_to_cart : R.string.sold_out);
+        mAddToCartButton.setEnabled(!saleDetail.isSoldOut());
+        mAddToCartButton.bringToFront();
+
         if (personalisation != null) {
             mPersonalisationLayout.inflateForProductDetails(mActivity, new Gson().fromJson(
                     personalisation, Personalisation.class));
+            if (mSavedPersonalizationData != null) {
+                mPersonalisationLayout.populateFieldsWithDataFromAddToCart(mSavedPersonalizationData);
+                mSavedPersonalizationData = null;
+            }
         }
 
         if (shippingInformation != null) {

@@ -193,9 +193,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         mAdapter.replaceData(items);
         mNoCartItemsLayout.setVisibility(View.GONE);
         mCheckoutContainer.setVisibility(View.VISIBLE);
-        int showOrdersLabel = getBoolean(R.bool.is_checkout_orders_label_visible) ? View.VISIBLE : View.GONE;
-
-        mOrdersLabel.setVisibility(showOrdersLabel);
     }
 
     @Override
