@@ -13,6 +13,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.ArraySet;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
+import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.mysale.genie.profiler.Profiler;
@@ -46,6 +48,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -64,6 +67,7 @@ import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
@@ -186,7 +190,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private ArrayList<Pair<String, String>> mProductSizes = new ArrayList<>();
 
     private boolean mHasSizes = false;
-    private boolean mDidSelectSize = false;
+    private int mSelectedSizeIndex = -1;
+    private boolean mAllowSelectingSoldoutSizes = false;
     private int mFromPosition = -1;
     private int mToolbarVerticalOffset;
     private boolean mIsSoldOutCombined = true;
@@ -693,27 +698,20 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mAddToCartButton.bringToFront();
 
             mSizesFlowLayout.setAdapter(mSizesAdapter);
+            if (mSelectedSizeIndex >= 0) {
+                mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(mSelectedSizeIndex));
+            }
+
+            mSizesFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
+                @Override
+                public boolean onTagClick(View view, int position, FlowLayout parent) {
+
+                    return false;
+                }
+            });
 
             mSizesFlowLayout.setOnSelectListener(selectPosSet -> {
-                if (selectPosSet.size() != 0) {
-                    int selectedIndex = selectPosSet.iterator().next();
-
-                    mSkuId = mProductSizes.get(selectedIndex).second;
-
-                    boolean isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
-
-                    if (isSizeSoldOut) return;
-
-                    mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
-                    mAddToCartButton.setEnabled(!isSizeSoldOut);
-                    mAddToCartButton.bringToFront();
-
-                    mDidSelectSize = true;
-
-                    updatePriceDetails(mSkuVariants.get(selectedIndex));
-                } else {
-                    mDidSelectSize = false;
-                }
+                onSelectTag(selectPosSet.isEmpty() ? -1 : selectPosSet.iterator().next());
             });
 
         }
@@ -821,7 +819,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         request.setPrice(Double.valueOf(mSalePrice.substring(1)));
         request.setPersonalizationData(mPersonalisationLayout.getDataForAddToCart());
 
-        boolean isSizeValid = !(mHasSizes && !mDidSelectSize);
+        boolean isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
 
         boolean isPersonalisationValid = mPersonalisationLayout.verifyRequiredFields();
 
@@ -998,5 +996,39 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             vhNew.image.setImageResource(R.drawable.circle_indicator_active);
         }
 
+    }
+
+    private void onSelectTag(int index) {
+        int selectedIndex = index;
+
+        // if selection is invalid, try reselecting previous index
+        if (index < 0) {
+            if (mSelectedSizeIndex >= 0) {
+                selectedIndex = mSelectedSizeIndex;
+            } else {
+                return;
+            }
+        }
+
+        boolean isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
+        if (isSizeSoldOut && !mAllowSelectingSoldoutSizes) {
+            // if current selection is sold out, try selecting previous index
+            onSelectTag(-1);
+            return;
+        }
+
+        // force selection - this prevents deselecting tags
+        mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(selectedIndex));
+
+        mSkuId = mProductSizes.get(selectedIndex).second;
+
+        mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
+        mAddToCartButton.setEnabled(!isSizeSoldOut);
+        mAddToCartButton.bringToFront();
+
+        if (selectedIndex != mSelectedSizeIndex) {
+            updatePriceDetails(mSkuVariants.get(selectedIndex));
+            mSelectedSizeIndex = selectedIndex;
+        }
     }
 }
