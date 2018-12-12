@@ -76,6 +76,12 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         @BindView(R.id.viewholder_banner_name)
         TextView name;
 
+        @BindView(R.id.viewholder_banner_discount)
+        TextView discount;
+
+        @BindView(R.id.viewholder_banner_free_delivery)
+        ImageView deliveryImage;
+
         ViewHolder(View view, int height) {
             super(view);
             ButterKnife.bind(this, view);
@@ -126,6 +132,11 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
         GetBannerResponse.Banner item = mSales.get(position);
         holder.name.setText(item.getDescription());
+        if (!item.getBannerText().isEmpty()) {
+            holder.discount.setVisibility(View.VISIBLE);
+            holder.discount.setText(item.getBannerText());
+        }
+        holder.deliveryImage.setVisibility(item.getFreeDelivery() ? View.VISIBLE : View.GONE);
         String imgUrl;
 
         imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), mWidth, mHeight);
