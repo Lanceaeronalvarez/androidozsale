@@ -29,9 +29,9 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="@dimen/ourpay_logo_width"
-                android:layout_height="@dimen/ourpay_logo_height"
-                android:src="@drawable/ic_ourpay_select_logo" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_select_checkout_big" />
 
             <TextView
                 android:id="@+id/delivery_option_ops_desc"
