@@ -796,7 +796,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void splashShownCallback() {
         ScreenUtils.setStatusBarColor(this, R.color.status_bar);
 
-        if (Settings.getIsMultiCountry() && mPresenter.defaultCountryId().isEmpty()) {
+        String defaultCountryId = !mPresenter.defaultCountryId().isEmpty() ? mPresenter.defaultCountryId() : mPresenter.legacyCountryId();
+
+        if (Settings.getIsMultiCountry() && defaultCountryId.isEmpty()) {
             if (!mIsShowingStrictConsentUI && !mAppHasSavedInstance) {
                 mRouter.setRoot(RouterTransaction.with(new CountryController(true)));
             }
@@ -804,7 +806,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
 
         Settings.Country country = Settings.getIsMultiCountry() ?
-                Settings.getCountryWithId(mPresenter.defaultCountryId()) :
+                Settings.getCountryWithId(defaultCountryId) :
                 Settings.getDefaultCountry() ;
 
         mPresenter.setCountry(country);

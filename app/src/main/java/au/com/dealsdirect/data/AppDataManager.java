@@ -661,6 +661,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public String getLegacyCountryId() {
+        return mPreferencesHelper.getLegacyCountryId();
+    }
+
+    @Override
+    public String getLegacyLanguageId() {
+        return mPreferencesHelper.getLegacyLanguageId();
+    }
+
+    @Override
     public void setLanguages(String languagesString) {
         mPreferencesHelper.setLanguages(languagesString);
     }

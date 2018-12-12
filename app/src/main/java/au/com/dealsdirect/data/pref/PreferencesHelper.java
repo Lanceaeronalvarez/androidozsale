@@ -26,6 +26,10 @@ public interface PreferencesHelper {
 
     String getLanguageId();
 
+    String getLegacyCountryId();
+
+    String getLegacyLanguageId();
+
     void setLanguages(String languagesJsonString);
 
     String getLanguages();
