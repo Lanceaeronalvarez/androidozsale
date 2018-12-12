@@ -135,7 +135,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     public boolean handleBack() {
         if(mCheckoutDetailRouter.getBackstackSize() == 1){
-            mActivity.getHomeController().resetVisibleContainer();
+            mActivity.getHomeController().goBackToHomePage();
             return true;
         }
 

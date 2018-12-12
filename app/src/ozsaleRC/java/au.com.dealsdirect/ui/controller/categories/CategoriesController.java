@@ -307,7 +307,7 @@ public class CategoriesController extends BaseController
     @Override
     public boolean handleBack() {
         if(getRouter().getBackstackSize() == 1){
-            mActivity.getHomeController().resetVisibleContainer();
+            mActivity.getHomeController().goBackToHomePage();
             return true;
         }
 
