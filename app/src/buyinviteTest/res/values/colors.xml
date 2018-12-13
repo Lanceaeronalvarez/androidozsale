@@ -117,7 +117,7 @@
     <color name="bg_facets_default">@color/white</color>
     <color name="bg_facets_border_default">#f1f1f1</color>
 
-    <color name="bg_order_node">@color/colorAccent</color>
+    <color name="bg_order_node">#65D87F</color>
     <color name="refunded_state_color">@color/ourpay_orange</color>
 
     <color name="item_select_remove">@color/colorAccent</color>
