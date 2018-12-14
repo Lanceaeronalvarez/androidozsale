@@ -9,8 +9,9 @@
 
     <color name="recyclerview_overscroll">@color/colorSecondary</color>
 
-    <color name="status_bar">@color/bg_splash</color>
-    <color name="status_bar_splash">@color/bg_splash</color>
+    <!--Status Bar-->
+    <color name="status_bar">@color/colorPrimaryDark</color>
+    <color name="status_bar_splash">#D44E50</color>
 
     <!--Search Edit Text-->
     <color name="search_edit_text_hint">#CCFFFFFF</color>
@@ -153,5 +154,9 @@
 
     <color name="refunded_state_color">@color/ourpay_orange</color>
 
+    <!--Splash Gradient-->
+    <color name="bg_splash_color_end">#D44E50</color>
+    <color name="bg_splash_color_center">#CC2E3C</color>
+    <color name="bg_splash_color_start">#C30E28</color>
 
 </resources>
