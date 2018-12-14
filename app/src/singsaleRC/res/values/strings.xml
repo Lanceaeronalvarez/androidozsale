@@ -36,6 +36,7 @@
     <string name="register_title">Registration</string>
     <string name="login_title">Log In</string>
     <string name="last_name">Surname</string>
+    <string name="i_am_looking_for">Search</string>
 
     <!--Placeholder remarks-->
     <string name="welcome_remark_subtitle_address">You do not currently have any address.</string>
