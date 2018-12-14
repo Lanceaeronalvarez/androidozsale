@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_account_item"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:padding="@dimen/padding_default">
 
         <RelativeLayout
@@ -38,8 +39,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/delivery_option_price_text_view">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/delivery_option_ourpay_select_container"
@@ -50,9 +50,8 @@
 
                     <ImageView
                         android:id="@+id/delivery_option_ourpay_logo"
-                        android:layout_width="@dimen/ourpay_logo_width"
-                        android:layout_height="@dimen/ourpay_logo_height"
-                        android:scaleType="fitStart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:src="@drawable/ic_select_checkout_big" />
 
                     <TextView
@@ -73,19 +72,21 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/row_checkout_text_light_color"
                     android:textSize="@dimen/text_size_body"
-                    tools:text="Standard" />
+                    tools:text="Standard"
+                    android:visibility="visible"/>
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/delivery_option_price_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:textColor="@color/row_checkout_text_light_color"
-                android:textSize="@dimen/text_size_body"
-                tools:text="$9.95" />
+
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/delivery_option_price_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/row_checkout_text_light_color"
+            android:textSize="@dimen/text_size_body"
+            tools:text="$9.95" />
 
 
         <ImageView
