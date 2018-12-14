@@ -361,7 +361,7 @@ android {
             buildConfigField "String", "APP_NAME", "\"singsale\""
             buildConfigField "boolean", "IS_TEST", "true"
 
-            resValue "string", "app_name", "Singsale"
+            resValue "string", "app_name", "Singsale Test"
             def facebookAppId = "213701285425668"
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "586750a24521ba339ff775ff2d729eb8"
