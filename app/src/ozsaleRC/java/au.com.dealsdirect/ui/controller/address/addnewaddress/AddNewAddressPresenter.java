@@ -76,7 +76,7 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
             }
         }
 
-        if (!isValid) {
+        if (!isValid && isViewAttached()) {
             getMvpView().showErrorMessage("Please populate all fields");
             return;
         }
