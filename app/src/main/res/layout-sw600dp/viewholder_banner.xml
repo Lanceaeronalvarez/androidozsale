@@ -16,29 +16,52 @@
         android:layout_margin="@dimen/controller_shop_banner_margin">
 
         <ImageView
+            android:id="@+id/viewholder_banner_free_delivery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/margin_extra_small"
+            android:src="@drawable/ic_free_delivery" />
+
+        <ImageView
             android:id="@+id/viewholder_banner_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
-            android:transitionName="image"/>
+            android:transitionName="image" />
 
         <View
             android:id="@+id/viewholder_banner_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_banner_selector"/>
+            android:background="@drawable/bg_banner_selector" />
+
+        <TextView
+            android:id="@+id/viewholder_banner_discount"
+            fontPath="@string/font_app_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/viewholder_banner_name"
+            android:layout_alignParentStart="true"
+            android:background="#ff0000"
+            android:padding="@dimen/margin_extra_small"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_caption2"
+            android:visibility="gone"
+            tools:text="Up To 50% Off" />
 
         <TextView
             android:id="@+id/viewholder_banner_name"
-            fontPath="@string/font_app_medium"
-            android:layout_width="match_parent"
+            fontPath="@string/font_app_regular"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:padding="10dp"
+            android:layout_alignParentBottom="true"
+            android:background="#8a000000"
+            android:padding="@dimen/margin_extra_small"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_body"
-            tools:text="Atom Pro Compression"/>
-
+            android:textSize="@dimen/text_size_caption1"
+            tools:text="Atom Pro Compression" />
     </RelativeLayout>
 </LinearLayout>
