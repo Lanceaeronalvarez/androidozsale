@@ -37,7 +37,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -82,7 +81,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
     private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
     private static final String TEXT_ALL = "• All";
-    private static final int INITIAL_BANNER_COUNT = 100;
+    private static final int INITIAL_BANNER_COUNT = 200;
 
 
     @Inject
@@ -121,9 +120,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private boolean hasLoadedAllItems = false;
 
     private String bannerGroupType = "";
-    private int newBannerCount = 50;
     private int bannerOffset = 0;
-    private int bannerLimit = bannerOffset + newBannerCount;
+    private int bannerLimit = INITIAL_BANNER_COUNT;
 
     private String mCategoryID;
     private String mCategoryName;
@@ -289,8 +287,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
                 page++;
-                bannerOffset += newBannerCount;
-                bannerLimit = newBannerCount;
+                bannerOffset += INITIAL_BANNER_COUNT;
                 refresh();
             }
 
@@ -547,8 +544,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void onError(String message) {
         super.onError(message);
 
-        bannerOffset -= newBannerCount;
-        bannerLimit = newBannerCount;
+        bannerOffset -= INITIAL_BANNER_COUNT;
         page--;
 
         loadingInProgress = false;
@@ -633,7 +629,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         //reset for values for Get_sales API call
         page = 0;
         bannerOffset = 0;
-        bannerLimit = bannerOffset + newBannerCount;
         mCategoryID = getCategoryTreeResponse.getId();
 
         //reset adapter
@@ -748,19 +743,20 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         bannerOffset = 0;
 
         if (mIsDeeplink) {
-            mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, bannerOffset, newBannerCount), true);
+            mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, bannerOffset, bannerLimit), true);
         } else {
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, newBannerCount), true);
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit), true);
         }
     }
 
     private GetBannerRequest createBannerRequest(String categoryId, int bannerOffset, int bannerLimit) {
+            String lastBannerType = mBannersAdapter.getItemCount() > 0 ? mBannersAdapter.getLastGroupType() : "";
 
-        int lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
-        GetBannerResponse.Banner lastVisibleBanner = mBannersAdapter.getItem(lastVisiblePos);
-        String newGroupType = lastVisibleBanner != null ? lastVisibleBanner.getGroup().getType() : "";
-        if (!newGroupType.equals("") && !newGroupType.equals(bannerGroupType)) bannerOffset = 10;
-        bannerGroupType = newGroupType;
+            //start from 0 offset when bannerGroupType changes
+            if (!lastBannerType.equals("") && !lastBannerType.equals(bannerGroupType)) {
+                bannerOffset = mBannersAdapter.getOffset();
+            }
+            bannerGroupType = lastBannerType;
 
         GetBannerRequest getBannerRequest = new GetBannerRequest();
         if (!bannerGroupType.equals("")) {

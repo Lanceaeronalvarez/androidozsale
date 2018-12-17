@@ -42,6 +42,8 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     private int mWidth;
     private int mHeight;
     private int mNumberOfColumns;
+    private int mOffset;
+    private String mLastGroupType;
 
     public BannersAdapter(
             Activity activity,
@@ -118,6 +120,9 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         for (GetBannerResponse.Group group : bannerResponses) {
             mSales.addAll(group.getBanners());
         }
+        GetBannerResponse.Group bannerGroup = bannerResponses.get(bannerResponses.size() - 1);
+        mOffset = bannerGroup.getBanners().size();
+        mLastGroupType = bannerGroup.getType();
         notifyItemRangeInserted(previousCount, mSales.size() - previousCount);
     }
 
@@ -229,5 +234,13 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
             String orientation = ScreenUtils.getOrientation(mActivity) == Configuration.ORIENTATION_LANDSCAPE ? "Landscape" : "Portrait";
             AppLogger.d(orientation + " Width: " + ScreenUtils.getScreenWidth(mActivity) + " Height: " + mComputedHeight);
         }
+    }
+
+    public int getOffset(){
+        return mOffset;
+    }
+
+    public String getLastGroupType() {
+        return mLastGroupType;
     }
 }
