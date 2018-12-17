@@ -481,6 +481,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
                 //reset routers with unique user info
                 mActivity.getMainController().getHomeController().resetRouters();
+                mActivity.getHomeRouter().popToRoot();
                 mActivity.setShopsAsVisibleContainer();
 
                 mActivity.callPublicSettings();

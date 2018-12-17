@@ -862,8 +862,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void setShopsAsVisibleContainer() {
-        getHomeController().setVisibleContainer(0);
-        getHomeController().setShopRouterViewPagerDraggable();
+        getHomeController().goBackToHomePage();
     }
 
     private void setPaymentSuccessOurpay(CreatePaymentTransaction.ResponseValue responseValue) {

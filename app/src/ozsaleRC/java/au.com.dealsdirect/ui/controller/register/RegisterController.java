@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +27,10 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
-import au.com.dealsdirect.data.pref.PreferencesHelper;
-import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
-import au.com.dealsdirect.ui.main.MainPresenter;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -43,7 +38,6 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.Optional;
 
 import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.FACEBOOK;
 import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.NO_ACTION;
@@ -272,7 +266,12 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @OnClick(R.id.partial_toolbar_right_view)
     void onCloseIconClick() {
         mActivity.getHomeController().goToPreviousContainerFromLogin(false);
-        getRouter().popToRoot(new VerticalChangeHandler());
+
+        if (getBoolean(R.bool.is_tablet)) {
+            mActivity.onBackPressed();
+        } else {
+            getRouter().popToRoot(new VerticalChangeHandler());
+        }
     }
 
     @OnClick(R.id.partial_toolbar_left_view)
@@ -319,7 +318,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
     public void showLoginSuccessful(String loginTicket, boolean isFacebookLogin) {
         isRegisterSuccess = true;
         mPresenter.setIsNewUser(true);
-        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
+        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.BACK, AppConstants.AUTH_FLAG.REGISTER);
     }
 
     @Override
