@@ -267,11 +267,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
     void onCloseIconClick() {
         mActivity.getHomeController().goToPreviousContainerFromLogin(false);
 
-        if (getBoolean(R.bool.is_tablet)) {
-            mActivity.onBackPressed();
-        } else {
-            getRouter().popToRoot(new VerticalChangeHandler());
-        }
+        mActivity.onBackPressed();
     }
 
     @OnClick(R.id.partial_toolbar_left_view)

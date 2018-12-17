@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
 
@@ -215,7 +216,7 @@ public class LoginController extends BaseController implements LoginMvpView {
         mWillShowRegistration = true;
         getRouter().replaceTopController(RouterTransaction.with(RegisterController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+                .popChangeHandler(new VerticalChangeHandler()));
     }
 
     @Override
