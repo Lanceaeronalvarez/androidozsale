@@ -220,6 +220,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mPresenter.onDetach();
         getRouter().removeChangeListener(newControllerChangeHandler);
         newControllerChangeHandler = null;
+        shopsControllerBannerRecyclerView.clearOnScrollListeners();
         shopsControllerBannerRecyclerView.setAdapter(null);
         super.onDestroyView(view);
     }
@@ -315,7 +316,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 mIsRecyclerViewScrollIdle = newState == 0;
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && mShopAppBarLayout != null) {
                     // Snaps search bar to expanded or hidden depending on whether
                     // t is halfway to 0 or 1
                     float t = -mVerticalOffset / (float) mShopAppBarLayout.getHeight();
