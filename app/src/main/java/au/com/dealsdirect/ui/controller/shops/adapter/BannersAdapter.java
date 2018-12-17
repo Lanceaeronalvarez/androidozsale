@@ -137,9 +137,9 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
         GetBannerResponse.Banner item = mSales.get(position);
         holder.name.setText(item.getDescription());
-        if (!item.getBannerText().isEmpty()) {
+        if (item.getPercentOffText() != null && !item.getPercentOffText().isEmpty()) {
             holder.discount.setVisibility(View.VISIBLE);
-            holder.discount.setText(item.getBannerText());
+            holder.discount.setText(item.getPercentOffText());
         }
         holder.deliveryImage.setVisibility(item.getFreeDelivery() ? View.VISIBLE : View.GONE);
         String imgUrl;
