@@ -25,7 +25,6 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * dp Created by Admin on 6/8/17.

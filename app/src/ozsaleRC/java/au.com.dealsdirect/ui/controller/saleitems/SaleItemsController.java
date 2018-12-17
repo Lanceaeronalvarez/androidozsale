@@ -212,7 +212,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         @Override
                         public void run() {
                             mActivity.runOnUiThread(() -> showLoading());
-                            mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                            if (mSearchFilterMvpView != null) {
+                                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(),
+                                        0,
+                                        mChipFilters));
+                            }
                         }
                     }, count >= before ? SEARCH_DELAY_MS : DELETE_DELAY_MS);
 

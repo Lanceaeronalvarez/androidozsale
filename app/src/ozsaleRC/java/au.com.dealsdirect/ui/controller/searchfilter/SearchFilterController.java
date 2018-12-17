@@ -246,11 +246,13 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
+        mFilterCategoriesRecyclerView.setHasFixedSize(true);
 
         //      SETUP FACET ITEMS (sub of facets)
         mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(), mFacetItemsRecyclerView);
         mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
+        mFacetItemsRecyclerView.setHasFixedSize(true);
         mFacetItemsAdapter.setSearchItemsList(mSearchItemsList);
 
         mOpaqueView.setOnClickListener(v -> closeFacets());

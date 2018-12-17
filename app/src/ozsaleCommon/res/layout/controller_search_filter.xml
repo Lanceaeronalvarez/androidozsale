@@ -44,7 +44,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/filters_categories_recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_small"
                     android:overScrollMode="never"
                     android:visibility="invisible" />
@@ -52,14 +52,14 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/filters_facet_items_recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/margin_small"
                     android:overScrollMode="never" />
 
                 <RelativeLayout
                     android:id="@+id/seekbar_main_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="top"
                     android:visibility="gone">
 
