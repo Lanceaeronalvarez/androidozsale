@@ -115,7 +115,6 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public static int currentVisibleIndex = 0;
     private int previousVisibleIndex = 0;
-    private boolean initNewBadge = false;
 
     public int mSavedIndex;
     private boolean mHasSavedStateInstance;
@@ -182,19 +181,22 @@ public class HomeController extends BaseController implements HomeMvpView {
         mBottomNavigationView.setInactiveColor(getResources().getColor(R.color.bottom_nav_inactive));
 
 //        ADD "NEW" Badge to categories
-        AHNotification notification = new AHNotification.Builder()
-                .setText("NEW")
-                .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge))
-                .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
-                .build();
-        getBottomNavigationView().setNotification(notification, TAB_CATEGORIES_INDEX);
-        initNewBadge = true;
+
+        if(mPresenter.isInitialLaunch()) {
+            AHNotification notification = new AHNotification.Builder()
+                    .setText("NEW")
+                    .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge))
+                    .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
+                    .build();
+            getBottomNavigationView().setNotification(notification, TAB_CATEGORIES_INDEX);
+        }
         setUp(view);
     }
 
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
+        mPresenter.setInitialLaunchFalse();
         super.onDestroyView(view);
     }
 
@@ -236,10 +238,6 @@ public class HomeController extends BaseController implements HomeMvpView {
                         showFirstTabController();
                         break;
                     case TAB_CATEGORIES_INDEX:
-                        if(initNewBadge) {
-                            getBottomNavigationView().setNotification(new AHNotification(), TAB_CATEGORIES_INDEX);
-                            initNewBadge = false;
-                        }
                         showSecondTabController();
                         break;
                     case TAB_ACCOUNT_INDEX:
