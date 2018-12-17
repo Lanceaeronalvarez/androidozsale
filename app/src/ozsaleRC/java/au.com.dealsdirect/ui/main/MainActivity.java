@@ -388,23 +388,32 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         } else {
             hideLoading();
-            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getBrainTreeFieldErrorMessage(((ErrorWithResponse) error).getFieldErrors().get(0)));
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getBrainTreeErrorMessage(((ErrorWithResponse) error)));
         }
     }
 
-    private String getBrainTreeFieldErrorMessage(BraintreeError error) {
-        BraintreeError err = error;
-        List<BraintreeError> fieldErrors = err.getFieldErrors();
-        while (fieldErrors != null && !fieldErrors.isEmpty()) {
-            if (fieldErrors.get(0) != null) {
-                err = fieldErrors.get(0);
-                fieldErrors = err.getFieldErrors();
-            } else {
-                break;
+    private String getBrainTreeErrorMessage(ErrorWithResponse error) {
+        String errMessage = getString(R.string.an_error_has_occurred);
+
+        if (!(error == null)) {
+            if (error.getFieldErrors() != null && !error.getFieldErrors().isEmpty()) {
+                BraintreeError err = error.getFieldErrors().get(0);
+                List<BraintreeError> fieldErrors = err.getFieldErrors();
+                while (fieldErrors != null && !fieldErrors.isEmpty()) {
+                    if (fieldErrors.get(0) != null) {
+                        err = fieldErrors.get(0);
+                        fieldErrors = err.getFieldErrors();
+                    } else {
+                        break;
+                    }
+                }
+                errMessage = err.getMessage();
+            } else if (!error.getMessage().isEmpty()) {
+                errMessage = error.getMessage();
             }
         }
-        boolean hasMessage = !(err.getMessage() == null || err.getMessage().isEmpty());
-        return  hasMessage ? err.getMessage() : getString(R.string.an_error_has_occurred);
+
+        return errMessage;
     }
 
     @Override
@@ -554,7 +563,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
 
-            if (currentController instanceof  CheckoutHostController || currentController instanceof AddPaymentController) {
+            if (currentController instanceof CheckoutHostController || currentController instanceof AddPaymentController) {
                 Router router = currentController instanceof CheckoutHostController ? ((CheckoutHostController) currentController).getDisplayRouter() : getCurrentRouter();
                 if (router.getBackstackSize() > 2) {
                     router.popToRoot();
@@ -807,14 +816,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         Settings.Country country = Settings.getIsMultiCountry() ?
                 Settings.getCountryWithId(defaultCountryId) :
-                Settings.getDefaultCountry() ;
+                Settings.getDefaultCountry();
 
         mPresenter.setCountry(country);
         setAppCountries(country);
         setUpAfterCountrySet();
     }
 
-    public void setUpAfterCountrySet(){
+    public void setUpAfterCountrySet() {
 
         // Call API settings
         mPresenter.callGetTemplateTexts();
@@ -845,7 +854,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
     }
 
-    public void callPublicSettings(){
+    public void callPublicSettings() {
         //If not logged in, call GetPublicAppSettings
         mPresenter.callGetPublicPaymentToken();
         mPresenter.callGetPublicAppSettings();
