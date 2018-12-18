@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="placeholder_icon_size">100dp</dimen>
-
-    <dimen name="text_size_body">14sp</dimen>
-    <dimen name="text_size_headline3">16sp</dimen>
-    <dimen name="text_size_headline2">18sp</dimen>
-    <dimen name="text_size_headline1">21sp</dimen>
-    <dimen name="text_size_subtitle">24sp</dimen>
-    <dimen name="text_size_title">24sp</dimen>
     <dimen name="voucher_cost_text_size">34sp</dimen>
-
     <dimen name="viewholder_subcategory_width">25dp</dimen>
     <dimen name="viewholder_subcategory_height">44dp</dimen>
-
 </resources>
