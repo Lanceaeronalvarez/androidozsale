@@ -238,6 +238,11 @@ public class HomeController extends BaseController implements HomeMvpView {
                         showFirstTabController();
                         break;
                     case TAB_CATEGORIES_INDEX:
+                        if(mPresenter.isInitialLaunch()) {
+                            //remove "new" badge by assigning a black notification on Categories Tan
+                            getBottomNavigationView().setNotification(new AHNotification(), TAB_CATEGORIES_INDEX);
+                            mPresenter.setInitialLaunchFalse();
+                        }
                         showSecondTabController();
                         break;
                     case TAB_ACCOUNT_INDEX:
