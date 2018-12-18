@@ -120,10 +120,14 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         for (GetBannerResponse.Group group : bannerResponses) {
             mSales.addAll(group.getBanners());
         }
-        GetBannerResponse.Group bannerGroup = bannerResponses.get(bannerResponses.size() - 1);
-        mOffset = bannerGroup.getBanners().size();
-        mLastGroupType = bannerGroup.getType();
-        notifyItemRangeInserted(previousCount, mSales.size() - previousCount);
+
+        if (!bannerResponses.isEmpty()) {
+            GetBannerResponse.Group bannerGroup = bannerResponses.get(bannerResponses.size() - 1);
+            mOffset = bannerGroup.getBanners().size();
+            mLastGroupType = bannerGroup.getType();
+            notifyItemRangeInserted(previousCount, mSales.size() - previousCount);
+        }
+
     }
 
     @Override
