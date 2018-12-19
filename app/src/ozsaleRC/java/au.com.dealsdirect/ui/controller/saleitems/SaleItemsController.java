@@ -406,6 +406,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void onDetach(View view) {
         mPtrFrameLayout.setPtrHandler(null);
         mAppBar.removeOnOffsetChangedListener(this);
+        mSaleItemsToolbarField.setOnEditorActionListener(null);
+        mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
         hideKeyboard();
         super.onDetach(view);
     }
@@ -994,7 +996,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     mSearchQuery = textView.getText().toString();
                     mIsSearch = true;
                     showLoading();
-                    mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                    if (mSearchFilterMvpView != null) {
+                        mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                    }
                 }
                 return false;
             });
