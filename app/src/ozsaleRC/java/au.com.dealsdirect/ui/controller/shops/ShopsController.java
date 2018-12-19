@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
-import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -59,15 +58,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
 import static au.com.dealsdirect.service.event.ActionTracker.ClickType.BANNER_CLICK;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_MAP;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_BANNER_SEARCH;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_POSITION;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_HEADER_IMAGE;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
 
 /**
@@ -193,7 +184,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         Bundle args = new Bundle();
         args.putBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
-        getRouter().pushController(RouterTransaction.with(new SaleItemsController(args))
+
+        SaleItemsController.Parameters.FromShopSearch parameters = new SaleItemsController.Parameters
+                .FromShopSearch(null, null);
+
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+        getRouter().pushController(RouterTransaction.with(controller)
                 .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
@@ -395,28 +392,32 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             String imageUrl,
             boolean isAvailable) {
 
-        Bundle args = new BundleBuilder(new Bundle())
-                .putString(SALEITEMS_TITLE, bannerTitle)
-                .putString(SALEITEMS_SALE_ID, saleId)
-                .putString(SALEITEMS_BANNER_ID, bannerId)
-                .putString(SALEITEMS_HEADER_IMAGE, imageUrl)
-                .putInt(SALEITEMS_FROM_POSITION, position)
-                .putString(SALEITEMS_CATEGORY_MAP, null)
-                .putBoolean(SALEITEMS_FROM_BANNER_SEARCH, true)
-                .build();
+        SaleItemsController.Parameters.FromBannerClick parameters = new SaleItemsController.Parameters
+                .FromBannerClick(bannerTitle, saleId, bannerId, imageUrl, position);
+
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
         mActionTracker.clicksEvent(BANNER_CLICK, position);
 
         List<String> names = new ArrayList<>();
         names.add(bannerId + position);
         if (isAvailable) {
-            getRouter().pushController(RouterTransaction.with(
-                    new SaleItemsController(args))
+            getRouter().pushController(RouterTransaction.with(controller)
                     .tag(mActivity.getString(R.string.sale_items_controller_tag))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         } else {
-            DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
+
+            // Check if sale is available
+            //TODO: Need computation for date and time when sale response is cached
+            if (isAvailable) {
+                getRouter().pushController(RouterTransaction.with(controller)
+                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+            } else {
+                DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
+            }
         }
     }
 
@@ -441,15 +442,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @OnClick(R.id.partial_toolbar_search_icon)
     void onSearchClick() {
 
-        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString("SaleItemsController.KEY_TITLE", "")
-                .putString("SaleItemsController.SEARCH_KEY", "")
-                .putBoolean("SaleItemsController.FROM_SHOP_SEARCH", true)
-                .build();
-        Router router = getRouter();
+        SaleItemsController.Parameters.FromShopSearch parameters = new SaleItemsController.Parameters
+                .FromShopSearch(null, null);
 
-        router.pushController(RouterTransaction.with(
-                new SaleItemsController(saleItemBundle))
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+        getRouter().pushController(RouterTransaction.with(controller)
                 .tag(mActivity.getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new SimpleChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
@@ -722,14 +720,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     public void goToSaleItemsFromCategorySearch() {
 
-        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString("SaleItemsController.KEY_TITLE", "")
-                .putString("SaleItemsController.SEARCH_KEY", "")
-                .putBoolean("SaleItemsController.FROM_CATEGORY_SEARCH", true)
-                .build();
+        SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
+                .FromCategory(null, null, null);
 
-        getRouter().pushController(RouterTransaction.with(
-                new SaleItemsController(saleItemBundle))
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+        getRouter().pushController(RouterTransaction.with(controller)
                 .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new SimpleChangeHandler())
                 .popChangeHandler(new FadeChangeHandler()));
@@ -877,14 +873,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             mCategoryKey = categoryMapKey;
             mCategoryID = categoryMapKey;
 
-            Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                    .putString(SALEITEMS_TITLE, categoryKey)
-                    .putString(SALEITEMS_CATEGORY_MAP, categoryMapKey)
-                    .putBoolean(SALEITEMS_FROM_CATEGORY_DEEPLINK, true)
-                    .build();
+            SaleItemsController.Parameters.FromCategoryDeepLink parameters = new SaleItemsController
+                    .Parameters.FromCategoryDeepLink(categoryKey, categoryMapKey);
 
-            getRouter().pushController(RouterTransaction.with(
-                    new SaleItemsController(saleItemBundle))
+            SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+            getRouter().pushController(RouterTransaction.with(controller)
                     .tag(getResources().getString(R.string.sale_items_controller_tag))
                     .pushChangeHandler(new SimpleChangeHandler())
                     .popChangeHandler(new FadeChangeHandler()));

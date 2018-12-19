@@ -54,6 +54,7 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpRepository;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
@@ -89,6 +90,102 @@ import static au.com.dealsdirect.service.event.ActionTracker.ClickType.PRODUCT_C
  */
 
 public class SaleItemsController extends BaseController implements SaleItemsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener, SearchFilterMvpRepository {
+
+    public abstract static class Parameters {
+        private Parameters() {}
+
+        public static final class FromBannerClick extends Parameters {
+            private String mTitle;
+            private String mSaleId;
+            private String mBannerId;
+            private String mImageURL;
+            private Integer mPosition;
+
+            public FromBannerClick(String title,
+                                   String saleId,
+                                   String bannerId,
+                                   String imageURL,
+                                   Integer position) {
+                mTitle = title;
+                mSaleId = saleId;
+                mBannerId = bannerId;
+                mImageURL = imageURL;
+                mPosition = position;
+            }
+
+            public String getTitle() { return mTitle; }
+            public String getSaleId() { return mSaleId; }
+            public String getBannerId() { return mBannerId; }
+            public String getImageURL() { return mImageURL; }
+            public Integer getPosition() { return mPosition; }
+        }
+
+        public static final class FromCategory extends Parameters {
+            private String mTitle;
+            private String mCategoryMap;
+            private List<GetCategoryTreeResponse> mCategories;
+
+            public FromCategory(String title,
+                                String categoryMap,
+                                List<GetCategoryTreeResponse> categories) {
+                mTitle = title;
+                mCategoryMap = categoryMap;
+                mCategories = categories;
+            }
+
+            public String getTitle() { return mTitle; }
+            public String getCategoryMap() { return mCategoryMap; }
+            public List<GetCategoryTreeResponse> getCategories() { return mCategories; }
+        }
+
+
+        public static final class FromShopSearch extends Parameters {
+            private String mTitle;
+            private String mSearchKey;
+
+            public FromShopSearch(String title,
+                                  String searchKey) {
+                mTitle = title;
+                mSearchKey = searchKey;
+            }
+
+            public String getTitle() { return mTitle; }
+            public String getSearchKey() { return mSearchKey; }
+        }
+        
+        public static final class FromSaleItemDeepLink extends Parameters {
+            private String mBannerTitle;
+            private String mSaleId;
+            private String mBannerId;
+
+            public FromSaleItemDeepLink(String bannerTitle,
+                                        String saleId,
+                                        String bannerId) {
+                mBannerTitle = bannerTitle;
+                mSaleId = saleId;
+                mBannerId = bannerId;
+            }
+
+            public String getBannerTitle() { return mBannerTitle; }
+            public String getSaleId() { return mSaleId; }
+            public String getBannerId() { return mBannerId; }
+        }
+
+        public static final class FromCategoryDeepLink extends Parameters {
+            private String mTitle;
+            private String mCategoryMapKey;
+
+            public FromCategoryDeepLink(String title,
+                                        String categoryMapKey) {
+                mTitle = title;
+                mCategoryMapKey = categoryMapKey;
+            }
+
+            public String getTitle() { return mTitle; }
+
+            public String getCategoryMapKey() { return mCategoryMapKey; }
+        }
+    }
 
     public static final String TAG = SaleItemsController.class.getSimpleName();
     private static final long SEARCH_DELAY_MS = 1000; // milliseconds
@@ -232,11 +329,42 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
     public static SaleItemsController newInstance() {
-
-
         return new SaleItemsController(new BundleBuilder(new Bundle()).build());
     }
 
+    public static SaleItemsController newInstance(Parameters parameters) {
+        SaleItemsController controller = SaleItemsController.newInstance();
+
+        String title = null;
+
+        if (parameters instanceof Parameters.FromBannerClick) {
+            title = ((Parameters.FromBannerClick) parameters).getTitle();
+            controller.mSaleId = ((Parameters.FromBannerClick) parameters).getSaleId();
+            controller.mFromBannerSearch = true;
+        } else if (parameters instanceof Parameters.FromShopSearch) {
+            title = ((Parameters.FromShopSearch) parameters).getTitle();
+            controller.mFromShopSearch = true;
+        } else if (parameters instanceof Parameters.FromCategory) {
+            title = ((Parameters.FromCategory) parameters).getTitle();
+            controller.mCategoryKey = ((Parameters.FromCategory) parameters).getCategoryMap();
+            controller.mInitialCategoryTree = ((Parameters.FromCategory) parameters).getCategories();
+            controller.mFromCategorySearch = true;
+        } else if (parameters instanceof Parameters.FromSaleItemDeepLink) {
+            title = ((Parameters.FromSaleItemDeepLink) parameters).getBannerTitle();
+            controller.mSaleId = ((Parameters.FromSaleItemDeepLink) parameters).getSaleId();
+        } else if (parameters instanceof Parameters.FromCategoryDeepLink) {
+            title = ((Parameters.FromCategoryDeepLink) parameters).getTitle();
+            controller.mCategoryKey = ((Parameters.FromCategoryDeepLink) parameters).getCategoryMapKey();
+            controller.mFromCategoryDeeplink = true;
+        }
+
+        title = title != null ? title.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT) : "";
+        controller.mTitle = title;
+
+        if (controller.mFromShopSearch) controller.mSalesOrigin = ActionTracker.ViewSource.SEARCH;
+        if (controller.mFromCategorySearch) controller.mSalesOrigin = ActionTracker.ViewSource.CATEGORY;
+        return controller;
+    }
 
     public SaleItemsController(Bundle args) {
         super(args);
@@ -664,28 +792,34 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSearchFilterMvpView.closeFacets();
         mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
-        Bundle bundle = new Bundle();
-        bundle.putInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION, position);
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl);
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, skuId);
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID, saleId);
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString());
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, mSalesOrigin);
+        SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
+                .Parameters.FromItemsList(position,
+                imageUrl,
+                seoIdentifierId,
+                skuId,
+                saleId,
+                ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString(),
+                ((SaleItemsAdapter.ViewHolder) viewHolder).brand.getText().toString(),
+                ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString(),
+                ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString(),
+                mSalesOrigin);
+
+        RouterTransaction routerTransaction = RouterTransaction
+                .with(SaleItemDetailsController.newInstance(parameters));
 
         mActionTracker.clicksEvent(mSalesOrigin + PRODUCT_CLICK, position);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+            routerTransaction = routerTransaction
                     .pushChangeHandler(new FadeChangeHandler())
-                    .popChangeHandler(new FadeChangeHandler()));
+                    .popChangeHandler(new FadeChangeHandler());
         } else {
-            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+            routerTransaction = routerTransaction
                     .pushChangeHandler(new SharedArcFadePushChangeHandler())
-                    .popChangeHandler(new SharedArcFadePopChangeHandler()));
+                    .popChangeHandler(new SharedArcFadePopChangeHandler());
         }
+
+        getRouter().pushController(routerTransaction);
 
         mFromShopSearch = false;
     }
@@ -693,17 +827,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private void setupSearchFilters() {
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
         if (mSearchFilterMvpView == null) {
-            Bundle bundle = new BundleBuilder(new Bundle())
-                    .putString(BundleKeys.KEY_CATEGORY_STRING, new Gson().toJson(mCategoryTreeResponse))
-                    .putString(BundleKeys.KEY_FACET_STRING, new Gson().toJson(mFacets))
-                    .putString(BundleKeys.KEY_SORTING_STRING, mSortingListJsonString)
-                    .putString(BundleKeys.SALEITEMS_SALE_ID, mSaleId)
-                    .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey)
-                    .putString(BundleKeys.KEY_SELECTED_FACETS, mPreviousSelectedFacetIndicesJsonString)
-                    .putString(BundleKeys.SALEITEMS_CHIPS_FILTER, new Gson().toJson(mChipFilters))
-                    .putString(BundleKeys.KEY_SALE_ITEMS_TITLE, mSearchQuery)
-                    .putBoolean(BundleKeys.KEY_HAS_DEFAULT_CATEGORY, !(mFromBannerSearch || mFromShopSearch))
-                    .build();
+            SearchFilterController.Parameters.FromItemsList parameters = new SearchFilterController
+                    .Parameters.FromItemsList(mFacets,
+                    mSortingResponse,
+                    mCategoryTreeResponse,
+                    null,
+                    mCategoryKey,
+                    mChipFilters);
 
             GateKeeper.Destination destination;
             if (mFromBannerSearch || mFromShopSearch) {
@@ -712,7 +842,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 destination = GateKeeper.Destination.SEARCH_FILTER_FOR_CATEGORY;
             }
 
-            Controller searchFilterController = ControllerFactory.getInstance(destination, bundle);
+            Controller searchFilterController = SearchFilterController.newInstance(parameters);
             mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
             GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
             mSearchFilterMvpView.setRepository(this);

@@ -50,11 +50,6 @@ import butterknife.BindView;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SKU_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_NAME;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -669,54 +664,41 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void deepLinkSaleItemDetails(String seoIdentifierId, String skuId, boolean isWithSale) {
 
-        Bundle bundle = new Bundle();
-        bundle.putString(SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
-        bundle.putString(SALEITEMDETAILS_KEY_SKU_ID, skuId);
-        bundle.putBoolean(SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE, isWithSale);
+        SaleItemDetailsController.Parameters.FromDeepLink parameters = new SaleItemDetailsController.Parameters
+                .FromDeepLink(seoIdentifierId, skuId);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            if (mShopRouter != null)
-                mShopRouter.pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+        if (mShopRouter != null) {
+            RouterTransaction routerTransaction = RouterTransaction.with(
+                    SaleItemDetailsController.newInstance(parameters));
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                routerTransaction = routerTransaction
                         .pushChangeHandler(new FadeChangeHandler(false))
-                        .popChangeHandler(new FadeChangeHandler()));
-
-        } else {
-            if (mShopRouter != null)
-                mShopRouter.pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .popChangeHandler(new FadeChangeHandler());
+            } else {
+                routerTransaction = routerTransaction
                         .pushChangeHandler(new SharedArcFadePushChangeHandler())
-                        .popChangeHandler(new SharedArcFadePopChangeHandler()));
+                        .popChangeHandler(new SharedArcFadePopChangeHandler());
+            }
 
+            mShopRouter.pushController(routerTransaction);
         }
     }
 
 
     public void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
 
-        Bundle args = new BundleBuilder(new Bundle())
-                .putString(SALEITEMS_TITLE, bannerTitle)
-                .putString(SALEITEMS_SALE_ID, saleId)
-                .putString(SALEITEMS_BANNER_ID, bannerId)
-                .build();
+        SaleItemsController.Parameters.FromSaleItemDeepLink parameters = new SaleItemsController
+                .Parameters.FromSaleItemDeepLink(bannerTitle, saleId, bannerId);
 
-        if (!mPresenter.isAuthorized()) {
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
-            // Invoke login if no auth or not an open app
-            if (mShopRouter != null)
-                mShopRouter.pushController(RouterTransaction.with(
-                        new SaleItemsController(args))
-                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
-        } else {
-
-            // Check if sale is available
-            mShopRouter.pushController(RouterTransaction.with(
-                    new SaleItemsController(args))
+        if (mShopRouter != null) {
+            mShopRouter.pushController(RouterTransaction.with(controller)
                     .tag(mActivity.getString(R.string.sale_items_controller_tag))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         }
-
     }
 
     public void sendSaleItemToCheckout(Value getCurrentOrder) {
@@ -725,25 +707,13 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void deepLinkSaleCategory(String categoryName, String categoryIdentifier) {
 
-        Bundle args = new BundleBuilder(new Bundle())
-                .putString(SALEITEMS_CATEGORY_ID, categoryIdentifier)
-                .putString(SALEITEMS_CATEGORY_NAME, categoryName)
-                .build();
+        SaleItemsController.Parameters.FromCategoryDeepLink parameters = new SaleItemsController
+                .Parameters.FromCategoryDeepLink(categoryName, categoryIdentifier);
 
-        if (!mPresenter.isAuthorized()) {
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
-            // Invoke login if no auth or not an open app
-            if (mShopRouter != null)
-                mShopRouter.pushController(RouterTransaction.with(
-                        new SaleItemsController(args))
-                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
-        } else {
-
-            // Check if sale is available
-            mShopRouter.pushController(RouterTransaction.with(
-                    new SaleItemsController(args))
+        if (mShopRouter != null) {
+            mShopRouter.pushController(RouterTransaction.with(controller)
                     .tag(mActivity.getString(R.string.sale_items_controller_tag))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));

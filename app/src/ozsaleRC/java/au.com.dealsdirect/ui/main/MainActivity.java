@@ -1060,34 +1060,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
-
-        Bundle args = new BundleBuilder(new Bundle())
-                .putString(SALEITEMS_TITLE, bannerTitle)
-                .putString(SALEITEMS_SALE_ID, saleId)
-                .putString(SALEITEMS_BANNER_ID, bannerId)
-                .build();
-
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-
-            if (!mPresenter.isAuthorized()) {
-
-                // Invoke login if no auth or not an open app
-                if (mHomeRouter != null)
-                    mHomeRouter.pushController(RouterTransaction.with(
-                            new SaleItemsController(args))
-                            .tag(this.getString(R.string.sale_items_controller_tag))
-                            .pushChangeHandler(new HorizontalChangeHandler())
-                            .popChangeHandler(new HorizontalChangeHandler()));
-            } else {
-
-                // Check if sale is available
-                mHomeRouter.pushController(RouterTransaction.with(
-                        new SaleItemsController(args))
-                        .tag(this.getString(R.string.sale_items_controller_tag))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
-            }
+            mMainController.getHomeController().deepLinkSaleItems(bannerTitle, saleId, bannerId);
         }, mDeepLinkLoadDelay);
 
     }
@@ -1111,11 +1086,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            Bundle bundle = new Bundle();
-            bundle.putString(SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
-            bundle.putString(SALEITEMDETAILS_KEY_SKU_ID, skuId);
-            bundle.putBoolean(SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE, false);
-
             setDraggableViewPager(false);
             mMainController.getHomeController().deepLinkSaleItemDetails(seoIdentifierId, skuId, false);
             deepLinkSuceeded();

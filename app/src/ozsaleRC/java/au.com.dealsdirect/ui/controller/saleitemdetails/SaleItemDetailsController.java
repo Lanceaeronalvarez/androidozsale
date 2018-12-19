@@ -86,6 +86,70 @@ import butterknife.OnClick;
 
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener {
 
+    public abstract static class Parameters {
+        private Parameters() {}
+
+        public static final class FromItemsList extends Parameters {
+            private Integer mPosition;
+            private String mImageURL;
+            private String mSeoIdentifierId;
+            private String mSkuId;
+            private String mSaleId;
+            private String mProductName;
+            private String mProductBrand;
+            private String mPrice;
+            private String mOldPrice;
+            private String mSalesOrigin;
+
+            public FromItemsList(Integer position,
+                                 String imageURL,
+                                 String seoIdentifierId,
+                                 String skuId,
+                                 String saleId,
+                                 String productName,
+                                 String productBrand,
+                                 String price,
+                                 String oldPrice,
+                                 String salesOrigin) {
+                mPosition = position;
+                mImageURL = imageURL;
+                mSeoIdentifierId = seoIdentifierId;
+                mSkuId = skuId;
+                mSaleId = saleId;
+                mProductName = productName;
+                mProductBrand = productBrand;
+                mPrice = price;
+                mOldPrice = oldPrice;
+                mSalesOrigin = salesOrigin;
+            }
+
+            public Integer getPosition() { return mPosition; }
+            public String getImageURL() { return mImageURL; }
+            public String getSeoIdentifierId() { return mSeoIdentifierId; }
+            public String getSkuId() { return mSkuId; }
+            public String getSaleId() { return mSaleId; }
+            public String getProductName() { return mProductName; }
+            public String getProductBrand() { return mProductBrand; }
+            public String getPrice() { return mPrice; }
+            public String getOldPrice() { return mOldPrice; }
+            public String getSalesOrigin() { return mSalesOrigin; }
+        }
+
+        public static final class FromDeepLink extends Parameters {
+            private String mSeoIdentifierId;
+            private String mSkuId;
+
+            public FromDeepLink(String seoIdentifierId,
+                                String skuId) {
+                mSeoIdentifierId = seoIdentifierId;
+                mSkuId = skuId;
+            }
+
+            public String getSeoIdentifierId() { return mSeoIdentifierId; }
+            public String getSkuId() { return mSkuId; }
+        }
+    }
+
     @Inject
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
 
@@ -96,6 +160,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mSaleName;
     private String mSalePrice;
     private String mSaleOldPrice;
+    private String mBrandName;
     private Ourpay mOurpay;
     private List<GetSaleItemDetailsResponse> mSkuVariants = new ArrayList<>();
 
@@ -244,6 +309,31 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         return new SaleItemDetailsController(bundle);
     }
 
+    public static SaleItemDetailsController newInstance(Parameters parameters) {
+        SaleItemDetailsController controller = new SaleItemDetailsController(
+                new BundleBuilder(new Bundle()).build());
+
+        if (parameters instanceof Parameters.FromItemsList) {
+            controller.mSaleId = ((Parameters.FromItemsList) parameters).getSaleId();
+            controller.mSkuId = ((Parameters.FromItemsList) parameters).getSkuId();
+            controller.mItemImageUrl = ((Parameters.FromItemsList) parameters).getImageURL();
+            controller.mSeoIdentifierId = ((Parameters.FromItemsList) parameters).getSeoIdentifierId();
+            controller.mSaleName = ((Parameters.FromItemsList) parameters).getProductName();
+            controller.mBrandName = ((Parameters.FromItemsList) parameters).getProductBrand();
+            controller.mSalePrice = ((Parameters.FromItemsList) parameters).getPrice();
+            controller.mSaleOldPrice = ((Parameters.FromItemsList) parameters).getOldPrice();
+            controller.mFromPosition = ((Parameters.FromItemsList) parameters).getPosition();
+            String origin = ((Parameters.FromItemsList) parameters).getSalesOrigin();
+            controller.mOrigin = origin != null ? origin : ActionTracker.ViewSource.SALE;
+        } else if (parameters instanceof Parameters.FromDeepLink) {
+            controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
+            controller.mSkuId = ((Parameters.FromDeepLink) parameters).getSkuId();
+            controller.mOrigin = ActionTracker.ViewSource.SALE;
+        }
+
+        return controller;
+    }
+
     public SaleItemDetailsController(Bundle args) {
         super(args);
         mSaleId = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID);
@@ -336,6 +426,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         //product info
         mProductName.setText(mSaleName);
+        if (mBrandName != null) {
+            mProductBrand.setText(mBrandName);
+        }
 
         mProductPrice.setText(mSalePrice);
         mProductPreviousPrice.setText(mSaleOldPrice);

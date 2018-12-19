@@ -2,19 +2,15 @@ package au.com.dealsdirect.ui.controller.checkout.paymentselect;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,7 +25,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
@@ -37,7 +33,6 @@ import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
-import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -139,14 +134,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
             mAdapter.replaceData(mPaymentMethods);
             showPaymentMethodsPlaceholder(false);
         } else if (checkoutTag == getActivity().getString(R.string.checkout_controller) && (paymentMethods == null || !hasPaymentMethod)) {
-            GateKeeper.push(getRouter(),
-                    GateKeeper.Destination.PAYMENT_ADD,
-                    new BundleBuilder(new Bundle())
-                            .putBoolean(BundleKeys.IS_FROM_CART, isFromCart)
-                            .putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost)
-                            .build()
-                    , new HorizontalChangeHandler()
-                    , new HorizontalChangeHandler());
+            goToPaymentController();
         } else if (!hasPaymentMethod) {
             showPaymentMethodsPlaceholder(true);
         }
@@ -225,19 +213,23 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     @OnClick(R.id.controller_payment_button)
     public void onAddPaymentMethod() {
-        BundleBuilder bundleBuilder = new BundleBuilder(new Bundle());
-        bundleBuilder.putBoolean(BundleKeys.IS_FROM_CART, isFromCart)
-                .putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, mIsOurpaySelectDeliveryMethod);
+        goToPaymentController();
+    }
 
+    private void goToPaymentController() {
+        AddPaymentController controller;
         if (isFromCart) {
-            bundleBuilder.putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().getTotal()));
-            bundleBuilder.putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mValue, Value.class));
+            AddPaymentController.Parameters.FromCheckout parameters = new AddPaymentController
+                    .Parameters.FromCheckout(mIsOurpaySelectDeliveryMethod,
+                    Double.toString(mValue.getSummary().getTotal()),
+                    mValue);
+            controller = AddPaymentController.newInstance(parameters);
+        } else {
+            controller = AddPaymentController.newInstance();
         }
 
-        GateKeeper.push(getRouter(),
-                GateKeeper.Destination.PAYMENT_ADD,
-                bundleBuilder.build()
-                , new HorizontalChangeHandler()
-                , new HorizontalChangeHandler());
+        getRouter().pushController(RouterTransaction.with(controller)
+                .pushChangeHandler(new HorizontalChangeHandler(false))
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 }

@@ -19,7 +19,6 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -243,15 +242,12 @@ public class CategoriesController extends BaseController
 
         mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
 
-        Bundle saleItemBundle = new BundleBuilder(new Bundle())
-                .putString(BundleKeys.SALEITEMS_TITLE, categoryKey)
-                .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, categoryKey)
-                .putString(BundleKeys.SALEITEMS_KEY_CATEGORIES, new Gson().toJson(mCategories))
-                .putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, true)
-                .build();
+        SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
+                .FromCategory(categoryKey, categoryKey, mCategories);
 
-        mActivity.getCategoriesRouter().pushController(RouterTransaction.with(
-                new SaleItemsController(saleItemBundle))
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+        mActivity.getCategoriesRouter().pushController(RouterTransaction.with(controller)
                 .tag(getResources().getString(R.string.sale_items_controller_tag))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
