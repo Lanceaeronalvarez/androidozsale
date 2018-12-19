@@ -110,4 +110,6 @@
     <string name="font_app_semibold">fonts/opensans/OpenSans-Semibold.ttf</string>
     <string name="font_app_semibold_italic">fonts/opensans/OpenSans-SemiboldItalic.ttf</string>
 
+    <string name="app_package_name">sg.com.singsale</string>
+
 </resources>

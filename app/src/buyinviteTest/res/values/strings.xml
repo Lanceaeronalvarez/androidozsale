@@ -188,5 +188,7 @@
     <string name="i_am_looking_for">Search</string>
     <string name="ourpay_code_hint">Code</string>
 
+    <string name="app_package_name">au.com.buyinvite.bi</string>
+
 
 </resources>

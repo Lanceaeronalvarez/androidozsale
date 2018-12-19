@@ -109,10 +109,8 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     protected void setUp(View view) {
         mOrderNumberTextView.setText(mInvoiceString);
 
-        mPackageName = getActivity().getPackageName();
+        mPackageName = getActivity().getResources().getString(R.string.app_package_name);
 
-        //Remove test postfix
-        mPackageName = mPackageName.replace(".test", "");
         mAppUri = getString(R.string.app_uri_header) + mPackageName;
         mAppPlayStoreUri = getString(R.string.app_playstore_uri_header) + mPackageName;
 
