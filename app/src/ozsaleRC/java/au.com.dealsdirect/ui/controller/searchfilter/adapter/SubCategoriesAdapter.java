@@ -148,20 +148,22 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     }
 
     private List<TransformedNode> transformData(List<GetCategoryTreeResponse> data) {
-        int currentIndex = 0;
         ArrayList<TransformedNode> list = new ArrayList<>();
         for (GetCategoryTreeResponse node: data) {
-            list.add(new TransformedNode(node, 0));
-            traverseTree(node, list, 1);
+            node.traverseTree(new GetCategoryTreeResponse.TreeTraversalBlock() {
+                @Override
+                public boolean execute(GetCategoryTreeResponse parent, Object option) {
+                    int level = ((Integer) option).intValue();
+                    list.add(new TransformedNode(parent, Integer.valueOf(level)));
+                    return true;
+                }
+
+                @Override
+                public Object transformOption(GetCategoryTreeResponse parent, Object option) {
+                    return Integer.valueOf(((Integer) option).intValue() + 1);
+                }
+            }, Integer.valueOf(0));
         }
         return list;
-    }
-
-    private void traverseTree(GetCategoryTreeResponse tree, ArrayList<TransformedNode> output, int level) {
-        List<GetCategoryTreeResponse> children = tree.getChildren();
-        for (GetCategoryTreeResponse child: children) {
-            output.add(new TransformedNode(child, level));
-            traverseTree(child, output, level + 1);
-        }
     }
 }

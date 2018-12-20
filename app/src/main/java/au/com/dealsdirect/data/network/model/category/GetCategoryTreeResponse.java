@@ -131,4 +131,23 @@ public class GetCategoryTreeResponse implements Parcelable {
     public boolean isSelected() {
         return isSelected;
     }
+
+    public void traverseTree(TreeTraversalBlock block, Object option) {
+        if (block.execute(this, option)) {
+            for (GetCategoryTreeResponse child: children) {
+                child.traverseTree(block, block.transformOption(this, option));
+            }
+        }
+    }
+
+    public interface TreeTraversalBlock {
+        /**
+         *
+         * @param parent
+         * @return True to continue traversal.
+         */
+        boolean execute(GetCategoryTreeResponse parent, Object option);
+
+        Object transformOption(GetCategoryTreeResponse parent, Object option);
+    }
 }

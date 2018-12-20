@@ -37,6 +37,7 @@ import com.paginate.Paginate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -876,9 +877,32 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, List<SearchChipModel> chipsList) {
-        mCategoryKey = StringUtils.generateConcatenatedCategories(categoryKeys);
+        mCategoryKey = StringUtils.generateConcatenatedCategories(reduceCategoryKeysForRequest(categoryKeys));
         mChipFilters = chipsList;
         return createSaleItemsRequest(mCategoryKey, pageNumber, chipsList);
+    }
+
+    private Set<String> reduceCategoryKeysForRequest(Set<String> categoryKeys) {
+        LinkedHashSet<String> keys = new LinkedHashSet<>();
+        for (GetCategoryTreeResponse node: mCategoryTreeResponse) {
+            node.traverseTree(new GetCategoryTreeResponse.TreeTraversalBlock() {
+                @Override
+                public boolean execute(GetCategoryTreeResponse parent, Object option) {
+                    boolean isChecked = categoryKeys.contains(parent.getKey());
+                    if (isChecked) {
+                        keys.add(parent.getKey());
+                    }
+                    return !isChecked;
+                }
+
+                @Override
+                public Object transformOption(GetCategoryTreeResponse parent, Object option) {
+                    return null;
+                }
+            }, null);
+        }
+
+        return keys;
     }
 
     @Override
