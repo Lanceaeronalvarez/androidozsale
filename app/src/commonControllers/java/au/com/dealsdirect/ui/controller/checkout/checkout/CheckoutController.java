@@ -677,7 +677,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail) {
-        if (getBoolean(R.bool.is_ozsale_app) && deliveryOptions != null) {
+        if (getBoolean(R.bool.is_ozsale_app) && (deliveryOptions != null && !deliveryOptions.isEmpty())) {
             mDeliveryOptions = deliveryOptions;
             mDeliveryServicePackageDetail = deliveryServicePackageDetail;
 
