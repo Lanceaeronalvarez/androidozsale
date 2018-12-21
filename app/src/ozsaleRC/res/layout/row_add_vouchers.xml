@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingPrefix">
+
+    <LinearLayout
+        android:id="@+id/row_layout_add_vouchers"
+        android:layout_width="@dimen/voucher_container_width"
+        android:layout_height="@dimen/voucher_container_height"
+        android:clickable="true"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
+        android:paddingStart="@dimen/padding_default"
+        android:paddingEnd="@dimen/padding_default"
+        android:background="@drawable/bg_voucher_item"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin_huge"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/row_add_vouchers_text_item_cost_value"
+                fontPath="@string/font_app_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_title"
+                tools:text="$10" />
+
+            <TextView
+                android:id="@+id/row_add_vouchers_text_item_desc"
+                fontPath="@string/font_app_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_caption2"
+                tools:text="voucher good for use until " />
+
+            <TextView
+                android:id="@+id/row_add_vouchers_text_item_expires_on_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_caption2"
+                tools:text="January 15" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
