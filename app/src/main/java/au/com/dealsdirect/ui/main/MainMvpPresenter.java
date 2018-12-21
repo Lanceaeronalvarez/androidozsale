@@ -88,4 +88,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void setCountry(Settings.Country country);
 
     String legacyCountryId();
+
+    void setUserRateCurrentVersion(boolean userRateCurrentVersion);
+
+    boolean isUserRateCurrentVersion();
 }

@@ -1128,6 +1128,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setUserHasRateApp(boolean userHasRateApp) {
+        mPreferencesHelper.setUserHasRateApp(userHasRateApp);
+    }
+
+    @Override
+    public boolean userHasRateApp() {
+        return mPreferencesHelper.userHasRateApp();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }

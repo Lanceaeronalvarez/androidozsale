@@ -55,6 +55,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String FOLLOW_US_LINK_FB = "server_follow_us_fb";
     private static final String FOLLOW_US_LINK_TWITTER = "server_follow_us_twitter";
     private static final String IMAGE_SERVER_URL = "server_image_server_url";
+    private static final String USER_HAS_RATE_APP = "server_user_rate";
 
     private static final String PAYMENT_PAYPAL_ENABLED = "app_paypal_enabled";
     private static final String PAYMENT_MASTERPASS_ENABLED = "app_masterpass_enabled";
@@ -748,6 +749,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean hasViewedCart() {
         return Prefs.getBoolean(HAS_VIEWED_CART, false);
+    }
+
+    @Override
+    public void setUserHasRateApp(boolean userHasRateApp) {
+        Prefs.putBoolean(USER_HAS_RATE_APP, userHasRateApp);
+    }
+
+    @Override
+    public boolean userHasRateApp() {
+        return Prefs.getBoolean(USER_HAS_RATE_APP, false);
     }
 
     public void setEventUserId(String userId) {

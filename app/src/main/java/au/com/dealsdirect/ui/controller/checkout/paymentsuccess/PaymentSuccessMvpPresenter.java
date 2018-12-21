@@ -12,4 +12,8 @@ public interface PaymentSuccessMvpPresenter<V extends MvpView> extends MvpPresen
     void incrementPayCount();
 
     void generateOurpay();
+
+    void setHasUserRateApp(boolean hasUserRateApp);
+
+    boolean getHasUserRateApp();
 }

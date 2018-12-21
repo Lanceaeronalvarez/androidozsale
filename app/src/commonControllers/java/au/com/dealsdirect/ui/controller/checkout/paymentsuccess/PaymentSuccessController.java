@@ -2,6 +2,8 @@ package au.com.dealsdirect.ui.controller.checkout.paymentsuccess;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.service.ourpay.Ourpay;
@@ -26,6 +29,7 @@ import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
+import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -156,16 +160,21 @@ public class PaymentSuccessController extends BaseController implements PaymentS
 
     @Override
     public void showRatePopUp() {
-        DialogUtils.showYesNoDialog(getActivity(),
-                getApplicationContext().getString(R.string.rate_us_dialog_title),
-                getApplicationContext().getString(R.string.rate_us_message),
-                getApplicationContext().getString(R.string.rate_us_positive_text),
-                getApplicationContext().getString(R.string.rate_us_negative_text),
-                (dialog, which) -> {
-                    rateApp();
-                    dialog.dismiss();
-                },
-                (dialog, which) -> dialog.dismiss());
+
+        if (!mPresenter.getHasUserRateApp()) {
+            DialogUtils.showYesNoDialog(getActivity(),
+                    getApplicationContext().getString(R.string.rate_us_dialog_title),
+                    getApplicationContext().getString(R.string.rate_us_message),
+                    getApplicationContext().getString(R.string.rate_us_positive_text),
+                    getApplicationContext().getString(R.string.rate_us_negative_text),
+                    (dialog, which) -> {
+                        mPresenter.setHasUserRateApp(true);
+                        IntrospectionUtils.verifyVersion(getApplicationContext());
+                        rateApp();
+                        dialog.dismiss();
+                    },
+                    (dialog, which) -> dialog.dismiss());
+        }
     }
 
     @Override

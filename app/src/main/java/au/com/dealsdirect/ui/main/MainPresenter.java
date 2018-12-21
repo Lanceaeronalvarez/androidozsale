@@ -615,6 +615,16 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void setUserRateCurrentVersion(boolean userRateCurrentVersion) {
+        getDataManager().setUserHasRateApp(userRateCurrentVersion);
+    }
+
+    @Override
+    public boolean isUserRateCurrentVersion() {
+        return getDataManager().userHasRateApp();
+    }
+
+    @Override
     public void callGCMNotificationEvent(Context context) {
         gNotification.callNotificationEvent(context);
     }

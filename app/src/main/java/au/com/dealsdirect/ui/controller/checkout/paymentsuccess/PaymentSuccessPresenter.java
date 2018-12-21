@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.paymentsuccess;
 
+import android.content.pm.PackageInfo;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
@@ -38,4 +40,15 @@ public class PaymentSuccessPresenter<V extends PaymentSuccessMvpView> extends Ba
             getMvpView().showOurpay();
         }
     }
+
+    @Override
+    public void setHasUserRateApp(boolean hasUserRateApp) {
+        getDataManager().setUserHasRateApp(hasUserRateApp);
+    }
+
+    @Override
+    public boolean getHasUserRateApp() {
+        return getDataManager().userHasRateApp();
+    }
+
 }

@@ -46,6 +46,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -184,8 +185,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         splashShownCallback();
         onNewIntent(getIntent());
 
-        setUp();
+        //Initialize version introspection
+        if (!IntrospectionUtils.verifyIsAppUpdated(getApplicationContext())) {
+            mPresenter.setUserRateCurrentVersion(false);
+            IntrospectionUtils.verifyVersion(getApplicationContext());
+        }
 
+        setUp();
     }
 
     /**

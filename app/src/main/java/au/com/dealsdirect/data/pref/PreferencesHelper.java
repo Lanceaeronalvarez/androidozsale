@@ -217,4 +217,9 @@ public interface PreferencesHelper {
     void setHasViewedCart(boolean hasViewedCart);
 
     boolean hasViewedCart();
+
+    void setUserHasRateApp(boolean userHasRateApp);
+
+    boolean userHasRateApp();
+
 }
