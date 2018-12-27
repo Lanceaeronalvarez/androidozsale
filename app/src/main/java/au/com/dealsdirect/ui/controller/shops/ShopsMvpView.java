@@ -24,6 +24,7 @@ public interface ShopsMvpView extends MvpView {
                          String bannerId,
                          int position,
                          String imageUrl,
+                         String endDate,
                          boolean isAvailable);
 
     boolean isChangeInProgress();

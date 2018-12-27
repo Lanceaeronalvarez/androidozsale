@@ -64,6 +64,15 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         @BindView(R.id.vh_sale_item_frame)
         FrameLayout layout;
 
+        @BindView(R.id.vh_sale_item_free_delivery)
+        ImageView freeDelivery;
+
+        @BindView(R.id.vh_sale_item_discount)
+        TextView discount;
+
+        @BindView(R.id.vh_sale_item_sale_price)
+        TextView salePrice;
+
         ViewHolder(View view, Pair<Integer, Integer> pair) {
             super(view);
             ButterKnife.bind(this, view);
@@ -136,6 +145,14 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         holder.price.setText(saleItemPrice);
         holder.oldPrice.setText(saleItemOldPrice);
         holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.freeDelivery.setVisibility(mData.get(position).getFreeDelivery() ? View.VISIBLE : View.GONE);
+        int discountValue = mData.get(position).getSalePercentOff().intValue();
+        double salePriceValue = mData.get(position).getSalePrice().getValue();
+        holder.discount.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
+        holder.salePrice.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
+        holder.discount.setText(String.format(mActivity.getResources().getString(R.string.banner_percent_off), String.valueOf(discountValue)));
+        holder.salePrice.setText(PriceUtils.getRpStringValue(salePriceValue));
+
 
         RxView.clicks(holder.itemView)
                 .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)

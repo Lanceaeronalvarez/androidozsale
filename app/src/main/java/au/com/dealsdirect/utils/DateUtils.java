@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 /*
@@ -19,6 +20,28 @@ public class DateUtils {
     public static String[] months = new DateFormatSymbols().getMonths();
 
     public static final String GMT_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    public static final String TIME_FORMAT = "HH:mm:ss";
+
+    public static final String KEY_MILLI_SECONDS = "milliseconds";
+
+    public static final String KEY_SECONDS = "seconds";
+
+    public static final String KEY_MINUTES = "minutes";
+
+    public static final String KEY_HOURS = "hours";
+
+    public static final String KEY_DAYS = "days";
+
+    public static final int DATE_UTIL_MILLIS_TO_SEC = 1000;
+
+    public static final int DATE_UTIL_MILLIS_TO_MIN = 60000;
+
+    public static final int DATE_UTIL_MILLIS_TO_HOUR = 3600000;
+
+    public static final int DATE_UTIL_MILLIS_TO_DAY = 86400000;
+
+    private static HashMap<String, String> mDiffTimeMap = new HashMap<>();
 
     public static String convertStartEndDateToString(String startString, String endString) {
         @SuppressLint("SimpleDateFormat")
@@ -285,4 +308,55 @@ public class DateUtils {
         }
     }
 
+    public static HashMap<String, String> timeDivision(long remainingDiffInMilliSeconds) {
+        try {
+            //get days
+            long days;
+            days = remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_DAY;
+            remainingDiffInMilliSeconds -= days * DATE_UTIL_MILLIS_TO_DAY;
+            mDiffTimeMap.put(KEY_DAYS, String.valueOf(days));
+
+            //get hours
+            long hours = remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR;
+            mDiffTimeMap.put(KEY_HOURS, String.valueOf(hours));
+
+            return mDiffTimeMap;
+        } catch (NullPointerException e) {
+            return null;
+        }
+
+    }
+
+    public static String getRemainingTimeValue(long remainingDiffInMilliSeconds) {
+        HashMap<String, String> map = timeDivision(remainingDiffInMilliSeconds);
+        String remainingTextViewValue = "";
+        boolean isGreaterThanTenDays = !map.get(KEY_DAYS).isEmpty() && Integer.valueOf(map.get(KEY_DAYS)) > 10;
+        boolean isLessThanADay = Integer.valueOf(map.get(KEY_DAYS)) < 1;
+        if (isGreaterThanTenDays) {
+            remainingTextViewValue = map.get(KEY_DAYS) + 'd';
+            return remainingTextViewValue;
+        } else if (!isGreaterThanTenDays && !isLessThanADay) {
+            remainingTextViewValue = map.get(KEY_DAYS) + "d " + map.get(DateUtils.KEY_HOURS) + 'h';
+            return remainingTextViewValue;
+        } else {
+            return getRemainingTimeInTimeFormat(remainingDiffInMilliSeconds);
+        }
+    }
+
+    public static long getRemainingTimeInMillis(String endDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat(AppConstants.API_DATE_FORMAT, Locale.ENGLISH);
+        Date date = new Date();
+
+        try {
+            long remainingDiffInMilliSeconds = sdf.parse(endDate).getTime() - date.getTime();
+            return remainingDiffInMilliSeconds;
+        } catch (ParseException | NullPointerException e) {
+            return 0;
+        }
+    }
+
+    public static String getRemainingTimeInTimeFormat(long milliSeconds) {
+        SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT, Locale.ENGLISH);
+        return sdf.format(new Date(milliSeconds));
+    }
 }

@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -66,12 +67,12 @@ import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.TabLayoutUtils;
-import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -93,12 +94,14 @@ import static au.com.dealsdirect.service.event.ActionTracker.ClickType.PRODUCT_C
 public class SaleItemsController extends BaseController implements SaleItemsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener, SearchFilterMvpRepository {
 
     public abstract static class Parameters {
-        private Parameters() {}
+        private Parameters() {
+        }
 
         public static final class FromBannerClick extends Parameters {
             private String mTitle;
             private String mSaleId;
             private String mBannerId;
+            private String mEndDate;
             private String mImageURL;
             private Integer mPosition;
 
@@ -106,19 +109,39 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                                    String saleId,
                                    String bannerId,
                                    String imageURL,
+                                   String endDate,
                                    Integer position) {
                 mTitle = title;
                 mSaleId = saleId;
                 mBannerId = bannerId;
                 mImageURL = imageURL;
+                mEndDate = endDate;
                 mPosition = position;
             }
 
-            public String getTitle() { return mTitle; }
-            public String getSaleId() { return mSaleId; }
-            public String getBannerId() { return mBannerId; }
-            public String getImageURL() { return mImageURL; }
-            public Integer getPosition() { return mPosition; }
+            public String getTitle() {
+                return mTitle;
+            }
+
+            public String getSaleId() {
+                return mSaleId;
+            }
+
+            public String getBannerId() {
+                return mBannerId;
+            }
+
+            public String getImageURL() {
+                return mImageURL;
+            }
+
+            public String getEndDate() {
+                return mEndDate;
+            }
+
+            public Integer getPosition() {
+                return mPosition;
+            }
         }
 
         public static final class FromCategory extends Parameters {
@@ -134,9 +157,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mCategories = categories;
             }
 
-            public String getTitle() { return mTitle; }
-            public String getCategoryMap() { return mCategoryMap; }
-            public List<GetCategoryTreeResponse> getCategories() { return mCategories; }
+            public String getTitle() {
+                return mTitle;
+            }
+
+            public String getCategoryMap() {
+                return mCategoryMap;
+            }
+
+            public List<GetCategoryTreeResponse> getCategories() {
+                return mCategories;
+            }
         }
 
 
@@ -150,10 +181,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mSearchKey = searchKey;
             }
 
-            public String getTitle() { return mTitle; }
-            public String getSearchKey() { return mSearchKey; }
+            public String getTitle() {
+                return mTitle;
+            }
+
+            public String getSearchKey() {
+                return mSearchKey;
+            }
         }
-        
+
         public static final class FromSaleItemDeepLink extends Parameters {
             private String mBannerTitle;
             private String mSaleId;
@@ -167,9 +203,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mBannerId = bannerId;
             }
 
-            public String getBannerTitle() { return mBannerTitle; }
-            public String getSaleId() { return mSaleId; }
-            public String getBannerId() { return mBannerId; }
+            public String getBannerTitle() {
+                return mBannerTitle;
+            }
+
+            public String getSaleId() {
+                return mSaleId;
+            }
+
+            public String getBannerId() {
+                return mBannerId;
+            }
         }
 
         public static final class FromCategoryDeepLink extends Parameters {
@@ -182,9 +226,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mCategoryMapKey = categoryMapKey;
             }
 
-            public String getTitle() { return mTitle; }
+            public String getTitle() {
+                return mTitle;
+            }
 
-            public String getCategoryMapKey() { return mCategoryMapKey; }
+            public String getCategoryMapKey() {
+                return mCategoryMapKey;
+            }
         }
     }
 
@@ -201,6 +249,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mCategoryKey = "";
     private String mCategoryForTitle = "";
     private String mSearchQuery = "";
+    private String mEndDate = "";
 
     private Map<String, GetCategoryTreeResponse> mCategoryMap = new HashMap<>();
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
@@ -255,6 +304,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.controller_sale_collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbar;
 
+    @BindView(R.id.partial_toolbar_details_remaining_time_layout)
+    LinearLayout mSaleItemsRemainingTimeLayout;
+
+    @BindView(R.id.partial_toolbar_details_remaining_time_value)
+    TextView mSaleItemsRemainingTimeText;
+
     private SaleItemsAdapter mSaleItemsAdapter;
     private Paginate mPaginateManager;
     private Paginate.Callbacks mPaginateCallbacks;
@@ -287,6 +342,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     //store removed query chips
     private List<String> mRemovedChipTitles;
     private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
+
+    private CountDownTimer mCountDownTimer;
 
     private TextWatcher mTextWatcher = new TextWatcher() {
         private Timer timer = new Timer();
@@ -341,6 +398,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (parameters instanceof Parameters.FromBannerClick) {
             title = ((Parameters.FromBannerClick) parameters).getTitle();
             controller.mSaleId = ((Parameters.FromBannerClick) parameters).getSaleId();
+            controller.mEndDate = ((Parameters.FromBannerClick) parameters).getEndDate();
             controller.mFromBannerSearch = true;
         } else if (parameters instanceof Parameters.FromShopSearch) {
             title = ((Parameters.FromShopSearch) parameters).getTitle();
@@ -363,7 +421,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         controller.mTitle = title;
 
         if (controller.mFromShopSearch) controller.mSalesOrigin = ActionTracker.ViewSource.SEARCH;
-        if (controller.mFromCategorySearch) controller.mSalesOrigin = ActionTracker.ViewSource.CATEGORY;
+        if (controller.mFromCategorySearch)
+            controller.mSalesOrigin = ActionTracker.ViewSource.CATEGORY;
         return controller;
     }
 
@@ -405,7 +464,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
-        if (!mSaleId.isEmpty())outState.putString(BundleKeys.SALEITEMS_SALE_ID, mSaleId);
+        if (!mSaleId.isEmpty()) outState.putString(BundleKeys.SALEITEMS_SALE_ID, mSaleId);
         outState.putBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
         outState.putBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
         outState.putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey);
@@ -413,14 +472,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
         outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
         outState.putString(BundleKeys.SALEITEMS_KEY_CATEGORIES, new Gson().toJson(mInitialCategoryTree));
-        if (mSaleItemsToolbarField != null)outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+        if (mSaleItemsToolbarField != null)
+            outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
-        mSaleId = savedInstanceState.getString(BundleKeys.SALEITEMS_SALE_ID,"");
+        mSaleId = savedInstanceState.getString(BundleKeys.SALEITEMS_SALE_ID, "");
         mCategoryKey = savedInstanceState.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
         mFromBannerSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH);
         mFromShopSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH);
@@ -436,7 +496,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }.getType());
         }
 
-        if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT, "");
+        if (savedInstanceState.containsKey(KEY_SEARCH_TEXT))
+            mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT, "");
     }
 
 
@@ -512,6 +573,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
         mSaleItemsCategoryToolbarTitle.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
         mSaleItemsToolbarSubTitleText.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
+        mSaleItemsRemainingTimeLayout.setVisibility(isFromCategories() ? View.GONE : View.VISIBLE);
         mSaleItemsToolbarTitle.setVisibility(!isFromCategories() ? View.VISIBLE : View.GONE);
 
         if (isFromCategories()) {
@@ -550,6 +612,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             newControllerChangeHandler = null;
         }
         mSaleItemsRecyclerView.setAdapter(null);
+        mCountDownTimer.cancel();
         super.onDestroyView(view);
     }
 
@@ -558,6 +621,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setDraggableViewPager(false);
         setupPtrHeader();
+        setupSaleRemainingTime(mEndDate);
+
 
         //use initialcategory tree map if it came from categories.
         if (!mInitialCategoryTree.isEmpty()) {
@@ -643,6 +708,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         hideKeyboard();
+    }
+
+    private void setupSaleRemainingTime(String endDate) {
+        mCountDownTimer = new CountDownTimer(DateUtils.getRemainingTimeInMillis(endDate), DateUtils.DATE_UTIL_MILLIS_TO_SEC) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mSaleItemsRemainingTimeText.setText(DateUtils.getRemainingTimeValue(millisUntilFinished));
+            }
+
+            @Override
+            public void onFinish() { }
+        };
+        mCountDownTimer.start();
     }
 
     private void showKeyboard() {
@@ -884,7 +962,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private Set<String> reduceCategoryKeysForRequest(Set<String> categoryKeys) {
         LinkedHashSet<String> keys = new LinkedHashSet<>();
-        for (GetCategoryTreeResponse node: mCategoryTreeResponse) {
+        for (GetCategoryTreeResponse node : mCategoryTreeResponse) {
             node.traverseTree(new GetCategoryTreeResponse.TreeTraversalBlock() {
                 @Override
                 public boolean execute(GetCategoryTreeResponse parent, Object option) {

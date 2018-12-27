@@ -373,6 +373,7 @@ public class ShopsController extends BasePullToRefreshController implements Shop
             String bannerId,
             int position,
             String imageUrl,
+            String endDate,
             boolean isAvailable) {
 
         Bundle args = new BundleBuilder(new Bundle())

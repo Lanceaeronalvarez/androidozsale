@@ -25,6 +25,13 @@
             android:src="@drawable/ic_deals"
             tools:ignore="ContentDescription" />
 
+        <ImageView
+            android:id="@+id/vh_sale_item_free_delivery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_free_delivery"
+            android:layout_gravity="bottom"/>
+
         <TextView
             android:id="@+id/vh_sale_item_sold_out"
             android:layout_width="wrap_content"
@@ -50,16 +57,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/vh_sale_item_frame"
         android:layout_marginTop="@dimen/margin_extra_small"
-        android:gravity="center"
+        android:gravity="left"
         android:lines="1"
-        android:paddingLeft="@dimen/margin_small"
-        android:paddingRight="@dimen/margin_small"
         android:singleLine="true"
         android:text=""
-        android:textColor="@color/color_item_title"
-        android:textSize="@dimen/text_size_body"
+        android:textColor="@color/text_extra_dark"
+        android:textSize="@dimen/text_size_caption1"
         android:textStyle="bold"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:text="Brand Sample" />
 
     <TextView
@@ -67,12 +72,12 @@
         fontPath="@string/font_app_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vh_sale_item_price_layout"
+        android:layout_below="@+id/vh_sale_item_brand"
         android:singleLine="true"
         android:ellipsize="end"
         android:gravity="left"
         android:lines="1"
-        android:textColor="@color/text_medium"
+        android:textColor="@color/text_extra_dark"
         android:textSize="@dimen/text_size_caption1"
         android:visibility="visible"
         tools:text="Item Name Sample" />
@@ -83,22 +88,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:gravity="top"
-        android:layout_below="@+id/vh_sale_item_frame"
-        android:layout_marginStart="@dimen/margin_extra_small"
-        android:layout_marginEnd="@dimen/margin_extra_small"
+        android:layout_below="@+id/vh_sale_item_name"
         android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/vh_sale_item_old_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="left"
-            android:lines="1"
-            android:singleLine="true"
-            android:textColor="@color/text_medium"
-            android:textSize="@dimen/text_size_caption1"
-            tools:text="$120.00" />
 
         <TextView
             android:id="@+id/vh_sale_item_price"
@@ -106,7 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:gravity="right"
+            android:gravity="left"
             android:lines="1"
             android:singleLine="true"
             android:text=""
@@ -115,8 +106,50 @@
             android:textStyle="bold"
             tools:text="$100.00" />
 
+        <TextView
+            android:id="@+id/vh_sale_item_old_price"
+            fontPath="@string/font_app_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="right"
+            android:lines="1"
+            android:singleLine="true"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_caption1"
+            tools:text="$120.00" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/vh_sale_item_discount"
+        fontPath="@string/font_app_bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:background="#ff0000"
+        android:gravity="left"
+        android:layout_below="@+id/vh_sale_item_price_layout"
+        android:padding="@dimen/margin_extra_small"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_caption2"
+        tools:text="Up To 50% Off" />
+
+    <TextView
+        android:id="@+id/vh_sale_item_sale_price"
+        fontPath="@string/font_app_bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:layout_below="@+id/vh_sale_item_discount"
+        android:gravity="left"
+        android:lines="1"
+        android:singleLine="true"
+        android:text=""
+        android:textColor="@color/ourpay_red"
+        android:textSize="@dimen/text_size_body"
+        android:textStyle="bold"
+        tools:text="$100.00" />
 
 </RelativeLayout>
 

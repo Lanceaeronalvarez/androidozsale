@@ -656,6 +656,8 @@
     <string name="order_total_item_payment">Total Item Payment:</string>
     <string name="order_total">Total:</string>
 
-    <string name="banner_percent_off">EXTRA\n%1$s%%\nOFF</string>
+    <string name="banner_percent_off_space">EXTRA\n%1$s%%\nOFF</string>
+    <string name="banner_percent_off">EXTRA %1$s%% OFF</string>
+    <string name="timer_label">Sale ends in</string>
 
 </resources>

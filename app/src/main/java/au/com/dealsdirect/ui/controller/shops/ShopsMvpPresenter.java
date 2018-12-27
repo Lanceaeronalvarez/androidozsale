@@ -24,6 +24,7 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
                       String bannerId,
                       int position,
                       String imageUrl,
+                      String endDate,
                       boolean isAvailable);
 
 }

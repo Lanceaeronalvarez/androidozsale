@@ -384,16 +384,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     @Override
-    public void onBannerClicked(
-            String saleId,
-            String bannerTitle,
-            String bannerId,
-            int position,
-            String imageUrl,
-            boolean isAvailable) {
+    public void onBannerClicked(String saleId, String bannerTitle, String bannerId, int position, String imageUrl, String endDate, boolean isAvailable) {
 
         SaleItemsController.Parameters.FromBannerClick parameters = new SaleItemsController.Parameters
-                .FromBannerClick(bannerTitle, saleId, bannerId, imageUrl, position);
+                .FromBannerClick(bannerTitle, saleId, bannerId, imageUrl, endDate, position);
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
