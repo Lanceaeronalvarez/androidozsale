@@ -4,10 +4,16 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
@@ -28,6 +34,9 @@ import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
+import static android.graphics.Typeface.BOLD;
+import static android.graphics.Typeface.ITALIC;
+
 /**
  * dp Created by Admin on 6/7/17.
  */
@@ -44,6 +53,8 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     private int mNumberOfColumns;
     private int mOffset;
     private String mLastGroupType;
+    private static final int SPANNABLE_STRING_START_INDEX = 6;
+    private static final float DISCOUNT_VALUE_SCALE_FACTOR = 1.4f;
 
     public BannersAdapter(
             Activity activity,
@@ -72,9 +83,6 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         @BindView(R.id.viewholder_banner_image)
         ImageView image;
 
-        @BindView(R.id.viewholder_banner_overlay)
-        View overlay;
-
         @BindView(R.id.viewholder_banner_name)
         TextView name;
 
@@ -83,6 +91,9 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
         @BindView(R.id.viewholder_banner_free_delivery)
         ImageView deliveryImage;
+
+        @BindView(R.id.viewholder_banner_percent_off)
+        TextView percentOff;
 
         ViewHolder(View view, int height) {
             super(view);
@@ -141,10 +152,26 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
         GetBannerResponse.Banner item = mSales.get(position);
         holder.name.setText(item.getDescription());
-        if (item.getPercentOffText() != null && !item.getPercentOffText().isEmpty()) {
+
+        if (item.getBannerText() != null && !item.getBannerText().isEmpty()) {
             holder.discount.setVisibility(View.VISIBLE);
-            holder.discount.setText(item.getPercentOffText());
+            holder.discount.setText(item.getBannerText());
+        } else {
+            holder.discount.setVisibility(View.GONE);
         }
+
+        if (item.getPercentOff() != 0) {
+            String percentOffValue = String.valueOf(item.getPercentOff());
+            SpannableString string = new SpannableString(String.format(mActivity.getResources().getString(R.string.banner_percent_off), percentOffValue));
+            string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR),SPANNABLE_STRING_START_INDEX, SPANNABLE_STRING_START_INDEX + percentOffValue.length(),  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            string.setSpan(new StyleSpan(BOLD),SPANNABLE_STRING_START_INDEX, SPANNABLE_STRING_START_INDEX + percentOffValue.length(),  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.percentOff.setVisibility(View.VISIBLE);
+            holder.percentOff.setText(string);
+        } else {
+            holder.percentOff.setVisibility(View.GONE);
+        }
+
+
         holder.deliveryImage.setVisibility(item.getFreeDelivery() ? View.VISIBLE : View.GONE);
         String imgUrl;
 
@@ -152,9 +179,6 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
 
         ImageUtils.loadImage(imgUrl, holder.image);
-        if (!item.getIsAvailable()) {
-            holder.overlay.setEnabled(false);
-        }
 
         if (holder.subscription != null) {
             holder.subscription.dispose();
@@ -212,8 +236,10 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     public int getItemCount() {
         return mSales.size();
     }
-    
-    public int getNumberOfColumns() { return mNumberOfColumns; }
+
+    public int getNumberOfColumns() {
+        return mNumberOfColumns;
+    }
 
     public GetBannerResponse.Banner getItem(int position) {
         return position > 0 && mSales.size() > position ? mSales.get(position) : null;
@@ -240,7 +266,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         }
     }
 
-    public int getOffset(){
+    public int getOffset() {
         return mOffset;
     }
 

@@ -191,7 +191,6 @@ public class HomeController extends BaseController implements HomeMvpView {
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
-        mPresenter.setInitialLaunchFalse();
         super.onDestroyView(view);
     }
 
