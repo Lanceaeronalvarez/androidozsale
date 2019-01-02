@@ -69,7 +69,7 @@
     <string name="browse">Category</string>
     <string name="shop">Shop</string>
     <string name="my_addresses">MY ADDRESSES</string>
-    <string name="select_a_sale">SELECT SALE</string>
+    <string name="select_a_sale">Select a Sale</string>
     <string name="voucher_used">MY VOUCHERS</string>
     <string name="checkout_order_label">MY ORDERS</string>
     <string name="promo_code">Promo Code</string>
