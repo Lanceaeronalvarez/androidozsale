@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -13,7 +14,10 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.ArraySet;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -48,7 +52,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -67,10 +70,10 @@ import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
@@ -79,6 +82,8 @@ import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static android.graphics.Typeface.BOLD;
 
 /*
  * Created by smartwave on 08/06/2017.
@@ -100,6 +105,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             private String mPrice;
             private String mOldPrice;
             private String mSalesOrigin;
+            private String mEndDate;
+            private boolean mIsFreeDelivery;
+            private int mPercentOff;
+            private long mSalePrice;
 
             public FromItemsList(Integer position,
                                  String imageURL,
@@ -110,7 +119,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                  String productBrand,
                                  String price,
                                  String oldPrice,
-                                 String salesOrigin) {
+                                 String salesOrigin,
+                                 String endDate,
+                                 boolean isFreeDelivery,
+                                 int percentOff) {
                 mPosition = position;
                 mImageURL = imageURL;
                 mSeoIdentifierId = seoIdentifierId;
@@ -121,6 +133,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mPrice = price;
                 mOldPrice = oldPrice;
                 mSalesOrigin = salesOrigin;
+                mEndDate = endDate;
+                mIsFreeDelivery = isFreeDelivery;
+                mPercentOff = percentOff;
             }
 
             public Integer getPosition() { return mPosition; }
@@ -133,6 +148,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             public String getPrice() { return mPrice; }
             public String getOldPrice() { return mOldPrice; }
             public String getSalesOrigin() { return mSalesOrigin; }
+            public String getEndDate() { return mEndDate; }
+            public boolean getIsFreeDelivery() { return mIsFreeDelivery; }
+            public int getPercentOff() { return mPercentOff; }
         }
 
         public static final class FromDeepLink extends Parameters {
@@ -163,6 +181,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mBrandName;
     private Ourpay mOurpay;
     private List<GetSaleItemDetailsResponse> mSkuVariants = new ArrayList<>();
+    private String mEndDate;
+    private boolean mIsFreeDelivery;
+    private int mPercentOff;
+    private CountDownTimer mCountDownTimer;
 
     @BindView(R.id.arrow_left)
     View mLeftView;
@@ -241,8 +263,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     LinearLayout mMainContentLayout;
     @BindView(R.id.product_details_image_animate)
     ImageView mImageViewToAnimate;
-
+    @BindView(R.id.product_details_add_to_basket_timer)
+    LinearLayout mAddToCartTimer;
+    @BindView(R.id.product_details_timer)
+    TextView mTimerTextView;
+    @BindView(R.id.product_details_free_delivery)
+    ImageView mFreeDeliveryImageView;
+    @BindView(R.id.product_details_percent_off)
+    TextView mProductDiscountTextView;
     int[] mSharedImageLocation;
+
+    private static final int SPANNABLE_STRING_START_INDEX = 6;
+    private static final float DISCOUNT_VALUE_SCALE_FACTOR = 2f;
 
     LinearLayoutManager mProductImagesRvLayoutManager;
 
@@ -324,7 +356,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             controller.mSaleOldPrice = ((Parameters.FromItemsList) parameters).getOldPrice();
             controller.mFromPosition = ((Parameters.FromItemsList) parameters).getPosition();
             String origin = ((Parameters.FromItemsList) parameters).getSalesOrigin();
+            controller.mEndDate = ((Parameters.FromItemsList) parameters).getEndDate();
+            controller.mIsFreeDelivery = ((Parameters.FromItemsList) parameters).getIsFreeDelivery();
             controller.mOrigin = origin != null ? origin : ActionTracker.ViewSource.SALE;
+            controller.mPercentOff = ((Parameters.FromItemsList) parameters).getPercentOff();
         } else if (parameters instanceof Parameters.FromDeepLink) {
             controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
             controller.mSkuId = ((Parameters.FromDeepLink) parameters).getSkuId();
@@ -584,6 +619,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
     }
 
+    private void setupSaleRemainingTime(String endDate) {
+        mCountDownTimer = new CountDownTimer(DateUtils.getRemainingTimeInMillis(endDate), DateUtils.DATE_UTIL_MILLIS_TO_SEC) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTimerTextView.setText(DateUtils.getRemainingTimeValue(millisUntilFinished));
+            }
+
+            @Override
+            public void onFinish() { }
+        };
+        mCountDownTimer.start();
+    }
+
     private void stretchImageView() {
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mProductDetailsImageLayout.getLayoutParams();
         int bottomNavHeight = mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight();
@@ -622,6 +670,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 //      mSizesFlowLayout.setAdapter(null);
         mSizesFlowLayout.setOnSelectListener(null);
         mProductDescriptionText.setWebViewClient(null);
+        if(mCountDownTimer != null) mCountDownTimer.cancel();
         super.onDestroyView(view);
     }
 
@@ -655,6 +704,27 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue());
         mActionTracker.CVItemDetails(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue()));
+
+        if (DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+            setupSaleRemainingTime(mEndDate);
+            mAddToCartTimer.setVisibility(View.VISIBLE);
+            mAddToCartButton.setVisibility(View.GONE);
+        } else {
+            mAddToCartTimer.setVisibility(View.GONE);
+        }
+
+        if (mPercentOff != 0) {
+            String percentOffValue = String.valueOf(mPercentOff);
+            SpannableString string = new SpannableString(String.format(mActivity.getResources().getString(R.string.banner_percent_off_space), percentOffValue));
+            string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR),SPANNABLE_STRING_START_INDEX, SPANNABLE_STRING_START_INDEX + percentOffValue.length(),  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            string.setSpan(new StyleSpan(BOLD),SPANNABLE_STRING_START_INDEX, SPANNABLE_STRING_START_INDEX + percentOffValue.length(),  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mProductDiscountTextView.setVisibility(View.VISIBLE);
+            mProductDiscountTextView.setText(string);
+        } else {
+            mProductDiscountTextView.setVisibility(View.GONE);
+        }
+
+        mFreeDeliveryImageView.setVisibility(mIsFreeDelivery ? View.VISIBLE : View.GONE);
 
         Animation anim = AnimationUtils.loadAnimation(mActivity, R.anim.slide_to_bottom);
         anim.setDuration(200);
@@ -903,7 +973,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         return true;
     }
 
-    @OnClick(R.id.product_details_add_to_basket)
+    @OnClick({R.id.product_details_add_to_basket, R.id.product_details_add_to_basket_timer})
     void addToBasket() {
         mAttempts++;
         AddToCartRequest request = new AddToCartRequest();

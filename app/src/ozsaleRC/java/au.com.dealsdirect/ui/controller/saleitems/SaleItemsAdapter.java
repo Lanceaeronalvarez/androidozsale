@@ -163,7 +163,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                         url,
                         mData.get(position).getSkus().isEmpty() ? "" :
                                 mData.get(position).getSkus().get(0).getId(),
-                        mSaleId));
+                        mSaleId,
+                        mData.get(position).getFreeDelivery(),
+                        mData.get(position).getSalePercentOff()));
 
     }
 

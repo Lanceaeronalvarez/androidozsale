@@ -327,6 +327,12 @@ public class DateUtils {
 
     }
 
+    public static boolean isLessThanADay(long remainingDiffInMilliSeconds) {
+        //get hours
+        long hours = remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR;
+        return hours < 24;
+    }
+
     public static String getRemainingTimeValue(long remainingDiffInMilliSeconds) {
         HashMap<String, String> map = timeDivision(remainingDiffInMilliSeconds);
         String remainingTextViewValue = "";

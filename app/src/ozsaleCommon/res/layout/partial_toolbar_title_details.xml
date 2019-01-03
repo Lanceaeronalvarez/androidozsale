@@ -117,7 +117,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:drawablePadding="@dimen/margin_tiny"
-                android:drawableLeft="@drawable/ic_chronometer"
+                android:drawableLeft="@drawable/ic_chronometer_red"
                 android:ellipsize="middle"
                 android:textColor="@color/ourpay_red"
                 android:textSize="@dimen/text_size_caption2"

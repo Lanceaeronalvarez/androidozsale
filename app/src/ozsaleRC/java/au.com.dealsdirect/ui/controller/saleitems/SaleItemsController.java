@@ -612,7 +612,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             newControllerChangeHandler = null;
         }
         mSaleItemsRecyclerView.setAdapter(null);
-        mCountDownTimer.cancel();
+        if (mCountDownTimer != null) mCountDownTimer.cancel();
         super.onDestroyView(view);
     }
 
@@ -871,7 +871,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
+    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
+                                   String skuId, String saleId, boolean isFreeDelivery, int percentOff) {
         mAppBar.setExpanded(true, false);
         mSearchFilterMvpView.closeFacets();
         mSaleItemsRecyclerView.smoothScrollToPosition(position);
@@ -886,7 +887,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 ((SaleItemsAdapter.ViewHolder) viewHolder).brand.getText().toString(),
                 ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString(),
                 ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString(),
-                mSalesOrigin);
+                mSalesOrigin,
+                mEndDate,
+                isFreeDelivery,
+                percentOff);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));
