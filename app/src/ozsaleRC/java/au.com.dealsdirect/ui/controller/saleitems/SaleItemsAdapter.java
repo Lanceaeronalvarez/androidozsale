@@ -150,7 +150,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         double salePriceValue = mData.get(position).getSalePrice().getValue();
         holder.discount.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
         holder.salePrice.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
-        holder.discount.setText(String.format(mActivity.getResources().getString(R.string.banner_percent_off), String.valueOf(discountValue)));
+        holder.discount.setText(mData.get(position).getSalePercentOffText());
         holder.salePrice.setText(PriceUtils.getRpStringValue(salePriceValue));
 
 

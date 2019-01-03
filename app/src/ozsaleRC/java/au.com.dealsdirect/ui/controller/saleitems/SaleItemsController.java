@@ -621,7 +621,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setDraggableViewPager(false);
         setupPtrHeader();
-        setupSaleRemainingTime(mEndDate);
+        if(mEndDate.isEmpty() || mEndDate == null) {
+            mSaleItemsRemainingTimeText.setVisibility(View.GONE);
+        } else {
+            mSaleItemsRemainingTimeText.setVisibility(View.VISIBLE);
+            setupSaleRemainingTime(mEndDate);
+        }
 
 
         //use initialcategory tree map if it came from categories.

@@ -60,6 +60,13 @@ public class GetSaleItemsResponse implements Serializable {
         @SerializedName("salePrice")
         @Expose
         private SalePrice salePrice;
+        @SerializedName("salePercentOffText")
+        @Expose
+        private String salePercentOffText;
+
+        public String getSalePercentOffText() {
+            return salePercentOffText;
+        }
 
         public SalePrice getSalePrice() {
             return salePrice;
