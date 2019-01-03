@@ -32,9 +32,9 @@
 
             <TextView
                 android:id="@+id/viewholder_banner_percent_off"
-                fontPath="@string/font_app_bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                fontPath="@string/font_app_regular"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_gravity="right"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/bg_banners_percent_off"

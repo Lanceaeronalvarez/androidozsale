@@ -11,9 +11,7 @@ import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
@@ -35,7 +33,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 import static android.graphics.Typeface.BOLD;
-import static android.graphics.Typeface.ITALIC;
 
 /**
  * dp Created by Admin on 6/7/17.
@@ -54,7 +51,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     private int mOffset;
     private String mLastGroupType;
     private static final int SPANNABLE_STRING_START_INDEX = 6;
-    private static final float DISCOUNT_VALUE_SCALE_FACTOR = 1.4f;
+    private static final float DISCOUNT_VALUE_SCALE_FACTOR = 1.8f;
 
     public BannersAdapter(
             Activity activity,
@@ -162,9 +159,11 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
         if (item.getPercentOff() != 0) {
             String percentOffValue = String.valueOf(item.getPercentOff());
+            int percentSymbolLength = 1;
+            int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + percentOffValue.length() + percentSymbolLength;
             SpannableString string = new SpannableString(String.format(mActivity.getResources().getString(R.string.banner_percent_off_space), percentOffValue));
-            string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR),SPANNABLE_STRING_START_INDEX, SPANNABLE_STRING_START_INDEX + percentOffValue.length(),  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            string.setSpan(new StyleSpan(BOLD),SPANNABLE_STRING_START_INDEX, SPANNABLE_STRING_START_INDEX + percentOffValue.length(),  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.percentOff.setVisibility(View.VISIBLE);
             holder.percentOff.setText(string);
         } else {
