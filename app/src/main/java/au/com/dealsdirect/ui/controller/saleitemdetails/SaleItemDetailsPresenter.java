@@ -21,6 +21,7 @@ import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppEventHelper;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CurrencyUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -202,5 +203,27 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     @Override
     public String getPersonalisationErrorText() {
         return getDataManager().getPersonalisationTemplateTexts();
+    }
+
+    @Override
+    public void getDynamicDiscount(String skuId) {
+        doApiCallForResponse(getDataManager().callDynamicDiscount(skuId), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                if(o != null) getMvpView().setDynamicDiscount((String) o);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                AppLogger.d(throwable.getMessage());
+                getMvpView().setDynamicDiscount(null);
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
     }
 }

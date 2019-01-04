@@ -61,9 +61,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String
-            seoIdentifierId, String imageUrl, String skuId, String saleId, boolean isFreeDelivery, int percentOff) {
+            seoIdentifierId, String imageUrl, String skuId, String saleId, boolean isFreeDelivery) {
         getMvpView().hideKeyboard();
-        getMvpView().showProductDetails(viewHolder, position, seoIdentifierId, imageUrl, skuId, saleId, isFreeDelivery, percentOff);
+        getMvpView().showProductDetails(viewHolder, position, seoIdentifierId, imageUrl, skuId, saleId, isFreeDelivery);
     }
 
     protected <T> Observable<T> wrapObservable(Observable<T> observable) {

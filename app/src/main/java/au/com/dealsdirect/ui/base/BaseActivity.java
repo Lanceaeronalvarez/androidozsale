@@ -140,12 +140,12 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
                     message.contains("SSLHandshakeException")) {
                 // Do not notify for these errors
                 return;
+            } else if (message.contains("Null")){
+                return;
             } else if (message.contains("Exception") || message.contains("virtual method")) {
 //                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
                 showSnackBar(getString(R.string.error), false);
-            } else if (message.contains("null")){
-                return;
-            } else if (message.contains("error")) {
+            }  else if (message.contains("error")) {
                 CustomAlertDialog.showCustomAlertDialog(this,
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.an_error_has_occurred));
             }

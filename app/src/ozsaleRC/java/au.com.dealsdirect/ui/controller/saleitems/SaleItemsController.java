@@ -872,7 +872,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
-                                   String skuId, String saleId, boolean isFreeDelivery, int percentOff) {
+                                   String skuId, String saleId, boolean isFreeDelivery) {
         mAppBar.setExpanded(true, false);
         mSearchFilterMvpView.closeFacets();
         mSaleItemsRecyclerView.smoothScrollToPosition(position);
@@ -889,8 +889,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString(),
                 mSalesOrigin,
                 mEndDate,
-                isFreeDelivery,
-                percentOff);
+                isFreeDelivery);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));

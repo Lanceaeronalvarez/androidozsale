@@ -148,6 +148,8 @@ public interface ApiHelper {
 
     Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest);
 
+    Observable<String> callDynamicDiscount(String skuId);
+
     Observable<AddToCartResponse.Response> callAddItemToCart(AddToCartRequest requestValues);
 
     // CONFIG API CALLS

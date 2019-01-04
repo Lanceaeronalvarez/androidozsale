@@ -207,6 +207,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<String> callDynamicDiscount(String skuId) {
+        return mApiHelper.callDynamicDiscount(skuId);
+    }
+
+    @Override
     public Observable<AddToCartResponse.Response> callAddItemToCart(AddToCartRequest requestValues) {
         return mApiHelper.callAddItemToCart(requestValues);
     }

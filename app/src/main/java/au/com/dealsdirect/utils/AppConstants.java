@@ -49,6 +49,8 @@ public final class AppConstants {
     public static final String API_REGISTER = "Registration";
     public static final String API_REGISTER_FACEBOOK = "LoginFacebook";
 
+    public static final String PARAM_SKUID = "skuid";
+
 
     private AppConstants() {
         // This utility class is not publicly instantiable

@@ -158,10 +158,13 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         }
 
         if (item.getPercentOff() != 0) {
-            String percentOffValue = String.valueOf(item.getPercentOff());
+            String percentOffValue = item.getPercentOffText().trim();
+            String[] discountWordArray = percentOffValue.split(" ");
+            percentOffValue = percentOffValue.replace(' ', '\n');
             int percentSymbolLength = 1;
-            int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + percentOffValue.length() + percentSymbolLength;
-            SpannableString string = new SpannableString(String.format(mActivity.getResources().getString(R.string.banner_percent_off_space), percentOffValue));
+            int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + discountWordArray[1].length() + percentSymbolLength;
+
+            SpannableString string = new SpannableString(percentOffValue);
             string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.percentOff.setVisibility(View.VISIBLE);

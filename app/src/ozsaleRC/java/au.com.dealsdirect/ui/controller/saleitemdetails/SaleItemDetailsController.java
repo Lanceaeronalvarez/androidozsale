@@ -107,8 +107,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             private String mSalesOrigin;
             private String mEndDate;
             private boolean mIsFreeDelivery;
-            private int mPercentOff;
-            private long mSalePrice;
 
             public FromItemsList(Integer position,
                                  String imageURL,
@@ -121,8 +119,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                  String oldPrice,
                                  String salesOrigin,
                                  String endDate,
-                                 boolean isFreeDelivery,
-                                 int percentOff) {
+                                 boolean isFreeDelivery) {
                 mPosition = position;
                 mImageURL = imageURL;
                 mSeoIdentifierId = seoIdentifierId;
@@ -135,7 +132,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mSalesOrigin = salesOrigin;
                 mEndDate = endDate;
                 mIsFreeDelivery = isFreeDelivery;
-                mPercentOff = percentOff;
             }
 
             public Integer getPosition() { return mPosition; }
@@ -150,7 +146,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             public String getSalesOrigin() { return mSalesOrigin; }
             public String getEndDate() { return mEndDate; }
             public boolean getIsFreeDelivery() { return mIsFreeDelivery; }
-            public int getPercentOff() { return mPercentOff; }
         }
 
         public static final class FromDeepLink extends Parameters {
@@ -183,7 +178,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private List<GetSaleItemDetailsResponse> mSkuVariants = new ArrayList<>();
     private String mEndDate;
     private boolean mIsFreeDelivery;
-    private int mPercentOff;
     private CountDownTimer mCountDownTimer;
 
     @BindView(R.id.arrow_left)
@@ -274,7 +268,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     int[] mSharedImageLocation;
 
     private static final int SPANNABLE_STRING_START_INDEX = 6;
-    private static final float DISCOUNT_VALUE_SCALE_FACTOR = 2f;
+    private static final float DISCOUNT_VALUE_SCALE_FACTOR = 1.8f;
 
     LinearLayoutManager mProductImagesRvLayoutManager;
 
@@ -359,7 +353,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             controller.mEndDate = ((Parameters.FromItemsList) parameters).getEndDate();
             controller.mIsFreeDelivery = ((Parameters.FromItemsList) parameters).getIsFreeDelivery();
             controller.mOrigin = origin != null ? origin : ActionTracker.ViewSource.SALE;
-            controller.mPercentOff = ((Parameters.FromItemsList) parameters).getPercentOff();
         } else if (parameters instanceof Parameters.FromDeepLink) {
             controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
             controller.mSkuId = ((Parameters.FromDeepLink) parameters).getSkuId();
@@ -679,6 +672,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
         mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
+
+        mPresenter.getDynamicDiscount(saleDetail.getSkuId());
         //update Images
         List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
         ((SaleItemDetailsImageAdapter) mProductImagesRv.getAdapter()).replaceData(qualitySaleImages);
@@ -713,16 +708,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mAddToCartTimer.setVisibility(View.GONE);
         }
 
-        if (mPercentOff != 0) {
-            String percentOffValue = String.valueOf(mPercentOff);
-            SpannableString string = new SpannableString(String.format(mActivity.getResources().getString(R.string.banner_percent_off_space), percentOffValue));
-            string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR),SPANNABLE_STRING_START_INDEX, SPANNABLE_STRING_START_INDEX + percentOffValue.length(),  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            string.setSpan(new StyleSpan(BOLD),SPANNABLE_STRING_START_INDEX, SPANNABLE_STRING_START_INDEX + percentOffValue.length(),  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            mProductDiscountTextView.setVisibility(View.VISIBLE);
-            mProductDiscountTextView.setText(string);
-        } else {
-            mProductDiscountTextView.setVisibility(View.GONE);
-        }
+        mPresenter.getDynamicDiscount(saleDetail.getSkuId());
 
         mFreeDeliveryImageView.setVisibility(mIsFreeDelivery ? View.VISIBLE : View.GONE);
 
@@ -956,6 +942,27 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void toggleClipPadding(boolean isClipped) {
         mProductCoordinatorLayout.setClipChildren(isClipped);
         mProductCoordinatorLayout.setClipToPadding(isClipped);
+
+    }
+
+    @Override
+    public void setDynamicDiscount(String discountText) {
+        if (discountText == null) return;
+        String percentOffText = discountText.trim();
+        String[] discountWordArray = discountText.split(" ");
+        percentOffText = percentOffText.replace(' ', '\n');
+        if (discountWordArray != null || discountWordArray.length != 0) {
+
+            int percentSymbolLength = 1;
+            int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + discountWordArray[1].length() + percentSymbolLength;
+            SpannableString string = new SpannableString(percentOffText);
+            string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mProductDiscountTextView.setVisibility(View.VISIBLE);
+            mProductDiscountTextView.setText(string);
+        } else {
+            mProductDiscountTextView.setVisibility(View.GONE);
+        }
 
     }
 

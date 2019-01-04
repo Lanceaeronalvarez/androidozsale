@@ -161,11 +161,10 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                         position,
                         mData.get(position).getSeoIdentifier(),
                         url,
-                        mData.get(position).getSkus().isEmpty() ? "" :
+                        mData.get(position).getSkus() == null || mData.get(position).getSkus().isEmpty() ? "" :
                                 mData.get(position).getSkus().get(0).getId(),
                         mSaleId,
-                        mData.get(position).getFreeDelivery(),
-                        mData.get(position).getSalePercentOff()));
+                        mData.get(position).getFreeDelivery()));
 
     }
 
