@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.braintreepayments.api.models.BraintreeRequestCodes;
@@ -21,6 +23,8 @@ import com.facebook.internal.CallbackManagerImpl;
 import com.google.gson.Gson;
 import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -127,6 +131,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     private String mRegisterMethod = NO_ACTION;
     private boolean isRegisterSuccess = false;
+    private boolean hasClearedBackstack = false;
 
     public static RegisterController newInstance() {
 
@@ -263,10 +268,18 @@ public class RegisterController extends VisaCheckoutController implements Regist
         super.onDestroyView(view);
     }
 
+    @Override
+    public boolean handleBack() {
+        if (hasClearedBackstack) {
+            mActivity.getHomeController().goToPreviousContainerFromLogin(mActivity.isAuthorized());
+        }
+
+        return super.handleBack();
+    }
+
     @OnClick(R.id.partial_toolbar_right_view)
     void onCloseIconClick() {
-        mActivity.getHomeController().goToPreviousContainerFromLogin(false);
-
+        clearBackstack();
         mActivity.onBackPressed();
     }
 
@@ -285,7 +298,6 @@ public class RegisterController extends VisaCheckoutController implements Regist
     void onLoginClick() {
         mActivity.onBackPressed();
     }
-
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookLoginClick() {
@@ -312,6 +324,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public void showLoginSuccessful(String loginTicket, boolean isFacebookLogin) {
+        clearBackstack();
         isRegisterSuccess = true;
         mPresenter.setIsNewUser(true);
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.BACK, AppConstants.AUTH_FLAG.REGISTER);
@@ -336,6 +349,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public void showLoginVisaSuccess(String loginTicket) {
+        clearBackstack();
         isRegisterSuccess = true;
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
@@ -398,6 +412,31 @@ public class RegisterController extends VisaCheckoutController implements Regist
                     mRegisterPasswordField.getText().toString(),
                     tncAccepted,
                     emailsAccepted);
+        }
+    }
+
+    private void clearBackstack() {
+        if (!hasClearedBackstack) {
+            hasClearedBackstack = true;
+            ArrayList<RouterTransaction> backStack = new ArrayList<>(getRouter().getBackstack());
+            int index = -1;
+            for (int i = 0; i < backStack.size(); i++) {
+                Controller controller = backStack.get(i).controller();
+                if (controller == this) {
+                    index = i - 1;
+                    break;
+                }
+            }
+            if (index >= 0) {
+                // Removes previous controller
+                backStack.remove(index);
+                // Removes self
+                backStack.remove(index);
+                // Adds self with different popChangeHandler
+                backStack.add(RouterTransaction.with(this)
+                        .popChangeHandler(new VerticalChangeHandler()));
+                getRouter().setBackstack(backStack, null);
+            }
         }
     }
 }

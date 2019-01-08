@@ -214,9 +214,9 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     public void showRegistration() {
         mWillShowRegistration = true;
-        getRouter().replaceTopController(RouterTransaction.with(RegisterController.newInstance())
+        getRouter().pushController(RouterTransaction.with(RegisterController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new VerticalChangeHandler()));
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override
