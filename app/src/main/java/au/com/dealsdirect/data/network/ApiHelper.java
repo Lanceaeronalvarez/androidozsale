@@ -138,7 +138,7 @@ public interface ApiHelper {
 
     Observable<List<GetCategoryTreeResponse>> callGetGetCategories();
 
-    Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId);
+    Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String saleId, String seoIdentifierId);
 
     Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request);
 

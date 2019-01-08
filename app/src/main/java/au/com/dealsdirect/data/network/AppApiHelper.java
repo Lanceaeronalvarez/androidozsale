@@ -195,10 +195,11 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId) {
+    public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String saleId, String seoIdentifierId) {
         return Rx2AndroidNetworking.get(ApiEndPoint.getProductDetails())
                 .addHeaders(mApiHeader.get())
                 .addPathParameter("seo_identifier", seoIdentifierId)
+                .addPathParameter("sale_id", saleId)
                 .build()
                 .getObjectObservable(GetSaleItemDetailsResponse.class);
     }

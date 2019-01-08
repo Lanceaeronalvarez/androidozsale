@@ -40,9 +40,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
-    public void loadSaleItemDetails(String seoIdentifierId) {
+    public void loadSaleItemDetails(String saleId, String seoIdentifierId) {
 
-        doApiCallForResponse(getDataManager().callGetSaleItemDetails(seoIdentifierId), new AppApiCallback() {
+        doApiCallForResponse(getDataManager().callGetSaleItemDetails(saleId, seoIdentifierId), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);

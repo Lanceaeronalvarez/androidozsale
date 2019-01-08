@@ -77,7 +77,7 @@ public final class ApiEndPoint {
     }
 
     public static String getProductDetails(){
-        return getFormattedUrl(ApiService.productDetails,ACCOUNT_ID_DELIMETER + "/products/{seo_identifier}");
+        return getFormattedUrl(ApiService.productDetails,ACCOUNT_ID_DELIMETER + "/sales/{sale_id}/products/{seo_identifier}");
     }
 
     public static String getProductDetailDynamicDiscount() {

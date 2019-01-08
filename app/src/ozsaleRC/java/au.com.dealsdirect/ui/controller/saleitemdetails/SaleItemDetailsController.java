@@ -513,14 +513,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                               @NonNull ViewGroup container,
                                               @NonNull ControllerChangeHandler handler) {
                     if (to == currentController) {
-                        mPresenter.loadSaleItemDetails(mSeoIdentifierId);
+                        mPresenter.loadSaleItemDetails(mSaleId, mSeoIdentifierId);
                         mActivity.getMainController().getHomeController().setSavedCurrentItem();
                     }
                 }
             };
             getRouter().addChangeListener(newControllerChangeHandler);
         } else {
-            mPresenter.loadSaleItemDetails(mSeoIdentifierId);
+            mPresenter.loadSaleItemDetails(mSaleId, mSeoIdentifierId);
         }
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
