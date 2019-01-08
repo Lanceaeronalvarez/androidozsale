@@ -17,6 +17,8 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     boolean isAccessAnonymousEnabled();
 
+    void cancelRequest();
+
     boolean isAuthorized();
 
     void selectBanner(String saleId,

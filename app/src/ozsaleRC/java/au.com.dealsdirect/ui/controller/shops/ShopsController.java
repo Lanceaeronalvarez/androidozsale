@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -270,6 +271,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             @Override
             public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
                 mIsChangeInProgress = true;
+                mPresenter.cancelRequest();
             }
 
             @Override
@@ -422,8 +424,15 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @OnClick(R.id.partial_toolbar_hamburger)
     void onClickHamburger() {
+        mPresenter.cancelRequest();
         assert (mActivity) != null;
         mActivity.setRootViewpagerItem(0);
+    }
+
+    @Override
+    public boolean handleBack() {
+        mPresenter.cancelRequest();
+        return false;
     }
 
     @OnClick(R.id.partial_toolbar_logo)
@@ -448,7 +457,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     @Override
-    public void showShopBanners(GetBannerResponse getBannerResponses) {
+    public void showShopBanners(GetBannerResponse getBannerResponses, String categoryID) {
+
+        if (mCategoryID != null && !mCategoryID.equals(categoryID)) { return; }
+
+        hasLoadedAllItems = false;
         mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_SALEBANNERS.getValue());
         mActionTracker.CVSaleBanners(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_SALEBANNERS.getValue()));
 
@@ -615,6 +628,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private void resetShopsBanners(GetCategoryTreeResponse getCategoryTreeResponse) {
         mPresenter.onAttach(this);
+        hasLoadedAllItems = true;
+
         if (shopsControllerBannerRecyclerView != null) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
         }
@@ -625,11 +640,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mCategoryID = getCategoryTreeResponse.getId();
 
         //reset adapter
-        sales = new ArrayList<>();
-        mBannersAdapter.getData().clear();
+        sales.clear();
+        mBannersAdapter.clear();
         mLayoutManager.scrollToPosition(0);
-
-        hasLoadedAllItems = false;
     }
 //
 //    @SuppressWarnings({"deprecation", "ConstantConditions"})
@@ -741,13 +754,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private GetBannerRequest createBannerRequest(String categoryId, int bannerOffset, int bannerLimit) {
-            String lastBannerType = mBannersAdapter.getItemCount() > 0 ? mBannersAdapter.getLastGroupType() : "";
+        String lastBannerType = mBannersAdapter.getItemCount() > 0 ? mBannersAdapter.getLastGroupType() : "";
 
-            //start from 0 offset when bannerGroupType changes
-            if (!lastBannerType.equals("") && !lastBannerType.equals(bannerGroupType)) {
-                bannerOffset = mBannersAdapter.getOffset();
-            }
-            bannerGroupType = lastBannerType;
+        //start from 0 offset when bannerGroupType changes
+        if (!lastBannerType.equals("") && !lastBannerType.equals(bannerGroupType) && !bannerGroupType.equals("")) {
+            bannerOffset = mBannersAdapter.getOffset();
+        }
+        bannerGroupType = lastBannerType;
 
         GetBannerRequest getBannerRequest = new GetBannerRequest();
         if (!bannerGroupType.equals("")) {
@@ -760,6 +773,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             getBannerRequest.setCategory(categoryId);
             getBannerRequest.setCategoryId(categoryId);
         }
+
+        hasLoadedAllItems = true;
 
         return getBannerRequest;
     }

@@ -43,7 +43,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                getMvpView().showShopBanners((GetBannerResponse) response);
+                getMvpView().showShopBanners((GetBannerResponse) response, request.getCategory());
             }
 
             @Override
@@ -98,6 +98,11 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     @Override
     public boolean isAccessAnonymousEnabled() {
         return getDataManager().getAccessAnonymousEnabled();
+    }
+
+    @Override
+    public void cancelRequest() {
+        cancel();
     }
 
     @Override

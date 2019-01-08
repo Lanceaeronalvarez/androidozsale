@@ -118,7 +118,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     }
 
     public void replace(List<GetBannerResponse.Group> bannerResponses) {
-        mSales = new ArrayList<>();
+        mSales.clear();
         addAll(bannerResponses);
     }
 
@@ -275,5 +275,13 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
     public String getLastGroupType() {
         return mLastGroupType;
+    }
+
+    public void clear() {
+        mLastGroupType = "";
+        mOffset = 0;
+        mSales.clear();
+        mGroups.clear();
+        notifyDataSetChanged();
     }
 }
