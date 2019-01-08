@@ -27,6 +27,7 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by pauldesilva on 4/13/18.
@@ -129,6 +130,11 @@ public class BannerFiltersController extends BaseController implements BannerFil
     public void showNoNetworkLayout(){
         mBannerFiltersRecyclerView.setVisibility(View.GONE);
         mNoNetworkLayout.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.no_network_layout)
+    public void refreshBannerFilters() {
+        mPresenter.callGetCategoryTree();
     }
 
     @Override

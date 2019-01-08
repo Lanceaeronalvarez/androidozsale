@@ -36,10 +36,13 @@ import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListene
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailItemDecorator;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.custom.OrderItemDecorator;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 import static au.com.dealsdirect.utils.BundleKeys.CATEGORY_SHOP;
 
@@ -156,8 +159,6 @@ public class CategoriesController extends BaseController
 
         mPresenter.callGetCategoryTree();
 
-        mNoNetworkLayout.setOnClickListener((v) -> mPresenter.callGetCategoryTree());
-
         mActionTracker.addToCartJourneyViewProductCategory();
 
         setUp(view);
@@ -173,15 +174,18 @@ public class CategoriesController extends BaseController
         super.onDestroyView(view);
     }
 
+    @OnClick(R.id.no_network_layout)
+    public void refreshCategories() {
+        mPresenter.callGetCategoryTree();
+    }
+
     @Override
     protected void setUp(View view) {
-
         //noinspection ConstantConditions,deprecation
         mToolbarLeftButton.setVisibility(View.INVISIBLE);
         mToolbarRightButton.setVisibility(View.INVISIBLE);
         mToolbarTitle.setText(mActivity.getResources().getString(R.string.browse));
         mSubCategoryItemClickListener = this;
-
     }
 
     @Override
@@ -202,7 +206,7 @@ public class CategoriesController extends BaseController
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
             mRecyclerView.setMotionEventSplittingEnabled(false);
             mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL));
+            mRecyclerView.addItemDecoration(new OrderDetailItemDecorator());
 
             mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, !mCategories.isEmpty() && mCategories.get(0).getChildren() != null ?
                     mCategories.get(0).getChildren() : new ArrayList<>(), mPresenter,
