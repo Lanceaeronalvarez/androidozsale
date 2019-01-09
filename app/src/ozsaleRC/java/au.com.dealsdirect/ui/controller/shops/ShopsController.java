@@ -216,8 +216,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
-        getRouter().removeChangeListener(newControllerChangeHandler);
-        newControllerChangeHandler = null;
+        if (newControllerChangeHandler != null) {
+            getRouter().removeChangeListener(newControllerChangeHandler);
+            newControllerChangeHandler = null;
+        }
+        getRouter().removeChangeListener(mControllerChangeListener);
         shopsControllerBannerRecyclerView.clearOnScrollListeners();
         shopsControllerBannerRecyclerView.setAdapter(null);
         super.onDestroyView(view);
