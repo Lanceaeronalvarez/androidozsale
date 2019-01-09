@@ -609,7 +609,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse) {
-        resetShopsBanners(getCategoryTreeResponse);
+        resetShopsBanners(getCategoryTreeResponse.getId());
 
         if (getCategoryTreeResponse.getKey() != null) {
             mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getId(), bannerOffset, bannerLimit));
@@ -629,7 +629,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         }
     }
 
-    private void resetShopsBanners(GetCategoryTreeResponse getCategoryTreeResponse) {
+    private void resetShopsBanners(String categoryID) {
         mPresenter.onAttach(this);
         hasLoadedAllItems = true;
 
@@ -640,7 +640,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         //reset for values for Get_sales API call
         page = 0;
         bannerOffset = 0;
-        mCategoryID = getCategoryTreeResponse.getId();
+        mCategoryID = categoryID;
 
         //reset adapter
         sales.clear();
@@ -810,6 +810,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @Override
     public void onRefreshBegin(PtrFrameLayout frame) {
+        hasLoadedAllItems = true;
+        resetShopsBanners(mCategoryID);
+
         if (mIsDeeplink) {
             mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, 0, 0));
         } else {
