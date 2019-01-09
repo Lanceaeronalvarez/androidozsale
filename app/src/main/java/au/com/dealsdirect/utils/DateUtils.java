@@ -34,6 +34,8 @@ public class DateUtils {
 
     public static final String KEY_DAYS = "days";
 
+    public static final String KEY_WEEKS = "weeks";
+
     public static final int DATE_UTIL_MILLIS_TO_SEC = 1000;
 
     public static final int DATE_UTIL_MILLIS_TO_MIN = 60000;
@@ -41,6 +43,8 @@ public class DateUtils {
     public static final int DATE_UTIL_MILLIS_TO_HOUR = 3600000;
 
     public static final int DATE_UTIL_MILLIS_TO_DAY = 86400000;
+
+    public static final int DATE_UTIL_MILLIS_TO_WEEK = 604800000;
 
     private static HashMap<String, String> mDiffTimeMap = new HashMap<>();
 
@@ -311,15 +315,22 @@ public class DateUtils {
 
     public static HashMap<String, String> timeDivision(long remainingDiffInMilliSeconds) {
         try {
-            //get days
-            long days;
-            days = remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_DAY;
-            remainingDiffInMilliSeconds -= days * DATE_UTIL_MILLIS_TO_DAY;
-            mDiffTimeMap.put(KEY_DAYS, String.valueOf(days));
 
             //get hours
             long hours = remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR;
+
+            //get days
+            long days;
+            days = hours / 24;
+            hours -= days * 24;
+
+            //get weeks
+            long weeks = days / 7;
+            days -= weeks * 7;
+
             mDiffTimeMap.put(KEY_HOURS, String.valueOf(hours));
+            mDiffTimeMap.put(KEY_WEEKS, String.valueOf(weeks));
+            mDiffTimeMap.put(KEY_DAYS, String.valueOf(days));
 
             return mDiffTimeMap;
         } catch (NullPointerException e) {
@@ -350,6 +361,22 @@ public class DateUtils {
             return remainingTextViewValue;
         } else {
             return getRemainingTimeInTimeFormat(remainingDiffInMilliSeconds);
+        }
+    }
+
+    public static String getRemainingTimeInWeeks(long remainingTimeInMilliSeconds) {
+        HashMap<String, String> map = timeDivision(remainingTimeInMilliSeconds);
+        String remainingTextViewValue = "";
+        boolean isWeekGreaterThanZero = (map != null && !map.get(KEY_WEEKS).isEmpty() && Integer.valueOf(map.get(KEY_WEEKS)) > 0);
+        boolean isDayLessThanOne = (map != null && !map.get(KEY_DAYS).isEmpty() && Integer.valueOf(map.get(KEY_DAYS)) < 1);
+        if (!isWeekGreaterThanZero && !isDayLessThanOne) {
+            remainingTextViewValue = map.get(KEY_DAYS) + "d " + map.get(DateUtils.KEY_HOURS) + 'h';
+            return remainingTextViewValue;
+        } else if (isWeekGreaterThanZero) {
+            remainingTextViewValue = map.get(KEY_WEEKS) + "w " + map.get(DateUtils.KEY_DAYS) + 'd';
+            return remainingTextViewValue;
+        } else {
+            return getRemainingTimeInTimeFormat(remainingTimeInMilliSeconds);
         }
     }
 

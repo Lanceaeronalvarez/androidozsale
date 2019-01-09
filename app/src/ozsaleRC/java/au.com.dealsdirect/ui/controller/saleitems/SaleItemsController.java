@@ -724,7 +724,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mCountDownTimer = new CountDownTimer(DateUtils.getRemainingTimeInMillis(endDate), DateUtils.DATE_UTIL_MILLIS_TO_SEC) {
             @Override
             public void onTick(long millisUntilFinished) {
-                mSaleItemsRemainingTimeText.setText(DateUtils.getRemainingTimeValue(millisUntilFinished));
+                mSaleItemsRemainingTimeText.setText(DateUtils.getRemainingTimeInWeeks(millisUntilFinished));
             }
 
             @Override
