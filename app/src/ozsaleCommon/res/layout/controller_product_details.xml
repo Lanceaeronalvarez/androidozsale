@@ -861,14 +861,13 @@
                     android:textColor="@color/white" />
             </RelativeLayout>
 
-
             <TextView
+                fontPath="@string/font_app_medium"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
                 android:background="@color/transparent"
                 android:gravity="center"
-                android:textSize="@dimen/text_size_headline2"
                 android:text="@string/add_to_cart"
                 android:textColor="@color/white" />
 

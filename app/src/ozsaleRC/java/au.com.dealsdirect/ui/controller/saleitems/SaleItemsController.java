@@ -310,6 +310,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.partial_toolbar_details_remaining_time_value)
     TextView mSaleItemsRemainingTimeText;
 
+    @BindView(R.id.partial_toolbar_details_end_time_text)
+    TextView mSaleEndsInText;
+
     private SaleItemsAdapter mSaleItemsAdapter;
     private Paginate mPaginateManager;
     private Paginate.Callbacks mPaginateCallbacks;
@@ -621,10 +624,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setDraggableViewPager(false);
         setupPtrHeader();
-        if(mEndDate.isEmpty() || mEndDate == null) {
+        if(mEndDate.isEmpty() || mEndDate == null || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
             mSaleItemsRemainingTimeText.setVisibility(View.GONE);
+            mSaleEndsInText.setVisibility(View.GONE);
         } else {
             mSaleItemsRemainingTimeText.setVisibility(View.VISIBLE);
+            mSaleEndsInText.setVisibility(View.VISIBLE);
             setupSaleRemainingTime(mEndDate);
         }
 

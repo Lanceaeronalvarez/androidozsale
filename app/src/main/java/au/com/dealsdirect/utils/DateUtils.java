@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /*
  * Created by Ayi on 18/05/2017.
@@ -333,15 +334,18 @@ public class DateUtils {
         return hours < 24;
     }
 
+    public static boolean isWithin48Hours(long remainingDiffInMilliSeconds) {
+        //get hours
+        long hours = remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR;
+        return hours <= 48 && remainingDiffInMilliSeconds > 0;
+    }
+
     public static String getRemainingTimeValue(long remainingDiffInMilliSeconds) {
         HashMap<String, String> map = timeDivision(remainingDiffInMilliSeconds);
         String remainingTextViewValue = "";
-        boolean isGreaterThanTenDays = !map.get(KEY_DAYS).isEmpty() && Integer.valueOf(map.get(KEY_DAYS)) > 10;
+        boolean isGreaterThanTwoDays = !map.get(KEY_DAYS).isEmpty() && Integer.valueOf(map.get(KEY_DAYS)) > 2;
         boolean isLessThanADay = Integer.valueOf(map.get(KEY_DAYS)) < 1;
-        if (isGreaterThanTenDays) {
-            remainingTextViewValue = map.get(KEY_DAYS) + 'd';
-            return remainingTextViewValue;
-        } else if (!isGreaterThanTenDays && !isLessThanADay) {
+        if (!isGreaterThanTwoDays && !isLessThanADay) {
             remainingTextViewValue = map.get(KEY_DAYS) + "d " + map.get(DateUtils.KEY_HOURS) + 'h';
             return remainingTextViewValue;
         } else {
@@ -350,7 +354,9 @@ public class DateUtils {
     }
 
     public static long getRemainingTimeInMillis(String endDate) {
+        TimeZone timeZone = TimeZone.getDefault();
         SimpleDateFormat sdf = new SimpleDateFormat(AppConstants.API_DATE_FORMAT, Locale.ENGLISH);
+        sdf.setTimeZone(timeZone);
         Date date = new Date();
 
         try {
@@ -362,7 +368,9 @@ public class DateUtils {
     }
 
     public static String getRemainingTimeInTimeFormat(long milliSeconds) {
-        SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT, Locale.ENGLISH);
-        return sdf.format(new Date(milliSeconds));
+        long seconds = milliSeconds / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        return String.format("%02d:%02d:%02d",hours % 24, minutes % 60, seconds % 60);
     }
 }
