@@ -184,6 +184,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId) {
+        return mApiHelper.callGetSaleItemDetails(seoIdentifierId);
+
+    }
+
+    @Override
     public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String saleId, String seoIdentifierId) {
         return mApiHelper.callGetSaleItemDetails(saleId, seoIdentifierId);
 

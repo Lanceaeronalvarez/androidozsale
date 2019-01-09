@@ -140,6 +140,8 @@ public interface ApiHelper {
 
     Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String saleId, String seoIdentifierId);
 
+    Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId);
+
     Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request);
 
     Observable<GetPublicSaleDetailsResponse> callGetPublicSaleDetails(GetPublicSaleDetailsRequest request);

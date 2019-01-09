@@ -25,6 +25,7 @@ import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CurrencyUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -42,7 +43,11 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     @Override
     public void loadSaleItemDetails(String saleId, String seoIdentifierId) {
 
-        doApiCallForResponse(getDataManager().callGetSaleItemDetails(saleId, seoIdentifierId), new AppApiCallback() {
+        Observable<GetSaleItemDetailsResponse> callGetSaleItemDetailObservable = saleId == null || saleId.isEmpty() ?
+                getDataManager().callGetSaleItemDetails(seoIdentifierId) :
+                getDataManager().callGetSaleItemDetails(saleId, seoIdentifierId);
+
+        doApiCallForResponse(callGetSaleItemDetailObservable, new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);

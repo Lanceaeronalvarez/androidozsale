@@ -80,6 +80,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.productDetails,ACCOUNT_ID_DELIMETER + "/sales/{sale_id}/products/{seo_identifier}");
     }
 
+    public static String getProductDetailsFromCategories(){
+        return getFormattedUrl(ApiService.productDetails,ACCOUNT_ID_DELIMETER + "/products/{seo_identifier}");
+    }
+
     public static String getProductDetailDynamicDiscount() {
         return getFormattedUrl(ApiService.productDetails, ACCOUNT_ID_DELIMETER + "/price/label");
     }
