@@ -229,7 +229,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         }
 
         getRouter().pushController(RouterTransaction.with(controller)
-                .pushChangeHandler(new HorizontalChangeHandler(false))
+                .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 }
