@@ -259,8 +259,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private List<SortingResponse> mSortingResponse = new ArrayList<>();
     private String mSortingListJsonString = "";
     private boolean mIsFilterClicked = false;
-    private boolean mHasCategoryTreeResponse = false;
-    private boolean mShouldRefreshFacets = true;
+    private boolean mIsSearchClicked = false;
     private String mCurrentTabName = "";
     private String mPreviousTabName = "";
     private List<Pair<String, String>> mFacetFilters = new ArrayList();
@@ -769,14 +768,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue());
         mActionTracker.CVItemList(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue()));
 
-        if (!mHasCategoryTreeResponse) {
-            mCategoryTreeResponse = getSaleItemsResponse.getCategories();
-            mHasCategoryTreeResponse = true;
-        }
-        if (mShouldRefreshFacets) {
-            mFacets = getSaleItemsResponse.getFacets();
-        }
-        mShouldRefreshFacets = true;
+        mCategoryTreeResponse = getSaleItemsResponse.getCategories();
+        mFacets = getSaleItemsResponse.getFacets();
 
         mPtrFrameLayout.setPullToRefresh(true);
 
@@ -1325,9 +1318,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList) {
-        String previousCategoryKey = mCategoryKey;
         mPresenter.loadSaleItems(createSaleItemsRequest(categoryKeys, 0, chipsList));
-        mShouldRefreshFacets = !previousCategoryKey.equals(mCategoryKey);
     }
 
     @Override

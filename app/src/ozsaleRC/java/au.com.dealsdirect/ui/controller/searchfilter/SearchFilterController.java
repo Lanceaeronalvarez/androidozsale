@@ -582,12 +582,15 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         if (category.isSelected()) {
             mCategoryKeys.add(category.getKey()); //add to category keys
+            if(!children.isEmpty()) { //if i have children{}
+                setChildrenSelection(category.getKey(),true);
+            }
+
         } else {
             mCategoryKeys.remove(category.getKey()); //remove to category keys
-        }
-
-        if(!children.isEmpty()) { //if i have children{}
-            setChildrenSelection(category.getKey(),false);
+            if(!children.isEmpty()) { //if i have children{}
+                setChildrenSelection(category.getKey(),false);
+            }
         }
 
         if (mHasDefaultCategoryKey && mCategoryKeys.size() == 0) {
@@ -619,23 +622,16 @@ public class SearchFilterController extends BaseController implements SearchFilt
             }
         }
 
-        if(childrenAreAllSelected){
-            for(GetCategoryTreeResponse child : parentNodeChildren){
-                setChildrenSelection(child.getKey(), false);
-            }
-        } else {
+        if(childrenAreAllSelected){ //if all parentNode children(siblings of category) are selected, then parent must be selected.
+            parentNode.setSelected(true);
+            mCategoryKeys.add(parentNode.getKey());
+        } else { // else deselect parent
             parentNode.setSelected(false);
             mCategoryKeys.remove(parentNode.getKey());
         }
 
-
         //recursion
         checkParentSelection(parentNode);
-        if (childrenAreAllSelected) {
-            for(GetCategoryTreeResponse child : parentNodeChildren){
-                setChildrenSelection(child.getKey(), false);
-            }
-        }
     }
 
     private void setChildrenSelection(String key, boolean isSelected) {
