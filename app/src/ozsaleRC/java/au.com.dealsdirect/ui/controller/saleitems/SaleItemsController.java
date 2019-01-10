@@ -576,7 +576,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
         mSaleItemsCategoryToolbarTitle.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
         mSaleItemsToolbarSubTitleText.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
-        mSaleItemsRemainingTimeLayout.setVisibility(isFromCategories() ? View.GONE : View.VISIBLE);
+        mSaleItemsRemainingTimeLayout.setVisibility(isFromCategories() ||
+                !mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) ? View.GONE : View.VISIBLE);
         mSaleItemsToolbarTitle.setVisibility(!isFromCategories() ? View.VISIBLE : View.GONE);
 
         if (isFromCategories()) {

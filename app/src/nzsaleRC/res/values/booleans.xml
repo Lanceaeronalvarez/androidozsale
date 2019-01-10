@@ -13,5 +13,6 @@
     <bool name="language_check_enabled">true</bool>
     <bool name="is_gender_enabled">false</bool>
     <bool name="is_category_all_enabled">false</bool>
+    <bool name="is_sale_countdown_timer_enabled">true</bool>
 
 </resources>

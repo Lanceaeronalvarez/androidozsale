@@ -700,7 +700,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue());
         mActionTracker.CVItemDetails(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue()));
 
-        if (DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+        if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
+                DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
             setupSaleRemainingTime(mEndDate);
             mAddToCartTimer.setVisibility(View.VISIBLE);
             mAddToCartButton.setVisibility(View.GONE);
