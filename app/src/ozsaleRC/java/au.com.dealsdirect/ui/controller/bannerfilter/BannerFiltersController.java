@@ -138,6 +138,12 @@ public class BannerFiltersController extends BaseController implements BannerFil
     }
 
     @Override
+    public void refreshContents() {
+        super.refreshContents();
+        mPresenter.callGetCategoryTree();
+    }
+
+    @Override
     public void hideNoNetworklayout(){
         mBannerFiltersRecyclerView.setVisibility(View.VISIBLE);
         mNoNetworkLayout.setVisibility(View.GONE);

@@ -180,6 +180,14 @@ public class CategoriesController extends BaseController
     }
 
     @Override
+    public void refreshContents() {
+        super.refreshContents();
+        if(mNoNetworkLayout.getVisibility() == View.VISIBLE) {
+            refreshCategories();
+        }
+    }
+
+    @Override
     protected void setUp(View view) {
         //noinspection ConstantConditions,deprecation
         mToolbarLeftButton.setVisibility(View.INVISIBLE);
