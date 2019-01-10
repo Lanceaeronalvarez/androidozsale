@@ -147,7 +147,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         holder.freeDelivery.setVisibility(mData.get(position).getFreeDelivery() ? View.VISIBLE : View.GONE);
         int discountValue = mData.get(position).getSalePercentOff().intValue();
-        double salePriceValue = mData.get(position).getSalePrice().getValue();
+        double salePriceValue = mData.get(position).getSalePrice() != null ?
+                mData.get(position).getSalePrice().getValue() : 0;
         holder.discount.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
         holder.salePrice.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
         holder.discount.setText(mData.get(position).getSalePercentOffText());
