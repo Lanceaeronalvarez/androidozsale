@@ -22,6 +22,8 @@ public class OrderImageAdapter extends RecyclerView.Adapter<OrderImageAdapter.Or
 
     private final int IMAGE_LIMIT_POSITION = 2;
 
+    private final int IMAGE_LIMIT_SIZE = 3;
+
     private List<GetPaymentsList.ResponseValue.Item> mData;
 
     private Activity mActivity;
@@ -51,9 +53,10 @@ public class OrderImageAdapter extends RecyclerView.Adapter<OrderImageAdapter.Or
                     item.getImageID(),
                     item.getFileName()),
                     holder.orderImageView);
+
             if (position == IMAGE_LIMIT_POSITION) {
                 holder.orderImageOverlayImageView.setVisibility(View.VISIBLE);
-                holder.orderImageText.setText("+" + String.valueOf(mData.size() - IMAGE_LIMIT_POSITION));
+                holder.orderImageText.setText("+" + String.valueOf(mData.size() - IMAGE_LIMIT_SIZE));
             }
         }
     }

@@ -16,7 +16,7 @@
         android:id="@+id/overlay_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:foreground="@drawable/bg_overlay_image"
+        android:background="@drawable/bg_overlay_image"
         android:visibility="gone"/>
 
     <TextView

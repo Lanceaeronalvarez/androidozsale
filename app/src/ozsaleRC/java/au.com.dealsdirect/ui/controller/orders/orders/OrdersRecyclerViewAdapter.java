@@ -271,22 +271,25 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         switch (currentStep) {
             case ORDER_DATE_ACTIVE_STATE:
             case ORDER_DATE_NEGATIVE_STATE:
-                holder.orderFirstNodeStatusTextView.setText(String.format(String.format(orderText, orderStatus)));
+                if (orderStatus.equalsIgnoreCase("approved")) {
+                    orderStatus = "Date";
+                }
+                holder.orderFirstNodeStatusTextView.setText(String.format(orderText, orderStatus));
                 break;
 
             case ORDER_STOCK_ARRIVED_ACTIVE_STATE:
             case ORDER_STOCK_ARRIVED_NEGATIVE_STATE:
-                holder.orderSecondNodeStatusTextView.setText(String.format(String.format(orderText, orderStatus)));
+                holder.orderSecondNodeStatusTextView.setText(String.format(orderText, orderStatus));
                 break;
 
             case ORDER_PACKED_ACTIVE_STATE:
             case ORDER_PACKED_NEGATIVE_STATE:
-                holder.orderThirdNodeStatusTextView.setText(String.format(String.format(orderText, orderStatus)));
+                holder.orderThirdNodeStatusTextView.setText(String.format(orderText, orderStatus));
                 break;
 
             case ORDER_DISPATCHED_ACTIVE_STATE:
             case ORDER_DISPATCHED_NEGATIVE_STATE:
-                holder.orderFourthNodeStatusTextView.setText(String.format(String.format(orderText, orderStatus)));
+                holder.orderFourthNodeStatusTextView.setText(String.format(orderText, orderStatus));
                 break;
         }
 
