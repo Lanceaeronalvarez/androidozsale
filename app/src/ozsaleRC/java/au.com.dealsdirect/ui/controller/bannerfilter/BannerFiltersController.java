@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -140,6 +141,7 @@ public class BannerFiltersController extends BaseController implements BannerFil
     @Override
     public void refreshContents() {
         super.refreshContents();
+        mActivity.getMainController().getHomeController().setViewpagerScreen(MainController.BANNER_FILTER_INDEX);
         mPresenter.callGetCategoryTree();
     }
 

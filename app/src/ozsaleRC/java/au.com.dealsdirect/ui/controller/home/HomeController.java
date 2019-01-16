@@ -31,6 +31,7 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
+import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
@@ -116,6 +117,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     public static boolean mIsInitialSavedInstanceLoad;
     public ViewContactsMvpView mViewContactsController;
     private int mDefaultTab;
+    private int mShopViewpagerIndex = 1;
 
     public static HomeController newInstance() {
 
@@ -219,7 +221,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 if (mIsInitialSavedInstanceLoad) {
                     position = mSavedIndex;
                 } else {
-                    mainController.goToPage(MainController.SHOP_INDEX);
+                    mainController.goToPage(getViewPagerScreen());
                 }
 
                 Controller checkoutController = getCurrentControllerOnRouter(mCheckoutRouter);
@@ -237,16 +239,20 @@ public class HomeController extends BaseController implements HomeMvpView {
                             getBottomNavigationView().setNotification(new AHNotification(), TAB_CATEGORIES_INDEX);
                             mPresenter.setInitialLaunchFalse();
                         }
+                        mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
                         showSecondTabController();
                         break;
                     case TAB_ACCOUNT_INDEX:
                         showThirdTabController();
+                        mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
                         break;
                     case TAB_CONTACT_INDEX:
                         showFourthTabController();
+                        mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
                         break;
                     case TAB_CHECKOUT_INDEX:
                         showFifthTabController();
+                        mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
                         break;
                     default:
                         break;
@@ -255,7 +261,11 @@ public class HomeController extends BaseController implements HomeMvpView {
             } else {
                 switch (position) {
                     case TAB_SHOP_INDEX:
-                        mShopRouter.popToRoot();
+                        if (getViewPagerScreen() == MainController.BANNER_FILTER_INDEX) {
+                            mActivity.onBackPressed();
+                        } else {
+                            mShopRouter.popToRoot();
+                        }
                         break;
                     case TAB_ACCOUNT_INDEX:
                         mAccountsRouter.popToRoot();
@@ -324,6 +334,14 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void setSavedCurrentItem() {
         if (mIsInitialSavedInstanceLoad) mBottomNavigationView.setCurrentItem(currentVisibleIndex);
+    }
+
+    public void setViewpagerScreen(int index) {
+        mShopViewpagerIndex = index;
+    }
+
+    public int getViewPagerScreen() {
+        return mShopViewpagerIndex;
     }
 
     public void showSplashSavedInstance(Router router){
@@ -414,6 +432,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             if (controller instanceof BaseController) {
                 ((BaseController) controller).refreshContents();
             }
+
         }
 
         mIsInitialSavedInstanceLoad = false;

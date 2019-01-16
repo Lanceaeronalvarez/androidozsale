@@ -270,6 +270,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             switch (getMainController().getHomeViewPager().getCurrentItem()) {
                 case BANNER_FILTER_INDEX:
                     setRootViewpagerItem(SHOP_INDEX);
+                    getHomeController().setViewpagerScreen(SHOP_INDEX);
                     resetShopController(currentRouter);
                     break;
                 case SHOP_INDEX:

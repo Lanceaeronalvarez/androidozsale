@@ -43,6 +43,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.custom.SearchEditText;
@@ -461,6 +462,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @Override
     public void showShopBanners(GetBannerResponse getBannerResponses, String categoryID) {
+
+        mActivity.getMainController().getHomeController().setViewpagerScreen(MainController.SHOP_INDEX);
 
         if (mCategoryID != null && !mCategoryID.equals(categoryID)) { return; }
 
