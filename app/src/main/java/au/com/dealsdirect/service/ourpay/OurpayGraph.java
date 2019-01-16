@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.PriceUtils;
 
 @SuppressWarnings({"ResourceType"})
@@ -62,12 +63,12 @@ public class OurpayGraph {
                     tempPay.setText(R.string.paid);
                     checkImage.setVisibility(View.VISIBLE);
                 } else {
-                    String formattedPriceString = PriceUtils.TEMP_CURRENCY_SIGN + String.format(Locale.ENGLISH, "%.2f", ourpayTransactions.get(i).getAmount());
+                    String formattedPriceString = Settings.getSelectedCountry().currencySign + String.format(Locale.ENGLISH, "%.2f", ourpayTransactions.get(i).getAmount());
                     tempPay.setText(formattedPriceString);
                     checkImage.setVisibility(View.INVISIBLE);
                 }
             } else {
-                String formattedPriceString = PriceUtils.TEMP_CURRENCY_SIGN + String.format(Locale.ENGLISH, "%.2f", ourpayTransactions.get(i).getAmount());
+                String formattedPriceString = Settings.getSelectedCountry().currencySign + String.format(Locale.ENGLISH, "%.2f", ourpayTransactions.get(i).getAmount());
                 tempPay.setText(formattedPriceString);
                 checkImage.setVisibility(View.GONE);
             }
