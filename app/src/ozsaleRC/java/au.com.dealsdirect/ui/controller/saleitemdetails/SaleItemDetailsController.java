@@ -65,6 +65,7 @@ import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -989,7 +990,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         AddToCartRequest request = new AddToCartRequest();
         request.setSkuId(mSkuId);
         request.setItemName(mSaleName);
-        request.setPrice(Double.valueOf(mSalePrice.substring(1)));
+        request.setPrice(Double.valueOf(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length())));
         request.setPersonalizationData(mPersonalisationLayout.getDataForAddToCart());
 
         boolean isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
