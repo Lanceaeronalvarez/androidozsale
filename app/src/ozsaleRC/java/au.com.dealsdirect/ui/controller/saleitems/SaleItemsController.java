@@ -31,6 +31,7 @@ import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.profiler.Profiler;
@@ -259,7 +260,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private List<SortingResponse> mSortingResponse = new ArrayList<>();
     private String mSortingListJsonString = "";
     private boolean mIsFilterClicked = false;
-    private boolean mIsSearchClicked = false;
+    private boolean mHasCategoryTreeResponse = false;
+    private boolean mShouldRefreshFacets = true;
     private String mCurrentTabName = "";
     private String mPreviousTabName = "";
     private List<Pair<String, String>> mFacetFilters = new ArrayList();
@@ -758,14 +760,33 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSortingListJsonString = new Gson().toJson(responseList);
     }
 
+    private void initializeCategoryTreeResponse(List<GetCategoryTreeResponse> source) {
+        if (mInitialCategoryTree.isEmpty() || source.isEmpty()) {
+            mCategoryTreeResponse = source;
+        } else {
+            for (GetCategoryTreeResponse initial : mInitialCategoryTree) {
+                if (initial.getKey().equals(source.get(0).getKey())) {
+                    mCategoryTreeResponse = Lists.newArrayList(initial);
+                    return;
+                }
+            }
+        }
+    }
+
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
         mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue());
         mActionTracker.CVItemList(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue()));
 
-        mCategoryTreeResponse = getSaleItemsResponse.getCategories();
-        mFacets = getSaleItemsResponse.getFacets();
+        if (!mHasCategoryTreeResponse) {
+            initializeCategoryTreeResponse(getSaleItemsResponse.getCategories());
+            mHasCategoryTreeResponse = true;
+        }
+        if (mShouldRefreshFacets) {
+            mFacets = getSaleItemsResponse.getFacets();
+        }
+        mShouldRefreshFacets = true;
 
         mPtrFrameLayout.setPullToRefresh(true);
 
@@ -965,7 +986,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, List<SearchChipModel> chipsList) {
+        String previousCategoryKey = mCategoryKey;
         mCategoryKey = StringUtils.generateConcatenatedCategories(reduceCategoryKeysForRequest(categoryKeys));
+        mShouldRefreshFacets = !(previousCategoryKey.equals(mCategoryKey) ||
+                previousCategoryKey.equals(mCategoryKey.replaceAll("[,\"]", ""))) ||
+                !mHasCategoryTreeResponse;
         mChipFilters = chipsList;
         return createSaleItemsRequest(mCategoryKey, pageNumber, chipsList);
     }
