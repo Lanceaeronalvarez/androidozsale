@@ -583,11 +583,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (isFromCategories()) {
             mSaleItemsCategoryToolbarTitle.setText(title);
             mSaleItemsToolbarSubTitleText.setText(subTitle);
-        } else if (!mSearchQuery.isEmpty()) {
-            mSaleItemsToolbarTitle.setText(mSearchQuery);
-        } else if (!editTextString.isEmpty()) {
-            mSaleItemsToolbarTitle.setText(editTextString);
-        } else if (!mCategoryForTitle.isEmpty()) {
+        }  else if (!mCategoryForTitle.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mCategoryForTitle);
         } else if (!mTitle.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mTitle);
