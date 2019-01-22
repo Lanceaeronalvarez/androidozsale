@@ -169,7 +169,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
             holder.discount.setVisibility(View.GONE);
         }
 
-        if (item.getPercentOff() != 0) {
+        if (item.getPercentOff() != 0 && mActivity.getResources().getBoolean(R.bool.is_dynamic_discount_banners_enabled)) {
             String percentOffValue = item.getPercentOffText().trim();
             String[] discountWordArray = percentOffValue.split(" ");
             percentOffValue = percentOffValue.replace(' ', '\n');
