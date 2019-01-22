@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.shops.adapter;
 
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -100,6 +101,12 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
                 GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) layout.getLayoutParams();
                 params.height = height;
                 layout.setLayoutParams(params);
+            }
+
+            if (view.getContext().getResources().getBoolean(R.bool.is_using_old_banner)) {
+                name.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.bg_banner_name_old));
+            } else {
+                name.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.bg_banner_name_new));
             }
         }
 
