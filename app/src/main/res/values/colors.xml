@@ -239,6 +239,7 @@
     <color name="banner_discount_color">#f09536</color>
     <color name="bg_product_detail_discount_button">#00ba57</color>
     <color name="product_details_promotion_discount">#f8952b</color>
+    <color name="bg_banner_discount">#CA433C</color>
 
 
 </resources>

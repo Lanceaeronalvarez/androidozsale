@@ -87,7 +87,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:background="#ff0000"
+                android:background="@color/bg_banner_discount"
                 android:gravity="center"
                 android:padding="@dimen/margin_extra_small"
                 android:textColor="@color/white"

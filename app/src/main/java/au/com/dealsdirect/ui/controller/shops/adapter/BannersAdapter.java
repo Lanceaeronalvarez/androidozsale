@@ -140,7 +140,14 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_banner, parent, false);
+        View view = null;
+        if (mActivity.getResources().getBoolean(R.bool.is_using_old_banner)) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.viewholder_old_banner, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.viewholder_banner, parent, false);
+        }
         return new ViewHolder(view, mComputedHeight);
     }
 
@@ -148,7 +155,12 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         GetBannerResponse.Banner item = mSales.get(position);
-        holder.name.setText(item.getDescription());
+        if (item.getDescription() != null && !item.getDescription().isEmpty()) {
+            holder.name.setVisibility(View.VISIBLE);
+            holder.name.setText(item.getDescription());
+        } else {
+            holder.name.setVisibility(View.GONE);
+        }
 
         if (item.getBannerText() != null && !item.getBannerText().isEmpty()) {
             holder.discount.setVisibility(View.VISIBLE);
