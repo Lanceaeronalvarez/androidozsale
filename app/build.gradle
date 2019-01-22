@@ -54,7 +54,7 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 117
+            versionCode 118
             versionName "2.4.1"
             applicationId "au.com.buyinvite.bi"
 
@@ -75,7 +75,7 @@ android {
         }
 
         buyinviteTest {
-            versionCode 117
+            versionCode 118
             versionName "2.4.1"
             applicationId "au.com.buyinvite.bi.test"
 
@@ -181,7 +181,7 @@ android {
         }
 
         ooRC {
-            versionCode 117
+            versionCode 118
             versionName "2.4.1"
             applicationId "au.com.oo"
 
@@ -202,7 +202,7 @@ android {
         }
 
         ooTest {
-            versionCode 117
+            versionCode 118
             versionName "2.4.1"
             applicationId "au.com.oo.test"
 
@@ -332,7 +332,7 @@ android {
         }
 
         singsaleRC {
-            versionCode 117
+            versionCode 118
             versionName "2.4.1"
             applicationId "sg.com.singsale"
 
@@ -354,7 +354,7 @@ android {
         }
 
         singsaleTest {
-            versionCode 117
+            versionCode 118
             versionName "2.4.1"
             applicationId "sg.com.singsaletest"
 
