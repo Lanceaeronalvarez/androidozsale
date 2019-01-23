@@ -16,6 +16,7 @@ import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 
 /**
@@ -26,6 +27,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         implements SaleItemsMvpPresenter<V> {
 
     private static final String SEARCH_QUERY_TAG = "search_query";
+    private Disposable mPreviousGetSaleItemsRequest = null;
 
     String mSaleId = "";
 
@@ -38,6 +40,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     @Override
     public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
 
+        // Cancels any previous loadSaleItems request
+        clearPreviousGetSaleItemsRequest();
+
         Observable dualApiCall = Observable.zip(wrapObservable(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest)),
                 wrapObservable(getDataManager().callSortingFacets()),
                 new BiFunction<GetSaleItemsResponse, List<SortingResponse>, Pair<GetSaleItemsResponse, List<SortingResponse>>>() {
@@ -47,16 +52,28 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                     }
                 });
 
-
-        doApiCallForResponse(dualApiCall, new AppApiCallback() {
+        mPreviousGetSaleItemsRequest = doApiCallForResponse(dualApiCall, new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
+                clearPreviousGetSaleItemsRequest();
                 Pair pair = (Pair) response;
                 getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>)pair.second);
                 getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, !getSaleItemsRequest.hasFilters());
             }
+
+            @Override
+            public void onFailure(Throwable t) {
+                clearPreviousGetSaleItemsRequest();
+            }
         });
+    }
+
+    private void clearPreviousGetSaleItemsRequest() {
+        if (mPreviousGetSaleItemsRequest != null) {
+            getCompositeDisposable().remove(mPreviousGetSaleItemsRequest);
+            mPreviousGetSaleItemsRequest = null;
+        }
     }
 
     @Override

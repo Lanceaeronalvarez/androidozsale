@@ -1,12 +1,11 @@
 package au.com.dealsdirect.ui.base;
 
 
-import android.os.Parcelable;
-
 import com.androidnetworking.error.ANError;
 
 import au.com.dealsdirect.data.network.ApiCallback;
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Every presenter in the app must either implement this interface or extend BasePresenter
@@ -34,6 +33,6 @@ public interface MvpPresenter<V extends MvpView> {
 
     boolean getIsNewUser();
 
-    void doApiCallForResponse(Observable observable, ApiCallback callback);
+    Disposable doApiCallForResponse(Observable observable, ApiCallback callback);
 
 }
