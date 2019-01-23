@@ -991,8 +991,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mShouldRefreshFacets = !(previousCategoryKey.equals(mCategoryKey) ||
                 previousCategoryKey.equals(mCategoryKey.replaceAll("[,\"]", ""))) ||
                 !mHasCategoryTreeResponse;
-        mChipFilters = chipsList;
-        return createSaleItemsRequest(mCategoryKey, pageNumber, chipsList);
+        if (mShouldRefreshFacets) {
+            mChipFilters = new LinkedList<>();
+            mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
+        } else {
+            mChipFilters = chipsList;
+        }
+        return createSaleItemsRequest(mCategoryKey, pageNumber, mChipFilters);
     }
 
     private Set<String> reduceCategoryKeysForRequest(Set<String> categoryKeys) {

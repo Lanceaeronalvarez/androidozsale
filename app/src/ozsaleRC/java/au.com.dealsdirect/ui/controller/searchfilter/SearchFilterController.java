@@ -559,9 +559,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mSeekbar.setMaxStartValue(mOrigMaxValue);
 
         mSeekbar.apply();
-        mMinPriceMovingLayout.setTranslationX(0);
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mSeekbar.getLayoutParams();
-        mMaxPriceMovingLayout.setX(mSeekbar.getWidth() - (lp.rightMargin));
+        mSeekbar.setMinThumbPosition(0);
+        mSeekbar.setMaxThumbPosition(1);
 
         mHasSeekbarReset = true;
         mSeekbar.resetMovingLayoutVisibility();
@@ -571,6 +570,24 @@ public class SearchFilterController extends BaseController implements SearchFilt
     public void replaceCategoryTree(List<GetCategoryTreeResponse> categoryTree) {
         mSubCategoriesAdapter.replaceData(categoryTree);
         mSubCategoriesAdapter.setSelectedCategories(mCategoryKeys);
+    }
+
+    @Override
+    public void replaceSearchChipModels(List<SearchChipModel> chipModels) {
+        mFacetItemsAdapter.setSearchItemsList(chipModels);
+        mSearchItemsList = chipModels;
+        boolean doesSliderExist = false;
+        for (SearchChipModel chipModel: chipModels) {
+            if (chipModel.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
+                mSeekbar.setMinThumbPosition(chipModel.getMinValue() / mOrigMaxValue);
+                mSeekbar.setMaxThumbPosition(chipModel.getMaxValue() / mOrigMaxValue);
+                doesSliderExist = true;
+            }
+        }
+
+        if (!doesSliderExist) {
+            onResetPriceRange();
+        }
     }
 
     @Override
