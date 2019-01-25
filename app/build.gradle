@@ -54,8 +54,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 118
-            versionName "2.4.1"
+            versionCode 120
+            versionName "2.5.0"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -75,8 +75,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 118
-            versionName "2.4.1"
+            versionCode 120
+            versionName "2.5.0"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -181,8 +181,8 @@ android {
         }
 
         ooRC {
-            versionCode 118
-            versionName "2.4.1"
+            versionCode 120
+            versionName "2.5.0"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -197,13 +197,13 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "app_uri_hostname", "www.oo.com.au"
 
-            ext.newRelicAppToken = "AA6269938ee23aef375c05484c8ba691eac5daf8f4"
+            ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ooTest {
-            versionCode 118
-            versionName "2.4.1"
+            versionCode 120
+            versionName "2.5.0"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -218,7 +218,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "app_uri_hostname", "www.oo.com.au"
 
-            ext.newRelicAppToken = "AA6269938ee23aef375c05484c8ba691eac5daf8f4"
+            ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
@@ -332,8 +332,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 118
-            versionName "2.4.1"
+            versionCode 120
+            versionName "2.5.0"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -354,8 +354,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 118
-            versionName "2.4.1"
+            versionCode 120
+            versionName "2.5.0"
             applicationId "sg.com.singsaletest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
