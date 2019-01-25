@@ -138,12 +138,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @BindView(R.id.partial_checkout_summary_tax_container)
     ViewGroup mSummaryTaxContainer;
     @Nullable
-    @BindView(R.id.partial_checkout_summary_pay_today_price)
-    TextView mSummaryPayTodayTextView;
-    @Nullable
-    @BindView(R.id.partial_checkout_summary_pay_today_container)
-    ViewGroup mSummaryPayTodayContainer;
-    @Nullable
     @BindView(R.id.partial_checkout_summary_ourpay_select_price)
     TextView mSummaryOurpaySelectPriceTextView;
     @Nullable
@@ -601,7 +595,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     }
                     if (isOurPaySelectDeliveryMethod()) { // show ourpay select related summary
                         mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount()));
-                        mSummaryPayTodayTextView.setText(PriceUtils.getPriceStringValue(ourpay.getInitialAmount()));
                     }
 
                 } else {
@@ -872,11 +865,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             // show ourpay select related summary, should been purchased yet if visible.
             if (isOurPaySelectDeliveryMethod() && !mDeliveryServicePackageDetail.getPurchased()) {
                 mSummaryOurpaySelectContainer.setVisibility(View.VISIBLE);
-                mSummaryPayTodayContainer.setVisibility(View.VISIBLE);
                 mSummaryShippingFeeContainer.setVisibility(View.GONE);
             } else {
                 mSummaryOurpaySelectContainer.setVisibility(View.GONE);
-                mSummaryPayTodayContainer.setVisibility(View.GONE);
             }
         }
 
