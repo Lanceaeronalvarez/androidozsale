@@ -14,6 +14,7 @@ import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -29,6 +30,8 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     private final SchedulerProvider mSchedulerProvider;
     private final CompositeDisposable mCompositeDisposable;
 
+    private boolean cancelled;
+
     private V mMvpView;
 
     @Inject
@@ -38,11 +41,13 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
         this.mDataManager = dataManager;
         this.mSchedulerProvider = schedulerProvider;
         this.mCompositeDisposable = compositeDisposable;
+        this.cancelled = false;
     }
 
     @Override
     public void onAttach(V mvpView) {
         mMvpView = mvpView;
+        cancelled = false;
     }
 
     @Override
@@ -69,6 +74,10 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 
     public CompositeDisposable getCompositeDisposable() {
         return mCompositeDisposable;
+    }
+
+    public void cancel() {
+        cancelled = true;
     }
 
     @Override
@@ -155,7 +164,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     }
 
     @Override
-    public void doApiCallForResponse(Observable observable, final ApiCallback callback) {
+    public Disposable doApiCallForResponse(Observable observable, final ApiCallback callback) {
 //        getMvpView().showLoading();
 
 //        if(getMvpView() instanceof BasePullToRefreshController) {
@@ -165,7 +174,8 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 //                ((BasePullToRefreshController) getMvpView()).showNoNetworkLayout();
 //            }
 //        }
-        getCompositeDisposable().add(observable
+
+        Disposable disposable = observable
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<Object>() {
@@ -179,11 +189,11 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                         getMvpView().hideNoNetworkLayout();
                         getMvpView().hideLoading();
 
-                        if (response instanceof List) {
+                        if (response instanceof List && !cancelled) {
                             callback.onSuccess((List) response);
-                        } else if (response != null) {
+                        } else if (response != null && !cancelled) {
                             callback.onSuccess(response);
-                        } else {
+                        } else if (!cancelled){
                             callback.onSuccess();
                         }
 
@@ -207,7 +217,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 
                         getMvpView().onError(throwable.getMessage());
 
-                        callback.onFailure(throwable);
+                        if (!cancelled) { callback.onFailure(throwable); }
 
                         // handle load accounts error here
                         if (throwable instanceof ANError) {
@@ -215,7 +225,11 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                             handleApiError(anError);
                         }
                     }
-                }));
+                });
+
+        getCompositeDisposable().add(disposable);
+
+        return disposable;
     }
 
     public static class MvpViewNotAttachedException extends RuntimeException {

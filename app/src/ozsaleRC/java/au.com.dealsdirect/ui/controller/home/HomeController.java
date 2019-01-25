@@ -31,6 +31,7 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
+import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
@@ -50,11 +51,6 @@ import butterknife.BindView;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SKU_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_CATEGORY_NAME;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -115,13 +111,13 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public static int currentVisibleIndex = 0;
     private int previousVisibleIndex = 0;
-    private boolean initNewBadge = false;
 
     public int mSavedIndex;
     private boolean mHasSavedStateInstance;
     public static boolean mIsInitialSavedInstanceLoad;
     public ViewContactsMvpView mViewContactsController;
     private int mDefaultTab;
+    private int mShopViewpagerIndex = 1;
 
     public static HomeController newInstance() {
 
@@ -182,13 +178,15 @@ public class HomeController extends BaseController implements HomeMvpView {
         mBottomNavigationView.setInactiveColor(getResources().getColor(R.color.bottom_nav_inactive));
 
 //        ADD "NEW" Badge to categories
-        AHNotification notification = new AHNotification.Builder()
-                .setText("NEW")
-                .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge))
-                .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
-                .build();
-        getBottomNavigationView().setNotification(notification, TAB_CATEGORIES_INDEX);
-        initNewBadge = true;
+
+        if(mPresenter.isInitialLaunch()) {
+            AHNotification notification = new AHNotification.Builder()
+                    .setText("NEW")
+                    .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge))
+                    .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
+                    .build();
+            getBottomNavigationView().setNotification(notification, TAB_CATEGORIES_INDEX);
+        }
         setUp(view);
     }
 
@@ -223,7 +221,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 if (mIsInitialSavedInstanceLoad) {
                     position = mSavedIndex;
                 } else {
-                    mainController.goToPage(MainController.SHOP_INDEX);
+                    mainController.goToPage(getViewPagerScreen());
                 }
 
                 Controller checkoutController = getCurrentControllerOnRouter(mCheckoutRouter);
@@ -236,20 +234,25 @@ public class HomeController extends BaseController implements HomeMvpView {
                         showFirstTabController();
                         break;
                     case TAB_CATEGORIES_INDEX:
-                        if(initNewBadge) {
+                        if(mPresenter.isInitialLaunch()) {
+                            //remove "new" badge by assigning a black notification on Categories Tan
                             getBottomNavigationView().setNotification(new AHNotification(), TAB_CATEGORIES_INDEX);
-                            initNewBadge = false;
+                            mPresenter.setInitialLaunchFalse();
                         }
+                        mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
                         showSecondTabController();
                         break;
                     case TAB_ACCOUNT_INDEX:
                         showThirdTabController();
+                        mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
                         break;
                     case TAB_CONTACT_INDEX:
                         showFourthTabController();
+                        mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
                         break;
                     case TAB_CHECKOUT_INDEX:
                         showFifthTabController();
+                        mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
                         break;
                     default:
                         break;
@@ -258,7 +261,11 @@ public class HomeController extends BaseController implements HomeMvpView {
             } else {
                 switch (position) {
                     case TAB_SHOP_INDEX:
-                        mShopRouter.popToRoot();
+                        if (getViewPagerScreen() == MainController.BANNER_FILTER_INDEX) {
+                            mActivity.onBackPressed();
+                        } else {
+                            mShopRouter.popToRoot();
+                        }
                         break;
                     case TAB_ACCOUNT_INDEX:
                         mAccountsRouter.popToRoot();
@@ -327,6 +334,14 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void setSavedCurrentItem() {
         if (mIsInitialSavedInstanceLoad) mBottomNavigationView.setCurrentItem(currentVisibleIndex);
+    }
+
+    public void setViewpagerScreen(int index) {
+        mShopViewpagerIndex = index;
+    }
+
+    public int getViewPagerScreen() {
+        return mShopViewpagerIndex;
     }
 
     public void showSplashSavedInstance(Router router){
@@ -417,6 +432,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             if (controller instanceof BaseController) {
                 ((BaseController) controller).refreshContents();
             }
+
         }
 
         mIsInitialSavedInstanceLoad = false;
@@ -581,20 +597,29 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
     }
 
-    public void resetVisibleContainer() {
-        if (!(getCurrentRouter() ==  mAccountsRouter || getCurrentRouter() == mShopRouter)) {
-            mRouterContainerMapping.get(currentVisibleIndex).second.setVisibility(View.GONE);
-            if (currentVisibleIndex == previousVisibleIndex) {
-                previousVisibleIndex = 0;
+    public void goToPreviousContainerFromLogin(boolean isAuthorized) {
+        int newIndex;
+        if (isAuthorized) {
+            newIndex = currentVisibleIndex;
+        } else {
+            switch (currentVisibleIndex) {
+                case TAB_CHECKOUT_INDEX:
+                case TAB_CONTACT_INDEX:
+                    newIndex = previousVisibleIndex;
+                    break;
+                default:
+                    newIndex = currentVisibleIndex;
+                    break;
             }
-            mRouterContainerMapping.get(previousVisibleIndex).second.setVisibility(View.VISIBLE);
-            mBottomNavigationView.setCurrentItem(previousVisibleIndex, false);
-            currentVisibleIndex = previousVisibleIndex;
+        }
 
-        }
-        if (getCurrentRouter() == mShopRouter) {
-            showBottomNav();
-        }
+        setVisibleContainer(newIndex);
+
+        showBottomNav();
+    }
+
+    public void goBackToHomePage() {
+        showFirstTabController();
     }
 
     @Override
@@ -657,54 +682,41 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void deepLinkSaleItemDetails(String seoIdentifierId, String skuId, boolean isWithSale) {
 
-        Bundle bundle = new Bundle();
-        bundle.putString(SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
-        bundle.putString(SALEITEMDETAILS_KEY_SKU_ID, skuId);
-        bundle.putBoolean(SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE, isWithSale);
+        SaleItemDetailsController.Parameters.FromDeepLink parameters = new SaleItemDetailsController.Parameters
+                .FromDeepLink(seoIdentifierId, skuId);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            if (mShopRouter != null)
-                mShopRouter.pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+        if (mShopRouter != null) {
+            RouterTransaction routerTransaction = RouterTransaction.with(
+                    SaleItemDetailsController.newInstance(parameters));
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                routerTransaction = routerTransaction
                         .pushChangeHandler(new FadeChangeHandler(false))
-                        .popChangeHandler(new FadeChangeHandler()));
-
-        } else {
-            if (mShopRouter != null)
-                mShopRouter.pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+                        .popChangeHandler(new FadeChangeHandler());
+            } else {
+                routerTransaction = routerTransaction
                         .pushChangeHandler(new SharedArcFadePushChangeHandler())
-                        .popChangeHandler(new SharedArcFadePopChangeHandler()));
+                        .popChangeHandler(new SharedArcFadePopChangeHandler());
+            }
 
+            mShopRouter.pushController(routerTransaction);
         }
     }
 
 
     public void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
 
-        Bundle args = new BundleBuilder(new Bundle())
-                .putString(SALEITEMS_TITLE, bannerTitle)
-                .putString(SALEITEMS_SALE_ID, saleId)
-                .putString(SALEITEMS_BANNER_ID, bannerId)
-                .build();
+        SaleItemsController.Parameters.FromSaleItemDeepLink parameters = new SaleItemsController
+                .Parameters.FromSaleItemDeepLink(bannerTitle, saleId, bannerId);
 
-        if (!mPresenter.isAuthorized()) {
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
-            // Invoke login if no auth or not an open app
-            if (mShopRouter != null)
-                mShopRouter.pushController(RouterTransaction.with(
-                        new SaleItemsController(args))
-                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
-        } else {
-
-            // Check if sale is available
-            mShopRouter.pushController(RouterTransaction.with(
-                    new SaleItemsController(args))
+        if (mShopRouter != null) {
+            mShopRouter.pushController(RouterTransaction.with(controller)
                     .tag(mActivity.getString(R.string.sale_items_controller_tag))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         }
-
     }
 
     public void sendSaleItemToCheckout(Value getCurrentOrder) {
@@ -713,25 +725,13 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void deepLinkSaleCategory(String categoryName, String categoryIdentifier) {
 
-        Bundle args = new BundleBuilder(new Bundle())
-                .putString(SALEITEMS_CATEGORY_ID, categoryIdentifier)
-                .putString(SALEITEMS_CATEGORY_NAME, categoryName)
-                .build();
+        SaleItemsController.Parameters.FromCategoryDeepLink parameters = new SaleItemsController
+                .Parameters.FromCategoryDeepLink(categoryName, categoryIdentifier);
 
-        if (!mPresenter.isAuthorized()) {
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
-            // Invoke login if no auth or not an open app
-            if (mShopRouter != null)
-                mShopRouter.pushController(RouterTransaction.with(
-                        new SaleItemsController(args))
-                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
-        } else {
-
-            // Check if sale is available
-            mShopRouter.pushController(RouterTransaction.with(
-                    new SaleItemsController(args))
+        if (mShopRouter != null) {
+            mShopRouter.pushController(RouterTransaction.with(controller)
                     .tag(mActivity.getString(R.string.sale_items_controller_tag))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));

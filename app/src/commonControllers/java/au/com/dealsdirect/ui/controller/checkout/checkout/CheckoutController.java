@@ -677,7 +677,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail) {
-        if (getBoolean(R.bool.is_ozsale_app) && deliveryOptions != null) {
+        if (getBoolean(R.bool.is_ozsale_app) && (deliveryOptions != null && !deliveryOptions.isEmpty())) {
             mDeliveryOptions = deliveryOptions;
             mDeliveryServicePackageDetail = deliveryServicePackageDetail;
 
@@ -1275,12 +1275,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private void showAddPaymentMethodController() {
         mIsPaymentMethodChanged = false;
 
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
-        bundle.putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, isOurPaySelectDeliveryMethod());
-        bundle.putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().getTotal()));
-        bundle.putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mValue, Value.class));
-        getRouter().pushController(RouterTransaction.with(new AddPaymentController(bundle))
+        AddPaymentController.Parameters.FromCheckout parameters = new AddPaymentController
+                .Parameters.FromCheckout(isOurPaySelectDeliveryMethod(),
+                Double.toString(mValue.getSummary().getTotal()),
+                mValue);
+
+        getRouter().pushController(RouterTransaction
+                .with(AddPaymentController.newInstance(parameters))
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
     }

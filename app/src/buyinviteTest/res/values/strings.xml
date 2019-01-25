@@ -5,7 +5,7 @@
 
     <string name="add_to_cart">Add to Cart</string>
     <string name="checkout_page_toolbar_title">Checkout</string>
-    <string name="total">Grand Total</string>
+    <string name="total">Total</string>
     <string name="add_new_address">Add New Address</string>
     <string name="invite_friend_guide">Invite your friends to join buyinvite. Once your friends have
         joined through your invitation and made their first purchase you will instantly receive a
@@ -187,6 +187,8 @@
     <string name="font_app_semibold_italic">fonts/opensans/OpenSans-SemiboldItalic.ttf</string>
     <string name="i_am_looking_for">Search</string>
     <string name="ourpay_code_hint">Code</string>
+
+    <string name="app_package_name">au.com.buyinvite.bi</string>
 
 
 </resources>

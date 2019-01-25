@@ -28,6 +28,8 @@ public interface SearchFilterMvpView extends MvpView {
 
     void replaceCategoryTree(List<GetCategoryTreeResponse> categoryTree);
 
+    void replaceSearchChipModels(List<SearchChipModel> chipModels);
+
     void onCategoryClicked(GetCategoryTreeResponse category);
 
     Set<String> getCategoryKeys();

@@ -271,4 +271,6 @@
     <string name="product_item_source_name">ozsale.com.au</string>
     <string name="no_orders">You do not have any orders</string>
 
+    <string name="app_package_name">au.com.ozsale</string>
+
 </resources>

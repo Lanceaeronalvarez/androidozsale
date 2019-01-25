@@ -128,6 +128,7 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.JsonUtils;
 import io.reactivex.Observable;
 
@@ -203,6 +204,16 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String saleId, String seoIdentifierId) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getProductDetails())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("seo_identifier", seoIdentifierId)
+                .addPathParameter("sale_id", saleId)
+                .build()
+                .getObjectObservable(GetSaleItemDetailsResponse.class);
+    }
+
+    @Override
     public Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request) {
         return Rx2AndroidNetworking.get(ApiEndPoint.getOurpayData())
                 .addHeaders(mApiHeader.get())
@@ -239,6 +250,15 @@ public class AppApiHelper implements ApiHelper {
                 .addQueryParameter(getSaleItemsRequest)
                 .build()
                 .getObjectObservable(GetSaleItemsResponse.class);
+    }
+
+    @Override
+    public Observable<String> callDynamicDiscount(String skuId) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getProductDetailDynamicDiscount())
+                .addHeaders(mApiHeader.get())
+                .addQueryParameter(AppConstants.PARAM_SKUID, skuId)
+                .build()
+                .getObjectObservable(String.class);
     }
 
     @Override

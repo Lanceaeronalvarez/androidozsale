@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.profiler.Profiler;
@@ -37,6 +39,7 @@ import com.paginate.Paginate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +57,7 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpRepository;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
@@ -64,12 +68,12 @@ import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.TabLayoutUtils;
-import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -90,6 +94,149 @@ import static au.com.dealsdirect.service.event.ActionTracker.ClickType.PRODUCT_C
 
 public class SaleItemsController extends BaseController implements SaleItemsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener, SearchFilterMvpRepository {
 
+    public abstract static class Parameters {
+        private Parameters() {
+        }
+
+        public static final class FromBannerClick extends Parameters {
+            private String mTitle;
+            private String mSaleId;
+            private String mBannerId;
+            private String mEndDate;
+            private String mImageURL;
+            private Integer mPosition;
+
+            public FromBannerClick(String title,
+                                   String saleId,
+                                   String bannerId,
+                                   String imageURL,
+                                   String endDate,
+                                   Integer position) {
+                mTitle = title;
+                mSaleId = saleId;
+                mBannerId = bannerId;
+                mImageURL = imageURL;
+                mEndDate = endDate;
+                mPosition = position;
+            }
+
+            public String getTitle() {
+                return mTitle;
+            }
+
+            public String getSaleId() {
+                return mSaleId;
+            }
+
+            public String getBannerId() {
+                return mBannerId;
+            }
+
+            public String getImageURL() {
+                return mImageURL;
+            }
+
+            public String getEndDate() {
+                return mEndDate;
+            }
+
+            public Integer getPosition() {
+                return mPosition;
+            }
+        }
+
+        public static final class FromCategory extends Parameters {
+            private String mTitle;
+            private String mCategoryMap;
+            private List<GetCategoryTreeResponse> mCategories;
+
+            public FromCategory(String title,
+                                String categoryMap,
+                                List<GetCategoryTreeResponse> categories) {
+                mTitle = title;
+                mCategoryMap = categoryMap;
+                mCategories = categories;
+            }
+
+            public String getTitle() {
+                return mTitle;
+            }
+
+            public String getCategoryMap() {
+                return mCategoryMap;
+            }
+
+            public List<GetCategoryTreeResponse> getCategories() {
+                return mCategories;
+            }
+        }
+
+
+        public static final class FromShopSearch extends Parameters {
+            private String mTitle;
+            private String mSearchKey;
+
+            public FromShopSearch(String title,
+                                  String searchKey) {
+                mTitle = title;
+                mSearchKey = searchKey;
+            }
+
+            public String getTitle() {
+                return mTitle;
+            }
+
+            public String getSearchKey() {
+                return mSearchKey;
+            }
+        }
+
+        public static final class FromSaleItemDeepLink extends Parameters {
+            private String mBannerTitle;
+            private String mSaleId;
+            private String mBannerId;
+
+            public FromSaleItemDeepLink(String bannerTitle,
+                                        String saleId,
+                                        String bannerId) {
+                mBannerTitle = bannerTitle;
+                mSaleId = saleId;
+                mBannerId = bannerId;
+            }
+
+            public String getBannerTitle() {
+                return mBannerTitle;
+            }
+
+            public String getSaleId() {
+                return mSaleId;
+            }
+
+            public String getBannerId() {
+                return mBannerId;
+            }
+        }
+
+        public static final class FromCategoryDeepLink extends Parameters {
+            private String mTitle;
+            private String mCategoryMapKey;
+
+            public FromCategoryDeepLink(String title,
+                                        String categoryMapKey) {
+                mTitle = title;
+                mCategoryMapKey = categoryMapKey;
+            }
+
+            public String getTitle() {
+                return mTitle;
+            }
+
+            public String getCategoryMapKey() {
+                return mCategoryMapKey;
+            }
+        }
+    }
+
     public static final String TAG = SaleItemsController.class.getSimpleName();
     private static final long SEARCH_DELAY_MS = 1000; // milliseconds
     private static final long DELETE_DELAY_MS = 1250; // milliseconds
@@ -103,6 +250,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mCategoryKey = "";
     private String mCategoryForTitle = "";
     private String mSearchQuery = "";
+    private String mEndDate = "";
 
     private Map<String, GetCategoryTreeResponse> mCategoryMap = new HashMap<>();
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
@@ -112,7 +260,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private List<SortingResponse> mSortingResponse = new ArrayList<>();
     private String mSortingListJsonString = "";
     private boolean mIsFilterClicked = false;
-    private boolean mIsSearchClicked = false;
+    private boolean mHasCategoryTreeResponse = false;
+    private boolean mShouldRefreshFacets = true;
     private String mCurrentTabName = "";
     private String mPreviousTabName = "";
     private List<Pair<String, String>> mFacetFilters = new ArrayList();
@@ -157,6 +306,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.controller_sale_collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbar;
 
+    @BindView(R.id.partial_toolbar_details_remaining_time_layout)
+    LinearLayout mSaleItemsRemainingTimeLayout;
+
+    @BindView(R.id.partial_toolbar_details_remaining_time_value)
+    TextView mSaleItemsRemainingTimeText;
+
+    @BindView(R.id.partial_toolbar_details_end_time_text)
+    TextView mSaleEndsInText;
+
     private SaleItemsAdapter mSaleItemsAdapter;
     private Paginate mPaginateManager;
     private Paginate.Callbacks mPaginateCallbacks;
@@ -190,6 +348,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private List<String> mRemovedChipTitles;
     private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
+    private CountDownTimer mCountDownTimer;
+
     private TextWatcher mTextWatcher = new TextWatcher() {
         private Timer timer = new Timer();
 
@@ -212,7 +372,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         @Override
                         public void run() {
                             mActivity.runOnUiThread(() -> showLoading());
-                            mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                            if (mSearchFilterMvpView != null) {
+                                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(),
+                                        0,
+                                        mChipFilters));
+                            }
                         }
                     }, count >= before ? SEARCH_DELAY_MS : DELETE_DELAY_MS);
 
@@ -228,11 +392,44 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
     public static SaleItemsController newInstance() {
-
-
         return new SaleItemsController(new BundleBuilder(new Bundle()).build());
     }
 
+    public static SaleItemsController newInstance(Parameters parameters) {
+        SaleItemsController controller = SaleItemsController.newInstance();
+
+        String title = null;
+
+        if (parameters instanceof Parameters.FromBannerClick) {
+            title = ((Parameters.FromBannerClick) parameters).getTitle();
+            controller.mSaleId = ((Parameters.FromBannerClick) parameters).getSaleId();
+            controller.mEndDate = ((Parameters.FromBannerClick) parameters).getEndDate();
+            controller.mFromBannerSearch = true;
+        } else if (parameters instanceof Parameters.FromShopSearch) {
+            title = ((Parameters.FromShopSearch) parameters).getTitle();
+            controller.mFromShopSearch = true;
+        } else if (parameters instanceof Parameters.FromCategory) {
+            title = ((Parameters.FromCategory) parameters).getTitle();
+            controller.mCategoryKey = ((Parameters.FromCategory) parameters).getCategoryMap();
+            controller.mInitialCategoryTree = ((Parameters.FromCategory) parameters).getCategories();
+            controller.mFromCategorySearch = true;
+        } else if (parameters instanceof Parameters.FromSaleItemDeepLink) {
+            title = ((Parameters.FromSaleItemDeepLink) parameters).getBannerTitle();
+            controller.mSaleId = ((Parameters.FromSaleItemDeepLink) parameters).getSaleId();
+        } else if (parameters instanceof Parameters.FromCategoryDeepLink) {
+            title = ((Parameters.FromCategoryDeepLink) parameters).getTitle();
+            controller.mCategoryKey = ((Parameters.FromCategoryDeepLink) parameters).getCategoryMapKey();
+            controller.mFromCategoryDeeplink = true;
+        }
+
+        title = title != null ? title.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT) : "";
+        controller.mTitle = title;
+
+        if (controller.mFromShopSearch) controller.mSalesOrigin = ActionTracker.ViewSource.SEARCH;
+        if (controller.mFromCategorySearch)
+            controller.mSalesOrigin = ActionTracker.ViewSource.CATEGORY;
+        return controller;
+    }
 
     public SaleItemsController(Bundle args) {
         super(args);
@@ -272,7 +469,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
-        if (!mSaleId.isEmpty())outState.putString(BundleKeys.SALEITEMS_SALE_ID, mSaleId);
+        if (!mSaleId.isEmpty()) outState.putString(BundleKeys.SALEITEMS_SALE_ID, mSaleId);
         outState.putBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
         outState.putBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
         outState.putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey);
@@ -280,14 +477,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
         outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
         outState.putString(BundleKeys.SALEITEMS_KEY_CATEGORIES, new Gson().toJson(mInitialCategoryTree));
-        if (mSaleItemsToolbarField != null)outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+        if (mSaleItemsToolbarField != null)
+            outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
-        mSaleId = savedInstanceState.getString(BundleKeys.SALEITEMS_SALE_ID,"");
+        mSaleId = savedInstanceState.getString(BundleKeys.SALEITEMS_SALE_ID, "");
         mCategoryKey = savedInstanceState.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
         mFromBannerSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH);
         mFromShopSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH);
@@ -303,7 +501,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }.getType());
         }
 
-        if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT, "");
+        if (savedInstanceState.containsKey(KEY_SEARCH_TEXT))
+            mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT, "");
     }
 
 
@@ -379,16 +578,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
         mSaleItemsCategoryToolbarTitle.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
         mSaleItemsToolbarSubTitleText.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
+        mSaleItemsRemainingTimeLayout.setVisibility(isFromCategories() || mFromShopSearch ||
+                !mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) ? View.GONE : View.VISIBLE);
         mSaleItemsToolbarTitle.setVisibility(!isFromCategories() ? View.VISIBLE : View.GONE);
 
         if (isFromCategories()) {
             mSaleItemsCategoryToolbarTitle.setText(title);
             mSaleItemsToolbarSubTitleText.setText(subTitle);
-        } else if (!mSearchQuery.isEmpty()) {
-            mSaleItemsToolbarTitle.setText(mSearchQuery);
-        } else if (!editTextString.isEmpty()) {
-            mSaleItemsToolbarTitle.setText(editTextString);
-        } else if (!mCategoryForTitle.isEmpty()) {
+        }  else if (!mCategoryForTitle.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mCategoryForTitle);
         } else if (!mTitle.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mTitle);
@@ -402,6 +599,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void onDetach(View view) {
         mPtrFrameLayout.setPtrHandler(null);
         mAppBar.removeOnOffsetChangedListener(this);
+        mSaleItemsToolbarField.setOnEditorActionListener(null);
+        mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
         hideKeyboard();
         super.onDetach(view);
     }
@@ -415,6 +614,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             newControllerChangeHandler = null;
         }
         mSaleItemsRecyclerView.setAdapter(null);
+        if (mCountDownTimer != null) mCountDownTimer.cancel();
         super.onDestroyView(view);
     }
 
@@ -423,6 +623,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setDraggableViewPager(false);
         setupPtrHeader();
+        if(mEndDate.isEmpty() || mEndDate == null || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+            mSaleItemsRemainingTimeText.setVisibility(View.GONE);
+            mSaleEndsInText.setVisibility(View.GONE);
+        } else {
+            mSaleItemsRemainingTimeText.setVisibility(View.VISIBLE);
+            mSaleEndsInText.setVisibility(View.VISIBLE);
+            setupSaleRemainingTime(mEndDate);
+        }
+
 
         //use initialcategory tree map if it came from categories.
         if (!mInitialCategoryTree.isEmpty()) {
@@ -510,6 +719,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         hideKeyboard();
     }
 
+    private void setupSaleRemainingTime(String endDate) {
+        mCountDownTimer = new CountDownTimer(DateUtils.getRemainingTimeInMillis(endDate), DateUtils.DATE_UTIL_MILLIS_TO_SEC) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mSaleItemsRemainingTimeText.setText(DateUtils.getRemainingTimeInWeeks(millisUntilFinished));
+            }
+
+            @Override
+            public void onFinish() { }
+        };
+        mCountDownTimer.start();
+    }
+
     private void showKeyboard() {
         if (mFromShopSearch) {
             activateSearch();
@@ -538,14 +760,33 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSortingListJsonString = new Gson().toJson(responseList);
     }
 
+    private void initializeCategoryTreeResponse(List<GetCategoryTreeResponse> source) {
+        if (mInitialCategoryTree.isEmpty() || source.isEmpty()) {
+            mCategoryTreeResponse = source;
+        } else {
+            for (GetCategoryTreeResponse initial : mInitialCategoryTree) {
+                if (initial.getKey().equals(source.get(0).getKey())) {
+                    mCategoryTreeResponse = Lists.newArrayList(initial);
+                    return;
+                }
+            }
+        }
+    }
+
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
         mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue());
         mActionTracker.CVItemList(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue()));
 
-        mCategoryTreeResponse = getSaleItemsResponse.getCategories();
-        mFacets = getSaleItemsResponse.getFacets();
+        if (!mHasCategoryTreeResponse) {
+            initializeCategoryTreeResponse(getSaleItemsResponse.getCategories());
+            mHasCategoryTreeResponse = true;
+        }
+        if (mShouldRefreshFacets) {
+            mFacets = getSaleItemsResponse.getFacets();
+        }
+        mShouldRefreshFacets = true;
 
         mPtrFrameLayout.setPullToRefresh(true);
 
@@ -653,33 +894,42 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId) {
+    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
+                                   String skuId, String saleId, boolean isFreeDelivery) {
         mAppBar.setExpanded(true, false);
         mSearchFilterMvpView.closeFacets();
         mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
-        Bundle bundle = new Bundle();
-        bundle.putInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION, position);
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_IMAGE_ID, imageUrl);
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SKU_ID, skuId);
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ID, saleId);
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME, ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString());
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString());
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString());
-        bundle.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, mSalesOrigin);
+        SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
+                .Parameters.FromItemsList(position,
+                imageUrl,
+                seoIdentifierId,
+                skuId,
+                saleId,
+                ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString(),
+                ((SaleItemsAdapter.ViewHolder) viewHolder).brand.getText().toString(),
+                ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString(),
+                ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString(),
+                mSalesOrigin,
+                mEndDate,
+                isFreeDelivery);
+
+        RouterTransaction routerTransaction = RouterTransaction
+                .with(SaleItemDetailsController.newInstance(parameters));
 
         mActionTracker.clicksEvent(mSalesOrigin + PRODUCT_CLICK, position);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+            routerTransaction = routerTransaction
                     .pushChangeHandler(new FadeChangeHandler())
-                    .popChangeHandler(new FadeChangeHandler()));
+                    .popChangeHandler(new FadeChangeHandler());
         } else {
-            getRouter().pushController(RouterTransaction.with(SaleItemDetailsController.newInstance(bundle))
+            routerTransaction = routerTransaction
                     .pushChangeHandler(new SharedArcFadePushChangeHandler())
-                    .popChangeHandler(new SharedArcFadePopChangeHandler()));
+                    .popChangeHandler(new SharedArcFadePopChangeHandler());
         }
+
+        getRouter().pushController(routerTransaction);
 
         mFromShopSearch = false;
     }
@@ -687,17 +937,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private void setupSearchFilters() {
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
         if (mSearchFilterMvpView == null) {
-            Bundle bundle = new BundleBuilder(new Bundle())
-                    .putString(BundleKeys.KEY_CATEGORY_STRING, new Gson().toJson(mCategoryTreeResponse))
-                    .putString(BundleKeys.KEY_FACET_STRING, new Gson().toJson(mFacets))
-                    .putString(BundleKeys.KEY_SORTING_STRING, mSortingListJsonString)
-                    .putString(BundleKeys.SALEITEMS_SALE_ID, mSaleId)
-                    .putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey)
-                    .putString(BundleKeys.KEY_SELECTED_FACETS, mPreviousSelectedFacetIndicesJsonString)
-                    .putString(BundleKeys.SALEITEMS_CHIPS_FILTER, new Gson().toJson(mChipFilters))
-                    .putString(BundleKeys.KEY_SALE_ITEMS_TITLE, mSearchQuery)
-                    .putBoolean(BundleKeys.KEY_HAS_DEFAULT_CATEGORY, !(mFromBannerSearch || mFromShopSearch))
-                    .build();
+            SearchFilterController.Parameters.FromItemsList parameters = new SearchFilterController
+                    .Parameters.FromItemsList(mFacets,
+                    mSortingResponse,
+                    mCategoryTreeResponse,
+                    null,
+                    mCategoryKey,
+                    mChipFilters);
 
             GateKeeper.Destination destination;
             if (mFromBannerSearch || mFromShopSearch) {
@@ -706,7 +952,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 destination = GateKeeper.Destination.SEARCH_FILTER_FOR_CATEGORY;
             }
 
-            Controller searchFilterController = ControllerFactory.getInstance(destination, bundle);
+            Controller searchFilterController = SearchFilterController.newInstance(parameters);
             mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
             GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
             mSearchFilterMvpView.setRepository(this);
@@ -740,9 +986,41 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, List<SearchChipModel> chipsList) {
-        mCategoryKey = StringUtils.generateConcatenatedCategories(categoryKeys);
-        mChipFilters = chipsList;
-        return createSaleItemsRequest(mCategoryKey, pageNumber, chipsList);
+        String previousCategoryKey = mCategoryKey;
+        mCategoryKey = StringUtils.generateConcatenatedCategories(reduceCategoryKeysForRequest(categoryKeys));
+        mShouldRefreshFacets = !(previousCategoryKey.equals(mCategoryKey) ||
+                previousCategoryKey.equals(mCategoryKey.replaceAll("[,\"]", ""))) ||
+                !mHasCategoryTreeResponse;
+        if (mShouldRefreshFacets) {
+            mChipFilters = new LinkedList<>();
+            mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
+        } else {
+            mChipFilters = chipsList;
+        }
+        return createSaleItemsRequest(mCategoryKey, pageNumber, mChipFilters);
+    }
+
+    private Set<String> reduceCategoryKeysForRequest(Set<String> categoryKeys) {
+        LinkedHashSet<String> keys = new LinkedHashSet<>();
+        for (GetCategoryTreeResponse node : mCategoryTreeResponse) {
+            node.traverseTree(new GetCategoryTreeResponse.TreeTraversalBlock() {
+                @Override
+                public boolean execute(GetCategoryTreeResponse parent, Object option) {
+                    boolean isChecked = categoryKeys.contains(parent.getKey());
+                    if (isChecked) {
+                        keys.add(parent.getKey());
+                    }
+                    return !isChecked;
+                }
+
+                @Override
+                public Object transformOption(GetCategoryTreeResponse parent, Object option) {
+                    return null;
+                }
+            }, null);
+        }
+
+        return keys;
     }
 
     @Override
@@ -990,7 +1268,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     mSearchQuery = textView.getText().toString();
                     mIsSearch = true;
                     showLoading();
-                    mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                    if (mSearchFilterMvpView != null) {
+                        mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                    }
                 }
                 return false;
             });

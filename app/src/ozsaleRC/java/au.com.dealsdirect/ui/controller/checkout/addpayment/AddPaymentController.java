@@ -60,6 +60,28 @@ import butterknife.OnClick;
 
 public class AddPaymentController extends VisaCheckoutController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
 
+    public static abstract class Parameters {
+        private Parameters() {}
+
+        public static final class FromCheckout extends Parameters {
+            private Boolean mIsOurpaySelectDeliveryMethod;
+            private String mCartTotalCost;
+            private Value mCurrentOrderValue;
+
+            public FromCheckout(Boolean isOurpaySelectDeliveryMethod,
+                                String cartTotalCost,
+                                Value currentOrderValue) {
+                mIsOurpaySelectDeliveryMethod = isOurpaySelectDeliveryMethod;
+                mCartTotalCost = cartTotalCost;
+                mCurrentOrderValue = currentOrderValue;
+            }
+
+            public Boolean getIsOurpaySelectDeliveryMethod() { return mIsOurpaySelectDeliveryMethod; }
+            public String getCartTotalCost() { return mCartTotalCost; }
+            public Value getCurrentOrderValue() { return mCurrentOrderValue; }
+        }
+    }
+
     @Inject
     AddPaymentMvpPresenter<AddPaymentMvpView> mPresenter;
 
@@ -102,6 +124,19 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
     public static AddPaymentController newInstance() {
         return new AddPaymentController(new BundleBuilder(new Bundle()).build());
+    }
+
+    public static AddPaymentController newInstance(Parameters parameters) {
+        AddPaymentController controller = AddPaymentController.newInstance();
+
+        if (parameters instanceof Parameters.FromCheckout) {
+            controller.isFromCart = true;
+            controller.mIsOurpaySelectDeliveryMethod = ((Parameters.FromCheckout) parameters).getIsOurpaySelectDeliveryMethod();
+            controller.mCartTotalCost = ((Parameters.FromCheckout) parameters).getCartTotalCost();
+            controller.mCurrentOrderValue = ((Parameters.FromCheckout) parameters).getCurrentOrderValue();
+        }
+
+        return controller;
     }
 
     public AddPaymentController(Bundle args) {

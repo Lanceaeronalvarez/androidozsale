@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.PowerManager;
 import android.util.Log;
 import android.util.SparseArray;
@@ -86,7 +87,13 @@ public abstract class WakefulBroadcastReceiver extends BroadcastReceiver {
             }
 
             intent.putExtra(EXTRA_WAKE_LOCK_ID, id);
-            ComponentName comp = context.startService(intent);
+            ComponentName comp;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                comp = context.startForegroundService(intent);
+                GcmIntentService.enqueueWork(context, intent);
+            } else {
+                comp = context.startService(intent);
+            }
             if (comp == null) {
                 return null;
             }

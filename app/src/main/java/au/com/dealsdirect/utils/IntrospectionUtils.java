@@ -44,12 +44,22 @@ public class IntrospectionUtils {
     public static void verifyVersion(Context context) {
         int savedVersionCode = getSavedVersionCode();
         int currentVersionCode = getVersionCode(context);
+        String savedVersionName = getSavedVersionName();
+        String currentVersionName = getVersionName(context);
 
-        if (savedVersionCode == 0 || savedVersionCode != currentVersionCode) {
+        if (savedVersionCode == 0 || savedVersionCode != currentVersionCode ||
+                !savedVersionName.equals(currentVersionName)) {
 
             //App is on initial install or updated
             saveVersionToPref(currentVersionCode, getVersionName(context));
         }
+    }
+
+    public static boolean verifyIsAppUpdated(Context context) {
+        String versionName = getVersionName(context);
+        String previousVersionName = getSavedVersionName();
+        return !previousVersionName.equals("") &&
+                previousVersionName.equals(versionName);
     }
 
     public static void checkVersion(Context context, List<Android> versions) {

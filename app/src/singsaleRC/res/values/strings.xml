@@ -6,14 +6,14 @@
     <string name="add_new_address">Add New Address</string>
     <string name="invite_friend_guide">Invite your friends to join Singsale. Once your friends have
         joined through your invitation and made their first purchase you will instantly receive a
-        $20 voucher to use towards any future purchase.
+        voucher to use towards any future purchase.
     </string>
 
     <string name="add_new_voucher">Add Voucher</string>
 
     <string name="vouchers_view_detail">Invite your friends to join Singsale. Once your friends have
     joined through your invitation and made their first purchase you will instantly receive a
-    $20 voucher to use towards any future purchase. \n\nYou can apply any vouchers
+    voucher to use towards any future purchase. \n\nYou can apply any vouchers
         currently in your account when you checkout your order. \n
     </string>
 
@@ -36,6 +36,7 @@
     <string name="register_title">Registration</string>
     <string name="login_title">Log In</string>
     <string name="last_name">Surname</string>
+    <string name="i_am_looking_for">Search</string>
 
     <!--Placeholder remarks-->
     <string name="welcome_remark_subtitle_address">You do not currently have any address.</string>
@@ -68,7 +69,7 @@
     <string name="browse">Category</string>
     <string name="shop">Shop</string>
     <string name="my_addresses">MY ADDRESSES</string>
-    <string name="select_a_sale">SELECT SALE</string>
+    <string name="select_a_sale">Select a Sale</string>
     <string name="voucher_used">MY VOUCHERS</string>
     <string name="checkout_order_label">MY ORDERS</string>
     <string name="promo_code">Promo Code</string>
@@ -108,5 +109,7 @@
     <string name="font_app_regular">fonts/opensans/OpenSans-Regular.ttf</string>
     <string name="font_app_semibold">fonts/opensans/OpenSans-Semibold.ttf</string>
     <string name="font_app_semibold_italic">fonts/opensans/OpenSans-SemiboldItalic.ttf</string>
+
+    <string name="app_package_name">sg.com.singsale</string>
 
 </resources>

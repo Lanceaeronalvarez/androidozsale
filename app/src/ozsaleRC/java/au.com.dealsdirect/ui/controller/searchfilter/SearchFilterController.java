@@ -56,6 +56,55 @@ import static au.com.dealsdirect.utils.BundleKeys.SIZE_FACET_FILTER_TYPE;
 
 public class SearchFilterController extends BaseController implements SearchFilterMvpView {
 
+    public abstract static class Parameters {
+        private Parameters() {}
+
+        public static final class FromItemsList extends Parameters {
+            private List<GetSaleItemsResponse.Facets> mFacets;
+            private List<SortingResponse> mSortingFacets;
+            private List<GetCategoryTreeResponse> mCategoryTree;
+            private List<String> mBrandList;
+            private String mCategoryKey;
+            private List<SearchChipModel> mChipsFilter;
+
+            public FromItemsList(List<GetSaleItemsResponse.Facets> facets,
+                    List<SortingResponse> sortingFacets,
+                    List<GetCategoryTreeResponse> categoryTree,
+                    List<String> brandList,
+                    String categoryKey,
+                    List<SearchChipModel> chipsFilter) {
+                mFacets = facets;
+                mSortingFacets = sortingFacets;
+                mCategoryTree = categoryTree;
+                mBrandList = brandList;
+                mCategoryKey = categoryKey;
+                mChipsFilter = chipsFilter;
+            }
+
+            public ArrayList<GetSaleItemsResponse.Facets> getFacets() {
+                return mFacets == null ? new ArrayList<>() : new ArrayList<>(mFacets);
+            }
+
+            public ArrayList<SortingResponse> getSortingFacets() {
+                return mSortingFacets == null ? new ArrayList<>() : new ArrayList<>(mSortingFacets);
+            }
+
+            public ArrayList<GetCategoryTreeResponse> getCategoryTree() {
+                return mCategoryTree == null ? new ArrayList<>() : new ArrayList<>(mCategoryTree);
+            }
+
+            public ArrayList<String> getBrandList() {
+                return mBrandList == null ? new ArrayList<>() : new ArrayList<>(mBrandList);
+            }
+
+            public String getCategoryKey() { return mCategoryKey; }
+
+            public ArrayList<SearchChipModel> getChipsFilter() {
+                return mChipsFilter == null ? new ArrayList<>() : new ArrayList<>(mChipsFilter);
+            }
+        }
+    }
+
     public static final String TAG = SearchFilterController.class.getSimpleName();
     private static final int DEFAULT_PRICE_THRESHOLD = 200;
     private static final String KEY_HAS_SAVED_INSTANCE = "SearchFilterController.KEY_HAS_SAVED_INSTANCE";
@@ -140,6 +189,24 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     public static SearchFilterController newInstance() {
         return new SearchFilterController(new BundleBuilder(new Bundle()).build());
+    }
+
+    public static SearchFilterController newInstance(Parameters parameters) {
+        SearchFilterController controller = SearchFilterController.newInstance();
+
+        if (parameters instanceof Parameters.FromItemsList) {
+            controller.mFacets = ((Parameters.FromItemsList) parameters).getFacets();
+            controller.mSortingFacets = ((Parameters.FromItemsList) parameters).getSortingFacets();
+            controller.mCategoryTree = ((Parameters.FromItemsList) parameters).getCategoryTree();
+            controller.mBrandList = ((Parameters.FromItemsList) parameters).getBrandList();
+            controller.mCategoryKey = ((Parameters.FromItemsList) parameters).getCategoryKey();
+            if (controller.mCategoryKey != null && !controller.mCategoryKey.isEmpty()) {
+                controller.mCategoryKeys.add(controller.mCategoryKey);
+            }
+            controller.mPreviousSearchChips = ((Parameters.FromItemsList) parameters).getChipsFilter();
+        }
+
+        return controller;
     }
 
     public SearchFilterController(Bundle args) {
@@ -246,11 +313,13 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         mFilterCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFilterCategoriesRecyclerView.setAdapter(mSubCategoriesAdapter);
+        mFilterCategoriesRecyclerView.setHasFixedSize(true);
 
         //      SETUP FACET ITEMS (sub of facets)
         mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(), mFacetItemsRecyclerView);
         mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
+        mFacetItemsRecyclerView.setHasFixedSize(true);
         mFacetItemsAdapter.setSearchItemsList(mSearchItemsList);
 
         mOpaqueView.setOnClickListener(v -> closeFacets());
@@ -490,9 +559,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mSeekbar.setMaxStartValue(mOrigMaxValue);
 
         mSeekbar.apply();
-        mMinPriceMovingLayout.setTranslationX(0);
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mSeekbar.getLayoutParams();
-        mMaxPriceMovingLayout.setX(mSeekbar.getWidth() - (lp.rightMargin));
+        mSeekbar.setMinThumbPosition(0);
+        mSeekbar.setMaxThumbPosition(1);
 
         mHasSeekbarReset = true;
         mSeekbar.resetMovingLayoutVisibility();
@@ -505,6 +573,24 @@ public class SearchFilterController extends BaseController implements SearchFilt
     }
 
     @Override
+    public void replaceSearchChipModels(List<SearchChipModel> chipModels) {
+        mFacetItemsAdapter.setSearchItemsList(chipModels);
+        mSearchItemsList = chipModels;
+        boolean doesSliderExist = false;
+        for (SearchChipModel chipModel: chipModels) {
+            if (chipModel.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
+                mSeekbar.setMinThumbPosition(chipModel.getMinValue() / mOrigMaxValue);
+                mSeekbar.setMaxThumbPosition(chipModel.getMaxValue() / mOrigMaxValue);
+                doesSliderExist = true;
+            }
+        }
+
+        if (!doesSliderExist) {
+            onResetPriceRange();
+        }
+    }
+
+    @Override
     public void onCategoryClicked(GetCategoryTreeResponse category) {
 
         checkParentSelection(category);
@@ -513,15 +599,12 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         if (category.isSelected()) {
             mCategoryKeys.add(category.getKey()); //add to category keys
-            if(!children.isEmpty()) { //if i have children{}
-                setChildrenSelection(category.getKey(),true);
-            }
-
         } else {
             mCategoryKeys.remove(category.getKey()); //remove to category keys
-            if(!children.isEmpty()) { //if i have children{}
-                setChildrenSelection(category.getKey(),false);
-            }
+        }
+
+        if(!children.isEmpty()) { //if i have children{}
+            setChildrenSelection(category.getKey(),false);
         }
 
         if (mHasDefaultCategoryKey && mCategoryKeys.size() == 0) {
@@ -553,16 +636,23 @@ public class SearchFilterController extends BaseController implements SearchFilt
             }
         }
 
-        if(childrenAreAllSelected){ //if all parentNode children(siblings of category) are selected, then parent must be selected.
-            parentNode.setSelected(true);
-            mCategoryKeys.add(parentNode.getKey());
-        } else { // else deselect parent
+        if(childrenAreAllSelected){
+            for(GetCategoryTreeResponse child : parentNodeChildren){
+                setChildrenSelection(child.getKey(), false);
+            }
+        } else {
             parentNode.setSelected(false);
             mCategoryKeys.remove(parentNode.getKey());
         }
 
+
         //recursion
         checkParentSelection(parentNode);
+        if (childrenAreAllSelected) {
+            for(GetCategoryTreeResponse child : parentNodeChildren){
+                setChildrenSelection(child.getKey(), false);
+            }
+        }
     }
 
     private void setChildrenSelection(String key, boolean isSelected) {

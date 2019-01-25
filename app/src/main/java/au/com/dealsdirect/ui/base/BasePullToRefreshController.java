@@ -100,12 +100,6 @@ public abstract class BasePullToRefreshController extends BaseController impleme
 
         mPtrLayout.setPtrHandler(this);
 
-        mPtrLayout.getHeader().setProgressIcon(getResources().getDrawable(R.drawable.ic_loader_logo));
-
-        mPtrLayout.getHeader().setPullProgressbar(getResources().getDrawable(R.drawable.bg_progress_bar));
-
-        mPtrLayout.getHeader().setProgressBar(ColorStateList.valueOf(getResources().getColor(R.color.progress_loader_stroke)));
-
     }
 
     @Override

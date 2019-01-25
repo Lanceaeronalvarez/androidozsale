@@ -8,8 +8,6 @@ import android.util.Log;
 
 import com.androidnetworking.error.ANError;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
@@ -41,11 +39,11 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     @Override
     public void loadShopsBanner(GetBannerRequest request, boolean getOnlyFromNetwork) {
 
-        doApiCallForResponse(getDataManager().callGetBanners(request, getOnlyFromNetwork), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callGetBanners(request, getOnlyFromNetwork), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                getMvpView().showShopBanners((GetBannerResponse) response);
+                getMvpView().showShopBanners((GetBannerResponse) response, request.getCategory());
             }
 
             @Override
@@ -68,7 +66,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                         return;
                     }
 
-                    Log.d("CategoryPresenter","success load category tree");
+                    Log.d("CategoryPresenter", "success load category tree");
 
                     if (response != null) {
 
@@ -103,18 +101,23 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     }
 
     @Override
+    public void cancelRequest() {
+        cancel();
+    }
+
+    @Override
     public boolean isAuthorized() {
         return getDataManager().isAuthorized();
     }
 
     @Override
-    public void selectBanner(String saleId, String bannerTitle, String bannerId, int position, String imageUrl, boolean isAvailable) {
+    public void selectBanner(String saleId, String bannerTitle, String bannerId, int position, String imageUrl, String endDate, boolean isAvailable) {
 
         if (!isViewAttached() || getMvpView().isChangeInProgress()) {
             return;
         }
 
-        getMvpView().onBannerClicked(saleId,bannerTitle,bannerId,position,imageUrl,isAvailable);
+        getMvpView().onBannerClicked(saleId, bannerTitle, bannerId, position, imageUrl, endDate, isAvailable);
     }
 
 }

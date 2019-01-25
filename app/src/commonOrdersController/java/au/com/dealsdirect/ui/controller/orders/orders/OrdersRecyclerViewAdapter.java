@@ -21,6 +21,9 @@ import butterknife.ButterKnife;
 
 public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static final int TITLE_VIEW_TYPE = 10;
+    public static final int DETAILS_VIEW_TYPE = 11;
+
     public ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orderList = new ArrayList<>();
     Context context;
 

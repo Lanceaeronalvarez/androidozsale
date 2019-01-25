@@ -14,7 +14,7 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPresenter<V>{
 
 //    void loadProductDetails(GetPublicItemDetailsRequest publicItemDetailsRequest, GetPublicSaleDetailsRequest publicSaleDetailsRequest);
-    void loadSaleItemDetails(String seoIdentifierId);
+    void loadSaleItemDetails(String saleId, String seoIdentifierId);
 
     void loadOurpayData(GetSaleItemDetailsResponse value);
 
@@ -27,4 +27,6 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     void callGetBasketItemsQuantity();
 
     String getPersonalisationErrorText();
+
+    void getDynamicDiscount(String skuId);
 }

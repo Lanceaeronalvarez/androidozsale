@@ -78,6 +78,39 @@ public class GetBannerResponse {
         @SerializedName("bannerType")
         @Expose
         private String bannerType;
+        @SerializedName("percentOff")
+        @Expose
+        private Integer percentOff;
+        @SerializedName("isFreeDelivery")
+        @Expose
+        private Boolean isFreeDelivery;
+        @SerializedName("percentOffText")
+        @Expose
+        private String percentOffText;
+
+        public Integer getPercentOff() {
+            return percentOff;
+        }
+
+        public void setPercentOff(Integer percentOff) {
+            this.percentOff = percentOff;
+        }
+
+        public Boolean getFreeDelivery() {
+            return isFreeDelivery;
+        }
+
+        public void setFreeDelivery(Boolean freeDelivery) {
+            isFreeDelivery = freeDelivery;
+        }
+
+        public String getPercentOffText() {
+            return percentOffText;
+        }
+
+        public void setPercentOffText(String percentOffText) {
+            this.percentOffText = percentOffText;
+        }
 
         public String getId() {
             return id;

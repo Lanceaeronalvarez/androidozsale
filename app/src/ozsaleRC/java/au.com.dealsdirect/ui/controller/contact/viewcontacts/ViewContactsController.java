@@ -160,7 +160,7 @@ public class ViewContactsController extends BaseController implements ViewContac
     @Override
     public boolean handleBack() {
         if(mContactDetailRouter != null && mContactDetailRouter.getBackstackSize() <= 1){
-            mActivity.getHomeController().resetVisibleContainer();
+            mActivity.getHomeController().goBackToHomePage();
             return true;
         }
 

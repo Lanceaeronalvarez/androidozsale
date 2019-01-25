@@ -138,6 +138,8 @@ public interface ApiHelper {
 
     Observable<List<GetCategoryTreeResponse>> callGetGetCategories();
 
+    Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String saleId, String seoIdentifierId);
+
     Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId);
 
     Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request);
@@ -147,6 +149,8 @@ public interface ApiHelper {
     Observable<GetPublicSaleItemsResponse> callGetPublicSaleItems(GetPublicSaleItemsRequest getPublicSaleItemsRequest);
 
     Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest);
+
+    Observable<String> callDynamicDiscount(String skuId);
 
     Observable<AddToCartResponse.Response> callAddItemToCart(AddToCartRequest requestValues);
 

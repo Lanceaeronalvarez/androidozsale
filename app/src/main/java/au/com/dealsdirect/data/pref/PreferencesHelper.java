@@ -26,6 +26,10 @@ public interface PreferencesHelper {
 
     String getLanguageId();
 
+    String getLegacyCountryId();
+
+    String getLegacyLanguageId();
+
     void setLanguages(String languagesJsonString);
 
     String getLanguages();
@@ -213,4 +217,9 @@ public interface PreferencesHelper {
     void setHasViewedCart(boolean hasViewedCart);
 
     boolean hasViewedCart();
+
+    void setUserHasRateApp(boolean userHasRateApp);
+
+    boolean userHasRateApp();
+
 }

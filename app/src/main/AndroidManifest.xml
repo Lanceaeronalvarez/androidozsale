@@ -110,12 +110,15 @@
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <!-- Receives the registration id. -->
+                <action android:name="com.google.android.c2dm.intent.REGISTER" />
 
                 <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".service.fcm.GcmIntentService" />
+        <service android:name=".service.fcm.GcmIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <!-- [END gcm_service] -->
 
         <!-- [START facebook] -->

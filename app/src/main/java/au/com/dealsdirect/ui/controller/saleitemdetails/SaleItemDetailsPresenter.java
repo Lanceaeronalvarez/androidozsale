@@ -21,9 +21,11 @@ import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppEventHelper;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CurrencyUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -39,9 +41,13 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
-    public void loadSaleItemDetails(String seoIdentifierId) {
+    public void loadSaleItemDetails(String saleId, String seoIdentifierId) {
 
-        doApiCallForResponse(getDataManager().callGetSaleItemDetails(seoIdentifierId), new AppApiCallback() {
+        Observable<GetSaleItemDetailsResponse> callGetSaleItemDetailObservable = saleId == null || saleId.isEmpty() ?
+                getDataManager().callGetSaleItemDetails(seoIdentifierId) :
+                getDataManager().callGetSaleItemDetails(saleId, seoIdentifierId);
+
+        doApiCallForResponse(callGetSaleItemDetailObservable, new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
@@ -202,5 +208,27 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     @Override
     public String getPersonalisationErrorText() {
         return getDataManager().getPersonalisationTemplateTexts();
+    }
+
+    @Override
+    public void getDynamicDiscount(String skuId) {
+        doApiCallForResponse(getDataManager().callDynamicDiscount(skuId), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                if(o != null) getMvpView().setDynamicDiscount((String) o);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                AppLogger.d(throwable.getMessage());
+                getMvpView().setDynamicDiscount(null);
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
     }
 }

@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
                 android:paddingBottom="@dimen/margin_small"
-                app:contentScrim="?attr/colorPrimary"
+                app:contentScrim="@color/toolbar_fade_in_color"
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <au.com.dealsdirect.ui.custom.SearchEditText

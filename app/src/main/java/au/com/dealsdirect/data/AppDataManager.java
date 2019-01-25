@@ -190,6 +190,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String saleId, String seoIdentifierId) {
+        return mApiHelper.callGetSaleItemDetails(saleId, seoIdentifierId);
+
+    }
+
+    @Override
     public Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request) {
         return mApiHelper.callGetOurpayData(request);
     }
@@ -204,6 +210,11 @@ public class AppDataManager implements DataManager {
     public Observable<GetSaleItemsResponse> callGetSaleItemsRequest(GetSaleItemsRequest getSaleItemsRequest) {
         return mApiHelper.callGetSaleItemsRequest(getSaleItemsRequest);
 
+    }
+
+    @Override
+    public Observable<String> callDynamicDiscount(String skuId) {
+        return mApiHelper.callDynamicDiscount(skuId);
     }
 
     @Override
@@ -661,6 +672,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public String getLegacyCountryId() {
+        return mPreferencesHelper.getLegacyCountryId();
+    }
+
+    @Override
+    public String getLegacyLanguageId() {
+        return mPreferencesHelper.getLegacyLanguageId();
+    }
+
+    @Override
     public void setLanguages(String languagesString) {
         mPreferencesHelper.setLanguages(languagesString);
     }
@@ -1115,6 +1136,16 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean hasViewedCart() {
         return mPreferencesHelper.hasViewedCart();
+    }
+
+    @Override
+    public void setUserHasRateApp(boolean userHasRateApp) {
+        mPreferencesHelper.setUserHasRateApp(userHasRateApp);
+    }
+
+    @Override
+    public boolean userHasRateApp() {
+        return mPreferencesHelper.userHasRateApp();
     }
 
     @Override

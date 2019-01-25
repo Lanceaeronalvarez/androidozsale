@@ -22,7 +22,7 @@ public class PaginateUtils {
 
     public static final int DEFAULT_COUNT = 48;
 
-    public static final int LOADING_TRIGGER_THRESHOLD = 50;
+    public static final int LOADING_TRIGGER_THRESHOLD = 100;
 
     private static final boolean ADD_LOADING_LIST_ITEM = true;
 

@@ -16,7 +16,7 @@
 
 package au.com.dealsdirect.service.fcm;
 
-import android.app.IntentService;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -24,13 +24,13 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import javax.inject.Inject;
 
 import au.com.dealsdirect.DDApplication;
 import au.com.dealsdirect.R;
@@ -46,18 +46,20 @@ import au.com.dealsdirect.utils.AppLogger;
  * service is finished, it calls {@code completeWakefulIntent()} to release the
  * wake lock.
  */
-public class GcmIntentService extends IntentService {
+public class GcmIntentService extends JobIntentService {
 
     DataManager mDataManager;
 
     public GcmIntentService() {
-        super("GcmIntentService");
+        super();
     }
 
     public static final String TAG = "GCM";
+    private final String GENERAL_CHANNEL_ID = "GENERAL_CHANNEL_01";
+    private static final int JOB_ID = 1000;
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(Intent intent) {
 
         mDataManager = ((DDApplication) getApplication()).getComponent().getDataManager();
 
@@ -66,38 +68,30 @@ public class GcmIntentService extends IntentService {
         }
 
         Bundle extras = intent.getExtras();
+        String message = "";
+        if (extras != null && extras.get("alert") != null) {
+            message = (String) extras.get("alert");
+        }
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
-        if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
+        if (extras != null && !extras.isEmpty()) {  // has effect of unparcelling Bundle
             /*
              * Filter messages based on message type. Since it is likely that GCM will be
              * extended in the future with new message types, just ignore any message types you're
              * not interested in, or that you don't recognize.
              */
             if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                sendNotification("Send error: " + extras.toString());
+                sendNotification("Send error: " + message);
 
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-                sendNotification("Deleted messages on server: " + extras.toString());
+                sendNotification("Deleted messages on server: " + message);
 
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                // This loop represents the service doing some work.
-                for (int i = 0; i < 5; i++) {
-                    AppLogger.d(TAG, "Working... " + (i + 1)
-                            + "/5 @ " + SystemClock.elapsedRealtime());
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                AppLogger.d(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
-                sendNotification(extras.getString("alert"));
-                AppLogger.d(TAG, "Received: " + extras.toString());
+                sendNotification(message);
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -107,7 +101,7 @@ public class GcmIntentService extends IntentService {
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
-    private void sendNotification(String msg) {
+    public void sendNotification(String msg) {
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(GNotification.FCM_INTENT_LAUNCHED, true);
@@ -119,7 +113,7 @@ public class GcmIntentService extends IntentService {
         String appName = getResources().getString(R.string.app_name);
 
         Uri uriSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, GENERAL_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_loader_logo)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(appName)
@@ -129,10 +123,21 @@ public class GcmIntentService extends IntentService {
                 .setSound(notificationSoundURI)
                 .setContentIntent(resultIntent);
 
-
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
+        NotificationChannel generalChannel;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            generalChannel = new NotificationChannel(GENERAL_CHANNEL_ID, "General", NotificationManager.IMPORTANCE_HIGH);
+
+            notificationManager.createNotificationChannel(generalChannel);
+        }
+
         notificationManager.notify(0, notificationBuilder.build());
     }
+
+    public static void enqueueWork(Context context, Intent intent) {
+        enqueueWork(context, GcmIntentService.class, JOB_ID, intent);
+    }
+
 }

@@ -29,19 +29,21 @@ public class BannerFiltersPresenter<V extends BannerFiltersMvpView> extends Base
 
     @Override
     public void callGetCategoryTree() {
-        if (!getMvpView().isNetworkConnected()) {
-            getMvpView().showNoNetworkLayout();
-        } else {
-            getMvpView().hideNoNetworklayout();
-        }
-
-        doApiCallForResponse(getDataManager()
-            .callGetGetCategories(), new AppApiCallback() {
-        @Override
-        public void onSuccess(List<?> response) {
-            super.onSuccess(response);
-            getMvpView().showCategories((List<GetCategoryTreeResponse>) response);
+        if(isViewAttached()) {
+            if (!getMvpView().isNetworkConnected()) {
+                getMvpView().showNoNetworkLayout();
+            } else {
+                getMvpView().hideNoNetworklayout();
             }
-        });
+
+            doApiCallForResponse(getDataManager()
+                    .callGetGetCategories(), new AppApiCallback() {
+                @Override
+                public void onSuccess(List<?> response) {
+                    super.onSuccess(response);
+                    getMvpView().showCategories((List<GetCategoryTreeResponse>) response);
+                }
+            });
+        }
     }
 }

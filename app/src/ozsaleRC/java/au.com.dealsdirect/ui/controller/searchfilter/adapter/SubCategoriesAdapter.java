@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,7 @@ import butterknife.ButterKnife;
 
 public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdapter.SubCategoriesViewHolder> {
 
-    private List<GetCategoryTreeResponse> mData = new ArrayList<>();
+    private List<TransformedNode> mData;
     private SubCategoriesAdapter mSubCategoryItemsAdapter;
     private int mMarginRight;
     static GetCategoryTreeResponse mPreviousCategory;
@@ -46,54 +45,39 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
         mContext = context;
         mChosenCategoryKey = chosenCategorykey;
-        mData = data;
         mMarginRight = marginRight;
         mViewPool = new RecyclerView.RecycledViewPool();
+        replaceData(data);
     }
 
     @Override
     public SubCategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_filter_subcategory, parent, false);
         SubCategoriesViewHolder viewHolder = new SubCategoriesViewHolder(view);
-        viewHolder.subCategoryItemsRecyclerView.setRecycledViewPool(mViewPool);
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) viewHolder.subCategoryTitle.getLayoutParams();
-        lp.setMargins(mMarginRight, 0, 0, 0);
-        viewHolder.subCategoryTitle.setLayoutParams(lp);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(SubCategoriesViewHolder holder, int position) {
 
-        GetCategoryTreeResponse categoryItem = mData.get(position);
+        TransformedNode node = mData.get(position);
 
-        if (!mData.get(position).getName().isEmpty()) {
-            holder.subCategoryTitle.setText(mData.get(position).getName());
+        GetCategoryTreeResponse categoryItem = node.getObject();
 
-            boolean isCategorySelected = categoryItem != null && (categoryItem.isSelected() || categoryItem.getKey() == mChosenCategoryKey);
+        if (!categoryItem.getName().isEmpty()) {
+            holder.subCategoryTitle.setText(categoryItem.getName());
+
+            boolean isCategorySelected = (categoryItem.isSelected() || categoryItem.getKey().equals(mChosenCategoryKey));
             if (mSelectedCategoryKeys != null) {
                 isCategorySelected = mSelectedCategoryKeys.contains(categoryItem.getKey());
             }
             holder.subCategoryCheck.setVisibility(isCategorySelected ? View.VISIBLE : View.GONE);
             holder.itemView.setSelected(isCategorySelected);
 
-            List<GetCategoryTreeResponse> subCategoryItems = categoryItem.getChildren();
-
-            if (subCategoryItems != null && !subCategoryItems.isEmpty()) {
-                int marginRight = mMarginRight + (int) mContext.getResources().getDimension(R.dimen.margin_large);
-                mSubCategoryItemsAdapter = new SubCategoriesAdapter(mContext, mChosenCategoryKey, subCategoryItems, marginRight);
-                mSubCategoryItemsAdapter.setOnClickListener(mOnClickListener);
-                mSubCategoryItemsAdapter.setSelectedCategories(mSelectedCategoryKeys);
-                holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
-                holder.subCategoryItemsRecyclerView.swapAdapter(mSubCategoryItemsAdapter, true);
-
-                holder.itemView.setActivated(false);
-                holder.subCategoryItemsRecyclerView.setVisibility(View.VISIBLE);
-            } else {
-                holder.subCategoryItemsRecyclerView.setVisibility(View.GONE);
-                holder.subCategoryItemsRecyclerView.setLayoutManager(null);
-                holder.subCategoryItemsRecyclerView.swapAdapter(null, true);
-            }
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) holder.subCategoryTitle.getLayoutParams();
+            int marginRight = mMarginRight * node.getLevel();
+            lp.setMargins(marginRight, 0, 0, 0);
+            holder.subCategoryTitle.setLayoutParams(lp);
 
             holder.itemView.setOnClickListener(view -> {
                 if (mOnClickListener != null) {
@@ -115,16 +99,13 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     }
 
     public void replaceData(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
-        mData = new ArrayList<>(getCategoryTreeResponses);
+        mData = transformData(getCategoryTreeResponses);
         notifyDataSetChanged();
     }
 
     static class SubCategoriesViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.viewholder_subcategory_title)
         TextView subCategoryTitle;
-
-        @BindView(R.id.viewholder_subcategory_items_recyclerview)
-        RecyclerView subCategoryItemsRecyclerView;
 
         @BindView(R.id.viewholder_subcategory_check)
         ImageView subCategoryCheck;
@@ -146,5 +127,43 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     public interface OnClickCategoryListener {
         void onClick(String categoryItemKey);
+    }
+
+    private class TransformedNode {
+        private GetCategoryTreeResponse mObject;
+        private int mLevel;
+
+        TransformedNode(GetCategoryTreeResponse object, int level) {
+            mObject = object;
+            mLevel = level;
+        }
+
+        int getLevel() {
+            return mLevel;
+        }
+
+        GetCategoryTreeResponse getObject() {
+            return mObject;
+        }
+    }
+
+    private List<TransformedNode> transformData(List<GetCategoryTreeResponse> data) {
+        ArrayList<TransformedNode> list = new ArrayList<>();
+        for (GetCategoryTreeResponse node: data) {
+            node.traverseTree(new GetCategoryTreeResponse.TreeTraversalBlock() {
+                @Override
+                public boolean execute(GetCategoryTreeResponse parent, Object option) {
+                    int level = ((Integer) option).intValue();
+                    list.add(new TransformedNode(parent, Integer.valueOf(level)));
+                    return true;
+                }
+
+                @Override
+                public Object transformOption(GetCategoryTreeResponse parent, Object option) {
+                    return Integer.valueOf(((Integer) option).intValue() + 1);
+                }
+            }, Integer.valueOf(0));
+        }
+        return list;
     }
 }

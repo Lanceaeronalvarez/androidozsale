@@ -42,7 +42,6 @@ import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.sample.SampleController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
-import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
 /**
@@ -164,7 +163,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
 
         if (!mCheckoutRouter.hasRootController()) {
-            mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
+            mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
                     .tag(getActivity().getResources().getString(R.string.checkout_controller)));
             ((MainActivity) getActivity()).setCheckoutRouter(mCheckoutRouter);
         }
@@ -299,7 +298,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         mActivity.setAccountsRouter(mAccountsRouter);
 
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
-        mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
+        mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
                 .tag(getActivity().getResources().getString(R.string.checkout_controller)));
     }
 
@@ -317,7 +316,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void resetCheckoutRouter() {
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
-        mCheckoutRouter.setRoot(RouterTransaction.with(CheckoutController.newInstance())
+        mCheckoutRouter.setRoot(RouterTransaction.with(new CheckoutController())
                 .tag(getActivity().getResources().getString(R.string.checkout_controller)));
     }
 

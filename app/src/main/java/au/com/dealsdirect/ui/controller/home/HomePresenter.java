@@ -55,4 +55,14 @@ public class HomePresenter<V extends HomeMvpView> extends BasePresenter<V> imple
     public boolean isAuthorized() {
         return getDataManager().isAuthorized();
     }
+
+    @Override
+    public boolean isInitialLaunch() {
+        return getDataManager().getIsInitialLaunch();
+    }
+
+    @Override
+    public void setInitialLaunchFalse() {
+        getDataManager().setIsInitialLaunch(false);
+    }
 }

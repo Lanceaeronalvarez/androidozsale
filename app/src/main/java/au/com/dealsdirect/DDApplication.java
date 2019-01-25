@@ -71,9 +71,6 @@ public class DDApplication extends Application {
 
         AndroidNetworking.initialize(this, customClient);
 
-        //Initialize version introspection
-        IntrospectionUtils.verifyVersion(this);
-
         initFonts();
     }
 

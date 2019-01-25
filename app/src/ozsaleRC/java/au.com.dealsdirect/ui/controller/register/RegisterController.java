@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.braintreepayments.api.models.BraintreeRequestCodes;
@@ -24,18 +24,17 @@ import com.google.gson.Gson;
 import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
-import au.com.dealsdirect.data.pref.PreferencesHelper;
-import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
-import au.com.dealsdirect.ui.main.MainPresenter;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -43,7 +42,6 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.Optional;
 
 import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.FACEBOOK;
 import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.NO_ACTION;
@@ -133,6 +131,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     private String mRegisterMethod = NO_ACTION;
     private boolean isRegisterSuccess = false;
+    private boolean hasClearedBackstack = false;
 
     public static RegisterController newInstance() {
 
@@ -269,9 +268,19 @@ public class RegisterController extends VisaCheckoutController implements Regist
         super.onDestroyView(view);
     }
 
+    @Override
+    public boolean handleBack() {
+        if (hasClearedBackstack) {
+            mActivity.getHomeController().goToPreviousContainerFromLogin(mActivity.isAuthorized());
+        }
+
+        return super.handleBack();
+    }
+
     @OnClick(R.id.partial_toolbar_right_view)
     void onCloseIconClick() {
-        getRouter().popToRoot(new VerticalChangeHandler());
+        clearBackstack();
+        mActivity.onBackPressed();
     }
 
     @OnClick(R.id.partial_toolbar_left_view)
@@ -289,7 +298,6 @@ public class RegisterController extends VisaCheckoutController implements Regist
     void onLoginClick() {
         mActivity.onBackPressed();
     }
-
 
     @OnClick(R.id.controller_login_fb_layout)
     void onFacebookLoginClick() {
@@ -316,9 +324,10 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public void showLoginSuccessful(String loginTicket, boolean isFacebookLogin) {
+        clearBackstack();
         isRegisterSuccess = true;
         mPresenter.setIsNewUser(true);
-        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
+        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.BACK, AppConstants.AUTH_FLAG.REGISTER);
     }
 
     @Override
@@ -340,6 +349,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public void showLoginVisaSuccess(String loginTicket) {
+        clearBackstack();
         isRegisterSuccess = true;
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
@@ -402,6 +412,31 @@ public class RegisterController extends VisaCheckoutController implements Regist
                     mRegisterPasswordField.getText().toString(),
                     tncAccepted,
                     emailsAccepted);
+        }
+    }
+
+    private void clearBackstack() {
+        if (!hasClearedBackstack) {
+            hasClearedBackstack = true;
+            ArrayList<RouterTransaction> backStack = new ArrayList<>(getRouter().getBackstack());
+            int index = -1;
+            for (int i = 0; i < backStack.size(); i++) {
+                Controller controller = backStack.get(i).controller();
+                if (controller == this) {
+                    index = i - 1;
+                    break;
+                }
+            }
+            if (index >= 0) {
+                // Removes previous controller
+                backStack.remove(index);
+                // Removes self
+                backStack.remove(index);
+                // Adds self with different popChangeHandler
+                backStack.add(RouterTransaction.with(this)
+                        .popChangeHandler(new VerticalChangeHandler()));
+                getRouter().setBackstack(backStack, null);
+            }
         }
     }
 }

@@ -51,6 +51,35 @@ public class GetSaleItemsResponse implements Serializable {
         String seoIdentifier;
         boolean isSoldOut;
 
+        @SerializedName("salePercentOff")
+        @Expose
+        private Integer salePercentOff;
+        @SerializedName("isFreeDelivery")
+        @Expose
+        private Boolean isFreeDelivery;
+        @SerializedName("salePrice")
+        @Expose
+        private SalePrice salePrice;
+        @SerializedName("salePercentOffText")
+        @Expose
+        private String salePercentOffText;
+
+        public String getSalePercentOffText() {
+            return salePercentOffText;
+        }
+
+        public SalePrice getSalePrice() {
+            return salePrice;
+        }
+
+        public Integer getSalePercentOff() {
+            return salePercentOff;
+        }
+
+        public Boolean getFreeDelivery() {
+            return isFreeDelivery;
+        }
+
         public boolean isSoldOut() {
             return isSoldOut;
         }
@@ -141,7 +170,8 @@ public class GetSaleItemsResponse implements Serializable {
     }
 
     public class Price {
-        public String currency;
+        private String currency;
+        private double value;
 
         public double getValue() {
             return value;
@@ -150,9 +180,9 @@ public class GetSaleItemsResponse implements Serializable {
         public String getCurrency() {
             return currency;
         }
-
-        public double value;
     }
+
+    public class SalePrice extends Price { }
 
     public class Sku {
         @SerializedName("id")

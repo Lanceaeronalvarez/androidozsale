@@ -481,6 +481,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
                 //reset routers with unique user info
                 mActivity.getMainController().getHomeController().resetRouters();
+                mActivity.getHomeRouter().popToRoot();
                 mActivity.setShopsAsVisibleContainer();
 
                 mActivity.callPublicSettings();
@@ -531,7 +532,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public boolean handleBack() {
         if (mAccountDetailRouter != null && mAccountDetailRouter.getBackstackSize() == 1) {
-            mActivity.getHomeController().resetVisibleContainer();
+            mActivity.getHomeController().goBackToHomePage();
             return true;
         }
 

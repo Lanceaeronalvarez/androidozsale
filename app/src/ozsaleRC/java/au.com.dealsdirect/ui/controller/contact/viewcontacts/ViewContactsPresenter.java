@@ -35,6 +35,8 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
 
     @Override
     public void selectContact(GetContactsResponse.ContactList contactList) {
-        getMvpView().onContactClicked(contactList);
+        if (isViewAttached()) {
+            getMvpView().onContactClicked(contactList);
+        }
     }
 }

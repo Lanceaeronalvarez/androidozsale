@@ -70,11 +70,11 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsControl
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
+import au.com.dealsdirect.ui.controller.home.HomeMvpView;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
@@ -94,12 +94,6 @@ import butterknife.ButterKnife;
 
 import static au.com.dealsdirect.ui.controller.main.MainController.BANNER_FILTER_INDEX;
 import static au.com.dealsdirect.ui.controller.main.MainController.SHOP_INDEX;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMDETAILS_KEY_SKU_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_BANNER_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_SALE_ID;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_TITLE;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -184,8 +178,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         splashShownCallback();
         onNewIntent(getIntent());
 
-        setUp();
+        //Initialize version introspection
+        if (!IntrospectionUtils.verifyIsAppUpdated(getApplicationContext())) {
+            mPresenter.setUserRateCurrentVersion(false);
+            IntrospectionUtils.verifyVersion(getApplicationContext());
+        }
 
+        setUp();
     }
 
     /**
@@ -271,6 +270,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             switch (getMainController().getHomeViewPager().getCurrentItem()) {
                 case BANNER_FILTER_INDEX:
                     setRootViewpagerItem(SHOP_INDEX);
+                    getHomeController().setViewpagerScreen(SHOP_INDEX);
                     resetShopController(currentRouter);
                     break;
                 case SHOP_INDEX:
@@ -388,23 +388,32 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         } else {
             hideLoading();
-            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getBrainTreeFieldErrorMessage(((ErrorWithResponse) error).getFieldErrors().get(0)));
+            CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getBrainTreeErrorMessage(((ErrorWithResponse) error)));
         }
     }
 
-    private String getBrainTreeFieldErrorMessage(BraintreeError error) {
-        BraintreeError err = error;
-        List<BraintreeError> fieldErrors = err.getFieldErrors();
-        while (fieldErrors != null && !fieldErrors.isEmpty()) {
-            if (fieldErrors.get(0) != null) {
-                err = fieldErrors.get(0);
-                fieldErrors = err.getFieldErrors();
-            } else {
-                break;
+    private String getBrainTreeErrorMessage(ErrorWithResponse error) {
+        String errMessage = getString(R.string.an_error_has_occurred);
+
+        if (!(error == null)) {
+            if (error.getFieldErrors() != null && !error.getFieldErrors().isEmpty()) {
+                BraintreeError err = error.getFieldErrors().get(0);
+                List<BraintreeError> fieldErrors = err.getFieldErrors();
+                while (fieldErrors != null && !fieldErrors.isEmpty()) {
+                    if (fieldErrors.get(0) != null) {
+                        err = fieldErrors.get(0);
+                        fieldErrors = err.getFieldErrors();
+                    } else {
+                        break;
+                    }
+                }
+                errMessage = err.getMessage();
+            } else if (!error.getMessage().isEmpty()) {
+                errMessage = error.getMessage();
             }
         }
-        boolean hasMessage = !(err.getMessage() == null || err.getMessage().isEmpty());
-        return  hasMessage ? err.getMessage() : getString(R.string.an_error_has_occurred);
+
+        return errMessage;
     }
 
     @Override
@@ -554,7 +563,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
 
-            if (currentController instanceof  CheckoutHostController || currentController instanceof AddPaymentController) {
+            if (currentController instanceof CheckoutHostController || currentController instanceof AddPaymentController) {
                 Router router = currentController instanceof CheckoutHostController ? ((CheckoutHostController) currentController).getDisplayRouter() : getCurrentRouter();
                 if (router.getBackstackSize() > 2) {
                     router.popToRoot();
@@ -796,7 +805,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void splashShownCallback() {
         ScreenUtils.setStatusBarColor(this, R.color.status_bar);
 
-        if (Settings.getIsMultiCountry() && mPresenter.defaultCountryId().isEmpty()) {
+        String defaultCountryId = !mPresenter.defaultCountryId().isEmpty() ? mPresenter.defaultCountryId() : mPresenter.legacyCountryId();
+
+        if (Settings.getIsMultiCountry() && defaultCountryId.isEmpty()) {
             if (!mIsShowingStrictConsentUI && !mAppHasSavedInstance) {
                 mRouter.setRoot(RouterTransaction.with(new CountryController(true)));
             }
@@ -804,15 +815,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
 
         Settings.Country country = Settings.getIsMultiCountry() ?
-                Settings.getCountryWithId(mPresenter.defaultCountryId()) :
-                Settings.getDefaultCountry() ;
+                Settings.getCountryWithId(defaultCountryId) :
+                Settings.getDefaultCountry();
 
         mPresenter.setCountry(country);
         setAppCountries(country);
         setUpAfterCountrySet();
     }
 
-    public void setUpAfterCountrySet(){
+    public void setUpAfterCountrySet() {
 
         // Call API settings
         mPresenter.callGetTemplateTexts();
@@ -843,7 +854,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
     }
 
-    public void callPublicSettings(){
+    public void callPublicSettings() {
         //If not logged in, call GetPublicAppSettings
         mPresenter.callGetPublicPaymentToken();
         mPresenter.callGetPublicAppSettings();
@@ -851,8 +862,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void setShopsAsVisibleContainer() {
-        getHomeController().setVisibleContainer(0);
-        getHomeController().setShopRouterViewPagerDraggable();
+        getHomeController().goBackToHomePage();
     }
 
     private void setPaymentSuccessOurpay(CreatePaymentTransaction.ResponseValue responseValue) {
@@ -910,7 +920,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public Controller getCurrentController(Router router) {
         try {
-            return getMainController().getHomeController().getCurrentControllerOnRouter(router);
+            Controller controller = getMainController().getCurrentViewPagerController();
+            if(controller instanceof HomeMvpView) {
+                return ((HomeController) controller).getCurrentControllerOnRouter(router);
+            } else {
+                return controller;
+            }
         } catch (NullPointerException e) {
             return getMainController();
         }
@@ -998,6 +1013,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         @Override
         public void onReceive(Context context, Intent intent) {
             updateSnackbar(isNetworkConnected());
+            if(isNetworkConnected()) {
+                ((BaseController) getCurrentController(getCurrentRouter())).refreshContents();
+            }
         }
     };
 
@@ -1050,34 +1068,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
-
-        Bundle args = new BundleBuilder(new Bundle())
-                .putString(SALEITEMS_TITLE, bannerTitle)
-                .putString(SALEITEMS_SALE_ID, saleId)
-                .putString(SALEITEMS_BANNER_ID, bannerId)
-                .build();
-
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-
-            if (!mPresenter.isAuthorized()) {
-
-                // Invoke login if no auth or not an open app
-                if (mHomeRouter != null)
-                    mHomeRouter.pushController(RouterTransaction.with(
-                            new SaleItemsController(args))
-                            .tag(this.getString(R.string.sale_items_controller_tag))
-                            .pushChangeHandler(new HorizontalChangeHandler())
-                            .popChangeHandler(new HorizontalChangeHandler()));
-            } else {
-
-                // Check if sale is available
-                mHomeRouter.pushController(RouterTransaction.with(
-                        new SaleItemsController(args))
-                        .tag(this.getString(R.string.sale_items_controller_tag))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
-            }
+            mMainController.getHomeController().deepLinkSaleItems(bannerTitle, saleId, bannerId);
         }, mDeepLinkLoadDelay);
 
     }
@@ -1101,11 +1094,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            Bundle bundle = new Bundle();
-            bundle.putString(SALEITEMDETAILS_KEY_SEO_IDENTIFIER_ID, seoIdentifierId);
-            bundle.putString(SALEITEMDETAILS_KEY_SKU_ID, skuId);
-            bundle.putBoolean(SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE, false);
-
             setDraggableViewPager(false);
             mMainController.getHomeController().deepLinkSaleItemDetails(seoIdentifierId, skuId, false);
             deepLinkSuceeded();

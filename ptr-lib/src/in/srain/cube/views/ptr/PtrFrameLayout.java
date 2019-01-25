@@ -898,7 +898,6 @@ public class PtrFrameLayout extends ViewGroup {
             header.setLayoutParams(lp);
         }
         mHeaderView = header;
-        addView(header);
     }
 
     @Override

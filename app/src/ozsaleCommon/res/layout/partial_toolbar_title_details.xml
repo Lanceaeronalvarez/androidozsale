@@ -74,6 +74,7 @@
                 android:singleLine="true"
                 android:textColor="@color/toolbar_text_dark"
                 android:textSize="@dimen/text_size_subtitle"
+                android:layout_marginBottom="@dimen/margin_tiny"
                 tools:text="Bedroom" />
 
             <TextView
@@ -84,9 +85,46 @@
                 android:gravity="center|top"
                 android:singleLine="true"
                 android:ellipsize="middle"
+                android:visibility="gone"
                 android:textColor="@color/toolbar_text_medium"
                 android:textSize="@dimen/text_size_caption2"
                 tools:text="Home • Furniture" />
+
+            <LinearLayout
+                android:id="@+id/partial_toolbar_details_remaining_time_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"
+                android:orientation="horizontal">
+            <TextView
+                android:id="@+id/partial_toolbar_details_end_time_text"
+                fontPath="@string/font_open_sans_semi_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|top"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                android:layout_marginRight="@dimen/margin_extra_small"
+                android:textColor="@color/toolbar_text_medium_dark"
+                android:textSize="@dimen/text_size_caption2"
+                android:text="@string/timer_label" />
+
+            <TextView
+                android:id="@+id/partial_toolbar_details_remaining_time_value"
+                fontPath="@string/font_open_sans_semi_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_tiny"
+                android:gravity="center"
+                android:singleLine="true"
+                android:drawablePadding="@dimen/margin_tiny"
+                android:drawableLeft="@drawable/ic_chronometer_red"
+                android:ellipsize="middle"
+                android:textColor="@color/ourpay_red"
+                android:textSize="@dimen/text_size_caption2"
+                tools:text="23:12:12"/>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 

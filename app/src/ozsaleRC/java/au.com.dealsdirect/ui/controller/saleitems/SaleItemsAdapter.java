@@ -25,7 +25,6 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -64,6 +63,15 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
         @BindView(R.id.vh_sale_item_frame)
         FrameLayout layout;
+
+        @BindView(R.id.vh_sale_item_free_delivery)
+        ImageView freeDelivery;
+
+        @BindView(R.id.vh_sale_item_discount)
+        TextView discount;
+
+        @BindView(R.id.vh_sale_item_sale_price)
+        TextView salePrice;
 
         ViewHolder(View view, Pair<Integer, Integer> pair) {
             super(view);
@@ -137,6 +145,15 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         holder.price.setText(saleItemPrice);
         holder.oldPrice.setText(saleItemOldPrice);
         holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.freeDelivery.setVisibility(mData.get(position).getFreeDelivery() ? View.VISIBLE : View.GONE);
+        int discountValue = mData.get(position).getSalePercentOff().intValue();
+        double salePriceValue = mData.get(position).getSalePrice() != null ?
+                mData.get(position).getSalePrice().getValue() : 0;
+        holder.discount.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
+        holder.salePrice.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
+        holder.discount.setText(mData.get(position).getSalePercentOffText());
+        holder.salePrice.setText(PriceUtils.getRpStringValue(salePriceValue));
+
 
         RxView.clicks(holder.itemView)
                 .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
@@ -145,9 +162,10 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                         position,
                         mData.get(position).getSeoIdentifier(),
                         url,
-                        mData.get(position).getSkus().isEmpty() ? "" :
+                        mData.get(position).getSkus() == null || mData.get(position).getSkus().isEmpty() ? "" :
                                 mData.get(position).getSkus().get(0).getId(),
-                        mSaleId));
+                        mSaleId,
+                        mData.get(position).getFreeDelivery()));
 
     }
 

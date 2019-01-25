@@ -13,4 +13,8 @@ public interface HomeMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
     boolean isAuthorized();
 
+    boolean isInitialLaunch();
+
+    void setInitialLaunchFalse();
+
 }

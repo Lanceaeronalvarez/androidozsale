@@ -69,7 +69,7 @@
     </style>
 
     <style name="DDButtonPayCart" parent="DDButtonStyle">
-        <item name="android:background">@drawable/bg_button_rounded</item>
+        <item name="android:background">@drawable/bg_button_pay</item>
     </style>
 
     <style name="DDButtonAddCart" parent="DDButtonStyle">

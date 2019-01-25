@@ -47,7 +47,7 @@ public final class ApiEndPoint {
             case shop: microServiceUrl = "api/shop/shop/v1/accounts/";break;
             case sale: microServiceUrl = "api/sale/sale/v3/accounts/";break;
             case product: microServiceUrl = "api/shop/product/v2/accounts/";break;
-            case productDetails: microServiceUrl = "api/shop/product/v1/accounts/";break;
+            case productDetails: microServiceUrl = "api/shop/product/v2/accounts/";break;
             case setting: microServiceUrl = "api/shop/settings/v1/";break;
             case eventing: microServiceUrl = "api/shop/eventing/v1/";break;
             case legacy: microServiceUrl = BuildConfig.IS_TEST ? "Public/"+ Settings.getSelectedCountry().apiVersion +"/"
@@ -77,7 +77,15 @@ public final class ApiEndPoint {
     }
 
     public static String getProductDetails(){
+        return getFormattedUrl(ApiService.productDetails,ACCOUNT_ID_DELIMETER + "/sales/{sale_id}/products/{seo_identifier}");
+    }
+
+    public static String getProductDetailsFromCategories(){
         return getFormattedUrl(ApiService.productDetails,ACCOUNT_ID_DELIMETER + "/products/{seo_identifier}");
+    }
+
+    public static String getProductDetailDynamicDiscount() {
+        return getFormattedUrl(ApiService.productDetails, ACCOUNT_ID_DELIMETER + "/price/label");
     }
 
     public static String getOurpayData(){

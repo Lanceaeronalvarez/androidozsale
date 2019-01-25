@@ -1,8 +1,10 @@
 package au.com.dealsdirect.ui.controller.main;
 
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -159,6 +161,21 @@ public class MainController extends BaseController implements MainMvpView {
         mHomeViewPager.setCurrentItem(SHOP_INDEX);
         mHomeViewPager.setMyScroller();
 
+        mHomeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position== BANNER_FILTER_INDEX) {
+                    mBannerFiltersController.refreshContents();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) { }
+        });
+
         mHomeViewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -265,6 +282,9 @@ public class MainController extends BaseController implements MainMvpView {
 
     public void goToPage(int position) {
         mHomeViewPager.setCurrentItem(position);
+        if(position == BANNER_FILTER_INDEX) {
+            mBannerFiltersController.refreshContents();
+        }
     }
 
     public AHBottomNavigation getBottomNav() {
@@ -289,5 +309,13 @@ public class MainController extends BaseController implements MainMvpView {
 
     public CheckoutHostController getCheckoutHostController() {
         return mCheckoutHostController;
+    }
+
+    public Controller getCurrentViewPagerController() {
+        if(getHomeViewPager().getCurrentItem() == SHOP_INDEX) {
+            return mHomeController;
+        } else {
+            return mBannerFiltersController;
+        }
     }
 }

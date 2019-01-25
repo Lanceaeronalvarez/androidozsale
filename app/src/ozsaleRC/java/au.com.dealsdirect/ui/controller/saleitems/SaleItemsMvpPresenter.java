@@ -13,7 +13,7 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest);
 
-    void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId);
+    void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId, boolean isFreeDelivery);
 
     void loadSortingFacets();
 

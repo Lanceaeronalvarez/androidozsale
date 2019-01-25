@@ -37,7 +37,9 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
             mRepository.requestCategoryMap(new SearchFilterMvpRepository.RequestCategoryMapCompletion() {
                 @Override
                 public void receivedCategoryMap(Map<String, GetCategoryTreeResponse> categoryMap) {
-                    getMvpView().onReceiveCategoryMap(categoryMap);
+                    if (isViewAttached()) {
+                        getMvpView().onReceiveCategoryMap(categoryMap);
+                    }
                 }
             });
         }
@@ -45,7 +47,9 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
 
     @Override
     public void onFacetItemClicked(List<SearchChipModel> selectedChips) {
-        getMvpView().updateFacetItemToFilters(selectedChips);
+        if (isViewAttached()) {
+            getMvpView().updateFacetItemToFilters(selectedChips);
+        }
     }
 
     @Override
@@ -55,7 +59,9 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
 
     @Override
     public void resetPriceRange() {
-        getMvpView().onResetPriceRange();
+        if (isViewAttached()) {
+            getMvpView().onResetPriceRange();
+        }
     }
 
     @Override
@@ -67,7 +73,9 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
 
     @Override
     public void selectCategory(GetCategoryTreeResponse category) {
-        getMvpView().onCategoryClicked(category);
+        if (isViewAttached()) {
+            getMvpView().onCategoryClicked(category);
+        }
     }
 
     @Override

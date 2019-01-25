@@ -66,6 +66,7 @@ import io.fabric.sdk.android.Fabric;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import okhttp3.Cookie;
 
@@ -160,8 +161,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void doApiCallForResponse(Observable observable, ApiCallback callback) {
-        super.doApiCallForResponse(observable, callback);
+    public Disposable doApiCallForResponse(Observable observable, ApiCallback callback) {
+        return super.doApiCallForResponse(observable, callback);
 
 //        checkConsentCookie();
     }
@@ -607,6 +608,21 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public void setCountry(Settings.Country country) {
         getDataManager().setCountryId(country.countryId);
         getDataManager().setLanguageId(country.languageId);
+    }
+
+    @Override
+    public String legacyCountryId() {
+        return getDataManager().getLegacyCountryId();
+    }
+
+    @Override
+    public void setUserRateCurrentVersion(boolean userRateCurrentVersion) {
+        getDataManager().setUserHasRateApp(userRateCurrentVersion);
+    }
+
+    @Override
+    public boolean isUserRateCurrentVersion() {
+        return getDataManager().userHasRateApp();
     }
 
     @Override

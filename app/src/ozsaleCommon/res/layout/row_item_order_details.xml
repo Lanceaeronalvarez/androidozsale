@@ -13,7 +13,7 @@
         android:layout_height="@dimen/order_image_height"
         android:layout_below="@+id/my_order_information_header"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin" />
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
     <LinearLayout
         android:id="@+id/order_item_details_layout"
@@ -156,9 +156,10 @@
     <View
         android:layout_width="wrap_content"
         android:layout_height="@dimen/border_regular"
-        android:layout_below="@id/controller_order_details_item_imageview"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:background="@color/border_regular" />
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@color/border_regular"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
 
