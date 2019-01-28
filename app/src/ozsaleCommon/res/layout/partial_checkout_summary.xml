@@ -173,35 +173,5 @@
                 tools:text="$9" />
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/partial_checkout_summary_pay_today_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/margin_extra_small"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/pay_today"
-                fontPath="@string/font_app_bold"
-                android:textColor="@color/text_extra_dark" />
-
-            <TextView
-                android:id="@+id/partial_checkout_summary_pay_today_price"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textColor="@color/text_extra_dark"
-                android:textSize="@dimen/text_size_body"
-                fontPath="@string/font_app_bold"
-                tools:text="$27" />
-
-        </LinearLayout>
-
     </LinearLayout>
 </LinearLayout>
