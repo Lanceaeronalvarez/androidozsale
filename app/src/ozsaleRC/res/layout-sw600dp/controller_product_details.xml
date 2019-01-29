@@ -476,7 +476,8 @@
 
                             </RelativeLayout>
 
-                            <LinearLayout
+                            <RelativeLayout
+                                android:id="@+id/controller_product_details_button_container"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@color/white"
@@ -495,7 +496,7 @@
                                     android:enabled="false"
                                     android:text="@string/add_to_cart"
                                     android:visibility="visible" />
-                            </LinearLayout>
+                            </RelativeLayout>
 
                         </LinearLayout>
 

@@ -996,6 +996,11 @@
 
             </android.support.v4.widget.NestedScrollView>
 
+            <RelativeLayout
+            android:id="@+id/controller_product_details_button_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/product_details_button_overlay"
                 android:layout_width="match_parent"
@@ -1071,6 +1076,8 @@
                 android:paddingBottom="@dimen/margin_extra_small"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:visibility="gone"/>
+
+            </RelativeLayout>
 
         </android.support.design.widget.CoordinatorLayout>
 

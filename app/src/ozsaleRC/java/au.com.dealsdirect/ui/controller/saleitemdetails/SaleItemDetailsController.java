@@ -67,6 +67,7 @@ import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
+import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
@@ -90,7 +91,7 @@ import static android.graphics.Typeface.BOLD;
  * Created by smartwave on 08/06/2017.
  */
 
-public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener {
+public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener, SaleDetailsImageListener {
 
     public abstract static class Parameters {
         private Parameters() {}
@@ -266,6 +267,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ImageView mFreeDeliveryImageView;
     @BindView(R.id.product_details_percent_off)
     TextView mProductDiscountTextView;
+    @BindView(R.id.controller_product_details_button_container)
+    RelativeLayout mProductDetailsButtonContainer;
     int[] mSharedImageLocation;
 
     private static final int SPANNABLE_STRING_START_INDEX = 6;
@@ -309,6 +312,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private ElasticDragDismissFrameLayout.ElasticDragDismissCallback mDragDismissListener;
 
     private Map<String, String> mSavedPersonalizationData;
+    private SaleDetailsImageListener mSaleDetailsImageListener;
 
     final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = new
             ViewTreeObserver.OnScrollChangedListener() {
@@ -492,6 +496,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         mLoadImagesListener = this;
+        mSaleDetailsImageListener = this;
         mProductSharedImage.setTransitionName(getResources().getString(R.string.transition_sale_image_indexed, mFromPosition));
 
         ImageUtils.loadImageImmediate(mItemImageUrl, mProductSharedImage, null);
@@ -526,7 +531,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
         SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(mActivity, mPresenter.isTablet(),
-                mProductDetailScrollView, null, mLoadImagesListener, new ArrayList<>(), 2, null, this);
+                mProductDetailScrollView, null, mLoadImagesListener, new ArrayList<>(), 2, null, this,
+                mSaleDetailsImageListener);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
         mOtherImagesRv.setVisibility(View.INVISIBLE);
 
@@ -547,7 +553,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mPresenter.isTablet()) toggledViews.add(mAddToCartOverlay);
 
         SaleItemDetailsImageAdapter mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(mActivity, mPresenter.isTablet(), null,
-                toggledViews, mLoadImagesListener, new ArrayList<>(), 1, mProductSharedImage.getDrawable(), this);
+                toggledViews, mLoadImagesListener, new ArrayList<>(), 1, mProductSharedImage.getDrawable(), this,
+                mSaleDetailsImageListener);
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
         mProductImagesRv.setEnabled(false);
         mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -627,7 +634,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void stretchImageView() {
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mProductDetailsImageLayout.getLayoutParams();
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mProductDetailsImageLayout.getLayoutParams();
         int bottomNavHeight = mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight();
 
         int screenAllowanceSize = mPresenter.isTablet() ? bottomNavHeight * 3 : bottomNavHeight * 2 + (int) getDimension(R.dimen.margin_extra_small);
@@ -1203,6 +1210,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (selectedIndex != mSelectedSizeIndex) {
             updatePriceDetails(mSkuVariants.get(selectedIndex));
             mSelectedSizeIndex = selectedIndex;
+        }
+    }
+
+    @Override
+    public void scaleImage(boolean hideImage) {
+        if (!hideImage) {
+            mProductImagesRv.setZ(10);
+            mProductDetailsButtonContainer.setVisibility(View.GONE);
+        } else {
+            mProductImagesRv.setZ(0);
+            mProductDetailsButtonContainer.setVisibility(View.VISIBLE);
         }
     }
 }
