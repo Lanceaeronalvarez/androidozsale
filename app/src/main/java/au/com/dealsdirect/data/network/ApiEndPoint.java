@@ -146,23 +146,23 @@ public final class ApiEndPoint {
 
     /*CONFIG CALLS*/
     public static String getServerSettings(){
-        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "GetServerSettings");
+        return getFormattedUrl(ApiService.legacy, AKAMAI_EXTENSION + "GetServerSettings");
     }
 
     public static String getPublicAppSettings(){
-        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "GetPublicAppSettings");
+        return getFormattedUrl(ApiService.legacy, AKAMAI_EXTENSION+ "GetPublicAppSettings");
     }
 
     public static String getAppSettings(){
-        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "GetAppSettings");
+        return getFormattedUrl(ApiService.legacy, AKAMAI_EXTENSION + "GetAppSettings");
     }
 
     public static String getAppSettingsSection(){
-        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "GetAppSettingsSection");
+        return getFormattedUrl(ApiService.legacy, AKAMAI_EXTENSION + "GetAppSettingsSection");
     }
 
     public static String getPublicAppSettingsSection(){
-        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "GetPublicAppSettingsSection");
+        return getFormattedUrl(ApiService.legacy, AKAMAI_EXTENSION + "GetPublicAppSettingsSection");
     }
 
     public static String getConsentData(){
