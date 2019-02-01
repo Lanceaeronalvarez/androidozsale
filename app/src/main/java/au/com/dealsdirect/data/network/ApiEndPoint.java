@@ -19,6 +19,7 @@ public final class ApiEndPoint {
     private static final String HANDLER_PREFIX = "handler.ashx/";
     private static final String HANDLER_ASMX_PREFIX = "handler.ashx/";
     public static final String API_VCO_ICON = "https://assets.secure.checkout.visa.com/VCO/images/acc_40x30_wht01.png";
+    public static final double LEGACY_API_VERSION = 3.26;
 
     enum ApiService {
         legacy,
@@ -50,8 +51,7 @@ public final class ApiEndPoint {
             case productDetails: microServiceUrl = "api/shop/product/v2/accounts/";break;
             case setting: microServiceUrl = "api/shop/settings/v1/";break;
             case eventing: microServiceUrl = "api/shop/eventing/v1/";break;
-            case legacy: microServiceUrl = BuildConfig.IS_TEST ? "Public/"+ Settings.getSelectedCountry().apiVersion +"/"
-                    : "papi/public/"+ Settings.getSelectedCountry().apiVersion +"/";break;
+            case legacy: microServiceUrl = (BuildConfig.IS_TEST ? "Public/V" : "papi/public/v") + LEGACY_API_VERSION + "/";break;
             case genie: microServiceUrl = HANDLER_PREFIX;break;
         }
 

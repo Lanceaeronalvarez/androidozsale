@@ -657,10 +657,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showStrictConsentUI() {
-        if (!mIsShowingStrictConsentUI) {
+        if (mPresenter.shouldShowStrictConsent()) {
             mIsShowingStrictConsentUI = true;
-            mRouter.setRoot(RouterTransaction.with(StrictConsentController.newInstance())
-                    .tag(StrictConsentController.TAG));
+
+            if (!mPresenter.isTablet() || (mPresenter.isTablet() && getHomeRouter() == null)) {
+                mRouter.setRoot(RouterTransaction.with(StrictConsentController.newInstance())
+                        .tag(StrictConsentController.TAG));
+            } else {
+                Bundle bundle = new BundleBuilder(new Bundle())
+                        .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.STRICT_CONSENT_UI)
+                        .build();
+                GateKeeper.setRoot(getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
+                        pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
+            }
+
+        } else {
+            setUpAfterCountrySet();
+            if (!mIsShowingStrictConsentUI && !mAppHasSavedInstance) {
+                initializeMainController();
+            }
         }
     }
 
@@ -670,7 +685,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mPresenter.callSaveConsentData();
 
-        splashShownCallback();
+        initializeMainController();
     }
 
     public void onPurchase(CardForm cardForm) {
@@ -811,16 +826,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             if (!mIsShowingStrictConsentUI && !mAppHasSavedInstance) {
                 mRouter.setRoot(RouterTransaction.with(new CountryController(true)));
             }
-            return;
+        } else {
+            Settings.Country country = Settings.getIsMultiCountry() ?
+                    Settings.getCountryWithId(defaultCountryId) :
+                    Settings.getDefaultCountry();
+
+            mPresenter.setCountry(country);
+            setAppCountries(country);
+
+            setUpAfterCountrySet();
+
+            if (!mAppHasSavedInstance) {
+                initializeMainController();
+            }
         }
-
-        Settings.Country country = Settings.getIsMultiCountry() ?
-                Settings.getCountryWithId(defaultCountryId) :
-                Settings.getDefaultCountry();
-
-        mPresenter.setCountry(country);
-        setAppCountries(country);
-        setUpAfterCountrySet();
     }
 
     public void setUpAfterCountrySet() {
@@ -834,19 +853,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             // GetAppSettings and GetPaymentToken will be called on success of this call
             mPresenter.callLoginTicket();
             mPresenter.callGetAppSettings();
-            mPresenter.callGetAppSettingsConsent(this);
         } else {
             callPublicSettings();
         }
 
         mPresenter.callGetAccountData();
 
-        if (!mIsShowingStrictConsentUI && !mAppHasSavedInstance) {
-            initializeMainController();
-        }
-
         callGCMRegisterSubscriber();
-
     }
 
     public void initializeMainController() {
@@ -858,7 +871,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         //If not logged in, call GetPublicAppSettings
         mPresenter.callGetPublicPaymentToken();
         mPresenter.callGetPublicAppSettings();
-        mPresenter.callGetPublicAppSettingsConsent(this);
+    }
+
+    public void callAppConsent() {
+        if (isAuthorized()) {
+            mPresenter.callGetAppSettingsConsent(this);
+        } else {
+            mPresenter.callGetPublicAppSettingsConsent(this);
+        }
     }
 
     public void setShopsAsVisibleContainer() {
@@ -1014,7 +1034,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         public void onReceive(Context context, Intent intent) {
             updateSnackbar(isNetworkConnected());
             if(isNetworkConnected()) {
-                ((BaseController) getCurrentController(getCurrentRouter())).refreshContents();
+                if ((getCurrentController(getCurrentRouter())) != null) {
+                    ((BaseController) getCurrentController(getCurrentRouter())).refreshContents();
+                }
             }
         }
     };

@@ -9,6 +9,8 @@
     <!--APP SPECIFIC SETTINGS-->
     <bool name="is_ourpay_app">false</bool>
     <bool name="is_ozsale_app">false</bool>
+    <bool name="show_split_registration_toggles">false</bool>
+    <bool name="show_details_email_option">false</bool>
     <bool name="master_detail_enabled">false</bool>
     <bool name="language_check_enabled">false</bool>
     <bool name="is_gender_enabled">true</bool>

@@ -123,6 +123,12 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
 
     @Override
     public void executeLoginVisa(LoginVisa.RequestValue.Data requestData, String password) {
+        executeLoginVisa(requestData, password, true, false);
+    }
+
+    @Override
+    public void executeLoginVisa(LoginVisa.RequestValue.Data requestData, String password,
+                                 boolean tncAccepted, boolean emailsAccepted) {
         LoginVisa.RequestValue requestValue = new LoginVisa.RequestValue();
         requestValue.setCountryID(getDataManager().getCountryId());
         requestValue.setLanguageID(getDataManager().getLanguageId());
@@ -131,6 +137,9 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
         requestValue.setVoucherID("00000000-0000-0000-0000-000000000000");
         requestValue.setPassword(password);
         requestValue.setData(requestData);
+        requestValue.setParameters(tncAccepted, emailsAccepted);
+
+        if (isGdprDisabled()) requestValue.setToGdprDisabled();
 
         getMvpView().showLoading();
         doApiCallForResponse(getDataManager().callLoginVisaCheckout(requestValue), new AppApiCallback() {

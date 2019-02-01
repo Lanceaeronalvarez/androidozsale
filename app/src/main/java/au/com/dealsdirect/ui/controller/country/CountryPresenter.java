@@ -66,5 +66,15 @@ public class CountryPresenter<V extends CountryMvpView> extends BasePresenter<V>
         getDataManager().setUserAgent();
     }
 
+    @Override
+    public boolean shouldShowStrictConsent() {
+        return getDataManager().isShowStrictConsent();
+    }
+
+    @Override
+    public void setShowStrictConsent(boolean isShowStrictContent) {
+        getDataManager().setIsShowStrictConsent(isShowStrictContent);
+    }
+
 
 }

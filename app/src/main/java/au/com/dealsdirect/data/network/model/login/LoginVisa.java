@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mysale.genie.utility.LegacyBaseResponseValue;
 
+import java.util.HashMap;
+
 /**
  * Created by smartwave on 07/02/2018.
  */
@@ -34,6 +36,9 @@ public class LoginVisa {
         @SerializedName("data")
         @Expose
         private Data data;
+        @SerializedName("parameters")
+        @Expose
+        private HashMap<String, Boolean> parameters;
 
         public String getCountryID() {
             return countryID;
@@ -89,6 +94,15 @@ public class LoginVisa {
 
         public void setData(Data data) {
             this.data = data;
+        }
+
+        public void setParameters(boolean tcAccepted, boolean emailsAccepted) {
+            this.parameters.put("tcAccepted", tcAccepted);
+            this.parameters.put("emailsAccepted", emailsAccepted);
+        }
+
+        public void setToGdprDisabled(){
+            this.parameters = null;
         }
 
         public static class Data {

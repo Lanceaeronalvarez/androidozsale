@@ -64,7 +64,8 @@ public class GateKeeper {
         LANGUAGE,
         COUNTRY,
         NOTIFICATION,
-        TUTORIAL
+        TUTORIAL,
+        STRICT_CONSENT_UI
         //add more destinations
     }
 

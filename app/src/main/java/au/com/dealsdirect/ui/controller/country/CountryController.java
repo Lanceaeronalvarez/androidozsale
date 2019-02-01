@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -52,6 +53,7 @@ public class CountryController extends BasePullToRefreshController implements Co
     private CountryAdapter mAdapter;
     private boolean mIsAfterSplash;
     private boolean mHasSavedInstance;
+    private boolean shouldShowStrictConsent;
 
     public static CountryController newInstance() {
         return new CountryController(
@@ -119,12 +121,18 @@ public class CountryController extends BasePullToRefreshController implements Co
 
         mActivity.setUpAfterCountrySet();
 
-        mActivity.callApiSettings();
+        mPresenter.setShowStrictConsent(shouldShowStrictConsent);
+
         CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 Settings.getSelectedCountry().countryName);
 
-        if (mHasSavedInstance && mIsAfterSplash) {
+        String[] array = mActivity.getResources().getStringArray(R.array.gdpr_countries);
+        List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));
+
+        if (mGdprCountriesArray.contains(country.getCountry().toLowerCase()) && mPresenter.shouldShowStrictConsent()) {
+            mActivity.callAppConsent();
+        } else {
             mActivity.initializeMainController();
         }
     }
@@ -141,6 +149,7 @@ public class CountryController extends BasePullToRefreshController implements Co
         mAdapter = new CountryAdapter(new ArrayList<>(), mActivity, mPresenter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
+        shouldShowStrictConsent = mPresenter.shouldShowStrictConsent();
 
         mPresenter.getUserCountries();
     }

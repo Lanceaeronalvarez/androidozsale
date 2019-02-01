@@ -1,12 +1,16 @@
 package au.com.dealsdirect.ui.controller.gdpr;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -79,6 +83,9 @@ public class StrictConsentController extends BaseController {
         mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
         mWebView.addJavascriptInterface(new WebViewJavascriptInterface(mActivity), JS_INTERFACE_TAG);
+        if (mActivity.getResources().getBoolean(R.bool.is_tablet)) {
+            mWebView.setInitialScale(150);
+        }
         mWebView.loadUrl(CONSENT_HTML_LOCATION);
 
         mButton.setText(mActivity.getMyTemplateTexts(AppPreferencesHelper.CONSENT_CONTINUE_TEXT));

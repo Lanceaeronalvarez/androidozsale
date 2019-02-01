@@ -14,4 +14,8 @@ public interface CountryMvpPresenter <V extends MvpView> extends MvpPresenter<V>
     void onCountryItemClick(Country country);
 
     void setCountry(Country country);
+
+    boolean shouldShowStrictConsent();
+
+    void setShowStrictConsent(boolean isShowStrictContent);
 }

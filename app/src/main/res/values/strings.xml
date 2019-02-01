@@ -465,9 +465,11 @@
         <item>@drawable/bg_account_logout</item>
     </integer-array>
 
+    <string-array name="gdpr_countries">
+        <item>@string/united_kingdom</item>
+    </string-array>
 
-
-
+    <string name="united_kingdom">united kingdom</string>
     <string name="create_account">create account</string>
     <string name="create_message">Create New Message</string>
     <string name="ic_back">ic_back</string>

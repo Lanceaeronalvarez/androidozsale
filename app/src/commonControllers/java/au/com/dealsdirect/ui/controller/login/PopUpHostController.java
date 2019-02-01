@@ -16,6 +16,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
+import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -75,6 +76,9 @@ public class PopUpHostController extends BaseController implements PopUpHostMvpV
             case SMS_VERIFICATION:
                 GateKeeper.setRoot(mPopUpHostChildRouter, GateKeeper.Destination.SMS_VERIFICATION, RouterTransaction.with(new OurpaySMSVerificationController(getArgs())));
                 break;
+            case STRICT_CONSENT_UI:
+                GateKeeper.setRoot(mPopUpHostChildRouter, GateKeeper.Destination.STRICT_CONSENT_UI, RouterTransaction.with(StrictConsentController.newInstance()));
+                break;
             default:
                 break;
         }
@@ -83,6 +87,11 @@ public class PopUpHostController extends BaseController implements PopUpHostMvpV
     @Nullable
     @OnClick(R.id.dialog_background)
     void dismissDialog() {
+
+        if (mDestination == GateKeeper.Destination.STRICT_CONSENT_UI) {
+            return;
+        }
+
         mPopUpHostChildRouter.handleBack();
         getRouter().popController(this);
         int routerStackSize = mActivity.getCurrentRouter().getBackstackSize();

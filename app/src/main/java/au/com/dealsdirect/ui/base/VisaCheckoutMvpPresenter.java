@@ -25,5 +25,7 @@ public interface VisaCheckoutMvpPresenter<V extends VisaCheckoutMvpView> extends
 
     void executeLoginVisa(LoginVisa.RequestValue.Data requestData, String password);
 
+    void executeLoginVisa(LoginVisa.RequestValue.Data requestData, String password, boolean tncAccepted, boolean emailsAccepted);
+
     boolean isVisaCheckoutEnabled();
 }

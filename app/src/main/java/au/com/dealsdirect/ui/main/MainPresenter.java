@@ -506,6 +506,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public void callSaveConsentData() {
         doApiCallForResponse(getDataManager().callSaveConsentData(getDataManager().getCountryId()),
                 new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+
+                        getDataManager().setIsShowStrictConsent(false);
+                    }
                 });
     }
 
@@ -623,6 +629,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public boolean isUserRateCurrentVersion() {
         return getDataManager().userHasRateApp();
+    }
+
+    @Override
+    public boolean shouldShowStrictConsent() {
+        return getDataManager().isShowStrictConsent();
     }
 
     @Override
