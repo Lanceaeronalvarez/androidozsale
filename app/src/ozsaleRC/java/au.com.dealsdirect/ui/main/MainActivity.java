@@ -1033,10 +1033,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         @Override
         public void onReceive(Context context, Intent intent) {
             updateSnackbar(isNetworkConnected());
-            if(isNetworkConnected()) {
-                if ((getCurrentController(getCurrentRouter())) != null) {
-                    ((BaseController) getCurrentController(getCurrentRouter())).refreshContents();
-                }
+
+            Controller currentController = getCurrentController(getCurrentRouter());
+            BaseController baseController = currentController instanceof BaseController ?
+                    (BaseController) getCurrentController(getCurrentRouter()) : null;
+            if(isNetworkConnected() && baseController != null) {
+                baseController.refreshContents();
             }
         }
     };

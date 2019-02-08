@@ -863,6 +863,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void refreshContents() {
         super.refreshContents();
+        setupSearchFilters();
+        mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
         mAppBar.setExpanded(true, true);
     }
 
