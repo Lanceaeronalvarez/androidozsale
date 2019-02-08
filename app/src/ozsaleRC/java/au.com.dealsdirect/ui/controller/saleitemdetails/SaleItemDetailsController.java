@@ -762,9 +762,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mShippingDescText.startAnimation(anim);
 
             if (deliveryInformation == null) {
-                mShippingDescText.loadData(mHtmlHeader + shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
+                mShippingDescText.loadDataWithBaseURL(null,mHtmlHeader + shippingInformation + mHtmlFooter,
+                        "text/html", "UTF-8", null);
             } else {
-                mShippingDescText.loadData(mHtmlHeader + deliveryInformation + "<br/><br/>" + shippingInformation + mHtmlFooter, "text/html; charset=UTF-8", null);
+                mShippingDescText.loadDataWithBaseURL(null,mHtmlHeader + deliveryInformation + "<br/><br/>" + shippingInformation + mHtmlFooter,
+                        "text/html", "UTF-8", null);
             }
 
             mPriceInfoButton.setOnClickListener(view -> toggleProductInfoWebView(shippingPricing, true));
@@ -777,20 +779,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mReturnPolicyContainer.setVisibility(View.VISIBLE);
             mReturnPolicyText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mReturnPolicyText.startAnimation(anim);
-            mReturnPolicyText.loadData(mHtmlHeader + returnPolicy + mHtmlFooter, "text/html; charset=UTF-8", null);
+            mReturnPolicyText.loadDataWithBaseURL(null,mHtmlHeader + returnPolicy + mHtmlFooter,
+                    "text/html", "UTF-8", null);
         }
 
         if (!productAbout.isEmpty()) {
             mProductAboutContainer.setVisibility(View.VISIBLE);
             mProductAboutText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mProductAboutText.startAnimation(anim);
-            mProductAboutText.loadData(mHtmlHeader + productAbout + mHtmlFooter, "text/html; charset=UTF-8", null);
+            mProductAboutText.loadDataWithBaseURL(null,mHtmlHeader + productAbout + mHtmlFooter,
+                    "text/html", "UTF-8", null);
         }
 
         mProductDescriptionText.startAnimation(anim);
-        mProductDescriptionText.loadData(mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
-                "text/html; charset=UTF-8",
-                null);
+        mProductDescriptionText.loadDataWithBaseURL(null,mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
+                "text/html", "UTF-8", null);
 
         mProductDescriptionText.getSettings()
                 .setJavaScriptEnabled(true);
@@ -887,11 +890,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private void toggleProductInfoWebView(String shippingPricing, boolean isNewPricing) {
         boolean isPricingContainerVisible = mProductPricingContainer.getVisibility() == View.VISIBLE;
         if (isNewPricing) {
-            mProductAboutPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
+            mProductAboutPricing.loadDataWithBaseURL(null,mHtmlHeader + shippingPricing + mHtmlFooter,
+                    "text/html", "UTF-8", null);
             mProductAboutPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mProductPricingContainer.setVisibility(isPricingContainerVisible && mProductAboutPricing.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
         } else {
-            mOldProductPricing.loadData(mHtmlHeader + shippingPricing + mHtmlFooter, "text/html; charset=UTF-8", null);
+            mOldProductPricing.loadDataWithBaseURL(null,mHtmlHeader + shippingPricing + mHtmlFooter,
+                    "text/html", "UTF-8", null);
+
             mOldProductPricing.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mProductPricingContainer.setVisibility(isPricingContainerVisible && mOldProductPricing.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
         }
