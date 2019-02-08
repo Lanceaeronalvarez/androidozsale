@@ -2,6 +2,8 @@ package au.com.dealsdirect.ui.controller.country;
 
 import com.mysale.genie.utility.Prefs;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,6 +41,13 @@ public class CountryPresenter<V extends CountryMvpView> extends BasePresenter<V>
             listOfCountry.setCountry(country.countryName);
             countries.add(listOfCountry);
         }
+
+        Collections.sort(countries, new Comparator<Country>() {
+            @Override
+            public int compare(Country s1, Country s2) {
+                return s1.getCountry().compareToIgnoreCase(s2.getCountry());
+            }
+        });
 
         getMvpView().showCountries(countries, getDataManager().getCountryId());
         getMvpView().hideLoading();
