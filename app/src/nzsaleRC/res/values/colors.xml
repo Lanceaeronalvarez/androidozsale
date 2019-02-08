@@ -119,7 +119,7 @@
     <color name="tab_bar_icon_hovered">@color/colorAccent</color>
 
     <color name="bottom_nav_accent">@color/colorAccent</color>
-    <color name="bottom_nav_inactive">@color/text_extra_light</color>
+    <color name="bottom_nav_inactive">@color/text_medium</color>
     <color name="bottom_nav_background">@color/toolbar_skin</color>
 
     <color name="progress_loader_stroke">@color/colorAccent</color>
