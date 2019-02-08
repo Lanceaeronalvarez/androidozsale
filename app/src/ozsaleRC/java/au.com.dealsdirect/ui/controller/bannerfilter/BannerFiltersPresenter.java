@@ -1,9 +1,5 @@
 package au.com.dealsdirect.ui.controller.bannerfilter;
 
-import com.androidnetworking.error.ANError;
-
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -29,21 +25,20 @@ public class BannerFiltersPresenter<V extends BannerFiltersMvpView> extends Base
 
     @Override
     public void callGetCategoryTree() {
-        if(isViewAttached()) {
+        if (isViewAttached()) {
             if (!getMvpView().isNetworkConnected()) {
                 getMvpView().showNoNetworkLayout();
             } else {
                 getMvpView().hideNoNetworklayout();
             }
-
-            doApiCallForResponse(getDataManager()
-                    .callGetGetCategories(), new AppApiCallback() {
-                @Override
-                public void onSuccess(List<?> response) {
-                    super.onSuccess(response);
-                    getMvpView().showCategories((List<GetCategoryTreeResponse>) response);
-                }
-            });
         }
+        doApiCallForResponse(getDataManager()
+                .callGetGetCategories(), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> response) {
+                super.onSuccess(response);
+                getMvpView().showCategories((List<GetCategoryTreeResponse>) response);
+            }
+        });
     }
 }
