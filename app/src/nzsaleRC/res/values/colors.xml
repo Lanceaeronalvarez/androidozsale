@@ -46,8 +46,8 @@
 
     <color name="clipboard_default">#FF8B8B8B</color>
     <color name="clipboard_pressed">#FF8B8B8B</color>
-    <color name="fb_default">#009BEC</color>
-    <color name="fb_pressed">#009BEC</color>
+    <color name="fb_default">#3b5998</color>
+    <color name="fb_pressed">#8b9dc3</color>
     <color name="twitter_default">#FF00B5E9</color>
     <color name="twitter_pressed">#FF00B5E9</color>
     <color name="mail_default">#FFEA5757</color>
