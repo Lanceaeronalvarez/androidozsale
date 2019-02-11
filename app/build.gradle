@@ -96,8 +96,8 @@ android {
         }
 
         cocosaRC {
-            versionCode 101
-            versionName "1.14.0"
+            versionCode 122
+            versionName "2.5.1"
             applicationId "uk.co.cocosa"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -117,8 +117,8 @@ android {
         }
 
         cocosaTest {
-            versionCode 101
-            versionName "1.14.0"
+            versionCode 122
+            versionName "2.5.1"
             applicationId "uk.co.cocosatest"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -181,7 +181,7 @@ android {
         }
 
         ooRC {
-            versionCode 121
+            versionCode 122
             versionName "2.5.1"
             applicationId "au.com.oo"
 
@@ -202,7 +202,7 @@ android {
         }
 
         ooTest {
-            versionCode 121
+            versionCode 122
             versionName "2.5.1"
             applicationId "au.com.oo.test"
 
@@ -375,8 +375,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 101
-            versionName "1.14.0"
+            versionCode 122
+            versionName "2.5.1"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -397,8 +397,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 101
-            versionName "1.14.0"
+            versionCode 122
+            versionName "2.5.1"
             applicationId "nz.co.nzsaletest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
