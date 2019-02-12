@@ -97,6 +97,7 @@ public class LoginVisa {
         }
 
         public void setParameters(boolean tcAccepted, boolean emailsAccepted) {
+            parameters = new HashMap<>();
             this.parameters.put("tcAccepted", tcAccepted);
             this.parameters.put("emailsAccepted", emailsAccepted);
         }
