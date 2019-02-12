@@ -547,19 +547,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private void determineToolbarTitle() {
 
         String lookingForText = getString(R.string.search_tag);
-        String categoryToolbarString = StringUtils.buildCategoryToolbarTitle(mCategoryKey);
-
-        //determining hint logic
-        //category precedes above all
 
         // bug/gen-8065_ozsale-reskin_bugfixing - always set searchbar hint to 'search'
         mSaleItemsToolbarField.setHint(lookingForText);
 
-        String editTextString = mSaleItemsToolbarField.getText().toString();
         //determining toolbartitle logic
         //category precedes above all
-
-
         String[] titles = mTitle.split(CATEGORY_KEY_SEPARATOR_REPLACEMENT, 0);
         String title = "";
         String subTitle = "";

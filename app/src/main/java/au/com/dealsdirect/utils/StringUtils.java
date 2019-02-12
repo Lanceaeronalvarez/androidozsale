@@ -74,6 +74,10 @@ public class StringUtils {
         char c = '>';
         int charCount = 0;
         String newString = "";
+
+        if(categoryKey == null) {
+            return newString;
+        }
         for (int i = 0; i < categoryKey.length(); i++) {
             String getChar = String.valueOf(categoryKey.charAt(i));
             if (!getChar.equals(String.valueOf(c))) {
