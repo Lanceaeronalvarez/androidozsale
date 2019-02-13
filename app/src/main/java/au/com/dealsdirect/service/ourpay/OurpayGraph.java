@@ -6,6 +6,7 @@ package au.com.dealsdirect.service.ourpay;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +74,7 @@ public class OurpayGraph {
                 checkImage.setVisibility(View.GONE);
             }
 
+            TextViewCompat.setAutoSizeTextTypeWithDefaults(tempPay, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
             viewGroup.addView(generateLineView(context));
             viewGroup.addView(ourpayPanelRow);
 

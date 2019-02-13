@@ -39,9 +39,13 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:textColor="@color/ourpay_panel_dark_gray"
-        android:textSize="@dimen/text_size_body"
         android:textAlignment="gravity"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="@dimen/text_size_caption2"
+        android:autoSizeMaxTextSize="@dimen/text_size_body"
+        android:autoSizeStepGranularity="2sp"
         android:gravity="right"
+        android:maxLines="1"
         tools:ignore="MissingPrefix"
         tools:text="$1866.91" />
 
