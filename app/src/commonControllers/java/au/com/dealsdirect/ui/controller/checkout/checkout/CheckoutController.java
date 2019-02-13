@@ -593,7 +593,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                         mCheckBoxOurpayTC.setOurPayToggleSwitch(termsAndConditionStatesState);
 
                     }
-                    if (isOurPaySelectDeliveryMethod()) { // show ourpay select related summary
+                    if (isOurPaySelectDeliveryMethod() && mDeliveryServicePackageDetail != null) { // show ourpay select related summary
                         mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount()));
                     }
 
