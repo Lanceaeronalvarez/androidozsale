@@ -511,7 +511,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mActivity.setDraggableViewPager(false);
         mPresenter.onAttach(this);
         mPtrFrameLayout.setPtrHandler(this);
-        mAppBar.addOnOffsetChangedListener(this);
+        if (mAppBar != null) {
+            mAppBar.addOnOffsetChangedListener(this);
+        }
 
         determineToolbarTitle();
 
@@ -591,7 +593,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void onDetach(View view) {
         mPtrFrameLayout.setPtrHandler(null);
-        mAppBar.removeOnOffsetChangedListener(this);
+        if (mAppBar != null) {
+            mAppBar.removeOnOffsetChangedListener(this);
+        }
         mSaleItemsToolbarField.setOnEditorActionListener(null);
         mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
         hideKeyboard();
@@ -670,8 +674,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 } else {
                     // Snaps search bar to expanded or hidden depending on whether
                     // t is halfway to 0 or 1
-                    float t = -mVerticalOffset / (float) mAppBar.getHeight();
-                    mAppBar.setExpanded(t < 0.5, true);
+                    float t = -mVerticalOffset / (float) (mAppBar != null ? mAppBar.getHeight() : 0);
+                    if (mAppBar != null) {
+                        mAppBar.setExpanded(t < 0.5, true);
+                    }
                 }
             }
         });
@@ -858,7 +864,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.refreshContents();
         setupSearchFilters();
         mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
-        mAppBar.setExpanded(true, true);
+        if (mAppBar != null) {
+            mAppBar.setExpanded(true, true);
+        }
     }
 
     void onBackClick() {
@@ -891,7 +899,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
                                    String skuId, String saleId, boolean isFreeDelivery) {
-        mAppBar.setExpanded(true, false);
+        if (mAppBar != null) {
+            mAppBar.setExpanded(true, false);
+        }
         mSearchFilterMvpView.closeFacets();
         mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
