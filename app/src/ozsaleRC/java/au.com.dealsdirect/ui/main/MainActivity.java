@@ -874,6 +874,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void callAppConsent() {
+        mPresenter.callGetTemplateTexts();
         if (isAuthorized()) {
             mPresenter.callGetAppSettingsConsent(this);
         } else {

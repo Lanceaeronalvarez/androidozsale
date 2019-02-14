@@ -496,8 +496,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         GetConsentDataResponse mapper = (GetConsentDataResponse) response;
 
                         if (mapper.getShowConsentRequired()) {
-                            showStrictConsentUI();
+                            getDataManager().setIsShowStrictConsent(true);
                         }
+
+                        showStrictConsentUI();
                     }
                 });
     }

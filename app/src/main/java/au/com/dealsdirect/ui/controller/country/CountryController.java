@@ -121,8 +121,6 @@ public class CountryController extends BasePullToRefreshController implements Co
 
         mActivity.setUpAfterCountrySet();
 
-        mPresenter.setShowStrictConsent(shouldShowStrictConsent);
-
         CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 Settings.getSelectedCountry().countryName);
@@ -149,8 +147,6 @@ public class CountryController extends BasePullToRefreshController implements Co
         mAdapter = new CountryAdapter(new ArrayList<>(), mActivity, mPresenter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
-        shouldShowStrictConsent = mPresenter.shouldShowStrictConsent();
-
         mPresenter.getUserCountries();
     }
 
