@@ -30,7 +30,7 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -63,8 +63,7 @@ import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.AdaptiveTabLayout;
 import au.com.dealsdirect.ui.custom.SearchEditText;
-import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
-import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -710,6 +709,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         }
                     }
                 }
+                if (from == currentController) {
+                    if (mAppBar != null) {
+                        mAppBar.setExpanded(true, false);
+                    }
+                }
             }
         };
         getRouter().addChangeListener(newControllerChangeHandler);
@@ -899,9 +903,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
                                    String skuId, String saleId, boolean isFreeDelivery) {
-        if (mAppBar != null) {
-            mAppBar.setExpanded(true, false);
-        }
         mSearchFilterMvpView.closeFacets();
         mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
@@ -924,15 +925,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActionTracker.clicksEvent(mSalesOrigin + PRODUCT_CLICK, position);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            routerTransaction = routerTransaction
-                    .pushChangeHandler(new FadeChangeHandler())
-                    .popChangeHandler(new FadeChangeHandler());
-        } else {
-            routerTransaction = routerTransaction
-                    .pushChangeHandler(new SharedArcFadePushChangeHandler())
-                    .popChangeHandler(new SharedArcFadePopChangeHandler());
-        }
+        int[] originalPos = new int[2];
+        viewHolder.itemView.getLocationOnScreen(originalPos);
+        int left = originalPos[0];
+        int top = originalPos[1];
+        int width = viewHolder.itemView.getWidth();
+        int height = viewHolder.itemView.getHeight();
+        routerTransaction = routerTransaction
+                .pushChangeHandler(new ArcZoomChangeHandler(left, top, width, height))
+                .popChangeHandler(new ArcZoomChangeHandler(left, top, width, height));
 
         getRouter().pushController(routerTransaction);
 

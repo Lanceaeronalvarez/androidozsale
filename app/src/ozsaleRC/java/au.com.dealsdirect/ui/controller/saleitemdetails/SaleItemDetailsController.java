@@ -453,6 +453,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (view instanceof ElasticDragDismissFrameLayout) {
             mRootView = ((ElasticDragDismissFrameLayout) view);
+
+            mRootView.setDragActivationAreaWidth(Float.MAX_VALUE);
+            mRootView.setDragActivationAreaHeight(Float.MAX_VALUE);
+            mRootView.setDragDismissScale(0.85f);
+            mRootView.setDragVerticalThreshold(8);
         }
 
         stretchImageView();
@@ -501,33 +506,31 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         ImageUtils.loadImageImmediate(mItemImageUrl, mProductSharedImage, null);
 
-        if (mHasSavedInstance) {
-            SaleItemDetailsController currentController = this;
-            newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
+        SaleItemDetailsController currentController = this;
+        newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
 
-                @Override
-                public void onChangeStarted(@Nullable Controller to,
-                                            @Nullable Controller from, boolean isPush,
-                                            @NonNull ViewGroup container,
-                                            @NonNull ControllerChangeHandler handler) {
+            @Override
+            public void onChangeStarted(@Nullable Controller to,
+                                        @Nullable Controller from, boolean isPush,
+                                        @NonNull ViewGroup container,
+                                        @NonNull ControllerChangeHandler handler) {
 
-                }
+            }
 
-                @Override
-                public void onChangeCompleted(@Nullable Controller to,
-                                              @Nullable Controller from, boolean isPush,
-                                              @NonNull ViewGroup container,
-                                              @NonNull ControllerChangeHandler handler) {
-                    if (to == currentController) {
-                        mPresenter.loadSaleItemDetails(mSaleId, mSeoIdentifierId);
+            @Override
+            public void onChangeCompleted(@Nullable Controller to,
+                                          @Nullable Controller from, boolean isPush,
+                                          @NonNull ViewGroup container,
+                                          @NonNull ControllerChangeHandler handler) {
+                if (to == currentController) {
+                    mPresenter.loadSaleItemDetails(mSaleId, mSeoIdentifierId);
+                    if (mHasSavedInstance) {
                         mActivity.getMainController().getHomeController().setSavedCurrentItem();
                     }
                 }
-            };
-            getRouter().addChangeListener(newControllerChangeHandler);
-        } else {
-            mPresenter.loadSaleItemDetails(mSaleId, mSeoIdentifierId);
-        }
+            }
+        };
+        getRouter().addChangeListener(newControllerChangeHandler);
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
         SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(mActivity, mPresenter.isTablet(),
@@ -569,6 +572,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     position = Ints.constrainToRange(position, 0, size - 1);
                     mProductImagesRv.smoothScrollToPosition(position);
                     updateCarouselPageIndicator(position);
+                    mRootView.setIsHorizontalDismissEnabled(
+                            mProductDetailScrollView.getScrollY() <= 0
+                                    && position == 0);
                 }
                 return false;
             }
@@ -577,10 +583,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
                     case MotionEvent.ACTION_MOVE:
                         updateCarouselPageIndicator(getCarouselPosition());
+                        mRootView.setIsHorizontalDismissEnabled(false);
+                        mRootView.setIsVerticalDismissEnabled(false);
                         break;
                     default:
+                        mRootView.setIsHorizontalDismissEnabled(
+                                mProductDetailScrollView.getScrollY() <= 0
+                                        && getCarouselPosition() == 0);
+                        mRootView.setIsVerticalDismissEnabled(mProductDetailScrollView.getScrollY() <= 0);
                         break;
                 }
                 return false;
@@ -991,7 +1004,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mRootView.removeListener(mDragDismissListener);
             }
             mDragDismissListener = null;
-            mProductImagesRv.setVisibility(View.GONE);
             return false;
         }
         return true;
@@ -1154,6 +1166,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     public void onScrollChanged(int scrollY) {
         if (isViewAttached()) {
+            mRootView.setIsHorizontalDismissEnabled(scrollY <= 0 && getCarouselPosition() == 0);
+            mRootView.setIsVerticalDismissEnabled(scrollY <= 0);
             boolean isScrollGreater = scrollY >= ScreenUtils.getScreenHeight(mActivity) -
                     (mProductDetailsTitleLayout.getBottom() + mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight());
             mProductDetailsToolbar.setVisibility(isScrollGreater && !mPresenter.isTablet() ? View.VISIBLE : View.GONE);
