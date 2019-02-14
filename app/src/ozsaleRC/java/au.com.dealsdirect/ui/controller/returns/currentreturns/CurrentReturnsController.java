@@ -187,8 +187,8 @@ public class CurrentReturnsController extends BasePullToRefreshController
 
     @Override
     public void showCurrentReturns(CurrentReturnResponseBody currentReturnResponseBody) {
-        List<CurrentReturns> currentReturns =
-                currentReturnResponseBody.getCurrentReturnResponse().getCurrentReturns();
+        List<CurrentReturns> currentReturns = new ArrayList<>(currentReturnResponseBody
+                .getCurrentReturnResponse().getCurrentReturns());
 
         if (currentReturns != null && currentReturns.size() != 0) {
 
@@ -198,11 +198,15 @@ public class CurrentReturnsController extends BasePullToRefreshController
             mPlaceholderLayout.setVisibility(View.GONE);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
 
+            if (mCurrentReturnsAdapter == null) {
+                mCurrentReturnsAdapter = new CurrentReturnAdapter(currentReturns, returnDetailsResponseBodyList, mPresenter);
+                mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
+            } else {
+                mCurrentReturnsAdapter.updateCurrentReturnsList(currentReturns);
+            }
+
             mCurrentReturns = currentReturns;
 
-            mCurrentReturnsAdapter = new CurrentReturnAdapter(currentReturns, returnDetailsResponseBodyList, mPresenter);
-
-            mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
             getCurrentReturnItems(mCurrentReturns);
 
 
@@ -285,8 +289,12 @@ public class CurrentReturnsController extends BasePullToRefreshController
     }
 
     private void requestNewReturn() {
-        if (mCurrentReturns != null)
+        if (mCurrentReturns != null) {
             mCurrentReturns.clear();
+            if (mCurrentReturnsAdapter != null) {
+                mCurrentReturnsAdapter.updateCurrentReturnsList(mCurrentReturns);
+            }
+        }
 
         getRouter().pushController(RouterTransaction.with(
                 ReturnOrdersController.newInstance())
