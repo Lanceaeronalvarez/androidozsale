@@ -1142,7 +1142,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void imagesLoaded() {
         if (isAttached()) {
             mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
-            ImageUtils.clearImage(mProductSharedImage);
+            mProductSharedImage.setVisibility(View.GONE);
 
             mImagesLoaded = true;
 
