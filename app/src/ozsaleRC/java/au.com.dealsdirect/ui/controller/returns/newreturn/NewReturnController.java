@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +23,11 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponse;
-import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.List;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.returns.newreturn.adapter.NewReturnOrdersAdapter;
-import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -171,10 +168,39 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     getString(R.string.return_request_submitted));
 
-            getRouter().pushController(RouterTransaction.with(
-                    CurrentReturnsController.newInstance())
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
+            ArrayList<RouterTransaction> backstack = new ArrayList<>(getRouter().getBackstack());
+
+
+            boolean hasFound = false;
+            for (int i = 0; i < backstack.size(); i++) {
+                RouterTransaction routerTransaction = backstack.get(i);
+                if (routerTransaction.controller() instanceof CurrentReturnsController) {
+                    hasFound = true;
+                    while (i + 1 < backstack.size()) {
+                        backstack.remove(i + 1);
+                    }
+                }
+            }
+
+            if (!hasFound) {
+                RouterTransaction root = null;
+                if (!backstack.isEmpty()) {
+                    root = backstack.get(0);
+                }
+
+                RouterTransaction routerTransaction = RouterTransaction.with(
+                        CurrentReturnsController.newInstance())
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler());
+
+                backstack.clear();
+                if (root != null) {
+                    backstack.add(root);
+                }
+                backstack.add(routerTransaction);
+            }
+
+            getRouter().setBackstack(backstack, new HorizontalChangeHandler());
 
         } else {
             CustomAlertDialog.showCustomAlertDialog(
