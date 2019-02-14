@@ -148,7 +148,7 @@ public class DetailsController extends BasePullToRefreshController implements De
                     AppPreferencesHelper.CONSENT_WITH_REGISTRATION_EMAILS_TEXT)));
         }
 
-        if (mEmailsToggle != null && mPresenter.getGdprIsChecked(AppPreferencesHelper.CONSENT_EMAILS_CHECKED)) {
+        if (mEmailsToggle != null && !mPresenter.isGdprDisabled()) {
             mOnToggleSwitchListener = new BaseToggleSwitch.OnToggleSwitchChangeListener() {
                 @Override
                 public void onToggleSwitchChangeListener(int position, boolean isChecked) {
@@ -212,7 +212,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         mLastNameText.setText(value.getSurname());
         mEmailAddressText.setText(value.getEmail());
 
-        if (mEmailsToggle != null && mPresenter.getGdprIsChecked(AppPreferencesHelper.CONSENT_EMAILS_CHECKED)) {
+        if (mEmailsToggle != null && !mPresenter.isGdprDisabled()) {
 //            POSITION 0 == YES
             mEmailsToggle.removeOnToggleSwitchListener();
             mEmailsToggle.setCheckedTogglePosition(value.getReceiveInvitations() ? 0 : 1);
