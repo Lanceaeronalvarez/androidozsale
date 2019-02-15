@@ -392,6 +392,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         outState.putString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE, mSaleOldPrice);
         outState.putInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION, mFromPosition);
         outState.putString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, mOrigin);
+        outState.putString(BundleKeys.SALEITEMDETAILS_KEY_END_DATE, mEndDate);
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
     }
 
@@ -407,6 +408,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleOldPrice = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE);
         mFromPosition = savedInstanceState.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
         mOrigin = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN);
+        mEndDate = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_END_DATE);
         mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
@@ -722,7 +724,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mActionTracker.CVItemDetails(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue()));
 
         if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
-                (!mEndDate.isEmpty() && mEndDate != null) &&
+                (mEndDate != null && !mEndDate.isEmpty()) &&
                 DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
                 DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
             setupSaleRemainingTime(mEndDate);

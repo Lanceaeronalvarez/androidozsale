@@ -40,6 +40,7 @@ public class BundleKeys {
     public static final String SALEITEMDETAILS_KEY_ITEM_OLD_PRICE = "KEY_SALE_OLD_PRICE";
     public static final String SALEITEMDETAILS_KEY_IS_DEEP_LINKED_WITH_SALE = "KEY_IS_DEEP_LINKED_WITH_SALE";
     public static final String SALEITEMDETAILS_KEY_SALE_ORIGIN = "KEY_SALE_ORIGIN";
+    public static final String SALEITEMDETAILS_KEY_END_DATE = "KEY_END_DATE";
 
     //search filters
     public static final String FACET_FILTER_TYPE = "FACET_FILTER_TYPE";
