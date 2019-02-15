@@ -958,10 +958,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 destination = GateKeeper.Destination.SEARCH_FILTER_FOR_CATEGORY;
             }
 
-            Controller searchFilterController = SearchFilterController.newInstance(parameters);
-            mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
-            GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
-            mSearchFilterMvpView.setRepository(this);
+
+            if (!mHasSavedInstance || mActivity.getSearchFilterController() == null) {
+                Controller searchFilterController = SearchFilterController.newInstance(parameters);
+                mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
+                GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
+            } else {
+                mSearchFilterMvpView = mActivity.getSearchFilterController();
+            }
+
+            mSearchFilterMvpView.setRepository(SaleItemsController.this);
         }
         showCollapsingToolbar();
     }

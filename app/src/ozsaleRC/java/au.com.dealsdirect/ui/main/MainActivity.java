@@ -75,6 +75,7 @@ import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
@@ -120,6 +121,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private CheckoutController mCheckoutController;
     private ViewContactsController mContactsController;
     private AccountController mAccountController;
+    private SearchFilterController mSearchFilterController;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -1205,6 +1207,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setAccountController(AccountController accountController) {
         mAccountController = accountController;
+    }
+
+    public void setSearchFilterController(SearchFilterController searchFilterController) {
+        mSearchFilterController = searchFilterController;
+    }
+
+    public SearchFilterController getSearchFilterController() {
+        return mSearchFilterController;
     }
 
     public AccountController getAccountController() {
