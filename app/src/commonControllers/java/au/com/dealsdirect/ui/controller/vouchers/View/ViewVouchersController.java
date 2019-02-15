@@ -60,7 +60,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
     RecyclerView mUsedVouchersRecyclerViewPager;
 
     @BindView(R.id.controller_view_voucher_unused_recyclerviewpager)
-    RecyclerViewPager mUnusedVouchersRecyclerViewPager;
+    RecyclerView mUnusedVouchersRecyclerViewPager;
 
     @BindView(R.id.controller_view_voucher_divider)
     View mDivider;

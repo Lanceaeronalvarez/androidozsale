@@ -112,7 +112,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/margin_small">
 
-            <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/controller_recycler_view_promo_vouchers"
                 style="@style/RecyclerViewPagerVouchersStyle"
                 android:nestedScrollingEnabled="false"
