@@ -35,7 +35,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
 import butterknife.Unbinder;
-import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends AppCompatActivity implements MvpView {
 
@@ -74,7 +74,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @TargetApi(Build.VERSION_CODES.M)
