@@ -19,6 +19,7 @@ import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -456,7 +457,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (view instanceof ElasticDragDismissFrameLayout) {
             mRootView = ((ElasticDragDismissFrameLayout) view);
 
-            mRootView.setDragActivationAreaWidth(Float.MAX_VALUE);
+            mRootView.setDragActivationAreaWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, getResources().getDisplayMetrics()));
             mRootView.setDragActivationAreaHeight(Float.MAX_VALUE);
             mRootView.setDragDismissScale(0.85f);
             mRootView.setDragVerticalThreshold(8);
