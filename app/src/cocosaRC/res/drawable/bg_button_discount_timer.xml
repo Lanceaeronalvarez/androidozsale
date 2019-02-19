@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-        android:color="@color/bg_button_ripple">
+    android:color="@color/bg_button_ripple">
     <item>
         <selector>
 
             <item android:state_enabled="true">
                 <shape android:shape="rectangle">
-                    <corners android:radius="@dimen/edit_text_corner_radius"/>
-                    <solid android:color="@color/bg_button_default"/>
+                    <corners android:bottomLeftRadius="@dimen/button_corner_radius" android:topLeftRadius="@dimen/button_corner_radius"/>
+                    <solid android:color="@color/bg_product_detail_discount_button"/>
                 </shape>
             </item>
 
             <item android:state_enabled="true" android:state_pressed="true">
 
                 <shape android:shape="rectangle">
-                    <corners android:radius="@dimen/edit_text_corner_radius"/>
-                    <solid android:color="@color/bg_button_pressed"/>
+                    <corners android:bottomLeftRadius="@dimen/button_corner_radius" android:topLeftRadius="@dimen/button_corner_radius"/>
+                    <solid android:color="@color/bg_product_detail_discount_button"/>
                 </shape>
             </item>
 
             <item android:state_enabled="false">
                 <shape android:shape="rectangle">
-                    <corners android:radius="@dimen/edit_text_corner_radius"/>
-                    <solid android:color="@color/bg_inactive_add_to_cart_button"/>
+                    <corners android:radius="@dimen/button_corner_radius"/>
+                    <solid android:color="@color/toolbar_skin"/>
                 </shape>
             </item>
 
