@@ -1063,6 +1063,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:visibility="gone"
                 android:enabled="false"
                 android:text="@string/add_to_basket" />
 

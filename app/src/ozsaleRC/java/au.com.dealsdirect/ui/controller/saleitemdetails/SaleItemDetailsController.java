@@ -723,17 +723,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue());
         mActionTracker.CVItemDetails(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue()));
 
-        if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
-                (mEndDate != null && !mEndDate.isEmpty()) &&
-                DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
-                DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
-            setupSaleRemainingTime(mEndDate);
-            mAddToCartTimer.setVisibility(View.VISIBLE);
-            mAddToCartButton.setVisibility(View.GONE);
-        } else {
-            mAddToCartTimer.setVisibility(View.GONE);
-        }
-
         mPresenter.getDynamicDiscount(saleDetail.getSkuId());
 
         mFreeDeliveryImageView.setVisibility(mIsFreeDelivery ? View.VISIBLE : View.GONE);
@@ -756,10 +745,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mProductName.setText(name.trim());
         mProductBrand.setText(brandName.trim());
-
-        mAddToCartButton.setText(!saleDetail.isSoldOut() ? R.string.add_to_cart : R.string.sold_out);
-        mAddToCartButton.setEnabled(!saleDetail.isSoldOut());
-        mAddToCartButton.bringToFront();
 
         if (personalisation != null) {
             mPersonalisationLayout.inflateForProductDetails(mActivity, new Gson().fromJson(
@@ -870,11 +855,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 }
             }
 
-            //modify Initial state depending on the result of all variant's isSoldOut
-            mAddToCartButton.setText(!mIsSoldOutCombined ? R.string.add_to_cart : R.string.sold_out);
-            mAddToCartButton.setEnabled(!mIsSoldOutCombined);
-            mAddToCartButton.bringToFront();
-
             mSizesFlowLayout.setAdapter(mSizesAdapter);
             if (mSelectedSizeIndex >= 0) {
                 mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(mSelectedSizeIndex));
@@ -892,6 +872,28 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 onSelectTag(selectPosSet.isEmpty() ? -1 : selectPosSet.iterator().next());
             });
 
+        }
+
+        if (!mIsSoldOutCombined || !saleDetail.isSoldOut()) {
+            if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
+                    (mEndDate != null && !mEndDate.isEmpty()) &&
+                    DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
+                    DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+                setupSaleRemainingTime(mEndDate);
+                mAddToCartTimer.setVisibility(View.VISIBLE);
+                mAddToCartButton.setVisibility(View.GONE);
+            } else {
+                mAddToCartTimer.setVisibility(View.GONE);
+                mAddToCartButton.setVisibility(View.VISIBLE);
+                mAddToCartButton.setText(R.string.add_to_cart);
+                mAddToCartButton.setEnabled(true);
+                mAddToCartButton.bringToFront();
+            }
+        } else {
+            mAddToCartButton.setText(R.string.sold_out);
+            mAddToCartButton.setVisibility(View.VISIBLE);
+            mAddToCartButton.setEnabled(false);
+            mAddToCartButton.bringToFront();
         }
 
         boolean isOldPriceInfoVisible = saleDetail.getOriginalPrice().getValue() <= 0;
@@ -1227,6 +1229,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
         mAddToCartButton.setEnabled(!isSizeSoldOut);
+        mAddToCartButton.setVisibility(mAddToCartTimer.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
         mAddToCartButton.bringToFront();
 
         if (selectedIndex != mSelectedSizeIndex) {
