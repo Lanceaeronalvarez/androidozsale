@@ -95,7 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/collapsing_toolbar_height"
                 android:animateLayoutChanges="true"
-                android:background="@color/white"
+                android:background="@color/toolbar_skin"
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/toolbar_fade_in_color"
                 app:layout_scrollFlags="scroll|enterAlways">
