@@ -25,6 +25,7 @@ import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandab
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,6 +45,7 @@ import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
@@ -485,6 +487,12 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mActivity.setShopsAsVisibleContainer();
 
                 mActivity.callPublicSettings();
+
+                String[] array = mActivity.getResources().getStringArray(R.array.gdpr_countries);
+                List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));
+                if (mGdprCountriesArray.contains(Settings.getSelectedCountry().countryName.toLowerCase()) && mPresenter.shouldShowStrictConsent()) {
+                    mActivity.callAppConsent();
+                }
 
                 if (showDialog) {
                     CustomAlertDialog.showCustomAlertDialog(mActivity,

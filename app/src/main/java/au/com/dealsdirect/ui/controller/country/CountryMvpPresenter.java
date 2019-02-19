@@ -18,4 +18,6 @@ public interface CountryMvpPresenter <V extends MvpView> extends MvpPresenter<V>
     boolean shouldShowStrictConsent();
 
     void setShowStrictConsent(boolean isShowStrictContent);
+
+    String getCurrentSelectedCountry();
 }

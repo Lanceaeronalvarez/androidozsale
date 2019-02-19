@@ -43,7 +43,6 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
-import au.com.dealsdirect.data.network.model.country.Country;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
@@ -496,7 +495,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         GetConsentDataResponse mapper = (GetConsentDataResponse) response;
 
                         if (mapper.getShowConsentRequired()) {
-                            getDataManager().setIsShowStrictConsent(true);
+                            getDataManager().setShouldShowStrictConsent(true);
                         }
 
                         showStrictConsentUI();
@@ -512,7 +511,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
 
-                        getDataManager().setIsShowStrictConsent(false);
+                        getDataManager().setShouldShowStrictConsent(false);
                     }
                 });
     }
@@ -635,7 +634,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public boolean shouldShowStrictConsent() {
-        return getDataManager().isShowStrictConsent();
+        return getDataManager().shouldShowStrictConsent();
     }
 
     @Override
@@ -948,7 +947,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         if (!isViewAttached()) {
                             return;
                         }
-
+                        getDataManager().setShouldShowStrictConsent(true);
                         getMvpView().hideLoading();
                         //fabric app event sign up reset new user.
                         setIsNewUser(false);

@@ -54,6 +54,7 @@ public class CountryController extends BasePullToRefreshController implements Co
     private boolean mIsAfterSplash;
     private boolean mHasSavedInstance;
     private boolean shouldShowStrictConsent;
+    private String previousSelectedCountry;
 
     public static CountryController newInstance() {
         return new CountryController(
@@ -128,7 +129,8 @@ public class CountryController extends BasePullToRefreshController implements Co
         String[] array = mActivity.getResources().getStringArray(R.array.gdpr_countries);
         List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));
 
-        if (mGdprCountriesArray.contains(country.getCountry().toLowerCase()) && mPresenter.shouldShowStrictConsent()) {
+        if (mGdprCountriesArray.contains(country.getCountry().toLowerCase()) && mPresenter.shouldShowStrictConsent()
+                && !previousSelectedCountry.equalsIgnoreCase(country.getShopCode())) {
             mActivity.callAppConsent();
         } else {
             mActivity.initializeMainController();
@@ -148,6 +150,7 @@ public class CountryController extends BasePullToRefreshController implements Co
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
         mPresenter.getUserCountries();
+        previousSelectedCountry = mPresenter.getCurrentSelectedCountry();
     }
 
     @OnClick(R.id.partial_toolbar_left_view)

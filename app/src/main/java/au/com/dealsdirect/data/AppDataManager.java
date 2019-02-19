@@ -1149,13 +1149,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void setIsShowStrictConsent(boolean shouldShowStrictConsent) {
-        mPreferencesHelper.setIsShowStrictConsent(shouldShowStrictConsent);
+    public void setShouldShowStrictConsent(boolean shouldShowStrictConsent) {
+        mPreferencesHelper.setShouldShowStrictConsent(shouldShowStrictConsent);
     }
 
     @Override
-    public boolean isShowStrictConsent() {
-        return mPreferencesHelper.isShowStrictConsent();
+    public boolean shouldShowStrictConsent() {
+        return mPreferencesHelper.shouldShowStrictConsent();
     }
 
     @Override

@@ -222,8 +222,8 @@ public interface PreferencesHelper {
 
     boolean userHasRateApp();
 
-    void setIsShowStrictConsent(boolean shouldShowStrictConsent);
+    void setShouldShowStrictConsent(boolean shouldShowStrictConsent);
 
-    boolean isShowStrictConsent();
+    boolean shouldShowStrictConsent();
 
 }

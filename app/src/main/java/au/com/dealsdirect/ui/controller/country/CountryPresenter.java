@@ -77,12 +77,17 @@ public class CountryPresenter<V extends CountryMvpView> extends BasePresenter<V>
 
     @Override
     public boolean shouldShowStrictConsent() {
-        return getDataManager().isShowStrictConsent();
+        return getDataManager().shouldShowStrictConsent();
     }
 
     @Override
     public void setShowStrictConsent(boolean isShowStrictContent) {
-        getDataManager().setIsShowStrictConsent(isShowStrictContent);
+        getDataManager().setShouldShowStrictConsent(isShowStrictContent);
+    }
+
+    @Override
+    public String getCurrentSelectedCountry() {
+        return getDataManager().getCountryId();
     }
 
 

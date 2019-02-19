@@ -763,12 +763,12 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
-    public void setIsShowStrictConsent(boolean shouldShowStrictConsent) {
+    public void setShouldShowStrictConsent(boolean shouldShowStrictConsent) {
         Prefs.putBoolean(SHOW_STRICT_CONSENT, shouldShowStrictConsent);
     }
 
     @Override
-    public boolean isShowStrictConsent() {
+    public boolean shouldShowStrictConsent() {
         return Prefs.getBoolean(SHOW_STRICT_CONSENT, true);
     }
 
