@@ -18,7 +18,7 @@
     <bool name="is_category_all_enabled">true</bool>
     <bool name="is_quantity_spinner_loading">true</bool>
     <bool name="is_sale_countdown_timer_enabled">true</bool>
-    <bool name="is_dynamic_discount_banners_enabled">false</bool>
+    <bool name="is_dynamic_discount_banners_enabled">true</bool>
 
     <bool name="is_using_old_banner">true</bool>
 </resources>
