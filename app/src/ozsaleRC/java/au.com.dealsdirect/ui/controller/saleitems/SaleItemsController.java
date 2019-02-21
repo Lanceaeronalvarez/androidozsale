@@ -476,6 +476,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
         outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
         outState.putString(BundleKeys.SALEITEMS_KEY_CATEGORIES, new Gson().toJson(mInitialCategoryTree));
+        outState.putString(BundleKeys.SALEITEMS_TITLE, mTitle);
         if (mSaleItemsToolbarField != null)
             outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
     }
@@ -500,8 +501,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }.getType());
         }
 
-        if (savedInstanceState.containsKey(KEY_SEARCH_TEXT))
+        if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) {
             mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT, "");
+        }
+        mTitle = savedInstanceState.getString(BundleKeys.SALEITEMS_TITLE);
     }
 
 
@@ -1013,6 +1016,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private Set<String> reduceCategoryKeysForRequest(Set<String> categoryKeys) {
+        if (mCategoryTreeResponse.isEmpty()) {
+            return categoryKeys;
+        }
+
         LinkedHashSet<String> keys = new LinkedHashSet<>();
         for (GetCategoryTreeResponse node : mCategoryTreeResponse) {
             node.traverseTree(new GetCategoryTreeResponse.TreeTraversalBlock() {
