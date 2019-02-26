@@ -162,6 +162,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
         //Set default settings here
         Prefs.putString(COUNTRY_ID, getCountryId());
         Prefs.putString(LANGUAGE_ID, getLanguageId());
+        Prefs.putBoolean(SHOW_STRICT_CONSENT, shouldShowStrictConsent());
         Prefs.putBoolean(DEBUG_MODE, context.getResources().getBoolean(R.bool.debug_mode));
         setUserAgent();
     }

@@ -469,7 +469,9 @@
         <item>@string/united_kingdom</item>
     </string-array>
 
+    <!--GDPR country string must be lower case-->
     <string name="united_kingdom">united kingdom</string>
+
     <string name="create_account">create account</string>
     <string name="create_message">Create New Message</string>
     <string name="ic_back">ic_back</string>

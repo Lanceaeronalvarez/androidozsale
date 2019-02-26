@@ -42,6 +42,8 @@ import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
 import com.visa.checkout.VisaPaymentSummary;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -829,18 +831,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 mRouter.setRoot(RouterTransaction.with(new CountryController(true)));
             }
         } else {
+
             Settings.Country country = Settings.getIsMultiCountry() ?
                     Settings.getCountryWithId(defaultCountryId) :
                     Settings.getDefaultCountry();
 
             mPresenter.setCountry(country);
             setAppCountries(country);
-
             setUpAfterCountrySet();
 
-            if (!mAppHasSavedInstance) {
-                initializeMainController();
+            String[] array = getResources().getStringArray(R.array.gdpr_countries);
+            List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));
+            if (mGdprCountriesArray.contains(Settings.getSelectedCountry().countryName.toLowerCase()) && mPresenter.shouldShowStrictConsent()) {
+                callAppConsent();
+            } else {
+                if (!mAppHasSavedInstance) {
+                    initializeMainController();
+                }
             }
+
         }
     }
 
