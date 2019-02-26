@@ -684,6 +684,7 @@
                                     android:src="@drawable/ic_pink_chevron"
                                     android:text="@string/back"
                                     android:textColor="@color/text_medium"
+                                    android:layout_marginTop="@dimen/padding_default"
                                     android:elevation="@dimen/button_elevation"
                                     android:textSize="@dimen/text_size_caption1" />
 
@@ -764,6 +765,7 @@
                     android:gravity="center"
                     android:paddingRight="@dimen/margin_extra_small"
                     android:src="@drawable/ic_pink_chevron"
+                    android:paddingTop="@dimen/padding_small"
                     android:text="@string/back"
                     android:textColor="@color/text_medium"
                     android:textSize="@dimen/text_size_caption1" />
