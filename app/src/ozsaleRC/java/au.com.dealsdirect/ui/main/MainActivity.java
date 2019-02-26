@@ -1229,4 +1229,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mProfiler;
     }
 
+    public void refreshBannersFromLogout() {
+        if (mShopController != null) {
+            mShopController.refreshFromLogout();
+        }
+    }
+
 }

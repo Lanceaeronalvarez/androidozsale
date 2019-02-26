@@ -485,8 +485,8 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mActivity.getMainController().getHomeController().resetRouters();
                 mActivity.getHomeRouter().popToRoot();
                 mActivity.setShopsAsVisibleContainer();
-
                 mActivity.callPublicSettings();
+                mActivity.refreshBannersFromLogout();
 
                 String[] array = mActivity.getResources().getStringArray(R.array.gdpr_countries);
                 List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));
