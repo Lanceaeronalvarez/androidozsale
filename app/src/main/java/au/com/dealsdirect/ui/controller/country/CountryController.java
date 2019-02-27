@@ -54,7 +54,7 @@ public class CountryController extends BasePullToRefreshController implements Co
     private boolean mIsAfterSplash;
     private boolean mHasSavedInstance;
     private boolean shouldShowStrictConsent;
-    private String previousSelectedCountry;
+    private String previousSelectedCountry = "";
 
     public static CountryController newInstance() {
         return new CountryController(
@@ -145,12 +145,11 @@ public class CountryController extends BasePullToRefreshController implements Co
         if (mIsAfterSplash){
             mArrowImage.setVisibility(View.INVISIBLE);
         }
-
-        mAdapter = new CountryAdapter(new ArrayList<>(), mActivity, mPresenter);
+        previousSelectedCountry = mPresenter.getCurrentSelectedCountry();
+        mAdapter = new CountryAdapter(previousSelectedCountry, new ArrayList<>(), mActivity, mPresenter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter);
         mPresenter.getUserCountries();
-        previousSelectedCountry = mPresenter.getCurrentSelectedCountry();
     }
 
     @OnClick(R.id.partial_toolbar_left_view)

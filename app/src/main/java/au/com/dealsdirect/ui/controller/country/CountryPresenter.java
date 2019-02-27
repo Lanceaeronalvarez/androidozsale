@@ -54,10 +54,13 @@ public class CountryPresenter<V extends CountryMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void onCountryItemClick(Country country) {
+    public void onCountryItemClick(String previousSelectedCountry, Country country) {
 
-        Prefs.clear();
-        CookieUtils.getInstance().clear();
+        if (!previousSelectedCountry.equalsIgnoreCase("") &&
+                !previousSelectedCountry.equalsIgnoreCase(country.getShopCode())) {
+            Prefs.clear();
+            CookieUtils.getInstance().clear();
+        }
 
         getMvpView().showSelectedCountryDialog(country);
 
