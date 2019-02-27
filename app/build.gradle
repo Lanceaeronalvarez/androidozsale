@@ -720,8 +720,8 @@ dependencies {
     compile "com.github.markomilos:paginate:$rootProject.paginateVersion"
 
     // leak canary
-    debugCompile "com.squareup.leakcanary:leakcanary-android:$rootProject.leakCanaryVersion"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakCanaryVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakCanaryVersion"
 
     // recycler view pager
     compile "com.github.lsjwzh.RecyclerViewPager:lib:$rootProject.recyclerViewPagerVersion"
