@@ -117,7 +117,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private String bannerGroupType = "";
     private int bannerOffset = 0;
     private int bannerLimit = 0;
-    private int latestOffset = 0;
 
     private String mCategoryID;
     private String mCategoryName;
@@ -136,7 +135,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private int mVerticalOffset;
     private boolean mIsRecyclerViewScrollIdle;
-    private Parcelable mRecyclerViewState;
 
     private static final int MAX_BANNERS = 5;
     private static final int MOBILE_BANNER = 1;
@@ -219,6 +217,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
+        unBindPaginate();
         if (newControllerChangeHandler != null) {
             getRouter().removeChangeListener(newControllerChangeHandler);
             newControllerChangeHandler = null;
@@ -293,10 +292,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             @Override
             public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
-                if(bannerOffset >= mBannersAdapter.getData().size()) {
-                    page++;
-                    bannerOffset += INITIAL_BANNER_COUNT;
-                }
+                page++;
+                bannerOffset += INITIAL_BANNER_COUNT;
                 refresh();
             }
 
@@ -337,7 +334,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
         } else {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-            mBannersAdapter.replace(sales);
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         }
 
@@ -382,13 +379,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         if (mIsDeeplink) {
             mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, 0, 0));
         } else {
-            if (mHasSavedInstance) {
-                bannerGroupType = "";
-                mBannersAdapter.clear();
-                mPresenter.loadShopsBanner(createBannerRequest("", 0, latestOffset));
-            } else {
-                mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
-            }
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
         }
     }
 
@@ -506,11 +497,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             }
         }
 
-        if (mHasSavedInstance) {
-            mHasSavedInstance = false;
-            mLayoutManager.onRestoreInstanceState(mRecyclerViewState);
-        }
-
         onRefreshEnd();
     }
 
@@ -537,9 +523,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         outState.putString(KEY_CATEGORY_ID, mCategoryID);
         outState.putString(KEY_CATEGORY_NAME, mCategoryName);
         outState.putString(KEY_CATEGORY_MAP, mCategoryKey);
-        outState.putParcelable(KEY_BANNERS_LAYOUT_MANAGER_STATE, mLayoutManager.onSaveInstanceState());
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
-        outState.putInt(KEY_BANNERS_OFFSET, bannerOffset);
     }
 
     @Override
@@ -549,8 +533,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mCategoryName = savedInstanceState.getString(KEY_CATEGORY_NAME);
         mCategoryKey = savedInstanceState.getString(KEY_CATEGORY_MAP);
         mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
-        mRecyclerViewState = savedInstanceState.getParcelable(KEY_BANNERS_LAYOUT_MANAGER_STATE);
-        latestOffset = savedInstanceState.getInt(KEY_BANNERS_OFFSET);
     }
 
 
