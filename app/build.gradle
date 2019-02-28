@@ -54,7 +54,7 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 124
+            versionCode 126
             versionName "2.5.1"
             applicationId "au.com.buyinvite.bi"
 
@@ -75,7 +75,7 @@ android {
         }
 
         buyinviteTest {
-            versionCode 124
+            versionCode 126
             versionName "2.5.1"
             applicationId "au.com.buyinvite.bi.test"
 
@@ -96,7 +96,7 @@ android {
         }
 
         cocosaRC {
-            versionCode 124
+            versionCode 126
             versionName "2.5.1"
             applicationId "uk.co.cocosa"
 
@@ -117,7 +117,7 @@ android {
         }
 
         cocosaTest {
-            versionCode 124
+            versionCode 126
             versionName "2.5.1"
             applicationId "uk.co.cocosatest"
 
@@ -181,7 +181,7 @@ android {
         }
 
         ooRC {
-            versionCode 124
+            versionCode 126
             versionName "2.5.1"
             applicationId "au.com.oo"
 
@@ -202,7 +202,7 @@ android {
         }
 
         ooTest {
-            versionCode 124
+            versionCode 126
             versionName "2.5.1"
             applicationId "au.com.oo.test"
 
@@ -332,7 +332,7 @@ android {
         }
 
         singsaleRC {
-            versionCode 124
+            versionCode 126
             versionName "2.5.1"
             applicationId "sg.com.singsale"
 
@@ -354,7 +354,7 @@ android {
         }
 
         singsaleTest {
-            versionCode 124
+            versionCode 126
             versionName "2.5.1"
             applicationId "sg.com.singsaletest"
 
