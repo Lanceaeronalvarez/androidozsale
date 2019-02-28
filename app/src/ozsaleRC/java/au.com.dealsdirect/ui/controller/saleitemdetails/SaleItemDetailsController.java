@@ -457,9 +457,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (view instanceof ElasticDragDismissFrameLayout) {
             mRootView = ((ElasticDragDismissFrameLayout) view);
 
-            mRootView.setDragActivationAreaWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, getResources().getDisplayMetrics()));
+            mRootView.setDragActivationAreaWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics()));
             mRootView.setDragActivationAreaHeight(Float.MAX_VALUE);
-            mRootView.setDragDismissScale(0.85f);
+            mRootView.setDragDismissScale(0.40f);
             mRootView.setDragVerticalThreshold(8);
         }
 

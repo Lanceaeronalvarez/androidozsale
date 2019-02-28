@@ -61,12 +61,28 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
     private float oldY = 0;
     private float dX = 0;
     private float dY = 0;
-    private float speedX = 0;
-    private float speedY = 0;
+    private float speedX = 0; //rawX per millisecond
+    private float speedY = 0; //rawY per millisecond
+    // lower is smoother/slower
+    // at 1.0, it snaps instantly
+    // at 0.0, it doesn't move
+    // any value outside [0.0 ..< 1.0] will cause weird things to happen
+    private float dragSmoothness = 0.4f;
     private boolean isDragging = false;
     private boolean isHorizontalDismissEnabled = true;
     private boolean isVerticalDismissEnabled = true;
     private boolean hasMultiTouchActivated = false;
+
+    private double verticalDirectionThreshold = 8; //8 degrees
+    private boolean isGestureDirectionChanged = false;
+    private double gestureDirectionThreshold = 20; //20 degrees
+    private double establishedGestureDirection = 0;
+    private double timeElapsedForDirectionUpdate = 0; //time elapsed resets to zero after every speed update
+    private double timeElapsedToDirectionUpdate = 40; //70 milliseconds
+    private long previousTime = -1;
+    private double deltaTime = 0;
+    private double timeElapsedForSpeedUpdate = 0; //time elapsed resets to zero after every speed update
+    private double timeElapsedToSpeedUpdate = 7; //20 milliseconds
 
     private List<ElasticDragDismissCallback> callbacks;
 
@@ -87,14 +103,16 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
         dragHorizontalThreshold = 12;
         dragVerticalThreshold = 8;
 
-        flingThreshold = 32;
+        flingThreshold = 50;
 
-        dragDismissScale = 0.85f;
+        dragDismissScale = 0.14f;
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
+        calculateDeltaTime(event);
         calculateTouchVelocity(event);
+        calculateGeneralGestureDirection(event);
         setupTouchPivotPoint(event);
 
         if (processMultiTouch(event)) {
@@ -112,6 +130,23 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
         }
     }
 
+    private void calculateDeltaTime(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                previousTime = -1;
+                deltaTime = 0;
+                break;
+        }
+
+        long time = System.nanoTime();
+        if (previousTime >= 0) {
+            deltaTime = (time - previousTime) / 10000000.0;
+        } else {
+            deltaTime = 0;
+        }
+        previousTime = time;
+    }
+
     private void calculateTouchVelocity(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -119,14 +154,44 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
                 speedY = 0;
                 oldX = event.getRawX();
                 oldY = event.getRawY();
+                timeElapsedForSpeedUpdate = 0;
+                isGestureDirectionChanged = false;
                 break;
             case MotionEvent.ACTION_MOVE:
-                speedX = event.getRawX() - oldX;
-                speedY = event.getRawY() - oldY;
-                oldX = event.getRawX();
-                oldY = event.getRawY();
+                if (timeElapsedForSpeedUpdate > timeElapsedToSpeedUpdate) {
+                    speedX = (event.getRawX() - oldX) / (float) timeElapsedToSpeedUpdate;
+                    speedY = (event.getRawY() - oldY) / (float) timeElapsedToSpeedUpdate;
+                    oldX = event.getRawX();
+                    oldY = event.getRawY();
+                    timeElapsedForSpeedUpdate -= timeElapsedToSpeedUpdate;
+                }
                 break;
         }
+        timeElapsedForSpeedUpdate += deltaTime;
+    }
+
+    private void calculateGeneralGestureDirection(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                timeElapsedForDirectionUpdate = 0;
+                establishedGestureDirection = -1;
+                isGestureDirectionChanged = false;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (timeElapsedForDirectionUpdate > timeElapsedToDirectionUpdate) {
+                    timeElapsedForDirectionUpdate -= timeElapsedToDirectionUpdate;
+
+                    double direction = getDirection();
+
+                    if (establishedGestureDirection < 0) {
+                        establishedGestureDirection = (direction < 0 ? direction + 360 : direction) % 360.0;
+                    } else if (!isGestureDirectionChanged) {
+                        isGestureDirectionChanged = Math.abs(getDirectionDifference(establishedGestureDirection, direction)) > gestureDirectionThreshold;
+                    }
+                }
+                break;
+        }
+        timeElapsedForDirectionUpdate += deltaTime;
     }
 
     private void setupTouchPivotPoint(MotionEvent event) {
@@ -174,7 +239,28 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
         return isVerticalDismissEnabled &&
                 event.getRawY() < dragActivationAreaHeight &&
                 speedY > dragVerticalThreshold &&
-                (Math.abs(speedX) < dragHorizontalThreshold || isDragging);
+                (Math.abs(speedX) < dragHorizontalThreshold || isDragging)
+                && isDirectionAlmostVerticalDown(verticalDirectionThreshold) &&
+                !isGestureDirectionChanged;
+    }
+
+    private boolean isDirectionAlmostVerticalDown(double threshold) {
+        return Math.abs(getDirectionDifference(getDirection(), 90.0)) < threshold;
+    }
+
+    private double getDirectionDifference(double dir1, double dir2) {
+        double diff = (dir1 - dir2) % 360.0;
+        if (diff > 180) {
+            diff -= 360;
+        }
+        if (diff < -180) {
+            diff += 360;
+        }
+        return diff;
+    }
+
+    private double getDirection() {
+        return Math.toDegrees(Math.atan2(speedY, speedX));
     }
 
     private float getDistanceFromInitialTouchPoint(MotionEvent event) {
@@ -204,17 +290,20 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
                 isDragging = true;
                 float centerX = (-dX / this.getWidth());
                 float centerY = (-dY / this.getHeight());
-                this.animate()
-                        .x(event.getRawX() + dX + this.getWidth() / 2 * (-1 + scale + centerX * 2 * (1 - scale)))
-                        .y(event.getRawY() + dY + this.getHeight() / 2 * (-1 + scale + centerY * 2 * (1 - scale)))
-                        .scaleX(scale)
-                        .scaleY(scale)
-                        .setDuration(0)
-                        .start();
+                float newPosX = event.getRawX() + dX + this.getWidth() / 2 * (-1 + scale + centerX * 2 * (1 - scale));
+                float newPosY = event.getRawY() + dY + this.getHeight() / 2 * (-1 + scale + centerY * 2 * (1 - scale));
+                setX(lerp(getX(),newPosX, dragSmoothness));
+                setY(lerp(getY(), newPosY, dragSmoothness));
+                setScaleX(scale);
+                setScaleY(scale);
                 dispatchDragCallback(scale, distance,
                         scale, distance);
                 break;
         }
+    }
+
+    private float lerp(float oldPos, float newPos, float t) {
+        return oldPos * (1 - t) + newPos * t;
     }
 
     private void processEndDragGesture(MotionEvent event) {
