@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.shops;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -32,7 +33,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -73,6 +73,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
     private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
     private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
+    private static final String KEY_BANNERS_LAYOUT_MANAGER_STATE = "KEY_BANNERS_LAYOUT_MANAGER_STATE";
+    private static final String KEY_BANNERS_OFFSET = "KEY_BANNERS_OFFSET";
     private static final String TEXT_ALL = "• All";
     private static final int INITIAL_BANNER_COUNT = 200;
 
@@ -114,7 +116,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private String bannerGroupType = "";
     private int bannerOffset = 0;
-    private int bannerLimit = INITIAL_BANNER_COUNT;
+    private int bannerLimit = 0;
+    private int latestOffset = 0;
 
     private String mCategoryID;
     private String mCategoryName;
@@ -133,6 +136,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private int mVerticalOffset;
     private boolean mIsRecyclerViewScrollIdle;
+    private Parcelable mRecyclerViewState;
 
     private static final int MAX_BANNERS = 5;
     private static final int MOBILE_BANNER = 1;
@@ -230,6 +234,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         assert (mActivity) != null;
 
+        bannerLimit = INITIAL_BANNER_COUNT;
+
         mActivity.setShopController(this);
 
         mActivity.setDraggableViewPager(true);
@@ -287,8 +293,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             @Override
             public void onLoadMore() {
                 // Load next page of data (e.g. network or database)
-                page++;
-                bannerOffset += INITIAL_BANNER_COUNT;
+                if(bannerOffset >= mBannersAdapter.getData().size()) {
+                    page++;
+                    bannerOffset += INITIAL_BANNER_COUNT;
+                }
                 refresh();
             }
 
@@ -374,7 +382,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         if (mIsDeeplink) {
             mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, 0, 0));
         } else {
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
+            if (mHasSavedInstance) {
+                bannerGroupType = "";
+                mBannersAdapter.clear();
+                mPresenter.loadShopsBanner(createBannerRequest("", 0, latestOffset));
+            } else {
+                mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
+            }
         }
     }
 
@@ -461,7 +475,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         mActivity.getMainController().getHomeController().setViewpagerScreen(MainController.SHOP_INDEX);
 
-        if (mCategoryID != null && !mCategoryID.equals(categoryID)) { return; }
+
+        if (mCategoryID != null && !mCategoryID.equals(categoryID)) {
+            return;
+        }
 
         hasLoadedAllItems = false;
         mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_SALEBANNERS.getValue());
@@ -487,6 +504,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 hasLoadedAllItems = true;
                 mPaginateManager.setHasMoreDataToLoad(false);
             }
+        }
+
+        if (mHasSavedInstance) {
+            mHasSavedInstance = false;
+            mLayoutManager.onRestoreInstanceState(mRecyclerViewState);
         }
 
         onRefreshEnd();
@@ -515,7 +537,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         outState.putString(KEY_CATEGORY_ID, mCategoryID);
         outState.putString(KEY_CATEGORY_NAME, mCategoryName);
         outState.putString(KEY_CATEGORY_MAP, mCategoryKey);
+        outState.putParcelable(KEY_BANNERS_LAYOUT_MANAGER_STATE, mLayoutManager.onSaveInstanceState());
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+        outState.putInt(KEY_BANNERS_OFFSET, bannerOffset);
     }
 
     @Override
@@ -525,6 +549,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mCategoryName = savedInstanceState.getString(KEY_CATEGORY_NAME);
         mCategoryKey = savedInstanceState.getString(KEY_CATEGORY_MAP);
         mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+        mRecyclerViewState = savedInstanceState.getParcelable(KEY_BANNERS_LAYOUT_MANAGER_STATE);
+        latestOffset = savedInstanceState.getInt(KEY_BANNERS_OFFSET);
     }
 
 
