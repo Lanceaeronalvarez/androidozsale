@@ -54,8 +54,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 126
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -75,8 +75,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 126
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -96,8 +96,8 @@ android {
         }
 
         cocosaRC {
-            versionCode 126
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "uk.co.cocosa"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -117,8 +117,8 @@ android {
         }
 
         cocosaTest {
-            versionCode 126
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "uk.co.cocosatest"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -181,8 +181,8 @@ android {
         }
 
         ooRC {
-            versionCode 126
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -202,8 +202,8 @@ android {
         }
 
         ooTest {
-            versionCode 126
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -332,8 +332,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 126
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -354,8 +354,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 126
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "sg.com.singsaletest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -375,8 +375,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 124
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -397,8 +397,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 124
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "nz.co.nzsaletest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
