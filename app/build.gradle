@@ -54,8 +54,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 121
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -75,8 +75,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 121
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -96,8 +96,8 @@ android {
         }
 
         cocosaRC {
-            versionCode 101
-            versionName "1.14.0"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "uk.co.cocosa"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -108,7 +108,7 @@ android {
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "8b8c0b64fa8ac9dc5b4835a68a356bf7"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "10357598833"
+            resValue "string", "fb_page_id", "259952730881867"
             resValue "string", "twitter_user_id", "twitter://user?user_id=2686522639"
             resValue "string", "app_uri_hostname", "www.cocosa.com.au"
 
@@ -117,8 +117,8 @@ android {
         }
 
         cocosaTest {
-            versionCode 101
-            versionName "1.14.0"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "uk.co.cocosatest"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -129,7 +129,7 @@ android {
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "8b8c0b64fa8ac9dc5b4835a68a356bf7"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "10357598833"
+            resValue "string", "fb_page_id", "259952730881867"
             resValue "string", "twitter_user_id", "twitter://user?user_id=2686522639"
             resValue "string", "app_uri_hostname", "www.cocosa.com.au"
 
@@ -181,8 +181,8 @@ android {
         }
 
         ooRC {
-            versionCode 121
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -202,8 +202,8 @@ android {
         }
 
         ooTest {
-            versionCode 121
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -332,8 +332,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 121
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -354,8 +354,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 121
-            versionName "2.5.1"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "sg.com.singsaletest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -375,8 +375,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 101
-            versionName "1.14.0"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -397,8 +397,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 101
-            versionName "1.14.0"
+            versionCode 127
+            versionName "2.5.2"
             applicationId "nz.co.nzsaletest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -720,8 +720,8 @@ dependencies {
     compile "com.github.markomilos:paginate:$rootProject.paginateVersion"
 
     // leak canary
-    debugCompile "com.squareup.leakcanary:leakcanary-android:$rootProject.leakCanaryVersion"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakCanaryVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakCanaryVersion"
 
     // recycler view pager
     compile "com.github.lsjwzh.RecyclerViewPager:lib:$rootProject.recyclerViewPagerVersion"

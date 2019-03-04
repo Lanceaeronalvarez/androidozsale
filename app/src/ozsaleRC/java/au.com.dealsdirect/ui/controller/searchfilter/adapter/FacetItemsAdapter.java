@@ -59,6 +59,10 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 int currentPosition = vh.getAdapterPosition();
 
+                if (currentPosition < 0 || currentPosition >= mData.size()) {
+                    return;
+                }
+
                 switch (mFilterType) {
                     //single selection, allows unselection logic for sort type of facet.
                     case BundleKeys.SORT_FACETFILTER_NAME:

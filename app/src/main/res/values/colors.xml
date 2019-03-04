@@ -242,5 +242,6 @@
     <color name="bg_banner_discount">#CA433C</color>
     <color name="bg_banner_name_old">#e5000000</color>
     <color name="bg_banner_name_new">#8a000000</color>
+    <color name="bg_inactive_add_to_cart_button">@color/tab_bar_icon_inactive</color>
 
 </resources>

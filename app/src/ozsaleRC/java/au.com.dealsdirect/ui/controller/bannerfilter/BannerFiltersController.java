@@ -118,6 +118,12 @@ public class BannerFiltersController extends BaseController implements BannerFil
     }
 
     @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+        mPresenter.onAttach(this);
+    }
+
+    @Override
     public void onDetach(View view) {
         super.onDetach(view);
         mPresenter.onDetach();

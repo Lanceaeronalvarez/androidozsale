@@ -99,7 +99,8 @@ public class LegalitiesController extends BasePullToRefreshController implements
         String header = mActivity.getResources().getString(R.string.base_html_template_header);
         String footer = mActivity.getResources().getString(R.string.base_html_template_footer);
 
-        mWebView.loadData(header + value + footer, "text/html; charset=UTF-8", null);
+        mWebView.loadDataWithBaseURL(null,header + value + footer,
+                "text/html", "UTF-8", null);
         mWebView.setVisibility(View.VISIBLE);
     }
 

@@ -119,6 +119,11 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     }
 
     @Override
+    public boolean shouldShowStrictConsent() {
+        return getDataManager().shouldShowStrictConsent();
+    }
+
+    @Override
     public void loadAccountItems(List<AccountItem> accountItems) {
         getMvpView().showAccountItems(accountItems);
     }

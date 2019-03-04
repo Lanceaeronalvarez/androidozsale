@@ -42,6 +42,8 @@ import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
 import com.visa.checkout.VisaPaymentSummary;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -75,6 +77,7 @@ import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
@@ -120,6 +123,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private CheckoutController mCheckoutController;
     private ViewContactsController mContactsController;
     private AccountController mAccountController;
+    private SearchFilterController mSearchFilterController;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -657,10 +661,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showStrictConsentUI() {
-        if (!mIsShowingStrictConsentUI) {
+        if (mPresenter.shouldShowStrictConsent()) {
             mIsShowingStrictConsentUI = true;
-            mRouter.setRoot(RouterTransaction.with(StrictConsentController.newInstance())
-                    .tag(StrictConsentController.TAG));
+
+            if (!mPresenter.isTablet() || (mPresenter.isTablet() && getHomeRouter() == null)) {
+                mRouter.setRoot(RouterTransaction.with(StrictConsentController.newInstance())
+                        .tag(StrictConsentController.TAG));
+            } else {
+                Bundle bundle = new BundleBuilder(new Bundle())
+                        .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.STRICT_CONSENT_UI)
+                        .build();
+                GateKeeper.setRoot(getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
+                        pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
+            }
+
+        } else {
+            setUpAfterCountrySet();
+            if (!mIsShowingStrictConsentUI && !mAppHasSavedInstance) {
+                initializeMainController();
+            }
         }
     }
 
@@ -670,7 +689,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mPresenter.callSaveConsentData();
 
-        splashShownCallback();
+        initializeMainController();
     }
 
     public void onPurchase(CardForm cardForm) {
@@ -811,16 +830,27 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             if (!mIsShowingStrictConsentUI && !mAppHasSavedInstance) {
                 mRouter.setRoot(RouterTransaction.with(new CountryController(true)));
             }
-            return;
+        } else {
+
+            Settings.Country country = Settings.getIsMultiCountry() ?
+                    Settings.getCountryWithId(defaultCountryId) :
+                    Settings.getDefaultCountry();
+
+            mPresenter.setCountry(country);
+            setAppCountries(country);
+            setUpAfterCountrySet();
+
+            String[] array = getResources().getStringArray(R.array.gdpr_countries);
+            List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));
+            if (mGdprCountriesArray.contains(Settings.getSelectedCountry().countryName.toLowerCase()) && mPresenter.shouldShowStrictConsent()) {
+                callAppConsent();
+            } else {
+                if (!mAppHasSavedInstance) {
+                    initializeMainController();
+                }
+            }
+
         }
-
-        Settings.Country country = Settings.getIsMultiCountry() ?
-                Settings.getCountryWithId(defaultCountryId) :
-                Settings.getDefaultCountry();
-
-        mPresenter.setCountry(country);
-        setAppCountries(country);
-        setUpAfterCountrySet();
     }
 
     public void setUpAfterCountrySet() {
@@ -834,19 +864,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             // GetAppSettings and GetPaymentToken will be called on success of this call
             mPresenter.callLoginTicket();
             mPresenter.callGetAppSettings();
-            mPresenter.callGetAppSettingsConsent(this);
         } else {
             callPublicSettings();
         }
 
         mPresenter.callGetAccountData();
 
-        if (!mIsShowingStrictConsentUI && !mAppHasSavedInstance) {
-            initializeMainController();
-        }
-
         callGCMRegisterSubscriber();
-
     }
 
     public void initializeMainController() {
@@ -858,7 +882,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         //If not logged in, call GetPublicAppSettings
         mPresenter.callGetPublicPaymentToken();
         mPresenter.callGetPublicAppSettings();
-        mPresenter.callGetPublicAppSettingsConsent(this);
+    }
+
+    public void callAppConsent() {
+        mPresenter.callGetTemplateTexts();
+        if (isAuthorized()) {
+            mPresenter.callGetAppSettingsConsent(this);
+        } else {
+            mPresenter.callGetPublicAppSettingsConsent(this);
+        }
     }
 
     public void setShopsAsVisibleContainer() {
@@ -1013,8 +1045,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         @Override
         public void onReceive(Context context, Intent intent) {
             updateSnackbar(isNetworkConnected());
-            if(isNetworkConnected()) {
-                ((BaseController) getCurrentController(getCurrentRouter())).refreshContents();
+
+            Controller currentController = getCurrentController(getCurrentRouter());
+            BaseController baseController = currentController instanceof BaseController ?
+                    (BaseController) getCurrentController(getCurrentRouter()) : null;
+            if(isNetworkConnected() && baseController != null) {
+                baseController.refreshContents();
             }
         }
     };
@@ -1182,6 +1218,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mAccountController = accountController;
     }
 
+    public void setSearchFilterController(SearchFilterController searchFilterController) {
+        mSearchFilterController = searchFilterController;
+    }
+
+    public SearchFilterController getSearchFilterController() {
+        return mSearchFilterController;
+    }
+
     public AccountController getAccountController() {
         return mAccountController;
     }
@@ -1192,6 +1236,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public ProfilerInterface getProfiler() {
         return mProfiler;
+    }
+
+    public void refreshBannersFromLogout() {
+        if (mShopController != null) {
+            mShopController.refreshFromLogout();
+        }
     }
 
 }

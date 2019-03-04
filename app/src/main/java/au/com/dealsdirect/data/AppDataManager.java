@@ -1149,6 +1149,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setShouldShowStrictConsent(boolean shouldShowStrictConsent) {
+        mPreferencesHelper.setShouldShowStrictConsent(shouldShowStrictConsent);
+    }
+
+    @Override
+    public boolean shouldShowStrictConsent() {
+        return mPreferencesHelper.shouldShowStrictConsent();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }

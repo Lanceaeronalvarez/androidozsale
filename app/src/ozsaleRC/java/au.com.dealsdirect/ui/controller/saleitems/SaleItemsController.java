@@ -30,7 +30,7 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -63,8 +63,7 @@ import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.AdaptiveTabLayout;
 import au.com.dealsdirect.ui.custom.SearchEditText;
-import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
-import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
+import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -477,6 +476,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
         outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
         outState.putString(BundleKeys.SALEITEMS_KEY_CATEGORIES, new Gson().toJson(mInitialCategoryTree));
+        outState.putString(BundleKeys.SALEITEMS_TITLE, mTitle);
         if (mSaleItemsToolbarField != null)
             outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
     }
@@ -501,8 +501,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }.getType());
         }
 
-        if (savedInstanceState.containsKey(KEY_SEARCH_TEXT))
+        if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) {
             mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT, "");
+        }
+        mTitle = savedInstanceState.getString(BundleKeys.SALEITEMS_TITLE);
     }
 
 
@@ -511,7 +513,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mActivity.setDraggableViewPager(false);
         mPresenter.onAttach(this);
         mPtrFrameLayout.setPtrHandler(this);
-        mAppBar.addOnOffsetChangedListener(this);
+        if (mAppBar != null) {
+            mAppBar.addOnOffsetChangedListener(this);
+        }
 
         determineToolbarTitle();
 
@@ -547,19 +551,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private void determineToolbarTitle() {
 
         String lookingForText = getString(R.string.search_tag);
-        String categoryToolbarString = StringUtils.buildCategoryToolbarTitle(mCategoryKey);
-
-        //determining hint logic
-        //category precedes above all
 
         // bug/gen-8065_ozsale-reskin_bugfixing - always set searchbar hint to 'search'
         mSaleItemsToolbarField.setHint(lookingForText);
 
-        String editTextString = mSaleItemsToolbarField.getText().toString();
         //determining toolbartitle logic
         //category precedes above all
-
-
         String[] titles = mTitle.split(CATEGORY_KEY_SEPARATOR_REPLACEMENT, 0);
         String title = "";
         String subTitle = "";
@@ -598,7 +595,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void onDetach(View view) {
         mPtrFrameLayout.setPtrHandler(null);
-        mAppBar.removeOnOffsetChangedListener(this);
+        if (mAppBar != null) {
+            mAppBar.removeOnOffsetChangedListener(this);
+        }
         mSaleItemsToolbarField.setOnEditorActionListener(null);
         mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
         hideKeyboard();
@@ -677,8 +676,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 } else {
                     // Snaps search bar to expanded or hidden depending on whether
                     // t is halfway to 0 or 1
-                    float t = -mVerticalOffset / (float) mAppBar.getHeight();
-                    mAppBar.setExpanded(t < 0.5, true);
+                    float t = -mVerticalOffset / (float) (mAppBar != null ? mAppBar.getHeight() : 0);
+                    if (mAppBar != null) {
+                        mAppBar.setExpanded(t < 0.5, true);
+                    }
                 }
             }
         });
@@ -709,6 +710,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         } else {
                             showKeyboard();
                         }
+                    }
+                }
+                if (from == currentController) {
+                    if (mAppBar != null) {
+                        mAppBar.setExpanded(true, false);
                     }
                 }
             }
@@ -863,7 +869,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void refreshContents() {
         super.refreshContents();
-        mAppBar.setExpanded(true, true);
+        setupSearchFilters();
+        mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+        if (mAppBar != null) {
+            mAppBar.setExpanded(true, true);
+        }
     }
 
     void onBackClick() {
@@ -896,7 +906,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
                                    String skuId, String saleId, boolean isFreeDelivery) {
-        mAppBar.setExpanded(true, false);
         mSearchFilterMvpView.closeFacets();
         mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
@@ -919,15 +928,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActionTracker.clicksEvent(mSalesOrigin + PRODUCT_CLICK, position);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            routerTransaction = routerTransaction
-                    .pushChangeHandler(new FadeChangeHandler())
-                    .popChangeHandler(new FadeChangeHandler());
-        } else {
-            routerTransaction = routerTransaction
-                    .pushChangeHandler(new SharedArcFadePushChangeHandler())
-                    .popChangeHandler(new SharedArcFadePopChangeHandler());
-        }
+        int[] originalPos = new int[2];
+        viewHolder.itemView.getLocationOnScreen(originalPos);
+        int left = originalPos[0];
+        int top = originalPos[1];
+        int width = viewHolder.itemView.getWidth();
+        int height = viewHolder.itemView.getHeight();
+        routerTransaction = routerTransaction
+                .pushChangeHandler(new ArcZoomChangeHandler(left, top, width, height))
+                .popChangeHandler(new ArcZoomChangeHandler(left, top, width, height));
 
         getRouter().pushController(routerTransaction);
 
@@ -952,10 +961,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 destination = GateKeeper.Destination.SEARCH_FILTER_FOR_CATEGORY;
             }
 
-            Controller searchFilterController = SearchFilterController.newInstance(parameters);
-            mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
-            GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
-            mSearchFilterMvpView.setRepository(this);
+
+            if (!mHasSavedInstance || mActivity.getSearchFilterController() == null) {
+                Controller searchFilterController = SearchFilterController.newInstance(parameters);
+                mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
+                GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
+            } else {
+                mSearchFilterMvpView = mActivity.getSearchFilterController();
+            }
+
+            mSearchFilterMvpView.setRepository(SaleItemsController.this);
         }
         showCollapsingToolbar();
     }
@@ -1001,6 +1016,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private Set<String> reduceCategoryKeysForRequest(Set<String> categoryKeys) {
+        if (mCategoryTreeResponse.isEmpty()) {
+            return categoryKeys;
+        }
+
         LinkedHashSet<String> keys = new LinkedHashSet<>();
         for (GetCategoryTreeResponse node : mCategoryTreeResponse) {
             node.traverseTree(new GetCategoryTreeResponse.TreeTraversalBlock() {

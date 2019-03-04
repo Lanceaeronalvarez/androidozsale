@@ -11,7 +11,13 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface CountryMvpPresenter <V extends MvpView> extends MvpPresenter<V> {
     void getUserCountries();
 
-    void onCountryItemClick(Country country);
+    void onCountryItemClick(String previousSelectedCountry, Country country);
 
     void setCountry(Country country);
+
+    boolean shouldShowStrictConsent();
+
+    void setShowStrictConsent(boolean isShowStrictContent);
+
+    String getCurrentSelectedCountry();
 }

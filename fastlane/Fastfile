@@ -30,7 +30,6 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   test_emails = '"
   gavin@mysale.com
   jc@mysale.com,
-  ayi@smartwave.ph,
   ruz@apacsale.com,
   jc@mysale.com,
   chindee@smartwave.ph
@@ -44,10 +43,7 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   jc@apacsale.com,
   TrishCorpuz@mysale.com,
   lindz@smartwave.ph,
-  gerald@smartwave.ph,
   chindee@smartwave.ph,
-  geraldadorza@mysale.com,
-  geraldadorza@apacsale.com,
   denis@mysale.com
 "'
 

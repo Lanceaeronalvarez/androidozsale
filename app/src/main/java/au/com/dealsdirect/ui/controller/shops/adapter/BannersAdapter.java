@@ -272,8 +272,17 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     }
 
     public void setupDimensions() {
-        int minColumns = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_min_column_count : R.integer.banner_mobile_min_column_count);
-        int maxColumns = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_max_column_count : R.integer.banner_mobile_max_column_count);
+        int resId;
+        switch (ScreenUtils.getOrientation(mActivity)) {
+            case Configuration.ORIENTATION_LANDSCAPE:
+                resId = mPresenter.isTablet() ? R.integer.banner_tablet_landscape_column_count : R.integer.banner_mobile_landscape_column_count;
+                break;
+            default:
+                resId = mPresenter.isTablet() ? R.integer.banner_tablet_portrait_column_count : R.integer.banner_mobile_portrait_column_count;
+                break;
+        }
+        int minColumns = mActivity.getResources().getInteger(resId);
+        int maxColumns = minColumns;
 
         if (!mActivity.getResources().getBoolean(R.bool.is_ourpay_app)) {
             // Dynamic Height Computation

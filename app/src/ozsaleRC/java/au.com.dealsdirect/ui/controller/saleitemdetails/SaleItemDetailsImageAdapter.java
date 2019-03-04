@@ -24,12 +24,14 @@ import com.github.chrisbanes.photoview.ScalableImageView;
 import com.mysale.genie.utility.GenericEvent;
 import com.mysale.genie.utility.RxBus;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
+import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -51,6 +53,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     private LoadImagesListener mLoadImagesListener;
     private int mViewType;
     private Drawable mPlaceholder;
+    private SaleDetailsImageListener mSaleDetailsListener;
     private RequestListener mRequestListener = new RequestListener() {
         @Override
         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
@@ -115,7 +118,8 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                                        LoadImagesListener loadImagesListener,
                                        List<String> data,
                                        int viewType,
-                                       Drawable placeholder, SaleItemDetailsMvpView saleItemDetailsMvpView) {
+                                       Drawable placeholder, SaleItemDetailsMvpView saleItemDetailsMvpView,
+                                       SaleDetailsImageListener saleDetailsImageListener) {
 
         this.mActivity = activity;
         this.mIsTablet = isTablet;
@@ -126,6 +130,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
         this.mViewType = viewType;
         this.mPlaceholder = placeholder;
         this.mSaleItemDetailsView = saleItemDetailsMvpView;
+        this.mSaleDetailsListener = saleDetailsImageListener;
     }
 
 
@@ -233,18 +238,10 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                     }
                 });
                 scalableImageView.setOnScaleChangeListener((scaleFactor, focusX, focusY) -> {
-
-                    boolean resetZoom = scalableImageView.getScale() <= 1.05f;
+                    float scale = (float) Math.round(scalableImageView.getScale());
+                    boolean resetZoom = scale <= 1.00f;
                     mSaleItemDetailsView.toggleClipPadding(resetZoom);
-                    if (resetZoom) {
-                        for (View v : mViewsToToggle) {
-                            v.setVisibility(View.VISIBLE);
-                        }
-                    } else {
-                        for (View v : mViewsToToggle) {
-                            v.setVisibility(View.INVISIBLE);
-                        }
-                    }
+                    mSaleDetailsListener.scaleImage(resetZoom);
                 });
                 break;
             default:

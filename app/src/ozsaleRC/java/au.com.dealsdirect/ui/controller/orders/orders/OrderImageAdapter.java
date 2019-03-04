@@ -54,7 +54,7 @@ public class OrderImageAdapter extends RecyclerView.Adapter<OrderImageAdapter.Or
                     item.getFileName()),
                     holder.orderImageView);
 
-            if (position == IMAGE_LIMIT_POSITION) {
+            if (position == IMAGE_LIMIT_POSITION && mData.size() > IMAGE_LIMIT_SIZE) {
                 holder.orderImageOverlayImageView.setVisibility(View.VISIBLE);
                 holder.orderImageText.setText("+" + String.valueOf(mData.size() - IMAGE_LIMIT_SIZE));
             }

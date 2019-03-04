@@ -465,8 +465,12 @@
         <item>@drawable/bg_account_logout</item>
     </integer-array>
 
+    <string-array name="gdpr_countries">
+        <item>@string/united_kingdom</item>
+    </string-array>
 
-
+    <!--GDPR country string must be lower case-->
+    <string name="united_kingdom">united kingdom</string>
 
     <string name="create_account">create account</string>
     <string name="create_message">Create New Message</string>
@@ -629,7 +633,7 @@
     <string name="dummy_text">dummy text</string>
     <string name="an_error_has_occurred">An error has occurred</string>
     <string name="track_order">Track Order</string>
-    <string name="default_image_link">http://c1.mysalec.com/brands/%1$s/%2$s/%3$s</string>
+    <string name="default_image_link">https://c1.mysalec.com/brands/%1$s/%2$s/%3$s</string>
     <string name="ourpay_order_schedule">ORDER PAYMENT SCHEDULE</string>
 
     <!--Country Id Mapping-->

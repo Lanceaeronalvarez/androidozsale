@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1.5"/>
-e
+
         <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
             android:id="@+id/child_frame_container"
             android:layout_width="0dp"

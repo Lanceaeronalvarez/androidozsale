@@ -107,4 +107,9 @@ public class CurrentReturnAdapter extends RecyclerView.Adapter<CurrentReturnView
         mReturnDetailsResponseBodyList = list;
         notifyDataSetChanged();
     }
+
+    public void updateCurrentReturnsList(List<CurrentReturns> currentReturnsList) {
+        mCurrentReturnList = currentReturnsList;
+        notifyDataSetChanged();
+    }
 }

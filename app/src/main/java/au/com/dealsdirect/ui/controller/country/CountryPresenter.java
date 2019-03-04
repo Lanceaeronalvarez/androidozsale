@@ -2,6 +2,8 @@ package au.com.dealsdirect.ui.controller.country;
 
 import com.mysale.genie.utility.Prefs;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,15 +42,25 @@ public class CountryPresenter<V extends CountryMvpView> extends BasePresenter<V>
             countries.add(listOfCountry);
         }
 
+        Collections.sort(countries, new Comparator<Country>() {
+            @Override
+            public int compare(Country s1, Country s2) {
+                return s1.getCountry().compareToIgnoreCase(s2.getCountry());
+            }
+        });
+
         getMvpView().showCountries(countries, getDataManager().getCountryId());
         getMvpView().hideLoading();
     }
 
     @Override
-    public void onCountryItemClick(Country country) {
+    public void onCountryItemClick(String previousSelectedCountry, Country country) {
 
-        Prefs.clear();
-        CookieUtils.getInstance().clear();
+        if (!previousSelectedCountry.equalsIgnoreCase("") &&
+                !previousSelectedCountry.equalsIgnoreCase(country.getShopCode())) {
+            Prefs.clear();
+            CookieUtils.getInstance().clear();
+        }
 
         getMvpView().showSelectedCountryDialog(country);
 
@@ -64,6 +76,21 @@ public class CountryPresenter<V extends CountryMvpView> extends BasePresenter<V>
         getDataManager().setCountryId(Settings.getSelectedCountry().countryId);
         getDataManager().setLanguageId(Settings.getSelectedCountry().languageId);
         getDataManager().setUserAgent();
+    }
+
+    @Override
+    public boolean shouldShowStrictConsent() {
+        return getDataManager().shouldShowStrictConsent();
+    }
+
+    @Override
+    public void setShowStrictConsent(boolean isShowStrictContent) {
+        getDataManager().setShouldShowStrictConsent(isShowStrictContent);
+    }
+
+    @Override
+    public String getCurrentSelectedCountry() {
+        return getDataManager().getCountryId();
     }
 
 

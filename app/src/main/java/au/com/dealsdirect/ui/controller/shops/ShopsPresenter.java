@@ -33,7 +33,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
     @Override
     public void loadShopsBanner(GetBannerRequest request) {
-        loadShopsBanner(request, false);
+        loadShopsBanner(request, true);
     }
 
     @Override

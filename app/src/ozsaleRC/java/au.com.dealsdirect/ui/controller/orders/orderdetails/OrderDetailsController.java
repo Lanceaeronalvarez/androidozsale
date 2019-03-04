@@ -132,7 +132,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
         mDeliveryPriceTextValue.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getDeliveryAmount()));
         mVoucherPaymentTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getDiscountAmount()));
         mCreditCardPaymentTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getCreditCardAmount()));
-        mTotalTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getTotalAmounExclVat()));
+        mTotalTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getTotalAmount()));
 
         //delivery details
         //take the first address of the first item since all of the items have the same address

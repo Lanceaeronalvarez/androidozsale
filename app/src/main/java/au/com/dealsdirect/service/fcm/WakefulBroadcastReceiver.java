@@ -25,6 +25,8 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.util.SparseArray;
 
+import au.com.dealsdirect.BuildConfig;
+
 /**
  * Helper for the common pattern of implementing a {@link BroadcastReceiver}
  * that receives a device wakeup event and then passes the work off
@@ -78,33 +80,26 @@ public abstract class WakefulBroadcastReceiver extends BroadcastReceiver {
      *                {@link Context#startService(Intent)
      *                Context.startService}.
      */
-    public static ComponentName startWakefulService(Context context, Intent intent) {
+    public static void startWakefulService(Context context, Intent intent) {
         synchronized (mActiveWakeLocks) {
             int id = mNextId;
             mNextId++;
             if (mNextId <= 0) {
                 mNextId = 1;
             }
-
             intent.putExtra(EXTRA_WAKE_LOCK_ID, id);
-            ComponentName comp;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                comp = context.startForegroundService(intent);
                 GcmIntentService.enqueueWork(context, intent);
             } else {
-                comp = context.startService(intent);
-            }
-            if (comp == null) {
-                return null;
+                context.startService(intent);
             }
 
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                    "wake:" + comp.flattenToShortString());
+                    "genie:" + BuildConfig.APP_NAME);
             wl.setReferenceCounted(false);
             wl.acquire(60 * 1000);
             mActiveWakeLocks.put(id, wl);
-            return comp;
         }
     }
 

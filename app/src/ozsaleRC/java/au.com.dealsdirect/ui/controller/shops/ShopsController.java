@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.shops;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -32,7 +33,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -73,6 +73,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
     private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
     private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
+    private static final String KEY_BANNERS_LAYOUT_MANAGER_STATE = "KEY_BANNERS_LAYOUT_MANAGER_STATE";
+    private static final String KEY_BANNERS_OFFSET = "KEY_BANNERS_OFFSET";
     private static final String TEXT_ALL = "• All";
     private static final int INITIAL_BANNER_COUNT = 200;
 
@@ -114,7 +116,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private String bannerGroupType = "";
     private int bannerOffset = 0;
-    private int bannerLimit = INITIAL_BANNER_COUNT;
+    private int bannerLimit = 0;
 
     private String mCategoryID;
     private String mCategoryName;
@@ -153,8 +155,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mActivity.setShopController(this);
         mShopPtrLayout.setPtrHandler(this);
         mShopAppBarLayout.addOnOffsetChangedListener(this);
-        resetBannerLayout();
-        mShopAppBarLayout.setExpanded(true, true);
 
         super.onAttach(view);
     }
@@ -217,6 +217,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
+        unBindPaginate();
         if (newControllerChangeHandler != null) {
             getRouter().removeChangeListener(newControllerChangeHandler);
             newControllerChangeHandler = null;
@@ -232,6 +233,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         assert (mActivity) != null;
 
+        bannerLimit = INITIAL_BANNER_COUNT;
+
         mActivity.setShopController(this);
 
         mActivity.setDraggableViewPager(true);
@@ -239,31 +242,30 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         displayBanners();
 
-        if (mHasSavedInstance) {
-            ShopsController currentController = this;
-            newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
+        ShopsController currentController = this;
+        newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
 
-                @Override
-                public void onChangeStarted(@Nullable Controller to,
-                                            @Nullable Controller from, boolean isPush,
-                                            @NonNull ViewGroup container,
-                                            @NonNull ControllerChangeHandler handler) {
+            @Override
+            public void onChangeStarted(@Nullable Controller to,
+                                        @Nullable Controller from, boolean isPush,
+                                        @NonNull ViewGroup container,
+                                        @NonNull ControllerChangeHandler handler) {
+                mShopAppBarLayout.setExpanded(true, true);
+            }
 
+            @Override
+            public void onChangeCompleted(@Nullable Controller to,
+                                          @Nullable Controller from, boolean isPush,
+                                          @NonNull ViewGroup container,
+                                          @NonNull ControllerChangeHandler handler) {
+                if (to == currentController && !(from instanceof SaleItemsController)
+                        && !(mActivity.getMainController().getCurrentViewPagerController() instanceof ShopsController)) {
+                    mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
+                    mActivity.getMainController().getHomeController().setSavedCurrentItem();
                 }
-
-                @Override
-                public void onChangeCompleted(@Nullable Controller to,
-                                              @Nullable Controller from, boolean isPush,
-                                              @NonNull ViewGroup container,
-                                              @NonNull ControllerChangeHandler handler) {
-                    if (to == currentController) {
-                        mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
-                        mActivity.getMainController().getHomeController().setSavedCurrentItem();
-                    }
-                }
-            };
-            getRouter().addChangeListener(newControllerChangeHandler);
-        }
+            }
+        };
+        getRouter().addChangeListener(newControllerChangeHandler);
 
         mSearchBarEditText.setFocusable(false);
         mSearchBarEditText.setOnClickListener(view1 -> {
@@ -330,10 +332,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         if (sales.isEmpty() && !mHasSavedInstance) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, INITIAL_BANNER_COUNT));
         } else {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-            mBannersAdapter.replace(sales);
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         }
 
@@ -465,7 +466,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         mActivity.getMainController().getHomeController().setViewpagerScreen(MainController.SHOP_INDEX);
 
-        if (mCategoryID != null && !mCategoryID.equals(categoryID)) { return; }
+
+        if (mCategoryID != null && !mCategoryID.equals(categoryID)) {
+            return;
+        }
 
         hasLoadedAllItems = false;
         mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_SALEBANNERS.getValue());
@@ -620,7 +624,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         resetShopsBanners(getCategoryTreeResponse.getId());
 
         if (getCategoryTreeResponse.getKey() != null) {
-            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getId(), bannerOffset, bannerLimit));
+            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getId(), bannerOffset, bannerLimit), false);
             if (mShopsControllerToolbarLogo != null) {
                 mShopsControllerToolbarLogo.setVisibility(View.GONE);
             }
@@ -633,7 +637,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             assert (mActivity) != null;
             mActivity.setIsFromCategories(false);
             showLogoHeader();
-            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getId(), bannerOffset, bannerLimit));
+            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getId(), bannerOffset, bannerLimit), false);
         }
     }
 
@@ -911,6 +915,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             assert (mActivity) != null;
             loadShopBanners();
         }
+    }
+
+    public void refreshFromLogout() {
+        bannerGroupType = "";
+        bannerOffset = 0;
+        mBannersAdapter.clear();
+        mPresenter.loadShopsBanner(createBannerRequest("", 0, bannerLimit), true);
     }
 
 }

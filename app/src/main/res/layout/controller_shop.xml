@@ -43,6 +43,7 @@
             android:id="@+id/main.collapsing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/toolbar_skin"
             android:fitsSystemWindows="true"
             android:paddingBottom="@dimen/margin_small"
             app:contentScrim="@color/white"

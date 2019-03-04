@@ -3,7 +3,11 @@ package au.com.dealsdirect.data.network.model.login;
  * Created by CodeineBot on 1/5/17.
  */
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.mysale.genie.utility.LegacyBaseResponseValue;
+
+import java.util.HashMap;
 
 public class LoginFacebook {
 
@@ -20,16 +24,15 @@ public class LoginFacebook {
         private String facebookUserID;
         private String password = "";
         private String facebookCookieValue;
+        private HashMap<String, String> parameters;
 
-
-        public RequestValue(String email, String firstName, String lastName, String countryID, String languageID, String facebookUserID, String facebookCookieValue) {
-            this.email = email;
-            this.firstName = firstName;
-            this.lastName = lastName;
+        public RequestValue(String countryID, String languageID, String facebookUserID, String facebookCookieValue,
+                            HashMap<String, String> parameters) {
             this.facebookUserID = facebookUserID;
             this.facebookCookieValue = facebookCookieValue;
             this.countryID = countryID;
             this.languageID = languageID;
+            this.parameters = parameters;
         }
     }
 

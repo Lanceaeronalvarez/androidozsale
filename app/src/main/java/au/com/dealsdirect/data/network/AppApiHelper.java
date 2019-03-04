@@ -272,18 +272,18 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.getServerSettings())
+        return Rx2AndroidNetworking.get(ApiEndPoint.getServerSettings())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetServerSettings.RequestValue(countryId)))
+                .addQueryParameter(new GetServerSettings.RequestValue(countryId))
                 .build()
                 .getObjectObservable(GetServerSettings.ResponseValue.class);
     }
 
     @Override
     public Observable<GetAppSettings.ResponseValue> callGetPublicAppSettings(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.getPublicAppSettings())
+        return Rx2AndroidNetworking.get(ApiEndPoint.getPublicAppSettings())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettings.RequestValue(countryId)))
+                .addQueryParameter(new GetAppSettings.RequestValue(countryId))
                 .build()
                 .getObjectObservable(GetAppSettings.ResponseValue.class);
     }
@@ -299,18 +299,18 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetAppSettings.ResponseValue> callGetAppSettings(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.getAppSettings())
+        return Rx2AndroidNetworking.get(ApiEndPoint.getAppSettings())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettings.RequestValue(countryId)))
+                .addQueryParameter(new GetAppSettings.RequestValue(countryId))
                 .build()
                 .getObjectObservable(GetAppSettings.ResponseValue.class);
     }
 
     @Override
     public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.getAppSettingsSection())
+        return Rx2AndroidNetworking.get(ApiEndPoint.getAppSettingsSection())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsSection.RequestValue(countryId)))
+                .addQueryParameter(new GetAppSettingsSection.RequestValue(countryId))
                 .build()
                 .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
     }
@@ -353,9 +353,9 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetAppSettingsConsent.ResponseValue> callGetPublicAppSettingsConsent(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.getPublicAppSettingsSection())
+        return Rx2AndroidNetworking.get(ApiEndPoint.getPublicAppSettingsSection())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsConsent.RequestValue(countryId)))
+                .addQueryParameter(new GetAppSettingsConsent.RequestValue(countryId))
                 .build()
                 .getObjectObservable(GetAppSettingsConsent.ResponseValue.class);
     }

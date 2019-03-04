@@ -268,6 +268,12 @@ public class SearchFilterController extends BaseController implements SearchFilt
     }
 
     @Override
+    protected void onAttach(@NonNull View view){
+        mPresenter.onAttach(this);
+        super.onAttach(view);
+    }
+
+    @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
@@ -278,6 +284,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         //create a category map from the categorytreeresponse in saleitems, else
         // use saleitemscontroller's category map if it is not empty else
+
+        mActivity.setSearchFilterController(this);
 
         mPresenter.requestCategoryMap();
         if(mCategoryMap.isEmpty()) {

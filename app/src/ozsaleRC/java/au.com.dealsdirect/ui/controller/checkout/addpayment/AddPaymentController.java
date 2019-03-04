@@ -51,6 +51,7 @@ import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.IntrospectionUtils;
+import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -145,6 +146,26 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mIsOurpaySelectDeliveryMethod = args.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
         mCurrentOrderValue = new Gson().fromJson(args.getString(BundleKeys.CURRENT_ORDER_VALUE, ""), Value.class);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(BundleKeys.IS_FROM_CART, isFromCart);
+        outState.putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, mIsOurpaySelectDeliveryMethod);
+        outState.putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost);
+        outState.putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mCurrentOrderValue));
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        isFromCart = savedInstanceState.getBoolean(BundleKeys.IS_FROM_CART);
+        mIsOurpaySelectDeliveryMethod = savedInstanceState.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD);
+        mCartTotalCost = savedInstanceState.getString(BundleKeys.CART_TOTAL_COST);
+        mCurrentOrderValue = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.CURRENT_ORDER_VALUE), Value.class);
     }
 
     @Override

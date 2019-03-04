@@ -22,11 +22,13 @@ public interface AuthenticationMvpPresenter<V extends MvpView> extends GdprMvpPr
 //
 //    void doApiCallForListResponse(Observable observable, ApiCallback callback);
 
-    boolean loginViaFacebook(String email, String firstName,
-                             String lastName, String facebookUserID,
-                             String facebookCookieValue);
+    boolean loginViaFacebook(String facebookUserID,
+                             String facebookCookieValue,
+                             boolean tcAccepted, boolean emailsAccepted,
+                             String accessToken);
 
-    void onFacebookLogin(Activity activity, CallbackManager callbackManager, int isRegister);
+    void onFacebookLogin(Activity activity, CallbackManager callbackManager, int isRegister,
+                         boolean tcAccepted, boolean emailsAccepted);
 
 
 }

@@ -317,7 +317,12 @@ public class RegisterController extends VisaCheckoutController implements Regist
         } else if (mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == -1) {
             onError(R.string.please_select_an_option_for_promotional_emails);
         } else {
-            mPresenter.onFacebookLogin(mActivity, mCallbackManager, 1);
+            boolean tncAccepted = (mTermsCheck != null && mTermsCheck.isChecked()) ||
+                    (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() == 0);
+
+            boolean emailsAccepted = mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == 0;
+
+            mPresenter.onFacebookLogin(mActivity, mCallbackManager, 1, tncAccepted, emailsAccepted);
         }
     }
 
@@ -357,7 +362,24 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @Override
     public void onVisaCheckoutButtonClicked() {
         mRegisterMethod = VCO;
-        mVcoPresenter.loginWithVisaCheckout();
+
+        if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
+                (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {
+
+            String templateTextError = mPresenter.getGdprTemplateTexts(
+                    AppPreferencesHelper.CONSENT_WITH_REGISTRATION_TERMS_WARNING);
+
+            if (templateTextError == null || templateTextError.equals("")) {
+                onError(R.string.please_accept_terms_and_conditions);
+            } else {
+                onError(templateTextError);
+            }
+
+        } else if (mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == -1) {
+            onError(R.string.please_select_an_option_for_promotional_emails);
+        } else {
+            mVcoPresenter.loginWithVisaCheckout();
+        }
     }
 
     private void onLegalitiesClicked(String key, String title) {

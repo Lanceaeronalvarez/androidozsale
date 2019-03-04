@@ -25,4 +25,6 @@ public interface AccountMvpPresenter <V extends MvpView> extends MvpPresenter<V>
     boolean isMultiLanguage();
 
     boolean isAuthorized();
+
+    boolean shouldShowStrictConsent();
 }

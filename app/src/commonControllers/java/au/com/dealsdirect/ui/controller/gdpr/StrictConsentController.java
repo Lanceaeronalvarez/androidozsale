@@ -1,21 +1,28 @@
 package au.com.dealsdirect.ui.controller.gdpr;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.TextView;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by Paul on 7/21/17.
@@ -39,6 +46,9 @@ public class StrictConsentController extends BaseController {
 
     @BindView(R.id.controller_strict_consent_button)
     Button mButton;
+
+    @BindView(R.id.partial_toolbar_field_title_left_option)
+    TextView mBackButton;
 
     public StrictConsentController(Bundle args) {
         super(args);
@@ -80,6 +90,7 @@ public class StrictConsentController extends BaseController {
 
         mWebView.addJavascriptInterface(new WebViewJavascriptInterface(mActivity), JS_INTERFACE_TAG);
         mWebView.loadUrl(CONSENT_HTML_LOCATION);
+        mBackButton.setVisibility(View.INVISIBLE);
 
         mButton.setText(mActivity.getMyTemplateTexts(AppPreferencesHelper.CONSENT_CONTINUE_TEXT));
         mButton.setOnClickListener(v -> mActivity.onClickAgreeStrictConsentUI());
@@ -95,9 +106,20 @@ public class StrictConsentController extends BaseController {
 
         @JavascriptInterface
         public void loadPrivacyPolicy() {
+            mWebView.post(() -> {
+                mBackButton.setVisibility(View.VISIBLE);
+                mWebView.loadDataWithBaseURL(null,mActivity.getMyTemplateTexts(AppPreferencesHelper.CONSENT_FULL_TEMPLATE_TEXT)
+                                +"<br><br><br><br><br><br><br>",
+                        "text/html", "UTF-8", null);
 
-            mWebView.post(() -> mWebView.loadUrl(PRIVACY_POLICY_HTML_LOCATION));
-
+            });
         }
     }
+
+    @OnClick(R.id.partial_toolbar_field_title_left_option)
+    public void onClick() {
+        mWebView.loadUrl(CONSENT_HTML_LOCATION);
+        mBackButton.setVisibility(View.INVISIBLE);
+    }
+
 }

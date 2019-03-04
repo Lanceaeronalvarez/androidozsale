@@ -135,21 +135,6 @@ public class CurrentReturnsController extends BasePullToRefreshController
         mCurrentReturnsRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
         mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
 
-        if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
-            showLoading();
-            mPresenter.loadCurrentReturns();
-        } else {
-
-            mCurrentReturnsAdapter = new CurrentReturnAdapter(
-                    mCurrentReturns,
-                    returnDetailsResponseBodyList,
-                    mPresenter);
-
-            mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
-            mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
-//            getCurrentReturnItems(mCurrentReturns);
-        }
-
         CurrentReturnsController currentController = this;
         newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
 
@@ -168,6 +153,11 @@ public class CurrentReturnsController extends BasePullToRefreshController
                                           @NonNull ControllerChangeHandler handler) {
                 if (to == currentController) {
                     updateToolbar();
+
+                    if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
+                        showLoading();
+                    }
+                    mPresenter.loadCurrentReturns();
                 }
             }
         };
@@ -181,16 +171,19 @@ public class CurrentReturnsController extends BasePullToRefreshController
             getRouter().removeChangeListener(newControllerChangeHandler);
             newControllerChangeHandler = null;
         }
+        mCurrentReturnsRecyclerView.setAdapter(null);
+        mCurrentReturnsAdapter = null;
         super.onDestroyView(view);
     }
 
 
     @Override
     public void showCurrentReturns(CurrentReturnResponseBody currentReturnResponseBody) {
-        List<CurrentReturns> currentReturns =
-                currentReturnResponseBody.getCurrentReturnResponse().getCurrentReturns();
+        List<CurrentReturns> currentReturns = currentReturnResponseBody
+                .getCurrentReturnResponse().getCurrentReturns();
 
         if (currentReturns != null && currentReturns.size() != 0) {
+            currentReturns = new ArrayList<>(currentReturns);
 
             mCurrentReturnsRequestButton.setVisibility(View.VISIBLE);
             mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
@@ -198,11 +191,16 @@ public class CurrentReturnsController extends BasePullToRefreshController
             mPlaceholderLayout.setVisibility(View.GONE);
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
 
+            if (mCurrentReturnsAdapter == null) {
+                mCurrentReturnsAdapter = new CurrentReturnAdapter(currentReturns, returnDetailsResponseBodyList, mPresenter);
+            } else {
+                mCurrentReturnsAdapter.updateCurrentReturnsList(currentReturns);
+            }
+            mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
+
+            scrollToNewReturn(mCurrentReturns, currentReturns);
             mCurrentReturns = currentReturns;
 
-            mCurrentReturnsAdapter = new CurrentReturnAdapter(currentReturns, returnDetailsResponseBodyList, mPresenter);
-
-            mCurrentReturnsRecyclerView.setAdapter(mCurrentReturnsAdapter);
             getCurrentReturnItems(mCurrentReturns);
 
 
@@ -285,9 +283,6 @@ public class CurrentReturnsController extends BasePullToRefreshController
     }
 
     private void requestNewReturn() {
-        if (mCurrentReturns != null)
-            mCurrentReturns.clear();
-
         getRouter().pushController(RouterTransaction.with(
                 ReturnOrdersController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
@@ -303,5 +298,24 @@ public class CurrentReturnsController extends BasePullToRefreshController
     private void updateToolbar(){
         mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
         mCurrentReturnsRequestButton.setVisibility(View.VISIBLE);
+    }
+
+    private void scrollToNewReturn(List<CurrentReturns> previousList, List<CurrentReturns> newList) {
+        if (previousList == null || newList == null) {
+            return;
+        }
+
+        int index = -1;
+        for(int i = 0; i < newList.size(); i++) {
+            CurrentReturns currentReturn = newList.get(i);
+            if (!previousList.contains(currentReturn)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index >= 0 && mCurrentReturnsRecyclerView != null) {
+            mCurrentReturnsRecyclerView.scrollToPosition(index);
+        }
     }
 }

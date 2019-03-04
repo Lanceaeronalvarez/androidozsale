@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.crypto.Mac;
@@ -257,24 +258,25 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
         }
     }
 
-
     @Override
     public boolean loginViaFacebook(
-            String email,
-            String firstName,
-            String lastName,
             String facebookUserID,
-            String facebookCookieValue) {
+            String facebookCookieValue,
+            boolean tcAccepted, boolean emailsAccepted,
+            String accessToken) {
+
+        HashMap<String, String> parameters = new HashMap<>();
+        parameters.put("tcAccepted", String.valueOf(tcAccepted));
+        parameters.put("emailsAccepted", String.valueOf(emailsAccepted));
+        parameters.put("accessToken", accessToken);
 
         getCompositeDisposable().add(getDataManager().callLoginViaFacebook(
                 new LoginFacebook.RequestValue(
-                        email,
-                        firstName,
-                        lastName,
                         getDataManager().getCountryId(),
                         getDataManager().getLanguageId(),
                         facebookUserID,
-                        facebookCookieValue))
+                        facebookCookieValue,
+                        parameters))
 
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
@@ -296,13 +298,14 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
 
 
     @Override
-    public void onFacebookLogin(Activity activity, CallbackManager callbackManager, int isRegister) {
+    public void onFacebookLogin(Activity activity, CallbackManager callbackManager, int isRegister, boolean tcAccepted,
+                                boolean emailsAccepted) {
         LoginManager loginManager = LoginManager.getInstance();
         loginManager.logInWithReadPermissions(activity, permissions);
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                fetchUserInfo(loginResult.getAccessToken());
+                fetchUserInfo(loginResult.getAccessToken(), tcAccepted, emailsAccepted);
                 if (isRegister == 1) {
                     AppEventHelper.completedRegistration(AppConstants.API_REGISTER_FACEBOOK);
                 }
@@ -320,7 +323,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
         });
     }
 
-    private void fetchUserInfo(final AccessToken accessToken) {
+    private void fetchUserInfo(final AccessToken accessToken, boolean tcAccepted, boolean emailsAccepted) {
 
         GraphRequest request = GraphRequest.newMeRequest(
                 accessToken,
@@ -337,7 +340,7 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
 
                                 generateFBSignedRequest(accessToken);
 
-                                validateFBLogin();
+                                validateFBLogin(tcAccepted, emailsAccepted, accessToken.getToken());
 
                                 LoginManager.getInstance().logOut();
                             }
@@ -353,10 +356,10 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
         request.executeAsync();
     }
 
-    private void validateFBLogin() {
+    private void validateFBLogin(boolean tcAccepted, boolean emailsAccepted, String accessToken) {
 
         if (isFacebookDetailsComplete()) {
-            loginViaFacebook(strEmail, strFirstName, strLastName, strFBUserID, strFBSignedRequest);
+            loginViaFacebook(strFBUserID, strFBSignedRequest, tcAccepted, emailsAccepted, accessToken);
         } else {
             getMvpView().showLoginError("Missing info from Facebook", true);
         }

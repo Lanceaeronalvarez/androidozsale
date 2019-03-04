@@ -58,8 +58,8 @@
     <color name="bg_button_tutorial">#f5f4f4</color>
     <color name="bg_button_tutorial_pressed">#ECECEC</color>
 
-    <color name="bg_button_addcart_default">#65D87F</color>
-    <color name="bg_button_addcart_pressed">#65D87F</color>
+    <color name="bg_button_addcart_default">#50c2c0</color>
+    <color name="bg_button_addcart_pressed">#50c2c0</color>
     <color name="bg_button_copy_to_clipboard">#4F4F4F</color>
 
     <!-- Text -->
@@ -144,7 +144,7 @@
     <color name="ourpay_verify_resend">#000080</color>
 
     <!-- Orders -->
-    <color name="bg_order_node">#323232</color>
+    <color name="bg_order_node">#65D87F</color>
 
     <!-- ViewHolder -->
     <color name="viewholder_text_remove">@color/text_highlight</color>
@@ -159,6 +159,10 @@
     <color name="toolbar_text_medium">@color/white</color>
     <color name="toolbar_text_light">@color/white</color>
     <color name="toolbar_text_medium_dark">@color/white</color>
-    <color name="toolbar_fade_in_color">@color/toolbar_skin</color>
+    <color name="toolbar_fade_in_color">@color/colorPrimaryDark</color>
+
+    <color name="bg_product_detail_discount_button">#419b9a</color>
+    <color name="bg_inactive_add_to_cart_button">@color/toolbar_skin</color>
+
 
 </resources>

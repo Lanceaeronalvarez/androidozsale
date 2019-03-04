@@ -11,6 +11,8 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.ApiCallback;
+import au.com.dealsdirect.data.network.ApiEndPoint;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -150,7 +152,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     @Override
     public boolean isGdprDisabled() {
         //consent mode 0, gdpr disabled. -1 default return value from preferences if no response is saved in preferences.
-        return getDataManager().getAppSettingsConsentMode() <= 0;
+        return ApiEndPoint.LEGACY_API_VERSION < 3.24;
     }
 
     @Override

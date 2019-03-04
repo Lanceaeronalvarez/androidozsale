@@ -79,7 +79,7 @@ ext {
     mockitoVersion = '2.7.1'
 
     //Routing
-    leakCanaryVersion = '1.5.1'
+    leakCanaryVersion = '1.6.3'
     conductorVersion = '2.1.4'
     paginateVersion = '0.5.1'
 

@@ -27,11 +27,13 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.Countrie
     private String mSelectedCountry;
     private CountryMvpPresenter mPresenter;
     private Context context;
+    private String previousSelectedCountry;
 
-    public CountryAdapter(ArrayList<Country> countries, Context context, CountryMvpPresenter presenter) {
+    public CountryAdapter(String previousSelectedCountry, ArrayList<Country> countries, Context context, CountryMvpPresenter presenter) {
         this.mCountries = countries;
         this.context = context;
         this.mPresenter = presenter;
+        this.previousSelectedCountry = previousSelectedCountry;
     }
 
     @Override
@@ -55,7 +57,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.Countrie
 
         holder.itemView.setOnClickListener(v -> {
             notifyDataSetChanged();
-            mPresenter.onCountryItemClick(mCountries.get(position));
+            mPresenter.onCountryItemClick(previousSelectedCountry, mCountries.get(position));
             holder.mCountryText.setTextColor(context.getResources().getColor(R.color.country_select_active));
         });
     }

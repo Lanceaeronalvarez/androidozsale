@@ -3,6 +3,8 @@ package au.com.dealsdirect.data.network.model.returns.currentreturn;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 /**
  * dp Created by Admin on 6/29/17.
  */
@@ -108,4 +110,38 @@ public class CurrentReturns {
         this.description = description;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object != null) {
+            if (object == this) {
+                return true;
+            } else if (object instanceof CurrentReturns) {
+                CurrentReturns other = (CurrentReturns) object;
+                return (getID() == null ? other.getID() == getID() : getID().equals(other.getID())) &&
+                        (getInvoiceNo() == null ? other.getInvoiceNo() == getInvoiceNo() : getInvoiceNo().equals(other.getInvoiceNo())) &&
+                        (getOrderNumber() == null ? other.getOrderNumber() == getOrderNumber() : getOrderNumber().equals(other.getOrderNumber())) &&
+                        (getInvoiceNoRef() == null ? other.getInvoiceNoRef() == getInvoiceNoRef() : getInvoiceNoRef().equals(other.getInvoiceNoRef())) &&
+                        (getLastSavedDate() == null ? other.getLastSavedDate() == getLastSavedDate() : getLastSavedDate().equals(other.getLastSavedDate())) &&
+                        (getApprovedDate() == null ? other.getApprovedDate() == getApprovedDate() : getApprovedDate().equals(other.getApprovedDate())) &&
+                        (getRan() == null ? other.getRan() == getRan() : getRan().equals(other.getRan())) &&
+                        (getReturnStatus() == null ? other.getReturnStatus() == getReturnStatus() : getReturnStatus().equals(other.getReturnStatus())) &&
+                        (getDescription() == null ? other.getDescription() == getDescription() : getDescription().equals(other.getDescription()));
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getID(),
+                getInvoiceNo(),
+                getOrderNumber(),
+                getInvoiceNoRef(),
+                getLastSavedDate(),
+                getApprovedDate(),
+                getRan(),
+                getReturnStatus(),
+                getDescription());
+    }
 }

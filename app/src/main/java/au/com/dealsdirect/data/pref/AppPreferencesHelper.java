@@ -130,6 +130,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public static final String CONSENT_MODE = "Mode";
     public static final String CONSENT_TNC_CHECKED = "RegAgreementTermsAndConditionCheckboxTicked";
     public static final String CONSENT_EMAILS_CHECKED = "RegAgreementReceiveEmailsCheckboxTicked";
+    public static final String SHOW_STRICT_CONSENT = "ShowStrictConsent";
 
     /*ACCOUNT DATA*/
     public static final String ACCOUNT_DATA_SORTING = "AccountDataSorting";
@@ -161,6 +162,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
         //Set default settings here
         Prefs.putString(COUNTRY_ID, getCountryId());
         Prefs.putString(LANGUAGE_ID, getLanguageId());
+        Prefs.putBoolean(SHOW_STRICT_CONSENT, shouldShowStrictConsent());
         Prefs.putBoolean(DEBUG_MODE, context.getResources().getBoolean(R.bool.debug_mode));
         setUserAgent();
     }
@@ -759,6 +761,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean userHasRateApp() {
         return Prefs.getBoolean(USER_HAS_RATE_APP, false);
+    }
+
+    @Override
+    public void setShouldShowStrictConsent(boolean shouldShowStrictConsent) {
+        Prefs.putBoolean(SHOW_STRICT_CONSENT, shouldShowStrictConsent);
+    }
+
+    @Override
+    public boolean shouldShowStrictConsent() {
+        return Prefs.getBoolean(SHOW_STRICT_CONSENT, true);
     }
 
     public void setEventUserId(String userId) {

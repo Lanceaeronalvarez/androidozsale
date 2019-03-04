@@ -35,7 +35,6 @@ public class SharedArcFadePopChangeHandler extends TransitionChangeHandler {
 
         TransitionSet transition = new TransitionSet()
                 .setOrdering(TransitionSet.ORDERING_SEQUENTIAL)
-                .addTransition(new Fade(Fade.OUT))
                 .addTransition(new TransitionSet().addTransition(new ChangeBounds()).addTransition(new ChangeClipBounds()).addTransition(new ChangeTransform()))
                 .addTransition(new Fade(Fade.IN));
 
