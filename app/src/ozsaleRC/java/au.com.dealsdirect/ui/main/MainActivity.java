@@ -156,6 +156,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mIsViewAttached = true;
         getActivityComponent().inject(this);
+        registerInternetCheckReceiver();
         mProfiler.setStartLogTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue());
 
         setUnBinder(ButterKnife.bind(this));
@@ -216,6 +217,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onDestroy() {
         mPresenter.onDetach();
         mIsViewAttached = false;
+        unregisterReceiver(broadcastReceiver);
         super.onDestroy();
     }
 
@@ -223,13 +225,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onResume() {
         super.onResume();
         mPresenter.onAttach(this);
-        registerInternetCheckReceiver();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
