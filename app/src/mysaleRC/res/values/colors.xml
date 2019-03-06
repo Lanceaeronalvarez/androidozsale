@@ -12,6 +12,10 @@
     <color name="status_bar">@color/bg_splash</color>
     <color name="status_bar_splash">@color/bg_splash_color_end</color>
 
+    <color name="bg_splash_color_end">#FFA300</color>
+    <color name="bg_splash_color_center">#FF8800</color>
+    <color name="bg_splash_color_start">#FF7100</color>
+
     <!--Search Edit Text-->
     <color name="search_edit_text_hint">#CCFFFFFF</color>
     <color name="search_edit_text">@color/white</color>
@@ -37,8 +41,8 @@
 
     <!-- Buttons -->
     <color name="bg_button_ripple">@color/white</color>
-    <color name="bg_button_default">@color/colorPrimaryDark</color>
-    <color name="bg_button_pressed">@color/colorPrimaryDark</color>
+    <color name="bg_button_default">@color/colorSecondary</color>
+    <color name="bg_button_pressed">@color/colorSecondary</color>
 
     <color name="bg_join_now_btn_ripple">@color/white</color>
     <color name="bg_join_now_btn_default">#cacaca</color>
@@ -46,8 +50,8 @@
 
     <color name="clipboard_default">#FF8B8B8B</color>
     <color name="clipboard_pressed">#FF8B8B8B</color>
-    <color name="fb_default">#009BEC</color>
-    <color name="fb_pressed">#009BEC</color>
+    <color name="fb_default">#3b5998</color>
+    <color name="fb_pressed">#8b9dc3</color>
     <color name="twitter_default">#FF00B5E9</color>
     <color name="twitter_pressed">#FF00B5E9</color>
     <color name="mail_default">#FFEA5757</color>
@@ -60,7 +64,7 @@
 
     <color name="bg_button_addcart_default">#65D87F</color>
     <color name="bg_button_addcart_pressed">#65D87F</color>
-    <color name="bg_button_copy_to_clipboard">#212121</color>
+    <color name="bg_button_copy_to_clipboard">#292929</color>
 
     <!-- Text -->
     <color name="text_extra_dark">#000000</color>
@@ -119,7 +123,7 @@
     <color name="tab_bar_icon_hovered">@color/colorAccent</color>
 
     <color name="bottom_nav_accent">@color/colorAccent</color>
-    <color name="bottom_nav_inactive">@color/text_extra_light</color>
+    <color name="bottom_nav_inactive">@color/text_medium</color>
     <color name="bottom_nav_background">@color/toolbar_skin</color>
 
     <color name="progress_loader_stroke">@color/colorAccent</color>
@@ -143,7 +147,7 @@
     <color name="ourpay_verify_resend">#000080</color>
 
     <!-- Orders -->
-    <color name="bg_order_node">#323232</color>
+    <color name="bg_order_node">#65D87F</color>
 
     <!-- ViewHolder -->
     <color name="viewholder_text_remove">@color/text_highlight</color>
@@ -152,9 +156,5 @@
     <color name="join_now_text_color">@color/white</color>
 
     <color name="refunded_state_color">@color/ourpay_orange</color>
-
-    <color name="bg_splash_color_end">#FFA300</color>
-    <color name="bg_splash_color_center">#FF8800</color>
-    <color name="bg_splash_color_start">#FF7100</color>
 
 </resources>
