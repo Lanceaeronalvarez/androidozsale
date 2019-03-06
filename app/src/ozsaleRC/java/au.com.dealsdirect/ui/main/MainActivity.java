@@ -736,8 +736,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void callLoginTicket() {
-        mPresenter.callLoginTicket();
+    public void callLoginTicket(boolean isGdprCountry) {
+        mPresenter.callLoginTicket(this, isGdprCountry);
     }
 
     @Override
@@ -845,6 +845,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             if (mGdprCountriesArray.contains(Settings.getSelectedCountry().countryName.toLowerCase()) && mPresenter.shouldShowStrictConsent()) {
                 callAppConsent();
             } else {
+                if (isAuthorized()) {
+                    // If login ticket exist, call login ticket api to renew cookies and ticket
+                    // GetAppSettings and GetPaymentToken will be called on success of this call
+                    mPresenter.callLoginTicket(this, false);
+                }
                 if (!mAppHasSavedInstance) {
                     initializeMainController();
                 }
@@ -859,15 +864,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.callGetTemplateTexts();
         mPresenter.callGetServerSettings();
         mPresenter.callGetAppSettingsSection(this);
-        if (isAuthorized()) {
-            // If login ticket exist, call login ticket api to renew cookies and ticket
-            // GetAppSettings and GetPaymentToken will be called on success of this call
-            mPresenter.callLoginTicket();
-            mPresenter.callGetAppSettings();
-        } else {
+        if (!isAuthorized()) {
             callPublicSettings();
         }
-
         mPresenter.callGetAccountData();
 
         callGCMRegisterSubscriber();
@@ -887,7 +886,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void callAppConsent() {
         mPresenter.callGetTemplateTexts();
         if (isAuthorized()) {
-            mPresenter.callGetAppSettingsConsent(this);
+            mPresenter.callLoginTicket(this, true);
         } else {
             mPresenter.callGetPublicAppSettingsConsent(this);
         }

@@ -889,7 +889,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void callLoginTicket() {
+    public void callLoginTicket(Context context, boolean isGdprCountry) {
         String loginTicket = getDataManager().getLoginTicket();
         if (!loginTicket.isEmpty()) {
             getCompositeDisposable().add(getDataManager()
@@ -907,9 +907,17 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             if (responseValue.isSuccess()) {
                                 getDataManager().acknowledgeAuth(responseValue.getTicket());
                                 // Call required post login api methods
+                                if (isGdprCountry) {
+                                    callGetAppSettingsConsent(context);
+                                }
+
+                                callGetAppSettings();
                             } else {
                                 //On login ticket fail, call logout and go back to shop
                                 callLogout(null);
+                                if (isGdprCountry) {
+                                    callGetPublicAppSettingsConsent(context);
+                                }
                             }
                         }
                     }, new Consumer<Throwable>() {

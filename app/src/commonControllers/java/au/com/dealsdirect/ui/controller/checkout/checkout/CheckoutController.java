@@ -938,7 +938,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Override
     public void triggerLoginTicket() {
         assert (mActivity) != null;
-        mActivity.callLoginTicket();
+        mActivity.callLoginTicket(false);
     }
 
     @Override
