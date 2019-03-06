@@ -602,7 +602,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         PaymentInfo.setAuthorization(null);
         PaymentInfo.setPaymentType(null);
 
-        if (mBraintreeFragment != null && getFragmentManager().findFragmentByTag(BraintreeFragment.TAG) != null) {
+        if (mBraintreeFragment != null && getBraintreeFragment().isResumed() && getFragmentManager().findFragmentByTag(BraintreeFragment.TAG) != null) {
             getFragmentManager().beginTransaction().remove(mBraintreeFragment).commit();
             mBraintreeFragment = null;
         }
