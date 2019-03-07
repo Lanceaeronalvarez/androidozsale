@@ -69,23 +69,17 @@
     </style>
 
     <style name="DDButtonPayCart" parent="DDButtonStyle">
-        <item name="android:background">@drawable/bg_button_rounded</item>
+        <item name="android:background">@drawable/bg_button_pay</item>
     </style>
 
     <style name="DDButtonAddCart" parent="DDButtonStyle">
         <item name="android:background">@drawable/bg_button_rounded</item>
     </style>
 
-    <style name="DDButtonJoinNow" parent="DDButtonStyle">
-        <item name="android:background">@drawable/bg_button_join_now</item>
-    </style>
-
     <style name="FacetFilterTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabBackground">@drawable/bg_facet_tab</item>
-        <item name="tabGravity">fill</item>
         <item name="tabMaxWidth">0dp</item>
-        <item name="tabMinWidth">100dp</item>
-        <item name="tabIndicatorColor">@color/colorAccent</item>
+        <item name="tabIndicatorColor">@color/colorPrimary</item>
         <item name="tabIndicatorHeight">0dp</item>
         <item name="tabMode">scrollable</item>
         <item name="tabTextColor">@color/text_medium</item>
@@ -97,7 +91,7 @@
         <item name="textAllCaps">false</item>
     </style>
 
-    <integer name="sale_items_threshold">9</integer>
+    <integer name="sale_items_threshold">4</integer>
 
     <!-- Toolbar visibility -->
     <bool name="login_toolbar_visibility">true</bool>
