@@ -463,6 +463,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (mVcoPresenter.isVisaCheckoutEnabled()) {
             mVcoPresenter.setupVisaCheckout();
         }
+
+        if(!mActivity.isBraintreeInitialized() && mActivity.isAuthorized()) {
+            mVcoPresenter.initializeBraintree();
+        }
     }
 
     @Override

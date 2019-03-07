@@ -146,7 +146,7 @@ public abstract class VisaCheckoutController extends BaseController implements V
 
     @Override
     public void onSetupVisaCheckoutBraintree(String paymentToken, String paymentType) {
-        mActivity.onAuthorizationFetched(paymentToken, paymentType);
+        initializeBrainTree(paymentToken, paymentType);
 
         if (mActivity.getBraintreeFragment() != null) {
             VisaCheckout.createProfileBuilder(mActivity.getBraintreeFragment(), new BraintreeResponseListener<Profile.ProfileBuilder>() {
@@ -198,4 +198,8 @@ public abstract class VisaCheckoutController extends BaseController implements V
         mActivity.setVisaCheckoutActionType(visaCheckoutActionType);
     }
 
+    @Override
+    public void initializeBrainTree(String token, String paymentType) {
+        mActivity.onAuthorizationFetched(token, paymentType);
+    }
 }
