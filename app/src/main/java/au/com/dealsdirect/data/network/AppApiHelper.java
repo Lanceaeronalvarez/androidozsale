@@ -317,9 +317,9 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.getAppSettingsSection())
+        return Rx2AndroidNetworking.get(ApiEndPoint.getAppSettingsSection())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetAppSettingsConsent.RequestValue(countryId)))
+                .addQueryParameter(new GetAppSettingsConsent.RequestValue(countryId))
                 .build()
                 .getObjectObservable(GetAppSettingsConsent.ResponseValue.class);
     }

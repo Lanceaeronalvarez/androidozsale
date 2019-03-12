@@ -7,10 +7,15 @@
 
     <color name="colorSecondary">#323232</color>
 
+    <color name="bg_splash_color_end">#21799A</color>
+    <color name="bg_splash_color_center">#21559A</color>
+    <color name="bg_splash_color_start">#213B9A</color>
+
     <color name="recyclerview_overscroll">@color/colorSecondary</color>
 
-    <color name="status_bar">@color/bg_splash</color>
-    <color name="status_bar_splash">@color/bg_splash_color_end</color>
+    <!--Status Bar-->
+    <color name="status_bar">@color/colorPrimaryDark</color>
+    <color name="status_bar_splash">#21799A</color>
 
     <!--Search Edit Text-->
     <color name="search_edit_text_hint">#CCFFFFFF</color>
@@ -46,8 +51,8 @@
 
     <color name="clipboard_default">#FF8B8B8B</color>
     <color name="clipboard_pressed">#FF8B8B8B</color>
-    <color name="fb_default">#009BEC</color>
-    <color name="fb_pressed">#009BEC</color>
+    <color name="fb_default">#3b5998</color>
+    <color name="fb_pressed">#8b9dc3</color>
     <color name="twitter_default">#FF00B5E9</color>
     <color name="twitter_pressed">#FF00B5E9</color>
     <color name="mail_default">#FFEA5757</color>
@@ -60,7 +65,7 @@
 
     <color name="bg_button_addcart_default">#65D87F</color>
     <color name="bg_button_addcart_pressed">#65D87F</color>
-    <color name="bg_button_copy_to_clipboard">#4F4F4F</color>
+    <color name="bg_button_copy_to_clipboard">#292929</color>
 
     <!-- Text -->
     <color name="text_extra_dark">#000000</color>
@@ -143,7 +148,7 @@
     <color name="ourpay_verify_resend">#000080</color>
 
     <!-- Orders -->
-    <color name="bg_order_node">#323232</color>
+    <color name="bg_order_node">#65D87F</color>
 
     <!-- ViewHolder -->
     <color name="viewholder_text_remove">@color/text_highlight</color>
@@ -153,8 +158,5 @@
 
     <color name="refunded_state_color">@color/ourpay_orange</color>
 
-    <color name="bg_splash_color_end">#21799A</color>
-    <color name="bg_splash_color_center">#21559A</color>
-    <color name="bg_splash_color_start">#213B9A</color>
 
 </resources>

@@ -175,4 +175,9 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
     public boolean isVisaCheckoutEnabled() {
         return getDataManager().getIsVisaCheckoutEnabled();
     }
+
+    @Override
+    public void initializeBraintree() {
+        getMvpView().initializeBrainTree(getDataManager().getPublicPaymentToken(), getDataManager().getPublicPaymentType());
+    }
 }

@@ -4,7 +4,7 @@
     <integer name="no_items_placeholder_icon_visibility">2</integer>
     <integer name="gender_option_visibility">2</integer>
     <integer name="banner_column_count_portrait">2</integer>
-    <integer name="banner_column_count_landscape">3</integer>
+    <integer name="banner_column_count_landscape">2</integer>
     <integer name="banner_mobile_width">423</integer>
     <integer name="banner_mobile_height">143</integer>
     <integer name="banner_tablet_width">320</integer>

@@ -32,4 +32,6 @@ public interface VisaCheckoutMvpView extends MvpView {
     void onVisaCheckoutButtonClicked();
 
     void setVisaCheckoutActionType(int visaCheckoutActionType);
+
+    void initializeBrainTree(String token, String paymentType);
 }

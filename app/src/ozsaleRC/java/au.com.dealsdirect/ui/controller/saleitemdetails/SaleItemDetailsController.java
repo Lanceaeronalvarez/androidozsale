@@ -465,10 +465,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         stretchImageView();
 
-        //product info
-        mProductName.setText(mSaleName);
-        if (mBrandName != null) {
+        if (mBrandName != null && !mBrandName.isEmpty()) {
+            mProductBrand.setText(mSaleName);
+            mProductName.setText("");
+        } else {
             mProductBrand.setText(mBrandName);
+            mProductName.setText(mSaleName);
         }
 
         mProductPrice.setText(mSalePrice);
@@ -741,11 +743,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         String name = saleDetail.getName() == null ? "" : saleDetail.getName();
         String brandName = saleDetail.getBrandName() == null ? "" : saleDetail.getBrandName();
 
-        mToolbarItemBrandTextView.setText(brandName);
-        mToolbarItemNameTextView.setText(name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
-
-        mProductName.setText(name.trim());
-        mProductBrand.setText(brandName.trim());
+        if (brandName != null && !brandName.isEmpty()) {
+            mToolbarItemBrandTextView.setText(brandName);
+            mToolbarItemNameTextView.setText(name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
+            mProductName.setText(name.trim());
+            mProductBrand.setText(brandName.trim());
+        } else {
+            mToolbarItemBrandTextView.setText(name.trim());
+            mToolbarItemNameTextView.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
+            mProductBrand.setText(name.trim());
+        }
 
         if (personalisation != null) {
             mPersonalisationLayout.inflateForProductDetails(mActivity, new Gson().fromJson(

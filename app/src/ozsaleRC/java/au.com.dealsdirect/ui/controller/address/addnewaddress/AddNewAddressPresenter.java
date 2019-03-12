@@ -9,11 +9,14 @@ import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.ApiCallback;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BasePresenter;
@@ -82,48 +85,46 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
         }
 
         getMvpView().showLoading();
-        getCompositeDisposable().add(getDataManager()
-                .callSetUserDeliveryAddress(new AddAddress.RequestValues(jsonAddress))
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<AddAddress.ResponseValue>() {
-                    @Override
-                    public void accept(@NonNull AddAddress.ResponseValue responseValue) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+        doApiCallForResponse(getDataManager()
+                .callSetUserDeliveryAddress(new AddAddress.RequestValues(jsonAddress)), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                AddAddress.ResponseValue responseValue = (AddAddress.ResponseValue) response;
 
-                        getMvpView().hideLoading();
+                if (!isViewAttached()) {
+                    return;
+                }
 
-                        if (!responseValue.d.isAuthenticated()) {
+                getMvpView().hideLoading();
+
+                if (!responseValue.d.isAuthenticated()) {
 //                            RxBus.instance().post(Auth.EVENT_NOT_AUTHENTICATED);
-                            return;
-                        }
+                    return;
+                }
 
-                        if (!responseValue.d.getResult()) {
-                            getMvpView().showErrorMessage(responseValue.d.getMessage());
-                            getMvpView().onError(responseValue.d.getMessage());
-                        } else {
-                            getMvpView().addNewAddressSuccessful();
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+                if (!responseValue.d.getResult()) {
+                    getMvpView().onError(responseValue.d.getMessage());
+                } else {
+                    getMvpView().addNewAddressSuccessful();
+                }
+            }
 
-                        getMvpView().hideLoading();
-                        getMvpView().onError(throwable.getMessage());
+            @Override
+            public void onFailure(Throwable throwable) {
+                if (!isViewAttached()) {
+                    return;
+                }
 
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
-                        }
-                    }
-                })
-        );
+                getMvpView().hideLoading();
+                getMvpView().onError(throwable.getMessage());
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
     }
 }
