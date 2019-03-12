@@ -33,6 +33,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
@@ -455,10 +456,10 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
         mSeekbar.setMaxPriceMovingLayout(mMaxPriceMovingLayout);
         mSeekbar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
-            mMinPrice.setText("$" + minValue.intValue());
-            mMaxPrice.setText("$" + maxValue.intValue());
+            mMinPrice.setText(Settings.getSelectedCountry().currencySign + minValue.intValue());
+            mMaxPrice.setText(Settings.getSelectedCountry().currencySign + maxValue.intValue());
             if (maxValue.intValue() == mOrigMaxValue) {
-                mMaxPrice.setText("$" + maxValue.intValue() + "+");
+                mMaxPrice.setText(Settings.getSelectedCountry().currencySign + maxValue.intValue() + "+");
             }
         });
 
