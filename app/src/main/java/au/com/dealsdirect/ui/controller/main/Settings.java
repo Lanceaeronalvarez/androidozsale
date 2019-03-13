@@ -319,7 +319,7 @@ public class Settings {
                                         "https://www.mysale.co.uk/",
                                         "https://www.mysale.co.uk/"),
                             new Country("HongKong",
-                                        "EN",
+                                        "HK",
                                         "ED03076F-912B-4287-9580-6E2F52D33580",
                                         "HK$",
                                         "mysale.hk",
