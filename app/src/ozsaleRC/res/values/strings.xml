@@ -233,7 +233,7 @@
     <integer-array name="account_options_sub_item_title_array">
         <item>@string/account_notification</item>
         <!--removed for release, still using 3.23, GDPR not included-->
-        <item>@string/account_clear_cookies_data</item>
+        <!--<item>@string/account_clear_cookies_data</item>-->
     </integer-array>
 
     <integer-array name="account_drawable_array">
