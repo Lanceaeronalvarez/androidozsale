@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:gravity="start"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:layout_marginStart="@dimen/margin_huge"/>
 
         <TextView
             android:id="@+id/row_view_voucher_cost_text"
@@ -42,6 +43,7 @@
             android:textColor="@color/bt_black"
             android:textSize="@dimen/text_size_voucher_title"
             android:textStyle="bold"
+            android:layout_marginStart="@dimen/margin_huge"
             tools:text="$1000" />
 
         <TextView
@@ -55,6 +57,7 @@
             android:textColor="@color/text_dark"
             android:textSize="@dimen/text_size_body"
             android:textStyle="bold"
+            android:layout_marginStart="@dimen/margin_huge"
             android:visibility="gone" />
 
         <TextView
@@ -66,6 +69,7 @@
             android:textColor="@color/text_dark"
             android:text="@string/value"
             android:textSize="@dimen/text_size_body"
+            android:layout_marginStart="@dimen/margin_huge"
             android:visibility="visible" />
 
         <TextView
@@ -76,6 +80,7 @@
             android:gravity="start"
             android:text="@string/voucher_valid_from"
             android:textColor="@color/text_medium"
+            android:layout_marginStart="@dimen/margin_huge"
             android:textSize="@dimen/text_size_caption2" />
 
         <TextView
@@ -86,21 +91,24 @@
             android:gravity="start"
             android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_caption2"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginStart="@dimen/margin_huge"/>
 
         <TextView
             android:id="@+id/row_view_voucher_purchased_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:layout_marginStart="@dimen/margin_huge"/>
 
         <TextView
             android:id="@+id/row_view_voucher_activated_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:layout_marginStart="@dimen/margin_huge"/>
 
     </LinearLayout>
 
