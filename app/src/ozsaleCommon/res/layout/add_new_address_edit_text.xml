@@ -16,8 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.35"
         android:padding="@dimen/padding_default"
-        android:minLines="1"
-        android:maxLines="1"
         android:textColor="@color/text_medium"
         android:textSize="@dimen/text_size_body" />
 

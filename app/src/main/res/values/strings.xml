@@ -664,4 +664,7 @@
     <string name="banner_percent_off">extra %1$s%% off</string>
     <string name="timer_label">Sale ends in</string>
 
+    <string name="address_error_format">%1$s must be minimum of %2$s and maximum of %3$s characters</string>
+    <string name="address_error_format_equal">%1$s must be exactly %2$s characters</string>
+
 </resources>
