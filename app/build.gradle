@@ -288,7 +288,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 131
+            versionCode 132
             versionName "2.5.2"
             applicationId "au.com.ozsale"
 
@@ -310,7 +310,7 @@ android {
         }
 
         ozsaleTest {
-            versionCode 131
+            versionCode 132
             versionName "2.5.2"
             applicationId "au.com.ozsale.test"
 
@@ -419,7 +419,7 @@ android {
         }
 
         mysaleRC {
-            versionCode 131
+            versionCode 133
             versionName "2.5.2"
             applicationId "my.mysale.mysale"
 
@@ -440,7 +440,7 @@ android {
         }
 
         mysaleTest {
-            versionCode 131
+            versionCode 133
             versionName "2.5.2"
             applicationId "my.mysale.mysaletest"
 
