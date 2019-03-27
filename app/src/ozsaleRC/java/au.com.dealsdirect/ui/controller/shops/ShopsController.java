@@ -502,7 +502,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void refreshContents() {
         super.refreshContents();
-        if (isViewAttached() && sales.isEmpty() && !mHasSavedInstance) {
+        if (isViewAttached() &&
+                sales.isEmpty() &&
+                !mHasSavedInstance &&
+                shopsControllerBannerRecyclerView != null) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, INITIAL_BANNER_COUNT));
         }
