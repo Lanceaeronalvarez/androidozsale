@@ -466,8 +466,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         mActivity.getMainController().getHomeController().setViewpagerScreen(MainController.SHOP_INDEX);
 
-
-        if (mCategoryID != null && !mCategoryID.equals(categoryID)) {
+        if (mCategoryID != null && categoryID != null && !mCategoryID.equals(categoryID)) {
             return;
         }
 
@@ -919,8 +918,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     public void refreshFromLogout() {
         bannerGroupType = "";
-        bannerOffset = 0;
-        mBannersAdapter.clear();
+        resetShopsBanners("");
         mPresenter.loadShopsBanner(createBannerRequest("", 0, bannerLimit), true);
     }
 
