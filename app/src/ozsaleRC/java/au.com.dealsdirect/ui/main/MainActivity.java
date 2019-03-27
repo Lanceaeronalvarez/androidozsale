@@ -201,8 +201,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        BaseController controller = (BaseController) getCurrentController(getCurrentRouter());
-        controller.onOrientationChanged(newConfig);
+        Router router = getCurrentRouter();
+        if (router != null) {
+            Controller controller = getCurrentController(router);
+            if (controller instanceof BaseController) {
+                ((BaseController) controller).onOrientationChanged(newConfig);
+            }
+        }
     }
 
     @Override
