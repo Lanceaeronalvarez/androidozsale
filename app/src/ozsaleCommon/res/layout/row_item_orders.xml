@@ -6,6 +6,7 @@
     android:background="@color/white"
     android:paddingStart="@dimen/padding_default"
     android:paddingEnd="@dimen/padding_default"
+    android:layout_marginBottom="@dimen/margin_huge"
     tools:ignore="MissingPrefix">
 
     <android.support.v7.widget.RecyclerView
