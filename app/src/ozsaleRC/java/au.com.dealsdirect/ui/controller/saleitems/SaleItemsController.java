@@ -1003,7 +1003,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, List<SearchChipModel> chipsList) {
         String previousCategoryKey = mCategoryKey;
         mCategoryKey = StringUtils.generateConcatenatedCategories(reduceCategoryKeysForRequest(categoryKeys));
-        mShouldRefreshFacets = !(previousCategoryKey.equals(mCategoryKey) ||
+        mShouldRefreshFacets = previousCategoryKey == null ||
+                !(previousCategoryKey.equals(mCategoryKey) ||
                 previousCategoryKey.equals(mCategoryKey.replaceAll("[,\"]", ""))) ||
                 !mHasCategoryTreeResponse;
         if (mShouldRefreshFacets) {
