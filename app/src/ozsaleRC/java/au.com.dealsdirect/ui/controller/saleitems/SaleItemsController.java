@@ -243,12 +243,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private static final String CATEGORY_KEY_SEPARATOR_REPLACEMENT = " • ";
     private static final String CATEGORY_FILTER_TYPE = "Category";
     private static final String KEY_SEARCH_TEXT = "KEY_SEARCH_TEXT";
+    private static final String SHOP_KEY_SEARCH_TEXT = "SHOP_KEY_SEARCH_TEXT";
 
     private String mSaleId = "";
     private String mTitle = "";
     private String mCategoryKey = "";
     private String mCategoryForTitle = "";
     private String mSearchQuery = "";
+    private String mShopSearchQuery = "";
     private String mEndDate = "";
 
     private Map<String, GetCategoryTreeResponse> mCategoryMap = new HashMap<>();
@@ -467,44 +469,76 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
-        if (!mSaleId.isEmpty()) outState.putString(BundleKeys.SALEITEMS_SALE_ID, mSaleId);
-        outState.putBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
-        outState.putBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
-        outState.putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey);
-        outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
-        outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
-        outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
-        outState.putString(BundleKeys.SALEITEMS_KEY_CATEGORIES, new Gson().toJson(mInitialCategoryTree));
-        outState.putString(BundleKeys.SALEITEMS_TITLE, mTitle);
-        if (mSaleItemsToolbarField != null)
-            outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+
+        if (mFromCategorySearch) {
+            outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+            outState.putBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
+            outState.putBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
+            outState.putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey);
+            outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
+            outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
+            outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
+            outState.putString(BundleKeys.SALEITEMS_TITLE, mTitle);
+            if (mSaleItemsToolbarField != null)
+                outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+        } else {
+            outState.putBoolean(BundleKeys.SHOP_KEY_HAS_SAVED_INSTANCE, true);
+            if (mSaleId != null && !mSaleId.isEmpty()) {
+                outState.putString(BundleKeys.SHOP_SALEITEMS_SALE_ID, mSaleId);
+            }
+            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
+            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
+            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
+            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
+            outState.putString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
+            outState.putString(BundleKeys.SHOP_SALEITEMS_TITLE, mTitle);
+            if (mSaleItemsToolbarField != null)
+                outState.putString(SHOP_KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+        }
+
+
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
-        mSaleId = savedInstanceState.getString(BundleKeys.SALEITEMS_SALE_ID, "");
-        mCategoryKey = savedInstanceState.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
-        mFromBannerSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH);
-        mFromShopSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH);
-        mFromCategorySearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH);
-        mFromCategoryDeeplink = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK);
-        if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
-            mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
-            }.getType());
-        }
 
-        if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_KEY_CATEGORIES)) {
-            mInitialCategoryTree = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SALEITEMS_KEY_CATEGORIES), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
-            }.getType());
-        }
+        if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH) &&
+                savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH)) {
+            mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+            mCategoryKey = savedInstanceState.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
+            mFromBannerSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH);
+            mFromShopSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH);
+            mFromCategorySearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH);
+            mFromCategoryDeeplink = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK);
+            if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
+                mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+                }.getType());
+            }
 
-        if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) {
-            mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT, "");
+            if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) {
+                mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT);
+            }
+            mTitle = savedInstanceState.getString(BundleKeys.SALEITEMS_TITLE);
+        } else {
+            mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.SHOP_KEY_HAS_SAVED_INSTANCE);
+            if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_SALE_ID)) {
+                mSaleId = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_SALE_ID);
+            }
+            mFromBannerSearch = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_BANNER_SEARCH);
+            mFromShopSearch = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_SHOP_SEARCH);
+            mFromCategorySearch = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_SEARCH);
+            mFromCategoryDeeplink = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK);
+            if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER)) {
+                mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+                }.getType());
+            }
+
+            if (savedInstanceState.containsKey(SHOP_KEY_SEARCH_TEXT)) {
+                mShopSearchQuery = savedInstanceState.getString(SHOP_KEY_SEARCH_TEXT);
+            }
+            mTitle = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_TITLE);
         }
-        mTitle = savedInstanceState.getString(BundleKeys.SALEITEMS_TITLE);
     }
 
 
@@ -553,7 +587,22 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         String lookingForText = getString(R.string.search_tag);
 
         // bug/gen-8065_ozsale-reskin_bugfixing - always set searchbar hint to 'search'
-        mSaleItemsToolbarField.setHint(lookingForText);
+        if (mHasSavedInstance && isFromCategories()) {
+            if (mSearchQuery.length() > 0) {
+                mSaleItemsToolbarField.setText(mSearchQuery);
+            } else {
+                mSaleItemsToolbarField.setText("");
+            }
+        } else if (mHasSavedInstance && !isFromCategories()) {
+            if (mShopSearchQuery.length() > 0) {
+                mSearchQuery = mShopSearchQuery;
+                mSaleItemsToolbarField.setText(mSearchQuery);
+            } else {
+                mSaleItemsToolbarField.setText("");
+            }
+        } else {
+            mSaleItemsToolbarField.setHint(lookingForText);
+        }
 
         //determining toolbartitle logic
         //category precedes above all
@@ -952,7 +1001,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     mCategoryTreeResponse,
                     null,
                     mCategoryKey,
-                    mChipFilters);
+                    mChipFilters,
+                    mFromCategorySearch);
 
             GateKeeper.Destination destination;
             if (mFromBannerSearch || mFromShopSearch) {
@@ -967,7 +1017,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
                 GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
             } else {
-                mSearchFilterMvpView = mActivity.getSearchFilterController();
+                if (isFromCategories()) {
+                    mSearchFilterMvpView = mActivity.getSearchFilterController();
+                } else {
+                    mSearchFilterMvpView = mActivity.getShopSearchFilterController();
+                }
             }
 
             mSearchFilterMvpView.setRepository(SaleItemsController.this);

@@ -124,6 +124,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private ViewContactsController mContactsController;
     private AccountController mAccountController;
     private SearchFilterController mSearchFilterController;
+    private SearchFilterController mShopSearchFilterController;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -1228,6 +1229,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public SearchFilterController getSearchFilterController() {
         return mSearchFilterController;
+    }
+
+    public SearchFilterController getShopSearchFilterController() {
+        return mShopSearchFilterController;
+    }
+
+    public void setShopSearchFilterController(SearchFilterController shopSearchFilterController) {
+        this.mShopSearchFilterController = shopSearchFilterController;
     }
 
     public AccountController getAccountController() {
