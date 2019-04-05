@@ -21,7 +21,9 @@ import javax.inject.Inject;
 import au.com.dealsdirect.di.component.ControllerComponent;
 import au.com.dealsdirect.di.component.DaggerControllerComponent;
 import au.com.dealsdirect.di.module.ControllerModule;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.registerservices.FirebaseAnalyticsService;
+import au.com.dealsdirect.service.datacollection.registerservices.GenieEventService;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.ui.main.MainActivity;
 
 
@@ -32,6 +34,12 @@ public abstract class BaseController extends RefWatchingController implements Mv
 
     @Inject
     protected ActionTracker mActionTracker;
+
+    @Inject
+    protected GenieEventService mGenieEventService;
+
+    @Inject
+    protected FirebaseAnalyticsService mFirebaseEventService;
 
     private ControllerComponent mControllerComponent;
 

@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.shops;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -40,7 +39,9 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.main.MainController;
@@ -59,7 +60,7 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
-import static au.com.dealsdirect.service.event.ActionTracker.ClickType.BANNER_CLICK;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.ClickType.BANNER_CLICK;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 
 
@@ -183,7 +184,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private void showProductList() {
-
         Bundle args = new Bundle();
         args.putBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
 
@@ -201,7 +201,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mActivity.getProfiler().setStartLogTime(ActionTracker.CustomEventType.CV_SALEBANNERS.getValue());
+        mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_SALEBANNERS.getValue());
         setUp(view);
     }
 
@@ -398,7 +398,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
-        mActionTracker.clicksEvent(BANNER_CLICK, position);
+        HashMap<String, Object> eventParameters = new HashMap<>();
+        eventParameters.put(DataCollector.EventParameters.TYPE, BANNER_CLICK);
+        eventParameters.put(DataCollector.EventParameters.ITEM_ARRAY_POSITION, position);
+        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, ShopsController.class.getSimpleName());
+        DataCollector.logEvent(Events.clicksEvent, eventParameters);
 
         List<String> names = new ArrayList<>();
         names.add(bannerId + position);
@@ -471,8 +476,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         }
 
         hasLoadedAllItems = false;
-        mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_SALEBANNERS.getValue());
-        mActionTracker.CVSaleBanners(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_SALEBANNERS.getValue()));
+        mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_SALEBANNERS.getValue());
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.MILLISECONDS,
+                Profiler.getTotalTime(DataCollector.EventParameters.CustomEventType.CV_SALEBANNERS.getValue()));
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, ShopsController.class.getSimpleName());
+        DataCollector.logEvent(Events.CVSaleBanners, parameters);
 
         shopsControllerBannerRecyclerView.setVisibility(View.VISIBLE);
 

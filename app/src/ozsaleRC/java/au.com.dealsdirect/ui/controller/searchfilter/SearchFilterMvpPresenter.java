@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,7 +19,9 @@ public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends
 
     void requestCategoryMap();
 
-    void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList);
+    void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList,
+                       ArrayList<String> brandList, int minPrice, int maxPrice,
+                       ArrayList<String> sizeList);
 
     void onFacetItemClicked(List<SearchChipModel> selectedChips);
 

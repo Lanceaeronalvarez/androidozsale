@@ -154,6 +154,18 @@
             android:name="io.fabric.ApiKey"
             android:value="156e897ec909d04276fe681aef03572370ac089e" />
         <!-- [END CLS] -->
+
+        <!--[START ADMOB APP ID]-->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713"/>  <!-- <- change this value to match app's own app id-->
+        <!--[END ADMOB APP ID]-->
+
+        <!--[Firebase Crashlytics]-->
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
+        <!--[END firebase crashlytics]-->
     </application>
 
 </manifest>

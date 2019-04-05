@@ -42,6 +42,7 @@ import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
 import com.visa.checkout.VisaPaymentSummary;
 
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,8 +56,11 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.service.event.ActionTrackerInterface;
+import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
+import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
@@ -103,6 +107,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private static final String TAG = "MainActivity";
 
     protected ActionTrackerInterface mActionTracker;
+
+    protected GenieEventServiceInterface mGenieEventService;
+
+    protected FirebaseEventServiceInterface mFirebaseEventService;
 
     @Inject
     ProfilerInterface mProfiler;
@@ -158,7 +166,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mIsViewAttached = true;
         getActivityComponent().inject(this);
         registerInternetCheckReceiver();
-        mProfiler.setStartLogTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue());
+        mProfiler.setStartLogTime(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.CustomEventType.CV_APPLAUNCH.getValue());
 
         setUnBinder(ButterKnife.bind(this));
 
@@ -173,12 +181,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         // Init All analytics sdk
         mPresenter.initializeAnalytics(this, this.getApplication());
         mActionTracker = getActivityComponent().getActionTracker();
+        mGenieEventService = getActivityComponent().getGenieEventService();
+        mFirebaseEventService = getActivityComponent().getFirebaseEventService();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
 
         if (!mAppHasSavedInstance) {
             mMainController = MainController.newInstance();
-            mProfiler.setEndLogTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue());
-            mActionTracker.CVAppLaunch(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue()));
+            mProfiler.setEndLogTime(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.CustomEventType.CV_APPLAUNCH.getValue());
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.MILLISECONDS,
+                    Profiler.getTotalTime(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.CustomEventType.CV_APPLAUNCH.getValue()));
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
+
+            au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.CVAppLaunch,parameters);
         }
 
         splashShownCallback();
@@ -495,7 +511,17 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             } else if (PaymentInfo.getOurpay() != null) {
                 PaymentInfo.getOurpay().setCanUse(false);
             }
-            mActionTracker.purchase(PaymentInfo.getFabricPaymentType(), mPresenter.getIsNewUser(), true);
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                    PaymentInfo.getFabricPaymentType());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.IS_NEW_USER,
+                    mPresenter.getIsNewUser());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, true);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
+            au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.PurchaseEvent, parameters);
+
 //            fabric app event sign up reset new user.
             mPresenter.setIsNewUser(false);
 
@@ -523,7 +549,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             Router currentRouter = getMainController().getHomeController().getCurrentRouter();
             Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
 
-            mActionTracker.purchase(PaymentInfo.getFabricPaymentType(), mPresenter.getIsNewUser(), false);
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                    PaymentInfo.getFabricPaymentType());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.IS_NEW_USER,
+                    mPresenter.getIsNewUser());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, false);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
+            au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.PurchaseEvent,parameters);
+
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
 
             if (currentController instanceof CheckoutMvpView) {
@@ -534,7 +569,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showCreatePaymentTransactionFailure(String errorMessage) {
-        mActionTracker.purchase(PaymentInfo.getFabricPaymentType(), mPresenter.getIsNewUser(), false);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                PaymentInfo.getFabricPaymentType());
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.IS_NEW_USER,
+                mPresenter.getIsNewUser());
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, false);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME,
+                MainActivity.class.getSimpleName());
+        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.PurchaseEvent,parameters);
+
         if (errorMessage != null) {
 
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
@@ -590,7 +636,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showGetPaymentMethodNonceSuccess(String nonce) {
         showLoadingDialog(getResources().getString(R.string.loading), false);
         PaymentInfo.setThreeDSecureCalled(true);
-        mPresenter.setLastCartRedirection(ActionTracker.LastRedirection.THREEDSECURE_OTP);
+        mPresenter.setLastCartRedirection(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LastRedirection.THREEDSECURE_OTP);
         ThreeDSecure.performVerification(getBraintreeFragment(), nonce, Double.toString(PaymentInfo.getCartCost()));
     }
 
@@ -738,7 +784,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void logLoginTicket() {
-        mActionTracker.login(ActionTracker.LoginType.TICKET, true);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.METHOD,
+                au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.TICKET);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, true);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
+        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.Login,parameters);
     }
 
     @Override
@@ -874,6 +926,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             callPublicSettings();
         }
         mPresenter.callGetAccountData();
+        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.EventUser,new HashMap<>());
 
         callGCMRegisterSubscriber();
     }
@@ -1245,6 +1298,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public ActionTrackerInterface getActionTracker() {
         return mActionTracker;
+    }
+
+    public GenieEventServiceInterface getGenieEventService() {
+        return mGenieEventService;
+    }
+
+    public FirebaseEventServiceInterface getFirebaseEventService() {
+        return mFirebaseEventService;
     }
 
     public ProfilerInterface getProfiler() {

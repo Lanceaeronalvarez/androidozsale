@@ -43,6 +43,9 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.ConsentDataRequest;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
@@ -904,6 +907,33 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<String> callSearchEvent(SearchEventRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<String> callProductViewEvent(ProductViewRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<String> callCategoryEvent(CategoryRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<String> callSaleEvent(SaleEventRequest request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))

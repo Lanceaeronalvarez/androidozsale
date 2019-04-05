@@ -25,12 +25,15 @@ import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
@@ -43,10 +46,10 @@ import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.FACEBOOK;
-import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.NO_ACTION;
-import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.REGISTRATION;
-import static au.com.dealsdirect.service.event.ActionTracker.RegisterMethod.VCO;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RegisterMethod.FACEBOOK;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RegisterMethod.NO_ACTION;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RegisterMethod.REGISTRATION;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RegisterMethod.VCO;
 
 /*
  * Created by Ayi on 05/06/2017.
@@ -263,8 +266,12 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public void onDestroyView(View view) {
-        mActionTracker.signUp(mRegisterMethod, isRegisterSuccess);
-//        mPresenter.onDetach();
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.METHOD, mRegisterMethod);
+        parameters.put(DataCollector.EventParameters.RESULT, isRegisterSuccess);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, RegisterController.class.getSimpleName());
+        DataCollector.logEvent(Events.SignUp, parameters);
         super.onDestroyView(view);
     }
 

@@ -48,6 +48,9 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
@@ -558,6 +561,21 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<String> callSearchEvent(SearchEventRequest request) {
         return mApiHelper.callSearchEvent(request);
+    }
+
+    @Override
+    public Observable<String> callProductViewEvent(ProductViewRequest request) {
+        return mApiHelper.callProductViewEvent(request);
+    }
+
+    @Override
+    public Observable<String> callCategoryEvent(CategoryRequest request) {
+        return mApiHelper.callCategoryEvent(request);
+    }
+
+    @Override
+    public Observable<String> callSaleEvent(SaleEventRequest request) {
+        return mApiHelper.callSaleEvent(request);
     }
 
     @Override

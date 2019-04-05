@@ -22,14 +22,11 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Router;
 
-import javax.inject.Inject;
-
 import au.com.dealsdirect.DDApplication;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.di.component.ActivityComponent;
 import au.com.dealsdirect.di.component.DaggerActivityComponent;
 import au.com.dealsdirect.di.module.ActivityModule;
-import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.CommonUtils;

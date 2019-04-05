@@ -24,12 +24,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,15 +38,16 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.invite.GetInviteResponse;
 import au.com.dealsdirect.data.network.model.invite.SetInviteRequest;
 import au.com.dealsdirect.data.network.model.invite.SetInviteResponse;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static au.com.dealsdirect.service.event.ActionTracker.InviteType.CANCEL;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.InviteType.CANCEL;
 
 /**
  * Created by Paul on 7/3/17.
@@ -258,7 +259,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                     }
                 }
                 if (resolved) {
-                    mInviteMethod = ActionTracker.InviteType.TWITTER;
+                    mInviteMethod = DataCollector.EventParameters.InviteType.TWITTER;
                     startActivity(tweetIntent);
                 } else {
                     Intent i = new Intent();
@@ -292,7 +293,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                     ShareDialog shareDialog = new ShareDialog(mActivity);
                     shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
 
-                    mInviteMethod = ActionTracker.InviteType.FACEBOOK;
+                    mInviteMethod = DataCollector.EventParameters.InviteType.FACEBOOK;
 
                 } catch (Exception e) {
 //                    GDebug.log("facebookSendInvite",e.getMessage());
@@ -310,7 +311,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                 String invitationLink = mPersonalInvitationLinkEditText.getText().toString();
                 String messageWithInvite = message + " " + invitationLink;
 
-                mInviteMethod = ActionTracker.InviteType.SMS;
+                mInviteMethod = DataCollector.EventParameters.InviteType.SMS;
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(mActivity);
@@ -355,7 +356,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", " ", null));
                             emailIntent.putExtra(Intent.EXTRA_SUBJECT, inviteSubject);
                             emailIntent.putExtra(Intent.EXTRA_TEXT, messageWithInvite);
-                            mInviteMethod = ActionTracker.InviteType.EMAIL;
+                            mInviteMethod = DataCollector.EventParameters.InviteType.EMAIL;
                             startActivity(Intent.createChooser(emailIntent, "Send email..."));
                         }
                     }, 2000);
@@ -472,7 +473,12 @@ public class InviteSendController extends BasePullToRefreshController implements
 
     @Override
     protected void onDestroyView(@NonNull View view) {
-        mActionTracker.share(mInviteMethod, ActionTracker.ViewSource.INVITE);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.METHOD, mInviteMethod);
+        parameters.put(DataCollector.EventParameters.SOURCE, DataCollector.EventParameters.ViewSource.INVITE);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, InviteSendController.class.getSimpleName());
+        DataCollector.logEvent(Events.Share, parameters);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }

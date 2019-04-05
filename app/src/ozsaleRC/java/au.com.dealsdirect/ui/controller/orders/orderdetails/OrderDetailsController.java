@@ -11,11 +11,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
@@ -149,7 +153,12 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     @Override
     public void showOrderTrackingWeb(String link) {
-        mActionTracker.CVOrderTrack(ActionTracker.ViewSource.ORDER_DETAILS);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.SOURCE, DataCollector.EventParameters.ViewSource.ORDER_DETAILS);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, OrderDetailsController.class.getSimpleName());
+        DataCollector.logEvent(Events.CVOrderTrack, parameters);
+
         ActivityLaunchUtil.launchActivity(mActivity, link, getString(R.string.no_order_tracking_message));
     }
 

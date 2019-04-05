@@ -1,0 +1,12 @@
+package au.com.dealsdirect.service.datacollection.enums;
+
+/**
+ * Created by MTC on 3/4/19.
+ */
+
+public class EventTypeId {
+    public static final int EVENT_PRODUCTVIEW = 5;
+    public static final int EVENT_SEARCH = 2;
+    public static final int EVENT_ENTER_CATEGORY = 1;
+    public static final int EVENT_ENTER_SALE = 7;
+}

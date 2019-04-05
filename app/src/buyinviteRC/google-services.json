@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "310856029549",
+    "firebase_url": "https://buyinvite-android-firebase.firebaseio.com",
+    "project_id": "buyinvite-android-firebase",
+    "storage_bucket": "buyinvite-android-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310856029549:android:bc2123c0ec7dee59",
+        "android_client_info": {
+          "package_name": "au.com.buyinvite.bi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310856029549-60sfs4rh0peb78vvp0snj8onjp96s840.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSrVajuX-XglbJ6LWM3gz1ifuGAWfLWss"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310856029549:android:f217ab1c79011184",
+        "android_client_info": {
+          "package_name": "au.com.buyinvite.bi.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310856029549-60sfs4rh0peb78vvp0snj8onjp96s840.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSrVajuX-XglbJ6LWM3gz1ifuGAWfLWss"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -777,11 +777,6 @@ dependencies {
     androidTestCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 
-    // CLS
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true
-    }
-
     // Answers
     compile('com.crashlytics.sdk.android:answers:1.4.2@aar') {
         transitive = true
@@ -789,6 +784,10 @@ dependencies {
 
     // NR
     compile 'com.newrelic.agent.android:android-agent:5.14.0'
+
+    // Firebase
+    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
 
     //VISA CHECKOUT
     // Visa checkout
@@ -798,8 +797,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
     compile group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
 
-    compile "com.google.android.gms:play-services-ads:$rootProject.gcmVersion"
-    compile "com.google.android.gms:play-services:$rootProject.gcmVersion"
+    implementation 'com.google.android.gms:play-services-ads:17.1.2'
     compile "com.android.support:multidex:1.0.0"
 
     compile project(path: ':genie-utility')

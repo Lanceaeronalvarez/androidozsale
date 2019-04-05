@@ -200,6 +200,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private String mCategoryKey;
     private boolean mHasDefaultCategoryKey = false;
     private boolean mHasSavedInstance = false;
+    private int minPrice = 0;
+    private int maxPrice = 200;
     private boolean isFromCategory = false;
 
     Set<String> mCategoryKeys = new LinkedHashSet<>();
@@ -506,7 +508,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
                     }
                 }
 
-                mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList);
+                mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList,mBrandList, minPrice, maxPrice, mSizeList);
 
                 onResetPriceRange();
             }
@@ -515,6 +517,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
         mSeekbar.setMaxPriceMovingLayout(mMaxPriceMovingLayout);
         mSeekbar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
+            minPrice = minValue.intValue();
+            maxPrice = maxValue.intValue();
             mMinPrice.setText(Settings.getSelectedCountry().currencySign + minValue.intValue());
             mMaxPrice.setText(Settings.getSelectedCountry().currencySign + maxValue.intValue());
             if (maxValue.intValue() == mOrigMaxValue) {
@@ -544,7 +548,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
                 mHasSeekbarReset = false;
 
-                mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList);
+                mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList,mBrandList, minPrice, maxPrice, mSizeList);
 
             }
         });
@@ -618,7 +622,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void updateFacetItemToFilters(List<SearchChipModel> selectedChips) {
-        mPresenter.requestUpdate(mCategoryKeys, selectedChips);
+        mPresenter.requestUpdate(mCategoryKeys, selectedChips, mBrandList, minPrice, maxPrice, mSizeList);
     }
 
     @Override
@@ -678,7 +682,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
         if (mHasDefaultCategoryKey && mCategoryKeys.size() == 0) {
             mCategoryKeys.add(mCategoryKey);
         }
-        mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList);
+
+        mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList,mBrandList, minPrice, maxPrice, mSizeList);
     }
 
     @Override

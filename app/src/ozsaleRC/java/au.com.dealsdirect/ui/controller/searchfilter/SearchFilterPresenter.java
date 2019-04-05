@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,9 +66,11 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList) {
+    public void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList,
+                              ArrayList<String> brandList, int minPrice, int maxPrice,
+                              ArrayList<String> sizeList) {
         if (mRepository != null) {
-            mRepository.requestUpdate(categoryKeys, chipsList);
+            mRepository.requestUpdate(categoryKeys, chipsList, brandList, minPrice, maxPrice, sizeList);
         }
     }
 

@@ -6,6 +6,8 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.di.module.ActivityModule;
 import au.com.dealsdirect.service.event.ActionTrackerInterface;
+import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
+import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import dagger.Component;
@@ -25,4 +27,8 @@ public interface ActivityComponent {
     SchedulerProvider getSchedulerProvider();
 
     ActionTrackerInterface getActionTracker();
+
+    GenieEventServiceInterface getGenieEventService();
+
+    FirebaseEventServiceInterface getFirebaseEventService();
 }

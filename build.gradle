@@ -11,7 +11,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
-        classpath 'com.google.gms:google-services:3.1.0'
+        classpath 'com.google.gms:google-services:4.2.0'
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3'
         classpath 'io.fabric.tools:gradle:1.26.1'
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.14.0"
@@ -32,10 +32,10 @@ buildScan {
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://jitpack.io" }
-        maven { url "https://maven.google.com" }
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.google.com' }
         maven { url 'https://maven.fabric.io/public' }
-        maven { url 'https://dl.bintray.com/guardian/android'}
+        maven { url 'https://dl.bintray.com/guardian/android' }
         mavenCentral()
         google()
     }
@@ -49,12 +49,12 @@ task clean(type: Delete) {
 ext {
     // Sdk and tools
     minSdkVersion = 21
-    targetSdkVersion = 26
-    compileSdkVersion = 26
-    buildToolsVersion = '26.0.2'
+    targetSdkVersion = 28
+    compileSdkVersion = 28
+    buildToolsVersion = '28.0.3'
 
     // App dependencies
-    supportLibrary = '26.0.2'
+    supportLibrary = '28.0.0'
     gsonVersion = '2.8.1'
     calligraphyVersion = '2.2.0'
 
@@ -93,7 +93,7 @@ ext {
     braintreeVersion = '2.12.0'
     facebookVersion = '4.28.0'
 
-    gcmVersion = '11.8.0'
+    gcmVersion = '16.0.0'
     crystalRangeSeekbarVersion = '1.1.1'
     stickyHeadersVersion = '0.4.3@aar'
 

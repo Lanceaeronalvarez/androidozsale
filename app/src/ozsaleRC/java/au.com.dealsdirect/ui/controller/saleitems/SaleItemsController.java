@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -30,7 +29,6 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -51,10 +49,16 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
+import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
+import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
@@ -85,7 +89,7 @@ import in.srain.cube.views.ptr.PtrHandler;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
-import static au.com.dealsdirect.service.event.ActionTracker.ClickType.PRODUCT_CLICK;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.ClickType.PRODUCT_CLICK;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -338,7 +342,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean mInitialLoad = false;
     private boolean mHasSavedInstance = false;
 
-    private String mSalesOrigin = ActionTracker.ViewSource.SALE;
+    private String mSalesOrigin = DataCollector.EventParameters.ViewSource.SALE;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
 
@@ -350,6 +354,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     private CountDownTimer mCountDownTimer;
+
+    //genie event search info
+    private boolean isGenieSearchEventActivated = false;
+    private String mGenieCategory = "";
+    private int mGenieBrandCount = 0;
+    private int mGenieMinPrice = 0;
+    private int mGenieMaxPrice = 200;
+    private int mGenieSizesCount = 0;
 
     private TextWatcher mTextWatcher = new TextWatcher() {
         private Timer timer = new Timer();
@@ -426,9 +438,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         title = title != null ? title.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT) : "";
         controller.mTitle = title;
 
-        if (controller.mFromShopSearch) controller.mSalesOrigin = ActionTracker.ViewSource.SEARCH;
+        if (controller.mFromShopSearch) controller.mSalesOrigin = DataCollector.EventParameters.ViewSource.SEARCH;
         if (controller.mFromCategorySearch)
-            controller.mSalesOrigin = ActionTracker.ViewSource.CATEGORY;
+            controller.mSalesOrigin = DataCollector.EventParameters.ViewSource.CATEGORY;
         return controller;
     }
 
@@ -453,8 +465,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mFromShopSearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, false);
         mFromCategorySearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, false);
 
-        if (mFromShopSearch) mSalesOrigin = ActionTracker.ViewSource.SEARCH;
-        if (mFromCategorySearch) mSalesOrigin = ActionTracker.ViewSource.CATEGORY;
+        if (mFromShopSearch) mSalesOrigin = DataCollector.EventParameters.ViewSource.SEARCH;
+        if (mFromCategorySearch) mSalesOrigin = DataCollector.EventParameters.ViewSource.CATEGORY;
 
         mFromCategoryDeeplink = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, false);
 
@@ -575,7 +587,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mActivity.getProfiler().setStartLogTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue());
+        mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue());
         mSaleItemsBackIcon.setOnClickListener(view12 -> mActivity.onBackPressed());
         setUp(view);
 
@@ -772,6 +784,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         hideKeyboard();
+
+        // Log data event for genie sale event
+        if (mFromBannerSearch) {
+            SaleEventRequest saleEventRequest = new SaleEventRequest();
+            saleEventRequest.setEventType(EventTypeId.EVENT_ENTER_SALE);
+            saleEventRequest.setId(mSaleId);
+            saleEventRequest.setName(mTitle);
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(DataCollector.EventParameters.SALE_EVENT_REQUEST, saleEventRequest);
+
+            DataCollector.logEvent(Events.SaleEvent, parameters);
+        }
+
     }
 
     private void setupSaleRemainingTime(String endDate) {
@@ -831,8 +857,23 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
-        mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue());
-        mActionTracker.CVItemList(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue()));
+        mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue());
+
+        if (!mFromShopSearch) {
+            String categories = mTitle.replaceAll(CATEGORY_KEY_SEPARATOR_REPLACEMENT, "/");
+            CategoryRequest categoryRequest = new CategoryRequest();
+            categoryRequest.setEventType(EventTypeId.EVENT_ENTER_CATEGORY);
+            categoryRequest.setCategories(categories);
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(DataCollector.EventParameters.MILLISECONDS,
+                    Profiler.getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue()));
+            parameters.put(DataCollector.EventParameters.CATEGORY_REQUEST, categoryRequest);
+            parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+            parameters.put(DataCollector.EventParameters.ITEM_LIST, categories);
+            parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+            DataCollector.logEvent(Events.CVItemList, parameters);
+        }
 
         if (!mHasCategoryTreeResponse) {
             initializeCategoryTreeResponse(getSaleItemsResponse.getCategories());
@@ -910,6 +951,52 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             createCategoryMap(mCategoryTreeResponse);
         }
 
+
+        String mGenieSort = "";
+        String mGenieFilters = "";
+
+        if (isGenieSearchEventActivated) {
+            mGenieCategory = mCategoryKey.replaceAll(CATEGORY_KEY_SEPARATOR, "/");
+
+            SearchEventRequest searchEventRequest = new SearchEventRequest();
+            searchEventRequest.setEventType(EventTypeId.EVENT_SEARCH);
+
+            SearchEventRequest.SearchInfo searchInfo = new SearchEventRequest.SearchInfo();
+            searchInfo.setOperation(1);
+            searchInfo.setResultsCount(getSaleItemsResponse.total);
+            searchInfo.setCategories(mGenieCategory.replaceAll("[,\"]", ""));
+            searchInfo.setSearchTerm(getSaleItemsResponse.query);
+            searchInfo.setBrandsCount(mGenieBrandCount);
+            searchInfo.setMinPrice(mGenieMinPrice);
+            searchInfo.setMaxPrice(mGenieMaxPrice);
+            searchInfo.setSizesCount(mGenieSizesCount);
+            searchInfo.setCategoriesCount(mCategoryMap.size());
+
+            for (int i = 0; i < mChipFilters.size(); i++) {
+                SearchChipModel searchChipModel = mChipFilters.get(i);
+
+                if (searchChipModel.getFilterType().equalsIgnoreCase(BundleKeys.SORT_FACETFILTER_NAME)) {
+                    mGenieSort = searchChipModel.getChipTitle();
+                } else {
+                    mGenieFilters = searchChipModel.getFilterType()+":"+searchChipModel.getChipTitle();
+                }
+
+            }
+
+            searchInfo.setSort(mGenieSort);
+            searchInfo.setFilters(mGenieFilters);
+            searchEventRequest.setSearchInfo(searchInfo);
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(DataCollector.EventParameters.SEARCH_EVENT_REQUEST, searchEventRequest);
+            parameters.put(DataCollector.EventParameters.SEARCH_TERM, getSaleItemsResponse.query);
+            parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+            parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+
+            DataCollector.logEvent(Events.SearchEvent, parameters);
+
+        }
+
         onRefreshEnd();
 
         reselectTabIfFacetsAlreadyVisible();
@@ -975,7 +1062,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));
 
-        mActionTracker.clicksEvent(mSalesOrigin + PRODUCT_CLICK, position);
+        HashMap<String, Object> eventParameters = new HashMap<>();
+        eventParameters.put(DataCollector.EventParameters.TYPE, mSalesOrigin + PRODUCT_CLICK);
+        eventParameters.put(DataCollector.EventParameters.ITEM_ARRAY_POSITION, position);
+        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
+        DataCollector.logEvent(Events.clicksEvent, eventParameters);
 
         int[] originalPos = new int[2];
         viewHolder.itemView.getLocationOnScreen(originalPos);
@@ -1417,7 +1509,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList) {
+    public void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList,
+                              ArrayList<String> brandList, int minPrice, int maxPrice,
+                              ArrayList<String> sizeList) {
+        isGenieSearchEventActivated = true;
+        mGenieBrandCount = brandList.size();
+        mGenieMinPrice = minPrice;
+        mGenieMaxPrice = maxPrice;
+        mGenieSizesCount = sizeList.size();
         mPresenter.loadSaleItems(createSaleItemsRequest(categoryKeys, 0, chipsList));
     }
 

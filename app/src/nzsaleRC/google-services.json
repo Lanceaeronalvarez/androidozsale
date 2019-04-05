@@ -1,0 +1,79 @@
+{
+  "project_info": {
+    "project_number": "118822854515",
+    "firebase_url": "https://nzsale-android-firebase.firebaseio.com",
+    "project_id": "nzsale-android-firebase",
+    "storage_bucket": "nzsale-android-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118822854515:android:9605bf6aef24e3fe",
+        "android_client_info": {
+          "package_name": "nz.co.nzsale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "118822854515-v64657qan6d3jk7q1mtiog6n0rihbvbc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV0RSwqlLQMbJwZ5Gz-526ECsmL63UggQ"
+        },
+        {
+          "current_key": "AIzaSyDndUEV_NCVmMuUTlkFKyAYY12TICYmRoU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118822854515:android:ef23b033ff685bed",
+        "android_client_info": {
+          "package_name": "nz.co.nzsaleTest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "118822854515-v64657qan6d3jk7q1mtiog6n0rihbvbc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV0RSwqlLQMbJwZ5Gz-526ECsmL63UggQ"
+        },
+        {
+          "current_key": "AIzaSyDndUEV_NCVmMuUTlkFKyAYY12TICYmRoU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
