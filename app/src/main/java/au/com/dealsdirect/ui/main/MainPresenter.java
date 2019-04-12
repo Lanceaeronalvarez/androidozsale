@@ -484,6 +484,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         if (!hasConsentCookie || !cookiePageTemplateName.equals(settingPageTemplateName)) {
             callGetConsentData();
+        } else {
+            getMvpView().onClickAgreeStrictConsentUI();
         }
     }
 

@@ -97,6 +97,7 @@ import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
+import au.com.dealsdirect.utils.legacycookie.LegacyCookie;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -903,7 +904,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             String[] array = getResources().getStringArray(R.array.gdpr_countries);
             List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));
             if (mGdprCountriesArray.contains(Settings.getSelectedCountry().countryName.toLowerCase()) && mPresenter.shouldShowStrictConsent()) {
-                callAppConsent();
+
+                if (LegacyCookie.hasConsentSaved()) {
+                    mPresenter.callSaveConsentData();
+                    initializeMainController();
+                } else {
+                    callAppConsent();
+                }
+
             } else {
                 if (isAuthorized()) {
                     // If login ticket exist, call login ticket api to renew cookies and ticket
