@@ -356,12 +356,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private CountDownTimer mCountDownTimer;
 
     //genie event search info
-    private boolean isGenieSearchEventActivated = false;
+    private boolean isFacetClicked = false;
+    private boolean hasLoggedSearch = true;
     private String mGenieCategory = "";
     private int mGenieBrandCount = 0;
     private int mGenieMinPrice = 0;
     private int mGenieMaxPrice = 200;
     private int mGenieSizesCount = 0;
+    private int mGenieTotal = 0;
+    private String mGenieQuery = "";
+    private String mGenieSort = "";
+    private String mGenieFilters = "";
 
     private TextWatcher mTextWatcher = new TextWatcher() {
         private Timer timer = new Timer();
@@ -377,6 +382,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             mSearchQuery = s.toString();
             mIsSearch = true;
+            hasLoggedSearch = false;
 
             timer.cancel();
             timer = new Timer();
@@ -859,6 +865,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue());
 
+        mGenieCategory = mCategoryKey.replaceAll(CATEGORY_KEY_SEPARATOR, "/");
+        mGenieTotal = getSaleItemsResponse.total;
+        mGenieQuery = getSaleItemsResponse.query;
+
+        for (int i = 0; i < mChipFilters.size(); i++) {
+            SearchChipModel searchChipModel = mChipFilters.get(i);
+
+            if (searchChipModel.getFilterType().equalsIgnoreCase(BundleKeys.SORT_FACETFILTER_NAME)) {
+                mGenieSort = searchChipModel.getChipTitle();
+            } else {
+                mGenieFilters = searchChipModel.getFilterType()+":"+searchChipModel.getChipTitle();
+            }
+
+        }
+
         if (!mFromShopSearch) {
             String categories = mTitle.replaceAll(CATEGORY_KEY_SEPARATOR_REPLACEMENT, "/");
             CategoryRequest categoryRequest = new CategoryRequest();
@@ -951,55 +972,60 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             createCategoryMap(mCategoryTreeResponse);
         }
 
-
-        String mGenieSort = "";
-        String mGenieFilters = "";
-
-        if (isGenieSearchEventActivated) {
-            mGenieCategory = mCategoryKey.replaceAll(CATEGORY_KEY_SEPARATOR, "/");
-
-            SearchEventRequest searchEventRequest = new SearchEventRequest();
-            searchEventRequest.setEventType(EventTypeId.EVENT_SEARCH);
-
-            SearchEventRequest.SearchInfo searchInfo = new SearchEventRequest.SearchInfo();
-            searchInfo.setOperation(1);
-            searchInfo.setResultsCount(getSaleItemsResponse.total);
-            searchInfo.setCategories(mGenieCategory.replaceAll("[,\"]", ""));
-            searchInfo.setSearchTerm(getSaleItemsResponse.query);
-            searchInfo.setBrandsCount(mGenieBrandCount);
-            searchInfo.setMinPrice(mGenieMinPrice);
-            searchInfo.setMaxPrice(mGenieMaxPrice);
-            searchInfo.setSizesCount(mGenieSizesCount);
-            searchInfo.setCategoriesCount(mCategoryMap.size());
-
-            for (int i = 0; i < mChipFilters.size(); i++) {
-                SearchChipModel searchChipModel = mChipFilters.get(i);
-
-                if (searchChipModel.getFilterType().equalsIgnoreCase(BundleKeys.SORT_FACETFILTER_NAME)) {
-                    mGenieSort = searchChipModel.getChipTitle();
-                } else {
-                    mGenieFilters = searchChipModel.getFilterType()+":"+searchChipModel.getChipTitle();
-                }
-
-            }
-
-            searchInfo.setSort(mGenieSort);
-            searchInfo.setFilters(mGenieFilters);
-            searchEventRequest.setSearchInfo(searchInfo);
-
-            HashMap<String, Object> parameters = new HashMap<>();
-            parameters.put(DataCollector.EventParameters.SEARCH_EVENT_REQUEST, searchEventRequest);
-            parameters.put(DataCollector.EventParameters.SEARCH_TERM, getSaleItemsResponse.query);
-            parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
-            parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-
-            DataCollector.logEvent(Events.SearchEvent, parameters);
-
-        }
-
         onRefreshEnd();
 
         reselectTabIfFacetsAlreadyVisible();
+
+        if ((!hasLoggedSearch && mGenieQuery.equalsIgnoreCase(mSearchQuery) && !mGenieQuery.isEmpty())
+                || isFacetClicked) {
+            logSearchEvent();
+            hasLoggedSearch = true;
+            isFacetClicked = false;
+        }
+
+    }
+
+    @Override
+    public void hideKeyboard() {
+        if (mActivity != null) {
+            mActivity.hideKeyboard();
+        }
+
+        if (isViewAttached() && !hasLoggedSearch) {
+            if (mGenieQuery.equalsIgnoreCase(mSearchQuery) && !mGenieQuery.isEmpty()) {
+                logSearchEvent();
+                hasLoggedSearch = true;
+            }
+        }
+
+
+    }
+
+    private void logSearchEvent() {
+        SearchEventRequest searchEventRequest = new SearchEventRequest();
+        searchEventRequest.setEventType(EventTypeId.EVENT_SEARCH);
+
+        SearchEventRequest.SearchInfo searchInfo = new SearchEventRequest.SearchInfo();
+        searchInfo.setOperation(1);
+        searchInfo.setResultsCount(mGenieTotal);
+        searchInfo.setCategories(mGenieCategory.replaceAll("[,\"]", ""));
+        searchInfo.setSearchTerm(mGenieQuery);
+        searchInfo.setBrandsCount(mGenieBrandCount);
+        searchInfo.setMinPrice(mGenieMinPrice);
+        searchInfo.setMaxPrice(mGenieMaxPrice);
+        searchInfo.setSizesCount(mGenieSizesCount);
+        searchInfo.setCategoriesCount(mCategoryMap.size());
+        searchInfo.setSort(mGenieSort);
+        searchInfo.setFilters(mGenieFilters);
+        searchEventRequest.setSearchInfo(searchInfo);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.SEARCH_EVENT_REQUEST, searchEventRequest);
+        parameters.put(DataCollector.EventParameters.SEARCH_TERM, mGenieQuery);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+
+        DataCollector.logEvent(Events.SearchEvent, parameters);
     }
 
     @Override
@@ -1512,11 +1538,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList,
                               ArrayList<String> brandList, int minPrice, int maxPrice,
                               ArrayList<String> sizeList) {
-        isGenieSearchEventActivated = true;
         mGenieBrandCount = brandList.size();
         mGenieMinPrice = minPrice;
         mGenieMaxPrice = maxPrice;
         mGenieSizesCount = sizeList.size();
+        isFacetClicked = true;
         mPresenter.loadSaleItems(createSaleItemsRequest(categoryKeys, 0, chipsList));
     }
 
