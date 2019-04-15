@@ -358,6 +358,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     //genie event search info
     private boolean isFacetClicked = false;
     private boolean hasLoggedSearch = true;
+    private boolean isKeyboardHidden = false;
     private String mGenieCategory = "";
     private int mGenieBrandCount = 0;
     private int mGenieMinPrice = 0;
@@ -976,11 +977,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         reselectTabIfFacetsAlreadyVisible();
 
-        if ((!hasLoggedSearch && mGenieQuery.equalsIgnoreCase(mSearchQuery) && !mGenieQuery.isEmpty())
-                || isFacetClicked) {
+        if ((!hasLoggedSearch && mGenieQuery.equalsIgnoreCase(mSearchQuery) && !mGenieQuery.isEmpty()
+                && isKeyboardHidden) || isFacetClicked) {
             logSearchEvent();
             hasLoggedSearch = true;
             isFacetClicked = false;
+            isKeyboardHidden = false;
         }
 
     }
@@ -992,9 +994,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         if (isViewAttached() && !hasLoggedSearch) {
+            isKeyboardHidden = true;
             if (mGenieQuery.equalsIgnoreCase(mSearchQuery) && !mGenieQuery.isEmpty()) {
                 logSearchEvent();
                 hasLoggedSearch = true;
+                isKeyboardHidden = false;
             }
         }
 

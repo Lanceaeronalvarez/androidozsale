@@ -825,6 +825,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void setRepository(SearchFilterMvpRepository repository) {
-        mPresenter.setRepository(repository);
+        if (repository != null) {
+            mPresenter.setRepository(repository);
+        }
     }
 }
