@@ -755,15 +755,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         if (responseValue.getD().getResult()) {
                             getMvpView().showCreatePaymentTransactionSuccess(paymentType, responseValue);
-
-                            HashMap<String, Object> parameters = new HashMap<>();
-                            parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE, paymentType);
-                            parameters.put(DataCollector.EventParameters.NUMBER_OF_ITEMS,
-                                    responseValue.getD().getValue().getOrderInfoResult().getItems().size());
-                            parameters.put(DataCollector.EventParameters.PRICE,
-                                    responseValue.getD().getValue().getOrderInfoResult().getTotal());
-                            parameters.put(DataCollector.EventParameters.COUNTRY_ID, getDataManager().getCountryId());
-                            DataCollector.logEvent(Events.PurchaseEvent, parameters);
                         } else {
                             getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
                         }
