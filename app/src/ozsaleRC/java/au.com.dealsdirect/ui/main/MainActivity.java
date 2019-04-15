@@ -568,6 +568,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     mPresenter.getIsNewUser());
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, false);
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                            .EventParameters.NUMBER_OF_ITEMS, responseValue.getD().getValue().getOrderInfoResult().getItems().size());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                            .EventParameters.PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
             au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.PurchaseEvent, parameters);
 
@@ -591,7 +597,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
         parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME,
                 MainActivity.class.getSimpleName());
-        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.PurchaseEvent, parameters);
+        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.FailedTransaction, parameters);
 
         if (errorMessage != null) {
 

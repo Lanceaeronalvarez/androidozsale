@@ -33,7 +33,8 @@ public enum Events {
     ProductViewEvent("ProductViewEvent"),
     EventUser("EventUser"),
     SaleEvent("SaleEvent"),
-    RemoveFromCart("RemoveFromCart");
+    RemoveFromCart("RemoveFromCart"),
+    FailedTransaction("FailedTransaction");
 
     private String value;
 

@@ -22,6 +22,7 @@ import au.com.dealsdirect.service.datacollection.events.CCScanEvent;
 import au.com.dealsdirect.service.datacollection.events.CVAppLaunchEvent;
 import au.com.dealsdirect.service.datacollection.events.CheckOutJourneyEvent;
 import au.com.dealsdirect.service.datacollection.events.ClickEvent;
+import au.com.dealsdirect.service.datacollection.events.FailedTransactionEvent;
 import au.com.dealsdirect.service.datacollection.events.InitiateCheckOutEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemDetailsDataEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemListDataEvent;
@@ -289,6 +290,21 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     }
                 }));
 
+        //register failed transaction
+        DataCollector.EventRegistry.register(generateEventKey(Events.FailedTransaction, getServiceKey()),
+                Events.FailedTransaction,
+                new LoggingService.LogFailedTransaction(new FailedTransactionEvent(){
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters){
+                        bundle.putString(DataCollector.EventParameters.CustomAttributeTypes.PAYMENT_OPTION.getValue(),
+                                String.valueOf(parameters.get(DataCollector.EventParameters.PAYMENT_METHOD_TYPE)));
+                        bundle.putString(DataCollector.EventParameters.CustomAttributeTypes.NEW_USER.getValue(),
+                                String.valueOf(parameters.get(DataCollector.EventParameters.IS_NEW_USER)));
+                        failedTransaction((Context) parameters.get(DataCollector.EventParameters.APP_CONTEXT), bundle,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.SCREEN_NAME)));
+                    }
+                }));
+
     }
 
     private static String generateEventKey(Events events, String service) {
@@ -436,6 +452,15 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
         firebaseAnalytics.logEvent(DataCollector.EventParameters.CustomEventType.CLICKS.getValue(), bundle);
+    }
+
+    private static void failedTransaction(Context context, Bundle bundle, String screenName) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle);
+
+        mDataManager.setLastRedirection(DataCollector.EventParameters.LastRedirection.PAY);
+        checkoutJourney(context, DataCollector.EventParameters.EventProgress.END.getValue(), screenName);
     }
 
     @Override

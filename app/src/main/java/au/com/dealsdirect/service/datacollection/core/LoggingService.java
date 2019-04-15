@@ -318,6 +318,19 @@ public class LoggingService {
         }
     }
 
+    public static class LogFailedTransaction implements LoggingEventData {
+
+        private LogDataEvents logFailedTransaction;
+
+        public LogFailedTransaction (LogDataEvents logFailedTransaction) {
+            this.logFailedTransaction = logFailedTransaction;
+        }
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logFailedTransaction.LogDataEvents(parameters);
+        }
+    }
+
     // Log data for remove fro cart
     public static class LogRemoveFromCart implements LoggingEventData {
 
