@@ -974,6 +974,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
         parameters.put(DataCollector.EventParameters.ITEM_ID, cartDetailsResponse.getSaleID());
         parameters.put(DataCollector.EventParameters.ITEM_NAME, mSaleName);
+        parameters.put(DataCollector.EventParameters.PRICE,
+                Double.valueOf(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length())));
+        parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
         parameters.put(DataCollector.EventParameters.ITEM_CATEGORY, mProductBrand);
         DataCollector.logEvent(Events.AddedToCartEvent, parameters);
 

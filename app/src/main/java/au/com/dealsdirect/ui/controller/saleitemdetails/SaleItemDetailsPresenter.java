@@ -101,13 +101,6 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
                 getMvpView().showAddToCartResponse(((AddToCartResponse.Response) response).getValue());
 
-                HashMap<String, Object> parameters = new HashMap<>();
-                parameters.put(DataCollector.EventParameters.ITEM_ID, requestValues.getSkuId());
-                parameters.put(DataCollector.EventParameters.ITEM_NAME, requestValues.getItemName());
-                parameters.put(DataCollector.EventParameters.PRICE, requestValues.getPrice());
-                parameters.put(DataCollector.EventParameters.COUNTRY_ID, getDataManager().getCountryId());
-
-                DataCollector.logEvent(Events.AddedToCartEvent,parameters);
             }
 
             @Override
