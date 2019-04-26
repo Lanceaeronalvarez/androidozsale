@@ -28,6 +28,16 @@ public class BundleKeys {
     public static final String SALEITEMS_KEY_CATEGORIES = "SaleItemsController.KEY_CATEGORIES";
     public static final String SALEITEMS_FROM_CATEGORIES = "SaleItemsController.FROM_CATEGORIES";
 
+    //sale items from shop
+    public static final String SHOP_SALEITEMS_SALE_ID = "SaleItemsController.SHOP_SALEITEMS_SALE_ID";
+    public static final String SHOP_SALEITEMS_TITLE = "SaleItemsController.SHOP_SALEITEMS_TITLE";
+    public static final String SHOP_SALEITEMS_CATEGORY_MAP = "SaleItemsController.SHOP_CATEGORY_SALEITEMS";
+    public static final String SHOP_SALEITEMS_CHIPS_FILTER = "SaleItemsController.SHOP_CHIPS_FILTER";
+    public static final String SHOP_SALEITEMS_FROM_SHOP_SEARCH = "SaleItemsController.SHOP_FROM_SHOP_SEARCH";
+    public static final String SHOP_SALEITEMS_FROM_BANNER_SEARCH = "SaleItemsController.SHOP_FROM_BANNER_SEARCH";
+    public static final String SHOP_SALEITEMS_FROM_CATEGORY_SEARCH = "SaleItemsController.SHOP_FROM_CATEGORY_SEARCH";
+    public static final String SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK = "SaleItemsController.SHOP_FROM_CATEGORY_LINK";
+    public static final String SHOP_SALEITEMS_KEY_CATEGORIES = "SaleItemsController.SHOP_KEY_CATEGORIES";
 
     //sale item details
     public static final String SALEITEMDETAILS_KEY_POSITION = "KEY_POSITION";
@@ -143,5 +153,6 @@ public class BundleKeys {
 
     //SavedInstance
     public static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";
+    public static final String SHOP_KEY_HAS_SAVED_INSTANCE = "SHOP_KEY_HAS_SAVED_INSTANCE";
 
 }

@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.inject.Inject;
@@ -50,10 +51,12 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.registerservices.GenieEventService;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.main.Settings;
-import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.DeepLinkUrlType;
@@ -481,6 +484,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         if (!hasConsentCookie || !cookiePageTemplateName.equals(settingPageTemplateName)) {
             callGetConsentData();
+        } else {
+            getMvpView().onClickAgreeStrictConsentUI();
         }
     }
 
@@ -654,6 +659,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void callGetAccountData() {
+        GenieEventService genieEventService = new GenieEventService(getDataManager(),getSchedulerProvider(),getCompositeDisposable());
         getCompositeDisposable().add(getDataManager()
                 .callGetAccountData()
                 .subscribeOn(getSchedulerProvider().io())
@@ -749,10 +755,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         if (responseValue.getD().getResult()) {
                             getMvpView().showCreatePaymentTransactionSuccess(paymentType, responseValue);
-                            AppEventHelper.completedPurchase(paymentType,
-                                    responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
-                                    responseValue.getD().getValue().getOrderInfoResult().getTotal(),
-                                    getDataManager().getCountryId());
                         } else {
                             getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
                         }
@@ -808,10 +810,15 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         if (responseValue.getD().getResult()) {
                             getMvpView().showCreatePaymentTransactionSuccess(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE, responseValue);
-                            AppEventHelper.completedPurchase(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE,
-                                    responseValue.getD().getValue().getOrderInfoResult().getItems().size(),
-                                    responseValue.getD().getValue().getOrderInfoResult().getTotal(),
-                                    getDataManager().getCountryId());
+                            HashMap<String, Object> parameters = new HashMap<>();
+                            parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                                    PaymentInfo.VISA_CHECKOUT_CYBERSOURCE);
+                            parameters.put(DataCollector.EventParameters.NUMBER_OF_ITEMS,
+                                    responseValue.getD().getValue().getOrderInfoResult().getItems().size());
+                            parameters.put(DataCollector.EventParameters.PRICE,
+                                    responseValue.getD().getValue().getOrderInfoResult().getTotal());
+                            parameters.put(DataCollector.EventParameters.COUNTRY_ID, getDataManager().getCountryId());
+                            DataCollector.logEvent(Events.PurchaseEvent, parameters);
                         } else {
                             getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
                         }
@@ -862,11 +869,15 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                                 if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
                                     getMvpView().showCreatePaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
-                                    AppEventHelper.addedPaymentInfo(responseValue.getD().getValue().getLastPaymentMethod().getPaymentType());
+
+                                    HashMap<String, Object> parameters = new HashMap<>();
+                                    parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                                            responseValue.getD().getValue().getLastPaymentMethod().getPaymentType());
+                                    DataCollector.logEvent(Events.AddPaymentInfo, parameters);
                                 } else {
                                     getMvpView().onError(responseValue.getMessage());
                                 }
-//
+
                             }
                         }, new Consumer<Throwable>() {
                             @Override

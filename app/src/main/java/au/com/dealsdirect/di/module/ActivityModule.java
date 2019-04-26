@@ -12,8 +12,12 @@ import javax.inject.Singleton;
 
 import au.com.dealsdirect.di.ActivityContext;
 import au.com.dealsdirect.di.PerActivity;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.registerservices.FirebaseAnalyticsService;
+import au.com.dealsdirect.service.datacollection.registerservices.GenieEventService;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.service.event.ActionTrackerInterface;
+import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
+import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.ui.main.MainMvpPresenter;
 import au.com.dealsdirect.ui.main.MainMvpView;
 import au.com.dealsdirect.ui.main.MainPresenter;
@@ -63,6 +67,18 @@ public class ActivityModule {
     @PerActivity
     ActionTrackerInterface provideActionTracker(ActionTracker actionTracker){
         return actionTracker;
+    }
+
+    @Provides
+    @PerActivity
+    GenieEventServiceInterface provideGenieEventService(GenieEventService genieEventService) {
+        return genieEventService;
+    }
+
+    @Provides
+    @PerActivity
+    FirebaseEventServiceInterface provideFirebaseEventService(FirebaseAnalyticsService firebaseEventService) {
+        return firebaseEventService;
     }
 
     @Provides

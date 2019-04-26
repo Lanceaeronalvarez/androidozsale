@@ -1,17 +1,20 @@
 package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPhoneVerification;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -103,7 +106,12 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
 
     @Override
     public void facebookInitiatedCheckout(String paymentType, int numItems, double price) {
-        AppEventHelper.initiatedCheckout(paymentType, numItems, price, getDataManager().getCountryId());
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE, paymentType);
+        parameters.put(DataCollector.EventParameters.NUMBER_OF_ITEMS, numItems);
+        parameters.put(DataCollector.EventParameters.PRICE, price);
+        parameters.put(DataCollector.EventParameters.COUNTRY_ID, getDataManager().getCountryId());
+        DataCollector.logEvent(Events.InitiateCheckout,parameters);
     }
 
     @Override

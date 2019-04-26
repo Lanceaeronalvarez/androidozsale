@@ -138,7 +138,6 @@ public class OrdersController extends BasePullToRefreshController implements Ord
             mOrders = orders;
             mAdapter = new OrdersRecyclerViewAdapter(mActivity,this, orders);
             mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.addItemDecoration(new OrderItemDecorator());
         }
 
         mContentLayout.setVisibility(hasOrders ? View.VISIBLE : View.GONE);

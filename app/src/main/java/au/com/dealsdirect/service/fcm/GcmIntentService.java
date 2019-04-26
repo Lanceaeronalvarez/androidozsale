@@ -91,7 +91,7 @@ public class GcmIntentService extends JobIntentService {
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // Post notification of received message.
-                sendNotification(message);
+                sendNotification(extras.getString("alert"));
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.

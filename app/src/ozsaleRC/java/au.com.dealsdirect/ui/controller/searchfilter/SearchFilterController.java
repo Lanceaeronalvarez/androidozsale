@@ -33,6 +33,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.FacetItemsAdapter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
@@ -66,19 +67,22 @@ public class SearchFilterController extends BaseController implements SearchFilt
             private List<String> mBrandList;
             private String mCategoryKey;
             private List<SearchChipModel> mChipsFilter;
+            private boolean mIsFromCategory;
 
             public FromItemsList(List<GetSaleItemsResponse.Facets> facets,
-                    List<SortingResponse> sortingFacets,
-                    List<GetCategoryTreeResponse> categoryTree,
-                    List<String> brandList,
-                    String categoryKey,
-                    List<SearchChipModel> chipsFilter) {
+                                List<SortingResponse> sortingFacets,
+                                List<GetCategoryTreeResponse> categoryTree,
+                                List<String> brandList,
+                                String categoryKey,
+                                List<SearchChipModel> chipsFilter,
+                                 boolean isFromCategory) {
                 mFacets = facets;
                 mSortingFacets = sortingFacets;
                 mCategoryTree = categoryTree;
                 mBrandList = brandList;
                 mCategoryKey = categoryKey;
                 mChipsFilter = chipsFilter;
+                mIsFromCategory = isFromCategory;
             }
 
             public ArrayList<GetSaleItemsResponse.Facets> getFacets() {
@@ -102,6 +106,11 @@ public class SearchFilterController extends BaseController implements SearchFilt
             public ArrayList<SearchChipModel> getChipsFilter() {
                 return mChipsFilter == null ? new ArrayList<>() : new ArrayList<>(mChipsFilter);
             }
+
+            public boolean isFromCategory() {
+                return mIsFromCategory;
+            }
+
         }
     }
 
@@ -114,6 +123,16 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private static final String KEY_BRAND_LIST = "KEY_BRAND_LIST";
     private static final String SALEITEMS_CATEGORY_MAP = "SALEITEMS_CATEGORY_MAP";
     private static final String SALEITEMS_CHIPS_FILTER = "SALEITEMS_CHIPS_FILTER";
+    private static final String KEY_FROM_CATEGORIES = "KEY_FROM_CATEGORIES";
+
+    private static final String SHOP_KEY_HAS_SAVED_INSTANCE = "SearchFilterController.SHOP_KEY_HAS_SAVED_INSTANCE";
+    private static final String SHOP_KEY_FACET_STRING = "SHOP_KEY_FACET_STRING";
+    private static final String SHOP_KEY_SORTING_STRING = "SHOP_KEY_SORTING_STRING";
+    private static final String SHOP_KEY_CATEGORY_STRING = "SHOP_KEY_CATEGORY_STRING";
+    private static final String SHOP_KEY_BRAND_LIST = "SHOP_KEY_BRAND_LIST";
+    private static final String SHOP_SALEITEMS_CATEGORY_MAP = "SHOP_SALEITEMS_CATEGORY_MAP";
+    private static final String SHOP_SALEITEMS_CHIPS_FILTER = "SHOP_SALEITEMS_CHIPS_FILTER";
+    private static final String SHOP_KEY_FROM_CATEGORIES = "SHOP_KEY_FROM_CATEGORIES";
 
 
     @Inject
@@ -181,6 +200,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private String mCategoryKey;
     private boolean mHasDefaultCategoryKey = false;
     private boolean mHasSavedInstance = false;
+    private int minPrice = 0;
+    private int maxPrice = 200;
+    private boolean isFromCategory = false;
 
     Set<String> mCategoryKeys = new LinkedHashSet<>();
 
@@ -204,6 +226,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
                 controller.mCategoryKeys.add(controller.mCategoryKey);
             }
             controller.mPreviousSearchChips = ((Parameters.FromItemsList) parameters).getChipsFilter();
+            controller.isFromCategory = ((Parameters.FromItemsList) parameters).isFromCategory();
         }
 
         return controller;
@@ -230,32 +253,67 @@ public class SearchFilterController extends BaseController implements SearchFilt
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_HAS_SAVED_INSTANCE, true);
-        outState.putString(KEY_FACET_STRING, new Gson().toJson(mFacets));
-        outState.putString(KEY_SORTING_STRING, new Gson().toJson(mSortingFacets));
-        outState.putString(KEY_CATEGORY_STRING, new Gson().toJson(mCategoryTree));
-        outState.putString(KEY_BRAND_LIST, new Gson().toJson(mBrandList));
-        outState.putString(SALEITEMS_CATEGORY_MAP, mCategoryKey);
-        outState.putString(SALEITEMS_CHIPS_FILTER, new Gson().toJson(mPreviousSearchChips));
+
+        if (isFromCategory) {
+            outState.putBoolean(KEY_HAS_SAVED_INSTANCE, true);
+            outState.putString(KEY_FACET_STRING, new Gson().toJson(mFacets));
+            outState.putString(KEY_SORTING_STRING, new Gson().toJson(mSortingFacets));
+            outState.putString(KEY_CATEGORY_STRING, new Gson().toJson(mCategoryTree));
+            outState.putString(KEY_BRAND_LIST, new Gson().toJson(mBrandList));
+            outState.putString(SALEITEMS_CATEGORY_MAP, mCategoryKey);
+            outState.putString(SALEITEMS_CHIPS_FILTER, new Gson().toJson(mPreviousSearchChips));
+            outState.putBoolean(KEY_FROM_CATEGORIES, isFromCategory);
+        } else {
+            outState.putBoolean(SHOP_KEY_HAS_SAVED_INSTANCE, true);
+            outState.putString(SHOP_KEY_FACET_STRING, new Gson().toJson(mFacets));
+            outState.putString(SHOP_KEY_SORTING_STRING, new Gson().toJson(mSortingFacets));
+            outState.putString(SHOP_KEY_CATEGORY_STRING, new Gson().toJson(mCategoryTree));
+            outState.putString(SHOP_KEY_BRAND_LIST, new Gson().toJson(mBrandList));
+            outState.putString(SHOP_SALEITEMS_CATEGORY_MAP, mCategoryKey);
+            outState.putString(SHOP_SALEITEMS_CHIPS_FILTER, new Gson().toJson(mPreviousSearchChips));
+            outState.putBoolean(SHOP_KEY_FROM_CATEGORIES, isFromCategory);
+
+        }
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mHasSavedInstance = savedInstanceState.getBoolean(KEY_HAS_SAVED_INSTANCE);
-        mFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_FACET_STRING,""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {}.getType());
-        mSortingFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_SORTING_STRING,""), new TypeToken<ArrayList<SortingResponse>>() {}.getType());
-        mCategoryTree = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_CATEGORY_STRING,""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {}.getType());
-        mBrandList = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_BRAND_LIST,""), new TypeToken<ArrayList<String>>() {}.getType());
-        mCategoryKey = savedInstanceState.getString(SALEITEMS_CATEGORY_MAP,"");
-        if(mCategoryKey != null && !mCategoryKey.isEmpty()) {
-            mCategoryKeys.add(mCategoryKey);
+
+        if (savedInstanceState.containsKey(KEY_FROM_CATEGORIES) &&
+                savedInstanceState.getBoolean(KEY_FROM_CATEGORIES)) {
+            mHasSavedInstance = savedInstanceState.getBoolean(KEY_HAS_SAVED_INSTANCE);
+            mFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_FACET_STRING,""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {}.getType());
+            mSortingFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_SORTING_STRING,""), new TypeToken<ArrayList<SortingResponse>>() {}.getType());
+            mCategoryTree = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_CATEGORY_STRING,""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {}.getType());
+            mBrandList = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_BRAND_LIST,""), new TypeToken<ArrayList<String>>() {}.getType());
+            mCategoryKey = savedInstanceState.getString(SALEITEMS_CATEGORY_MAP,"");
+            if(mCategoryKey != null && !mCategoryKey.isEmpty()) {
+                mCategoryKeys.add(mCategoryKey);
+            }
+
+            String previousChipsString = savedInstanceState.getString(SALEITEMS_CHIPS_FILTER,"");
+            mPreviousSearchChips =  previousChipsString.isEmpty() ? new ArrayList<>() :
+                    JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {}.getType());
+
+            isFromCategory = savedInstanceState.getBoolean(KEY_FROM_CATEGORIES);
+        } else {
+            mHasSavedInstance = savedInstanceState.getBoolean(SHOP_KEY_HAS_SAVED_INSTANCE);
+            mFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(SHOP_KEY_FACET_STRING,""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {}.getType());
+            mSortingFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(SHOP_KEY_SORTING_STRING,""), new TypeToken<ArrayList<SortingResponse>>() {}.getType());
+            mCategoryTree = JsonUtils.convertStringToObject(savedInstanceState.getString(SHOP_KEY_CATEGORY_STRING,""), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {}.getType());
+            mBrandList = JsonUtils.convertStringToObject(savedInstanceState.getString(SHOP_KEY_BRAND_LIST,""), new TypeToken<ArrayList<String>>() {}.getType());
+            mCategoryKey = savedInstanceState.getString(SHOP_SALEITEMS_CATEGORY_MAP,"");
+            if(mCategoryKey != null && !mCategoryKey.isEmpty()) {
+                mCategoryKeys.add(mCategoryKey);
+            }
+
+            String previousChipsString = savedInstanceState.getString(SHOP_SALEITEMS_CHIPS_FILTER,"");
+            mPreviousSearchChips =  previousChipsString.isEmpty() ? new ArrayList<>() :
+                    JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {}.getType());
+
+            isFromCategory = savedInstanceState.getBoolean(SHOP_KEY_FROM_CATEGORIES);
         }
-
-        String previousChipsString = savedInstanceState.getString(SALEITEMS_CHIPS_FILTER,"");
-        mPreviousSearchChips =  previousChipsString.isEmpty() ? new ArrayList<>() :
-                JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {}.getType());
-
     }
 
     @Override
@@ -285,7 +343,11 @@ public class SearchFilterController extends BaseController implements SearchFilt
         //create a category map from the categorytreeresponse in saleitems, else
         // use saleitemscontroller's category map if it is not empty else
 
-        mActivity.setSearchFilterController(this);
+        if (isFromCategory) {
+            mActivity.setSearchFilterController(this);
+        } else {
+            mActivity.setShopSearchFilterController(this);
+        }
 
         mPresenter.requestCategoryMap();
         if(mCategoryMap.isEmpty()) {
@@ -446,7 +508,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
                     }
                 }
 
-                mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList);
+                mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList,mBrandList, minPrice, maxPrice, mSizeList);
 
                 onResetPriceRange();
             }
@@ -455,10 +517,12 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
         mSeekbar.setMaxPriceMovingLayout(mMaxPriceMovingLayout);
         mSeekbar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
-            mMinPrice.setText("$" + minValue.intValue());
-            mMaxPrice.setText("$" + maxValue.intValue());
+            minPrice = minValue.intValue();
+            maxPrice = maxValue.intValue();
+            mMinPrice.setText(Settings.getSelectedCountry().currencySign + minValue.intValue());
+            mMaxPrice.setText(Settings.getSelectedCountry().currencySign + maxValue.intValue());
             if (maxValue.intValue() == mOrigMaxValue) {
-                mMaxPrice.setText("$" + maxValue.intValue() + "+");
+                mMaxPrice.setText(Settings.getSelectedCountry().currencySign + maxValue.intValue() + "+");
             }
         });
 
@@ -484,7 +548,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
                 mHasSeekbarReset = false;
 
-                mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList);
+                mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList,mBrandList, minPrice, maxPrice, mSizeList);
 
             }
         });
@@ -558,7 +622,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void updateFacetItemToFilters(List<SearchChipModel> selectedChips) {
-        mPresenter.requestUpdate(mCategoryKeys, selectedChips);
+        mPresenter.requestUpdate(mCategoryKeys, selectedChips, mBrandList, minPrice, maxPrice, mSizeList);
     }
 
     @Override
@@ -618,7 +682,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
         if (mHasDefaultCategoryKey && mCategoryKeys.size() == 0) {
             mCategoryKeys.add(mCategoryKey);
         }
-        mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList);
+
+        mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList,mBrandList, minPrice, maxPrice, mSizeList);
     }
 
     @Override
@@ -760,6 +825,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void setRepository(SearchFilterMvpRepository repository) {
-        mPresenter.setRepository(repository);
+        if (repository != null) {
+            mPresenter.setRepository(repository);
+        }
     }
 }

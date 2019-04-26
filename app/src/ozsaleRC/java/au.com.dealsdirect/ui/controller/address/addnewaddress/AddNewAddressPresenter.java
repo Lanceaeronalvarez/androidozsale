@@ -9,21 +9,18 @@ import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 import timber.log.Timber;
 
 /**
@@ -51,8 +48,24 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
 
                 if (pair.getValue() instanceof EditText) {
                     EditText et = (EditText) pair.getValue();
-                    jsonAddress.addProperty(info.getName(), et.getText().toString());
-                    Timber.d("ADDRESS", "Key: " + info.getName() + " ScheduledPlan: " + et.getText().toString());
+                    String editTextValue = et.getText().toString();
+                    String label = info.getName();
+                    jsonAddress.addProperty(label, editTextValue);
+                    if (!(editTextValue.length() >= info.getMinLength() && editTextValue.length() <= info.getMaxLength())) {
+                        if (info.getMinLength() == info.getMaxLength()) {
+                            getMvpView().onError(String.format(
+                                    et.getContext().getString(R.string.address_error_format_equal),
+                                    info.getLabel(),
+                                    String.valueOf(info.getMinLength())));
+                        } else {
+                            getMvpView().onError(String.format(
+                                    et.getContext().getString(R.string.address_error_format),
+                                    info.getLabel(), String.valueOf(info.getMinLength()),
+                                    String.valueOf(info.getMaxLength())));
+                        }
+                        return;
+                    }
+                    Timber.d("ADDRESS", "Key: " + label + " ScheduledPlan: " + editTextValue);
                 } else if (pair.getValue() instanceof AppCompatSpinner) {
                     AppCompatSpinner spinner = (AppCompatSpinner) pair.getValue();
                     jsonAddress.addProperty(info.getName(), spinner.getSelectedItem().toString());

@@ -10,11 +10,8 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.appevents.AppEventsConstants;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
@@ -32,15 +29,12 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
-import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-
-import au.com.dealsdirect.utils.AppEventHelper;
 
 /**
  * Base class that implements the Presenter interface and provides a base implementation for
@@ -307,7 +301,9 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
             public void onSuccess(LoginResult loginResult) {
                 fetchUserInfo(loginResult.getAccessToken(), tcAccepted, emailsAccepted);
                 if (isRegister == 1) {
-                    AppEventHelper.completedRegistration(AppConstants.API_REGISTER_FACEBOOK);
+                    HashMap<String, Object> parameters = new HashMap<>();
+                    parameters.put(DataCollector.EventParameters.METHOD, AppConstants.API_REGISTER_FACEBOOK);
+                    DataCollector.logEvent(Events.CompleteRegistration, parameters);
                 }
             }
 

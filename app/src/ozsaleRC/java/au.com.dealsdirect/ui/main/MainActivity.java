@@ -44,6 +44,7 @@ import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -52,11 +53,13 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.event.ActionTrackerInterface;
+import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
+import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
@@ -91,6 +94,7 @@ import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
+import au.com.dealsdirect.utils.legacycookie.LegacyCookie;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,6 +107,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private static final String TAG = "MainActivity";
 
     protected ActionTrackerInterface mActionTracker;
+
+    protected GenieEventServiceInterface mGenieEventService;
+
+    protected FirebaseEventServiceInterface mFirebaseEventService;
 
     @Inject
     ProfilerInterface mProfiler;
@@ -124,6 +132,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private ViewContactsController mContactsController;
     private AccountController mAccountController;
     private SearchFilterController mSearchFilterController;
+    private SearchFilterController mShopSearchFilterController;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -157,7 +166,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mIsViewAttached = true;
         getActivityComponent().inject(this);
         registerInternetCheckReceiver();
-        mProfiler.setStartLogTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue());
+        mProfiler.setStartLogTime(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.CustomEventType.CV_APPLAUNCH.getValue());
 
         setUnBinder(ButterKnife.bind(this));
 
@@ -172,12 +181,20 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         // Init All analytics sdk
         mPresenter.initializeAnalytics(this, this.getApplication());
         mActionTracker = getActivityComponent().getActionTracker();
+        mGenieEventService = getActivityComponent().getGenieEventService();
+        mFirebaseEventService = getActivityComponent().getFirebaseEventService();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
 
         if (!mAppHasSavedInstance) {
             mMainController = MainController.newInstance();
-            mProfiler.setEndLogTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue());
-            mActionTracker.CVAppLaunch(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_APPLAUNCH.getValue()));
+            mProfiler.setEndLogTime(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.CustomEventType.CV_APPLAUNCH.getValue());
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.MILLISECONDS,
+                    Profiler.getTotalTime(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.CustomEventType.CV_APPLAUNCH.getValue()));
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
+
+            au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.CVAppLaunch, parameters);
         }
 
         splashShownCallback();
@@ -201,8 +218,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        BaseController controller = (BaseController) getCurrentController(getCurrentRouter());
-        controller.onOrientationChanged(newConfig);
+        Router router = getCurrentRouter();
+        if (router != null) {
+            Controller controller = getCurrentController(router);
+            if (controller instanceof BaseController) {
+                ((BaseController) controller).onOrientationChanged(newConfig);
+            }
+        }
     }
 
     @Override
@@ -489,7 +511,29 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             } else if (PaymentInfo.getOurpay() != null) {
                 PaymentInfo.getOurpay().setCanUse(false);
             }
-            mActionTracker.purchase(PaymentInfo.getFabricPaymentType(), mPresenter.getIsNewUser(), true);
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .EventParameters.PAYMENT_METHOD_TYPE, PaymentInfo.getFabricPaymentType());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                            .EventParameters.IS_NEW_USER, mPresenter.getIsNewUser());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .EventParameters.RESULT, true);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .EventParameters.APP_CONTEXT, this);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                            .EventParameters.NUMBER_OF_ITEMS,
+                    responseValue.getD().getValue().getOrderInfoResult().getItems().size());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                            .EventParameters.PRICE,
+                    responseValue.getD().getValue().getOrderInfoResult().getTotal());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
+            au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .logEvent(Events.PurchaseEvent, parameters);
+
 //            fabric app event sign up reset new user.
             mPresenter.setIsNewUser(false);
 
@@ -517,7 +561,22 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             Router currentRouter = getMainController().getHomeController().getCurrentRouter();
             Controller currentController = getMainController().getHomeController().getCurrentControllerOnRouter(currentRouter);
 
-            mActionTracker.purchase(PaymentInfo.getFabricPaymentType(), mPresenter.getIsNewUser(), false);
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                    PaymentInfo.getFabricPaymentType());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.IS_NEW_USER,
+                    mPresenter.getIsNewUser());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, false);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                            .EventParameters.NUMBER_OF_ITEMS, responseValue.getD().getValue().getOrderInfoResult().getItems().size());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                            .EventParameters.PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
+            au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.PurchaseEvent, parameters);
+
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
 
             if (currentController instanceof CheckoutMvpView) {
@@ -528,7 +587,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void showCreatePaymentTransactionFailure(String errorMessage) {
-        mActionTracker.purchase(PaymentInfo.getFabricPaymentType(), mPresenter.getIsNewUser(), false);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                PaymentInfo.getFabricPaymentType());
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.IS_NEW_USER,
+                mPresenter.getIsNewUser());
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, false);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME,
+                MainActivity.class.getSimpleName());
+        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.FailedTransaction, parameters);
+
         if (errorMessage != null) {
 
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
@@ -584,7 +654,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showGetPaymentMethodNonceSuccess(String nonce) {
         showLoadingDialog(getResources().getString(R.string.loading), false);
         PaymentInfo.setThreeDSecureCalled(true);
-        mPresenter.setLastCartRedirection(ActionTracker.LastRedirection.THREEDSECURE_OTP);
+        mPresenter.setLastCartRedirection(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LastRedirection.THREEDSECURE_OTP);
         ThreeDSecure.performVerification(getBraintreeFragment(), nonce, Double.toString(PaymentInfo.getCartCost()));
     }
 
@@ -732,7 +802,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void logLoginTicket() {
-        mActionTracker.login(ActionTracker.LoginType.TICKET, true);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.METHOD,
+                au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.TICKET);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, true);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
+        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.Login, parameters);
     }
 
     @Override
@@ -843,7 +919,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             String[] array = getResources().getStringArray(R.array.gdpr_countries);
             List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));
             if (mGdprCountriesArray.contains(Settings.getSelectedCountry().countryName.toLowerCase()) && mPresenter.shouldShowStrictConsent()) {
-                callAppConsent();
+
+                if (LegacyCookie.hasConsentSaved()) {
+                    mPresenter.callSaveConsentData();
+                    initializeMainController();
+                } else {
+                    callAppConsent();
+                }
+
             } else {
                 if (isAuthorized()) {
                     // If login ticket exist, call login ticket api to renew cookies and ticket
@@ -868,6 +951,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             callPublicSettings();
         }
         mPresenter.callGetAccountData();
+        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.EventUser, new HashMap<>());
 
         callGCMRegisterSubscriber();
     }
@@ -952,7 +1036,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public Controller getCurrentController(Router router) {
         try {
             Controller controller = getMainController().getCurrentViewPagerController();
-            if(controller instanceof HomeMvpView) {
+            if (controller instanceof HomeMvpView) {
                 return ((HomeController) controller).getCurrentControllerOnRouter(router);
             } else {
                 return controller;
@@ -1048,7 +1132,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             Controller currentController = getCurrentController(getCurrentRouter());
             BaseController baseController = currentController instanceof BaseController ?
                     (BaseController) getCurrentController(getCurrentRouter()) : null;
-            if(isNetworkConnected() && baseController != null) {
+            if (isNetworkConnected() && baseController != null) {
                 baseController.refreshContents();
             }
         }
@@ -1225,12 +1309,28 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mSearchFilterController;
     }
 
+    public SearchFilterController getShopSearchFilterController() {
+        return mShopSearchFilterController;
+    }
+
+    public void setShopSearchFilterController(SearchFilterController shopSearchFilterController) {
+        this.mShopSearchFilterController = shopSearchFilterController;
+    }
+
     public AccountController getAccountController() {
         return mAccountController;
     }
 
     public ActionTrackerInterface getActionTracker() {
         return mActionTracker;
+    }
+
+    public GenieEventServiceInterface getGenieEventService() {
+        return mGenieEventService;
+    }
+
+    public FirebaseEventServiceInterface getFirebaseEventService() {
+        return mFirebaseEventService;
     }
 
     public ProfilerInterface getProfiler() {

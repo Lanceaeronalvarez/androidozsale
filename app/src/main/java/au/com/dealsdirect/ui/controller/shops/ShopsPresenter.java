@@ -116,7 +116,6 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         if (!isViewAttached() || getMvpView().isChangeInProgress()) {
             return;
         }
-
         getMvpView().onBannerClicked(saleId, bannerTitle, bannerId, position, imageUrl, endDate, isAvailable);
     }
 

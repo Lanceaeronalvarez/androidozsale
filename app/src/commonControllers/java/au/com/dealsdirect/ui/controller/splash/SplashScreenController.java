@@ -1,20 +1,14 @@
 package au.com.dealsdirect.ui.controller.splash;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.mysale.genie.profiler.Profiler;
-
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.service.event.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppLogger;

@@ -29,13 +29,16 @@ import com.mysale.genie.utility.RxBus;
 import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.data.network.model.login.LoginVisa;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
@@ -455,7 +458,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @OnClick(R.id.bt_camera)
     void launchCamera() {
 
-        mActionTracker.CCScan(ActionTracker.EventProgress.START);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.EVENT_PROGRESS, DataCollector.EventParameters.EventProgress.START);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, AddPaymentController.class.getSimpleName());
+        DataCollector.logEvent(Events.CCScan, parameters);
         mCardForm.scanCard(getActivity());
     }
 
@@ -464,7 +471,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         //This callback is called when successful CC scanning
 
         mCardForm.getCardEditText().setEnabled(false);
-        mActionTracker.CCScan(ActionTracker.EventProgress.SUCCESS);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.EVENT_PROGRESS, DataCollector.EventParameters.EventProgress.SUCCESS);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, AddPaymentController.class.getSimpleName());
+        DataCollector.logEvent(Events.CCScan, parameters);
 
     }
 

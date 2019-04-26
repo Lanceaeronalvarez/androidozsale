@@ -38,6 +38,9 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
@@ -319,6 +322,12 @@ public interface ApiHelper {
 
     // EVENT
     Observable<String> callSearchEvent(SearchEventRequest request);
+
+    Observable<String> callProductViewEvent(ProductViewRequest request);
+
+    Observable<String> callCategoryEvent(CategoryRequest request);
+
+    Observable<String> callSaleEvent(SaleEventRequest request);
 
     Observable<String> callEventUser();
 

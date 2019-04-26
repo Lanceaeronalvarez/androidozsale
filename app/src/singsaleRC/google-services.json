@@ -1,0 +1,79 @@
+{
+  "project_info": {
+    "project_number": "390674118206",
+    "firebase_url": "https://singsale-android-firebase.firebaseio.com",
+    "project_id": "singsale-android-firebase",
+    "storage_bucket": "singsale-android-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:390674118206:android:49eddd6c1c298210",
+        "android_client_info": {
+          "package_name": "sg.com.singsale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "390674118206-4up7q4rqldhph8552tccsfrenr7r1r5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_ZsRuOk9XSbBnP_NXFo6rln3J1Y0FoG8"
+        },
+        {
+          "current_key": "AIzaSyDn2-vjciYd7pYGyDq4FORWglCdk8hJfK8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:390674118206:android:94b3627773b56ddd",
+        "android_client_info": {
+          "package_name": "sg.com.singsaletest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "390674118206-4up7q4rqldhph8552tccsfrenr7r1r5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_ZsRuOk9XSbBnP_NXFo6rln3J1Y0FoG8"
+        },
+        {
+          "current_key": "AIzaSyDn2-vjciYd7pYGyDq4FORWglCdk8hJfK8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

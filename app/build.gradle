@@ -54,8 +54,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 127
-            versionName "2.5.2"
+            versionCode 132
+            versionName "2.5.3"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -75,8 +75,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 127
-            versionName "2.5.2"
+            versionCode 132
+            versionName "2.5.3"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -96,8 +96,8 @@ android {
         }
 
         cocosaRC {
-            versionCode 130
-            versionName "2.5.2"
+            versionCode 132
+            versionName "2.5.3"
             applicationId "uk.co.cocosa"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -117,8 +117,8 @@ android {
         }
 
         cocosaTest {
-            versionCode 130
-            versionName "2.5.2"
+            versionCode 132
+            versionName "2.5.3"
             applicationId "uk.co.cocosatest"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -181,8 +181,8 @@ android {
         }
 
         ooRC {
-            versionCode 127
-            versionName "2.5.2"
+            versionCode 132
+            versionName "2.5.3"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -202,8 +202,8 @@ android {
         }
 
         ooTest {
-            versionCode 127
-            versionName "2.5.2"
+            versionCode 132
+            versionName "2.5.3"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -288,7 +288,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 128
+            versionCode 132
             versionName "2.5.2"
             applicationId "au.com.ozsale"
 
@@ -310,7 +310,7 @@ android {
         }
 
         ozsaleTest {
-            versionCode 128
+            versionCode 132
             versionName "2.5.2"
             applicationId "au.com.ozsale.test"
 
@@ -332,8 +332,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 127
-            versionName "2.5.2"
+            versionCode 132
+            versionName "2.5.3"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -354,8 +354,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 127
-            versionName "2.5.2"
+            versionCode 132
+            versionName "2.5.3"
             applicationId "sg.com.singsaletest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -375,8 +375,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 130
-            versionName "2.5.2"
+            versionCode 132
+            versionName "2.5.3"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -397,8 +397,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 130
-            versionName "2.5.2"
+            versionCode 132
+            versionName "2.5.3"
             applicationId "nz.co.nzsaletest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -419,7 +419,7 @@ android {
         }
 
         mysaleRC {
-            versionCode 128
+            versionCode 133
             versionName "2.5.2"
             applicationId "my.mysale.mysale"
 
@@ -440,7 +440,7 @@ android {
         }
 
         mysaleTest {
-            versionCode 128
+            versionCode 133
             versionName "2.5.2"
             applicationId "my.mysale.mysaletest"
 
@@ -777,11 +777,6 @@ dependencies {
     androidTestCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 
-    // CLS
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true
-    }
-
     // Answers
     compile('com.crashlytics.sdk.android:answers:1.4.2@aar') {
         transitive = true
@@ -789,6 +784,13 @@ dependencies {
 
     // NR
     compile 'com.newrelic.agent.android:android-agent:5.14.0'
+
+    // Firebase
+    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
+
+    compile 'com.loopj.android:android-async-http:1.4.9'
 
     //VISA CHECKOUT
     // Visa checkout
@@ -798,8 +800,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
     compile group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
 
-    compile "com.google.android.gms:play-services-ads:$rootProject.gcmVersion"
-    compile "com.google.android.gms:play-services:$rootProject.gcmVersion"
+    implementation 'com.google.android.gms:play-services-ads:17.1.2'
     compile "com.android.support:multidex:1.0.0"
 
     compile project(path: ':genie-utility')

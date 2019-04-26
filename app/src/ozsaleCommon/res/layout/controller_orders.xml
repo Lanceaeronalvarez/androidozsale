@@ -11,6 +11,9 @@
         android:id="@+id/contentFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:background="@color/transparent"
         android:visibility="visible">
 
         <LinearLayout

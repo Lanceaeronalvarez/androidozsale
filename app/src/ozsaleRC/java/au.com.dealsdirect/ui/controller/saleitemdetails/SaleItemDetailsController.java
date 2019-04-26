@@ -50,6 +50,7 @@ import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -59,10 +60,14 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
+import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -294,7 +299,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private int mAttempts = 0;
 
     //default sales origin
-    private String mOrigin = ActionTracker.ViewSource.SALE;
+    private String mOrigin = DataCollector.EventParameters.ViewSource.SALE;
 
     int[] mCheckoutLocation = new int[2];
     boolean isAnimating = false;
@@ -358,11 +363,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             String origin = ((Parameters.FromItemsList) parameters).getSalesOrigin();
             controller.mEndDate = ((Parameters.FromItemsList) parameters).getEndDate();
             controller.mIsFreeDelivery = ((Parameters.FromItemsList) parameters).getIsFreeDelivery();
-            controller.mOrigin = origin != null ? origin : ActionTracker.ViewSource.SALE;
+            controller.mOrigin = origin != null ? origin : DataCollector.EventParameters.ViewSource.SALE;
         } else if (parameters instanceof Parameters.FromDeepLink) {
             controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
             controller.mSkuId = ((Parameters.FromDeepLink) parameters).getSkuId();
-            controller.mOrigin = ActionTracker.ViewSource.SALE;
+            controller.mOrigin = DataCollector.EventParameters.ViewSource.SALE;
         }
 
         return controller;
@@ -378,7 +383,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSalePrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE);
         mSaleOldPrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE);
         mFromPosition = args.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
-        mOrigin = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, ActionTracker.ViewSource.SALE);
+        mOrigin = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, DataCollector.EventParameters.ViewSource.SALE);
     }
 
     @Override
@@ -432,7 +437,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mActivity.getProfiler().setStartLogTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue());
+        mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
         setUp(view);
     }
 
@@ -636,6 +641,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 }
             });
         }
+
     }
 
     private void setupSaleRemainingTime(String endDate) {
@@ -723,8 +729,30 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
 
-        mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue());
-        mActionTracker.CVItemDetails(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMDETAILS.getValue()));
+        mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
+
+        // set product view request object for genie event
+        ProductViewRequest productViewRequest = new ProductViewRequest();
+        productViewRequest.setEventType(EventTypeId.EVENT_PRODUCTVIEW);
+
+        ProductViewRequest.SkuInfo skuInfo = new ProductViewRequest.SkuInfo();
+        skuInfo.setId(saleDetail.getSkuId());
+        skuInfo.setName(saleDetail.getName());
+
+        productViewRequest.setSkuInfo(skuInfo);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.MILLISECONDS,
+                Profiler.getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue()));
+        parameters.put(DataCollector.EventParameters.PRODUCT_VIEW_REQUEST, productViewRequest);
+        parameters.put(DataCollector.EventParameters.ITEM_ID, saleDetail.getSkuId());
+        parameters.put(DataCollector.EventParameters.ITEM_NAME, saleDetail.getName());
+        parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getPrice().getValue());
+        parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
+        parameters.put(DataCollector.EventParameters.ITEM_BRAND, saleDetail.getBrandName());
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
+        DataCollector.logEvent(Events.CVItemDetails, parameters);
 
         mPresenter.getDynamicDiscount(saleDetail.getSkuId());
 
@@ -939,7 +967,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         animateAddToCart();
 
         RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
-        mActionTracker.addToCartEvent(mOrigin, mAttempts);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.SOURCE, mOrigin);
+        parameters.put(DataCollector.EventParameters.ATTEMPTS, mAttempts);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
+        parameters.put(DataCollector.EventParameters.ITEM_ID, cartDetailsResponse.getSaleID());
+        parameters.put(DataCollector.EventParameters.ITEM_NAME, mSaleName);
+        parameters.put(DataCollector.EventParameters.PRICE,
+                Double.valueOf(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length())));
+        parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
+        parameters.put(DataCollector.EventParameters.ITEM_CATEGORY, mProductBrand);
+        DataCollector.logEvent(Events.AddedToCartEvent, parameters);
+
         mAttempts = 0;
         //notify bottom navigation view(checkout) with success.
         CartUtil.addValueToCart(1);

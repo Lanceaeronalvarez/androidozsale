@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -30,7 +29,6 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -51,10 +49,16 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
+import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
+import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
@@ -85,7 +89,7 @@ import in.srain.cube.views.ptr.PtrHandler;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
-import static au.com.dealsdirect.service.event.ActionTracker.ClickType.PRODUCT_CLICK;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.ClickType.PRODUCT_CLICK;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -243,12 +247,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private static final String CATEGORY_KEY_SEPARATOR_REPLACEMENT = " • ";
     private static final String CATEGORY_FILTER_TYPE = "Category";
     private static final String KEY_SEARCH_TEXT = "KEY_SEARCH_TEXT";
+    private static final String SHOP_KEY_SEARCH_TEXT = "SHOP_KEY_SEARCH_TEXT";
 
     private String mSaleId = "";
     private String mTitle = "";
     private String mCategoryKey = "";
     private String mCategoryForTitle = "";
     private String mSearchQuery = "";
+    private String mShopSearchQuery = "";
     private String mEndDate = "";
 
     private Map<String, GetCategoryTreeResponse> mCategoryMap = new HashMap<>();
@@ -336,7 +342,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean mInitialLoad = false;
     private boolean mHasSavedInstance = false;
 
-    private String mSalesOrigin = ActionTracker.ViewSource.SALE;
+    private String mSalesOrigin = DataCollector.EventParameters.ViewSource.SALE;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
 
@@ -348,6 +354,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     private CountDownTimer mCountDownTimer;
+
+    //genie event search info
+    private boolean isFacetClicked = false;
+    private boolean hasLoggedSearch = true;
+    private boolean isKeyboardHidden = false;
+    private String mGenieCategory = "";
+    private int mGenieBrandCount = 0;
+    private int mGenieMinPrice = 0;
+    private int mGenieMaxPrice = 200;
+    private int mGenieSizesCount = 0;
+    private int mGenieTotal = 0;
+    private String mGenieQuery = "";
+    private String mGenieSort = "";
+    private String mGenieFilters = "";
 
     private TextWatcher mTextWatcher = new TextWatcher() {
         private Timer timer = new Timer();
@@ -363,6 +383,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             mSearchQuery = s.toString();
             mIsSearch = true;
+            hasLoggedSearch = false;
 
             timer.cancel();
             timer = new Timer();
@@ -424,9 +445,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         title = title != null ? title.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT) : "";
         controller.mTitle = title;
 
-        if (controller.mFromShopSearch) controller.mSalesOrigin = ActionTracker.ViewSource.SEARCH;
+        if (controller.mFromShopSearch) controller.mSalesOrigin = DataCollector.EventParameters.ViewSource.SEARCH;
         if (controller.mFromCategorySearch)
-            controller.mSalesOrigin = ActionTracker.ViewSource.CATEGORY;
+            controller.mSalesOrigin = DataCollector.EventParameters.ViewSource.CATEGORY;
         return controller;
     }
 
@@ -451,8 +472,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mFromShopSearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, false);
         mFromCategorySearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, false);
 
-        if (mFromShopSearch) mSalesOrigin = ActionTracker.ViewSource.SEARCH;
-        if (mFromCategorySearch) mSalesOrigin = ActionTracker.ViewSource.CATEGORY;
+        if (mFromShopSearch) mSalesOrigin = DataCollector.EventParameters.ViewSource.SEARCH;
+        if (mFromCategorySearch) mSalesOrigin = DataCollector.EventParameters.ViewSource.CATEGORY;
 
         mFromCategoryDeeplink = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, false);
 
@@ -467,44 +488,76 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
-        if (!mSaleId.isEmpty()) outState.putString(BundleKeys.SALEITEMS_SALE_ID, mSaleId);
-        outState.putBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
-        outState.putBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
-        outState.putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey);
-        outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
-        outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
-        outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
-        outState.putString(BundleKeys.SALEITEMS_KEY_CATEGORIES, new Gson().toJson(mInitialCategoryTree));
-        outState.putString(BundleKeys.SALEITEMS_TITLE, mTitle);
-        if (mSaleItemsToolbarField != null)
-            outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+
+        if (mFromCategorySearch) {
+            outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+            outState.putBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
+            outState.putBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
+            outState.putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey);
+            outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
+            outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
+            outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
+            outState.putString(BundleKeys.SALEITEMS_TITLE, mTitle);
+            if (mSaleItemsToolbarField != null)
+                outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+        } else {
+            outState.putBoolean(BundleKeys.SHOP_KEY_HAS_SAVED_INSTANCE, true);
+            if (mSaleId != null && !mSaleId.isEmpty()) {
+                outState.putString(BundleKeys.SHOP_SALEITEMS_SALE_ID, mSaleId);
+            }
+            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
+            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
+            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
+            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
+            outState.putString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
+            outState.putString(BundleKeys.SHOP_SALEITEMS_TITLE, mTitle);
+            if (mSaleItemsToolbarField != null)
+                outState.putString(SHOP_KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+        }
+
+
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
-        mSaleId = savedInstanceState.getString(BundleKeys.SALEITEMS_SALE_ID, "");
-        mCategoryKey = savedInstanceState.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
-        mFromBannerSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH);
-        mFromShopSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH);
-        mFromCategorySearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH);
-        mFromCategoryDeeplink = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK);
-        if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
-            mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
-            }.getType());
-        }
 
-        if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_KEY_CATEGORIES)) {
-            mInitialCategoryTree = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SALEITEMS_KEY_CATEGORIES), new TypeToken<ArrayList<GetCategoryTreeResponse>>() {
-            }.getType());
-        }
+        if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH) &&
+                savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH)) {
+            mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+            mCategoryKey = savedInstanceState.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
+            mFromBannerSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH);
+            mFromShopSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH);
+            mFromCategorySearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH);
+            mFromCategoryDeeplink = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK);
+            if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
+                mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+                }.getType());
+            }
 
-        if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) {
-            mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT, "");
+            if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) {
+                mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT);
+            }
+            mTitle = savedInstanceState.getString(BundleKeys.SALEITEMS_TITLE);
+        } else {
+            mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.SHOP_KEY_HAS_SAVED_INSTANCE);
+            if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_SALE_ID)) {
+                mSaleId = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_SALE_ID);
+            }
+            mFromBannerSearch = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_BANNER_SEARCH);
+            mFromShopSearch = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_SHOP_SEARCH);
+            mFromCategorySearch = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_SEARCH);
+            mFromCategoryDeeplink = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK);
+            if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER)) {
+                mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+                }.getType());
+            }
+
+            if (savedInstanceState.containsKey(SHOP_KEY_SEARCH_TEXT)) {
+                mShopSearchQuery = savedInstanceState.getString(SHOP_KEY_SEARCH_TEXT);
+            }
+            mTitle = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_TITLE);
         }
-        mTitle = savedInstanceState.getString(BundleKeys.SALEITEMS_TITLE);
     }
 
 
@@ -541,7 +594,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        mActivity.getProfiler().setStartLogTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue());
+        mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue());
         mSaleItemsBackIcon.setOnClickListener(view12 -> mActivity.onBackPressed());
         setUp(view);
 
@@ -553,7 +606,22 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         String lookingForText = getString(R.string.search_tag);
 
         // bug/gen-8065_ozsale-reskin_bugfixing - always set searchbar hint to 'search'
-        mSaleItemsToolbarField.setHint(lookingForText);
+        if (mHasSavedInstance && isFromCategories()) {
+            if (mSearchQuery.length() > 0) {
+                mSaleItemsToolbarField.setText(mSearchQuery);
+            } else {
+                mSaleItemsToolbarField.setText("");
+            }
+        } else if (mHasSavedInstance && !isFromCategories()) {
+            if (mShopSearchQuery.length() > 0) {
+                mSearchQuery = mShopSearchQuery;
+                mSaleItemsToolbarField.setText(mSearchQuery);
+            } else {
+                mSaleItemsToolbarField.setText("");
+            }
+        } else {
+            mSaleItemsToolbarField.setHint(lookingForText);
+        }
 
         //determining toolbartitle logic
         //category precedes above all
@@ -723,6 +791,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         hideKeyboard();
+
+        // Log data event for genie sale event
+        if (mFromBannerSearch) {
+            SaleEventRequest saleEventRequest = new SaleEventRequest();
+            saleEventRequest.setEventType(EventTypeId.EVENT_ENTER_SALE);
+            saleEventRequest.setId(mSaleId);
+            saleEventRequest.setName(mTitle);
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(DataCollector.EventParameters.SALE_EVENT_REQUEST, saleEventRequest);
+
+            DataCollector.logEvent(Events.SaleEvent, parameters);
+        }
+
     }
 
     private void setupSaleRemainingTime(String endDate) {
@@ -782,8 +864,38 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
 
-        mActivity.getProfiler().setEndLogTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue());
-        mActionTracker.CVItemList(Profiler.getTotalTime(ActionTracker.CustomEventType.CV_ITEMLIST.getValue()));
+        mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue());
+
+        mGenieCategory = mCategoryKey.replaceAll(CATEGORY_KEY_SEPARATOR, "/");
+        mGenieTotal = getSaleItemsResponse.total;
+        mGenieQuery = getSaleItemsResponse.query;
+
+        for (int i = 0; i < mChipFilters.size(); i++) {
+            SearchChipModel searchChipModel = mChipFilters.get(i);
+
+            if (searchChipModel.getFilterType().equalsIgnoreCase(BundleKeys.SORT_FACETFILTER_NAME)) {
+                mGenieSort = searchChipModel.getChipTitle();
+            } else {
+                mGenieFilters = searchChipModel.getFilterType()+":"+searchChipModel.getChipTitle();
+            }
+
+        }
+
+        if (!mFromShopSearch) {
+            String categories = mTitle.replaceAll(CATEGORY_KEY_SEPARATOR_REPLACEMENT, "/");
+            CategoryRequest categoryRequest = new CategoryRequest();
+            categoryRequest.setEventType(EventTypeId.EVENT_ENTER_CATEGORY);
+            categoryRequest.setCategories(categories);
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(DataCollector.EventParameters.MILLISECONDS,
+                    Profiler.getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue()));
+            parameters.put(DataCollector.EventParameters.CATEGORY_REQUEST, categoryRequest);
+            parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+            parameters.put(DataCollector.EventParameters.ITEM_LIST, categories);
+            parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+            DataCollector.logEvent(Events.CVItemList, parameters);
+        }
 
         if (!mHasCategoryTreeResponse) {
             initializeCategoryTreeResponse(getSaleItemsResponse.getCategories());
@@ -864,6 +976,60 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         onRefreshEnd();
 
         reselectTabIfFacetsAlreadyVisible();
+
+        if ((!hasLoggedSearch && mGenieQuery.equalsIgnoreCase(mSearchQuery) && !mGenieQuery.isEmpty()
+                && isKeyboardHidden) || isFacetClicked) {
+            logSearchEvent();
+            hasLoggedSearch = true;
+            isFacetClicked = false;
+            isKeyboardHidden = false;
+        }
+
+    }
+
+    @Override
+    public void hideKeyboard() {
+        if (mActivity != null) {
+            mActivity.hideKeyboard();
+        }
+
+        if (isViewAttached() && !hasLoggedSearch) {
+            isKeyboardHidden = true;
+            if (mGenieQuery.equalsIgnoreCase(mSearchQuery) && !mGenieQuery.isEmpty()) {
+                logSearchEvent();
+                hasLoggedSearch = true;
+                isKeyboardHidden = false;
+            }
+        }
+
+
+    }
+
+    private void logSearchEvent() {
+        SearchEventRequest searchEventRequest = new SearchEventRequest();
+        searchEventRequest.setEventType(EventTypeId.EVENT_SEARCH);
+
+        SearchEventRequest.SearchInfo searchInfo = new SearchEventRequest.SearchInfo();
+        searchInfo.setOperation(1);
+        searchInfo.setResultsCount(mGenieTotal);
+        searchInfo.setCategories(mGenieCategory.replaceAll("[,\"]", ""));
+        searchInfo.setSearchTerm(mGenieQuery);
+        searchInfo.setBrandsCount(mGenieBrandCount);
+        searchInfo.setMinPrice(mGenieMinPrice);
+        searchInfo.setMaxPrice(mGenieMaxPrice);
+        searchInfo.setSizesCount(mGenieSizesCount);
+        searchInfo.setCategoriesCount(mCategoryMap.size());
+        searchInfo.setSort(mGenieSort);
+        searchInfo.setFilters(mGenieFilters);
+        searchEventRequest.setSearchInfo(searchInfo);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.SEARCH_EVENT_REQUEST, searchEventRequest);
+        parameters.put(DataCollector.EventParameters.SEARCH_TERM, mGenieQuery);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+
+        DataCollector.logEvent(Events.SearchEvent, parameters);
     }
 
     @Override
@@ -926,7 +1092,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));
 
-        mActionTracker.clicksEvent(mSalesOrigin + PRODUCT_CLICK, position);
+        HashMap<String, Object> eventParameters = new HashMap<>();
+        eventParameters.put(DataCollector.EventParameters.TYPE, mSalesOrigin + PRODUCT_CLICK);
+        eventParameters.put(DataCollector.EventParameters.ITEM_ARRAY_POSITION, position);
+        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
+        DataCollector.logEvent(Events.clicksEvent, eventParameters);
 
         int[] originalPos = new int[2];
         viewHolder.itemView.getLocationOnScreen(originalPos);
@@ -952,7 +1123,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     mCategoryTreeResponse,
                     null,
                     mCategoryKey,
-                    mChipFilters);
+                    mChipFilters,
+                    mFromCategorySearch);
 
             GateKeeper.Destination destination;
             if (mFromBannerSearch || mFromShopSearch) {
@@ -967,7 +1139,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
                 GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
             } else {
-                mSearchFilterMvpView = mActivity.getSearchFilterController();
+                if (isFromCategories()) {
+                    mSearchFilterMvpView = mActivity.getSearchFilterController();
+                } else {
+                    mSearchFilterMvpView = mActivity.getShopSearchFilterController();
+                }
             }
 
             mSearchFilterMvpView.setRepository(SaleItemsController.this);
@@ -1003,7 +1179,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, List<SearchChipModel> chipsList) {
         String previousCategoryKey = mCategoryKey;
         mCategoryKey = StringUtils.generateConcatenatedCategories(reduceCategoryKeysForRequest(categoryKeys));
-        mShouldRefreshFacets = !(previousCategoryKey.equals(mCategoryKey) ||
+        mShouldRefreshFacets = previousCategoryKey == null ||
+                !(previousCategoryKey.equals(mCategoryKey) ||
                 previousCategoryKey.equals(mCategoryKey.replaceAll("[,\"]", ""))) ||
                 !mHasCategoryTreeResponse;
         if (mShouldRefreshFacets) {
@@ -1362,7 +1539,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList) {
+    public void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList,
+                              ArrayList<String> brandList, int minPrice, int maxPrice,
+                              ArrayList<String> sizeList) {
+        mGenieBrandCount = brandList.size();
+        mGenieMinPrice = minPrice;
+        mGenieMaxPrice = maxPrice;
+        mGenieSizesCount = sizeList.size();
+        isFacetClicked = true;
         mPresenter.loadSaleItems(createSaleItemsRequest(categoryKeys, 0, chipsList));
     }
 

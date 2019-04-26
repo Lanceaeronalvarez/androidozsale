@@ -1,44 +1,47 @@
 package au.com.dealsdirect.service.event;
 
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
+
 /**
  * Created by smartwave on 31/07/2018.
  */
 
 public interface ActionTrackerInterface {
 
-    void startCheckoutEvent();
+    static void startCheckoutEvent(){};
 
-    void addToCartEvent(String source, int attempts);
+    static void addToCartEvent(String source, int attempts){};
 
-    void CCScan(ActionTracker.EventProgress eventProgress);
+    static void CCScan(DataCollector.EventParameters.EventProgress eventProgress){};
 
-    void CVAppLaunch(double milliseconds);
+    static void CVAppLaunch(double milliseconds){};
 
-    void CVSaleBanners(double milliseconds);
+    static void CVSaleBanners(double milliseconds){};
 
-    void CVItemList(double milliseconds);
+    static void CVItemList(double milliseconds){};
 
-    void CVItemDetails(double milliseconds);
+    static void CVItemDetails(double milliseconds){};
 
-    void CVOrderTrack(String source);
+    static void CVOrderTrack(String source){};
 
-    void purchase(String paymentOption, boolean isNewUser, boolean result);
+    static void purchase(String paymentOption, boolean isNewUser, boolean result){};
 
-    void signUp(String method, boolean result);
+    static void signUp(String method, boolean result){};
 
-    void login(String method, boolean result);
+    static void login(String method, boolean result){};
 
-    void share(String method, String source);
+    static void share(String method, String source){};
 
-    void addToCartJourneyViewCart();
+    static void addToCartJourneyViewCart(){};
 
-    void addToCartJourneyViewProductCategory();
+    static void addToCartJourneyViewProductCategory(){};
 
-    void addToCartJourney(String type);
+    static void addToCartJourney(String type){};
 
-    void checkoutJourney(String type);
+    static void checkoutJourney(String type){};
 
-    void clicksOrdersEvent(String source);
+    static void clicksOrdersEvent(String source){};
 
-    void clicksEvent(String type, int itemArrPos);
+    static void clicksEvent(String type, int itemArrPos){};
 }

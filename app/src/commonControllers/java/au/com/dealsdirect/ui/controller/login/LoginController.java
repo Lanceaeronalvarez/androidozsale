@@ -17,16 +17,17 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
 
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.service.event.ActionTracker;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
@@ -37,10 +38,10 @@ import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static au.com.dealsdirect.service.event.ActionTracker.LoginType.FACEBOOK;
-import static au.com.dealsdirect.service.event.ActionTracker.LoginType.FORGOT_PASSWORD;
-import static au.com.dealsdirect.service.event.ActionTracker.LoginType.LOGIN;
-import static au.com.dealsdirect.service.event.ActionTracker.LoginType.NO_ACTION;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.FACEBOOK;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.FORGOT_PASSWORD;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.LOGIN;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.NO_ACTION;
 
 public class LoginController extends BaseController implements LoginMvpView {
 
@@ -174,7 +175,14 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void onDestroyView(@NonNull View view) {
-        if (!mWillShowRegistration) mActionTracker.login(mLoginMethod, isLoginSuccess);
+        if (!mWillShowRegistration) {
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put(DataCollector.EventParameters.METHOD, mLoginMethod);
+            parameters.put(DataCollector.EventParameters.RESULT, isLoginSuccess);
+            parameters.put(DataCollector.EventParameters.SCREEN_NAME, LoginController.class.getSimpleName());
+            parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+            DataCollector.logEvent(Events.Login, parameters);
+        }
         mPresenter.onDetach();
         super.onDestroyView(view);
     }

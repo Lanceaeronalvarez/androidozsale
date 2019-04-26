@@ -24,6 +24,7 @@ import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
+import au.com.dealsdirect.utils.legacycookie.LegacyCookie;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -42,6 +43,9 @@ public class DDApplication extends Application {
         super.onCreate();
 
         Settings.getSupportedCountries();
+
+        LegacyCookie.getLegacyCookie(this);
+        LegacyCookie.checkForLegacyConsentCookie(this);
 
         //Remove legacy cache and database
         removeLegacyData();

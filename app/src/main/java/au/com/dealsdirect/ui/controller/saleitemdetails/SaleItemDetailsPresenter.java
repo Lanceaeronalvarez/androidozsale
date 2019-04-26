@@ -2,12 +2,11 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import com.androidnetworking.error.ANError;
 
-import java.util.List;
+import java.util.HashMap;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
@@ -15,12 +14,13 @@ import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayError;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.AppEventHelper;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CurrencyUtil;
@@ -58,9 +58,6 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 }
 
                 getMvpView().hideLoading();
-
-                AppEventHelper.viewedContent(getSaleItemDetailsResponse.getSkuId(), getSaleItemDetailsResponse.getName(),
-                        getSaleItemDetailsResponse.getPrice().getValue(), getDataManager().getCountryId());
             }
 
             @Override
@@ -104,8 +101,6 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
                 getMvpView().showAddToCartResponse(((AddToCartResponse.Response) response).getValue());
 
-                AppEventHelper.addedToCart(requestValues.getSkuId(), requestValues.getItemName(),
-                        requestValues.getPrice(), getDataManager().getCountryId());
             }
 
             @Override
