@@ -1134,7 +1134,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
 
 
-            if (!mHasSavedInstance || mActivity.getSearchFilterController() == null) {
+            if (!mHasSavedInstance) {
                 Controller searchFilterController = SearchFilterController.newInstance(parameters);
                 mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
                 GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
