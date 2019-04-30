@@ -16,6 +16,7 @@
 
 package au.com.dealsdirect.service.fcm;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -126,14 +127,17 @@ public class GcmIntentService extends JobIntentService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
+        notificationManager.notify(0, notificationBuilder.build());
+
         NotificationChannel generalChannel;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             generalChannel = new NotificationChannel(GENERAL_CHANNEL_ID, "General", NotificationManager.IMPORTANCE_HIGH);
 
             notificationManager.createNotificationChannel(generalChannel);
-        }
 
-        notificationManager.notify(0, notificationBuilder.build());
+            Notification notification = new Notification.Builder(getApplicationContext(),GENERAL_CHANNEL_ID).build();
+            startForeground(1, notification);
+        }
     }
 
     public static void enqueueWork(Context context, Intent intent) {
