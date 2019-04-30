@@ -80,7 +80,7 @@ ext {
 
     //Routing
     leakCanaryVersion = '1.6.3'
-    conductorVersion = '2.1.4'
+    conductorVersion = '2.1.5'
     paginateVersion = '0.5.1'
 
     //Image Loading
