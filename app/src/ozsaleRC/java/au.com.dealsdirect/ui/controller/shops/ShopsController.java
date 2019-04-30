@@ -4,7 +4,6 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -41,7 +39,6 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
-import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.main.MainController;
@@ -142,8 +139,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
 
     private boolean mIsChangeInProgress = false;
-    private ControllerChangeHandler.ControllerChangeListener mControllerChangeListener;
-    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     @Override
     protected void onAttach(@NonNull View view) {
@@ -218,14 +213,52 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         unBindPaginate();
-        if (newControllerChangeHandler != null) {
-            getRouter().removeChangeListener(newControllerChangeHandler);
-            newControllerChangeHandler = null;
-        }
-        getRouter().removeChangeListener(mControllerChangeListener);
         shopsControllerBannerRecyclerView.clearOnScrollListeners();
         shopsControllerBannerRecyclerView.setAdapter(null);
         super.onDestroyView(view);
+    }
+
+    @Override
+    public void onViewWillAppear(Controller previousController) {
+        super.onViewWillAppear(previousController);
+        if (mShopAppBarLayout != null) {
+            mShopAppBarLayout.setExpanded(true, true);
+        }
+
+        mIsChangeInProgress = true;
+        if (mPresenter != null) {
+            mPresenter.cancelRequest();
+        }
+    }
+
+    @Override
+    public void onViewWillDisappear(Controller nextController) {
+        super.onViewWillDisappear(nextController);
+        if (mShopAppBarLayout != null) {
+            mShopAppBarLayout.setExpanded(true, true);
+        }
+
+        mIsChangeInProgress = true;
+        mPresenter.cancelRequest();
+    }
+
+    @Override
+    public void onViewDidAppear(Controller previousController) {
+        super.onViewDidAppear(previousController);
+        if (!(previousController instanceof SaleItemsController)
+                && !(mActivity.getMainController().getCurrentViewPagerController() instanceof ShopsController)) {
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
+            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+        }
+
+        mIsChangeInProgress = false;
+    }
+
+    @Override
+    public void onViewDidDisappear(Controller nextController) {
+        super.onViewDidDisappear(nextController);
+
+        mIsChangeInProgress = false;
     }
 
     @Override
@@ -242,51 +275,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         displayBanners();
 
-        ShopsController currentController = this;
-        newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
-
-            @Override
-            public void onChangeStarted(@Nullable Controller to,
-                                        @Nullable Controller from, boolean isPush,
-                                        @NonNull ViewGroup container,
-                                        @NonNull ControllerChangeHandler handler) {
-                mShopAppBarLayout.setExpanded(true, true);
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to,
-                                          @Nullable Controller from, boolean isPush,
-                                          @NonNull ViewGroup container,
-                                          @NonNull ControllerChangeHandler handler) {
-                if (to == currentController && !(from instanceof SaleItemsController)
-                        && !(mActivity.getMainController().getCurrentViewPagerController() instanceof ShopsController)) {
-                    mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
-                    mActivity.getMainController().getHomeController().setSavedCurrentItem();
-                }
-            }
-        };
-        getRouter().addChangeListener(newControllerChangeHandler);
-
         mSearchBarEditText.setFocusable(false);
         mSearchBarEditText.setOnClickListener(view1 -> {
             showProductList();
         });
         mSearchBarEditText.setHint(getResource().getString(R.string.search_tag));
-
-        mControllerChangeListener = new ControllerChangeHandler.ControllerChangeListener() {
-            @Override
-            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                mIsChangeInProgress = true;
-                mPresenter.cancelRequest();
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                mIsChangeInProgress = false;
-            }
-        };
-
-        getRouter().addChangeListener(mControllerChangeListener);
 
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
@@ -344,6 +337,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         setupPtrHeader();
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+
+        if (mHasSavedInstance) {
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
+            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+        }
     }
 
     private void displayBanners() {

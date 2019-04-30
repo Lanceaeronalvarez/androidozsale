@@ -64,6 +64,7 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.BaseController.CommonControllerChangeListener;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
@@ -184,6 +185,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mGenieEventService = getActivityComponent().getGenieEventService();
         mFirebaseEventService = getActivityComponent().getFirebaseEventService();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
+        CommonControllerChangeListener.addToRouter(mRouter);
 
         if (!mAppHasSavedInstance) {
             mMainController = MainController.newInstance();
@@ -516,7 +518,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
                     .EventParameters.PAYMENT_METHOD_TYPE, PaymentInfo.getFabricPaymentType());
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
-                            .EventParameters.IS_NEW_USER, mPresenter.getIsNewUser());
+                    .EventParameters.IS_NEW_USER, mPresenter.getIsNewUser());
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
                     .EventParameters.RESULT, true);
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
@@ -569,9 +571,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, false);
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
-                            .EventParameters.NUMBER_OF_ITEMS, responseValue.getD().getValue().getOrderInfoResult().getItems().size());
+                    .EventParameters.NUMBER_OF_ITEMS, responseValue.getD().getValue().getOrderInfoResult().getItems().size());
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
-                            .EventParameters.PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal());
+                    .EventParameters.PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal());
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
                     .EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
@@ -1342,5 +1344,4 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             mShopController.refreshFromLogout();
         }
     }
-
 }

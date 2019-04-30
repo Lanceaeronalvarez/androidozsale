@@ -2,18 +2,15 @@ package au.com.dealsdirect.ui.controller.bannerfilter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +50,6 @@ public class BannerFiltersController extends BaseController implements BannerFil
 
     BannerFiltersAdapter bannerFiltersAdapter;
     private boolean mHasSavedInstance = false;
-    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     public static BannerFiltersController newInstance() {
 
@@ -73,6 +69,16 @@ public class BannerFiltersController extends BaseController implements BannerFil
     }
 
     @Override
+    public void onViewDidAppear(Controller previousController) {
+        super.onViewDidAppear(previousController);
+
+        if (mHasSavedInstance) {
+            mPresenter.callGetCategoryTree();
+            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+        }
+    }
+
+    @Override
     protected void setUp(View view) {
         mActivity.getMainController().setBannerFiltersController(this);
         bannerFiltersAdapter = new BannerFiltersAdapter(mActivity, this, new ArrayList<>());
@@ -82,31 +88,7 @@ public class BannerFiltersController extends BaseController implements BannerFil
         mLeftImageButton.setVisibility(View.GONE);
         mTitleText.setText(getResources().getString(R.string.category_title));
 
-        if (mHasSavedInstance) {
-            BannerFiltersController currentController = this;
-            newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
-
-                @Override
-                public void onChangeStarted(@Nullable Controller to,
-                                            @Nullable Controller from, boolean isPush,
-                                            @NonNull ViewGroup container,
-                                            @NonNull ControllerChangeHandler handler) {
-
-                }
-
-                @Override
-                public void onChangeCompleted(@Nullable Controller to,
-                                              @Nullable Controller from, boolean isPush,
-                                              @NonNull ViewGroup container,
-                                              @NonNull ControllerChangeHandler handler) {
-                    if (to == currentController) {
-                        mPresenter.callGetCategoryTree();
-                        mActivity.getMainController().getHomeController().setSavedCurrentItem();
-                    }
-                }
-            };
-            getRouter().addChangeListener(newControllerChangeHandler);
-        } else {
+        if (!mHasSavedInstance) {
             mPresenter.callGetCategoryTree();
         }
     }
@@ -133,8 +115,9 @@ public class BannerFiltersController extends BaseController implements BannerFil
     public void showCategories(List<GetCategoryTreeResponse> categories) {
         bannerFiltersAdapter.replaceData(categories);
     }
+
     @Override
-    public void showNoNetworkLayout(){
+    public void showNoNetworkLayout() {
         mBannerFiltersRecyclerView.setVisibility(View.GONE);
         mNoNetworkLayout.setVisibility(View.VISIBLE);
     }
@@ -152,7 +135,7 @@ public class BannerFiltersController extends BaseController implements BannerFil
     }
 
     @Override
-    public void hideNoNetworklayout(){
+    public void hideNoNetworklayout() {
         mBannerFiltersRecyclerView.setVisibility(View.VISIBLE);
         mNoNetworkLayout.setVisibility(View.GONE);
     }
@@ -180,10 +163,6 @@ public class BannerFiltersController extends BaseController implements BannerFil
 
     @Override
     public void onDestroyView(@NonNull View view) {
-        if (newControllerChangeHandler != null) {
-            getRouter().removeChangeListener(newControllerChangeHandler);
-            newControllerChangeHandler = null;
-        }
         super.onDestroyView(view);
     }
 }

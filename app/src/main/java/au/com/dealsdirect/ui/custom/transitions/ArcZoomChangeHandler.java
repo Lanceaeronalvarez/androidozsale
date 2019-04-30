@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.custom.transitions;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -14,7 +15,10 @@ import com.bluelinelabs.conductor.changehandler.AnimatorChangeHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.dealsdirect.utils.BundleKeys;
+
 public class ArcZoomChangeHandler extends AnimatorChangeHandler {
+
     private float sourceLeft = 0;
     private float sourceTop = 0;
     private float sourceWidth = 0;
@@ -30,6 +34,25 @@ public class ArcZoomChangeHandler extends AnimatorChangeHandler {
         sourceHeight = height;
     }
 
+    @Override
+    public void saveToBundle(@NonNull Bundle bundle) {
+        super.saveToBundle(bundle);
+
+        bundle.putFloat(BundleKeys.KEY_ARCZOOMCHANGEHANDLER_LEFT, sourceLeft);
+        bundle.putFloat(BundleKeys.KEY_ARCZOOMCHANGEHANDLER_TOP, sourceTop);
+        bundle.putFloat(BundleKeys.KEY_ARCZOOMCHANGEHANDLER_WIDTH, sourceWidth);
+        bundle.putFloat(BundleKeys.KEY_ARCZOOMCHANGEHANDLER_HEIGHT, sourceHeight);
+    }
+
+    @Override
+    public void restoreFromBundle(@NonNull Bundle bundle) {
+        super.restoreFromBundle(bundle);
+
+        sourceLeft = bundle.getFloat(BundleKeys.KEY_ARCZOOMCHANGEHANDLER_LEFT);
+        sourceTop = bundle.getFloat(BundleKeys.KEY_ARCZOOMCHANGEHANDLER_TOP);
+        sourceWidth = bundle.getFloat(BundleKeys.KEY_ARCZOOMCHANGEHANDLER_WIDTH);
+        sourceHeight = bundle.getFloat(BundleKeys.KEY_ARCZOOMCHANGEHANDLER_HEIGHT);
+    }
 
     @Override @NonNull
     protected Animator getAnimator(@NonNull ViewGroup container, @Nullable View from, @Nullable View to, boolean isPush, boolean toAddedToContainer) {

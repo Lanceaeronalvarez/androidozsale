@@ -38,6 +38,7 @@ public class BundleKeys {
     public static final String SHOP_SALEITEMS_FROM_CATEGORY_SEARCH = "SaleItemsController.SHOP_FROM_CATEGORY_SEARCH";
     public static final String SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK = "SaleItemsController.SHOP_FROM_CATEGORY_LINK";
     public static final String SHOP_SALEITEMS_KEY_CATEGORIES = "SaleItemsController.SHOP_KEY_CATEGORIES";
+    public static final String SHOP_SALEITEMS_KEY_END_DATE = "SaleItemsController.SHOP_KEY_END_DATE";
 
     //sale item details
     public static final String SALEITEMDETAILS_KEY_POSITION = "KEY_POSITION";
@@ -78,6 +79,12 @@ public class BundleKeys {
 
     //facet filters
     public static final String FACET_PAYLOAD = "FACET_PAYLOAD";
+
+    //ArcZoomChangeHandler
+    public static final String KEY_ARCZOOMCHANGEHANDLER_LEFT = "KEY_ARCZOOMCHANGEHANDLER_LEFT";
+    public static final String KEY_ARCZOOMCHANGEHANDLER_TOP = "KEY_ARCZOOMCHANGEHANDLER_TOP";
+    public static final String KEY_ARCZOOMCHANGEHANDLER_WIDTH = "KEY_ARCZOOMCHANGEHANDLER_WIDTH";
+    public static final String KEY_ARCZOOMCHANGEHANDLER_HEIGHT = "KEY_ARCZOOMCHANGEHANDLER_HEIGHT";
 
     //payment select
     public static final String PAYMENT_METHODS = "payment_methods";

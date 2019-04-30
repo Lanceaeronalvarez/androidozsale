@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.categories;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -89,7 +87,6 @@ public class CategoriesController extends BaseController
 
     private int searchTapCounter = 0;
     private boolean mHasSavedInstance;
-    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     public static CategoriesController newInstance() {
         return new CategoriesController(
@@ -126,33 +123,6 @@ public class CategoriesController extends BaseController
         mActivity.setCategoriesRouter(getRouter());
         mActivity.setCategoriesController(this);
         hideKeyboard();
-        if (mHasSavedInstance) {
-            CategoriesController currentController = this;
-            newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
-
-                @Override
-                public void onChangeStarted(@Nullable Controller to,
-                                            @Nullable Controller from, boolean isPush,
-                                            @NonNull ViewGroup container,
-                                            @NonNull ControllerChangeHandler handler) {
-
-                }
-
-                @Override
-                public void onChangeCompleted(@Nullable Controller to,
-                                              @Nullable Controller from, boolean isPush,
-                                              @NonNull ViewGroup container,
-                                              @NonNull ControllerChangeHandler handler) {
-                    if (to == currentController) {
-                        if (from == null || mCategories == null) {
-                            mPresenter.callGetCategoryTree();
-                            mActivity.getMainController().getHomeController().setSavedCurrentItem();
-                        }
-                    }
-                }
-            };
-            getRouter().addChangeListener(newControllerChangeHandler);
-        }
 
         mPresenter.callGetCategoryTree();
 
@@ -165,12 +135,19 @@ public class CategoriesController extends BaseController
     }
 
     @Override
+    public void onViewDidAppear(Controller previousController) {
+        super.onViewDidAppear(previousController);
+        if (mHasSavedInstance) {
+            if (previousController == null || mCategories == null) {
+                mPresenter.callGetCategoryTree();
+                mActivity.getMainController().getHomeController().setSavedCurrentItem();
+            }
+        }
+    }
+
+    @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
-        if (newControllerChangeHandler != null) {
-            getRouter().removeChangeListener(newControllerChangeHandler);
-            newControllerChangeHandler = null;
-        }
         super.onDestroyView(view);
     }
 
@@ -182,7 +159,7 @@ public class CategoriesController extends BaseController
     @Override
     public void refreshContents() {
         super.refreshContents();
-        if(mNoNetworkLayout.getVisibility() == View.VISIBLE) {
+        if (mNoNetworkLayout.getVisibility() == View.VISIBLE) {
             refreshCategories();
         }
     }
@@ -314,7 +291,7 @@ public class CategoriesController extends BaseController
 
     @Override
     public boolean handleBack() {
-        if(getRouter().getBackstackSize() == 1){
+        if (getRouter().getBackstackSize() == 1) {
             mActivity.getHomeController().goBackToHomePage();
             return true;
         }
@@ -360,8 +337,8 @@ public class CategoriesController extends BaseController
 
 
     public String getCategoryKey(String categoryId) {
-        Log.d("deeplinkers", "get category key = "+categoryId+ " , "+ mCategoryKeyMap.get(categoryId));
-        Log.d("deeplinkers", "get category key = "+categoryId+ " , "+ mCategoryKeyMap.get("SG9tZT4_PkJlZCAmIEJhdGg_Pj5TaGVldHM="));
+        Log.d("deeplinkers", "get category key = " + categoryId + " , " + mCategoryKeyMap.get(categoryId));
+        Log.d("deeplinkers", "get category key = " + categoryId + " , " + mCategoryKeyMap.get("SG9tZT4_PkJlZCAmIEJhdGg_Pj5TaGVldHM="));
 
         return mCategoryKeyMap.get(categoryId);
     }

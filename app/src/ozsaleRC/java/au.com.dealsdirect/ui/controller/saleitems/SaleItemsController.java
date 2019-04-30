@@ -26,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.google.common.collect.Lists;
@@ -58,7 +57,6 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
-import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
@@ -351,7 +349,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     //store removed query chips
     private List<String> mRemovedChipTitles;
-    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     private CountDownTimer mCountDownTimer;
 
@@ -445,9 +442,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         title = title != null ? title.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT) : "";
         controller.mTitle = title;
 
-        if (controller.mFromShopSearch) controller.mSalesOrigin = DataCollector.EventParameters.ViewSource.SEARCH;
-        if (controller.mFromCategorySearch)
+        if (controller.mFromShopSearch) {
+            controller.mSalesOrigin = DataCollector.EventParameters.ViewSource.SEARCH;
+        }
+        if (controller.mFromCategorySearch) {
             controller.mSalesOrigin = DataCollector.EventParameters.ViewSource.CATEGORY;
+        }
         return controller;
     }
 
@@ -498,8 +498,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
             outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
             outState.putString(BundleKeys.SALEITEMS_TITLE, mTitle);
-            if (mSaleItemsToolbarField != null)
+            if (mSaleItemsToolbarField != null) {
                 outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+            }
         } else {
             outState.putBoolean(BundleKeys.SHOP_KEY_HAS_SAVED_INSTANCE, true);
             if (mSaleId != null && !mSaleId.isEmpty()) {
@@ -511,8 +512,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
             outState.putString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
             outState.putString(BundleKeys.SHOP_SALEITEMS_TITLE, mTitle);
-            if (mSaleItemsToolbarField != null)
+            if (mSaleItemsToolbarField != null) {
                 outState.putString(SHOP_KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+            }
+            if (mEndDate != null && !mEndDate.isEmpty()) {
+                outState.putString(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE, mEndDate);
+            }
         }
 
 
@@ -557,6 +562,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mShopSearchQuery = savedInstanceState.getString(SHOP_KEY_SEARCH_TEXT);
             }
             mTitle = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_TITLE);
+            mEndDate = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE);
         }
     }
 
@@ -589,6 +595,29 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.onActivityResumed(activity);
 
         mActivity.setDraggableViewPager(false);
+    }
+
+    @Override
+    public void onViewDidDisappear(Controller nextController) {
+        super.onViewDidDisappear(nextController);
+
+        if (mAppBar != null) {
+            mAppBar.setExpanded(true, false);
+        }
+    }
+
+    @Override
+    public void onViewDidAppear(Controller previousController) {
+        super.onViewDidAppear(previousController);
+
+        if (!mFromCategoryDeeplink && (!(previousController instanceof SaleItemDetailsController) || mSaleItems == null || mSaleItems.size() == 0)) {
+            mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
+            if (mHasSavedInstance) {
+                mActivity.getMainController().getHomeController().setSavedCurrentItem();
+            } else {
+                showKeyboard();
+            }
+        }
     }
 
     @Override
@@ -650,7 +679,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (isFromCategories()) {
             mSaleItemsCategoryToolbarTitle.setText(title);
             mSaleItemsToolbarSubTitleText.setText(subTitle);
-        }  else if (!mCategoryForTitle.isEmpty()) {
+        } else if (!mCategoryForTitle.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mCategoryForTitle);
         } else if (!mTitle.isEmpty()) {
             mSaleItemsToolbarTitle.setText(mTitle);
@@ -676,10 +705,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void onDestroyView(@NonNull View view) {
 
         mPresenter.onDetach();
-        if (newControllerChangeHandler != null) {
-            getRouter().removeChangeListener(newControllerChangeHandler);
-            newControllerChangeHandler = null;
-        }
         mSaleItemsRecyclerView.setAdapter(null);
         if (mCountDownTimer != null) mCountDownTimer.cancel();
         super.onDestroyView(view);
@@ -690,7 +715,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setDraggableViewPager(false);
         setupPtrHeader();
-        if(mEndDate.isEmpty() || mEndDate == null || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+        if (mEndDate.isEmpty() || mEndDate == null || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
             mSaleItemsRemainingTimeText.setVisibility(View.GONE);
             mSaleEndsInText.setVisibility(View.GONE);
         } else {
@@ -754,41 +779,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mInitialLoad = true;
 
-        SaleItemsController currentController = this;
-        newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
-
-            @Override
-            public void onChangeStarted(@Nullable Controller to,
-                                        @Nullable Controller from, boolean isPush,
-                                        @NonNull ViewGroup container,
-                                        @NonNull ControllerChangeHandler handler) {
-
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to,
-                                          @Nullable Controller from, boolean isPush,
-                                          @NonNull ViewGroup container,
-                                          @NonNull ControllerChangeHandler handler) {
-                if (to == currentController) {
-                    if (!mFromCategoryDeeplink && !(from instanceof SaleItemDetailsController)) {
-                        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
-                        if (mHasSavedInstance) {
-                            mActivity.getMainController().getHomeController().setSavedCurrentItem();
-                        } else {
-                            showKeyboard();
-                        }
-                    }
-                }
-                if (from == currentController) {
-                    if (mAppBar != null) {
-                        mAppBar.setExpanded(true, false);
-                    }
-                }
-            }
-        };
-        getRouter().addChangeListener(newControllerChangeHandler);
-
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         hideKeyboard();
 
@@ -815,7 +805,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
 
             @Override
-            public void onFinish() { }
+            public void onFinish() {
+            }
         };
         mCountDownTimer.start();
     }
@@ -876,7 +867,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             if (searchChipModel.getFilterType().equalsIgnoreCase(BundleKeys.SORT_FACETFILTER_NAME)) {
                 mGenieSort = searchChipModel.getChipTitle();
             } else {
-                mGenieFilters = searchChipModel.getFilterType()+":"+searchChipModel.getChipTitle();
+                mGenieFilters = searchChipModel.getFilterType() + ":" + searchChipModel.getChipTitle();
             }
 
         }
@@ -1181,7 +1172,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mCategoryKey = StringUtils.generateConcatenatedCategories(reduceCategoryKeysForRequest(categoryKeys));
         mShouldRefreshFacets = previousCategoryKey == null ||
                 !(previousCategoryKey.equals(mCategoryKey) ||
-                previousCategoryKey.equals(mCategoryKey.replaceAll("[,\"]", ""))) ||
+                        previousCategoryKey.equals(mCategoryKey.replaceAll("[,\"]", ""))) ||
                 !mHasCategoryTreeResponse;
         if (mShouldRefreshFacets) {
             mChipFilters = new LinkedList<>();
