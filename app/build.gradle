@@ -54,8 +54,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 132
-            versionName "2.5.3"
+            versionCode 135
+            versionName "2.5.4"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -75,8 +75,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 132
-            versionName "2.5.3"
+            versionCode 135
+            versionName "2.5.4"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -96,8 +96,8 @@ android {
         }
 
         cocosaRC {
-            versionCode 132
-            versionName "2.5.3"
+            versionCode 135
+            versionName "2.5.4"
             applicationId "uk.co.cocosa"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -117,8 +117,8 @@ android {
         }
 
         cocosaTest {
-            versionCode 132
-            versionName "2.5.3"
+            versionCode 135
+            versionName "2.5.4"
             applicationId "uk.co.cocosatest"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -181,8 +181,8 @@ android {
         }
 
         ooRC {
-            versionCode 132
-            versionName "2.5.3"
+            versionCode 135
+            versionName "2.5.4"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -202,8 +202,8 @@ android {
         }
 
         ooTest {
-            versionCode 132
-            versionName "2.5.3"
+            versionCode 135
+            versionName "2.5.4"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -288,7 +288,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 132
+            versionCode 135
             versionName "2.5.2"
             applicationId "au.com.ozsale"
 
@@ -310,7 +310,7 @@ android {
         }
 
         ozsaleTest {
-            versionCode 132
+            versionCode 135
             versionName "2.5.2"
             applicationId "au.com.ozsale.test"
 
@@ -332,8 +332,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 132
-            versionName "2.5.3"
+            versionCode 135
+            versionName "2.5.4"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -354,8 +354,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 132
-            versionName "2.5.3"
+            versionCode 135
+            versionName "2.5.4"
             applicationId "sg.com.singsaletest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -375,8 +375,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 132
-            versionName "2.5.3"
+            versionCode 135
+            versionName "2.5.4"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -397,8 +397,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 132
-            versionName "2.5.3"
+            versionCode 135
+            versionName "2.5.4"
             applicationId "nz.co.nzsaletest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -419,7 +419,7 @@ android {
         }
 
         mysaleRC {
-            versionCode 133
+            versionCode 135
             versionName "2.5.2"
             applicationId "my.mysale.mysale"
 
@@ -440,7 +440,7 @@ android {
         }
 
         mysaleTest {
-            versionCode 133
+            versionCode 135
             versionName "2.5.2"
             applicationId "my.mysale.mysaletest"
 
