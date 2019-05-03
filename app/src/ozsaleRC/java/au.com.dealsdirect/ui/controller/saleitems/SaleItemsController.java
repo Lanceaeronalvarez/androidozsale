@@ -1125,16 +1125,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
 
 
-            if (!mHasSavedInstance) {
-                Controller searchFilterController = SearchFilterController.newInstance(parameters);
-                mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
-                GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
-            } else {
+
+            if (mHasSavedInstance) {
                 if (isFromCategories()) {
                     mSearchFilterMvpView = mActivity.getSearchFilterController();
                 } else {
                     mSearchFilterMvpView = mActivity.getShopSearchFilterController();
                 }
+            }
+
+            if (mSearchFilterMvpView == null) {
+                Controller searchFilterController = SearchFilterController.newInstance(parameters);
+                mSearchFilterMvpView = (SearchFilterMvpView) searchFilterController;
+                GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
             }
 
             mSearchFilterMvpView.setRepository(SaleItemsController.this);
