@@ -135,8 +135,7 @@ public class GcmIntentService extends JobIntentService {
 
             notificationManager.createNotificationChannel(generalChannel);
 
-            Notification notification = new Notification.Builder(getApplicationContext(),GENERAL_CHANNEL_ID).build();
-            startForeground(1, notification);
+            startForeground(1, notificationBuilder.build());
         }
     }
 
