@@ -562,7 +562,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mShopSearchQuery = savedInstanceState.getString(SHOP_KEY_SEARCH_TEXT);
             }
             mTitle = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_TITLE);
-            mEndDate = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE);
+            if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE)) {
+                mEndDate = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE);
+            }
         }
     }
 
@@ -715,7 +717,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setDraggableViewPager(false);
         setupPtrHeader();
-        if (mEndDate.isEmpty() || mEndDate == null || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+        if (mEndDate == null || mEndDate.isEmpty() || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
             mSaleItemsRemainingTimeText.setVisibility(View.GONE);
             mSaleEndsInText.setVisibility(View.GONE);
         } else {
