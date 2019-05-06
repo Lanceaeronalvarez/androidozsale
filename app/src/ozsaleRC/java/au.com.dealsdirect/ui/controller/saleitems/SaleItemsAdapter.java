@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Paint;
@@ -118,6 +119,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         return new ViewHolder(view, mComputedPair);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         GetSaleItemsResponse.Products saleItem = mData.get(position);

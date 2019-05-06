@@ -14,10 +14,18 @@ import com.mysale.genie.utility.Prefs;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
@@ -63,6 +71,54 @@ public final class NetworkUtils {
                 .addNetworkInterceptor(provideCacheInterceptor())
                 .addInterceptor(provideReceivedCookiesInterceptor())
                 .build();
+    }
+
+    public static OkHttpClient provideDebugOkHttpClientResponseCaching(Context ctx, HttpLoggingInterceptor.Level level) {
+        try {
+            final TrustManager[] trustAllCerts = new TrustManager[] {
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        }
+
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[]{};
+                        }
+                    }
+            };
+
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                    .cache(Utils.getCache(ctx, ANConstants.MAX_CACHE_SIZE, ANConstants.CACHE_DIR_NAME))
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .cookieJar(CookieUtils.getInstance());
+
+            if (level != null) {
+                builder.addInterceptor(new HttpLoggingInterceptor().setLevel(level));
+            }
+
+            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
+            builder.hostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+
+            return builder.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static Interceptor provideOfflineCacheInterceptor(final Context ctx, final int maxStale, final TimeUnit timeUnit) {

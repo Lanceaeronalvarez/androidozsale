@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.main;
 
-import android.content.pm.PackageManager;
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -105,6 +105,7 @@ public class MainController extends BaseController implements MainMvpView {
         setUp(view);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
@@ -131,6 +132,7 @@ public class MainController extends BaseController implements MainMvpView {
         setupViewPager();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setupViewPager() {
 
         RouterPagerAdapter mViewPagerAdapter = new RouterPagerAdapter(this) {
@@ -143,6 +145,8 @@ public class MainController extends BaseController implements MainMvpView {
                             .pushChangeHandler(new FadeChangeHandler(100))
                             .popChangeHandler(new FadeChangeHandler(100)));
                 }
+
+                CommonControllerChangeListener.addToRouter(router);
             }
 
             @Override
@@ -163,39 +167,38 @@ public class MainController extends BaseController implements MainMvpView {
 
         mHomeViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {
-                if (position== BANNER_FILTER_INDEX && mBannerFiltersController != null) {
+                if (position == BANNER_FILTER_INDEX && mBannerFiltersController != null) {
                     mBannerFiltersController.refreshContents();
                 }
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) { }
+            public void onPageScrollStateChanged(int state) {
+            }
         });
 
-        mHomeViewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mHomeViewPager.isSwipeable()) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_UP:
-                            mIsHomeViewPagerDragging = false;
-                            break;
-                        case MotionEvent.ACTION_DOWN:
-                        case MotionEvent.ACTION_MOVE:
-                            mIsHomeViewPagerDragging = true;
-                            break;
-                        default:
-                            break;
-                    }
-                } else {
-                    mIsHomeViewPagerDragging = false;
+        mHomeViewPager.setOnTouchListener((v, event) -> {
+            if (mHomeViewPager.isSwipeable()) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                        mIsHomeViewPagerDragging = false;
+                        break;
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_MOVE:
+                        mIsHomeViewPagerDragging = true;
+                        break;
+                    default:
+                        break;
                 }
-                return false;
+            } else {
+                mIsHomeViewPagerDragging = false;
             }
+            return false;
         });
     }
 
@@ -260,11 +263,11 @@ public class MainController extends BaseController implements MainMvpView {
         return mLastSelectedSubCategoryItem;
     }
 
-    public void setPreviousSubcategoryItem(View view){
+    public void setPreviousSubcategoryItem(View view) {
         mPreviousSubcategoryItem = view;
     }
 
-    public View getPreviousSubcategoryItem(){
+    public View getPreviousSubcategoryItem() {
         return mPreviousSubcategoryItem;
     }
 
@@ -282,7 +285,7 @@ public class MainController extends BaseController implements MainMvpView {
 
     public void goToPage(int position) {
         mHomeViewPager.setCurrentItem(position);
-        if(position == BANNER_FILTER_INDEX) {
+        if (position == BANNER_FILTER_INDEX) {
             mBannerFiltersController.refreshContents();
         }
     }
@@ -312,7 +315,7 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public Controller getCurrentViewPagerController() {
-        if(getHomeViewPager().getCurrentItem() == SHOP_INDEX) {
+        if (SHOP_INDEX == getHomeViewPager().getCurrentItem()) {
             return mHomeController;
         } else {
             return mBannerFiltersController;

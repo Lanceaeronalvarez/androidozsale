@@ -134,48 +134,26 @@ public class CurrentReturnsController extends BasePullToRefreshController
         }
         mCurrentReturnsRightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
         mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);
-
-        CurrentReturnsController currentController = this;
-        newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
-
-            @Override
-            public void onChangeStarted(@Nullable Controller to,
-                                        @Nullable Controller from, boolean isPush,
-                                        @NonNull ViewGroup container,
-                                        @NonNull ControllerChangeHandler handler) {
-
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to,
-                                          @Nullable Controller from, boolean isPush,
-                                          @NonNull ViewGroup container,
-                                          @NonNull ControllerChangeHandler handler) {
-                if (to == currentController) {
-                    updateToolbar();
-
-                    if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
-                        showLoading();
-                    }
-                    mPresenter.loadCurrentReturns();
-                }
-            }
-        };
-        getRouter().addChangeListener(newControllerChangeHandler);
     }
 
     @Override
     public void onDestroyView(View view) {
         mPresenter.onDetach();
-        if (newControllerChangeHandler != null) {
-            getRouter().removeChangeListener(newControllerChangeHandler);
-            newControllerChangeHandler = null;
-        }
         mCurrentReturnsRecyclerView.setAdapter(null);
         mCurrentReturnsAdapter = null;
         super.onDestroyView(view);
     }
 
+    @Override
+    public void onViewDidAppear(Controller previousController) {
+        super.onViewDidAppear(previousController);
+        updateToolbar();
+
+        if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
+            showLoading();
+        }
+        mPresenter.loadCurrentReturns();
+    }
 
     @Override
     public void showCurrentReturns(CurrentReturnResponseBody currentReturnResponseBody) {
@@ -292,8 +270,6 @@ public class CurrentReturnsController extends BasePullToRefreshController
     public GetReturnDetailRequest createReturnDetailsRequest(String itemID) {
         return new GetReturnDetailRequest(itemID);
     }
-
-    ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     private void updateToolbar(){
         mCurrentReturnsRightOption.setVisibility(View.INVISIBLE);

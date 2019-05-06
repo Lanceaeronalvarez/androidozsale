@@ -54,8 +54,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 135
-            versionName "2.5.4"
+            versionCode 137
+            versionName "2.5.5"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -75,8 +75,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 135
-            versionName "2.5.4"
+            versionCode 137
+            versionName "2.5.5"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -181,8 +181,8 @@ android {
         }
 
         ooRC {
-            versionCode 135
-            versionName "2.5.4"
+            versionCode 137
+            versionName "2.5.5"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -202,8 +202,8 @@ android {
         }
 
         ooTest {
-            versionCode 135
-            versionName "2.5.4"
+            versionCode 137
+            versionName "2.5.5"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -288,7 +288,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 135
+            versionCode 137
             versionName "2.5.2"
             applicationId "au.com.ozsale"
 
@@ -310,7 +310,7 @@ android {
         }
 
         ozsaleTest {
-            versionCode 135
+            versionCode 137
             versionName "2.5.2"
             applicationId "au.com.ozsale.test"
 
@@ -332,8 +332,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 135
-            versionName "2.5.4"
+            versionCode 137
+            versionName "2.5.5"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -354,8 +354,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 135
-            versionName "2.5.4"
+            versionCode 137
+            versionName "2.5.5"
             applicationId "sg.com.singsaletest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -375,8 +375,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 135
-            versionName "2.5.4"
+            versionCode 137
+            versionName "2.5.5"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -397,8 +397,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 135
-            versionName "2.5.4"
+            versionCode 137
+            versionName "2.5.5"
             applicationId "nz.co.nzsaletest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -419,7 +419,7 @@ android {
         }
 
         mysaleRC {
-            versionCode 135
+            versionCode 137
             versionName "2.5.2"
             applicationId "my.mysale.mysale"
 
@@ -440,7 +440,7 @@ android {
         }
 
         mysaleTest {
-            versionCode 135
+            versionCode 137
             versionName "2.5.2"
             applicationId "my.mysale.mysaletest"
 
@@ -783,7 +783,7 @@ dependencies {
     }
 
     // NR
-    compile 'com.newrelic.agent.android:android-agent:5.14.0'
+    compile 'com.newrelic.agent.android:android-agent:5.22.0'
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.8'

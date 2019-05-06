@@ -10,24 +10,29 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.Router;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.di.component.ControllerComponent;
 import au.com.dealsdirect.di.component.DaggerControllerComponent;
 import au.com.dealsdirect.di.module.ControllerModule;
+import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.service.datacollection.registerservices.FirebaseAnalyticsService;
 import au.com.dealsdirect.service.datacollection.registerservices.GenieEventService;
-import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.ui.main.MainActivity;
 
 
-public abstract class BaseController extends RefWatchingController implements MvpView {
+public abstract class BaseController
+        extends RefWatchingController
+        implements MvpView {
 
     @Inject
     protected MainActivity mActivity;
@@ -260,4 +265,70 @@ public abstract class BaseController extends RefWatchingController implements Mv
         return mActivity.getResources().getBoolean(resId);
     }
 
+    public void onViewWillAppear(Controller previousController) {
+
+    }
+
+    public void onViewDidAppear(Controller previousController) {
+
+    }
+
+    public void onViewWillDisappear(Controller nextController) {
+
+    }
+
+    public void onViewDidDisappear(Controller nextController) {
+
+    }
+
+    public static class CommonControllerChangeListener implements com.bluelinelabs.conductor.ControllerChangeHandler.ControllerChangeListener {
+
+        public static void addToRouter(Router... routers) {
+            for (Router router: routers) {
+                if (router != null) {
+                    router.addChangeListener(CommonControllerChangeListener.getSharedInstance());
+                }
+            }
+        }
+
+        private static CommonControllerChangeListener sharedInstance;
+
+        private static CommonControllerChangeListener getSharedInstance() {
+            if (sharedInstance == null) {
+                sharedInstance = new CommonControllerChangeListener();
+            }
+
+            return sharedInstance;
+        }
+
+        @Override
+        public void onChangeStarted(@Nullable Controller to,
+                                    @Nullable Controller from,
+                                    boolean isPush,
+                                    @NonNull ViewGroup container,
+                                    @NonNull com.bluelinelabs.conductor.ControllerChangeHandler handler) {
+            if (from instanceof BaseController) {
+                ((BaseController) from).onViewWillDisappear(to);
+            }
+
+            if (to instanceof BaseController) {
+                ((BaseController) to).onViewWillAppear(from);
+            }
+        }
+
+        @Override
+        public void onChangeCompleted(@Nullable Controller to,
+                                      @Nullable Controller from,
+                                      boolean isPush,
+                                      @NonNull ViewGroup container,
+                                      @NonNull com.bluelinelabs.conductor.ControllerChangeHandler handler) {
+            if (from instanceof BaseController) {
+                ((BaseController) from).onViewDidDisappear(to);
+            }
+
+            if (to instanceof BaseController) {
+                ((BaseController) to).onViewDidAppear(from);
+            }
+        }
+    }
 }

@@ -109,6 +109,12 @@ public class ViewContactsController extends BaseController implements ViewContac
     }
 
     @Override
+    public void refreshContents() {
+        super.refreshContents();
+        mPresenter.loadContacts();
+    }
+
+    @Override
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 

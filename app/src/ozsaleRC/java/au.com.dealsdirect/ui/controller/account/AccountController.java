@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.account;
 
-import android.app.Activity;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -93,14 +90,12 @@ public class AccountController extends BaseController implements AccountMvpView,
     private String mDefaultChosenAccountOption = "";
     private int mDefaultChosenAccountOptionPos = 0;
     private boolean mIsChangeInProgress = false;
-    private ControllerChangeHandler.ControllerChangeListener mControllerChangeListener;
 
     private ArrayList<AccountItem> mAccountItems;
     private boolean mIsLoginSuccessful;
     private String mChosenOption = "";
 
     private boolean mHasSavedInstance = false;
-    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
 
     public static AccountController newInstance() {
         return new AccountController(
@@ -142,6 +137,36 @@ public class AccountController extends BaseController implements AccountMvpView,
         hideKeyboard();
     }
 
+    @Override
+    public void onViewWillAppear(Controller previousController) {
+        super.onViewWillAppear(previousController);
+        mIsChangeInProgress = true;
+    }
+
+
+    @Override
+    public void onViewWillDisappear(Controller nextController) {
+        super.onViewWillDisappear(nextController);
+        mIsChangeInProgress = true;
+    }
+
+    @Override
+    public void onViewDidAppear(Controller previousController) {
+        super.onViewDidAppear(previousController);
+
+        if (mHasSavedInstance) {
+            createAccountItems();
+            mPresenter.loadAccountItems(mAccountItems);
+            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+        }
+
+        mIsChangeInProgress = false;
+        if (mIsLoginSuccessful) {
+            mPresenter.onAccountItemClick(mActivity, mChosenOption);
+            mChosenOption = "";
+            mIsLoginSuccessful = false;
+        }
+    }
 
     @Override
     protected void setUp(View view) {
@@ -152,33 +177,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         if (mPresenter.isTablet()) {
             mAccountDetailRouter = getChildRouter(mAccountDetailContainer);
-        }
-
-        if (mHasSavedInstance) {
-            AccountController currentController = this;
-            newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
-
-                @Override
-                public void onChangeStarted(@Nullable Controller to,
-                                            @Nullable Controller from, boolean isPush,
-                                            @NonNull ViewGroup container,
-                                            @NonNull ControllerChangeHandler handler) {
-
-                }
-
-                @Override
-                public void onChangeCompleted(@Nullable Controller to,
-                                              @Nullable Controller from, boolean isPush,
-                                              @NonNull ViewGroup container,
-                                              @NonNull ControllerChangeHandler handler) {
-                    if (to == currentController) {
-                        createAccountItems();
-                        mPresenter.loadAccountItems(mAccountItems);
-                        mActivity.getMainController().getHomeController().setSavedCurrentItem();
-                    }
-                }
-            };
-            getRouter().addChangeListener(newControllerChangeHandler);
+            CommonControllerChangeListener.addToRouter(mAccountDetailRouter);
         }
 
         createAccountItems();
@@ -189,26 +188,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         mLeftToolbarButton.setVisibility(View.INVISIBLE);
 
         initLoginDrawable();
-
-        mControllerChangeListener = new ControllerChangeHandler.ControllerChangeListener() {
-            @Override
-            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                mIsChangeInProgress = true;
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                mIsChangeInProgress = false;
-                if (mIsLoginSuccessful) {
-                    mPresenter.onAccountItemClick(mActivity, mChosenOption);
-                    mChosenOption = "";
-                    mIsLoginSuccessful = false;
-                }
-
-            }
-        };
-
-        getDisplayRouter().addChangeListener(mControllerChangeListener);
     }
 
     @Override
@@ -272,11 +251,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void onDetach(View view) {
         mPresenter.onDetach();
-        getDisplayRouter().removeChangeListener(mControllerChangeListener);
-        if (newControllerChangeHandler != null) {
-            getRouter().removeChangeListener(newControllerChangeHandler);
-            newControllerChangeHandler = null;
-        }
+
         super.onDetach(view);
     }
 
