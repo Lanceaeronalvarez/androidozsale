@@ -40,6 +40,7 @@ import com.braintreepayments.cardform.view.CardForm;
 import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
+import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.ArrayList;
@@ -134,6 +135,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private AccountController mAccountController;
     private SearchFilterController mSearchFilterController;
     private SearchFilterController mShopSearchFilterController;
+    private MainActivity mMainActivity;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -916,7 +918,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             mPresenter.setCountry(country);
             setAppCountries(country);
-            setUpAfterCountrySet();
 
             String[] array = getResources().getStringArray(R.array.gdpr_countries);
             List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));
@@ -937,6 +938,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
                 if (!mAppHasSavedInstance) {
                     initializeMainController();
+                } else {
+                    setUpAfterCountrySet();
                 }
             }
 
@@ -948,9 +951,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         // Call API settings
         mPresenter.callGetTemplateTexts();
         mPresenter.callGetServerSettings();
-        mPresenter.callGetAppSettingsSection(this);
         if (!isAuthorized()) {
             callPublicSettings();
+        } else {
+            mPresenter.callGetAppSettingsSection(this);
         }
         mPresenter.callGetAccountData();
         au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.EventUser, new HashMap<>());
@@ -959,6 +963,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void initializeMainController() {
+        setUpAfterCountrySet();
         mMainController = MainController.newInstance();
         mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
     }
@@ -967,6 +972,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         //If not logged in, call GetPublicAppSettings
         mPresenter.callGetPublicPaymentToken();
         mPresenter.callGetPublicAppSettings();
+        mPresenter.callGetPublicAppSettingsSections(this);
     }
 
     public void callAppConsent() {
@@ -1253,6 +1259,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void deepLinkDefault() {
         deepLinkSuceeded();
+    }
+
+    @Override
+    public void showIntrospectionUtils(ArrayList<Android> androidArrayList) {
+        IntrospectionUtils.checkVersion(this, androidArrayList);
     }
 
     private void deepLinkSuceeded() {
