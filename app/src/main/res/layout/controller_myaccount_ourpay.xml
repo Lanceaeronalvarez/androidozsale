@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/myAccountOurpayToolbar"
+        layout="@layout/partial_toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myAccountOurpayToolbar">
+
+        <ViewStub
+            android:id="@+id/myAccountOurpayEmptyViewStub"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inflatedId="@id/myAccountOurpayEmptyViewStub"
+            android:layout="@layout/myaccount_ourpay_empty" />
+
+        <ViewStub
+            android:id="@+id/myAccountOurpayTabbedViewStub"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inflatedId="@id/myAccountOurpayTabbedViewStub"
+            android:layout="@layout/myaccount_ourpay_tabbed" />
+
+        <au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayOverlayView
+            android:id="@+id/myAccountOurpayOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0" />
+    </FrameLayout>
+
+    <!-- Need this to capture full screen touches away from the recycler views -->
+</android.support.constraint.ConstraintLayout>

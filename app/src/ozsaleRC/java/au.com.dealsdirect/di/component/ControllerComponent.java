@@ -35,6 +35,7 @@ import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
+import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
@@ -48,6 +49,7 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
+import au.com.dealsdirect.ui.controller.webviewcontroller.WebViewController;
 import au.com.dealsdirect.ui.sample.SampleController;
 import dagger.Component;
 
@@ -153,4 +155,7 @@ public interface ControllerComponent {
     
     void inject(NotificationController controller);
 
+    void inject(MyAccountsOurpayController controller);
+
+    void inject(WebViewController controller);
 }

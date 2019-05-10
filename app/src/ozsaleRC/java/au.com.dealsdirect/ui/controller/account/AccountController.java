@@ -45,6 +45,7 @@ import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
+import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -337,6 +338,27 @@ public class AccountController extends BaseController implements AccountMvpView,
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.PAYMENT_SELECT, RouterTransaction.with(PaymentSelectController.newInstance()));
         }
     }
+
+    @Override
+    public void showMyAccountsOurpay() {
+        if (!mPresenter.isTablet()) {
+            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.MY_ACCOUNTS_OURPAY, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        } else {
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.MY_ACCOUNTS_OURPAY, RouterTransaction.with(MyAccountsOurpayController.newInstance()));
+        }
+    }
+
+    @Override
+    public void showMyAccountsSelect() {
+        /* TODO
+        if (!mPresenter.isTablet()) {
+            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.MY_ACCOUNTS_SELECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        } else {
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.MY_ACCOUNTS_SELECT, RouterTransaction.with(MyAccountsSelectController.newInstance()));
+        }
+        */
+    }
+
 
     @Override
     public void showLanguage() {

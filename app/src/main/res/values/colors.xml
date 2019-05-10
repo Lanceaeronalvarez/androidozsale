@@ -10,6 +10,7 @@
     <color name="color_text_option">#F00065</color>
     <color name="color_item_title">#466E87</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 
     <color name="recyclerview_overscroll">@color/colorPrimary</color>
 
@@ -243,5 +244,11 @@
     <color name="bg_banner_name_old">#e5000000</color>
     <color name="bg_banner_name_new">#8a000000</color>
     <color name="bg_inactive_add_to_cart_button">@color/tab_bar_icon_inactive</color>
+
+    <!--Ourpay-->
+    <color name="ourpay_header_detail">#66000000</color>
+    <color name="ourpay_installment_circle">#cccccc</color>
+    <color name="ourpay_installment_circle_fail">#e05050</color>
+    <color name="ourpay_installment_circle_success">#50d050</color>
 
 </resources>

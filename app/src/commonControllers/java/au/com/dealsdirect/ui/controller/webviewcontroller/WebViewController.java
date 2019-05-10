@@ -1,0 +1,95 @@
+package au.com.dealsdirect.ui.controller.webviewcontroller;
+
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import javax.inject.Inject;
+
+import au.com.dealsdirect.R;
+import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.utils.BundleKeys;
+import butterknife.BindView;
+import butterknife.OnClick;
+
+public class WebViewController extends BasePullToRefreshController implements WebViewMvpView {
+
+    @Inject
+    WebViewMvpPresenter<WebViewMvpView> mPresenter;
+
+    @BindView(R.id.controller_webview_webview)
+    protected WebView mWebView;
+
+    @BindView(R.id.partial_toolbar_right_view)
+    ImageButton mFilterButton;
+
+    @BindView(R.id.partial_toolbar_title)
+    TextView mTitleText;
+
+    private String url;
+
+    private String title;
+
+    public WebViewController(Bundle args) {
+        super(args);
+        title = args.getString(BundleKeys.KEY_WEBVIEW_CONTROLLER_TITLE);
+        url = args.getString(BundleKeys.KEY_WEBVIEW_CONTROLLER_URL);
+    }
+
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
+
+        setToolBarVisible(getResource().getBoolean(R.bool.webview_toolbar_visibility));
+        fillContent(inflater.inflate(R.layout.controller_webview, container, false));
+
+        getControllerComponent().inject(this);
+        mPresenter.onAttach(this);
+        return view;
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        mWebView.setVisibility(View.GONE);
+        mPresenter.loadFromUrl(url);
+    }
+
+    @Override
+    protected void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        setUp(view);
+    }
+
+    @Override
+    protected void setUp(View view) {
+        mActivity.setDraggableViewPager(false);
+
+        mTitleText.setText(title);
+        mFilterButton.setVisibility(View.INVISIBLE);
+        mPresenter.loadFromUrl(url);
+
+    }
+
+    @Override
+    public void onDetach(View view) {
+        mPresenter.onDetach();
+        super.onDetach(view);
+    }
+
+    @OnClick(R.id.partial_toolbar_left_view)
+    public void backPress() {
+        mActivity.onBackPressed();
+    }
+
+    @Override
+    public void showWebpage(String url) {
+        mWebView.loadUrl(url);
+        mWebView.setVisibility(View.VISIBLE);
+    }
+}

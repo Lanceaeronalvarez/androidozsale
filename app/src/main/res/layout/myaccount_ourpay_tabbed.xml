@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/myAccountOurpayTabbedHeader"
+        android:layout_width="match_parent"
+        android:layout_height="152dp">
+
+        <ImageView
+            android:id="@+id/headerBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/myaccount_ourpay_header_bg" />
+
+        <ImageView
+            android:id="@+id/headerLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/ourpay_header_logo_horizontal_margin"
+            android:layout_marginTop="@dimen/ourpay_header_logo_horizontal_margin"
+            android:layout_marginEnd="@dimen/ourpay_header_logo_gap"
+            android:contentDescription="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_myaccount_ourpay_logo" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/ourpay_header_details_margin"
+            android:layout_marginTop="@dimen/ourpay_header_details_margin"
+            android:layout_marginEnd="@dimen/ourpay_header_details_margin"
+            android:layout_marginBottom="@dimen/ourpay_header_details_margin"
+            android:baselineAligned="true"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headerLogo">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/ourpay_header_detail_horizontal_margin"
+                android:layout_marginRight="@dimen/ourpay_header_detail_horizontal_margin"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/bg_myaccount_ourpay_header_detail" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/ourpay_header_detail_height"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/activePlansDetailValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_app_bold"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:maxLines="1"
+                        android:text="100"
+                        android:textAlignment="center"
+                        android:textColor="@color/ourpay_circle_state_color_active"
+                        android:textSize="@dimen/text_size_title"
+                        android:textStyle="bold"
+                        app:autoSizeTextType="uniform" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/ourpay_header_detail_gap"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:contentDescription="@null"
+                            app:srcCompat="@drawable/ic_myaccount_ourpay_active_plans" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@string/font_app_light"
+                            android:maxLines="1"
+                            android:text="@string/ourpay_active_plans"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/text_size_caption1"
+                            android:textStyle="bold"
+                            app:autoSizeTextType="uniform" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/ourpay_header_detail_horizontal_margin"
+                android:layout_marginRight="@dimen/ourpay_header_detail_horizontal_margin"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/bg_myaccount_ourpay_header_detail" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/ourpay_header_detail_height"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/balanceOwingDetailValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_app_bold"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:maxLines="1"
+                        android:text="$100000.00"
+                        android:textAlignment="center"
+                        android:textColor="@color/ourpay_circle_state_color_active"
+                        android:textSize="@dimen/text_size_title"
+                        android:textStyle="bold"
+                        app:autoSizeTextType="uniform" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/ourpay_header_detail_gap"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:contentDescription="@null"
+                            app:srcCompat="@drawable/ic_myaccount_ourpay_balance" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@string/font_app_light"
+                            android:maxLines="1"
+                            android:text="@string/ourpay_balance_owing"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/text_size_caption1"
+                            app:autoSizeTextType="uniform" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/ourpay_header_detail_horizontal_margin"
+                android:layout_marginRight="@dimen/ourpay_header_detail_horizontal_margin"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/bg_myaccount_ourpay_header_detail" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/ourpay_header_detail_height"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/remainingCreditDetailValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_app_bold"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:maxLines="1"
+                        android:text="$100.00"
+                        android:textAlignment="center"
+                        android:textColor="@color/ourpay_circle_state_color_active"
+                        android:textSize="@dimen/text_size_title"
+                        app:autoSizeTextType="uniform" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/ourpay_header_detail_gap"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:contentDescription="@null"
+                            app:srcCompat="@drawable/ic_myaccount_ourpay_remaining_credit" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@string/font_app_light"
+                            android:maxLines="1"
+                            android:text="@string/ourpay_remaining_credit"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/text_size_caption1"
+                            app:autoSizeTextType="uniform" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/myAccountOurpayTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/MyAccountsOurpayTabLayout">
+
+        <android.support.design.widget.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ourpay_payment_plans" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ourpay_schedule_payments" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ourpay_past_payments" />
+    </android.support.design.widget.TabLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/myAccountOurpayRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

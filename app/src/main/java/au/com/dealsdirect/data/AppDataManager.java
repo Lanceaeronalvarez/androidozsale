@@ -589,18 +589,18 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetPaymentPlansResponse> callGetPaymentPlans() {
-        return mApiHelper.callGetPaymentPlans();
+    public Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String langaugeId) {
+        return mApiHelper.callGetPaymentPlans(countryId, langaugeId);
     }
 
     @Override
-    public Observable<GetScheduledPlansResponse> callGetScheduledPlans() {
-        return mApiHelper.callGetScheduledPlans();
+    public Observable<GetScheduledPlansResponse> callGetScheduledPlans(String countryId, String langaugeId) {
+        return mApiHelper.callGetScheduledPlans(countryId, langaugeId);
     }
 
     @Override
-    public Observable<GetPastPaymentsResponse> callGetPastPayments() {
-        return mApiHelper.callGetPastPayments();
+    public Observable<GetPastPaymentsResponse> callGetPastPayments(String countryId, String langaugeId) {
+        return mApiHelper.callGetPastPayments(countryId, langaugeId);
     }
 
     @Override

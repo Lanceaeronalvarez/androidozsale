@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="@color/ourpay_header_detail" />
+
+    <padding
+        android:bottom="@dimen/ourpay_header_detail_padding"
+        android:left="@dimen/ourpay_header_detail_padding"
+        android:right="@dimen/ourpay_header_detail_padding"
+        android:top="@dimen/ourpay_header_detail_padding" />
+
+    <corners android:radius="@dimen/ourpay_header_corner_radius" />
+
+</shape>

@@ -263,7 +263,9 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
         if (useMockData) {
             getMvpView().showPaymentPlans(new Gson().fromJson(SAMPLE_PAYMENT_PLANS, GetPaymentPlansResponse.class));
         } else {
-            doApiCallForResponse(getDataManager().callGetPaymentPlans(), new AppApiCallback() {
+            doApiCallForResponse(getDataManager()
+                    .callGetPaymentPlans(getDataManager().getCountryId(),
+                            getDataManager().getLanguageId()), new AppApiCallback() {
                 @Override
                 public void onSuccess(Object response) {
                     super.onSuccess(response);
@@ -278,7 +280,9 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
         if (useMockData) {
             getMvpView().showScheduledPlans(new Gson().fromJson(SAMPLE_SCHEDULED_PLANS, GetScheduledPlansResponse.class));
         } else {
-            doApiCallForResponse(getDataManager().callGetScheduledPlans(), new AppApiCallback() {
+            doApiCallForResponse(getDataManager()
+                    .callGetScheduledPlans(getDataManager().getCountryId(),
+                            getDataManager().getLanguageId()), new AppApiCallback() {
                 @Override
                 public void onSuccess(Object response) {
                     super.onSuccess(response);
@@ -293,7 +297,9 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
         if (useMockData) {
             getMvpView().showPastPayments(new Gson().fromJson(SAMPLE_PAST_PAYMENTS, GetPastPaymentsResponse.class));
         } else {
-            doApiCallForResponse(getDataManager().callGetPastPayments(), new AppApiCallback() {
+            doApiCallForResponse(getDataManager()
+                    .callGetPastPayments(getDataManager().getCountryId(),
+                            getDataManager().getLanguageId()), new AppApiCallback() {
                 @Override
                 public void onSuccess(Object response) {
                     super.onSuccess(response);

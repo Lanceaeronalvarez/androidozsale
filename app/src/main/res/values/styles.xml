@@ -132,6 +132,7 @@
     <bool name="payselect_toolbar_visibility">true</bool>
     <bool name="invite_toolbar_visibility">true</bool>
     <bool name="legalities_toolbar_visibility">true</bool>
+    <bool name="webview_toolbar_visibility">true</bool>
     <bool name="login_toolbar_visibility">false</bool>
 
 

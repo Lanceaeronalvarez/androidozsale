@@ -1,7 +1,5 @@
 package au.com.dealsdirect.data.network;
 
-import android.accounts.Account;
-
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -43,12 +41,6 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
-import au.com.dealsdirect.data.network.model.events.CategoryRequest;
-import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
-import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
-import au.com.dealsdirect.data.network.model.gdpr.consentdata.ConsentDataRequest;
-import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
-import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -61,11 +53,17 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
+import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.ConsentDataRequest;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesRequest;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
@@ -295,7 +293,7 @@ public class AppApiHelper implements ApiHelper {
     public Observable<GetPublicPaymentToken.ResponseValue> callGetPublicPaymentToken(String countryId, String languageId) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getPublicPaymentToken())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetPublicPaymentToken.RequestValue(countryId,languageId)))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(new GetPublicPaymentToken.RequestValue(countryId, languageId)))
                 .build()
                 .getObjectObservable(GetPublicPaymentToken.ResponseValue.class);
     }
@@ -959,25 +957,31 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetPaymentPlansResponse> callGetPaymentPlans() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.getPaymentPlans())
+    public Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String languageId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getPaymentPlans())
                 .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(
+                        new GetPublicPaymentToken.RequestValue(countryId, languageId)))
                 .build()
                 .getObjectObservable(GetPaymentPlansResponse.class);
     }
 
     @Override
-    public Observable<GetScheduledPlansResponse> callGetScheduledPlans() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.getScheduledPlans())
+    public Observable<GetScheduledPlansResponse> callGetScheduledPlans(String countryId, String languageId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getScheduledPlans())
                 .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(
+                        new GetPublicPaymentToken.RequestValue(countryId, languageId)))
                 .build()
                 .getObjectObservable(GetScheduledPlansResponse.class);
     }
 
     @Override
-    public Observable<GetPastPaymentsResponse> callGetPastPayments() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.getPastPayments())
+    public Observable<GetPastPaymentsResponse> callGetPastPayments(String countryId, String languageId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getPastPayments())
                 .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(
+                        new GetPublicPaymentToken.RequestValue(countryId, languageId)))
                 .build()
                 .getObjectObservable(GetPastPaymentsResponse.class);
     }
