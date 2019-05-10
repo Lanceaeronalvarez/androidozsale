@@ -168,6 +168,8 @@ public interface ApiHelper {
 
     Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId);
 
+    Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId);
+
     Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId);
 
     Observable<GetConsentDataResponse> callGetConsentData(String countryId);

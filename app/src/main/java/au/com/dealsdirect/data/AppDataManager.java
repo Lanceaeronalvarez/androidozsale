@@ -252,6 +252,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId) {
+        return mApiHelper.callGetPublicAppSettingsSections(countryId);
+    }
+
+    @Override
     public Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId) {
         return mApiHelper.callGetAppSettingsConsent(countryId);
     }

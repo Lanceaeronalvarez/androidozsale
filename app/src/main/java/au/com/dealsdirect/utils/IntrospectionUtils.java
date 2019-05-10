@@ -98,11 +98,7 @@ public class IntrospectionUtils {
                 String sAction = (String) action;
 
                 if (sAction.equalsIgnoreCase(android.getEvent())) {
-
-                    if (!Prefs.getBoolean(VERSION_SHOW, false)) {
-                        showPayload(context, android);
-                        Prefs.putBoolean(VERSION_SHOW, true);
-                    }
+                    showPayload(context, android);
                 }
             }
 
