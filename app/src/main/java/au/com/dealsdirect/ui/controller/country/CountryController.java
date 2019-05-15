@@ -120,8 +120,6 @@ public class CountryController extends BasePullToRefreshController implements Co
         mActivity.setAppCountries(selectedCountry);
         mPresenter.setCountry(country);
 
-        mActivity.setUpAfterCountrySet();
-
         CustomAlertDialog.showCustomAlertDialog(mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 Settings.getSelectedCountry().countryName);

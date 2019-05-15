@@ -325,82 +325,95 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .callGetAppSettingsSection(getDataManager().getCountryId())
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetAppSettingsSection.ResponseValue>() {
-                               @Override
-                               public void accept(@NonNull GetAppSettingsSection.ResponseValue responseValue) throws Exception {
-                                   if (!isViewAttached()) {
-                                       return;
-                                   }
-
-                                   GetAppSettingsSection.ResponseValue.Value value = responseValue.d.getValue();
-                                   if (value != null) {
-                                       String version = value.getMobileApp().getVersionRules();
-                                       version = version.replace("/", "");
-
-                                       try {
-                                           JSONObject jsonVersion = new JSONObject(version);
-
-                                           ArrayList<Android> androidArrayList = new ArrayList<>();
-
-                                           for (int i = 0; i < jsonVersion.getJSONObject("VersionRules").getJSONArray("Android").length(); i++) {
-                                               JSONObject jsonAndroid = jsonVersion.getJSONObject("VersionRules").getJSONArray("Android").getJSONObject(i);
-                                               Android android = new Android();
-                                               android.setAction(jsonAndroid.getString("action"));
-                                               android.setEvent(jsonAndroid.getString("event"));
-                                               android.setVersionNo(jsonAndroid.getString("versionNo"));
-
-                                               Payload payload = new Payload();
-
-                                               try {
-                                                   JSONObject jsonPayload = jsonAndroid.getJSONObject("payload");
-                                                   payload.setMessage(jsonPayload.getString("title"));
-                                                   payload.setTitle(jsonPayload.getString("message"));
-
-                                                   try {
-                                                       payload.setUrl(jsonPayload.getString("url"));
-                                                   } catch (Exception e) {
-                                                       e.printStackTrace();
-                                                       payload.setUrl(null);
-                                                   }
-
-                                               } catch (Exception e) {
-                                                   e.printStackTrace();
-                                                   payload = null;
-                                               }
-
-                                               android.setPayload(payload);
-
-                                               androidArrayList.add(android);
-                                           }
-
-                                           if (!androidArrayList.isEmpty()) {
-                                               IntrospectionUtils.checkVersion(context, androidArrayList);
-                                           }
-                                       } catch (JSONException e) {
-                                           e.printStackTrace();
-                                       }
-                                   }
-                               }
-                           }, new Consumer<Throwable>() {
-                               @Override
-                               public void accept(@NonNull Throwable throwable) throws Exception {
-                                   if (!isViewAttached()) {
-                                       return;
-                                   }
-
-                                   getMvpView().hideLoading();
-                                   getMvpView().onError(throwable.getMessage());
-
-                                   // handle load accounts error here
-                                   if (throwable instanceof ANError) {
-                                       ANError anError = (ANError) throwable;
-                                       handleApiError(anError);
-                                   }
-                               }
-                           }
-
-                ));
+                .subscribe(mAppSettingsSectionAcceptCallback,mAppSettingsSectionThrowableCallback));
     }
+
+    @Override
+    public void callGetPublicAppSettingsSections(Context context) {
+        getCompositeDisposable().add(getDataManager()
+                .callGetPublicAppSettingsSections(getDataManager().getCountryId())
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(mAppSettingsSectionAcceptCallback,mAppSettingsSectionThrowableCallback));
+    }
+
+    private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
+        @Override
+        public void accept(@NonNull GetAppSettingsSection.ResponseValue responseValue) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            GetAppSettingsSection.ResponseValue.Value value = responseValue.d.getValue();
+            if (value != null) {
+                String version = value.getMobileApp().getVersionRules();
+                version = version.replace("/", "");
+
+                try {
+                    JSONObject jsonVersion = new JSONObject(version);
+
+                    ArrayList<Android> androidArrayList = new ArrayList<>();
+
+                    for (int i = 0; i < jsonVersion.getJSONObject("VersionRules").getJSONArray("Android").length(); i++) {
+                        JSONObject jsonAndroid = jsonVersion.getJSONObject("VersionRules").getJSONArray("Android").getJSONObject(i);
+                        Android android = new Android();
+                        android.setAction(jsonAndroid.getString("action"));
+                        android.setEvent(jsonAndroid.getString("event"));
+                        android.setVersionNo(jsonAndroid.getString("versionNo"));
+
+                        Payload payload = new Payload();
+
+                        try {
+                            JSONObject jsonPayload = jsonAndroid.getJSONObject("payload");
+                            payload.setTitle(jsonPayload.getString("title"));
+                            payload.setMessage(jsonPayload.getString("message"));
+
+                            try {
+                                payload.setUrl(jsonPayload.getString("url"));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                payload.setUrl(null);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            payload = null;
+                        }
+
+                        android.setPayload(payload);
+
+                        androidArrayList.add(android);
+                    }
+
+                    if (!androidArrayList.isEmpty()) {
+                        getMvpView().showIntrospectionUtils(androidArrayList);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
+    private Consumer<Throwable> mAppSettingsSectionThrowableCallback = new Consumer<Throwable>() {
+        @Override
+        public void accept(@NonNull Throwable throwable) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            getMvpView().hideLoading();
+            getMvpView().onError(throwable.getMessage());
+
+            // handle load accounts error here
+            if (throwable instanceof ANError) {
+                ANError anError = (ANError) throwable;
+                handleApiError(anError);
+            }
+        }
+    };
+
+
 
     @Override
     public void callGetAppSettingsConsent(Context context) {
