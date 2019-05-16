@@ -692,16 +692,26 @@ public class SearchFilterController extends BaseController implements SearchFilt
     }
 
     private void checkParentSelection(GetCategoryTreeResponse category){
-        boolean childrenAreAllSelected = true;
-
-        //get parent node and children
-        String parentKey = StringUtils.getParentKey(category);
-        GetCategoryTreeResponse parentNode = mCategoryMap.get(parentKey);
-        List<GetCategoryTreeResponse> parentNodeChildren = parentNode.getChildren();
-
-        if(parentKey.equals(category.getKey())){ //we reached end node up. terminate recursion
+        if (category == null) {
             return;
         }
+
+        boolean childrenAreAllSelected = true;
+
+        // get parent node and children
+        String parentKey = StringUtils.getParentKey(category);
+
+        if(parentKey.equals(category.getKey())){ // we reached end node up. terminate recursion
+            return;
+        }
+
+        GetCategoryTreeResponse parentNode = mCategoryMap.get(parentKey);
+
+        if(parentNode == null) { // parentKey might be invalid
+            return;
+        }
+
+        List<GetCategoryTreeResponse> parentNodeChildren = parentNode.getChildren();
 
         for(GetCategoryTreeResponse child : parentNodeChildren){
             if(!child.isSelected()){
