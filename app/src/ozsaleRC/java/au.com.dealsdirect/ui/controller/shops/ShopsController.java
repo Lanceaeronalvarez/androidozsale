@@ -518,7 +518,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, INITIAL_BANNER_COUNT));
         }
         resetBannerLayout();
-        mShopAppBarLayout.setExpanded(true, true);
+        if (mShopAppBarLayout != null) {
+            mShopAppBarLayout.setExpanded(true, true);
+        }
     }
 
     @Override
