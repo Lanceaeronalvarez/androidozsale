@@ -304,7 +304,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
             resValue "string", "app_uri_hostname", "www.ozsale.com.au"
 
-            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            ext.newRelicAppToken = "AA81128f803ab5bdb52bb2d4f6b19d29f0bb62bca1"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
@@ -326,7 +326,7 @@ android {
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
             resValue "string", "app_uri_hostname", "www.ozsale.com.au"
 
-            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            ext.newRelicAppToken = "AA81128f803ab5bdb52bb2d4f6b19d29f0bb62bca1"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
 
         }
