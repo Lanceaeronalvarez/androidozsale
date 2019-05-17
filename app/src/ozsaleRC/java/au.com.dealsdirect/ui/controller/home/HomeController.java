@@ -621,7 +621,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             Pair<Router, ViewGroup> pair = mRouterContainerMapping.get(index);
             if (pair != null) {
                 Router router = pair.first;
-                if (router != null) {
+                if (router != null && router.getBackstack().size() > 0) {
                     Controller controller = router.getBackstack()
                             .get(router.getBackstack().size() - 1).controller();
                     if (controller instanceof BaseController) {
