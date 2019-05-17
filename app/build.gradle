@@ -288,8 +288,8 @@ android {
         }
 
         ozsaleRC {
-            versionCode 137
-            versionName "2.5.5"
+            versionCode 138
+            versionName "2.5.5.2"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
