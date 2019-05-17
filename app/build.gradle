@@ -54,8 +54,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 137
-            versionName "2.5.5"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -75,8 +75,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 137
-            versionName "2.5.5"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -96,8 +96,8 @@ android {
         }
 
         cocosaRC {
-            versionCode 135
-            versionName "2.5.4"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "uk.co.cocosa"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -117,8 +117,8 @@ android {
         }
 
         cocosaTest {
-            versionCode 135
-            versionName "2.5.4"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "uk.co.cocosatest"
 
             buildConfigField "String", "APP_NAME", "\"cocosa\""
@@ -181,8 +181,8 @@ android {
         }
 
         ooRC {
-            versionCode 137
-            versionName "2.5.5"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -202,8 +202,8 @@ android {
         }
 
         ooTest {
-            versionCode 137
-            versionName "2.5.5"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -288,8 +288,8 @@ android {
         }
 
         ozsaleRC {
-            versionCode 138
-            versionName "2.5.5.2"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -310,8 +310,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 137
-            versionName "2.5.5"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "au.com.ozsale.test"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -332,8 +332,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 137
-            versionName "2.5.5"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -354,8 +354,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 137
-            versionName "2.5.5"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "sg.com.singsaletest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -375,8 +375,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 137
-            versionName "2.5.5"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -397,8 +397,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 137
-            versionName "2.5.5"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "nz.co.nzsaletest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -419,8 +419,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 137
-            versionName "2.5.2"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -440,8 +440,8 @@ android {
         }
 
         mysaleTest {
-            versionCode 137
-            versionName "2.5.2"
+            versionCode 139
+            versionName "2.5.6"
             applicationId "my.mysale.mysaletest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""

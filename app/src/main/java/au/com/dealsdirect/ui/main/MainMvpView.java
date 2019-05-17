@@ -8,7 +8,10 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.cardform.view.CardForm;
+import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 import com.visa.checkout.VisaPaymentSummary;
+
+import java.util.ArrayList;
 
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
@@ -110,4 +113,6 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     void deeLinkMessageThread();
 
     void deepLinkDefault();
+
+    void showIntrospectionUtils(ArrayList<Android> androidArrayList);
 }

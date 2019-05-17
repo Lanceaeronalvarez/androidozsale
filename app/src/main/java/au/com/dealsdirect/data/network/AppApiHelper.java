@@ -319,6 +319,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getPublicAppSettingsSection())
+                .addHeaders(mApiHeader.get())
+                .addQueryParameter(new GetAppSettingsSection.RequestValue(countryId))
+                .build()
+                .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
+    }
+
+    @Override
     public Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId) {
         return Rx2AndroidNetworking.get(ApiEndPoint.getAppSettingsSection())
                 .addHeaders(mApiHeader.get())
