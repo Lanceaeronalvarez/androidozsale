@@ -15,15 +15,6 @@
     <!--  Android Fingerprint -->
     <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
 
-    <!-- [START gcm_permissions] -->
-    <permission
-        android:name="${applicationId}.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
-
-    <!-- [END gcm_permissions] -->
-
     <application
         android:name=".DDApplication"
         tools:replace="android:allowBackup"
@@ -107,17 +98,19 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <receiver
-            android:name=".service.fcm.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+        <service
+            android:name=".service.fcm.FirebaseBroadcastReceiver">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <!-- Receives the registration id. -->
-                <action android:name="com.google.android.c2dm.intent.REGISTER" />
-
-                <category android:name="${applicationId}" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </receiver>
+        </service>
+
+        <service
+            android:name=".service.fcm.FirebaseInstanceID">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
 
         <service android:name=".service.fcm.GcmIntentService"
             android:permission="android.permission.BIND_JOB_SERVICE"/>

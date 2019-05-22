@@ -15,6 +15,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.mysale.genie.utility.Prefs;
 
 import org.json.JSONObject;
@@ -44,9 +46,9 @@ public class GNotification {
 
     public static final String FCM_INTENT_LAUNCHED = "fcm_intent_launched";
 
-    DataManager mDataManager;
-    SchedulerProvider mSchedulerProvider;
-    CompositeDisposable mCompositeDisposable;
+    static DataManager mDataManager;
+    static SchedulerProvider mSchedulerProvider;
+    static CompositeDisposable mCompositeDisposable;
 
     @Inject
     public GNotification(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
@@ -86,7 +88,7 @@ public class GNotification {
 //        );
 //    }
 
-    public void callRegisterSubscriber(Context context, String token, boolean newTokenFetched) {
+    public static void callRegisterSubscriber(Context context, String token, boolean newTokenFetched) {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("app", getNotificationServerName(context));
         paramMap.put("deviceID", getDeviceID(context));
@@ -171,7 +173,7 @@ public class GNotification {
         return registrationId;
     }
 
-    private int getAppVersion(Context context) {
+    private static int getAppVersion(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0);
@@ -182,7 +184,7 @@ public class GNotification {
         }
     }
 
-    private void storeRegistrationId(Context context, String regId) {
+    public static void storeRegistrationId(Context context, String regId) {
         int appVersion = getAppVersion(context);
         AppLogger.d(TAG + "Saving regId on app version " + appVersion);
         mDataManager.setGCMRegistrationId(regId);
@@ -195,7 +197,10 @@ public class GNotification {
             String regId = getRegistrationId(context.getApplicationContext());
             AppLogger.d(TAG + "regId " + regId);
             if (regId.isEmpty()) {
-                new RegisterInBackground().execute(context);
+                storeRegistrationId(context, FirebaseInstanceId.getInstance().getToken());
+
+                callRegisterSubscriber(context, FirebaseInstanceId.getInstance().getToken(), true);
+
             } else {
                 callRegisterSubscriber(context, regId, isNotificationEnabled(context));
             }
@@ -204,14 +209,14 @@ public class GNotification {
         }
     }
 
-    private String getNotificationServerName(Context context) {
+    private static String getNotificationServerName(Context context) {
         String appName = context.getResources().getString(R.string.app_name);
         appName = appName.replace(" ", "-").toLowerCase();
         AppLogger.d(TAG + "ServerName: " + appName);
         return appName;
     }
 
-    private String getDeviceID(Context context) {
+    private static String getDeviceID(Context context) {
         @SuppressLint("HardwareIds")
         String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         String serial = android.os.Build.SERIAL;
@@ -254,7 +259,7 @@ public class GNotification {
 
     }
 
-    private Date getDateAppInstall(Context context) {
+    private static Date getDateAppInstall(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0);
@@ -267,7 +272,7 @@ public class GNotification {
         }
     }
 
-    private Date getDateLastUpdate(Context context) {
+    private static Date getDateLastUpdate(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0);
