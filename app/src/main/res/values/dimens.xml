@@ -161,6 +161,7 @@
     <dimen name="product_details_review_fab_width">40dp</dimen>
     <dimen name="product_details_review_fab_height">40dp</dimen>
     <dimen name="product_details_subtitle_indent">3dp</dimen>
+    <dimen name="product_details_content_view_bottom_padding">72dp</dimen>
 
     <!-- Quantity Widget -->
     <dimen name="quantity_widget_loader_width">30dp</dimen>
