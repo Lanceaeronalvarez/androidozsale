@@ -68,6 +68,7 @@ import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptions
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
@@ -469,6 +470,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         //initialize context for firebase
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
+        parameters.put(DataCollector.EventParameters.START_CHECKOUT_VALUE,
+                mValue.getSummary().getTotal());
+        parameters.put(DataCollector.EventParameters.START_CHECKOUT_CURRENCY,
+                Settings.getSelectedCountry().currencySign);
 
         if(!mActivity.isBraintreeInitialized() && mActivity.isAuthorized()) {
             mVcoPresenter.initializeBraintree();

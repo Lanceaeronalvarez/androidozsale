@@ -53,6 +53,18 @@ public class DataCollector {
         public static final String ITEM_CATEGORY = "ITEM_CATEGORY";
         public static final String SEARCH_TERM = "SEARCH_TERM";
         public static final String QUANTITY = "QUANTITY";
+        // START CHECKOUT
+        public static final String START_CHECKOUT_VALUE = "kFIRParameterValue";
+        public static final String START_CHECKOUT_CURRENCY = "kFIRParameterCurrency";
+        //ADD TO CART
+        public static final String ADD_TO_CART_ITEM_ID = "kFIRParameterItemID";
+        public static final String ADD_TO_CART_ITEM_NAME = "kFIRParameterItemName";
+        public static final String ADD_TO_CART_ITEM_CATEGORY = "kFIRParameterItemCategory";
+        public static final String ADD_TO_CART_QUANTITY = "kFIRParameterQuantity";
+        public static final String ADD_TO_CART_VALUE = "kFIRParameterValue";
+        public static final String ADD_TO_CART_CURRENCY = "kFIRParameterCurrency";
+        public static final String ADD_TO_CART_SOURCE = "kFIRParameterSource";
+        public static final String ADD_TO_CART_ATTEMPTS = "Attempts";
 
         public final class LoginType {
             public final static String FACEBOOK = "LoginFacebook";
