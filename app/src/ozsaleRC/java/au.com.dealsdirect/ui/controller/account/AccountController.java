@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.account;
 
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,10 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
@@ -52,6 +55,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -81,6 +85,12 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Nullable
     @BindView(R.id.account_detail_container)
     ViewGroup mAccountDetailContainer;
+
+    @BindView(R.id.adView_banner)
+    View mAdView;
+
+    @BindView(R.id.rl_footer)
+    RelativeLayout mAdFooter;
 
     @Inject
     AccountMvpPresenter<AccountMvpView> mPresenter;
@@ -189,6 +199,28 @@ public class AccountController extends BaseController implements AccountMvpView,
         mLeftToolbarButton.setVisibility(View.INVISIBLE);
 
         initLoginDrawable();
+
+        displayAds();
+    }
+
+    @Override
+    public void onOrientationChanged(Configuration newConfiguration) {
+        super.onOrientationChanged(newConfiguration);
+
+        displayAds();
+    }
+
+    private void displayAds(){
+        Display display = mActivity.getWindowManager().getDefaultDisplay();
+        int width = (int) (display.getWidth() * 0.4);
+
+        if (mPresenter.isTablet()) {
+            CommonUtils.showAdmob(mActivity, mAdView,
+                    mActivity.getResources().getString(R.string.admob_account_id), width);
+        } else {
+            CommonUtils.showAdmob(mActivity, mAdView,
+                    mActivity.getResources().getString(R.string.admob_account_id));
+        }
     }
 
     @Override

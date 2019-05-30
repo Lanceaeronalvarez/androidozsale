@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
@@ -44,6 +45,7 @@ import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -105,6 +107,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     private CheckoutMvpView mCheckoutMvpView;
     public ViewContactsMvpView mViewContactsMvpView;
     private AHBottomNavigation mBottomNavigationView;
+    private RelativeLayout mFooter;
+    private View mAdView;
 
     private int currentVisibleIndex = 0;
     private int previousVisibleIndex = 0;

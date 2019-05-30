@@ -69,6 +69,7 @@ import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
@@ -759,7 +760,22 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
 
-        mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount()));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch(mSaleItemsAdapter.getItemViewType(position)){
+                    case 1: // set default column count if not footer
+                        return mSaleItemsAdapter.getColumnCount();
+                    case 0: // set column count to 1 if it's a footer
+                        return 1;
+                    default:
+                        return -1;
+                }
+            }
+        });
+
+        mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
         mSaleItemsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

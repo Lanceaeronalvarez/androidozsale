@@ -161,7 +161,7 @@
         <!--[START ADMOB APP ID]-->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>  <!-- <- change this value to match app's own app id-->
+            android:value="@string/admob_app_id"/>
         <!--[END ADMOB APP ID]-->
 
         <!--[Firebase Crashlytics]-->

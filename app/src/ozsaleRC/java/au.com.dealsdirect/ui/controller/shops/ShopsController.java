@@ -357,6 +357,20 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 GridLayoutManager.VERTICAL,
                 false);
 
+        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch(mBannersAdapter.getItemViewType(position)){
+                    case 1: // if view is not a footer, set default columns
+                        return mBannersAdapter.getNumberOfColumns();
+                    case 0: // if view is a footer, set column count to 1
+                        return 1;
+                    default:
+                        return -1;
+                }
+            }
+        });
+
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
         shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
     }

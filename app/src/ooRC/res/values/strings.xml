@@ -1,4 +1,9 @@
 <resources>
+    <string name="admob_app_id">ca-app-pub-4114338578467810~9655608647</string>
+    <string name="admob_banners_id">ca-app-pub-4114338578467810/4403281968</string>
+    <string name="admob_products_id">ca-app-pub-4114338578467810/1125068855</string>
+    <string name="admob_account_id">ca-app-pub-4114338578467810/6185823843</string>
+
     <!-- Font Strings -->
     <string name="font_app_bold">fonts/opensans/OpenSans-Bold.ttf</string>
     <string name="font_app_bold_italic">fonts/opensans/OpenSans-BoldItalic.ttf</string>
