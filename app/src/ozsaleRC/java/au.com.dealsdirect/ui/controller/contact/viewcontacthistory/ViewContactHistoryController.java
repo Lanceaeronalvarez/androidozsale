@@ -178,7 +178,11 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @OnClick(R.id.partial_toolbar_field_title_left_option)
     void onBackClick() {
-        mActivity.onBackPressed();
+        if (mPresenter.isTablet() && mActivity.getContactsController() != null) {
+            mActivity.getContactsController().resetContactDetailRouter();
+        } else {
+            mActivity.onBackPressed();
+        }
     }
 
     @OnClick(R.id.controller_view_contacts_history_reply_button)
