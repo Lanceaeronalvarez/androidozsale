@@ -801,4 +801,14 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
     }
 
+    public void setNavigationBarEnabled(boolean enabled) {
+        for (int i = 0; i < TAB_ALL_INDICES.length; i++) {
+            if (enabled) {
+                mBottomNavigationView.enableItemAtPosition(TAB_ALL_INDICES[i]);
+            } else {
+                mBottomNavigationView.disableItemAtPosition(TAB_ALL_INDICES[i]);
+            }
+        }
+    }
+
 }

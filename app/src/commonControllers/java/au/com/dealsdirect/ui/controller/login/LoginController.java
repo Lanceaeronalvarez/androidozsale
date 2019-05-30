@@ -107,7 +107,9 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void onAttach(@NonNull View view) {
-        if (!mPresenter.isTablet()) {
+        if (mPresenter.isTablet()) {
+            mActivity.getHomeController().setNavigationBarEnabled(false);
+        } else {
             mActivity.getMainController().hideBottomNav();
         }
 
@@ -116,11 +118,23 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void onDetach(View view) {
-        if (!mPresenter.isTablet() && !mWillShowRegistration) {
+        if (mPresenter.isTablet()) {
+            mActivity.getHomeController().setNavigationBarEnabled(true);
+        } else if (!mWillShowRegistration) {
             mActivity.getMainController().showBottomNav();
         }
 
         super.onDetach(view);
+    }
+
+    @Override
+    public void refreshContents() {
+        super.refreshContents();
+        if (mPresenter.isTablet()) {
+            mActivity.getHomeController().setNavigationBarEnabled(false);
+        } else {
+            mActivity.getMainController().hideBottomNav();
+        }
     }
 
     @NonNull
