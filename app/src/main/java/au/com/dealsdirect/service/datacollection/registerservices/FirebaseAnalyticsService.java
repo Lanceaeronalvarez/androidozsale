@@ -89,7 +89,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                 new LoggingService.LogCVAppLaunch(new CVAppLaunchEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
-                        bundle.putDouble(DataCollector.EventParameters.MILLISECONDS,
+                        bundle.putDouble(DataCollector.EventParameters.LOAD_TIME,
                                 (Double) parameters.get(DataCollector.EventParameters.MILLISECONDS));
                         appOpen((Context) parameters.get(DataCollector.EventParameters.APP_CONTEXT),bundle);
                     }
@@ -124,8 +124,10 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                 new LoggingService.LogItemList(new ItemListDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
-                        bundle.putString(FirebaseAnalytics.Param.ITEM_LIST,
+                        bundle.putString(DataCollector.EventParameters.ITEM_LIST_CATEGORY,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.ITEM_LIST)));
+                        bundle.putString(DataCollector.EventParameters.LOAD_TIME,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.MILLISECONDS)));
                         itemList((Context) parameters.get(DataCollector.EventParameters.APP_CONTEXT),
                                 bundle,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.SCREEN_NAME)));
@@ -137,12 +139,14 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                 new LoggingService.LogItemDetails(new ItemDetailsDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
-                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID,
+                        bundle.putString(DataCollector.EventParameters.ITEM_DETAILS_ITEM_ID,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.ITEM_ID)));
-                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                        bundle.putString(DataCollector.EventParameters.ITEM_DETAILS_ITEM_NAME,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.ITEM_NAME)));
-                        bundle.putString(FirebaseAnalytics.Param.ITEM_BRAND,
-                                String.valueOf(parameters.get(DataCollector.EventParameters.ITEM_BRAND)));
+                        bundle.putString(DataCollector.EventParameters.ITEM_DETAILS_PRICE,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.PRICE)));
+                        bundle.putString(DataCollector.EventParameters.ITEM_DETAILS_SOURCE,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.SCREEN_NAME)));
                         itemDetails((Context) parameters.get(DataCollector.EventParameters.APP_CONTEXT), bundle,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.SCREEN_NAME)));
                     }
@@ -180,12 +184,22 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                 new LoggingService.LogAddedToCart(new AddedToCartEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters){
-                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID,
+                        bundle.putString(DataCollector.EventParameters.ADD_TO_CART_ITEM_ID,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.ITEM_ID)));
-                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,
+                        bundle.putString(DataCollector.EventParameters.ADD_TO_CART_ITEM_NAME,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.ITEM_NAME)));
-                        bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY,
+                        bundle.putString(DataCollector.EventParameters.ADD_TO_CART_ITEM_CATEGORY,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.ITEM_CATEGORY)));
+                        bundle.putString(DataCollector.EventParameters.ADD_TO_CART_QUANTITY,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.ADD_TO_CART_QUANTITY)));
+                        bundle.putString(DataCollector.EventParameters.ADD_TO_CART_VALUE,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.PRICE)));
+                        bundle.putString(DataCollector.EventParameters.ADD_TO_CART_CURRENCY,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.ADD_TO_CART_CURRENCY)));
+                        bundle.putString(DataCollector.EventParameters.ADD_TO_CART_SOURCE,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.ADD_TO_CART_SOURCE)));
+                        bundle.putString(DataCollector.EventParameters.ADD_TO_CART_ATTEMPTS,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.ATTEMPTS)));
                         addToCart((Context) parameters.get(DataCollector.EventParameters.APP_CONTEXT), bundle,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.SCREEN_NAME)));
                     }

@@ -65,6 +65,15 @@ public class DataCollector {
         public static final String ADD_TO_CART_CURRENCY = "kFIRParameterCurrency";
         public static final String ADD_TO_CART_SOURCE = "kFIRParameterSource";
         public static final String ADD_TO_CART_ATTEMPTS = "Attempts";
+        //APP LAUNCH
+        public static final String LOAD_TIME = "LoadTime";
+        //ITEM LIST
+        public static final String ITEM_LIST_CATEGORY = "kFIRParameterItemCategory";
+        // ITEM DETAILS
+        public static final String ITEM_DETAILS_ITEM_ID = "kFIRParameterItemID";
+        public static final String ITEM_DETAILS_ITEM_NAME = "kFIRParameterItemName";
+        public static final String ITEM_DETAILS_PRICE = "kFIRParameterPrice";
+        public static final String ITEM_DETAILS_SOURCE = "kFIRParameterSource";
 
         public final class LoginType {
             public final static String FACEBOOK = "LoginFacebook";
