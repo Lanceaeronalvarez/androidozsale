@@ -143,7 +143,8 @@ public class ContactSelectSubjectController extends BaseController
 
     @OnClick(R.id.partial_toolbar_left_view)
     void onBackClick() {
-        if (mPresenter.isTablet() && mActivity.getContactsController() != null) {
+        if (mPresenter.isTablet() && mActivity.getContactsController() != null
+                && getRouter().getBackstack().size() == 1) {
             mActivity.getContactsController().resetContactDetailRouter();
         } else {
             mActivity.onBackPressed();
