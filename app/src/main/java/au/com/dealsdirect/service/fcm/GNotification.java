@@ -92,7 +92,7 @@ public class GNotification {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("app", getNotificationServerName(context));
         paramMap.put("deviceID", getDeviceID(context));
-        paramMap.put("platform", "android");
+        paramMap.put("platform", "android-fcm");
         paramMap.put("token", token);
         paramMap.put("manufacture", android.os.Build.MANUFACTURER);
         paramMap.put("model", android.os.Build.MODEL);
