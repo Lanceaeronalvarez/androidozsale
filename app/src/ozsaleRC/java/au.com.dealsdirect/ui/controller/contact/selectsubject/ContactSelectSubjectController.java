@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.List;
@@ -127,8 +128,9 @@ public class ContactSelectSubjectController extends BaseController
     public void onContactSubjectItemSelected(String contactSubject) {
         ContactPreferenceHelper.setChosenSubjectString(mActivity, contactSubject);
         if (getRouter().getControllerWithTag(AddContactController.TAG) == null) {
-            GateKeeper.push(getRouter(), AddContactController.TAG, GateKeeper.Destination.ADD_CONTACT,
-                    new HorizontalChangeHandler(), new HorizontalChangeHandler());
+            RouterTransaction routerTransaction = RouterTransaction.with(AddContactController.newInstance())
+                    .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
+            getRouter().replaceTopController(routerTransaction);
         } else {
             getRouter().popCurrentController();
         }
@@ -141,6 +143,11 @@ public class ContactSelectSubjectController extends BaseController
 
     @OnClick(R.id.partial_toolbar_left_view)
     void onBackClick() {
-        mActivity.onBackPressed();
+        if (mPresenter.isTablet() && mActivity.getContactsController() != null
+                && getRouter().getBackstack().size() == 1) {
+            mActivity.getContactsController().resetContactDetailRouter();
+        } else {
+            mActivity.onBackPressed();
+        }
     }
 }

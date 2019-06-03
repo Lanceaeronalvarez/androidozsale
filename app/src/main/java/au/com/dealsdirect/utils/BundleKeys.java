@@ -111,6 +111,7 @@ public class BundleKeys {
     public static final String TEMPLATE_KEY_ABOUT_US = "aboutus";
     public static final String TEMPLATE_KEY_PRIVACY = "PrivacyPolicy_Text";
     public static final String TEMPLATE_KEY_TNC = "TermsAndConditions_Text";
+    public static final String TEMPLATE_KEY_OURPAY_TNC = "OurPayTermsAndConditions_Text";
     public static final String LEGALITIES_TITLE = "LEGALITIES_TITLE";
 
     //Tutorial
@@ -157,6 +158,10 @@ public class BundleKeys {
 
     //PopUp Root Destination Key
     public static final String KEY_POP_UP_HOST_DESTINATION = "PopUpHostController.Destination";
+
+    //WebViewController
+    public static final String KEY_WEBVIEW_CONTROLLER_TITLE = "WebViewController.Title";
+    public static final String KEY_WEBVIEW_CONTROLLER_URL = "WebViewController.Url";
 
     //SavedInstance
     public static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";

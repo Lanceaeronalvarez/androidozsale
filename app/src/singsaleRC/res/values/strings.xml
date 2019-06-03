@@ -1,4 +1,8 @@
 <resources>
+    <string name="admob_app_id">ca-app-pub-4114338578467810~5169568722</string>
+    <string name="admob_banners_id">ca-app-pub-4114338578467810/1230323715</string>
+    <string name="admob_products_id">ca-app-pub-4114338578467810/7580109644</string>
+    <string name="admob_account_id">ca-app-pub-4114338578467810/8053439286</string>
 
     <string name="add_to_cart">Add to Cart</string>
     <string name="checkout_page_toolbar_title">Checkout</string>

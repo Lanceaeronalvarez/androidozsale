@@ -70,6 +70,26 @@ public class DateUtils {
         return new SimpleDateFormat(AppConstants.MP_DATE_FORMAT).format(date);
     }
 
+    public static Calendar convertApiEpochtoDateObject(String dateString) {
+        int start = dateString.indexOf("(") + 1;
+        int end = dateString.indexOf(")");
+        String actualString;
+
+        if (start >= 0 && start < dateString.length() && end >= 0) {
+            actualString = dateString.substring(start, end);
+        } else {
+            actualString = dateString;
+        }
+
+        return convertEpochToDateObject(actualString);
+    }
+
+    public static Calendar convertEpochToDateObject(String epoch) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(Long.parseLong(epoch)));
+        return calendar;
+    }
+
     public static Calendar convertApiDateToDateObject(String dateString) {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat apiDateFormat = new SimpleDateFormat(AppConstants.API_DATE_FORMAT);
@@ -80,7 +100,7 @@ public class DateUtils {
             return calendar;
         } catch (ParseException e) {
             e.printStackTrace();
-            return null;
+            return convertApiEpochtoDateObject(dateString);
         } catch (NullPointerException e) {
             return null;
         }
@@ -133,12 +153,12 @@ public class DateUtils {
     }
 
     public static String convertHourMinuteToString(int hour, int min) {
-        int hh = hour > 12 ? hour-12 : hour;
+        int hh = hour > 12 ? hour - 12 : hour;
         hh = hh == 0 ? 12 : hh;
         String a = hour > 12 ? "PM" : "AM";
-        String HH = hh > 10? hh+"" : "0"+hh;
-        String mm = min > 10? min+"" : "0"+min;
-        return HH+":"+mm+" "+a;
+        String HH = hh > 10 ? hh + "" : "0" + hh;
+        String mm = min > 10 ? min + "" : "0" + min;
+        return HH + ":" + mm + " " + a;
     }
 
     public static Date gmtDateFromServerDateString(String dateString) {
@@ -163,8 +183,8 @@ public class DateUtils {
 
     public static String getDayOfWeekFromDateString(String dateString) {
         if (null != dateString
-            && !dateString.equalsIgnoreCase("null")
-            && dateString.length() > 0) {
+                && !dateString.equalsIgnoreCase("null")
+                && dateString.length() > 0) {
             Date date = DateUtils.gmtDateFromServerDateString(dateString);
 
             Calendar c = Calendar.getInstance();
@@ -226,7 +246,7 @@ public class DateUtils {
         }
     }
 
-    public static String getDateForOrderProgress(String dateString){
+    public static String getDateForOrderProgress(String dateString) {
         if (null != dateString
                 && !dateString.equalsIgnoreCase("null")
                 && dateString.length() > 0) {
@@ -253,8 +273,8 @@ public class DateUtils {
     public static String getTimeFromDateString(String dateString) {
 
         if (null != dateString
-            && !dateString.equalsIgnoreCase("null")
-            && dateString.length() > 0) {
+                && !dateString.equalsIgnoreCase("null")
+                && dateString.length() > 0) {
             Date date = DateUtils.gmtDateFromServerDateString(dateString);
             return (String) android.text.format.DateFormat.format("hh:mm AA", date).toString();//(String) date.toString().subSequence(4, date.toString().indexOf("GMT"));
         } else {
@@ -301,7 +321,7 @@ public class DateUtils {
         return df.format(date);
     }
 
-    public static String getDateFromStringInFormat(String dateString, String format){
+    public static String getDateFromStringInFormat(String dateString, String format) {
         if (null != dateString
                 && !dateString.equalsIgnoreCase("null")
                 && dateString.length() > 0) {
@@ -398,6 +418,6 @@ public class DateUtils {
         long seconds = milliSeconds / 1000;
         long minutes = seconds / 60;
         long hours = minutes / 60;
-        return String.format("%02d:%02d:%02d",hours % 24, minutes % 60, seconds % 60);
+        return String.format("%02d:%02d:%02d", hours % 24, minutes % 60, seconds % 60);
     }
 }

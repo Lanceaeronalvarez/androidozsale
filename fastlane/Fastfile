@@ -20,10 +20,8 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
 # You can list more emails here
   live_emails = '"
   ruz@apacsale.com,
-  michael@smartwave.ph,
   jc@mysale.com,
   chindee@smartwave.ph,
-  ejptacc123@gmail.com,
 "'
 
 # You can list more emails here
@@ -37,9 +35,7 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
 
 # You can list more emails here
   dev_emails = '"
-  PaulDeSilva@mysale.com,
   ChindeeTubasis@mysale.com,
-  michael@smartwave.ph,
   jc@apacsale.com,
   TrishCorpuz@mysale.com,
   lindz@smartwave.ph,

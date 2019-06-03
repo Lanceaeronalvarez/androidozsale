@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.shops.adapter;
 
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
@@ -53,6 +55,7 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     private String mLastGroupType;
     private static final int SPANNABLE_STRING_START_INDEX = 6;
     private static final float DISCOUNT_VALUE_SCALE_FACTOR = 1.8f;
+    private static final int FOOTER_VIEW = 1;
 
     public BannersAdapter(
             Activity activity,
@@ -93,6 +96,10 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         @BindView(R.id.viewholder_banner_percent_off)
         TextView percentOff;
 
+        @Nullable
+        @BindView(R.id.adView_banner)
+        View adView;
+
         ViewHolder(View view, int height) {
             super(view);
             ButterKnife.bind(this, view);
@@ -108,6 +115,11 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
             } else {
                 name.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.bg_banner_name_new));
             }
+        }
+
+        ViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
         }
 
         Disposable subscription;
@@ -148,77 +160,90 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
-        if (mActivity.getResources().getBoolean(R.bool.is_using_old_banner)) {
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.viewholder_old_banner, parent, false);
+
+        if (viewType != FOOTER_VIEW) {
+            if (mActivity.getResources().getBoolean(R.bool.is_using_old_banner)) {
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.viewholder_old_banner, parent, false);
+            } else {
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.viewholder_banner, parent, false);
+            }
+
+            return new ViewHolder(view, mComputedHeight);
         } else {
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.viewholder_banner, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_ads, parent, false);
+            return new ViewHolder(view);
         }
-        return new ViewHolder(view, mComputedHeight);
+
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        GetBannerResponse.Banner item = mSales.get(position);
-        if (item.getDescription() != null && !item.getDescription().isEmpty()) {
-            holder.name.setVisibility(View.VISIBLE);
-            holder.name.setText(item.getDescription());
+        if (holder.getItemViewType() != FOOTER_VIEW) {
+            GetBannerResponse.Banner item = mSales.get(position);
+            if (item.getDescription() != null && !item.getDescription().isEmpty()) {
+                holder.name.setVisibility(View.VISIBLE);
+                holder.name.setText(item.getDescription());
+            } else {
+                holder.name.setVisibility(View.GONE);
+            }
+
+            if (item.getBannerText() != null && !item.getBannerText().isEmpty()) {
+                holder.discount.setVisibility(View.VISIBLE);
+                holder.discount.setText(item.getBannerText());
+            } else {
+                holder.discount.setVisibility(View.GONE);
+            }
+
+            if (item.getPercentOffText() != null &&
+                    item.getPercentOffText().length() > 0 &&
+                    mActivity.getResources().getBoolean(R.bool.is_dynamic_discount_banners_enabled)) {
+                String percentOffValue = item.getPercentOffText().trim();
+                String[] discountWordArray = percentOffValue.split(" ");
+                percentOffValue = percentOffValue.replace(' ', '\n');
+                int percentSymbolLength = 1;
+                int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + discountWordArray[1].length() + percentSymbolLength;
+
+                SpannableString string = new SpannableString(percentOffValue);
+                string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.percentOff.setVisibility(View.VISIBLE);
+                holder.percentOff.setText(string);
+            } else {
+                holder.percentOff.setVisibility(View.GONE);
+            }
+
+
+            holder.deliveryImage.setVisibility(item.getFreeDelivery() ? View.VISIBLE : View.GONE);
+            String imgUrl;
+
+            imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), mWidth, mHeight);
+
+
+            ImageUtils.loadImage(imgUrl, holder.image);
+
+            if (holder.subscription != null) {
+                holder.subscription.dispose();
+            }
+
+            if (item.getGroup().getIsClickable()) {
+                holder.subscription = RxView.clicks(holder.layout)
+                        .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(action -> mPresenter.selectBanner(
+                                item.getDestinationId(),
+                                item.getDescription(),
+                                item.getId(),
+                                position,
+                                imgUrl,
+                                item.getEndDate(),
+                                item.getIsAvailable()));
+            }
         } else {
-            holder.name.setVisibility(View.GONE);
-        }
-
-        if (item.getBannerText() != null && !item.getBannerText().isEmpty()) {
-            holder.discount.setVisibility(View.VISIBLE);
-            holder.discount.setText(item.getBannerText());
-        } else {
-            holder.discount.setVisibility(View.GONE);
-        }
-
-        if (item.getPercentOffText() != null &&
-                item.getPercentOffText().length() > 0 &&
-                mActivity.getResources().getBoolean(R.bool.is_dynamic_discount_banners_enabled)) {
-            String percentOffValue = item.getPercentOffText().trim();
-            String[] discountWordArray = percentOffValue.split(" ");
-            percentOffValue = percentOffValue.replace(' ', '\n');
-            int percentSymbolLength = 1;
-            int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + discountWordArray[1].length() + percentSymbolLength;
-
-            SpannableString string = new SpannableString(percentOffValue);
-            string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            holder.percentOff.setVisibility(View.VISIBLE);
-            holder.percentOff.setText(string);
-        } else {
-            holder.percentOff.setVisibility(View.GONE);
-        }
-
-
-        holder.deliveryImage.setVisibility(item.getFreeDelivery() ? View.VISIBLE : View.GONE);
-        String imgUrl;
-
-        imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), mWidth, mHeight);
-
-
-        ImageUtils.loadImage(imgUrl, holder.image);
-
-        if (holder.subscription != null) {
-            holder.subscription.dispose();
-        }
-
-        if (item.getGroup().getIsClickable()) {
-            holder.subscription = RxView.clicks(holder.layout)
-                    .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(action -> mPresenter.selectBanner(
-                            item.getDestinationId(),
-                            item.getDescription(),
-                            item.getId(),
-                            position,
-                            imgUrl,
-                            item.getEndDate(),
-                            item.getIsAvailable()));
+            CommonUtils.showAdmob(mActivity, holder.adView,
+                    mActivity.getResources().getString(R.string.admob_banners_id));
         }
     }
 
@@ -313,5 +338,13 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
         mSales.clear();
         mGroups.clear();
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == (mSales.size() - 1) && mSales.size() != 0) {
+            return FOOTER_VIEW;
+        }
+        return super.getItemViewType(position);
     }
 }

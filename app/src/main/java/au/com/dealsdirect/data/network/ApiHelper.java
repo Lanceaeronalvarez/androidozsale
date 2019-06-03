@@ -336,11 +336,11 @@ public interface ApiHelper {
     Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request);
 
     // OURPAY
-    Observable<GetPaymentPlansResponse> callGetPaymentPlans();
+    Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String languageId);
 
-    Observable<GetScheduledPlansResponse> callGetScheduledPlans();
+    Observable<GetScheduledPlansResponse> callGetScheduledPlans(String countryId, String languageId);
 
-    Observable<GetPastPaymentsResponse> callGetPastPayments();
+    Observable<GetPastPaymentsResponse> callGetPastPayments(String countryId, String languageId);
 
     Observable<GetDeliveryServiceResponse> callGetDeliveryService();
 

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cellBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/order_details_view_color">
+
+    <LinearLayout
+        android:id="@+id/myAccountOurpayScheduledPaymentView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/ourpay_cell_horizontal_margin"
+        android:layout_marginTop="@dimen/ourpay_cell_vertical_margin"
+        android:layout_marginEnd="@dimen/ourpay_cell_horizontal_margin"
+        android:layout_marginBottom="@dimen/ourpay_cell_vertical_margin"
+        android:background="@drawable/bg_myaccount_ourpay_cell"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:layout_width="@dimen/ourpay_scheduled_payment_date_area_width"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/myAccountOurpayScheduledPaymentBigDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="29"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/ourpay_big_date_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/myAccountOurpayScheduledPaymentSmallDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Jun"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/ourpay_small_date_text_size" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <View
+            android:id="@+id/myAccountOurpayScheduledPaymentSeparatorAfterDate"
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/ourpay_cell_divider_line_vertical_margin"
+            android:layout_marginBottom="@dimen/ourpay_cell_divider_line_vertical_margin"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/ourpay_scheduled_payment_detail_area_horizontal_padding"
+            android:paddingRight="@dimen/ourpay_scheduled_payment_detail_area_horizontal_padding">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/myAccountOurpayScheduledPaymentTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLines="1"
+                        android:text="Order: $200"
+                        android:textAlignment="textStart"
+                        android:textColor="@android:color/black"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:autoSizeTextType="uniform" />
+
+                    <TextView
+                        android:id="@+id/myAccountOurpayScheduledPaymentName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:maxLines="1"
+                        android:text="#112039123"
+                        android:textAlignment="textEnd"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_headline3"
+                        android:textStyle="bold"
+                        app:autoSizeTextType="none" />
+
+                </LinearLayout>
+            </FrameLayout>
+
+            <View
+                android:id="@+id/myAccountOurpayScheduledPaymentSeparatorAbovePaymentMethod"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/ourpay_scheduled_payment_detail_area_divider_margin_left"
+                android:layout_marginRight="@dimen/ourpay_scheduled_payment_detail_area_divider_margin_right"
+                android:background="@android:color/darker_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/myAccountOurpayScheduledPaymentPaymentMethodIcon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.1"
+                    app:srcCompat="@drawable/bt_ic_mastercard" />
+
+                <TextView
+                    android:id="@+id/myAccountOurpayScheduledPaymentObfuscatedNumber"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:paddingLeft="@dimen/ourpay_payment_method_text_gap"
+                    android:text="586xxxxxxx768"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

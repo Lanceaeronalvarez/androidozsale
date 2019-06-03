@@ -1,4 +1,8 @@
 <resources>
+    <string name="admob_app_id">ca-app-pub-4114338578467810~8730982743</string>
+    <string name="admob_banners_id">ca-app-pub-4114338578467810/2489943804</string>
+    <string name="admob_products_id">ca-app-pub-4114338578467810/1384089159</string>
+    <string name="admob_account_id">ca-app-pub-4114338578467810/8879435793</string>
 
     <!-- Font Strings -->
     <string name="font_app_bold">fonts/opensans/OpenSans-Bold.ttf</string>
@@ -227,6 +231,8 @@
         <item>@string/account_returns</item>
         <item>@string/account_vouchers</item>
         <item>@string/account_invite_friend</item>
+        <!--<item>@string/account_ourpay</item>-->
+        <!--<item>@string/account_select</item>-->
         <item>@string/account_options</item>
     </integer-array>
 

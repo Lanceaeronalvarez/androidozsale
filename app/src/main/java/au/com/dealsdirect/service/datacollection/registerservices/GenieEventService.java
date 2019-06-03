@@ -11,6 +11,7 @@ import com.androidnetworking.error.ANError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 import javax.inject.Inject;
 
@@ -318,10 +319,26 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
         for (Iterator<Cookie> it = CookieUtils.getInstance().getCookieIterator(); it.hasNext(); ) {
             Cookie cookie = it.next();
             if (cookie.name().equalsIgnoreCase("us")) {
-                String cookieValue = cookie.value();
-                userGroup = (String) cookieValue.subSequence(cookieValue.indexOf("=") + 1, cookieValue.indexOf("&"));
-                char firstCharacter = userGroup.charAt(0);
-                userGroup = String.valueOf(firstCharacter);
+                String[] subCookies = cookie.value().split("&");
+                if (subCookies.length > 0) {
+                    String value;
+                    // only take first subcookie
+                    String[] subCookieParts = subCookies[0].split("=");
+                    if(subCookieParts.length > 1) {
+                        // when equal sign exists
+                        value = subCookieParts[1];
+                    } else if (subCookieParts.length == 1){
+                        // when value is not actually subcookies
+                        value = subCookieParts[0];
+                    } else {
+                        value = "";
+                    }
+
+                    if (!value.isEmpty()) {
+                        char firstCharacter = value.charAt(0);
+                        userGroup = String.valueOf(firstCharacter);
+                    }
+                }
                 break;
             }
         }

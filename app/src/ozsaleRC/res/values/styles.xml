@@ -91,6 +91,26 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="MyAccountsOurpayTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabBackground">@color/white</item>
+        <item name="tabMaxWidth">0dp</item>
+        <item name="tabIndicatorColor">@color/ourpay_circle_state_color_active</item>
+        <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabMode">fixed</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabTextColor">@color/text_dark</item>
+        <item name="tabSelectedTextColor">@color/ourpay_circle_state_color_active</item>
+        <item name="tabTextAppearance">@style/MyAccountsOurpayTabTextAppearance</item>
+    </style>
+
+    <style name="MyAccountsOurpayTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:fontFamily">@string/font_app_regular</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+
     <integer name="sale_items_threshold">4</integer>
 
     <!-- Toolbar visibility -->

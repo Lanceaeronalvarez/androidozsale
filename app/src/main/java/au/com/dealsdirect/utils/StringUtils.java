@@ -121,7 +121,11 @@ public class StringUtils {
     }
 
     public static String getParentKey(GetCategoryTreeResponse category) {
-        return category.getKey().replace(">>>" + category.getName(), "");
+        String key = category.getKey();
+        if (key != null) {
+            key = key.replace(">>>" + category.getName(), "");
+        }
+        return key;
     }
 
 }

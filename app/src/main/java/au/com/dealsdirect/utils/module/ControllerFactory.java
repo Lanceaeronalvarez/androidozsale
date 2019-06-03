@@ -42,6 +42,8 @@ import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.tutorial.TutorialController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
+import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
+import au.com.dealsdirect.ui.controller.webviewcontroller.WebViewController;
 
 /**
  * Created by smartwave on 16/10/2017.
@@ -138,6 +140,10 @@ public class ControllerFactory {
                 return NotificationController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
+            case MY_ACCOUNTS_OURPAY:
+                return MyAccountsOurpayController.newInstance();
+            case COMMON_WEBVIEW:
+                return null;
             default:
                 return null;
         }
@@ -217,6 +223,10 @@ public class ControllerFactory {
                 return NotificationController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
+            case MY_ACCOUNTS_OURPAY:
+                return MyAccountsOurpayController.newInstance();
+            case COMMON_WEBVIEW:
+                return new WebViewController(bundle);
             default:
                 return null;
         }
@@ -282,6 +292,10 @@ public class ControllerFactory {
         if (controller instanceof LegalitiesController) {
             return GateKeeper.Destination.LEGALITIES;
 	    }
+
+	    if (controller instanceof MyAccountsOurpayController) {
+            return GateKeeper.Destination.MY_ACCOUNTS_OURPAY;
+        }
 
         return GateKeeper.Destination.EMPTY;
     }

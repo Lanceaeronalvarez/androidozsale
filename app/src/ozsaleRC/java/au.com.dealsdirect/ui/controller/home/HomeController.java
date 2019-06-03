@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
@@ -44,6 +45,7 @@ import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -105,6 +107,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     private CheckoutMvpView mCheckoutMvpView;
     public ViewContactsMvpView mViewContactsMvpView;
     private AHBottomNavigation mBottomNavigationView;
+    private RelativeLayout mFooter;
+    private View mAdView;
 
     private int currentVisibleIndex = 0;
     private int previousVisibleIndex = 0;
@@ -621,7 +625,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             Pair<Router, ViewGroup> pair = mRouterContainerMapping.get(index);
             if (pair != null) {
                 Router router = pair.first;
-                if (router != null) {
+                if (router != null && router.getBackstack().size() > 0) {
                     Controller controller = router.getBackstack()
                             .get(router.getBackstack().size() - 1).controller();
                     if (controller instanceof BaseController) {
@@ -798,6 +802,16 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (container != null) {
             Animation fadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.splash_fade_in);
             container.startAnimation(fadeIn);
+        }
+    }
+
+    public void setNavigationBarEnabled(boolean enabled) {
+        for (int i = 0; i < TAB_ALL_INDICES.length; i++) {
+            if (enabled) {
+                mBottomNavigationView.enableItemAtPosition(TAB_ALL_INDICES[i]);
+            } else {
+                mBottomNavigationView.disableItemAtPosition(TAB_ALL_INDICES[i]);
+            }
         }
     }
 

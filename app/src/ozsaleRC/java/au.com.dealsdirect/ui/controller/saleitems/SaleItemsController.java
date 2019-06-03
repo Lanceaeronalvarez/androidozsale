@@ -69,6 +69,7 @@ import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
@@ -562,7 +563,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mShopSearchQuery = savedInstanceState.getString(SHOP_KEY_SEARCH_TEXT);
             }
             mTitle = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_TITLE);
-            mEndDate = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE);
+            if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE)) {
+                mEndDate = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE);
+            }
         }
     }
 
@@ -715,7 +718,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setDraggableViewPager(false);
         setupPtrHeader();
-        if (mEndDate.isEmpty() || mEndDate == null || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+        if (mEndDate == null || mEndDate.isEmpty() || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
             mSaleItemsRemainingTimeText.setVisibility(View.GONE);
             mSaleEndsInText.setVisibility(View.GONE);
         } else {
@@ -757,7 +760,22 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
 
-        mSaleItemsRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount()));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch(mSaleItemsAdapter.getItemViewType(position)){
+                    case 1: // set default column count if not footer
+                        return mSaleItemsAdapter.getColumnCount();
+                    case 0: // set column count to 1 if it's a footer
+                        return 1;
+                    default:
+                        return -1;
+                }
+            }
+        });
+
+        mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
         mSaleItemsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

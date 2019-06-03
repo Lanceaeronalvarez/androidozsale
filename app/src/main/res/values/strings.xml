@@ -1,4 +1,12 @@
 <resources>
+    <!-- change this value to match app's own app id-->
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_banners_id">ca-app-pub-4114338578467810/2489943804</string>
+    <string name="admob_products_id">ca-app-pub-4114338578467810/1384089159</string>
+    <string name="admob_account_id">ca-app-pub-4114338578467810/8879435793</string>
+    <!--Test Ads IDs-->
+    <string name="admob_test_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_test_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
     <string name="font_app_black">fonts/lato/App-Font-Black.ttf</string>
     <string name="font_app_black_italic">fonts/lato/App-Font-BlackItalic.ttf</string>
@@ -389,6 +397,8 @@
     <string name="account_language">My Languages</string>
     <string name="account_contact_us">Contact Us</string>
     <string name="account_country">My Country</string>
+    <string name="account_ourpay">Ourpay</string>
+    <string name="account_select">Select</string>
     <string name="account_options">My Options</string>
     <string name="account_notification">My Notification</string>
     <string name="account_clear_cookies_data">Clear Cookies</string>
@@ -445,6 +455,8 @@
         <item>@string/account_returns</item>
         <item>@string/account_language</item>
         <item>@string/account_country</item>
+        <!--<item>@string/account_ourpay</item>-->
+        <!--<item>@string/account_select</item>-->
         <item>@string/account_tnc</item>
         <item>@string/account_privacy</item>
         <item>@string/account_about_us</item>
@@ -666,5 +678,31 @@
 
     <string name="address_error_format">%1$s must be minimum of %2$s and maximum of %3$s characters</string>
     <string name="address_error_format_equal">%1$s must be exactly %2$s characters</string>
+
+    <!--My Accounts Ourpay-->
+    <string name="ourpay_title">Ourpay</string>
+    <string name="ourpay_payment_plans">Payment Plans</string>
+    <string name="ourpay_schedule_payments">Scheduled Payments</string>
+    <string name="ourpay_past_payments">Past Payments</string>
+    <string name="ourpay_active_plans">Active Plans</string>
+    <string name="ourpay_balance_owing">Balance Owing</string>
+    <string name="ourpay_remaining_credit">Remaining Credit</string>
+    <string name="ourpay_order">Order:</string>
+    <string name="ourpay_paid">Paid:</string>
+    <string name="ourpay_refund">Refund:</string>
+    <string name="ourpay_adjusted_to_schedule">Adjusted to Schedule:</string>
+    <string name="ourpay_refund_to_card">Refund to Card:</string>
+    <string name="ourpay_balance">Balance:</string>
+    <string name="ourpay_installment_date_format">MMM dd</string>
+    <string name="ourpay_big_date_format">dd</string>
+    <string name="ourpay_small_date_format">MMM</string>
+    <string name="ourpay_order_number_prefix">#</string>
+    <string name="ourpay_section_header_date_format">MMM yyyy</string>
+    <string name="ourpay_info_page_title">Information Page</string>
+    <string name="ourpay_info_page_url">https://www.ourpaypayments.com/onlyonline/ourpay.html</string>
+    <string name="ourpay_tnc_title">Terms and Conditions</string>
+    <string name="ourpay_empty_view_text">Ourpay is exclusive installment payment plan\nsolution. Ourpay allows you to checkout with all\nthe items you love and pay over four easy,\ninterest free installments.\n\nSimply browse the site and add your preferred\ngoodies to your cart. Proceeed to checkout and\npay less today with Ourpay!\n\n\nMore details about Ourpay, you can visit:\n</string>
+
+
 
 </resources>

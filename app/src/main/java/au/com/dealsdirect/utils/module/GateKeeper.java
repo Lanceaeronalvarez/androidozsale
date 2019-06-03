@@ -65,7 +65,10 @@ public class GateKeeper {
         COUNTRY,
         NOTIFICATION,
         TUTORIAL,
-        STRICT_CONSENT_UI
+        STRICT_CONSENT_UI,
+        MY_ACCOUNTS_OURPAY,
+        MY_ACCOUNTS_SELECT,
+        COMMON_WEBVIEW
         //add more destinations
     }
 

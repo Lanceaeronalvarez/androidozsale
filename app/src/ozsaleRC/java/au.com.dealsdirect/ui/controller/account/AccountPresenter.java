@@ -65,6 +65,10 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             getMvpView().showMyReturns();
         } else if (option.equals(context.getString(R.string.account_payments))) {
             getMvpView().showMyPaymentsController();
+        } else if (option.equals(context.getString(R.string.account_ourpay))) {
+            getMvpView().showMyAccountsOurpay();
+        } else if (option.equals(context.getString(R.string.account_select))) {
+            getMvpView().showMyAccountsSelect();
         } else if (option.equals(context.getString(R.string.account_invite_friend))) {
             getMvpView().showInviteAFriend();
         }
@@ -136,6 +140,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 option.equals(context.getString(R.string.account_vouchers)) ||
                 option.equals(context.getString(R.string.account_returns)) ||
                 option.equals(context.getString(R.string.account_payments)) ||
+                option.equals(context.getString(R.string.account_ourpay)) ||
+                option.equals(context.getString(R.string.account_select)) ||
                 option.equals(context.getString(R.string.account_invite_friend));
     }
 
