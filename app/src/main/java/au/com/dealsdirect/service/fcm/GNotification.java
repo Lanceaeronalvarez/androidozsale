@@ -15,6 +15,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.mysale.genie.utility.Prefs;
 
 import org.json.JSONObject;
@@ -195,7 +197,10 @@ public class GNotification {
             String regId = getRegistrationId(context.getApplicationContext());
             AppLogger.d(TAG + "regId " + regId);
             if (regId.isEmpty()) {
-                new RegisterInBackground().execute(context);
+                storeRegistrationId(context, FirebaseInstanceId.getInstance().getToken());
+
+                callRegisterSubscriber(context, FirebaseInstanceId.getInstance().getToken(), true);
+
             } else {
                 callRegisterSubscriber(context, regId, isNotificationEnabled(context));
             }
