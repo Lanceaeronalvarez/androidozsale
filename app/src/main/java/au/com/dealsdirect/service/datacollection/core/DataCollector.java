@@ -74,6 +74,25 @@ public class DataCollector {
         public static final String ITEM_DETAILS_ITEM_NAME = "kFIRParameterItemName";
         public static final String ITEM_DETAILS_PRICE = "kFIRParameterPrice";
         public static final String ITEM_DETAILS_SOURCE = "kFIRParameterSource";
+        // PURCHASE
+        public static final String PURCHASE_TRANSACTION_ID = "kFIRParameterTransactionID";
+        public static final String PURCHASE_VALUE = "kFIRParameterValue";
+        public static final String PURCHASE_CURRENCY = "kFIRParameterCurrency";
+        public static final String PURCHASE_CHECKOUT_OPTION = "kFIRParameterCheckoutOption";
+        public static final String PURCHASE_NEW_USER = "NewUser";
+        public static final String PURCHASE_CC_SCAN = "CCScan";
+        // SIGN UP
+        public static final String SIGN_UP_METHOD = "kFIRParameterSignUpMethod";
+        public static final String SIGN_UP_GAVE_UP = "GaveUpRegistration";
+        // LOGIN
+        public static final String LOGIN_METHOD = "kFIRParameterMethod";
+        public static final String LOGIN_GAVE_UP = "GaveUpLogin";
+        // ORDER TRACK
+        public static final String ORDER_TRACK_SOURCE = "kFIRParameterSource";
+        // SHARE
+        public static final String SHARE_SOURCE = "kFIRParameterSource";
+        public static final String SHARE_CONTENT_TYPE = "kFIRParameterContentType";
+        public static final String SHARE_SUCCESS = "kFIRParameterSuccess";
 
         public final class LoginType {
             public final static String FACEBOOK = "LoginFacebook";

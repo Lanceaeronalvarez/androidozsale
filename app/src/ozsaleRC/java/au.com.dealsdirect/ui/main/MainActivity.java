@@ -535,6 +535,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     .EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
                     .EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .EventParameters.PURCHASE_CURRENCY, Settings.getSelectedCountry().currencySign);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .EventParameters.PURCHASE_TRANSACTION_ID, responseValue.getD().getValue().getPaymentID());
             au.com.dealsdirect.service.datacollection.core.DataCollector
                     .logEvent(Events.PurchaseEvent, parameters);
 
