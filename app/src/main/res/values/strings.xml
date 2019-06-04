@@ -455,7 +455,7 @@
         <item>@string/account_returns</item>
         <item>@string/account_language</item>
         <item>@string/account_country</item>
-        <!--<item>@string/account_ourpay</item>-->
+        <item>@string/account_ourpay</item>
         <!--<item>@string/account_select</item>-->
         <item>@string/account_tnc</item>
         <item>@string/account_privacy</item>

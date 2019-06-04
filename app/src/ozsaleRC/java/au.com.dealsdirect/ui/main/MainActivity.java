@@ -1268,6 +1268,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         IntrospectionUtils.checkVersion(this, androidArrayList);
     }
 
+    @Override
+    public void onGetAppSettings() {
+        getAccountController().reloadAccountItems();
+    }
+
     private void deepLinkSuceeded() {
         /* deep link succeeded */
     }

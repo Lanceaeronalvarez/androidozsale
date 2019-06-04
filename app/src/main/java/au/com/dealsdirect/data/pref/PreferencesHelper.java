@@ -226,4 +226,6 @@ public interface PreferencesHelper {
 
     boolean shouldShowStrictConsent();
 
+    void setIsOurpayDashboardEnabled(boolean enabled);
+    boolean getIsOurpayDashboardEnabled();
 }
