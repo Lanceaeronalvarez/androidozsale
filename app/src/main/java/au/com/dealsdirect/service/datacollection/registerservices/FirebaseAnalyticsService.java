@@ -55,6 +55,15 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static CompositeDisposable mCompositeDisposable;
     static String type;
     static String finalType;
+    private static final String START_CHECKOUT_EVENT = "AnalyticsEventBeginCheckout";
+    private static final String ADD_TO_CART_EVENT = "AnalyticsEventAddToCart";
+    private static final String APP_LAUNCH_EVENT = "AnalyticsEventAppOpen";
+    private static final String ITEM_LIST_EVENT = "AnalyticsEventViewItemList";
+    private static final String ITEM_DETAIL_EVENT = "AnalyticsEventViewItem";
+    private static final String PURCHASE_EVENT = "AnalyticsEventEcommercePurchase";
+    private static final String SIGN_UP_EVENT = "AnalyticsEventSignUp";
+    private static final String LOGIN_EVENT = "AnalyticsEventLogin";
+    private static final String SHARE_EVENT = "AnalyticsEventShare";
 
     private static FirebaseAnalyticsService instance;
     public static FirebaseAnalyticsService getInstance() {
@@ -341,15 +350,14 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
 
     private static void appOpen(Context context, Bundle bundle) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, bundle);
+        firebaseAnalytics.logEvent(APP_LAUNCH_EVENT, bundle);
     }
 
     private static void startCheckout(Context context, Bundle bundle, String screenName) {
         if (!mDataManager.hasActiveCheckoutSession()) {
             firebaseAnalytics = FirebaseAnalytics.getInstance(context);
             firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT,bundle);
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle);
+            firebaseAnalytics.logEvent(START_CHECKOUT_EVENT,bundle);
 
             checkoutJourney(context, DataCollector.EventParameters.EventProgress.START.getValue(), screenName);
 
@@ -359,37 +367,37 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static void shareEvent(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle);
+        firebaseAnalytics.logEvent(SHARE_EVENT, bundle);
     }
 
     private static void itemList(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST, bundle);
+        firebaseAnalytics.logEvent(ITEM_LIST_EVENT, bundle);
     }
 
     private static void itemDetails(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle);
+        firebaseAnalytics.logEvent(ITEM_DETAIL_EVENT, bundle);
     }
 
     private static void signUp(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle);
+        firebaseAnalytics.logEvent(SIGN_UP_EVENT, bundle);
     }
 
     private static void login(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+        firebaseAnalytics.logEvent(LOGIN_EVENT, bundle);
     }
 
     private static void addToCart(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_CART, bundle);
+        firebaseAnalytics.logEvent(ADD_TO_CART_EVENT, bundle);
 
         if (!mDataManager.hasAddedToCart()) {
             addToCartJourney(context, DataCollector.EventParameters.CartJourneyType.ADD_TO_CART);
@@ -426,7 +434,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static void purchase(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle);
+        firebaseAnalytics.logEvent(PURCHASE_EVENT, bundle);
 
         mDataManager.setLastRedirection(DataCollector.EventParameters.LastRedirection.PAY);
         checkoutJourney(context, DataCollector.EventParameters.EventProgress.END.getValue(), screenName);
