@@ -115,4 +115,6 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     void deepLinkDefault();
 
     void showIntrospectionUtils(ArrayList<Android> androidArrayList);
+
+    void onGetAppSettings();
 }

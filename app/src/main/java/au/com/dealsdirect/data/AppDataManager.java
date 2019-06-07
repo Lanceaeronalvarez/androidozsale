@@ -1182,6 +1182,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setIsOurpayDashboardEnabled(boolean enabled) {
+        mPreferencesHelper.setIsOurpayDashboardEnabled(enabled);
+    }
+
+    @Override
+    public boolean getIsOurpayDashboardEnabled() {
+        return mPreferencesHelper.getIsOurpayDashboardEnabled();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }

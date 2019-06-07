@@ -27,4 +27,6 @@ public interface AccountMvpPresenter <V extends MvpView> extends MvpPresenter<V>
     boolean isAuthorized();
 
     boolean shouldShowStrictConsent();
+
+    boolean isOurpayEnabled();
 }

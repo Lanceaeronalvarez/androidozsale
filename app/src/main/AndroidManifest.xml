@@ -161,6 +161,13 @@
             android:name="firebase_crashlytics_collection_enabled"
             android:value="false" />
         <!--[END firebase crashlytics]-->
+
+        <!--[ADMOB CRASH WORKAROUND]-->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+        <!--[END ADMOB CRASH WORKAROUND]-->
+
     </application>
 
 </manifest>

@@ -235,12 +235,21 @@ public class AccountController extends BaseController implements AccountMvpView,
         mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
+    public void reloadAccountItems() {
+        createAccountItems();
+        mPresenter.loadAccountItems(mAccountItems);
+    }
+
     private void createAccountItems() {
         TypedArray titles = mActivity.getResources().obtainTypedArray(R.array.account_title_array);
         mAccountItems = new ArrayList<>();
         AccountItem newAccountItem;
         for (int i = 0; i < titles.length(); i++) {
             String title = getString(titles.getResourceId(i, 0));
+
+            if (!mPresenter.isOurpayEnabled() && title.equals(getString(R.string.account_ourpay))) {
+                continue;
+            }
 
             //skip if multi country not enabled
             if (!mPresenter.isMultiCountry() && title.equals(getString(R.string.account_country))) {

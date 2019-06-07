@@ -147,6 +147,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String HAS_ADDED_TO_CART = "HAS_CLICKED_ADD_TO_CART";
     private static final String HAS_VIEWED_CART = "HAS_CLICKED_VIEW_CART";
 
+    //Ourpay
+    private static final String IS_OURPAY_DASHBOARD_ENABLED = "IS_OURPAY_DASHBOARD_ENABLED";
+
     private Context mContext;
 
     @Inject
@@ -787,4 +790,13 @@ public class AppPreferencesHelper implements PreferencesHelper {
         return (HashSet<String>) Prefs.getStringSet(COOKIES, new HashSet<>());
     }
 
+    @Override
+    public void setIsOurpayDashboardEnabled(boolean enabled) {
+        Prefs.putBoolean(IS_OURPAY_DASHBOARD_ENABLED, enabled);
+    }
+
+    @Override
+    public boolean getIsOurpayDashboardEnabled() {
+        return Prefs.getBoolean(IS_OURPAY_DASHBOARD_ENABLED, false);
+    }
 }
