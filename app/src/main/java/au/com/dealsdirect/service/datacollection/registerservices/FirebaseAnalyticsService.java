@@ -177,14 +177,11 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                 new LoggingService.LogLogin(new LoginDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters){
-//                        boolean result = (Boolean) parameters.get(DataCollector.EventParameters.RESULT);
-//                        bundle.putString(result ? DataCollector.EventParameters.LoginType.SUCCESSFUL_LOGIN :
-//                                        DataCollector.EventParameters.LoginType.GAVE_UP_LOGIN,
-//                                            String.valueOf(parameters.get(DataCollector.EventParameters.METHOD)));
+                        boolean result = (Boolean) parameters.get(DataCollector.EventParameters.RESULT);
                         bundle.putString(DataCollector.EventParameters.LOGIN_METHOD,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.METHOD)));
                         bundle.putString(DataCollector.EventParameters.LOGIN_GAVE_UP,
-                                String.valueOf(parameters.get(DataCollector.EventParameters.RESULT)));
+                                String.valueOf(!result));
                         login((Context) parameters.get(DataCollector.EventParameters.APP_CONTEXT), bundle,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.SCREEN_NAME)));
                     }
