@@ -1,4 +1,12 @@
 <resources>
+    <!-- change this value to match app's own app id-->
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_banners_id">ca-app-pub-4114338578467810/2489943804</string>
+    <string name="admob_products_id">ca-app-pub-4114338578467810/1384089159</string>
+    <string name="admob_account_id">ca-app-pub-4114338578467810/8879435793</string>
+    <!--Test Ads IDs-->
+    <string name="admob_test_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_test_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
     <string name="font_app_black">fonts/lato/App-Font-Black.ttf</string>
     <string name="font_app_black_italic">fonts/lato/App-Font-BlackItalic.ttf</string>
@@ -448,7 +456,7 @@
         <item>@string/account_language</item>
         <item>@string/account_country</item>
         <item>@string/account_ourpay</item>
-        <item>@string/account_select</item>
+        <!--<item>@string/account_select</item>-->
         <item>@string/account_tnc</item>
         <item>@string/account_privacy</item>
         <item>@string/account_about_us</item>

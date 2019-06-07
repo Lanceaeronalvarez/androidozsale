@@ -1,4 +1,9 @@
 <resources>
+    <string name="admob_app_id">ca-app-pub-4114338578467810~7913838480</string>
+    <string name="admob_banners_id">ca-app-pub-4114338578467810/2519354652</string>
+    <string name="admob_products_id">ca-app-pub-4114338578467810/7987303752</string>
+    <string name="admob_account_id">ca-app-pub-4114338578467810/5361140411</string>
+
     <string name="exit_app_name">BA</string>
 
     <string name="default_country_id">DA</string>
@@ -171,6 +176,7 @@
         <item>@string/account_returns</item>
         <item>@string/account_vouchers</item>
         <item>@string/account_invite_friend</item>
+        <item>@string/account_ourpay</item>
         <item>@string/account_options</item>
     </integer-array>
 

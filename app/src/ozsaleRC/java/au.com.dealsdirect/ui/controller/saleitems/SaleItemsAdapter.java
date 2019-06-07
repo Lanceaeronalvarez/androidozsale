@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Paint;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
@@ -39,6 +41,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private SaleItemsMvpPresenter mPresenter;
     private String mSaleId;
     private int mColumnCount;
+    private static final int FOOTER_VIEW = 1;
 
     private Pair<Integer, Integer> mComputedPair;
 
@@ -74,6 +77,10 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         @BindView(R.id.vh_sale_item_sale_price)
         TextView salePrice;
 
+        @Nullable
+        @BindView(R.id.adView_banner)
+        View adView;
+
         ViewHolder(View view, Pair<Integer, Integer> pair) {
             super(view);
             ButterKnife.bind(this, view);
@@ -82,6 +89,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             params.width = pair.first;
             params.height = pair.second;
             layout.setLayoutParams(params);
+        }
+
+        ViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
         }
     }
 
@@ -114,61 +126,77 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.viewholder_sale_item, parent, false);
-        return new ViewHolder(view, mComputedPair);
+        View view = null;
+
+        if (viewType != FOOTER_VIEW) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.viewholder_sale_item, parent, false);
+            return new ViewHolder(view, mComputedPair);
+        } else {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.footer_ads, parent, false);
+            return new ViewHolder(view);
+        }
     }
 
     @SuppressLint("CheckResult")
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        GetSaleItemsResponse.Products saleItem = mData.get(position);
-        String url = mData.get(position).getImages().isEmpty() ? "" : mData.get(position).getImages().get(0);
 
-        holder.name.setText(saleItem.getProductName());
+        if (holder.getItemViewType() == 0 && mData.size() != 0) {
+            GetSaleItemsResponse.Products saleItem = mData.get(position);
+            String url = mData.get(position).getImages().isEmpty() ? "" : mData.get(position).getImages().get(0);
 
-        String saleItemBrand = saleItem.getProductName();
+            holder.name.setText(saleItem.getProductName());
 
-        if (mData.get(position).getSkus() != null)
-            if (!mData.get(position).getSkus().isEmpty())
-                if (mData.get(position).getSkus().get(0).getBrandName() != null)
-                    saleItemBrand = mData.get(position).getSkus().get(0).getBrandName();
+            String saleItemBrand = saleItem.getProductName();
 
-        String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
-        String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
+            if (mData.get(position).getSkus() != null)
+                if (!mData.get(position).getSkus().isEmpty())
+                    if (mData.get(position).getSkus().get(0).getBrandName() != null)
+                        saleItemBrand = mData.get(position).getSkus().get(0).getBrandName();
 
-        ImageUtils.loadImage(url, holder.image);
+            String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
+            String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
 
-        holder.image.setTransitionName(mActivity.getString(R.string.transition_sale_image_indexed, position));
+            ImageUtils.loadImage(url, holder.image);
 
-        holder.soldout.setVisibility(saleItem.isSoldOut() ? View.VISIBLE : View.GONE);
+            holder.image.setTransitionName(mActivity.getString(R.string.transition_sale_image_indexed, position));
 
-        holder.brand.setText(saleItemBrand);
-        holder.price.setText(saleItemPrice);
-        holder.oldPrice.setText(saleItemOldPrice);
-        holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        holder.freeDelivery.setVisibility(mData.get(position).getFreeDelivery() ? View.VISIBLE : View.GONE);
-        int discountValue = mData.get(position).getSalePercentOff().intValue();
-        double salePriceValue = mData.get(position).getSalePrice() != null ?
-                mData.get(position).getSalePrice().getValue() : 0;
-        holder.discount.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
-        holder.salePrice.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
-        holder.discount.setText(mData.get(position).getSalePercentOffText());
-        holder.salePrice.setText(PriceUtils.getRpStringValue(salePriceValue));
+            holder.soldout.setVisibility(saleItem.isSoldOut() ? View.VISIBLE : View.GONE);
+
+            holder.brand.setText(saleItemBrand);
+            holder.price.setText(saleItemPrice);
+            holder.oldPrice.setText(saleItemOldPrice);
+            holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.freeDelivery.setVisibility(mData.get(position).getFreeDelivery() ? View.VISIBLE : View.GONE);
+            int discountValue = mData.get(position).getSalePercentOff().intValue();
+            double salePriceValue = mData.get(position).getSalePrice() != null ?
+                    mData.get(position).getSalePrice().getValue() : 0;
+            holder.discount.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
+            holder.salePrice.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
+            holder.discount.setText(mData.get(position).getSalePercentOffText());
+            holder.salePrice.setText(PriceUtils.getRpStringValue(salePriceValue));
 
 
-        RxView.clicks(holder.itemView)
-                .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
-                .subscribe(action -> mPresenter.loadProductDetails(
-                        holder,
-                        position,
-                        mData.get(position).getSeoIdentifier(),
-                        url,
-                        mData.get(position).getSkus() == null || mData.get(position).getSkus().isEmpty() ? "" :
-                                mData.get(position).getSkus().get(0).getId(),
-                        mSaleId,
-                        mData.get(position).getFreeDelivery()));
+            RxView.clicks(holder.itemView)
+                    .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
+                    .subscribe(action -> mPresenter.loadProductDetails(
+                            holder,
+                            position,
+                            mData.get(position).getSeoIdentifier(),
+                            url,
+                            mData.get(position).getSkus() == null || mData.get(position).getSkus().isEmpty() ? "" :
+                                    mData.get(position).getSkus().get(0).getId(),
+                            mSaleId,
+                            mData.get(position).getFreeDelivery()));
 
+        } else {
+            if (holder.adView != null) {
+                CommonUtils.showAdmob(mActivity, holder.adView,
+                        mActivity.getResources().getString(R.string.admob_products_id));
+            }
+        }
     }
 
     @Override
@@ -206,4 +234,17 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private float getInteger(int resId) {
         return mActivity.getResources().getInteger(resId);
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (isPositionFooter(position)) {
+            return FOOTER_VIEW;
+        }
+        return super.getItemViewType(position);
+    }
+
+    private boolean isPositionFooter(int position) {
+        return position == (mData.size() - 1) && mData.size() != 0;
+    }
+
 }

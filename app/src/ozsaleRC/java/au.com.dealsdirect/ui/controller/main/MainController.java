@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
@@ -67,6 +68,7 @@ public class MainController extends BaseController implements MainMvpView {
 
     @BindView(R.id.controller_home_bottom_nav)
     AHBottomNavigation mBottomNavigationView;
+
     private boolean mShouldBottomNavigationViewEnabled = true;
 
     public static MainController newInstance() {

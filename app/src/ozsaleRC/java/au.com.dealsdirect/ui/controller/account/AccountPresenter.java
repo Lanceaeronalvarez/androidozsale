@@ -128,6 +128,11 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     }
 
     @Override
+    public boolean isOurpayEnabled() {
+        return getDataManager().getIsOurpayDashboardEnabled();
+    }
+
+    @Override
     public void loadAccountItems(List<AccountItem> accountItems) {
         getMvpView().showAccountItems(accountItems);
     }

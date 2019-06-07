@@ -15,8 +15,11 @@ import android.support.v4.app.NotificationManagerCompat;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.google.firebase.iid.InstanceIdResult;
 import com.mysale.genie.utility.Prefs;
 
 import org.json.JSONObject;
@@ -24,6 +27,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -92,7 +96,7 @@ public class GNotification {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("app", getNotificationServerName(context));
         paramMap.put("deviceID", getDeviceID(context));
-        paramMap.put("platform", "android");
+        paramMap.put("platform", "android-fcm");
         paramMap.put("token", token);
         paramMap.put("manufacture", android.os.Build.MANUFACTURER);
         paramMap.put("model", android.os.Build.MODEL);
@@ -197,9 +201,28 @@ public class GNotification {
             String regId = getRegistrationId(context.getApplicationContext());
             AppLogger.d(TAG + "regId " + regId);
             if (regId.isEmpty()) {
-                storeRegistrationId(context, FirebaseInstanceId.getInstance().getToken());
 
-                callRegisterSubscriber(context, FirebaseInstanceId.getInstance().getToken(), true);
+                FirebaseInstanceId.getInstance().getInstanceId()
+                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                if (!task.isSuccessful()) {
+                                    return;
+                                }
+
+                                // Get new Instance ID token
+                                if (task.getResult() != null) {
+                                    String token = task.getResult().getToken();
+
+                                    storeRegistrationId(context, token);
+
+                                    callRegisterSubscriber(context, token, true);
+
+                                }
+
+
+                            }
+                        });
 
             } else {
                 callRegisterSubscriber(context, regId, isNotificationEnabled(context));

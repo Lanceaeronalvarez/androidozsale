@@ -37,6 +37,7 @@ import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.braintreepayments.cardform.view.CardForm;
+import com.google.android.gms.ads.MobileAds;
 import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
@@ -175,6 +176,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mPresenter.onAttach(this);
 //        mPresenter.callGetTemplateTexts();
+        MobileAds.initialize(this, getResources().getString(R.string.admob_app_id));
 
         if (mAppHasSavedInstance && Settings.getIsMultiCountry() && !mPresenter.defaultCountryId().isEmpty()) {
             Settings.Country country = Settings.getCountryWithId(mPresenter.defaultCountryId());
@@ -1268,6 +1270,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showIntrospectionUtils(ArrayList<Android> androidArrayList) {
         IntrospectionUtils.checkVersion(this, androidArrayList);
+    }
+
+    @Override
+    public void onGetAppSettings() {
+        getAccountController().reloadAccountItems();
     }
 
     private void deepLinkSuceeded() {

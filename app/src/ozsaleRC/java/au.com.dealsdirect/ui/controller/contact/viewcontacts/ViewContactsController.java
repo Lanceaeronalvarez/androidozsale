@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -325,4 +326,11 @@ public class ViewContactsController extends BaseController implements ViewContac
         mActivity.getMainController().getHomeController().setContactsController(this);
     }
 
+    public void resetContactDetailRouter() {
+        if (mContactDetailContainer != null && mContactDetailRouter != null) {
+            mContactDetailRouter.popToRoot();
+            mContactDetailRouter.popCurrentController();
+            mContactDetailContainer.removeAllViews();
+        }
+    }
 }

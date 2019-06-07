@@ -214,6 +214,8 @@ public class MyAccountsOurpayController extends BaseController
     }
 
     private void animateHeaderHeightTo(int height) {
+        if (mHeaderView == null) return;
+
         final int currentHeight = mHeaderView.getHeight();
         ObjectAnimator animator = ObjectAnimator.ofInt(mHeaderView, new HeightProperty(), currentHeight, height);
         animator.setDuration(300L);

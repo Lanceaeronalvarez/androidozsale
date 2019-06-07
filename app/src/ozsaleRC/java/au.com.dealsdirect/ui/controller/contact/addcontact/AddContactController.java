@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -198,7 +197,12 @@ public class AddContactController extends BaseController implements AddContactMv
 
     @OnClick({R.id.partial_toolbar_left_view})
     void onBack() {
-        mActivity.onBackPressed();
+        if (mPresenter.isTablet() && mActivity.getContactsController() != null
+                && getRouter().getBackstack().size() == 1) {
+            mActivity.getContactsController().resetContactDetailRouter();
+        } else {
+            mActivity.onBackPressed();
+        }
     }
 
 
@@ -253,12 +257,6 @@ public class AddContactController extends BaseController implements AddContactMv
 
     @OnClick(R.id.controller_add_contact_subject_container)
     void addContact() {
-        RouterTransaction routerTransaction = RouterTransaction.with(ContactSelectSubjectController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
-        if (mPresenter.isTablet()) {
-            GateKeeper.setRoot(getRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, routerTransaction);
-        } else {
-            GateKeeper.push(getRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
-        }
+        GateKeeper.push(getRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
     }
 }

@@ -131,15 +131,15 @@ public class MyAccountsOurpayResponseReducer {
                 cal2 = DateUtils.convertApiEpochtoDateObject(t2.get(0).getPlannedDate());
             }
 
-            if (cal1 == null) {
-                return cal2 == null ? 0 : -1;
+            if (cal2 == null) {
+                return cal1 == null ? 0 : -1;
             }
 
-            if (cal2 == null) {
+            if (cal1 == null) {
                 return 1;
             }
 
-            return cal1.compareTo(cal2);
+            return cal2.compareTo(cal1);
         });
 
         // split them up into groups
@@ -238,15 +238,15 @@ public class MyAccountsOurpayResponseReducer {
             Calendar cal1 = DateUtils.convertApiEpochtoDateObject(o1.getPlannedDate());
             Calendar cal2 = DateUtils.convertApiEpochtoDateObject(o2.getPlannedDate());
 
-            if (cal1 == null) {
-                return cal2 == null ? 0 : -1;
+            if (cal2 == null) {
+                return cal1 == null ? 0 : -1;
             }
 
-            if (cal2 == null) {
+            if (cal1 == null) {
                 return 1;
             }
 
-            return cal1.compareTo(cal2);
+            return cal2.compareTo(cal1);
         });
 
         // split them up into groups
