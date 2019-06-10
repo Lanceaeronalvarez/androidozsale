@@ -228,4 +228,7 @@ public interface PreferencesHelper {
 
     void setIsOurpayDashboardEnabled(boolean enabled);
     boolean getIsOurpayDashboardEnabled();
+
+    void setReCaptchaSiteKey(String key);
+    String getReCaptchaSiteKey();
 }

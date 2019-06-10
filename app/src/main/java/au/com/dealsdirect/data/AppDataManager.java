@@ -1192,6 +1192,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setReCaptchaSiteKey(String key) {
+        mPreferencesHelper.setReCaptchaSiteKey(key);
+    }
+
+    @Override
+    public String getReCaptchaSiteKey() {
+        return mPreferencesHelper.getReCaptchaSiteKey();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }

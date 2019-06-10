@@ -21,11 +21,16 @@ public class RegisterUserRequest {
     boolean tcWasRead;
     HashMap<String, Boolean> parameters;
 
+    String captchaResponse;
+
+    // 2 for apps https://apacsale.atlassian.net/wiki/spaces/CX/pages/708641008/V3.26
+    int clientID = 2;
+
     public RegisterUserRequest(
             String languageID, String countryID, int clientType,
             String foreName, String surName, String email, String password,
             String referredBy, String invitedBy, String voucherID,
-            boolean tcAccepted, boolean emailsAccepted) {
+            boolean tcAccepted, boolean emailsAccepted, String captchaResponse) {
 
         this.languageID = languageID;
         this.countryID = countryID;
@@ -40,6 +45,7 @@ public class RegisterUserRequest {
         this.parameters = new HashMap<>();
         this.parameters.put("tcAccepted", tcAccepted);
         this.parameters.put("emailsAccepted", emailsAccepted);
+        this.captchaResponse = captchaResponse;
     }
 
     public void setToGdprDisabled(){
@@ -125,5 +131,13 @@ public class RegisterUserRequest {
 
     public void setVoucherID(String voucherID) {
         this.voucherID = voucherID;
+    }
+
+    public String getCaptchaResponse() {
+        return captchaResponse;
+    }
+
+    public void setCaptchaResponse(String captchaResponse) {
+        this.captchaResponse = captchaResponse;
     }
 }

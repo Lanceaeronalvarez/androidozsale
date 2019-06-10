@@ -16,12 +16,17 @@ public class LoginEmail {
         private String userName;
         private String password;
         private String languageID;
+        private String captchaResponse;
 
-        public RequestValue(String userName, String password, String countryID, String languageID) {
+        // 2 for apps https://apacsale.atlassian.net/wiki/spaces/CX/pages/708641008/V3.26
+        private int clientID = 2;
+
+        public RequestValue(String userName, String password, String countryID, String languageID, String captchaResponse) {
             this.userName = userName;
             this.password = password;
             this.countryID = countryID;
             this.languageID = languageID;
+            this.captchaResponse = captchaResponse;
         }
     }
 

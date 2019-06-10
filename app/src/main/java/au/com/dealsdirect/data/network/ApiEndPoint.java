@@ -396,7 +396,7 @@ public final class ApiEndPoint {
     }
 
     public static String loginEmail(){
-        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "Login");
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "Signin");
     }
 
     public static String loginFb(){
@@ -412,7 +412,7 @@ public final class ApiEndPoint {
     }
 
     public static String registration(){
-        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "Registration");
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "Signup");
     }
 
     public static String saveUserDetails(){

@@ -803,6 +803,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:17.2.1'
     compile "com.android.support:multidex:1.0.0"
 
+    // reCAPTCHA
+    compile 'com.google.android.gms:play-services-safetynet:16.0.0'
+
     compile project(path: ':genie-utility')
     compile project(path: ':genie-animation')
     compile project(path: ':genie-views')

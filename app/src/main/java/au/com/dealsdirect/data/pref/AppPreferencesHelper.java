@@ -150,6 +150,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     //Ourpay
     private static final String IS_OURPAY_DASHBOARD_ENABLED = "IS_OURPAY_DASHBOARD_ENABLED";
 
+    //ReCAPTCHA
+    private static final String RECAPTCHA_SITE_KEY = "RECAPTCHA_SITE_KEY";
+
     private Context mContext;
 
     @Inject
@@ -798,5 +801,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean getIsOurpayDashboardEnabled() {
         return Prefs.getBoolean(IS_OURPAY_DASHBOARD_ENABLED, false);
+    }
+
+    @Override
+    public void setReCaptchaSiteKey(String key) {
+        Prefs.putString(RECAPTCHA_SITE_KEY, key);
+    }
+
+    @Override
+    public String getReCaptchaSiteKey() {
+        return Prefs.getString(RECAPTCHA_SITE_KEY, "");
     }
 }
