@@ -1011,6 +1011,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 Double.valueOf(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length())));
         parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
         parameters.put(DataCollector.EventParameters.ITEM_CATEGORY, mProductBrand);
+        parameters.put(DataCollector.EventParameters.ADD_TO_CART_QUANTITY, "1");
+        parameters.put(DataCollector.EventParameters.ADD_TO_CART_CURRENCY,
+                Settings.getSelectedCountry().currencySign);
+        parameters.put(DataCollector.EventParameters.ADD_TO_CART_SOURCE, SaleItemDetailsController.class.getSimpleName());
         DataCollector.logEvent(Events.AddedToCartEvent, parameters);
 
         mAttempts = 0;
