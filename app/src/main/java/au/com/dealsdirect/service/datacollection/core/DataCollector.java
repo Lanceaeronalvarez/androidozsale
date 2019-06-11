@@ -93,6 +93,9 @@ public class DataCollector {
         public static final String SHARE_SOURCE = "kFIRParameterSource";
         public static final String SHARE_CONTENT_TYPE = "kFIRParameterContentType";
         public static final String SHARE_SUCCESS = "kFIRParameterSuccess";
+        // FAILED TRANSACTION
+        public static final String FAILED_TRANSACTION_OPTION = "PaymentOption";
+        public static final String FAILED_TRANSACTION_MESSAGE = "Message";
 
         public final class LoginType {
             public final static String FACEBOOK = "LoginFacebook";
