@@ -49,7 +49,7 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
 public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, DataCollectionService {
 
     private static FirebaseAnalytics firebaseAnalytics;
-    private static Bundle bundle;
+    private static Bundle bundle =  new Bundle();
     private static DataManager mDataManager;
     private static SchedulerProvider mSchedulerProvider;
     private static CompositeDisposable mCompositeDisposable;
@@ -64,6 +64,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static final String SIGN_UP_EVENT = "AnalyticsEventSignUp";
     private static final String LOGIN_EVENT = "AnalyticsEventLogin";
     private static final String SHARE_EVENT = "AnalyticsEventShare";
+    private static final String FAILED_TRANSACTION_EVENT = "FAILED_PAYMENT_TRANSACTION";
 
     private static FirebaseAnalyticsService instance;
     public static FirebaseAnalyticsService getInstance() {
@@ -91,7 +92,6 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     }
 
     public static void registerFirebaseEvents() {
-        bundle = new Bundle();
 
         //register open app
         DataCollector.EventRegistry.register(generateEventKey(Events.CVAppLaunch, getServiceKey()), Events.CVAppLaunch,
@@ -333,10 +333,10 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                 new LoggingService.LogFailedTransaction(new FailedTransactionEvent(){
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters){
-                        bundle.putString(DataCollector.EventParameters.CustomAttributeTypes.PAYMENT_OPTION.getValue(),
+                        bundle.putString(DataCollector.EventParameters.FAILED_TRANSACTION_OPTION,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.PAYMENT_METHOD_TYPE)));
-                        bundle.putString(DataCollector.EventParameters.CustomAttributeTypes.NEW_USER.getValue(),
-                                String.valueOf(parameters.get(DataCollector.EventParameters.IS_NEW_USER)));
+                        bundle.putString(DataCollector.EventParameters.FAILED_TRANSACTION_MESSAGE,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.FAILED_TRANSACTION_MESSAGE)));
                         failedTransaction((Context) parameters.get(DataCollector.EventParameters.APP_CONTEXT), bundle,
                                 String.valueOf(parameters.get(DataCollector.EventParameters.SCREEN_NAME)));
                     }
@@ -493,7 +493,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static void failedTransaction(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle);
+        firebaseAnalytics.logEvent(FAILED_TRANSACTION_EVENT, bundle);
 
         mDataManager.setLastRedirection(DataCollector.EventParameters.LastRedirection.PAY);
         checkoutJourney(context, DataCollector.EventParameters.EventProgress.END.getValue(), screenName);
