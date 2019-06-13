@@ -40,7 +40,7 @@ public class FirebaseBroadcastReceiver extends FirebaseMessagingService {
         final int NOTIFY_ID = 0;
         String GENERAL_CHANNEL_ID = "GENERAL_CHANNEL_01";
         String appName = getResources().getString(R.string.app_name);
-        String title = notificationTitle.isEmpty() ? getResources().getString(R.string.app_name) :
+        String title = (notificationTitle == null || notificationTitle.isEmpty()) ? getResources().getString(R.string.app_name) :
                 notificationTitle;
         NotificationCompat.Builder builder;
         Uri notificationSoundURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
