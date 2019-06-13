@@ -54,7 +54,7 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "au.com.buyinvite.bi"
 
@@ -75,7 +75,7 @@ android {
         }
 
         buyinviteTest {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "au.com.buyinvite.bi.test"
 
@@ -181,7 +181,7 @@ android {
         }
 
         ooRC {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "au.com.oo"
 
@@ -202,7 +202,7 @@ android {
         }
 
         ooTest {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "au.com.oo.test"
 
@@ -288,7 +288,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "au.com.ozsale"
 
@@ -310,7 +310,7 @@ android {
         }
 
         ozsaleTest {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "au.com.ozsale.test"
 
@@ -332,7 +332,7 @@ android {
         }
 
         singsaleRC {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "sg.com.singsale"
 
@@ -354,7 +354,7 @@ android {
         }
 
         singsaleTest {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "sg.com.singsaletest"
 
@@ -375,7 +375,7 @@ android {
         }
 
         nzsaleRC {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "nz.co.nzsale"
 
@@ -397,7 +397,7 @@ android {
         }
 
         nzsaleTest {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "nz.co.nzsaletest"
 
@@ -419,7 +419,7 @@ android {
         }
 
         mysaleRC {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "my.mysale.mysale"
 
@@ -440,7 +440,7 @@ android {
         }
 
         mysaleTest {
-            versionCode 149
+            versionCode 150
             versionName "2.5.7.1"
             applicationId "my.mysale.mysaletest"
 
