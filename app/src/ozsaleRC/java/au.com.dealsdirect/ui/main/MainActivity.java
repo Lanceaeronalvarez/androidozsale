@@ -537,6 +537,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     .EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
             parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
                     .EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .EventParameters.PURCHASE_CURRENCY, Settings.getSelectedCountry().currencySign);
+            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                    .EventParameters.PURCHASE_TRANSACTION_ID, responseValue.getD().getValue().getPaymentID());
             au.com.dealsdirect.service.datacollection.core.DataCollector
                     .logEvent(Events.PurchaseEvent, parameters);
 
@@ -603,6 +607,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, this);
         parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME,
                 MainActivity.class.getSimpleName());
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.FAILED_TRANSACTION_MESSAGE,
+                errorMessage);
         au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.FailedTransaction, parameters);
 
         if (errorMessage != null) {
@@ -1266,6 +1272,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showIntrospectionUtils(ArrayList<Android> androidArrayList) {
         IntrospectionUtils.checkVersion(this, androidArrayList);
+    }
+
+    @Override
+    public void onGetAppSettings() {
+        getAccountController().reloadAccountItems();
     }
 
     private void deepLinkSuceeded() {

@@ -226,4 +226,9 @@ public interface PreferencesHelper {
 
     boolean shouldShowStrictConsent();
 
+    void setIsOurpayDashboardEnabled(boolean enabled);
+    boolean getIsOurpayDashboardEnabled();
+
+    void setReCaptchaSiteKey(String key);
+    String getReCaptchaSiteKey();
 }

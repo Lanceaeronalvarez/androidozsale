@@ -275,6 +275,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setAccessAnonymousEnabled(value.getAccess().getAnonymousEnabled());
                 getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
                 getDataManager().setIsPaypalCreditEnabled(value.getPayments().getBrainTree().isPaypalCreditEnabled());
+                getDataManager().setIsOurpayDashboardEnabled(value.getMyAccount().isShowOurpaySchedulerInMyAccount());
 
                 if (value.getPayments().getVisaCheckout() != null) {
                     getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());
@@ -285,6 +286,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     getDataManager().setVisaCheckoutProviderType(value.getPayments().getVisaCheckout().getVisaCheckoutProviderType());
                 }
             }
+
+            getMvpView().onGetAppSettings();
         }
     };
 
@@ -831,6 +834,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             parameters.put(DataCollector.EventParameters.PRICE,
                                     responseValue.getD().getValue().getOrderInfoResult().getTotal());
                             parameters.put(DataCollector.EventParameters.COUNTRY_ID, getDataManager().getCountryId());
+                            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                                    .EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
+                            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                                    .EventParameters.PURCHASE_CURRENCY, Settings.getSelectedCountry().currencySign);
+                            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
+                                    .EventParameters.PURCHASE_TRANSACTION_ID, responseValue.getD().getValue().getPaymentID());
                             DataCollector.logEvent(Events.PurchaseEvent, parameters);
                         } else {
                             getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());

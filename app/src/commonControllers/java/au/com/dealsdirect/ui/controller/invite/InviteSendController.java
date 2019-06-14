@@ -478,6 +478,7 @@ public class InviteSendController extends BasePullToRefreshController implements
         parameters.put(DataCollector.EventParameters.SOURCE, DataCollector.EventParameters.ViewSource.INVITE);
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, InviteSendController.class.getSimpleName());
+        parameters.put(DataCollector.EventParameters.SHARE_SUCCESS, 1);
         DataCollector.logEvent(Events.Share, parameters);
         mPresenter.onDetach();
         super.onDestroyView(view);

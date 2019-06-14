@@ -1182,6 +1182,26 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setIsOurpayDashboardEnabled(boolean enabled) {
+        mPreferencesHelper.setIsOurpayDashboardEnabled(enabled);
+    }
+
+    @Override
+    public boolean getIsOurpayDashboardEnabled() {
+        return mPreferencesHelper.getIsOurpayDashboardEnabled();
+    }
+
+    @Override
+    public void setReCaptchaSiteKey(String key) {
+        mPreferencesHelper.setReCaptchaSiteKey(key);
+    }
+
+    @Override
+    public String getReCaptchaSiteKey() {
+        return mPreferencesHelper.getReCaptchaSiteKey();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }

@@ -68,6 +68,7 @@ import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptions
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
@@ -466,9 +467,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mVcoPresenter.setupVisaCheckout();
         }
 
-        //initialize context for firebase
-        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
 
         if(!mActivity.isBraintreeInitialized() && mActivity.isAuthorized()) {
             mVcoPresenter.initializeBraintree();
@@ -551,6 +549,17 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
 
         mActivity.getMainController().setViewpagerDraggable(false);
+    }
+
+    private void initializeCheckoutParams() {
+        //initialize context for firebase
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
+        parameters.put(DataCollector.EventParameters.START_CHECKOUT_VALUE,
+                mValue.getSummary().getTotal());
+        parameters.put(DataCollector.EventParameters.START_CHECKOUT_CURRENCY,
+                Settings.getSelectedCountry().currencySign);
+
     }
 
     @Override
@@ -995,6 +1004,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
 
+        initializeCheckoutParams();
         DataCollector.logEvent(Events.StartCheckout, parameters);
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
@@ -1021,6 +1031,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.PAYPAL);
+        initializeCheckoutParams();
         DataCollector.logEvent(Events.StartCheckout, parameters);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
@@ -1043,6 +1054,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.PAYPAL);
+        initializeCheckoutParams();
         DataCollector.logEvent(Events.StartCheckout, parameters);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
@@ -1068,6 +1080,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.MASTERPASS);
+        initializeCheckoutParams();
         DataCollector.logEvent(Events.StartCheckout, parameters);
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.MASTERPASS.getValue());
@@ -1310,6 +1323,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.VISACHECKOUT);
+        initializeCheckoutParams();
         DataCollector.logEvent(Events.StartCheckout, parameters);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.VCO.getValue());
         mVcoPresenter.payWithVisaCheckout(mValue.getSummary().getTotal());

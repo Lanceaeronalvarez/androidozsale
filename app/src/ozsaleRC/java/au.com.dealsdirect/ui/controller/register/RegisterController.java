@@ -435,6 +435,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
             boolean emailsAccepted = mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == 0;
 
             mPresenter.registerUser(
+                    mActivity,
                     mRegisterForenameField.getText().toString(),
                     mRegisterSurnameField.getText().toString(),
                     mRegisterEmailField.getText().toString(),

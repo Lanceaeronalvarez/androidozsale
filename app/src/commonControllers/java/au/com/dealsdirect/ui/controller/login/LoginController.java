@@ -19,6 +19,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
+import com.google.android.gms.safetynet.SafetyNet;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -83,7 +84,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     private String mLoginMethod = NO_ACTION;
     private boolean isLoginSuccess = false;
-    private boolean isLoginTapped = false;
     private boolean mWillShowRegistration = false;
 
     private CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -167,22 +167,24 @@ public class LoginController extends BaseController implements LoginMvpView {
         mToolbar.setVisibility(shouldToolbarBeVisible ? View.VISIBLE : View.GONE);
         mToolbarTitle.setText(mActivity.getResources().getString(R.string.login_title));
 
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (!isLoginTapped) {
-                    callLoginApi();
-                }
-
-                isLoginTapped = true;
-            }
+        mLoginButton.setOnClickListener(view1 -> {
+            startLogin();
         });
 
         if (mLegalitiesContainer != null) {
             mAboutUsTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_ABOUT_US, getString(R.string.account_about_us)));
             mTncTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
             mPrivacyTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_PRIVACY, getString(R.string.account_privacy)));
+        }
+    }
+
+    private void startLogin() {
+        if (mEmailEditText.getText().toString().isEmpty() ||
+                mPasswordEditText.getText().toString().isEmpty()) {
+            mActivity.loginErrorHandler(getResources().getString(R.string.please_fill_up_all_the_fields));
+        } else {
+            mLoginButton.setEnabled(false);
+            callLoginApi();
         }
     }
 
@@ -228,9 +230,8 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showLoginError(String message, boolean isFacebookLogin) {
+        mLoginButton.setEnabled(true);
         mActivity.loginErrorHandler(message);
-
-        isLoginTapped = false;
     }
 
     @Override
@@ -252,7 +253,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     private void callLoginApi() {
         String email = mEmailEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
-        mPresenter.loginViaEmail(email, password);
+        mPresenter.loginViaEmail(mActivity, email, password);
     }
 
     @OnClick(R.id.controller_login_signup_text)

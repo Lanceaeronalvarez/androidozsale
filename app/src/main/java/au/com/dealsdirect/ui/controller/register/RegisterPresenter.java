@@ -4,6 +4,10 @@ package au.com.dealsdirect.ui.controller.register;
  */
 
 
+import android.content.Context;
+
+import com.google.android.gms.safetynet.SafetyNet;
+
 import java.util.HashMap;
 
 import javax.inject.Inject;
@@ -15,6 +19,7 @@ import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.AuthenticationBasePresenter;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -28,8 +33,25 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
 
 
     @Override
-    public void registerUser(String firstName, String lastName, String email, String password,
+    public void registerUser(Context context, String firstName, String lastName, String email, String password,
                              boolean tncAccepted, boolean emailsAccepted) {
+        getMvpView().showLoading();
+        SafetyNet.getClient(context)
+                .verifyWithRecaptcha(Settings.getReCaptchaSiteKey())
+                .addOnSuccessListener(recaptchaTokenResponse -> {
+                    String token = recaptchaTokenResponse.getTokenResult();
+                    registerUserWithToken(
+                            firstName, lastName,
+                            email, password,
+                            tncAccepted, emailsAccepted,
+                            token);
+                }).addOnFailureListener(e -> {
+            getMvpView().showLoginError(e.getMessage(), false);
+        });
+    }
+
+    private void registerUserWithToken(String firstName, String lastName, String email, String password,
+                             boolean tncAccepted, boolean emailsAccepted, String token) {
 
         getMvpView().showLoading();
         RegisterUserRequest registerUserRequest
@@ -45,7 +67,8 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
                 "",
                 "00000000-0000-0000-0000-000000000000",
                 tncAccepted,
-                emailsAccepted);
+                emailsAccepted,
+                token);
 
         if (isGdprDisabled()) registerUserRequest.setToGdprDisabled();
 
