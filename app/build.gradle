@@ -442,7 +442,7 @@ android {
         mysaleTest {
             versionCode 150
             versionName "2.5.8"
-            applicationId "my.mysale.mysaletest"
+            applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
             buildConfigField "boolean", "IS_TEST", "true"

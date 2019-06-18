@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "387103789802",
+    "firebase_url": "https://mysale-android-firebase.firebaseio.com",
+    "project_id": "mysale-android-firebase",
+    "storage_bucket": "mysale-android-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387103789802:android:7afe94bd87a5773f",
+        "android_client_info": {
+          "package_name": "my.mysale.mysale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "387103789802-kg7e2q12v85p3ri9vaetui9k68quqtpo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDb8XAf6l0srXEC8vVqTEQoFZf7YobyWag"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387103789802:android:b174fdb1b78ff50e",
+        "android_client_info": {
+          "package_name": "my.mysale.mysaleTest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "387103789802-kg7e2q12v85p3ri9vaetui9k68quqtpo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDb8XAf6l0srXEC8vVqTEQoFZf7YobyWag"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
