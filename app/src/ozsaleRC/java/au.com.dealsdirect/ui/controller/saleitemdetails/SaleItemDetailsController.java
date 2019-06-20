@@ -939,6 +939,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 onSelectTag(selectPosSet.isEmpty() ? -1 : selectPosSet.iterator().next());
             });
 
+            // auto-select size if mProductSizes equals to 1
+            if (mProductSizes.size() == 1) {
+                onSelectTag(0);
+            }
+
         }
 
         if (!mIsSoldOutCombined || !saleDetail.isSoldOut()) {
