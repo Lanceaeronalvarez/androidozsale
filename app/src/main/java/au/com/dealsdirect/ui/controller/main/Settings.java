@@ -271,7 +271,7 @@ public class Settings {
                                     "EN",
                                     "https://api.mysaledev.com/",
                                     "https://api.mysaledev.com/")} );
-        } else if (BuildConfig.FLAVOR.equals("topbuyRC")){
+        } else if (BuildConfig.FLAVOR.equals("topbuyRC") || BuildConfig.FLAVOR.equals("topbuy2RC")){
             populatePackageWithCountries(
                     new Country[] {
                             new Country("Australia",
@@ -282,7 +282,7 @@ public class Settings {
                                         "EN",
                                         "https://www.topbuy.com.au/",
                                         "https://www.topbuy.com.au/")} );
-        } else if (BuildConfig.FLAVOR.equals("topbuyTest")){
+        } else if (BuildConfig.FLAVOR.equals("topbuyTest") || BuildConfig.FLAVOR.equals("topbuy2Test")){
             populatePackageWithCountries(
                     new Country[] {
                             new Country("Australia",
