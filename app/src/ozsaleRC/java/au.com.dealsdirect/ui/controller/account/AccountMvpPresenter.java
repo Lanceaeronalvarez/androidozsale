@@ -29,4 +29,6 @@ public interface AccountMvpPresenter <V extends MvpView> extends MvpPresenter<V>
     boolean shouldShowStrictConsent();
 
     boolean isOurpayEnabled();
+
+    boolean isGoogleAdsEnabled();
 }

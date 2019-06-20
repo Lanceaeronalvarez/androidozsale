@@ -231,4 +231,8 @@ public interface PreferencesHelper {
 
     void setReCaptchaSiteKey(String key);
     String getReCaptchaSiteKey();
+
+    void setIsGoogleAdsEnabled(boolean isGoogleAdsEnabled);
+
+    boolean isGoogleAdsEnabled();
 }

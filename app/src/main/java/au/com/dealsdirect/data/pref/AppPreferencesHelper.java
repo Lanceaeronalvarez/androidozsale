@@ -153,6 +153,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
     //ReCAPTCHA
     private static final String RECAPTCHA_SITE_KEY = "RECAPTCHA_SITE_KEY";
 
+    private static final String GOOGLE_ADS = "GOOGLE_ADS";
+
     private Context mContext;
 
     @Inject
@@ -811,5 +813,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public String getReCaptchaSiteKey() {
         return Prefs.getString(RECAPTCHA_SITE_KEY, "");
+    }
+
+    @Override
+    public void setIsGoogleAdsEnabled(boolean isGoogleAdsEnabled) {
+        Prefs.putBoolean(GOOGLE_ADS, isGoogleAdsEnabled);
+    }
+
+    @Override
+    public boolean isGoogleAdsEnabled() {
+        return Prefs.getBoolean(GOOGLE_ADS, true);
     }
 }

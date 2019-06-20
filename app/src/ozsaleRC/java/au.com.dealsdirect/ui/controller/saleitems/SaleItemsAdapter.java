@@ -192,7 +192,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                             mData.get(position).getFreeDelivery()));
 
         } else {
-            if (holder.adView != null) {
+            if (holder.adView != null && mPresenter.isGoogleAdsEnabled()) {
                 CommonUtils.showAdmob(mActivity, holder.adView,
                         mActivity.getResources().getString(R.string.admob_products_id));
             }

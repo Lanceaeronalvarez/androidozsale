@@ -18,4 +18,6 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
     void loadSortingFacets();
 
     boolean isSortingEnabled();
+
+    boolean isGoogleAdsEnabled();
 }

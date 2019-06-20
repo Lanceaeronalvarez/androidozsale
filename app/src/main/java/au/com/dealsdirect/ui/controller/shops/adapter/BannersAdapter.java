@@ -242,8 +242,10 @@ public class BannersAdapter extends RecyclerView.Adapter<BannersAdapter.ViewHold
                                 item.getIsAvailable()));
             }
         } else {
-            CommonUtils.showAdmob(mActivity, holder.adView,
-                    mActivity.getResources().getString(R.string.admob_banners_id));
+            if (mPresenter.isGoogleAdsEnabled()) {
+                CommonUtils.showAdmob(mActivity, holder.adView,
+                        mActivity.getResources().getString(R.string.admob_banners_id));
+            }
         }
     }
 

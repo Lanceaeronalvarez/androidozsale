@@ -119,5 +119,10 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         getMvpView().onBannerClicked(saleId, bannerTitle, bannerId, position, imageUrl, endDate, isAvailable);
     }
 
+    @Override
+    public boolean isGoogleAdsEnabled() {
+        return getDataManager().isGoogleAdsEnabled();
+    }
+
 }
 

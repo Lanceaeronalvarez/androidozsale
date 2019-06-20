@@ -352,6 +352,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 String version = value.getMobileApp().getVersionRules();
                 version = version.replace("/", "");
 
+                getDataManager().setIsGoogleAdsEnabled(Boolean.parseBoolean(value.getMobileApp().getGoogleAdEnabled()));
+
                 try {
                     JSONObject jsonVersion = new JSONObject(version);
 

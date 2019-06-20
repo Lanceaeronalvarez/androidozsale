@@ -1202,6 +1202,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setIsGoogleAdsEnabled(boolean isGoogleAdsEnabled) {
+        mPreferencesHelper.setIsGoogleAdsEnabled(isGoogleAdsEnabled);
+    }
+
+    @Override
+    public boolean isGoogleAdsEnabled() {
+        return mPreferencesHelper.isGoogleAdsEnabled();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }

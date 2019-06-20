@@ -133,6 +133,11 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     }
 
     @Override
+    public boolean isGoogleAdsEnabled() {
+        return getDataManager().isGoogleAdsEnabled();
+    }
+
+    @Override
     public void loadAccountItems(List<AccountItem> accountItems) {
         getMvpView().showAccountItems(accountItems);
     }

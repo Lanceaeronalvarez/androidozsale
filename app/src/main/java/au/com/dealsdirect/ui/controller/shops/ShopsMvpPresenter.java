@@ -29,4 +29,6 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
                       String endDate,
                       boolean isAvailable);
 
+    boolean isGoogleAdsEnabled();
+
 }

@@ -103,4 +103,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         return getDataManager().getIsSortingEnabled();
     }
 
+    @Override
+    public boolean isGoogleAdsEnabled() {
+        return getDataManager().isGoogleAdsEnabled();
+    }
+
 }

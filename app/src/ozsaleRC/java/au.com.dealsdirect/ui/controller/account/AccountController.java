@@ -200,14 +200,18 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         initLoginDrawable();
 
-        displayAds();
+        if (mPresenter.isGoogleAdsEnabled()) {
+            displayAds();
+        }
     }
 
     @Override
     public void onOrientationChanged(Configuration newConfiguration) {
         super.onOrientationChanged(newConfiguration);
 
-        displayAds();
+        if (mPresenter.isGoogleAdsEnabled()) {
+            displayAds();
+        }
     }
 
     private void displayAds(){
