@@ -129,7 +129,9 @@ public class ContactSelectSubjectController extends BaseController
         ContactPreferenceHelper.setChosenSubjectString(mActivity, contactSubject);
         if (getRouter().getControllerWithTag(AddContactController.TAG) == null) {
             RouterTransaction routerTransaction = RouterTransaction.with(AddContactController.newInstance())
-                    .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler())
+                    .tag(AddContactController.TAG);
             getRouter().replaceTopController(routerTransaction);
         } else {
             getRouter().popCurrentController();
