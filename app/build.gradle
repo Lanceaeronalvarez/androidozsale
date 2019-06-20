@@ -180,6 +180,49 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
+        dealsDirect2RC {
+            versionCode 150
+            versionName "2.5.8"
+            applicationId "au.com.dealsdirect"
+
+            buildConfigField "String", "APP_NAME", "\"dealsdirect\""
+            buildConfigField "boolean", "IS_TEST", "false"
+
+            resValue "string", "app_name", "DealsDirect"
+            def facebookAppId = "1650094968544406"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "257280167216"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+
+        }
+
+        dealsDirect2Test {
+            versionCode 150
+            versionName "2.5.8"
+            applicationId "au.com.dealsdirect.test"
+
+            buildConfigField "String", "APP_NAME", "\"dealsdirect\""
+            buildConfigField "boolean", "IS_TEST", "true"
+
+            resValue "string", "app_name", "DealsDirect Test"
+            def facebookAppId = "1658400667713836"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "38e0530d1a0339d117b5474f0731f2af"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "257280167216"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
+
         ooRC {
             versionCode 150
             versionName "2.5.8"
@@ -505,6 +548,20 @@ android {
                             'src/commonPaymentsController/java',
                             'src/commonActivity/java/',
                             'src/dealsDirectRC/java/',
+                            'src/main/java/']
+        }
+
+        dealsDirect2RC {
+            res.srcDirs = ['src/dealsDirect2RC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        dealsDirect2Test {
+            res.srcDirs = ['src/dealsDirect2RC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
                             'src/main/java/']
         }
 
