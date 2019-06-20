@@ -46,6 +46,7 @@ public class LoginPresenter<V extends LoginMvpView> extends AuthenticationBasePr
     }
 
     private void loginViewEmailWithToken(String username, String password, String token) {
+        getMvpView().showLoginStart();
         getCompositeDisposable().add(getDataManager()
                 .callLoginViaEmail(
                         new LoginEmail.RequestValue(
