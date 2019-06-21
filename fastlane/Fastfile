@@ -22,6 +22,7 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   ruz@apacsale.com,
   jc@mysale.com,
   chindee@smartwave.ph,
+  michael@smartwave.ph
 "'
 
 # You can list more emails here
@@ -30,7 +31,8 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   jc@mysale.com,
   ruz@apacsale.com,
   jc@mysale.com,
-  chindee@smartwave.ph
+  chindee@smartwave.ph,
+  michael@smartwave.ph
 "'
 
 # You can list more emails here
@@ -40,7 +42,8 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   TrishCorpuz@mysale.com,
   lindz@smartwave.ph,
   chindee@smartwave.ph,
-  denis@mysale.com
+  denis@mysale.com,
+  michael@smartwave.ph
 "'
 
 default_platform :android
@@ -125,7 +128,7 @@ lane :fabric_deploy_dd_test do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'DealsDirectTest' emails:" + dev_emails + " apk_name:" + 'app-dealsDirectTest-release.apk' + " build_variant:" + 'DealsDirectTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'dealsDirectTest' + " app_notes_path:" + app_dir + '/fastlane/DealsDirectReleaseNotes'
+  sh "fastlane dd_build app_name:'DealsDirectTest' emails:" + dev_emails + " apk_name:" + 'app-dealsDirect2Test-release.apk' + " build_variant:" + 'DealsDirect2TestRelease' + " app_path:" + app_dir + " app_flavor:" + 'dealsDirect2Test' + " app_notes_path:" + app_dir + '/fastlane/DealsDirectReleaseNotes'
  end
 
 lane :fabric_deploy_dd_rc do
@@ -133,7 +136,7 @@ lane :fabric_deploy_dd_rc do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'DealsDirect' emails:" + dev_emails + " apk_name:" + 'app-dealsDirectRC-release.apk' + " build_variant:" + 'DealsDirectRCRelease' + " app_path:" + app_dir+ " app_flavor:" + 'dealsDirectRC' + " app_notes_path:" + app_dir + '/fastlane/DealsDirectReleaseNotes'
+  sh "fastlane dd_build app_name:'DealsDirect' emails:" + dev_emails + " apk_name:" + 'app-dealsDirect2RC-release.apk' + " build_variant:" + 'DealsDirect2RCRelease' + " app_path:" + app_dir+ " app_flavor:" + 'dealsDirect2RC' + " app_notes_path:" + app_dir + '/fastlane/DealsDirectReleaseNotes'
  end
 
  lane :fabric_deploy_oo_rc do
@@ -165,7 +168,7 @@ lane :fabric_deploy_tb_rc do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'topbuy RC Test' emails:" + dev_emails + " apk_name:" + 'app-topbuyRC-release.apk' + " build_variant:" + 'topbuyRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'topbuyRC' + " app_notes_path:" + app_dir + '/fastlane/TopBuyReleaseNotes'
+  sh "fastlane dd_build app_name:'topbuy RC Test' emails:" + dev_emails + " apk_name:" + 'app-topbuy2RC-release.apk' + " build_variant:" + 'topbuy2RCRelease' + " app_path:" + app_dir + " app_flavor:" + 'topbuy2RC' + " app_notes_path:" + app_dir + '/fastlane/TopBuyReleaseNotes'
 end
 
 lane :fabric_deploy_tb_test do
@@ -173,7 +176,7 @@ lane :fabric_deploy_tb_test do
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'topbuy Test' emails:" + dev_emails + " apk_name:" + 'app-topbuyTest-release.apk' + " build_variant:" + 'topbuyTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'topbuyTest' + " app_notes_path:" + app_dir + '/fastlane/TopBuyReleaseNotes'
+  sh "fastlane dd_build app_name:'topbuy Test' emails:" + dev_emails + " apk_name:" + 'app-topbuy2Test-release.apk' + " build_variant:" + 'topbuy2TestRelease' + " app_path:" + app_dir + " app_flavor:" + 'topbuy2Test' + " app_notes_path:" + app_dir + '/fastlane/TopBuyReleaseNotes'
 end
 
 lane :fabric_deploy_ourpay_test do
