@@ -103,7 +103,7 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
 
         holder.mAccountItemName.setText(title);
         holder.itemView.setOnClickListener(view -> {
-            if (mIsTablet) {
+            if (mIsTablet && mPresenter.willScreenChange(mContext, title)) {
                 if (mPreviousPos != groupPosition) {
                     notifyItemChanged(mPreviousPos);
                 }

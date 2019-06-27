@@ -39,7 +39,6 @@ import au.com.dealsdirect.ui.controller.account.model.AccountItem;
 import au.com.dealsdirect.ui.controller.account.model.AccountSubItem;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
@@ -416,13 +415,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showContactUs() {
-        if (getResources().getBoolean(R.bool.is_account_contact_visible)) {
-            if (!mPresenter.isTablet()) {
-                GateKeeper.push(getDisplayRouter(), ViewContactsController.TAG, GateKeeper.Destination.CONTACT_US, new HorizontalChangeHandler(), new HorizontalChangeHandler());
-            } else {
-                GateKeeper.setRoot(getDisplayRouter(), ViewContactsController.TAG, GateKeeper.Destination.CONTACT_US, RouterTransaction.with(LanguageController.newInstance()));
-            }
-        }
+        mActivity.getHomeController().showFourthTabController();
     }
 
     @Override

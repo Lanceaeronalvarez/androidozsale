@@ -100,6 +100,7 @@
         <item>@string/account_vouchers</item>
         <item>@string/account_invite_friend</item>
         <item>@string/account_ourpay</item>
+        <item>@string/account_contact_us</item>
         <item>@string/account_options</item>
     </integer-array>
 
