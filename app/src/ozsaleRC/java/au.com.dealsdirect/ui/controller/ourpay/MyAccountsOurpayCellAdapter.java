@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.ourpaydata.ProcessOurpayInstallmentRequest;
+import au.com.dealsdirect.utils.AppLogger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -27,6 +30,9 @@ public class MyAccountsOurpayCellAdapter extends RecyclerView.Adapter {
     private final static int VIEW_TYPE_SECTION_HEADER = -1;
     final static int VIEW_TYPE_PAYMENT_PLANS = 0;
     final static int VIEW_TYPE_SCHEDULED_PAYMENTS = 1;
+
+    private static MyAccountsOurpayMvpPresenter mPresenter;
+    private static MyAccountsOurpayListener mMyAccountsOurpayListener;
 
     private static class OrderedDataItem {
 
@@ -209,10 +215,15 @@ public class MyAccountsOurpayCellAdapter extends RecyclerView.Adapter {
         return mId;
     }
 
-    MyAccountsOurpayCellAdapter(String id,
+    MyAccountsOurpayCellAdapter(MyAccountsOurpayMvpPresenter presenter,
+                                MyAccountsOurpayListener myAccountsOurpayListener,
+                                String id,
                                 int viewType,
                                 MyAccountsOurpayDataSource dataSource,
                                 OnItemViewTouchEventListener listener) {
+
+        mPresenter = presenter;
+        mMyAccountsOurpayListener = myAccountsOurpayListener;
         mId = id;
         mViewType = viewType;
         mDataSource = dataSource;
@@ -627,6 +638,9 @@ public class MyAccountsOurpayCellAdapter extends RecyclerView.Adapter {
         @BindView(R.id.myAccountOurpayScheduledPaymentSeparatorAbovePaymentMethod)
         View mSeparatorAbovePaymentMethod;
 
+        @BindView(R.id.myAccountOurpayScheduledPaymentPayButton)
+        Button mPayButton;
+
         int getSuggestedRowHeight() {
             // replace with XML constant
             return (int) (100 * itemView.getContext().getResources().getDisplayMetrics().density);
@@ -644,6 +658,14 @@ public class MyAccountsOurpayCellAdapter extends RecyclerView.Adapter {
             mName.setText(data.getName());
             mPaymentMethodIcon.setImageDrawable(data.getPaymentMethodIconImage(itemView.getContext()));
             mObfuscatedNumber.setText(data.getObfuscatedCardNumber());
+
+            mPayButton.setOnClickListener(v -> {
+                mMyAccountsOurpayListener.showLoadingDialog();
+                ProcessOurpayInstallmentRequest processOurpayInstallmentRequest = new ProcessOurpayInstallmentRequest();
+                processOurpayInstallmentRequest.setInstallmentId(String.valueOf(data.getTransactionId()));
+                processOurpayInstallmentRequest.setBillingAgreementId(String.valueOf(data.getBillingAgreementId()));
+                mPresenter.processOurpayInstallment(processOurpayInstallmentRequest);
+            });
         }
     }
 
@@ -746,6 +768,10 @@ public class MyAccountsOurpayCellAdapter extends RecyclerView.Adapter {
                         MyAccountsOurpayDataSource.Item.ScheduledPayment.class, position));
 
                 height = ((ScheduledPaymentViewHolder) holder).getSuggestedRowHeight();
+
+                if (mId.equalsIgnoreCase("PastPayments")){
+                    ((ScheduledPaymentViewHolder) holder).mPayButton.setVisibility(View.GONE);
+                }
                 break;
         }
         holder.itemView.getLayoutParams().height = height;

@@ -147,6 +147,20 @@
                     android:paddingLeft="@dimen/ourpay_payment_method_text_gap"
                     android:text="586xxxxxxx768"
                     android:textColor="@android:color/black" />
+
+                <Button
+                    android:id="@+id/myAccountOurpayScheduledPaymentPayButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:background="@drawable/bg_button_pay_ourpay_schedule"
+                    android:text="Pay"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:layout_marginRight="@dimen/ourpay_scheduled_payment_detail_area_divider_margin_right"
+                    android:layout_marginBottom="@dimen/ourpay_scheduled_payment_detail_area_divider_margin_left"
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>

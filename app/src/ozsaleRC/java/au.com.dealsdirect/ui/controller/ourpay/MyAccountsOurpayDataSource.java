@@ -84,6 +84,10 @@ public interface MyAccountsOurpayDataSource {
             CharSequence getObfuscatedCardNumber();
 
             Drawable getPaymentMethodIconImage(Context context);
+
+            CharSequence getTransactionId();
+
+            CharSequence getBillingAgreementId();
         }
     }
 }

@@ -263,6 +263,7 @@
     <dimen name="ourpay_scheduled_payment_detail_area_horizontal_padding">10dp</dimen>
     <dimen name="ourpay_scheduled_payment_detail_area_divider_margin_left">-10dp</dimen>
     <dimen name="ourpay_scheduled_payment_detail_area_divider_margin_right">-17dp</dimen>
+    <dimen name="ourpay_scheduled_payment_detail_button_margin_bottom">-15dp</dimen>
     <dimen name="ourpay_big_date_text_size">30sp</dimen>
     <dimen name="ourpay_small_date_text_size">@dimen/text_size_caption2</dimen>
 

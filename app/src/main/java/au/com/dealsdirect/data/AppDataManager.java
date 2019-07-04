@@ -95,6 +95,7 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPay
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
+import au.com.dealsdirect.data.network.model.ourpaydata.ProcessOurpayInstallmentRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
@@ -611,6 +612,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetDeliveryServiceResponse> callGetDeliveryService() {
         return mApiHelper.callGetDeliveryService();
+    }
+
+    @Override
+    public Observable<GetScheduledPlansResponse> processOurpayInstallment(ProcessOurpayInstallmentRequest request) {
+        return mApiHelper.processOurpayInstallment(request);
     }
 
     @Override

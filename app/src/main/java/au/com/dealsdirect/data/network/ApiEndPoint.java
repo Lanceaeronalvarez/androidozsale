@@ -19,7 +19,7 @@ public final class ApiEndPoint {
     private static final String HANDLER_PREFIX = "handler.ashx/";
     private static final String HANDLER_ASMX_PREFIX = "handler.ashx/";
     public static final String API_VCO_ICON = "https://assets.secure.checkout.visa.com/VCO/images/acc_40x30_wht01.png";
-    public static final double LEGACY_API_VERSION = 3.26;
+    public static final double LEGACY_API_VERSION = 3.27;
 
     enum ApiService {
         legacy,
@@ -498,6 +498,10 @@ public final class ApiEndPoint {
 
     public static String getDeliveryService(){
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "GetDeliveryServicePackageByCustomer");
+    }
+
+    public static String processOurpayInstallment() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "ProcessOurpayInstallment");
     }
 
     /*VISA CHECKOUT*/

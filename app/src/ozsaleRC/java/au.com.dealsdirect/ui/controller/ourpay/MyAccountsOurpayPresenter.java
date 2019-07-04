@@ -9,6 +9,7 @@ import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
+import au.com.dealsdirect.data.network.model.ourpaydata.ProcessOurpayInstallmentRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -18,6 +19,7 @@ public class MyAccountsOurpayPresenter<V extends MyAccountsOurpayMvpView> extend
     private boolean mHasReceivedPaymentPlans = false;
     private boolean mHasReceivedScheduledPayments = false;
     private boolean mHasRecievedPastPayments = false;
+    private boolean mShouldReloadPastPayment = false;
 
     @Inject
     MyAccountsOurpayPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
@@ -144,7 +146,7 @@ public class MyAccountsOurpayPresenter<V extends MyAccountsOurpayMvpView> extend
     }
 
     public void fetchDataForPastPayments() {
-        if (mHasRecievedPastPayments) {
+        if (mHasRecievedPastPayments && !mShouldReloadPastPayment) {
             return;
         }
 
@@ -159,6 +161,7 @@ public class MyAccountsOurpayPresenter<V extends MyAccountsOurpayMvpView> extend
             @Override
             public void onSuccess(Object o) {
                 mHasRecievedPastPayments = true;
+                mShouldReloadPastPayment = false;
                 GetPastPaymentsResponse response = (GetPastPaymentsResponse) o;
                 getMvpView().setDataForPastPayments(response);
             }
@@ -170,6 +173,47 @@ public class MyAccountsOurpayPresenter<V extends MyAccountsOurpayMvpView> extend
 
             @Override
             public void onFailure(Throwable t) {
+                getMvpView().setDataForScheduledPayments(null);
+            }
+        });
+    }
+
+    @Override
+    public void processOurpayInstallment(ProcessOurpayInstallmentRequest request) {
+        doApiCallForResponse(getDataManager()
+                .processOurpayInstallment(request), new ApiCallback() {
+            @Override
+            public void onSuccess() {
+                if (isViewAttached()) {
+                    getMvpView().hideLoading();
+                }
+            }
+
+            @Override
+            public void onSuccess(Object o) {
+                if (o != null) {
+                    if (isViewAttached()) {
+                        getMvpView().hideLoading();
+                    }
+                    mShouldReloadPastPayment = true;
+                    GetScheduledPlansResponse response = (GetScheduledPlansResponse) o;
+                    getMvpView().setDataForScheduledPayments(response);
+                }
+            }
+
+            @Override
+            public void onSuccess(List<?> list) {
+                if (isViewAttached()) {
+                    getMvpView().hideLoading();
+                }
+                getMvpView().setDataForScheduledPayments(null);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (isViewAttached()) {
+                    getMvpView().hideLoading();
+                }
                 getMvpView().setDataForScheduledPayments(null);
             }
         });

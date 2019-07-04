@@ -36,6 +36,12 @@ public class ScheduledPlan implements Parcelable {
     @SerializedName("MaskedNumber")
     @Expose
     private String maskedNumber;
+    @SerializedName("TransactionId")
+    @Expose
+    private String transactionId;
+    @SerializedName("BillingAgreementId")
+    @Expose
+    private String billingAgreementId;
 
     protected ScheduledPlan(Parcel in) {
         plannedDate = in.readString();
@@ -55,6 +61,8 @@ public class ScheduledPlan implements Parcelable {
         paymentMethod = in.readString();
         name = in.readString();
         maskedNumber = in.readString();
+        transactionId = in.readString();
+        billingAgreementId = in.readString();
     }
 
     @Override
@@ -78,6 +86,8 @@ public class ScheduledPlan implements Parcelable {
         dest.writeString(paymentMethod);
         dest.writeString(name);
         dest.writeString(maskedNumber);
+        dest.writeString(transactionId);
+        dest.writeString(billingAgreementId);
     }
 
     @Override
@@ -167,6 +177,22 @@ public class ScheduledPlan implements Parcelable {
 
     public void setMaskedNumber(String maskedNumber) {
         this.maskedNumber = maskedNumber;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public String getBillingAgreementId() {
+        return billingAgreementId;
+    }
+
+    public void setBillingAgreementId(String billingAgreementId) {
+        this.billingAgreementId = billingAgreementId;
     }
 
 }
