@@ -185,7 +185,7 @@ public class MyAccountsOurpayPresenter<V extends MyAccountsOurpayMvpView> extend
             @Override
             public void onSuccess() {
                 if (isViewAttached()) {
-                    getMvpView().hideLoading();
+                    getMvpView().hideOurpayLoading();
                 }
             }
 
@@ -193,7 +193,7 @@ public class MyAccountsOurpayPresenter<V extends MyAccountsOurpayMvpView> extend
             public void onSuccess(Object o) {
                 if (o != null) {
                     if (isViewAttached()) {
-                        getMvpView().hideLoading();
+                        getMvpView().hideOurpayLoading();
                     }
                     mShouldReloadPastPayment = true;
                     GetScheduledPlansResponse response = (GetScheduledPlansResponse) o;
@@ -204,7 +204,7 @@ public class MyAccountsOurpayPresenter<V extends MyAccountsOurpayMvpView> extend
             @Override
             public void onSuccess(List<?> list) {
                 if (isViewAttached()) {
-                    getMvpView().hideLoading();
+                    getMvpView().hideOurpayLoading();
                 }
                 getMvpView().setDataForScheduledPayments(null);
             }
@@ -212,7 +212,7 @@ public class MyAccountsOurpayPresenter<V extends MyAccountsOurpayMvpView> extend
             @Override
             public void onFailure(Throwable t) {
                 if (isViewAttached()) {
-                    getMvpView().hideLoading();
+                    getMvpView().hideOurpayLoading();
                 }
                 getMvpView().setDataForScheduledPayments(null);
             }

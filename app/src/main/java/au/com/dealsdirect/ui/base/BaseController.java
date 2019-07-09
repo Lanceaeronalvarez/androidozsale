@@ -108,6 +108,21 @@ public abstract class BaseController
     }
 
     @Override
+    public void showOurpayLoading() {
+        if (mActivity != null) {
+            mActivity.showOurpayLoading();
+        }
+    }
+
+    @Override
+    public void hideOurpayLoading() {
+        if (mActivity != null) {
+            mActivity.hideOurpayLoading();
+            mActivity.updateSnackbar(mActivity.isNetworkConnected());
+        }
+    }
+
+    @Override
     public void showLoadingDialog(String message, boolean cancelable) {
         if (mActivity != null) {
             mActivity.showLoadingDialog(message, cancelable);

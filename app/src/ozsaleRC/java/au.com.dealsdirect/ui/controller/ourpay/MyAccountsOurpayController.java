@@ -199,7 +199,7 @@ public class MyAccountsOurpayController extends BaseController
     @Override
     public void showLoadingDialog() {
         if (isViewAttached()) {
-            mActivity.showLoading();
+            mActivity.showOurpayLoading();
         }
     }
 

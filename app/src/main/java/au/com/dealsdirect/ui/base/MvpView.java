@@ -35,4 +35,8 @@ public interface MvpView {
 
     boolean isViewAttached();
 
+    void showOurpayLoading();
+
+    void hideOurpayLoading();
+
 }
