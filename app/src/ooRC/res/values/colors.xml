@@ -181,4 +181,6 @@
     <color name="refunded_state_color">@color/ourpay_red</color>
 
     <color name="toggle_switch_positive">@color/tab_bar_icon_active</color>
+
+    <color name="bg_fcm_notif">@color/white</color>
 </resources>
