@@ -214,6 +214,7 @@
     <string name="ccv">CCV</string>
     <string name="expiration_date">Expiration Date</string>
     <string name="my_payment_methods">My Payment Methods</string>
+    <string name="enter_card_details">ENTER CARD DETAILS</string>
     <string name="your_payment_has_been_successful">Your payment has been successful!</string>
     <string name="your_order_will_arrive_within_14_28_working_days_after_the_sale_has_finished">Your
         order will arrive within 14-28 working days after the sale has finished.</string>

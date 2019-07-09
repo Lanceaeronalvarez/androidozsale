@@ -6,14 +6,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -38,7 +42,6 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
-import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
@@ -65,7 +68,8 @@ import butterknife.OnClick;
 public class AddPaymentController extends VisaCheckoutController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
 
     public static abstract class Parameters {
-        private Parameters() {}
+        private Parameters() {
+        }
 
         public static final class FromCheckout extends Parameters {
             private Boolean mIsOurpaySelectDeliveryMethod;
@@ -80,9 +84,17 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 mCurrentOrderValue = currentOrderValue;
             }
 
-            public Boolean getIsOurpaySelectDeliveryMethod() { return mIsOurpaySelectDeliveryMethod; }
-            public String getCartTotalCost() { return mCartTotalCost; }
-            public Value getCurrentOrderValue() { return mCurrentOrderValue; }
+            public Boolean getIsOurpaySelectDeliveryMethod() {
+                return mIsOurpaySelectDeliveryMethod;
+            }
+
+            public String getCartTotalCost() {
+                return mCartTotalCost;
+            }
+
+            public Value getCurrentOrderValue() {
+                return mCurrentOrderValue;
+            }
         }
     }
 
@@ -106,13 +118,13 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
     LinearLayout mOurpayHolder;
     @BindView(R.id.add_payment_scrollview)
-    NestedScrollView mNestedScrollView;
+    ScrollView mNestedScrollView;
+    @BindView(R.id.partial_toolbar_right_view)
+    ImageButton mCameraButton;
 
 
     @BindView(R.id.partial_toolbar_title)
     TextView mViewAddressToolarTitle;
-    @BindView(R.id.partial_toolbar_right_view)
-    ImageView mViewAddressRightOption;
 
     CheckoutMvpView mCheckoutMvpView;
 
@@ -194,7 +206,6 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @Override
     protected void setUp(View view) {
         mViewAddressToolarTitle.setText("Add New Payment");
-        mViewAddressRightOption.setVisibility(View.INVISIBLE);
 
         if (mActivity.isBraintreeInitialized()) {
             showPaymentButtons();
@@ -231,10 +242,15 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mCardForm.setOnCardFormSubmitListener(this);
         mCardForm.setOnCardTypeChangedListener(this);
         mCardForm.setOnCardFormScanListener(this);
-        mCardForm.setCameraIcon(getResources().getDrawable(R.drawable.bg_credit_card));
+        mCameraButton.setBackground(null);
+        mCameraButton.setImageDrawable(getResources().getDrawable(R.drawable.bg_credit_card));
+        mCameraButton.setVisibility(View.VISIBLE);
+        mCameraButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        mCameraButton.setPadding(0, 0, 0, 0);
+        DrawableCompat.setTint(
+                DrawableCompat.wrap(mCameraButton.getDrawable()),
+                ContextCompat.getColor(mActivity, R.color.toolbar_text_dark));
         mCardForm.setToolbarColor(getResources().getColor(R.color.toolbar_active_skin));
-        mCardForm.setCameraBackground(null);
-        mCardForm.setEditTextDrawable(getResources().getDrawable(R.drawable.bg_edit_text_rounded), R.drawable.bg_edit_text_rounded);
         mPayButton.setVisibility(View.VISIBLE);
         mPaypalButton.setVisibility(View.VISIBLE);
         mTextPaypal.setVisibility(View.VISIBLE);
@@ -455,7 +471,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mActivity.onBackPressed();
     }
 
-    @OnClick(R.id.bt_camera)
+    @OnClick(R.id.partial_toolbar_right_view)
     void launchCamera() {
 
         HashMap<String, Object> parameters = new HashMap<>();
@@ -516,7 +532,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
     @Override
     public void onVisaCheckoutButtonClicked() {
-        if(isFromCart && !mCartTotalCost.isEmpty()) {
+        if (isFromCart && !mCartTotalCost.isEmpty()) {
             mVcoPresenter.payWithVisaCheckout(Double.valueOf(mCartTotalCost));
         } else {
             //TODO: should call Flow for addPaymentMethod
