@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -271,6 +272,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private List<Pair<String, String>> mFacetFilters = new ArrayList();
     private List<String> mTabTitles = new ArrayList();
     private List<String> mSelectedTitle = new ArrayList<>();
+    private int mColumnCount;
 
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
@@ -318,6 +320,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.partial_toolbar_details_end_time_text)
     TextView mSaleEndsInText;
+
+    @BindView(R.id.partial_toolbar_field_title_right_option)
+    ImageButton mColumnView;
 
     private SaleItemsAdapter mSaleItemsAdapter;
     private Paginate mPaginateManager;
@@ -727,6 +732,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             setupSaleRemainingTime(mEndDate);
         }
 
+        mColumnView.setVisibility(View.VISIBLE);
+        mColumnView.setTag(R.drawable.ic_3_column_view);
+        mColumnCount = 3;
 
         //use initialcategory tree map if it came from categories.
         if (!mInitialCategoryTree.isEmpty()) {
@@ -736,7 +744,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
-        mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
+        mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId, mColumnCount);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -813,6 +821,48 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             DataCollector.logEvent(Events.SaleEvent, parameters);
         }
 
+    }
+
+    @OnClick(R.id.partial_toolbar_field_title_right_option)
+    void onColumnClick() {
+        int tag = (int) mColumnView.getTag();
+        if( tag == R.drawable.ic_2_column_view ){
+            mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_3_column_view));
+            mColumnView.setTag(R.drawable.ic_3_column_view);
+
+            mColumnCount = mActivity.getResources().getInteger(R.integer.items_max_column_portrait);
+
+            setAdapterPerColumnChange();
+        }else{
+            mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_2_column_view));
+            mColumnView.setTag(R.drawable.ic_2_column_view);
+
+            mColumnCount = mActivity.getResources().getInteger(R.integer.items_min_column_portrait);
+
+            setAdapterPerColumnChange();
+        }
+    }
+
+    private void setAdapterPerColumnChange() {
+        mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId, mColumnCount);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch(mSaleItemsAdapter.getItemViewType(position)){
+                    case 1: // set default column count if not footer
+                        return mSaleItemsAdapter.getColumnCount();
+                    case 0: // set column count to 1 if it's a footer
+                        return 1;
+                    default:
+                        return -1;
+                }
+            }
+        });
+
+        mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
+
+        mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
     }
 
     private void setupSaleRemainingTime(String endDate) {

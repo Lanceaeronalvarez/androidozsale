@@ -42,6 +42,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private String mSaleId;
     private int mColumnCount;
     private static final int FOOTER_VIEW = 1;
+    private int mMinColumn;
 
     private Pair<Integer, Integer> mComputedPair;
 
@@ -101,12 +102,13 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             Activity activity,
             List<GetSaleItemsResponse.Products> saleItems,
             SaleItemsMvpPresenter presenter,
-            String saleId) {
+            String saleId, int minColumn) {
 
         this.mActivity = activity;
         this.mData = saleItems;
         this.mPresenter = presenter;
         this.mSaleId = saleId;
+        this.mMinColumn = minColumn;
 
         computeItemViewDimensions();
     }
@@ -116,10 +118,22 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         int orientation = mActivity.getResources().getConfiguration().orientation;
         boolean isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE;
         int screenDensity = (int) ScreenUtils.getScreenDensity(mActivity);
+
+        int portraitSize;
+        int landscapeSize;
+        if (mMinColumn == mActivity.getResources().getInteger(R.integer.items_min_column_portrait)) {
+            portraitSize = mActivity.getResources().getInteger(R.integer.items_min_column_portrait);
+            landscapeSize = mActivity.getResources().getInteger(R.integer.items_min_column_landscape);
+        } else {
+            portraitSize = mActivity.getResources().getInteger(R.integer.items_max_column_portrait);
+            landscapeSize = mActivity.getResources().getInteger(R.integer.items_max_column_landscape);
+        }
+
         ImageUtils.Grid gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width) * screenDensity,
-                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mActivity),3);
-        if(!mPresenter.isTablet()) gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width) * screenDensity,
-                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mActivity), isLandscape ? 4 : 3, 4);
+                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mActivity),isLandscape ?
+                        landscapeSize : portraitSize,
+                isLandscape ? landscapeSize : portraitSize);
+
         mColumnCount = gridDefinition.getColumn();
         mComputedPair = new Pair<>((int) gridDefinition.getItemWidth(),(int) gridDefinition.getItemHeight());
     }
