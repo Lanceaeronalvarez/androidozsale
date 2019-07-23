@@ -6,10 +6,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
+import android.support.multidex.BuildConfig;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -34,6 +36,11 @@ import au.com.dealsdirect.R;
 public final class CommonUtils {
 
     private static final String TAG = "CommonUtils";
+    private static SharedPreferences settings;
+    private static SharedPreferences.Editor editor;
+
+    protected static final String PREFS_NAME = "Sale_Items_" + BuildConfig.FLAVOR;
+
 
     private CommonUtils() {
         // This utility class is not publicly instantiable
@@ -150,6 +157,33 @@ public final class CommonUtils {
 
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+    }
+
+
+    public static void saveSaleItem(Context context, String itemName, String seoIdentifier, String saleId,
+                                    String saleName) {
+        settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        editor = settings.edit();
+        editor.putString(itemName, seoIdentifier);
+        editor.putString(saleName, saleId);
+        editor.apply();
+    }
+
+    public static void clearSaleItem(Context context) {
+        settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        editor = settings.edit();
+        editor.clear();
+        editor.apply();
+    }
+
+    public static String loadSaleItem(Context context, String itemName) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(itemName, "");
+    }
+
+    public static String loadSaleId(Context context, String saleName) {
+        SharedPreferences preferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return preferences.getString(saleName, "");
     }
 
 }

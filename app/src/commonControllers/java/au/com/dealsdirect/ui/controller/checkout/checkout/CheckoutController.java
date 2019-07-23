@@ -76,16 +76,19 @@ import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
+import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -106,7 +109,7 @@ import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC
  * dp Created by Admin on 6/6/17.
  */
 
-public class CheckoutController extends VisaCheckoutController implements CheckoutMvpView, FetchTokenHandler {
+public class CheckoutController extends VisaCheckoutController implements CheckoutMvpView, FetchTokenHandler, CheckoutListener {
     public static final String CARD_PAYPAL = "Paypal";
     public static final String CARD_MASTERPASS = "Masterpass";
     public static final String CARD_VISA_CHECKOUT = "VisaCheckoutBraintree";
@@ -462,7 +465,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         if (!mPresenter.isTablet() || !getBoolean(R.bool.master_detail_enabled)) {
             mRecyclerView.setVisibility(View.VISIBLE);
-            mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
+            mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         }
@@ -651,6 +654,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (items.isEmpty()) {
             //no items
             showNoCartItemsLayout();
+            CommonUtils.clearSaleItem(mActivity);
         } else {
 
             if (mAdapter != null) {
@@ -1435,6 +1439,47 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     private void setIsOurPaySelectedDeliveryOption(boolean isOurPaySelected) {
         mIsOurPaySelectDeliveryOption = isOurPaySelected;
+    }
+
+    @Override
+    public void showItemDetail(RecyclerView.ViewHolder viewHolder,int position, String seoIdentifierId, String imageUrl,
+                               String skuId, String saleId, boolean isFreeDelivery,
+                               String itemName, String brandName, String price, String oldPrice,
+                               String productID) {
+
+        if (CommonUtils.loadSaleItem(mActivity, productID).isEmpty()) {
+            return;
+        }
+
+        SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
+                .Parameters.FromItemsList(position,
+                imageUrl,
+                CommonUtils.loadSaleItem(mActivity, productID),
+                skuId,
+                CommonUtils.loadSaleId(mActivity, itemName),
+                itemName,
+                brandName,
+                price,
+                oldPrice,
+                "",
+                "",
+                isFreeDelivery);
+
+        RouterTransaction routerTransaction = RouterTransaction
+                .with(SaleItemDetailsController.newInstance(parameters));
+
+        int[] originalPos = new int[2];
+        viewHolder.itemView.getLocationOnScreen(originalPos);
+        int left = originalPos[0];
+        int top = originalPos[1];
+        int width = viewHolder.itemView.getWidth();
+        int height = viewHolder.itemView.getHeight();
+        routerTransaction = routerTransaction
+                .pushChangeHandler(new ArcZoomChangeHandler(left, top, width, height))
+                .popChangeHandler(new ArcZoomChangeHandler(left, top, width, height));
+
+        getRouter().pushController(routerTransaction);
+
     }
 }
 

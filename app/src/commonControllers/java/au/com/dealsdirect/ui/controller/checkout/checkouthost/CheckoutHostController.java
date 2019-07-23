@@ -34,11 +34,15 @@ import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.Paym
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutListener;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.CommonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
@@ -47,7 +51,7 @@ import butterknife.Optional;
  * Created by smartwave on 13/06/2018.
  */
 
-public class CheckoutHostController extends BaseController implements CheckoutHostMvpView {
+public class CheckoutHostController extends BaseController implements CheckoutHostMvpView, CheckoutListener {
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
@@ -126,7 +130,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
         mCheckoutDetailView = mCheckoutController;
 
-        mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter);
+        mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
 
@@ -289,5 +293,46 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @OnClick(R.id.partial_checkout_empty_button)
     void shopNow() {
         mActivity.setShopsAsVisibleContainer();
+    }
+
+    @Override
+    public void showItemDetail(RecyclerView.ViewHolder viewHolder,int position, String seoIdentifierId, String imageUrl,
+                               String skuId, String saleId, boolean isFreeDelivery,
+                               String itemName, String brandName, String price, String oldPrice,
+                               String productID) {
+
+        if (CommonUtils.loadSaleItem(mActivity, productID).isEmpty()) {
+            return;
+        }
+
+        SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
+                .Parameters.FromItemsList(position,
+                imageUrl,
+                CommonUtils.loadSaleItem(mActivity, productID),
+                skuId,
+                CommonUtils.loadSaleId(mActivity, itemName),
+                itemName,
+                brandName,
+                price,
+                oldPrice,
+                "",
+                "",
+                isFreeDelivery);
+
+        RouterTransaction routerTransaction = RouterTransaction
+                .with(SaleItemDetailsController.newInstance(parameters));
+
+        int[] originalPos = new int[2];
+        viewHolder.itemView.getLocationOnScreen(originalPos);
+        int left = originalPos[0];
+        int top = originalPos[1];
+        int width = viewHolder.itemView.getWidth();
+        int height = viewHolder.itemView.getHeight();
+        routerTransaction = routerTransaction
+                .pushChangeHandler(new ArcZoomChangeHandler(left, top, width, height))
+                .popChangeHandler(new ArcZoomChangeHandler(left, top, width, height));
+
+        getRouter().pushController(routerTransaction);
+
     }
 }
