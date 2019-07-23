@@ -255,7 +255,7 @@ public class AccountController extends BaseController implements AccountMvpView,
             }
 
             //skip if multi country not enabled
-            if (!mPresenter.isMultiCountry() && title.equals(getString(R.string.account_country))) {
+            if (!Settings.getIsMultiCountry() && title.equals(getString(R.string.account_country))) {
                 continue;
             }
 
@@ -264,12 +264,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 continue;
             }
 
-            if (title.equals(getString(R.string.account_options))) {
-                List optionsArray = createSubAccountItems(R.array.account_options_sub_item_title_array);
-                newAccountItem = new AccountItem(i, title, optionsArray);
-            } else {
-                newAccountItem = new AccountItem(i, title, Collections.emptyList());
-            }
+            newAccountItem = new AccountItem(i, title, Collections.emptyList());
             mAccountItems.add(newAccountItem);
         }
 
