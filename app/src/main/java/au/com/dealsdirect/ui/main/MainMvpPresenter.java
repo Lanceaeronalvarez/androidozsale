@@ -27,6 +27,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void callGetPublicAppSettingsSections(Context context);
 
+    void callGetPublicAppSettingsSectionsAfterpay(Context context);
+
     void callGetAppSettingsConsent(Context context);
 
     void callGetPublicAppSettingsConsent(Context context);

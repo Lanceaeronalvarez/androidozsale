@@ -45,7 +45,6 @@ import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
-import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -91,8 +90,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     @BindView(R.id.controller_fifth_frame)
     ViewGroup mCheckoutContainer;
 
-    @BindView(R.id.login_host_frame)
-    ViewGroup mLoginHostContainer;
+    @BindView(R.id.popup_host_frame)
+    ViewGroup mPopupHostContainer;
 
     private HashMap<Integer, Pair<Router, ViewGroup>> mRouterContainerMapping;
 
@@ -305,11 +304,9 @@ public class HomeController extends BaseController implements HomeMvpView {
         CommonControllerChangeListener.addToRouter(mCategoriesRouter);
         mCategoriesRouter.setRoot(RouterTransaction.with(ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES)));
 
-        if (mPresenter.isTablet()) {
-            mPopUpHostRouter = getChildRouter(mLoginHostContainer);
-            CommonControllerChangeListener.addToRouter(mPopUpHostRouter);
-            mPopUpHostRouter.setPopsLastView(true);
-        }
+        mPopUpHostRouter = getChildRouter(mPopupHostContainer);
+        CommonControllerChangeListener.addToRouter(mPopUpHostRouter);
+        mPopUpHostRouter.setPopsLastView(true);
 
         resetContactsRouter();
 
@@ -336,7 +333,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 mShopRouter, mCategoriesRouter, mContactRouter, mAccountsRouter, mCheckoutRouter);
 
         if (mPresenter.isTablet()) {
-            mPopUpHostRouter = getChildRouter(mLoginHostContainer);
+            mPopUpHostRouter = getChildRouter(mPopupHostContainer);
             mPopUpHostRouter.setPopsLastView(true);
 
             CommonControllerChangeListener.addToRouter(mPopUpHostRouter);

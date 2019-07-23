@@ -226,7 +226,7 @@ public class Settings {
                                     "ozsale.com.au",
                                     "EN",
                                     "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
-                                    "https://api.mysaledev.com/")} );
+                                    "http://api.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("singsaleRC")){
             populatePackageWithCountries(
                     new Country[] {

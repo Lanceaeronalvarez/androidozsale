@@ -504,6 +504,14 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "ProcessOurpayInstallment");
     }
 
+    public static String createAfterpayOrder() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "CreateAfterpayOrder");
+    }
+
+    public static String callAfterPayCreatePayment() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "AfterPayCreatePayment");
+    }
+
     /*VISA CHECKOUT*/
     public static String visaCheckoutLogin(){
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "LoginVisa");

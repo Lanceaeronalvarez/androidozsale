@@ -38,6 +38,21 @@ public class CustomPhotoViewAttacher implements View.OnTouchListener,
         OnGestureListener,
         View.OnLayoutChangeListener {
 
+
+    public enum ZoomSnapBackMode {
+        NORMAL, TO_MINIMUM, TO_MEDIUM, TO_MAXIMUM
+    };
+
+    private ZoomSnapBackMode mZoomSnapBackMode = ZoomSnapBackMode.NORMAL;
+
+    public ZoomSnapBackMode getZoomSnapBackMode() {
+        return mZoomSnapBackMode;
+    }
+
+    public void setZoomSnapBackMode(ZoomSnapBackMode zoomSnapBackMode) {
+        mZoomSnapBackMode = zoomSnapBackMode;
+    }
+
     private static float DEFAULT_MAX_SCALE = 3.0f;
     private static float DEFAULT_MID_SCALE = 1.75f;
     private static float DEFAULT_MIN_SCALE = 1.0f;
@@ -337,14 +352,29 @@ public class CustomPhotoViewAttacher implements View.OnTouchListener,
                 case MotionEvent.ACTION_UP:
                     // If the user has zoomed less than min scale, zoom back
                     // to min scale
-//                    if (getScale() < mMinScale) {
+                    // *** Added zoom snap back mode *** - Earl
+                    float zoomOrigin = mMinScale;
+
+                    switch (mZoomSnapBackMode) {
+                        case TO_MEDIUM:
+                            zoomOrigin = mMidScale;
+                            break;
+                        case TO_MAXIMUM:
+                            zoomOrigin = mMaxScale;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (mZoomSnapBackMode != ZoomSnapBackMode.NORMAL ||
+                            getScale() < mMinScale) {
                         RectF rect = getDisplayRect();
                         if (rect != null) {
-                            v.post(new AnimatedZoomRunnable(getScale(), mMinScale,
+                            v.post(new AnimatedZoomRunnable(getScale(), zoomOrigin,
                                     rect.centerX(), rect.centerY()));
                             handled = true;
                         }
-//                    }
+                    }
                     break;
             }
 

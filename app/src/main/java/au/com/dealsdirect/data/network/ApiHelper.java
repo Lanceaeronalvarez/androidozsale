@@ -20,6 +20,9 @@ import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
+import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -170,6 +173,8 @@ public interface ApiHelper {
     Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId);
 
     Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId);
+
+    Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId, String sectionName);
 
     Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId);
 
@@ -346,6 +351,12 @@ public interface ApiHelper {
     Observable<GetDeliveryServiceResponse> callGetDeliveryService();
 
     Observable<GetScheduledPlansResponse> processOurpayInstallment(ProcessOurpayInstallmentRequest request);
+
+    // AFTERPAY
+
+    Observable<CreateAfterpayOrderResponse> createAfterpayOrder(CreateAfterpayOrderRequest request);
+
+    Observable<JSONObject> callAfterPayCreatePayment(AfterPayCreatePaymentRequest request);
 
     // DEEPLINK
     Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request);

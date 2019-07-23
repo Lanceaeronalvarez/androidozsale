@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/controller_afterpay_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_default"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/controller_afterpay_toolbar_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true">
+
+            <include layout="@layout/partial_toolbar_arrow" />
+        </RelativeLayout>
+
+        <WebView
+            android:id="@+id/controller_afterpay_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:overScrollMode="never" />
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

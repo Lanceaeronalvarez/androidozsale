@@ -23,6 +23,9 @@ import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
+import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -322,6 +325,15 @@ public class AppApiHelper implements ApiHelper {
         return Rx2AndroidNetworking.get(ApiEndPoint.getPublicAppSettingsSection())
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(new GetAppSettingsSection.RequestValue(countryId))
+                .build()
+                .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId, String sectionName) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getPublicAppSettingsSection())
+                .addHeaders(mApiHeader.get())
+                .addQueryParameter(new GetAppSettingsSection.RequestValue(countryId, sectionName))
                 .build()
                 .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
     }
@@ -1011,6 +1023,24 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(processOurpayInstallmentRequest))
                 .build()
                 .getObjectObservable(GetScheduledPlansResponse.class);
+    }
+
+    @Override
+    public Observable<CreateAfterpayOrderResponse> createAfterpayOrder(CreateAfterpayOrderRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.createAfterpayOrder())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getObjectObservable(CreateAfterpayOrderResponse.class);
+    }
+
+    @Override
+    public Observable<JSONObject> callAfterPayCreatePayment(AfterPayCreatePaymentRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callAfterPayCreatePayment())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getJSONObjectObservable();
     }
 
     @Override

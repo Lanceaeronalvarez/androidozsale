@@ -30,6 +30,9 @@ import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
+import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -255,6 +258,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId) {
         return mApiHelper.callGetPublicAppSettingsSections(countryId);
+    }
+
+    @Override
+    public Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId, String sectionName) {
+        return mApiHelper.callGetPublicAppSettingsSections(countryId, sectionName);
     }
 
     @Override
@@ -620,6 +628,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<CreateAfterpayOrderResponse> createAfterpayOrder(CreateAfterpayOrderRequest request) {
+        return mApiHelper.createAfterpayOrder(request);
+    }
+
+    @Override
+    public Observable<JSONObject> callAfterPayCreatePayment(AfterPayCreatePaymentRequest request) {
+        return mApiHelper.callAfterPayCreatePayment(request);
+    }
+
+    @Override
     public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request) {
         return mApiHelper.callGetDeepLinkData(request);
     }
@@ -688,6 +706,16 @@ public class AppDataManager implements DataManager {
     @Override
     public String getCountryId() {
         return mPreferencesHelper.getCountryId();
+    }
+
+    @Override
+    public void setCountryIso(String countryIso) {
+        mPreferencesHelper.setCountryIso(countryIso);
+    }
+
+    @Override
+    public String getCountryIso() {
+        return mPreferencesHelper.getCountryIso();
     }
 
     @Override
@@ -798,6 +826,46 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean isMasterpassEnabled() {
         return mPreferencesHelper.isMasterpassEnabled();
+    }
+
+    @Override
+    public void setIsAfterpayEnabled(boolean val) {
+        mPreferencesHelper.setIsAfterpayEnabled(val);
+    }
+
+    @Override
+    public boolean isAfterpayEnabled() {
+        return mPreferencesHelper.isAfterpayEnabled();
+    }
+
+    @Override
+    public void setAfterpayScriptUri(String uri) {
+        mPreferencesHelper.setAfterpayScriptUri(uri);
+    }
+
+    @Override
+    public String getAfterpayScriptUri() {
+        return mPreferencesHelper.getAfterpayScriptUri();
+    }
+
+    @Override
+    public void setAfterpayLightboxImgUrl(String url) {
+        mPreferencesHelper.setAfterpayLightboxImgUrl(url);
+    }
+
+    @Override
+    public String getAfterpayLightboxImageUrl() {
+        return mPreferencesHelper.getAfterpayLightboxImageUrl();
+    }
+
+    @Override
+    public void setAfterpayTermsLink(String link) {
+        mPreferencesHelper.setAfterpayTermsLink(link);
+    }
+
+    @Override
+    public String getAfterpayTermsLink() {
+        return mPreferencesHelper.getAfterpayTermsLink();
     }
 
     @Override

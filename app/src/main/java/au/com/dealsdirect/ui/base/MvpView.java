@@ -38,5 +38,4 @@ public interface MvpView {
     void showOurpayLoading();
 
     void hideOurpayLoading();
-
 }

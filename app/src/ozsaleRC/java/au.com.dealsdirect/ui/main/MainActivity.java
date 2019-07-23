@@ -68,6 +68,7 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BaseController.CommonControllerChangeListener;
 import au.com.dealsdirect.ui.controller.account.AccountController;
+import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -284,6 +285,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onBackPressed() {
         /* gen-8065_ozsale-reskin_bugfixing - dismiss keyboard when changing screen fix  */
         hideKeyboard();
+
+        if (getCurrentController(getCurrentRouter()) instanceof AfterpayViewController &&
+                ((AfterpayViewController) getCurrentController(getCurrentRouter())).isBusy()) {
+            return;
+        }
+
         if (mIsShowingStrictConsentUI && mRouter.getControllerWithTag(StrictConsentController.TAG)
                 instanceof StrictConsentController) {
             mRouter.getControllerWithTag(StrictConsentController.TAG).handleBack();
@@ -294,7 +301,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             return;
         }
 
-        if (mPresenter.isTablet() && getHomeController().isPopUpControllerVisible()) {
+        if (getHomeController().isPopUpControllerVisible()) {
             getHomeController().getPopUpHostRouter().handleBack();
         } else {
             Router currentRouter = getCurrentRouter();
@@ -964,6 +971,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         } else {
             mPresenter.callGetAppSettingsSection(this);
         }
+        mPresenter.callGetPublicAppSettingsSectionsAfterpay(this);
         mPresenter.callGetAccountData();
         au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.EventUser, new HashMap<>());
 

@@ -40,11 +40,17 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
 
     void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters);
 
+    String getAfterpayLightboxImgUrl();
+
+    String getAfterpayTermsLink();
+
     boolean isMasterPassEnabled();
 
     boolean isPaypalCreditEnabled();
 
     boolean isPaypalEnabled();
+
+    boolean isAfterpayEnabled();
 
     boolean isVcoEnabled();
 }

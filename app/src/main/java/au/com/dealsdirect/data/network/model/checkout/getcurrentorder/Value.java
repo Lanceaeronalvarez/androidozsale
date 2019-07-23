@@ -46,6 +46,9 @@ public class Value {
     private DeliveryServicePackageDetail deliveryServicePackageDetail;
     @SerializedName(value = "IsEmpty", alternate = {"isEmpty"})
     public boolean isEmpty = false;
+    @SerializedName(value = "Afterpay", alternate = {"afterpay", "AfterPay"})
+    @Expose
+    private GetCurrentOrderAfterpay afterpay;
     @SerializedName(value = "OurPay", alternate = {"ourPay"})
     @Expose
     private GetCurrentOrderOurpay ourpay;
@@ -131,6 +134,39 @@ public class Value {
 
     public int getOurPaySelectTermsAndConditions() {
         return ourPaySelect.getTermsAndConditions();
+    }
+
+    public GetCurrentOrderAfterpay getAfterpay() {
+        return afterpay;
+    }
+
+    public void setAfterpay(GetCurrentOrderAfterpay afterpay) {
+        this.afterpay = afterpay;
+    }
+
+    public static class GetCurrentOrderAfterpay {
+        @SerializedName(value = "IsAvailable", alternate = {"isAvailable"})
+        @Expose
+        private boolean isAvailable;
+        @SerializedName(value = "Description", alternate = {"description"})
+        @Expose
+        private String description;
+
+        public boolean isAvailable() {
+            return isAvailable;
+        }
+
+        public void setAvailable(boolean available) {
+            isAvailable = available;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
     }
 
     private static class GetOurPaySelect {

@@ -1,11 +1,14 @@
 package au.com.dealsdirect.ui.controller.webviewcontroller;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -14,6 +17,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -31,14 +35,19 @@ public class WebViewController extends BasePullToRefreshController implements We
     @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
+    private boolean isUrlJavascript;
+
     private String url;
 
     private String title;
+
+    private WebViewClient mWebViewClient;
 
     public WebViewController(Bundle args) {
         super(args);
         title = args.getString(BundleKeys.KEY_WEBVIEW_CONTROLLER_TITLE);
         url = args.getString(BundleKeys.KEY_WEBVIEW_CONTROLLER_URL);
+        isUrlJavascript = args.getBoolean(BundleKeys.KEY_WEBVIEW_CONTROLLER_IS_JS, false);
     }
 
     @Override
@@ -87,9 +96,33 @@ public class WebViewController extends BasePullToRefreshController implements We
         mActivity.onBackPressed();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void showWebpage(String url) {
-        mWebView.loadUrl(url);
+        mWebView.setWebViewClient(mWebViewClient);
+        mWebView.getSettings().setJavaScriptEnabled(isUrlJavascript);
+        mWebView.setWebChromeClient(new WebChromeClient());
+        if (isUrlJavascript) {
+            String source = StringUtils.loadAssetTextAsString(mActivity, "js_loader.html");
+            if (source == null) {
+                return;
+            }
+            source = source.replace("JS_ADDRESS_GOES_HERE", url);
+            mWebView.loadDataWithBaseURL(null, source, "text/html", "UTF-8", null);
+        } else {
+            mWebView.loadUrl(url);
+        }
         mWebView.setVisibility(View.VISIBLE);
+    }
+
+    public WebViewClient getWebViewClient() {
+        return mWebViewClient;
+    }
+
+    public void setWebViewClient(WebViewClient webViewClient) {
+        mWebViewClient = webViewClient;
+        if (mWebView != null && mWebView.isAttachedToWindow()) {
+            mWebView.setWebViewClient(webViewClient);
+        }
     }
 }

@@ -46,6 +46,7 @@ public class GateKeeper {
         PAYMENT_ADD,
         PAYMENT_SUCCESS,
         MASTERPASS,
+        AFTERPAY,
         ORDERS,
         ORDER_DETAILS,
         CURRENT_RETURNS,

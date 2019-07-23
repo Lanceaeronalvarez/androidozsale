@@ -6,12 +6,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.mysale.genie.utility.Prefs;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashSet;
 
@@ -43,6 +39,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String DEBUG_MODE = "app_debug_mode";
     private static final String COUNTRY_ID = "server_country_id";
+    private static final String COUNTRY_ISO = "server_country_iso";
     private static final String LANGUAGE_ID = "server_language_id";
     private static final String LEGACY_COUNTRY_ID = "mysalecountryid";
     private static final String LEGACY_LANGUAGE_ID = "languageId";
@@ -59,12 +56,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String PAYMENT_PAYPAL_ENABLED = "app_paypal_enabled";
     private static final String PAYMENT_MASTERPASS_ENABLED = "app_masterpass_enabled";
+    private static final String PAYMENT_AFTERPAY_ENABLED = "app_afterpay_enabled";
     private static final String PAYMENT_AMEX_ENABLED = "app_amex_enabled";
     private static final String PAYMENT_KOUNT_ENABLED = "app_kount_enabled";
     private static final String PAYMENT_KOUNT_MERCHANT_ID = "app_kount_merchant_id";
     private static final String PAYMENT_MYPAY_ENABLED = "app_mypay_enabled";
     private static final String PAYMENT_PAYPAL_CREDIT_ENABLED = "app_paypal_credit_enabled";
 
+    private static final String AFTERPAY_SCRIPT_URI = "app_afterpay_script_uri";
+    private static final String AFTERPAY_LIGHTBOX_IMG_URL = "app_afterpay_lightboximgurl";
+    private static final String AFTERPAY_TERMS_LINK = "app_afterpay_terms_link";
 
     private static final String PUBLIC_PAYMENT_TOKEN = "PUBLIC_PAYMENT_TOKEN";
     private static final String PUBLIC_PAYMENT_TYPE = "PUBLIC_PAYMENT_TYPE";
@@ -238,6 +239,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
+    public void setCountryIso(String countryIso) {
+        Prefs.putString(COUNTRY_ISO, countryIso);
+    }
+
+    @Override
+    public String getCountryIso() {
+        return Prefs.getString(COUNTRY_ISO, "");
+    }
+
+    @Override
     public void setLanguageId(String languageId) {
         Prefs.putString(LANGUAGE_ID, languageId);
     }
@@ -354,6 +365,47 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public boolean isMasterpassEnabled() {
         return Prefs.getBoolean(PAYMENT_MASTERPASS_ENABLED, false);
     }
+
+    @Override
+    public void setIsAfterpayEnabled(boolean val) {
+        Prefs.putBoolean(PAYMENT_AFTERPAY_ENABLED, val);
+    }
+
+    @Override
+    public boolean isAfterpayEnabled() {
+        return Prefs.getBoolean(PAYMENT_AFTERPAY_ENABLED, false);
+    }
+
+    @Override
+    public void setAfterpayScriptUri(String uri) {
+        Prefs.putString(AFTERPAY_SCRIPT_URI, uri);
+    }
+
+    @Override
+    public String getAfterpayScriptUri() {
+        return Prefs.getString(AFTERPAY_SCRIPT_URI, "");
+    }
+
+    @Override
+    public void setAfterpayLightboxImgUrl(String url) {
+        Prefs.putString(AFTERPAY_LIGHTBOX_IMG_URL, url);
+    }
+
+    @Override
+    public String getAfterpayLightboxImageUrl() {
+        return Prefs.getString(AFTERPAY_LIGHTBOX_IMG_URL, "");
+    }
+
+    @Override
+    public void setAfterpayTermsLink(String link) {
+        Prefs.putString(AFTERPAY_TERMS_LINK, link);
+    }
+
+    @Override
+    public String getAfterpayTermsLink() {
+        return Prefs.getString(AFTERPAY_TERMS_LINK, "");
+    }
+
 
     @Override
     public void setIsAmexEnabled(boolean val) {

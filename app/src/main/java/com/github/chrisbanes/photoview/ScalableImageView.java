@@ -58,7 +58,6 @@ public class ScalableImageView extends ImageView {
         //We always pose as a Matrix scale type, though we can change to another scale type
         //via the attacher
         super.setScaleType(ScaleType.MATRIX);
-        setOnDoubleTapListener(null);
     }
 
     /**
@@ -231,5 +230,13 @@ public class ScalableImageView extends ImageView {
 
     public void setOnScaleChangeListener(OnScaleChangedListener onScaleChangedListener) {
         attacher.setOnScaleChangeListener(onScaleChangedListener);
+    }
+
+    public CustomPhotoViewAttacher.ZoomSnapBackMode getZoomSnapBackMode() {
+        return attacher.getZoomSnapBackMode();
+    }
+
+    public void setZoomSnapBackMode(CustomPhotoViewAttacher.ZoomSnapBackMode zoomSnapBackMode) {
+        attacher.setZoomSnapBackMode(zoomSnapBackMode);
     }
 }
