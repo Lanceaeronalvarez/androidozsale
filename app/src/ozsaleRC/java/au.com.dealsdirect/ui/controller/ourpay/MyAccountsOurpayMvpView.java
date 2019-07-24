@@ -16,4 +16,6 @@ public interface MyAccountsOurpayMvpView extends MvpView {
     void setDataForScheduledPayments(GetScheduledPlansResponse response);
 
     void setDataForPastPayments(GetPastPaymentsResponse response);
+
+    void showMessage(String message);
 }

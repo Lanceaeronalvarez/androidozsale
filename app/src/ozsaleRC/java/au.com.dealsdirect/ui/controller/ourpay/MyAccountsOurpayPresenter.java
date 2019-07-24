@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.ourpay;
 
+import android.app.Activity;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,6 +13,7 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPay
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydata.ProcessOurpayInstallmentRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -197,7 +200,12 @@ public class MyAccountsOurpayPresenter<V extends MyAccountsOurpayMvpView> extend
                     }
                     mShouldReloadPastPayment = true;
                     GetScheduledPlansResponse response = (GetScheduledPlansResponse) o;
-                    getMvpView().setDataForScheduledPayments(response);
+
+                    if (response.getResult()) {
+                        getMvpView().setDataForScheduledPayments(response);
+                    } else {
+                        getMvpView().showMessage(response.getMessage());
+                    }
                 }
             }
 

@@ -40,6 +40,7 @@ import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayDataSource.Item.PaymentPlan;
 import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayDataSource.Item.ScheduledPayment;
 import au.com.dealsdirect.ui.controller.webviewcontroller.WebViewController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.ControllerFactory;
@@ -681,6 +682,12 @@ public class MyAccountsOurpayController extends BaseController
         if (mCellAdapters != null && mCellAdapters.size() > 2) {
             mCellAdapters.get(2).reloadData();
         }
+    }
+
+    @Override
+    public void showMessage(String message) {
+        CustomAlertDialog.showCustomAlertDialog(mActivity,
+                CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
     }
 
     private void fetchDataForIndex(int index) {

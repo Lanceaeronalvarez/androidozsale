@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.ourpay;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
