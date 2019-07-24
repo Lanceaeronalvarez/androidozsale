@@ -1456,7 +1456,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 imageUrl,
                 CommonUtils.loadSaleItem(mActivity, productID),
                 skuId,
-                CommonUtils.loadSaleId(mActivity, itemName),
+                CommonUtils.loadSaleId(mActivity, productID),
                 itemName,
                 brandName,
                 price,

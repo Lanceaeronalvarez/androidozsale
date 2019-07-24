@@ -310,7 +310,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
                 imageUrl,
                 CommonUtils.loadSaleItem(mActivity, productID),
                 skuId,
-                CommonUtils.loadSaleId(mActivity, itemName),
+                CommonUtils.loadSaleId(mActivity, productID),
                 itemName,
                 brandName,
                 price,

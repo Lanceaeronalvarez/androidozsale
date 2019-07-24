@@ -764,6 +764,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mProductId = saleDetail.getAttributes().getProductId();
 
+        mSkuId = saleDetail.getSkuId();
+
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
 
         // set product view request object for genie event
@@ -1111,7 +1113,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     void addToBasket() {
         mAttempts++;
 
-        CommonUtils.saveSaleItem(mActivity, mProductId, mSeoIdentifierId, mSaleId, mSaleName);
+        CommonUtils.saveSaleItem(mActivity, mProductId, mSeoIdentifierId, mSaleId);
 
         AddToCartRequest request = new AddToCartRequest();
         request.setSkuId(mSkuId);

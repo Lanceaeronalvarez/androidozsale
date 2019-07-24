@@ -38,6 +38,7 @@ public final class CommonUtils {
     private static final String TAG = "CommonUtils";
     private static SharedPreferences settings;
     private static SharedPreferences.Editor editor;
+    private static final String KEY_ID = "_id";
 
     protected static final String PREFS_NAME = "Sale_Items_" + BuildConfig.FLAVOR;
 
@@ -160,12 +161,11 @@ public final class CommonUtils {
     }
 
 
-    public static void saveSaleItem(Context context, String itemName, String seoIdentifier, String saleId,
-                                    String saleName) {
+    public static void saveSaleItem(Context context, String itemId, String seoIdentifier, String saleId) {
         settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         editor = settings.edit();
-        editor.putString(itemName, seoIdentifier);
-        editor.putString(saleName, saleId);
+        editor.putString(itemId, seoIdentifier);
+        editor.putString(itemId+KEY_ID, saleId);
         editor.apply();
     }
 
@@ -181,9 +181,9 @@ public final class CommonUtils {
         return prefs.getString(itemName, "");
     }
 
-    public static String loadSaleId(Context context, String saleName) {
+    public static String loadSaleId(Context context, String itemID) {
         SharedPreferences preferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return preferences.getString(saleName, "");
+        return preferences.getString(itemID+KEY_ID, "");
     }
 
 }
