@@ -925,7 +925,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             StringUtils.applySpanToSubstringsMatching(
                     spannableString,
                     new StyleSpan(BOLD),
-                    "[^\\s\\\\]+\\d+(\\.\\d{2})?",
+                    mActivity.getResources().getString(R.string.regex_currency),
                     SPAN_EXCLUSIVE_INCLUSIVE);
 
             mAfterpayDescription.setText(spannableString);

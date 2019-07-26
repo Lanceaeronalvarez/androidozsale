@@ -24,6 +24,7 @@ import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentRequest;
 import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRequest;
 import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderResponse;
+import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -42,11 +43,6 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
-import au.com.dealsdirect.data.network.model.events.CategoryRequest;
-import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
-import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
-import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
-import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -59,11 +55,16 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
+import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesRequest;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
@@ -359,6 +360,8 @@ public interface ApiHelper {
     Observable<CreateAfterpayOrderResponse> createAfterpayOrder(CreateAfterpayOrderRequest request);
 
     Observable<JSONObject> callAfterPayCreatePayment(AfterPayCreatePaymentRequest request);
+
+    Observable<GetAfterpayDataResponse> callGetAfterpayData(String price);
 
     // DEEPLINK
     Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request);

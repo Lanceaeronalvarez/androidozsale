@@ -512,6 +512,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "AfterPayCreatePayment");
     }
 
+    public static String callGetAfterpayData() {
+        return getFormattedUrl(ApiService.productDetails,ACCOUNT_ID_DELIMETER + "/afterpay?amount={amount}");
+    }
+
     /*VISA CHECKOUT*/
     public static String visaCheckoutLogin(){
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "LoginVisa");

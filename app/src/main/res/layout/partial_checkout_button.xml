@@ -182,7 +182,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/afterpay" />
+                        android:src="@drawable/pay_with_afterpay" />
                 </RelativeLayout>
             </LinearLayout>
 

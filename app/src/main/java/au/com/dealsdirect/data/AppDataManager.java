@@ -34,6 +34,7 @@ import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentRequest;
 import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRequest;
 import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderResponse;
+import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -637,6 +638,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<JSONObject> callAfterPayCreatePayment(AfterPayCreatePaymentRequest request) {
         return mApiHelper.callAfterPayCreatePayment(request);
+    }
+
+    @Override
+    public Observable<GetAfterpayDataResponse> callGetAfterpayData(String price) {
+        return mApiHelper.callGetAfterpayData(price);
     }
 
     @Override

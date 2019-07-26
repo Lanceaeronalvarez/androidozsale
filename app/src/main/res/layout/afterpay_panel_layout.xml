@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/ourpay_header_detail_height"
+    android:background="@drawable/ourpay_layout_border">
+
+    <TextView
+        android:id="@+id/afterpay_panel_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:fontFamily="@string/font_app_regular"
+        android:text="4 instalments of $14.75 with Afterpay"
+        android:textColor="@color/ourpay_gray"
+        android:textSize="@dimen/text_size_body" />
+
+    <ImageButton
+        android:id="@+id/afterpay_panel_info_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_small"
+        android:background="@drawable/ourpay_info"
+        android:scaleType="center" />
+</RelativeLayout>

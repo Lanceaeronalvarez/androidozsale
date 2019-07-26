@@ -218,9 +218,6 @@
     <string name="your_payment_has_been_successful">Your payment has been successful!</string>
     <string name="your_order_will_arrive_within_14_28_working_days_after_the_sale_has_finished">Your
         order will arrive within 14-28 working days after the sale has finished.</string>
-    <string name="afterpay">Afterpay</string>
-    <string name="afterpay_javascript_initialize">AfterPay.initialize({countryCode:\"%s\"});</string>
-    <string name="afterpay_javascript_redirect">AfterPay.redirect({token:\"%s\"});</string>
 
     <string name="continue_shopping">continue shopping</string>
     <string name="your_cart_is_currently_empty">welcome to my basket!</string>
@@ -708,6 +705,14 @@
     <string name="ourpay_tnc_title">Terms and Conditions</string>
     <string name="ourpay_empty_view_text">Ourpay is exclusive installment payment plan\nsolution. Ourpay allows you to checkout with all\nthe items you love and pay over four easy,\ninterest free installments.\n\nSimply browse the site and add your preferred\ngoodies to your cart. Proceeed to checkout and\npay less today with Ourpay!\n\n\nMore details about Ourpay, you can visit:\n</string>
 
+    <!--AFTERPAY-->
+    <string name="afterpay">Afterpay</string>
+    <string name="afterpay_javascript_initialize">AfterPay.initialize({countryCode:\"%s\"});</string>
+    <string name="afterpay_javascript_redirect">AfterPay.redirect({token:\"%s\"});</string>
+    <string name="afterpay_panel_description_is_unavailable">\u0020\u0020\u0020is unavailable for this item</string>
+    <string name="afterpay_panel_description_normal">%d installments of %s%.2f with\u0020\u0020\u0020</string>
+
+    <string name="regex_currency">[^\\s\\\\]+\\d+(\\.\\d{2})?</string>
 
     <string name="dialog_cancel_order_body_text">You are about to cancel this order. Are you sure you would like to cancel this order?</string>
     <string name="dialog_cancel_item_text">You are about to cancel this item. Are you sure you would like to cancel this item?</string>

@@ -27,6 +27,7 @@ import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentRequest;
 import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRequest;
 import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderResponse;
+import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -1043,6 +1044,15 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
                 .getJSONObjectObservable();
+    }
+
+    @Override
+    public Observable<GetAfterpayDataResponse> callGetAfterpayData(String price) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.callGetAfterpayData())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("amount", price)
+                .build()
+                .getObjectObservable(GetAfterpayDataResponse.class);
     }
 
     @Override

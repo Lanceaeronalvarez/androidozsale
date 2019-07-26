@@ -1,21 +1,20 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
-import com.androidnetworking.error.ANError;
+import android.annotation.SuppressLint;
 
-import java.util.HashMap;
+import com.androidnetworking.error.ANError;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
-import au.com.dealsdirect.service.datacollection.core.DataCollector;
-import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayError;
 import au.com.dealsdirect.service.ourpay.OurpayState;
@@ -85,6 +84,31 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                         super.onSuccess(response);
 
                         generateOurpay(value, (OurpayDataResponse) response);
+                    }
+                });
+    }
+
+    @SuppressLint("DefaultLocale")
+    @Override
+    public void loadAfterpayData(Double price) {
+        doApiCallForResponse(getDataManager().callGetAfterpayData(String.format("%.2f", price)),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        super.onSuccess(o);
+
+                        if (o instanceof GetAfterpayDataResponse) {
+                            GetAfterpayDataResponse response = (GetAfterpayDataResponse) o;
+                            if (response.getApplicabilityStatus().toLowerCase().contains("ok") &&
+                                    response.getPaymentInfo() != null) {
+                                getMvpView().showAfterpayDetails(
+                                        response.getPaymentInfo().getPaymentsCount(),
+                                        response.getPaymentInfo().getPaymentsAmount(),
+                                        getDataManager().getCurrencySign());
+                            } else {
+                                getMvpView().showAfterpayDetails(0, 0, null);
+                            }
+                        }
                     }
                 });
     }
@@ -210,7 +234,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
         doApiCallForResponse(getDataManager().callDynamicDiscount(skuId), new AppApiCallback() {
             @Override
             public void onSuccess(Object o) {
-                if(o != null) getMvpView().setDynamicDiscount((String) o);
+                if (o != null) getMvpView().setDynamicDiscount((String) o);
             }
 
             @Override
@@ -225,5 +249,15 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 }
             }
         });
+    }
+
+    @Override
+    public String getAfterpayLightboxImgUrl() {
+        return getDataManager().getAfterpayLightboxImageUrl();
+    }
+
+    @Override
+    public String getAfterpayTermsLink() {
+        return getDataManager().getAfterpayTermsLink();
     }
 }

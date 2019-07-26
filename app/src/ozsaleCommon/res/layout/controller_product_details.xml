@@ -116,6 +116,18 @@
                                 android:paddingBottom="@dimen/margin_extra_small"
                                 android:visibility="gone" />
 
+                            <LinearLayout
+                                android:id="@+id/partial_item_details_afterpay_panel_holder"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/white"
+                                android:orientation="vertical"
+                                android:paddingLeft="@dimen/activity_horizontal_margin"
+                                android:paddingTop="@dimen/margin_extra_small"
+                                android:paddingRight="@dimen/activity_horizontal_margin"
+                                android:paddingBottom="@dimen/margin_extra_small"
+                                android:visibility="gone" />
+
                             <RelativeLayout
                                 android:id="@+id/product_details_sizes_container"
                                 android:layout_width="match_parent"
