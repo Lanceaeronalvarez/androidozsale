@@ -155,6 +155,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String RECAPTCHA_SITE_KEY = "RECAPTCHA_SITE_KEY";
 
     private static final String GOOGLE_ADS = "GOOGLE_ADS";
+    private static final String COLUMN_COUNT = "COLUMN_COUNT";
 
     private Context mContext;
 
@@ -875,5 +876,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean isGoogleAdsEnabled() {
         return Prefs.getBoolean(GOOGLE_ADS, true);
+    }
+
+    @Override
+    public void setLastColumnSelected(int columnCount) {
+        Prefs.putInt(COLUMN_COUNT, columnCount);
+    }
+
+    @Override
+    public int getLastColumnSelected() {
+        return Prefs.getInt(COLUMN_COUNT, 3);
     }
 }

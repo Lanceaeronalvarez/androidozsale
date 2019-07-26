@@ -108,4 +108,14 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         return getDataManager().isGoogleAdsEnabled();
     }
 
+    @Override
+    public int getColumnCount() {
+        return getDataManager().getLastColumnSelected();
+    }
+
+    @Override
+    public void setColumnCount(int columnCount) {
+        getDataManager().setLastColumnSelected(columnCount);
+    }
+
 }

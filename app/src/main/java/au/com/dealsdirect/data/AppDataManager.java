@@ -1298,6 +1298,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setLastColumnSelected(int columnCount) {
+        mPreferencesHelper.setLastColumnSelected(columnCount);
+    }
+
+    @Override
+    public int getLastColumnSelected() {
+        return mPreferencesHelper.getLastColumnSelected();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }

@@ -20,4 +20,8 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
     boolean isSortingEnabled();
 
     boolean isGoogleAdsEnabled();
+
+    int getColumnCount();
+
+    void setColumnCount(int columnCount);
 }

@@ -255,4 +255,8 @@ public interface PreferencesHelper {
     void setIsGoogleAdsEnabled(boolean isGoogleAdsEnabled);
 
     boolean isGoogleAdsEnabled();
+
+    void setLastColumnSelected(int columnCount);
+
+    int getLastColumnSelected();
 }

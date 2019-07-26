@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -733,8 +734,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         mColumnView.setVisibility(View.VISIBLE);
-        mColumnView.setTag(R.drawable.ic_3_column_view);
-        mColumnCount = 3;
+        mColumnCount = mPresenter.getColumnCount();
+        mColumnView.setTag(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
+                R.drawable.ic_3_column_view : R.drawable.ic_2_column_view);
+        mColumnView.setImageDrawable(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
+                getResources().getDrawable(R.drawable.ic_3_column_view) : getResources().getDrawable(R.drawable.ic_2_column_view));
 
         //use initialcategory tree map if it came from categories.
         if (!mInitialCategoryTree.isEmpty()) {
@@ -831,6 +835,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mColumnView.setTag(R.drawable.ic_3_column_view);
 
             mColumnCount = mActivity.getResources().getInteger(R.integer.items_max_column_portrait);
+            mPresenter.setColumnCount(mColumnCount);
 
             setAdapterPerColumnChange();
         }else{
@@ -838,6 +843,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mColumnView.setTag(R.drawable.ic_2_column_view);
 
             mColumnCount = mActivity.getResources().getInteger(R.integer.items_min_column_portrait);
+            mPresenter.setColumnCount(mColumnCount);
 
             setAdapterPerColumnChange();
         }
