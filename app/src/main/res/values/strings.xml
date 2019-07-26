@@ -709,5 +709,10 @@
     <string name="ourpay_empty_view_text">Ourpay is exclusive installment payment plan\nsolution. Ourpay allows you to checkout with all\nthe items you love and pay over four easy,\ninterest free installments.\n\nSimply browse the site and add your preferred\ngoodies to your cart. Proceeed to checkout and\npay less today with Ourpay!\n\n\nMore details about Ourpay, you can visit:\n</string>
 
 
+    <string name="dialog_cancel_order_body_text">You are about to cancel this order. Are you sure you would like to cancel this order?</string>
+    <string name="dialog_cancel_item_text">You are about to cancel this item. Are you sure you would like to cancel this item?</string>
+    <string name="dialog_yes_cancel_item">Yes, Cancel this Item</string>
+    <string name="dialog_yes_cancel_order">Yes, Cancel this Order</string>
+    <string name="dialog_no_nevermind">No, Nevermind</string>
 
 </resources>

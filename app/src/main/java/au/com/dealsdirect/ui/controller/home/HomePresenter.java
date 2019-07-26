@@ -5,7 +5,10 @@ import com.androidnetworking.error.ANError;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -49,6 +52,36 @@ public class HomePresenter<V extends HomeMvpView> extends BasePresenter<V> imple
                     }
                 })
         );
+    }
+
+    @Override
+    public void callCreateRefund(CreateRefundRequest refundRequest) {
+
+        doApiCallForResponse(getDataManager().callCreateRefund(refundRequest),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+
+                        if (isViewAttached()) {
+                            getMvpView().backClick();
+                        }
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        AppLogger.d("refund success");
+
+                        if (isViewAttached()) {
+                            getMvpView().backClick();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                    }
+                });
     }
 
     @Override

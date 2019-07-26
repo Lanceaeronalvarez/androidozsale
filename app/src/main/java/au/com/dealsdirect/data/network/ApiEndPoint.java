@@ -517,6 +517,14 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "LoginVisa");
     }
 
+    public static String changeDeliveryAddress() {
+        return getFormattedUrl(ApiService.legacy,  NO_AKAMAI_EXTENSION + "ChangeDeliveryAddress");
+    }
+
+    public static String createRefund() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "CreateRefund");
+    }
+
     private ApiEndPoint() {
          // This class is not publicly instantiable
     }

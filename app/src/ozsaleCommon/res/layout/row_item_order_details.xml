@@ -4,22 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:paddingTop="@dimen/margin_small"
+    android:paddingTop="@dimen/margin_tiny"
     tools:ignore="MissingPrefix">
 
     <ImageView
         android:id="@+id/controller_order_details_item_imageview"
         android:layout_width="@dimen/order_image_width"
         android:layout_height="@dimen/order_image_height"
-        android:layout_below="@+id/my_order_information_header"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/margin_small"/>
+
+    <ImageButton
+        android:id="@+id/order_item_details_more"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/margin_small"
+        android:background="@drawable/ic_orders_ellipsis"
+        android:padding="@dimen/margin_tiny" />
 
     <LinearLayout
         android:id="@+id/order_item_details_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/my_order_information_header"
         android:layout_alignTop="@+id/controller_order_details_item_imageview"
         android:layout_marginLeft="@dimen/margin_extra_small"
         android:layout_marginRight="@dimen/activity_horizontal_margin"

@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.main;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +8,13 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
@@ -44,6 +51,8 @@ import com.mysale.genie.utility.RxBus;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 import com.visa.checkout.VisaPaymentSummary;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,6 +67,7 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.event.ActionTrackerInterface;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
@@ -83,6 +93,7 @@ import au.com.dealsdirect.ui.controller.home.HomeMvpView;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
+import au.com.dealsdirect.ui.controller.orders.orders.BottomSheetOrderDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -90,10 +101,13 @@ import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BraintreeUtils;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
@@ -109,6 +123,7 @@ import static au.com.dealsdirect.ui.controller.main.MainController.SHOP_INDEX;
 public class MainActivity extends BaseActivity implements MainMvpView {
 
     private static final String TAG = "MainActivity";
+    private static Router mRouter;
 
     protected ActionTrackerInterface mActionTracker;
 
@@ -125,11 +140,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.activity_main_frame)
     ViewGroup mContainer;
 
+    @BindView(R.id.bottomSheetLayout)
+    View bottomSheetDialog;
+
 
     private BraintreeFragment mBraintreeFragment;
     private FetchTokenHandler mFetchTokenHandler;
 
-    private MainController mMainController;
+    private static MainController mMainController;
     private ShopsController mShopController;
     private CategoriesController mCategoriesController;
     private CheckoutController mCheckoutController;
@@ -904,7 +922,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mShopController = shopsController;
     }
 
-    public MainController getMainController() {
+    public static MainController getMainController() {
         return mMainController;
     }
 
@@ -1375,5 +1393,53 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         if (mShopController != null) {
             mShopController.refreshFromLogout();
         }
+    }
+
+    public void showBottomDialog(ArrayList<String> actionArrays, HashMap<String,String> hashMap) {
+        BottomSheetOrderDialog bottomSheetFragment = new BottomSheetOrderDialog();
+        Bundle bundle = new Bundle();
+
+        bundle.putStringArrayList(ActionConstants.ORDER_ARRAYS, actionArrays);
+
+        for (String key: hashMap.keySet()) {
+            bundle.putString(key, hashMap.get(key));
+        }
+
+        bottomSheetFragment.setArguments(bundle);
+        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
+    }
+
+    public static void showContactUs(boolean isCalledFromOrders, int invoiceNumber, String description){
+        getMainController().getHomeController().showSendContactMessage(isCalledFromOrders, invoiceNumber, description);
+    }
+
+    public static void showWhereIsOrder() {
+
+    }
+
+    public static void showChangeAddress(String orderID) {
+        getMainController().getHomeController().showMyAddress(orderID);
+    }
+
+    public static void showReturnItems(int invoiceNumber, boolean calledFromOrder, String productId) {
+        getMainController().getHomeController().showMyReturns(invoiceNumber, calledFromOrder, productId);
+    }
+
+    public static void showViewReturnDetails(String returnID, String productName){
+        getMainController().getHomeController().showViewReturnsDetails(returnID,productName);
+    }
+
+    public static void showCancelDialog(String orderNumber, String reason) {
+        getMainController().getHomeController().showCancelOrderDialog(orderNumber, reason);
+    }
+
+    public static void showCancelItemDialog(String imageUrl, String itemName, String invoiceNumber,
+                                            String reason, int quantity, int totalItems) {
+        getMainController().getHomeController().showCancelItemDialog(imageUrl, itemName, invoiceNumber,
+                reason, quantity, totalItems);
+    }
+
+    public static void callRefundOrder(String invoiceNumber, String reason, JSONObject items){
+        getMainController().getHomeController().callCreateOrderRefund(invoiceNumber, reason, items);
     }
 }

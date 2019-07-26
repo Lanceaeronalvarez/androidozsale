@@ -21,6 +21,7 @@ import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
+import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentRequest;
@@ -84,6 +85,7 @@ import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
+import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
@@ -1050,6 +1052,24 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(deepLinkDataRequest))
                 .build()
                 .getObjectObservable(DeepLinkDataResponse.class);
+    }
+
+    @Override
+    public Observable<String> callChangeDeliveryAddress(ChangeDeliveryAddressRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.changeDeliveryAddress())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<String> callCreateRefund(CreateRefundRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.createRefund())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
     }
 }
 

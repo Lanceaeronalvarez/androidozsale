@@ -24,4 +24,6 @@ public interface HomeMvpView extends MvpView {
     void updateBasketItemCount();
 
     boolean isPopUpControllerVisible();
+
+    void backClick();
 }

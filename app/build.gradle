@@ -484,7 +484,7 @@ android {
         nzsaleTest {
             versionCode 152
             versionName "2.5.8"
-            applicationId "nz.co.nzsaletest"
+            applicationId "nz.co.nzsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
             buildConfigField "boolean", "IS_TEST", "true"

@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.home;
 
+import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -16,5 +17,7 @@ public interface HomeMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
     boolean isInitialLaunch();
 
     void setInitialLaunchFalse();
+
+    void callCreateRefund(CreateRefundRequest createRefundRequest);
 
 }

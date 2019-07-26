@@ -8,5 +8,7 @@
     </base-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">api.mysaledev.com</domain>
+        <domain includeSubdomains="true">phd1api.mysalecx-dev.com</domain>
+        <domain includeSubdomains="true">c1.mysalec.com</domain>
     </domain-config>
 </network-security-config>

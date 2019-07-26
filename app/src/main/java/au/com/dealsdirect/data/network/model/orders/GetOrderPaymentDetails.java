@@ -88,6 +88,28 @@ public class GetOrderPaymentDetails {
             @SerializedName("Size")
             @Expose
             private String size;
+            @SerializedName("Actions")
+            @Expose
+            private List<String> actions;
+            @SerializedName("ReturnID")
+            @Expose
+            private String returnID;
+
+            public List<String> getActions() {
+                return actions;
+            }
+
+            public void setActions(List<String> actions) {
+                this.actions = actions;
+            }
+
+            public String getReturnID() {
+                return returnID;
+            }
+
+            public void setReturnID(String returnID) {
+                this.returnID = returnID;
+            }
 
             public Integer getQty() {
                 return qty;
@@ -299,6 +321,17 @@ public class GetOrderPaymentDetails {
             @SerializedName("ItemsAmount")
             @Expose
             private Double itemsAmount;
+            @SerializedName("DeliveryAmount")
+            @Expose
+            private Integer deliveryAmount;
+
+            public Integer getDeliveryAmount() {
+                return deliveryAmount;
+            }
+
+            public void setDeliveryAmount(Integer deliveryAmount) {
+                this.deliveryAmount = deliveryAmount;
+            }
 
             public Integer getItemsCount() {
                 return itemsCount;
@@ -516,6 +549,23 @@ public class GetOrderPaymentDetails {
             @SerializedName("DeliveryAddress")
             @Expose
             private String deliveryAddress;
+            @SerializedName("Received")
+            @Expose
+            private String received;
+            @SerializedName("Tracker")
+            @Expose
+            private Tracker tracker;
+            @SerializedName("Actions")
+            @Expose
+            private List<String> actions;
+
+            public List<String> getActions() {
+                return actions;
+            }
+
+            public void setActions(List<String> actions) {
+                this.actions = actions;
+            }
 
             public List<Item> getItems() {
                 return items;
@@ -571,6 +621,81 @@ public class GetOrderPaymentDetails {
 
             public void setDeliveryAddress(String deliveryAddress) {
                 this.deliveryAddress = deliveryAddress;
+            }
+
+            public String getReceived() {
+                return received;
+            }
+
+            public void setReceived(String received) {
+                this.received = received;
+            }
+
+            public Tracker getTracker() {
+                return tracker;
+            }
+
+            public void setTracker(Tracker tracker) {
+                this.tracker = tracker;
+            }
+
+        }
+
+        public class Tracker {
+            @SerializedName("Step")
+            @Expose
+            private int step;
+            @SerializedName("ApprovedDate")
+            @Expose
+            private String approvedDate;
+            @SerializedName("StockDate")
+            @Expose
+            private String stockDate;
+            @SerializedName("DispatchedDate")
+            @Expose
+            private String dispatchedDate;
+            @SerializedName("ClosedDate")
+            @Expose
+            private String closedDate;
+
+            public int getStep() {
+                return step;
+            }
+
+            public void setStep(int step) {
+                this.step = step;
+            }
+
+            public String getApprovedDate() {
+                return approvedDate;
+            }
+
+            public void setApprovedDate(String approvedDate) {
+                this.approvedDate = approvedDate;
+            }
+
+            public String getStockDate() {
+                return stockDate;
+            }
+
+            public void setStockDate(String stockDate) {
+                this.stockDate = stockDate;
+            }
+
+            public String getDispatchedDate() {
+                return dispatchedDate;
+            }
+
+            public void setDispatchedDate(String dispatchedDate) {
+                this.dispatchedDate = dispatchedDate;
+            }
+
+            public String getClosedDate() {
+                return closedDate;
+            }
+
+            public void setClosedDate(String closedDate) {
+                this.closedDate = closedDate;
             }
 
         }

@@ -60,7 +60,6 @@ public class FirebaseBroadcastReceiver extends FirebaseMessagingService {
                 .setSmallIcon(R.drawable.ic_loader_logo)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentText(notificationMessage)
-                .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setTicker(notificationMessage)

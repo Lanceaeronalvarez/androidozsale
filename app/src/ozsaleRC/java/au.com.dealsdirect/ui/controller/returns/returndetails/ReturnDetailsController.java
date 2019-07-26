@@ -41,13 +41,13 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     private static final String KEY_RAN = "ReturnDetailsController.RAN";
     private static final String KEY_RETURN_ID = "ReturnDetailsController.RETURN_ID";
 
-    private String mProductName;
-    private int mOrderNumber;
-    private String mReturnID;
-    private String mRequestDate;
-    private String mIsApproved;
-    private String mStatus;
-    private String mRAN;
+    private String mProductName = "";
+    private int mOrderNumber = 0;
+    private String mReturnID = "";
+    private String mRequestDate = "";
+    private String mIsApproved = "";
+    private String mStatus = "";
+    private String mRAN = "";
 
     @BindView(R.id.controller_return_details_order_number)
     TextView mOrderNumberTextView;
@@ -103,15 +103,44 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
                         .build());
     }
 
+    public static ReturnDetailsController newInstance(
+            String returnID,
+            String productName) {
+
+        return new ReturnDetailsController(
+                new BundleBuilder(new Bundle())
+                        .putString(KEY_RETURN_ID, returnID)
+                        .putString(KEY_PRODUCT_NAME, productName)
+                        .build());
+    }
+
     public ReturnDetailsController(Bundle args) {
         super(args);
-        mProductName = args.getString(KEY_PRODUCT_NAME);
-        mOrderNumber = args.getInt(KEY_ORDER_NUMBER);
+        if (args.containsKey(KEY_PRODUCT_NAME)) {
+            mProductName = args.getString(KEY_PRODUCT_NAME);
+        }
+
+        if (args.containsKey(KEY_ORDER_NUMBER)) {
+            mOrderNumber = args.getInt(KEY_ORDER_NUMBER);
+        }
+
         mReturnID = args.getString(KEY_RETURN_ID);
-        mRequestDate = args.getString(KEY_REQUEST_DATE);
-        mIsApproved = args.getString(KEY_IS_APPROVED);
-        mStatus = args.getString(KEY_STATUS);
-        mRAN = args.getString(KEY_RAN);
+
+        if (args.containsKey(KEY_REQUEST_DATE)) {
+            mRequestDate = args.getString(KEY_REQUEST_DATE);
+        }
+
+        if (args.containsKey(KEY_IS_APPROVED)) {
+            mIsApproved = args.getString(KEY_IS_APPROVED);
+        }
+
+        if (args.containsKey(KEY_STATUS)) {
+            mStatus = args.getString(KEY_STATUS);
+        }
+
+        if (args.containsKey(KEY_RAN)) {
+            mRAN = args.getString(KEY_RAN);
+        }
     }
 
     @NonNull
@@ -172,4 +201,5 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     void onBackClick(){
         mActivity.onBackPressed();
     }
+
 }

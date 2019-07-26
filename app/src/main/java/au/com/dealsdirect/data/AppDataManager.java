@@ -28,6 +28,7 @@ import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
+import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentRequest;
@@ -90,6 +91,7 @@ import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
+import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
@@ -640,6 +642,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request) {
         return mApiHelper.callGetDeepLinkData(request);
+    }
+
+    @Override
+    public Observable<String> callChangeDeliveryAddress(ChangeDeliveryAddressRequest request) {
+        return mApiHelper.callChangeDeliveryAddress(request);
+    }
+
+    @Override
+    public Observable<String> callCreateRefund(CreateRefundRequest request) {
+        return mApiHelper.callCreateRefund(request);
     }
 
     @Override
