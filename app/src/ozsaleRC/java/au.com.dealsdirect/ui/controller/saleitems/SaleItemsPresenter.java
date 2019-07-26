@@ -118,4 +118,13 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         getDataManager().setLastColumnSelected(columnCount);
     }
 
+    public void setTimeStamp(String date) {
+        getDataManager().setLastTimeStamp(date);
+    }
+
+    @Override
+    public String getTimeStamp() {
+        return getDataManager().getLastTimeStamp();
+    }
+
 }

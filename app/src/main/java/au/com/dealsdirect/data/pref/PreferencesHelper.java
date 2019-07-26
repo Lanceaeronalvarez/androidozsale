@@ -263,4 +263,8 @@ public interface PreferencesHelper {
     void setLastColumnSelected(int columnCount);
 
     int getLastColumnSelected();
+
+    void setLastTimeStamp(String timeStamp);
+
+    String getLastTimeStamp();
 }

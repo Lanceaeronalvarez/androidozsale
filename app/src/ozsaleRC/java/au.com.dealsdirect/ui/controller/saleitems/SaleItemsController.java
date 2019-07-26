@@ -36,11 +36,15 @@ import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.profiler.Profiler;
 import com.paginate.Paginate;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -68,6 +72,7 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.AdaptiveTabLayout;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -853,13 +858,22 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void setAdapterPerColumnChange(int portraitColumn, int landscapeColumn) {
 
-        HashMap<String, Object> eventParameters = new HashMap<>();
-        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
-        eventParameters.put(DataCollector.EventParameters.TOGGLE_LIST_PORTRAIT, portraitColumn);
-        eventParameters.put(DataCollector.EventParameters.TOGGLE_LIST_LANDSCAPE, landscapeColumn);
-        DataCollector.logEvent(Events.ToggleColumn, eventParameters);
+        int getSavedDay = mPresenter.getTimeStamp().isEmpty() ? 0 :
+                Integer.parseInt(mPresenter.getTimeStamp());
 
+        if (DateUtils.hasDayPassed(getSavedDay)) {
+
+            Calendar calander = Calendar.getInstance();
+            int calendarDay = calander.get(Calendar.DAY_OF_YEAR);
+            mPresenter.setTimeStamp(String.valueOf(calendarDay));
+
+            HashMap<String, Object> eventParameters = new HashMap<>();
+            eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+            eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
+            eventParameters.put(DataCollector.EventParameters.TOGGLE_LIST_PORTRAIT, portraitColumn);
+            eventParameters.put(DataCollector.EventParameters.TOGGLE_LIST_LANDSCAPE, landscapeColumn);
+            DataCollector.logEvent(Events.ToggleColumn, eventParameters);
+        }
 
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId, mColumnCount);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());

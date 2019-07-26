@@ -1323,6 +1323,15 @@ public class AppDataManager implements DataManager {
         return mPreferencesHelper.getLastColumnSelected();
     }
 
+    public void setLastTimeStamp(String timeStamp) {
+        mPreferencesHelper.setLastTimeStamp(timeStamp);
+    }
+
+    @Override
+    public String getLastTimeStamp() {
+        return mPreferencesHelper.getLastTimeStamp();
+    }
+
     @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);

@@ -159,6 +159,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String GOOGLE_ADS = "GOOGLE_ADS";
     private static final String COLUMN_COUNT = "COLUMN_COUNT";
+    private static final String LAST_TIME_STAMP = "LAST_TIME_STAMP";
 
     private Context mContext;
 
@@ -899,5 +900,14 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public int getLastColumnSelected() {
         return Prefs.getInt(COLUMN_COUNT, 3);
+    }
+
+    public void setLastTimeStamp(String timeStamp) {
+        Prefs.putString(LAST_TIME_STAMP, timeStamp);
+    }
+
+    @Override
+    public String getLastTimeStamp() {
+        return Prefs.getString(LAST_TIME_STAMP, "");
     }
 }

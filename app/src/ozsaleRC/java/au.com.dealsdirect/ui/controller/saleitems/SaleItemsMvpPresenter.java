@@ -24,4 +24,8 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
     int getColumnCount();
 
     void setColumnCount(int columnCount);
+
+    void setTimeStamp(String date);
+
+    String getTimeStamp();
 }
