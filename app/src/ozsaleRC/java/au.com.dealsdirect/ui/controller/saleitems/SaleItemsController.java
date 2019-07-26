@@ -837,7 +837,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mColumnCount = mActivity.getResources().getInteger(R.integer.items_max_column_portrait);
             mPresenter.setColumnCount(mColumnCount);
 
-            setAdapterPerColumnChange();
+            setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_max_column_portrait),
+                    mActivity.getResources().getInteger(R.integer.items_max_column_landscape));
         }else{
             mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_2_column_view));
             mColumnView.setTag(R.drawable.ic_2_column_view);
@@ -845,11 +846,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mColumnCount = mActivity.getResources().getInteger(R.integer.items_min_column_portrait);
             mPresenter.setColumnCount(mColumnCount);
 
-            setAdapterPerColumnChange();
+            setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_min_column_portrait),
+                    mActivity.getResources().getInteger(R.integer.items_min_column_landscape));
         }
     }
 
-    private void setAdapterPerColumnChange() {
+    private void setAdapterPerColumnChange(int portraitColumn, int landscapeColumn) {
+
+        HashMap<String, Object> eventParameters = new HashMap<>();
+        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
+        eventParameters.put(DataCollector.EventParameters.TOGGLE_LIST_PORTRAIT, portraitColumn);
+        eventParameters.put(DataCollector.EventParameters.TOGGLE_LIST_LANDSCAPE, landscapeColumn);
+        DataCollector.logEvent(Events.ToggleColumn, eventParameters);
+
+
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId, mColumnCount);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

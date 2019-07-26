@@ -96,6 +96,10 @@ public class DataCollector {
         // FAILED TRANSACTION
         public static final String FAILED_TRANSACTION_OPTION = "PaymentOption";
         public static final String FAILED_TRANSACTION_MESSAGE = "Message";
+        // TOGGLE COLUMN LIST
+        public static final String TOGGLE_LIST_PORTRAIT = "PortraitNumberOfColumns";
+        public static final String TOGGLE_LIST_LANDSCAPE = "LandscapeNumberOfColumns";
+
 
         public final class LoginType {
             public final static String FACEBOOK = "LoginFacebook";

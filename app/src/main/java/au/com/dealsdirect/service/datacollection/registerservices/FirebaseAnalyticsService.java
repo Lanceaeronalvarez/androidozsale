@@ -31,6 +31,7 @@ import au.com.dealsdirect.service.datacollection.events.PurchaseDataEvent;
 import au.com.dealsdirect.service.datacollection.events.RegistrationDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SaleBannersDataEvent;
 import au.com.dealsdirect.service.datacollection.events.ShareDataEvent;
+import au.com.dealsdirect.service.datacollection.events.ToggleColumnEvent;
 import au.com.dealsdirect.service.datacollection.events.TrackOrderDataEvent;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -65,6 +66,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static final String LOGIN_EVENT = "AnalyticsEventLogin";
     private static final String SHARE_EVENT = "AnalyticsEventShare";
     private static final String FAILED_TRANSACTION_EVENT = "FAILED_PAYMENT_TRANSACTION";
+    private static final String TOGGLE_LIST_COUNT_EVENT = "PRODUCT_LIST_TOGGLE_COLUMN_COUNT";
 
     private static FirebaseAnalyticsService instance;
     public static FirebaseAnalyticsService getInstance() {
@@ -342,6 +344,22 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     }
                 }));
 
+        // register toggle column
+        DataCollector.EventRegistry.register(generateEventKey(Events.ToggleColumn, getServiceKey()),
+                Events.ToggleColumn,
+                new LoggingService.LogToggleColumn(new ToggleColumnEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        bundle.putString(DataCollector.EventParameters.TOGGLE_LIST_PORTRAIT,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.TOGGLE_LIST_PORTRAIT)));
+                        bundle.putString(DataCollector.EventParameters.TOGGLE_LIST_LANDSCAPE,
+                                String.valueOf(parameters.get(DataCollector.EventParameters.TOGGLE_LIST_LANDSCAPE)));
+                        toggleColumnCount((Context) parameters.get(DataCollector.EventParameters.APP_CONTEXT),
+                                bundle,String.valueOf(parameters.get(DataCollector.EventParameters.SCREEN_NAME)));
+                    }
+                }))
+        ;
+
     }
 
     private static String generateEventKey(Events events, String service) {
@@ -497,6 +515,12 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
 
         mDataManager.setLastRedirection(DataCollector.EventParameters.LastRedirection.PAY);
         checkoutJourney(context, DataCollector.EventParameters.EventProgress.END.getValue(), screenName);
+    }
+
+    private static void toggleColumnCount(Context context, Bundle bundle, String screenName) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
+        firebaseAnalytics.logEvent(TOGGLE_LIST_COUNT_EVENT, bundle);
     }
 
     @Override
