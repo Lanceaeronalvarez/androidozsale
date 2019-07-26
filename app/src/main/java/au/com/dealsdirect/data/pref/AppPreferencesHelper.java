@@ -63,10 +63,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PAYMENT_MYPAY_ENABLED = "app_mypay_enabled";
     private static final String PAYMENT_PAYPAL_CREDIT_ENABLED = "app_paypal_credit_enabled";
 
-    private static final String AFTERPAY_SCRIPT_URI = "app_afterpay_script_uri";
-    private static final String AFTERPAY_LIGHTBOX_IMG_URL = "app_afterpay_lightboximgurl";
-    private static final String AFTERPAY_TERMS_LINK = "app_afterpay_terms_link";
-
     private static final String PUBLIC_PAYMENT_TOKEN = "PUBLIC_PAYMENT_TOKEN";
     private static final String PUBLIC_PAYMENT_TYPE = "PUBLIC_PAYMENT_TYPE";
 
@@ -149,7 +145,14 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String HAS_VIEWED_CART = "HAS_CLICKED_VIEW_CART";
 
     //Ourpay
+    private static final String IS_OURPAY_ENABLED = "IS_OURPAY_ENABLED";
     private static final String IS_OURPAY_DASHBOARD_ENABLED = "IS_OURPAY_DASHBOARD_ENABLED";
+
+    //Aferpay
+    private static final String IS_AFTERPAY_ENABLED = "IS_AFTERPAY_ENABLED";
+    private static final String AFTERPAY_SCRIPT_URI = "app_afterpay_script_uri";
+    private static final String AFTERPAY_LIGHTBOX_IMG_URL = "app_afterpay_lightboximgurl";
+    private static final String AFTERPAY_TERMS_LINK = "app_afterpay_terms_link";
 
     //ReCAPTCHA
     private static final String RECAPTCHA_SITE_KEY = "RECAPTCHA_SITE_KEY";
@@ -365,6 +368,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean isMasterpassEnabled() {
         return Prefs.getBoolean(PAYMENT_MASTERPASS_ENABLED, false);
+    }
+
+    @Override
+    public void setIsOurpayEnabled(boolean val) {
+        Prefs.putBoolean(IS_OURPAY_ENABLED, val);
+    }
+
+    @Override
+    public boolean isOurpayEnabled() {
+        return Prefs.getBoolean(IS_OURPAY_ENABLED, false);
     }
 
     @Override

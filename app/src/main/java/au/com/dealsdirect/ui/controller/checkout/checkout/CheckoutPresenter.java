@@ -223,6 +223,10 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Override
     public void generateOurpay(Value value) {
+        if (!getDataManager().isOurpayEnabled()) {
+            return;
+        }
+
         ourpay = new Ourpay();
         ourpay.setState(OurpayState.ONCART);
 
@@ -319,11 +323,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public boolean isAfterpayEnabled() {
-        return getDataManager().isAfterpayEnabled();
-    }
-
-    @Override
     public void updateCart(GetCurrentOrder.ResponseValue response) {
         if (!response.getD().isAuthenticated()) {
             getMvpView().triggerLoginTicket();
@@ -366,7 +365,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             getMvpView().showCartDetails(new ArrayList<>());
         }
 
-        if (cartDetailsValue.getAfterpay() != null) {
+        if (getDataManager().isAfterpayEnabled() && cartDetailsValue.getAfterpay() != null) {
             getMvpView().showAfterpayButton(
                     cartDetailsValue.getAfterpay().isAvailable(),
                     cartDetailsValue.getAfterpay().getDescription());

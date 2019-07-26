@@ -847,6 +847,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setIsOurpayEnabled(boolean val) {
+        mPreferencesHelper.setIsOurpayEnabled(val);
+    }
+
+    @Override
+    public boolean isOurpayEnabled() {
+        return mPreferencesHelper.isOurpayEnabled();
+    }
+
+    @Override
     public void setIsAfterpayEnabled(boolean val) {
         mPreferencesHelper.setIsAfterpayEnabled(val);
     }

@@ -50,7 +50,5 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
 
     boolean isPaypalEnabled();
 
-    boolean isAfterpayEnabled();
-
     boolean isVcoEnabled();
 }

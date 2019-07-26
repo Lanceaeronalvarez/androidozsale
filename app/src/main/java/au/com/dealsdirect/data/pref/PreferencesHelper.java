@@ -70,6 +70,10 @@ public interface PreferencesHelper {
 
     boolean isMasterpassEnabled();
 
+    void setIsOurpayEnabled(boolean val);
+
+    boolean isOurpayEnabled();
+
     void setIsAfterpayEnabled(boolean val);
 
     boolean isAfterpayEnabled();

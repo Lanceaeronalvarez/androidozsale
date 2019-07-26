@@ -63,7 +63,6 @@ import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.DeepLinkUrlType;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.utils.GdprUtils;
-import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.Observable;
@@ -320,6 +319,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
             if (accountData != null) {
                 getDataManager().setIsSortingEnabled(accountData.getSorting().getIsEnabled());
+
+                getDataManager().setIsOurpayEnabled(accountData.getOurPay().isEnabled());
+                getDataManager().setIsAfterpayEnabled(accountData.getAfterpay().isEnabled());
             }
         }
     };
@@ -357,7 +359,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             if (!isViewAttached()) {
                 return;
             }
-            getDataManager().setIsAfterpayEnabled(responseValue.d.getValue().getAfterpay().isEnabled());
             getDataManager().setAfterpayScriptUri(responseValue.d.getValue().getAfterpay().getScriptUri());
 
             String lightboxImageUrl = responseValue.d.getValue().getAfterpay().getLightboxImgUrl();

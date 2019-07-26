@@ -76,6 +76,10 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
     @Override
     public void loadOurpayData(final GetSaleItemDetailsResponse value) {
+        if (!getDataManager().isOurpayEnabled()) {
+            return;
+        }
+
         doApiCallForResponse(getDataManager().callGetOurpayData(OurpayDataRequest.init(
                 CurrencyUtil.getCurrency(getDataManager().getCountryId()), value.getPrice().getValue())),
                 new AppApiCallback() {
@@ -91,6 +95,10 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     @SuppressLint("DefaultLocale")
     @Override
     public void loadAfterpayData(Double price) {
+        if (!getDataManager().isAfterpayEnabled()) {
+            return;
+        }
+
         doApiCallForResponse(getDataManager().callGetAfterpayData(String.format("%.2f", price)),
                 new AppApiCallback() {
                     @Override

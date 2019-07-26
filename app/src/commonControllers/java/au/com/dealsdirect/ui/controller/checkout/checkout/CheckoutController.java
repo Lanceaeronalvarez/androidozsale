@@ -918,7 +918,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showAfterpayButton(boolean isAvailable, String description) {
-        if (mPresenter.isAfterpayEnabled() && isAvailable) {
+        if (isAvailable) {
             mAfterpayHolder.setVisibility(View.VISIBLE);
 
             SpannableStringBuilder spannableString = new SpannableStringBuilder(description);
@@ -931,6 +931,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mAfterpayDescription.setText(spannableString);
         } else {
             mAfterpayHolder.setVisibility(View.GONE);
+            // TODO: handle Afterpay display when Afterpay is unavailable for current cart
         }
     }
 
