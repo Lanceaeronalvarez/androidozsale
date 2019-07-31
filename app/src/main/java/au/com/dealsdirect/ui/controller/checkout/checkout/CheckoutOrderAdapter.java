@@ -33,11 +33,14 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
     private CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
     private int resLayout;
     private static final int MAX_ITEM_QTY = 5;
+    private CheckoutListener mClickListener;
 
-    public CheckoutOrderAdapter(Context context, List<Item> data, CheckoutMvpPresenter<CheckoutMvpView> presenter) {
+    public CheckoutOrderAdapter(Context context, List<Item> data, CheckoutMvpPresenter<CheckoutMvpView> presenter,
+                                CheckoutListener clickListener) {
         this.mContext = context;
         this.mData = data;
         this.mPresenter = presenter;
+        this.mClickListener = clickListener;
     }
 
     @Override
@@ -91,6 +94,13 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
             public void onQuantityDecrease(ProductQuantityLayout view, int value) {
                 mPresenter.fetchAdjustItemQuantity("DecreaseOrderItem", item.id, view);
             }
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+            mClickListener.showItemDetail(holder, 0, "",
+                    LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName),
+                    "", item.getSaleID(), false, item.getItem(), item.getItem(),
+                    String.valueOf(item.getPrice()), String.valueOf(item.getPrice()), item.getItemID());
         });
     }
 

@@ -54,8 +54,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 150
-            versionName "2.5.8"
+            versionCode 158
+            versionName "2.5.9"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -75,8 +75,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 150
-            versionName "2.5.8"
+            versionCode 158
+            versionName "2.5.9"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -180,9 +180,52 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
-        ooRC {
-            versionCode 150
+        dealsDirect2RC {
+            versionCode 152
             versionName "2.5.8"
+            applicationId "au.com.dealsdirect"
+
+            buildConfigField "String", "APP_NAME", "\"dealsdirect\""
+            buildConfigField "boolean", "IS_TEST", "false"
+
+            resValue "string", "app_name", "DealsDirect"
+            def facebookAppId = "1650094968544406"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "257280167216"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+
+        }
+
+        dealsDirect2Test {
+            versionCode 152
+            versionName "2.5.8"
+            applicationId "au.com.dealsdirect.test"
+
+            buildConfigField "String", "APP_NAME", "\"dealsdirect\""
+            buildConfigField "boolean", "IS_TEST", "true"
+
+            resValue "string", "app_name", "DealsDirect Test"
+            def facebookAppId = "1658400667713836"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "38e0530d1a0339d117b5474f0731f2af"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "257280167216"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
+
+            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
+
+        ooRC {
+            versionCode 158
+            versionName "2.5.9"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -202,8 +245,8 @@ android {
         }
 
         ooTest {
-            versionCode 150
-            versionName "2.5.8"
+            versionCode 158
+            versionName "2.5.9"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -243,9 +286,51 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
+        topbuy2RC {
+            versionCode 152
+            versionName "2.5.8"
+            applicationId "au.com.topbuy"
+
+            buildConfigField "String", "APP_NAME", "\"topbuy\""
+            buildConfigField "boolean", "IS_TEST", "false"
+
+            resValue "string", "app_name", "TopBuy"
+            def facebookAppId = "1544909069170785"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "fb7a6db2221738ebe78810dff07e1223"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "47143367223"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
+            resValue "string", "app_uri_hostname", "www.topbuy.com.au"
+
+            ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
+
         topbuyTest {
             versionCode 106
             versionName "2.3.3"
+            applicationId "au.com.topbuy.test"
+
+            buildConfigField "String", "APP_NAME", "\"topbuy\""
+            buildConfigField "boolean", "IS_TEST", "true"
+
+            resValue "string", "app_name", "TopBuy Test"
+            def facebookAppId = "1544909372504088"
+            resValue "string", "facebook_app_id", facebookAppId
+            resValue "string", "facebook_app_secret", "c1c38e066ad13cc4987929e3c2f73770"
+            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "fb_page_id", "47143367223"
+            resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
+            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
+
+            ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
+            resValue "string", "new_relic_app_token", ext.newRelicAppToken
+        }
+
+        topbuy2Test {
+            versionCode 152
+            versionName "2.5.8"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -288,8 +373,8 @@ android {
         }
 
         ozsaleRC {
-            versionCode 150
-            versionName "2.5.8"
+            versionCode 158
+            versionName "2.5.9"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -310,8 +395,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 150
-            versionName "2.5.8"
+            versionCode 158
+            versionName "2.5.9"
             applicationId "au.com.ozsale.test"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -332,8 +417,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 150
-            versionName "2.5.8"
+            versionCode 158
+            versionName "2.5.9"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -354,8 +439,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 150
-            versionName "2.5.8"
+            versionCode 158
+            versionName "2.5.9"
             applicationId "sg.com.singsaletest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -375,8 +460,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 150
-            versionName "2.5.8"
+            versionCode 158
+            versionName "2.5.9"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -397,9 +482,9 @@ android {
         }
 
         nzsaleTest {
-            versionCode 150
-            versionName "2.5.8"
-            applicationId "nz.co.nzsaletest"
+            versionCode 158
+            versionName "2.5.9"
+            applicationId "nz.co.nzsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
             buildConfigField "boolean", "IS_TEST", "true"
@@ -419,8 +504,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 150
-            versionName "2.5.8"
+            versionCode 158
+            versionName "2.5.9"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -440,9 +525,9 @@ android {
         }
 
         mysaleTest {
-            versionCode 150
-            versionName "2.5.8"
-            applicationId "my.mysale.mysaletest"
+            versionCode 158
+            versionName "2.5.9"
+            applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
             buildConfigField "boolean", "IS_TEST", "true"
@@ -508,6 +593,20 @@ android {
                             'src/main/java/']
         }
 
+        dealsDirect2RC {
+            res.srcDirs = ['src/dealsDirect2RC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        dealsDirect2Test {
+            res.srcDirs = ['src/dealsDirect2RC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
         ooRC {
             res.srcDirs = ['src/ooRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
@@ -558,6 +657,19 @@ android {
             java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
         }
 
+        topbuy2Test {
+            res.srcDirs = ['src/topbuy2RC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
+
+        topbuy2RC {
+            res.srcDirs = ['src/topbuy2RC/res','src/ozsaleCommon/res']
+            java.srcDirs = ['src/ozsaleRC/java',
+                            'src/commonControllers/java/',
+                            'src/main/java/']
+        }
 
         ozsaleRC {
             res.srcDirs = ['src/ozsaleRC/res','src/ozsaleCommon/res']

@@ -7,6 +7,8 @@ import au.com.dealsdirect.ui.base.AuthenticationMvpView;
 
 public interface LoginMvpView extends AuthenticationMvpView {
 
+    void showLoginStart();
+
     void showLoginSuccessful(String loginTicket, boolean isFacebookLogin);
 
     void showLoginError(String message, boolean isFacebookLogin);

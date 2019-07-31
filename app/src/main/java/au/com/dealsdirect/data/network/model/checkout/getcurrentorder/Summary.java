@@ -26,6 +26,14 @@ public class Summary {
         return tax != null ? tax : 0;
     }
 
+    public Double getSelect() {
+        return select;
+    }
+
+    public Double getTotalWithSelect() {
+        return totalWithSelect;
+    }
+
     @SerializedName(value = "Subtotal", alternate = {"subtotal"})
     private Double subtotal;
     @SerializedName(value = "Delivery", alternate = {"delivery"})
@@ -36,4 +44,9 @@ public class Summary {
     private Double total;
     @SerializedName(value = "Tax", alternate = {"tax"})
     private Double tax;
+    @SerializedName(value = "Select", alternate = {"select"})
+    private Double select;
+    @SerializedName("TotalWithSelect")
+    private Double totalWithSelect;
+
 }

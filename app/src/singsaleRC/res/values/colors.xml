@@ -159,4 +159,6 @@
     <color name="bg_splash_color_center">#CC2E3C</color>
     <color name="bg_splash_color_start">#C30E28</color>
 
+    <color name="bg_fcm_notif">#C30E28</color>
+
 </resources>

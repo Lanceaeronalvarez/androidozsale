@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "135798231877",
+    "firebase_url": "https://deals-direct.firebaseio.com",
+    "project_id": "deals-direct",
+    "storage_bucket": "deals-direct.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:135798231877:android:d1712d1f61e17b08",
+        "android_client_info": {
+          "package_name": "au.com.dealsdirect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "135798231877-768vhh6b2emdhovt3u284276er96ubru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCi9AF-S6A3Al5I-hxO4TQ3-VFzS5P4Iw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "135798231877-768vhh6b2emdhovt3u284276er96ubru.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "135798231877-7c936glr8met3jnglate71o553msu0ar.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "au.com.DealsDirect-test"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

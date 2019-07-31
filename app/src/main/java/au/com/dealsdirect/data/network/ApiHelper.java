@@ -85,6 +85,7 @@ import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPay
 import au.com.dealsdirect.data.network.model.ourpaydashboard.scheduledplans.GetScheduledPlansResponse;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
+import au.com.dealsdirect.data.network.model.ourpaydata.ProcessOurpayInstallmentRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
@@ -343,6 +344,8 @@ public interface ApiHelper {
     Observable<GetPastPaymentsResponse> callGetPastPayments(String countryId, String languageId);
 
     Observable<GetDeliveryServiceResponse> callGetDeliveryService();
+
+    Observable<GetScheduledPlansResponse> processOurpayInstallment(ProcessOurpayInstallmentRequest request);
 
     // DEEPLINK
     Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request);

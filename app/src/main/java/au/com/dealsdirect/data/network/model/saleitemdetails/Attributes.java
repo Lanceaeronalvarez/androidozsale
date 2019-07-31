@@ -21,6 +21,13 @@ public class Attributes {
     @SerializedName("brandDescription")
     @Expose
     private String brandDescription;
+    @SerializedName("masterProductId")
+    @Expose
+    private String productId;
+
+    public String getProductId() {
+        return productId;
+    }
 
     public String getSize() {
         return size;

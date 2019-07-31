@@ -39,7 +39,6 @@ import au.com.dealsdirect.ui.controller.account.model.AccountItem;
 import au.com.dealsdirect.ui.controller.account.model.AccountSubItem;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
@@ -200,14 +199,18 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         initLoginDrawable();
 
-        displayAds();
+        if (mPresenter.isGoogleAdsEnabled()) {
+            displayAds();
+        }
     }
 
     @Override
     public void onOrientationChanged(Configuration newConfiguration) {
         super.onOrientationChanged(newConfiguration);
 
-        displayAds();
+        if (mPresenter.isGoogleAdsEnabled()) {
+            displayAds();
+        }
     }
 
     private void displayAds(){
@@ -252,7 +255,7 @@ public class AccountController extends BaseController implements AccountMvpView,
             }
 
             //skip if multi country not enabled
-            if (!mPresenter.isMultiCountry() && title.equals(getString(R.string.account_country))) {
+            if (!Settings.getIsMultiCountry() && title.equals(getString(R.string.account_country))) {
                 continue;
             }
 
@@ -261,12 +264,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 continue;
             }
 
-            if (title.equals(getString(R.string.account_options))) {
-                List optionsArray = createSubAccountItems(R.array.account_options_sub_item_title_array);
-                newAccountItem = new AccountItem(i, title, optionsArray);
-            } else {
-                newAccountItem = new AccountItem(i, title, Collections.emptyList());
-            }
+            newAccountItem = new AccountItem(i, title, Collections.emptyList());
             mAccountItems.add(newAccountItem);
         }
 
@@ -412,13 +410,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showContactUs() {
-        if (getResources().getBoolean(R.bool.is_account_contact_visible)) {
-            if (!mPresenter.isTablet()) {
-                GateKeeper.push(getDisplayRouter(), ViewContactsController.TAG, GateKeeper.Destination.CONTACT_US, new HorizontalChangeHandler(), new HorizontalChangeHandler());
-            } else {
-                GateKeeper.setRoot(getDisplayRouter(), ViewContactsController.TAG, GateKeeper.Destination.CONTACT_US, RouterTransaction.with(LanguageController.newInstance()));
-            }
-        }
+        mActivity.getHomeController().showFourthTabController();
     }
 
     @Override

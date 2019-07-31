@@ -78,6 +78,7 @@ import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -335,6 +336,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private int mToolbarVerticalOffset;
     private boolean mIsSoldOutCombined = true;
     private int mAttempts = 0;
+    private String mProductId;
 
     private boolean hasLoadedDetails = false;
 
@@ -760,6 +762,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
 
+        mProductId = saleDetail.getAttributes().getProductId();
+
+        mSkuId = saleDetail.getSkuId();
+
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
 
         // set product view request object for genie event
@@ -939,6 +945,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 onSelectTag(selectPosSet.isEmpty() ? -1 : selectPosSet.iterator().next());
             });
 
+            // auto-select size if mProductSizes equals to 1
+            if (mProductSizes.size() == 1) {
+                onSelectTag(0);
+            }
+
         }
 
         if (!mIsSoldOutCombined || !saleDetail.isSoldOut()) {
@@ -1101,6 +1112,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @OnClick({R.id.product_details_add_to_basket, R.id.product_details_add_to_basket_timer})
     void addToBasket() {
         mAttempts++;
+
+        CommonUtils.saveSaleItem(mActivity, mProductId, mSeoIdentifierId, mSaleId);
+
         AddToCartRequest request = new AddToCartRequest();
         request.setSkuId(mSkuId);
         request.setItemName(mSaleName);

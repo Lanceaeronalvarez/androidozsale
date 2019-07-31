@@ -231,4 +231,16 @@ public interface PreferencesHelper {
 
     void setReCaptchaSiteKey(String key);
     String getReCaptchaSiteKey();
+
+    void setIsGoogleAdsEnabled(boolean isGoogleAdsEnabled);
+
+    boolean isGoogleAdsEnabled();
+
+    void setLastColumnSelected(int columnCount);
+
+    int getLastColumnSelected();
+
+    void setLastTimeStamp(String timeStamp);
+
+    String getLastTimeStamp();
 }

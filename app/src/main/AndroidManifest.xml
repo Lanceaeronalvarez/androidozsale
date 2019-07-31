@@ -98,6 +98,16 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <!--set notification icon-->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notif_icon" />
+
+        <!--set notification color-->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/bg_fcm_notif" />
+
         <service
             android:name=".service.fcm.FirebaseBroadcastReceiver">
             <intent-filter>

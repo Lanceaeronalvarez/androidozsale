@@ -149,4 +149,6 @@
     <color name="bg_chips_soldout_text">#959595</color>
     <color name="country_select_active">@color/text_extra_dark</color>
 
+    <color name="bg_fcm_notif">#E90F87</color>
+
 </resources>

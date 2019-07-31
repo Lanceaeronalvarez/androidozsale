@@ -249,7 +249,7 @@ public class Settings {
                                     "EN",
                                     "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
                                     "https://api.mysaledev.com/")} );
-        } else if (BuildConfig.FLAVOR.equals("dealsDirectRC")){
+        } else if (BuildConfig.FLAVOR.equals("dealsDirectRC") || BuildConfig.FLAVOR.equals("dealsDirect2RC")){
             populatePackageWithCountries(
                     new Country[] {
                             new Country("Australia",
@@ -260,7 +260,7 @@ public class Settings {
                                         "EN",
                                         "https://www.dealsdirect.com.au/",
                                         "https://www.dealsdirect.com.au/")} );
-        } else if (BuildConfig.FLAVOR.equals("dealsDirectTest")){
+        } else if (BuildConfig.FLAVOR.equals("dealsDirectTest") || BuildConfig.FLAVOR.equals("dealsDirect2Test")){
             populatePackageWithCountries(
                     new Country[] {
                             new Country("Australia",
@@ -271,7 +271,7 @@ public class Settings {
                                     "EN",
                                     "https://api.mysaledev.com/",
                                     "https://api.mysaledev.com/")} );
-        } else if (BuildConfig.FLAVOR.equals("topbuyRC")){
+        } else if (BuildConfig.FLAVOR.equals("topbuyRC") || BuildConfig.FLAVOR.equals("topbuy2RC")){
             populatePackageWithCountries(
                     new Country[] {
                             new Country("Australia",
@@ -282,7 +282,7 @@ public class Settings {
                                         "EN",
                                         "https://www.topbuy.com.au/",
                                         "https://www.topbuy.com.au/")} );
-        } else if (BuildConfig.FLAVOR.equals("topbuyTest")){
+        } else if (BuildConfig.FLAVOR.equals("topbuyTest") || BuildConfig.FLAVOR.equals("topbuy2Test")){
             populatePackageWithCountries(
                     new Country[] {
                             new Country("Australia",

@@ -183,7 +183,6 @@ public class LoginController extends BaseController implements LoginMvpView {
                 mPasswordEditText.getText().toString().isEmpty()) {
             mActivity.loginErrorHandler(getResources().getString(R.string.please_fill_up_all_the_fields));
         } else {
-            mLoginButton.setEnabled(false);
             callLoginApi();
         }
     }
@@ -206,6 +205,11 @@ public class LoginController extends BaseController implements LoginMvpView {
     @OnClick({R.id.partial_toolbar_right_view, R.id.controller_login_close_icon})
     void onCloseIconClick() {
         mActivity.onBackPressed();
+    }
+
+    @Override
+    public void showLoginStart() {
+        mLoginButton.setEnabled(false);
     }
 
     @Override

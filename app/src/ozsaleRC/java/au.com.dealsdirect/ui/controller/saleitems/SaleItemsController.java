@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,11 +36,15 @@ import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.profiler.Profiler;
 import com.paginate.Paginate;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -66,6 +72,7 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.AdaptiveTabLayout;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -271,6 +278,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private List<Pair<String, String>> mFacetFilters = new ArrayList();
     private List<String> mTabTitles = new ArrayList();
     private List<String> mSelectedTitle = new ArrayList<>();
+    private int mColumnCount;
 
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
@@ -318,6 +326,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.partial_toolbar_details_end_time_text)
     TextView mSaleEndsInText;
+
+    @BindView(R.id.partial_toolbar_field_title_right_option)
+    ImageButton mColumnView;
 
     private SaleItemsAdapter mSaleItemsAdapter;
     private Paginate mPaginateManager;
@@ -727,6 +738,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             setupSaleRemainingTime(mEndDate);
         }
 
+        mColumnView.setVisibility(View.VISIBLE);
+        mColumnCount = mPresenter.getColumnCount();
+        mColumnView.setTag(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
+                R.drawable.ic_3_column_view : R.drawable.ic_2_column_view);
+        mColumnView.setImageDrawable(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
+                getResources().getDrawable(R.drawable.ic_3_column_view) : getResources().getDrawable(R.drawable.ic_2_column_view));
 
         //use initialcategory tree map if it came from categories.
         if (!mInitialCategoryTree.isEmpty()) {
@@ -736,7 +753,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
-        mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId);
+        mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId, mColumnCount);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -813,6 +830,70 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             DataCollector.logEvent(Events.SaleEvent, parameters);
         }
 
+    }
+
+    @OnClick(R.id.partial_toolbar_field_title_right_option)
+    void onColumnClick() {
+        int tag = (int) mColumnView.getTag();
+        if( tag == R.drawable.ic_2_column_view ){
+            mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_3_column_view));
+            mColumnView.setTag(R.drawable.ic_3_column_view);
+
+            mColumnCount = mActivity.getResources().getInteger(R.integer.items_max_column_portrait);
+            mPresenter.setColumnCount(mColumnCount);
+
+            setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_max_column_portrait),
+                    mActivity.getResources().getInteger(R.integer.items_max_column_landscape));
+        }else{
+            mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_2_column_view));
+            mColumnView.setTag(R.drawable.ic_2_column_view);
+
+            mColumnCount = mActivity.getResources().getInteger(R.integer.items_min_column_portrait);
+            mPresenter.setColumnCount(mColumnCount);
+
+            setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_min_column_portrait),
+                    mActivity.getResources().getInteger(R.integer.items_min_column_landscape));
+        }
+    }
+
+    private void setAdapterPerColumnChange(int portraitColumn, int landscapeColumn) {
+
+        int getSavedDay = mPresenter.getTimeStamp().isEmpty() ? 0 :
+                Integer.parseInt(mPresenter.getTimeStamp());
+
+        if (DateUtils.hasDayPassed(getSavedDay)) {
+
+            Calendar calander = Calendar.getInstance();
+            int calendarDay = calander.get(Calendar.DAY_OF_YEAR);
+            mPresenter.setTimeStamp(String.valueOf(calendarDay));
+
+            HashMap<String, Object> eventParameters = new HashMap<>();
+            eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+            eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
+            eventParameters.put(DataCollector.EventParameters.TOGGLE_LIST_PORTRAIT, portraitColumn);
+            eventParameters.put(DataCollector.EventParameters.TOGGLE_LIST_LANDSCAPE, landscapeColumn);
+            DataCollector.logEvent(Events.ToggleColumn, eventParameters);
+        }
+
+        mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId, mColumnCount);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch(mSaleItemsAdapter.getItemViewType(position)){
+                    case 1: // set default column count if not footer
+                        return mSaleItemsAdapter.getColumnCount();
+                    case 0: // set column count to 1 if it's a footer
+                        return 1;
+                    default:
+                        return -1;
+                }
+            }
+        });
+
+        mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
+
+        mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
     }
 
     private void setupSaleRemainingTime(String endDate) {

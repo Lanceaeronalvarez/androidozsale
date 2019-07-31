@@ -40,6 +40,7 @@ import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayDataSource.Item.PaymentPlan;
 import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayDataSource.Item.ScheduledPayment;
 import au.com.dealsdirect.ui.controller.webviewcontroller.WebViewController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.module.ControllerFactory;
@@ -53,7 +54,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Timed;
 
 public class MyAccountsOurpayController extends BaseController
-        implements MyAccountsOurpayMvpView, MyAccountsOurpayDataSource {
+        implements MyAccountsOurpayMvpView, MyAccountsOurpayDataSource, MyAccountsOurpayListener {
 
     private final static TimeUnit EXECUTOR_SERVICE_TIME_UNIT = TimeUnit.MILLISECONDS;
     private final static float HEADER_SNAP_SPEED_MULTIPLIER = EXECUTOR_SERVICE_TIME_UNIT.convert(1, TimeUnit.SECONDS);
@@ -194,6 +195,13 @@ public class MyAccountsOurpayController extends BaseController
 
     private void endHeaderRunLoop() {
         mHeaderRunLoopDisposable.clear();
+    }
+
+    @Override
+    public void showLoadingDialog() {
+        if (isViewAttached()) {
+            mActivity.showOurpayLoading();
+        }
     }
 
     private static class HeightProperty extends Property<View, Integer> {
@@ -401,6 +409,8 @@ public class MyAccountsOurpayController extends BaseController
 
         mCellAdapters = new ArrayList<>();
         mCellAdapters.add(new MyAccountsOurpayCellAdapter(
+                mPresenter,
+                this,
                 "PaymentPlans",
                 MyAccountsOurpayCellAdapter.VIEW_TYPE_PAYMENT_PLANS,
                 this,
@@ -458,9 +468,9 @@ public class MyAccountsOurpayController extends BaseController
                     }
                     return false;
                 }));
-        mCellAdapters.add(new MyAccountsOurpayCellAdapter("ScheduledPayments",
+        mCellAdapters.add(new MyAccountsOurpayCellAdapter(mPresenter, this,"ScheduledPayments",
                 MyAccountsOurpayCellAdapter.VIEW_TYPE_SCHEDULED_PAYMENTS, this, null));
-        mCellAdapters.add(new MyAccountsOurpayCellAdapter("PastPayments",
+        mCellAdapters.add(new MyAccountsOurpayCellAdapter(mPresenter, this,"PastPayments",
                 MyAccountsOurpayCellAdapter.VIEW_TYPE_SCHEDULED_PAYMENTS, this, null));
 
         mRecyclerViewAdapter.setCellAdapters(mCellAdapters);
@@ -471,6 +481,18 @@ public class MyAccountsOurpayController extends BaseController
                 mRecyclerView.smoothScrollToPosition(tab.getPosition());
                 resetHeaderHeight(Objects.requireNonNull(getResources())
                         .getConfiguration().orientation);
+
+                switch (tab.getPosition()) {
+                    case 0:
+                        mPresenter.fetchDataForPaymentPlans();
+                        break;
+                    case 1:
+                        mPresenter.fetchDataForScheduledPayments();
+                        break;
+                    case 2:
+                        mPresenter.fetchDataForPastPayments();
+                        break;
+                }
             }
 
             @Override
@@ -660,6 +682,12 @@ public class MyAccountsOurpayController extends BaseController
         if (mCellAdapters != null && mCellAdapters.size() > 2) {
             mCellAdapters.get(2).reloadData();
         }
+    }
+
+    @Override
+    public void showMessage(String message) {
+        CustomAlertDialog.showCustomAlertDialog(mActivity,
+                CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
     }
 
     private void fetchDataForIndex(int index) {

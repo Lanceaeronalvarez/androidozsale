@@ -133,6 +133,19 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     }
 
     @Override
+    public boolean isGoogleAdsEnabled() {
+        return getDataManager().isGoogleAdsEnabled();
+    }
+
+    @Override
+    public boolean willScreenChange(Context context, String option) {
+        if (option.equals(context.getString(R.string.account_contact_us))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public void loadAccountItems(List<AccountItem> accountItems) {
         getMvpView().showAccountItems(accountItems);
     }

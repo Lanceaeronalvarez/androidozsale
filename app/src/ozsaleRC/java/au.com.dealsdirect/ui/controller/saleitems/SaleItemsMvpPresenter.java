@@ -18,4 +18,14 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
     void loadSortingFacets();
 
     boolean isSortingEnabled();
+
+    boolean isGoogleAdsEnabled();
+
+    int getColumnCount();
+
+    void setColumnCount(int columnCount);
+
+    void setTimeStamp(String date);
+
+    String getTimeStamp();
 }

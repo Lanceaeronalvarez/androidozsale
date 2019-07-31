@@ -7,11 +7,11 @@
 
     <include layout="@layout/partial_toolbar_arrow" />
 
-    <android.support.v4.widget.NestedScrollView
+    <ScrollView
         android:id="@+id/add_payment_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
+        android:background="@color/background_default"
         android:fillViewport="true">
 
         <LinearLayout
@@ -19,15 +19,26 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/address_office_delivery_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_default_half"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:layout_marginRight="@dimen/padding_default"
+                android:layout_marginTop="@dimen/padding_default"
+                android:text="@string/enter_card_details"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption2" />
+
             <com.braintreepayments.cardform.view.CardForm
                 android:id="@+id/card_form"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_default"/>
+                android:layout_height="wrap_content" />
 
-            <include layout="@layout/partial_checkout_button"/>
+            <include layout="@layout/partial_checkout_button" />
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </ScrollView>
 </LinearLayout>

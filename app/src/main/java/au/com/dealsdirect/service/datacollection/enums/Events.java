@@ -34,7 +34,8 @@ public enum Events {
     EventUser("EventUser"),
     SaleEvent("SaleEvent"),
     RemoveFromCart("RemoveFromCart"),
-    FailedTransaction("FailedTransaction");
+    FailedTransaction("FailedTransaction"),
+    ToggleColumn("ToggleColumn");
 
     private String value;
 

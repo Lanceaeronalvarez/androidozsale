@@ -251,4 +251,6 @@
     <color name="ourpay_installment_circle_fail">#e05050</color>
     <color name="ourpay_installment_circle_success">#50d050</color>
 
+    <color name="bg_fcm_notif">#F00065</color>
+
 </resources>

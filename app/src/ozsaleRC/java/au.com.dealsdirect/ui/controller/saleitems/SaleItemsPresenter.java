@@ -103,4 +103,28 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         return getDataManager().getIsSortingEnabled();
     }
 
+    @Override
+    public boolean isGoogleAdsEnabled() {
+        return getDataManager().isGoogleAdsEnabled();
+    }
+
+    @Override
+    public int getColumnCount() {
+        return getDataManager().getLastColumnSelected();
+    }
+
+    @Override
+    public void setColumnCount(int columnCount) {
+        getDataManager().setLastColumnSelected(columnCount);
+    }
+
+    public void setTimeStamp(String date) {
+        getDataManager().setLastTimeStamp(date);
+    }
+
+    @Override
+    public String getTimeStamp() {
+        return getDataManager().getLastTimeStamp();
+    }
+
 }

@@ -1,0 +1,121 @@
+<resources>
+    <string name="admob_app_id">ca-app-pub-4114338578467810~6949554253</string>
+    <string name="admob_banners_id">ca-app-pub-4114338578467810/5044132565</string>
+    <string name="admob_products_id">ca-app-pub-4114338578467810/6566410870</string>
+    <string name="admob_account_id">ca-app-pub-4114338578467810/7193096833</string>
+
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="checkout_page_toolbar_title">Checkout</string>
+    <string name="total">Total</string>
+    <string name="add_new_address">Add New Address</string>
+    <string name="invite_friend_guide">Invite your friends to join Topbuy. Once your friends have
+        joined through your invitation and made their first purchase you will instantly receive a
+        voucher to use towards any future purchase.
+    </string>
+
+    <string name="add_new_voucher">Add Voucher</string>
+
+    <string name="vouchers_view_detail">Invite your friends to join Topbuy. Once your friends have
+    joined through your invitation and made their first purchase you will instantly receive a
+    voucher to use towards any future purchase. \n\nYou can apply any vouchers
+        currently in your account when you checkout your order. \n
+    </string>
+
+    <string name="thank_you_for_shopping">Thank you for shopping with</string>
+
+    <string name="close">Close</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="see_todays_sale">See Today\'s Sales</string>
+    <string name="save_80_off">Save up to 80% off</string>
+    <string name="designer_fashion_more">Designer fashion, homeware, cosmetics &amp; more!</string>
+    <string name="enter_personal_details">ENTER PERSONAL DETAILS</string>
+    <string name="surname">Surname</string>
+    <string name="my_messages">MY MESSAGES</string>
+    <string name="delivery_label">Delivery</string>
+    <string name="voucher_label">Voucher</string>
+    <string name="my_addresses_toolbar_title">My Addresses</string>
+    <string name="new_message">New Message</string>
+    <string name="my_payments">My Payments</string>
+    <string name="email_hint">Email</string>
+    <string name="register_title">Registration</string>
+    <string name="login_title">Log In</string>
+    <string name="last_name">Surname</string>
+    <string name="i_am_looking_for">Search</string>
+
+    <!--Placeholder remarks-->
+    <string name="welcome_remark_subtitle_address">You do not currently have any address.</string>
+    <string name="welcome_remark_title_address">Welcome to My Addresses!</string>
+    <string name="welcome_to_my_vouchers">Welcome to My Vouchers!</string>
+    <string name="welcome_remark_title_payments">Welcome to My Payments!</string>
+    <string name="you_do_not_currently_have_any_vouchers">You do not currently have any vouchers.</string>
+    <string name="welcome_remark_title_contact_us">Welcome to Contact Us!</string>
+    <string name="welcome_remark_subtitle_contact_us">You do not currently have any messages.</string>
+    <string name="welcome_remark_title_orders">Welcome to My Orders!</string>
+    <string name="welcome_remark_subtitle_orders">You do not currently have any orders.</string>
+    <string name="your_cart_is_currently_empty">Welcome to Checkout!</string>
+    <string name="welcome_remark_subtitle_payments">You do not currently have any payment methods.</string>
+    <string name="you_have_not_added_any_items_in_your_shopping_cart">You do not currently have any items added.</string>
+    <string name="you_have_not_added_any_orders_for_return">You have not added any orders for return.</string>
+    <string name="no_orders_for_return">No orders for return</string>
+    <string name="welcome_to_my_returns">Welcome to My Returns!</string>
+    <string name="you_currently_do_not_have_any_returns">You do not currently have any returns.</string>
+
+    <string name="product_item_source_name">Topbuy</string>
+    <string name="add_new_payment_method">Add New Payment Method</string>
+    <string name="my_payment_methods">MY PAYMENT METHOD</string>
+    <string name="continue_shopping">Continue Shopping</string>
+    <string name="my_current_delivery_address">MY CURRENT DELIVERY ADDRESS</string>
+    <string name="delivery_method">DELIVERY METHOD</string>
+    <string name="payment_method">PAYMENT METHOD</string>
+    <string name="apply">Apply Voucher</string>
+    <string name="shop_now">Shop Now</string>
+    <string name="my_basket">Checkout</string>
+    <string name="browse">Category</string>
+    <string name="shop">Shop</string>
+    <string name="my_addresses">MY ADDRESSES</string>
+    <string name="select_a_sale">Select a Sale</string>
+    <string name="voucher_used">MY VOUCHERS</string>
+    <string name="checkout_order_label">MY ORDERS</string>
+    <string name="promo_code">Promo Code</string>
+    <string name="enter_voucher_code">Enter voucher code</string>
+    <string name="enter_promo_code">Enter promo code</string>
+    <string name="date_of_birth">Birthday</string>
+    <string name="email_address">Email</string>
+    <string name="no_orders">You do not have any orders</string>
+
+    <integer-array name="account_options_sub_item_title_array">
+        <!--<item>@string/account_language</item>-->
+        <!--<item>@string/account_country</item>-->
+        <item>@string/account_notification</item>
+        <!--removed for release, still using 3.23, GDPR not included-->
+        <!--<item>@string/account_clear_cookies_data</item>-->
+    </integer-array>
+
+    <integer-array name="account_title_array">
+        <item>@string/account_details</item>
+        <item>@string/account_addresses</item>
+        <item>@string/account_orders</item>
+        <item>@string/account_payments</item>
+        <item>@string/account_returns</item>
+        <item>@string/account_vouchers</item>
+        <item>@string/account_invite_friend</item>
+        <item>@string/account_ourpay</item>
+        <item>@string/account_contact_us</item>
+        <item>@string/account_options</item>
+    </integer-array>
+
+    <!-- Font Strings -->
+    <string name="font_app_bold">fonts/opensans/OpenSans-Bold.ttf</string>
+    <string name="font_app_bold_italic">fonts/opensans/OpenSans-BoldItalic.ttf</string>
+    <string name="font_app_heavy">fonts/opensans/OpenSans-ExtraBold.ttf</string>
+    <string name="font_app_heavy_italic">fonts/opensans/OpenSans-ExtraBoldItalic.ttf</string>
+    <string name="font_app_italic">fonts/opensans/OpenSans-Italic.ttf</string>
+    <string name="font_app_light">fonts/opensans/OpenSans-Light.ttf</string>
+    <string name="font_app_light_italic">fonts/opensans/OpenSans-LightItalic.ttf</string>
+    <string name="font_app_regular">fonts/opensans/OpenSans-Regular.ttf</string>
+    <string name="font_app_semibold">fonts/opensans/OpenSans-Semibold.ttf</string>
+    <string name="font_app_semibold_italic">fonts/opensans/OpenSans-SemiboldItalic.ttf</string>
+
+    <string name="app_package_name">au.com.topbuy</string>
+
+</resources>

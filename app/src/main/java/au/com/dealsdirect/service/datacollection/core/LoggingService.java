@@ -346,4 +346,18 @@ public class LoggingService {
         }
     }
 
+    public static class LogToggleColumn implements LoggingEventData {
+
+        private LogDataEvents logToggleColumn;
+
+        public LogToggleColumn (LogDataEvents logToggleColumn) {
+            this.logToggleColumn = logToggleColumn;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logToggleColumn.LogDataEvents(parameters);
+        }
+    }
+
 }

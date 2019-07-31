@@ -522,6 +522,17 @@ public class MyAccountsOurpayResponseReducer {
                 return context.getResources().getDrawable(id);
             }
         }
+
+        @Override
+        public CharSequence getTransactionId() {
+            return mSource.getTransactionId();
+        }
+
+        @Override
+        public CharSequence getBillingAgreementId() {
+            return mSource.getBillingAgreementId();
+        }
+
     }
 
     private static class PresenterPastPayment implements ScheduledPayment {
@@ -586,6 +597,16 @@ public class MyAccountsOurpayResponseReducer {
             } else {
                 return context.getResources().getDrawable(id);
             }
+        }
+
+        @Override
+        public CharSequence getTransactionId() {
+            return mSource.getTransactionId();
+        }
+
+        @Override
+        public CharSequence getBillingAgreementId() {
+            return mSource.getBillingAgreementId();
         }
     }
 
