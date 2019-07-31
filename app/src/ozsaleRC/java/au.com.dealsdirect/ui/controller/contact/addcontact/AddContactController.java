@@ -44,6 +44,9 @@ import butterknife.OnClick;
 public class AddContactController extends BaseController implements AddContactMvpView {
 
     public static final String TAG = "AddContactController";
+    public static final String INVOICE_NUMBER = "INVOICE_NUMBER";
+    public static final String IS_CALLED_FROM_ORDERS = "IS_CALLED_FROM_ORDERS";
+    public static final String ITEM_DESCRIPTION = "ITEM_DESCRIPTION";
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageView mAddContactToolbarRightOption;
@@ -78,6 +81,9 @@ public class AddContactController extends BaseController implements AddContactMv
     private String mChosenOptionInvoice;
 
     private String mChosenSubject = "";
+    private int mInvoiceNumber;
+    private String mDescription = "";
+    private boolean isCalledFromOrders = false;
 
     private ViewContactsMvpView mViewContactsMvpView;
     private boolean mHasSavedInstance = false;
@@ -87,9 +93,25 @@ public class AddContactController extends BaseController implements AddContactMv
                 new BundleBuilder(new Bundle()).build());
     }
 
+    public static AddContactController newInstance(
+            int invoiceNo,
+            boolean isCalledFromOrders,
+            String itemDescription) {
+
+        return new AddContactController(
+                new BundleBuilder(new Bundle())
+                        .putInt(INVOICE_NUMBER, invoiceNo)
+                        .putBoolean(IS_CALLED_FROM_ORDERS, isCalledFromOrders)
+                        .putString(ITEM_DESCRIPTION, itemDescription)
+                        .build());
+    }
+
 
     public AddContactController(Bundle args) {
         super(args);
+        mInvoiceNumber = getArgs().getInt(INVOICE_NUMBER);
+        mDescription = getArgs().getString(ITEM_DESCRIPTION, "");
+        isCalledFromOrders = getArgs().getBoolean(IS_CALLED_FROM_ORDERS, false);
     }
 
     @Override
@@ -137,11 +159,18 @@ public class AddContactController extends BaseController implements AddContactMv
         mAddContactToolbarTitle.setText(R.string.new_message);
         mActivity.setDraggableViewPager(false);
 
-        if(ContactPreferenceHelper.getChosenInvoice(mActivity).isEmpty()) {
+        if(ContactPreferenceHelper.getChosenInvoice(mActivity).isEmpty() &&
+            !isCalledFromOrders) {
             mAddContactOrderText.setText(getString(R.string.select_a_sale));
         } else {
+
+            if (isCalledFromOrders) {
+                ContactPreferenceHelper.setChosenInvoiceString(mActivity, String.valueOf(mInvoiceNumber));
+                ContactPreferenceHelper.setChosenOrderString(mActivity, mDescription);
+            }
+
             mAddContactOrderText.setText(ContactPreferenceHelper.getChosenInvoice(mActivity)
-                    + " " + ContactPreferenceHelper.getChosenOrder(mActivity));
+                            + " " + ContactPreferenceHelper.getChosenOrder(mActivity));
         }
         String message = ContactPreferenceHelper.getContactMessage(mActivity);
         if(!message.isEmpty()) {

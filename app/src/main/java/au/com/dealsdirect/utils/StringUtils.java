@@ -1,18 +1,19 @@
 package au.com.dealsdirect.utils;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.widget.TextView;
+import android.text.SpannableStringBuilder;
+import android.util.Log;
+import android.util.Range;
 
-import com.mysale.genie.utility.Prefs;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -75,7 +76,7 @@ public class StringUtils {
         int charCount = 0;
         String newString = "";
 
-        if(categoryKey == null) {
+        if (categoryKey == null) {
             return newString;
         }
         for (int i = 0; i < categoryKey.length(); i++) {
@@ -128,4 +129,120 @@ public class StringUtils {
         return key;
     }
 
+    public static String loadAssetTextAsString(Context context, String name) {
+        BufferedReader in = null;
+        try {
+            StringBuilder buf = new StringBuilder();
+            InputStream is = context.getAssets().open(name);
+            in = new BufferedReader(new InputStreamReader(is));
+
+            String str;
+            boolean isFirst = true;
+            while ((str = in.readLine()) != null) {
+                if (isFirst)
+                    isFirst = false;
+                else
+                    buf.append('\n');
+                buf.append(str);
+            }
+            return buf.toString();
+        } catch (IOException e) {
+            Log.e(StringUtils.class.toString(), "Error opening asset " + name);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    Log.e(StringUtils.class.toString(), "Error closing asset " + name);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    // Probably runs faster? uses a delimiter
+    public static List<Range<Integer>> rangesOfSubstringsMatching(String source,
+                                                                  char delimiter,
+                                                                  String regex) {
+        ArrayList<Range<Integer>> ranges = new ArrayList<>();
+
+        int i = -1;
+        int length = source.length();
+        while (i < length) {
+            if ((i < 0 || source.charAt(i) == delimiter) &&
+                    (i + 1 < length && source.charAt(i + 1) != delimiter)) {
+                int start = i + 1;
+
+                // initialize chr as anything other than the delimiter
+                char chr = delimiter == (char) 0 ? (char) 1 : (char) 0;
+
+                // find index of next instance of the delimiter
+                do {
+                    i++;
+                    if (i < length) {
+                        chr = source.charAt(i);
+                    }
+                } while (i < length && chr != delimiter);
+
+                int end = Math.min(chr == delimiter ? i : i + 1, length);
+
+                if (start <= end && source.substring(start, end).matches(regex)) {
+                    ranges.add(new Range<>(start, end));
+                }
+            } else {
+                i++;
+            }
+        }
+
+        return ranges;
+    }
+
+    // More readable version
+    public static List<Range<Integer>> rangesOfSubstringsMatching(String source,
+                                                                  String regex) {
+        ArrayList<Range<Integer>> ranges = new ArrayList<>();
+
+        Matcher matcher = Pattern.compile(regex).matcher(source);
+
+        while (matcher.find()) {
+            String match = matcher.group();
+            int start = source.indexOf(match);
+            int end = start + match.length();
+            ranges.add(new Range<>(start, end));
+        }
+
+        return ranges;
+    }
+
+    public static void applySpanToRange(SpannableStringBuilder source,
+                                        Object what,
+                                        Range<Integer> range,
+                                        int flags) {
+        source.setSpan(what, range.getLower(), range.getUpper(), flags);
+    }
+
+    public static void applySpanToRanges(SpannableStringBuilder source,
+                                         Object what,
+                                         List<Range<Integer>> ranges,
+                                         int flags) {
+        for (int i = 0; i < ranges.size(); i++) {
+            applySpanToRange(source, what, ranges.get(i), flags);
+        }
+    }
+
+    public static void applySpanToSubstringsMatching(SpannableStringBuilder source,
+                                                     Object what,
+                                                     char delimiter,
+                                                     String regex,
+                                                     int flags) {
+        applySpanToRanges(source, what, rangesOfSubstringsMatching(source.toString(), delimiter, regex), flags);
+    }
+
+    public static void applySpanToSubstringsMatching(SpannableStringBuilder source,
+                                                     Object what,
+                                                     String regex,
+                                                     int flags) {
+        applySpanToRanges(source, what, rangesOfSubstringsMatching(source.toString(), regex), flags);
+    }
 }

@@ -19,4 +19,6 @@ public interface ViewAddressMvpView extends MvpView {
     void backToCheckout();
 
     void deleteAddressFailed();
+
+    void backToOrders();
 }

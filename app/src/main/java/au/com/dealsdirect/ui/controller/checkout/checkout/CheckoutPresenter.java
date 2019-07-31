@@ -14,8 +14,8 @@ import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
@@ -58,23 +58,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Override
     public void fetchCartDetails() {
-
-//        doApiCallForResponse(getDataManager().callGetCurrentOrder(new GetCurrentOrder.RequestValue(getDataManager().getLanguageId())), new AppApiCallback(){
-//            @Override
-//            public void onSuccess(Object responseValue) {
-//                super.onSuccess(responseValue);
-//
-//                getMvpView().setCartIsLoading(false);
-//                updateCart((GetCurrentOrder.ResponseValue)responseValue);
-//                mFetchCartFinished = true;
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//                super.onFailure(t);
-//                getMvpView().setCartIsLoading(false);
-//            }
-//        });
 
         getCompositeDisposable().add(getDataManager()
                 .callGetCurrentOrder(new GetCurrentOrder.RequestValue(getDataManager().getLanguageId()))
@@ -148,7 +131,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                                 if (paymentMethod.getPaymentType().contains("VisaCheckout")) {
                                     paymentMethod.setImageUrl(ApiEndPoint.API_VCO_ICON);
                                 }
-                                responseValue.getUserPaymentMethods().set(i,paymentMethod);
+                                responseValue.getUserPaymentMethods().set(i, paymentMethod);
                             }
                             getMvpView().showPaymentDetails(responseValue.getD().getValue().getLastPaymentMethod());
                             getMvpView().setPaymentList(responseValue.getUserPaymentMethods());
@@ -240,6 +223,10 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Override
     public void generateOurpay(Value value) {
+        if (!getDataManager().isOurpayEnabled()) {
+            return;
+        }
+
         ourpay = new Ourpay();
         ourpay.setState(OurpayState.ONCART);
 
@@ -359,7 +346,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         }
 
         getMvpView().updateCheckoutBadge();
-        
+
         if (!cartDetailsValue.isEmpty()) {
             Value value = cartDetailsValue;
 
@@ -376,6 +363,12 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             getMvpView().showSummaryDetails(cartDetailsValue.getSummary());
         } else {
             getMvpView().showCartDetails(new ArrayList<>());
+        }
+
+        if (getDataManager().isAfterpayEnabled() && cartDetailsValue.getAfterpay() != null) {
+            getMvpView().showAfterpayButton(
+                    cartDetailsValue.getAfterpay().isAvailable(),
+                    cartDetailsValue.getAfterpay().getDescription());
         }
     }
 
@@ -398,6 +391,16 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                 }
             }
         });
+    }
+
+    @Override
+    public String getAfterpayLightboxImgUrl() {
+        return getDataManager().getAfterpayLightboxImageUrl();
+    }
+
+    @Override
+    public String getAfterpayTermsLink() {
+        return getDataManager().getAfterpayTermsLink();
     }
 
     @Override

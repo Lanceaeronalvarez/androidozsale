@@ -18,6 +18,8 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 
     void loadOurpayData(GetSaleItemDetailsResponse value);
 
+    void loadAfterpayData(Double price);
+
     void addToCart(AddToCartRequest requestValues);
 
     boolean isAuthorized();
@@ -29,4 +31,8 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     String getPersonalisationErrorText();
 
     void getDynamicDiscount(String skuId);
+
+    String getAfterpayLightboxImgUrl();
+
+    String getAfterpayTermsLink();
 }

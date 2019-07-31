@@ -61,7 +61,7 @@
     </RelativeLayout>
 
     <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-        android:id="@+id/login_host_frame"
+        android:id="@+id/popup_host_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"

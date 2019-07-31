@@ -33,15 +33,18 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
     public HashMap<String, NewReturnOrderViewHolder> returnViewMap = new HashMap<>();
     List<NewReturnOrderList> mCurrentReturnList = Collections.emptyList();
     Context mContext;
+    String mProductId;
 
     public NewReturnOrdersAdapter(
             List<NewReturnOrderList> orderList,
             Context context,
-            NewReturnMvpPresenter mvpPresenter) {
+            NewReturnMvpPresenter mvpPresenter,
+            String productId) {
 
         mCurrentReturnList = orderList;
         mContext = context;
         mPresenter = mvpPresenter;
+        mProductId = productId;
         mDataChecked = new Boolean[mCurrentReturnList.size()];
         Arrays.fill(this.mDataChecked, false);
     }
@@ -71,7 +74,23 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
         holder.productQuantityLayout.setQuantity(1);
         holder.productQuantityLayout.setEditTextToNonEditable();
 
-        holder.newReturnItemCheckBox.setChecked(mDataChecked[position]);
+        if (mProductId != null && !mProductId.isEmpty()) {
+            if (productId.equalsIgnoreCase(mProductId)) {
+                holder.newReturnItemCheckBox.setChecked(true);
+                mDataChecked[position] = true;
+                int quantityVal = Integer.valueOf(holder.productQuantityLayout.getQuantity());
+                if(quantityVal == 0){
+                    holder.productQuantityLayout.setQuantity(1);
+                }
+                mPresenter.updateReturnValue(productId, position, Integer.valueOf(holder.productQuantityLayout.getQuantity()), true);
+
+            } else {
+                holder.newReturnItemCheckBox.setChecked(mDataChecked[position]);
+            }
+        } else {
+            holder.newReturnItemCheckBox.setChecked(mDataChecked[position]);
+        }
+
         holder.newReturnItemCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

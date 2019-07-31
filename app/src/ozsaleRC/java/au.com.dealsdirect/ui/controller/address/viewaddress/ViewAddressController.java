@@ -47,6 +47,10 @@ public class ViewAddressController extends BaseController implements ViewAddress
 
     private static final String DELIVERY_ADDRESS = "ViewAddressController.DELIVERY_ADDRESS";
 
+    private static final String CALLED_FROM_ORDER = "ViewAddressController.CALLED_FROM_ORDER";
+
+    private static final String ORDER_ID = "ViewAddressController.ORDER_ID";
+
     @BindView(R.id.no_addresses_layout)
     RelativeLayout mAddressPlaceHolder;
     @BindView(R.id.view_addresses_layout)
@@ -66,14 +70,19 @@ public class ViewAddressController extends BaseController implements ViewAddress
     private List<DecorationInfoList> mDecorationInfoList;
     private boolean mAddressesLoaded = false;
     private DeliveryAddress mDeliveryAddress;
+    boolean mCalledFromOrder;
+    private String mOrderID;
 
     @Inject
     ViewAddressMvpPresenter<ViewAddressMvpView> mPresenter;
 
-    public ViewAddressController(boolean mCalledFromCart, DeliveryAddress deliveryAddress) {
+    public ViewAddressController(boolean mCalledFromCart, DeliveryAddress deliveryAddress, boolean calledFromOrder,
+                                 String orderID) {
         this(new BundleBuilder(new Bundle())
                 .putBoolean(CALLED_FROM_CART, mCalledFromCart)
                 .putParcelable(DELIVERY_ADDRESS, deliveryAddress)
+                .putBoolean(CALLED_FROM_ORDER, calledFromOrder)
+                .putString(ORDER_ID, orderID)
                 .build());
     }
 
@@ -81,6 +90,8 @@ public class ViewAddressController extends BaseController implements ViewAddress
         super(args);
         mCalledFromCart = args.getBoolean(CALLED_FROM_CART, false);
         mDeliveryAddress = args.getParcelable(DELIVERY_ADDRESS);
+        mCalledFromOrder = args.getBoolean(CALLED_FROM_ORDER, false);
+        mOrderID = args.getString(ORDER_ID, "");
     }
 
     @Override
@@ -105,7 +116,8 @@ public class ViewAddressController extends BaseController implements ViewAddress
         mViewAddressToolarTitle.setText(getString(R.string.my_addresses_toolbar_title));
         mAddressList = new ArrayList<>();
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
-        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, mAddressList, mActivity, mDeliveryAddress, mPresenter);
+        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, mAddressList, mActivity, mDeliveryAddress, mPresenter,
+                                                    mOrderID, mCalledFromOrder);
         RecyclerView.Adapter wrappedAdapter = swipeManager.createWrappedAdapter(mRecyclerViewAdapter);
 
         mRecyclerView.setAdapter(wrappedAdapter);
@@ -216,6 +228,13 @@ public class ViewAddressController extends BaseController implements ViewAddress
     @Override
     public void deleteAddressFailed() {
         mRecyclerViewAdapter.replaceData(mAddressList);
+    }
+
+    @Override
+    public void backToOrders() {
+        if (mCalledFromOrder) {
+            getRouter().handleBack();
+        }
     }
 
     @Override

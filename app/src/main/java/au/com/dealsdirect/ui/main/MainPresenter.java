@@ -51,6 +51,7 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
+import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.registerservices.GenieEventService;
@@ -62,7 +63,6 @@ import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.DeepLinkUrlType;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.utils.GdprUtils;
-import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.Observable;
@@ -185,6 +185,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         com.mysale.genie.utility.config.model.getserversettings.Value value = responseValue.d.getValue();
                         if (value != null) {
 //                            getDataManager().setCountryId(responseValue.getCountryId());
+                            getDataManager().setCountryIso(value.getCountry().getIso());
                             getDataManager().setLanguageId(responseValue.getLanguages().get(0).getID());
                             Gson gson = new Gson();
                             getDataManager().setLanguages(gson.toJson(responseValue.getLanguages()));
@@ -318,6 +319,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
             if (accountData != null) {
                 getDataManager().setIsSortingEnabled(accountData.getSorting().getIsEnabled());
+
+                getDataManager().setIsOurpayEnabled(accountData.getOurPay().isEnabled());
+                getDataManager().setIsAfterpayEnabled(accountData.getAfterpay().isEnabled());
             }
         }
     };
@@ -339,6 +343,40 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(mAppSettingsSectionAcceptCallback,mAppSettingsSectionThrowableCallback));
     }
+
+    @Override
+    public void callGetPublicAppSettingsSectionsAfterpay(Context context) {
+        getCompositeDisposable().add(getDataManager()
+                .callGetPublicAppSettingsSections(getDataManager().getCountryId(), "Afterpay")
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(mAppSettingsSectionAcceptAfterpayCallback,mAppSettingsSectionThrowableCallback));
+    }
+
+    private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptAfterpayCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
+        @Override
+        public void accept(@NonNull GetAppSettingsSection.ResponseValue responseValue) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+            getDataManager().setAfterpayScriptUri(responseValue.d.getValue().getAfterpay().getScriptUri());
+
+            String lightboxImageUrl = responseValue.d.getValue().getAfterpay().getLightboxImgUrl();
+            if (lightboxImageUrl == null || lightboxImageUrl.isEmpty()) {
+                // server links not yet implemented
+                lightboxImageUrl = "https://www.ozsale.com.au/Res/Default/Img/Checkout/afterpay-lightbox.png";
+            }
+
+            String termsLink = responseValue.d.getValue().getAfterpay().getTermsLink();
+            if (termsLink == null || termsLink.isEmpty()) {
+                // server links not yet implemented
+                termsLink = "https://www.afterpay.com/terms-of-service";
+            }
+
+            getDataManager().setAfterpayLightboxImgUrl(lightboxImageUrl);
+            getDataManager().setAfterpayTermsLink(termsLink);
+        }
+    };
 
     private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
         @Override
@@ -407,6 +445,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 return;
             }
 
+
+
             getMvpView().hideLoading();
             getMvpView().onError(throwable.getMessage());
 
@@ -417,8 +457,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             }
         }
     };
-
-
 
     @Override
     public void callGetAppSettingsConsent(Context context) {

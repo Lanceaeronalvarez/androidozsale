@@ -7,14 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
@@ -37,6 +40,8 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private ArrayList<String> mReferenceNumbers;
     private GetPaymentsList.ResponseValue.PaymentItem item;
     private LinkedHashMap<String, Object> mLinkedHashMap;
+    private HashMap<String, String> estDeliveryDate = new HashMap<>();
+    private HashMap<String, String> mStatusArray = new HashMap<>();
 
     private static final int ORDER_DATE_ACTIVE_STATE = 1;
     private static final int ORDER_DATE_NEGATIVE_STATE = -1;
@@ -85,8 +90,34 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             setOrderTrackData((OrderItemsViewholder) viewHolder, item, order);
             ((OrderItemsViewholder) viewHolder).trackHereButton.setOnClickListener(v ->
                     mClickListener.onOrderItemTrackingButtonClick(order.getLink(), null));
+
+            if (order.getActions().size() == 0) {
+                ((OrderItemsViewholder) viewHolder).orderOptions.setVisibility(View.GONE);
+            } else {
+
+                if (order.getActions().contains(ActionConstants.ORDER_ACTION_CHECK_STATUS) ||
+                    order.getActions().contains(ActionConstants.ORDER_ACTION_CHANGE_ADDRESS) ||
+                    order.getActions().contains(ActionConstants.ORDER_ACTION_REFUND)) {
+
+                    ((OrderItemsViewholder) viewHolder).orderOptions.setVisibility(View.VISIBLE);
+                }
+
+                HashMap<String, String> itemArrays = new HashMap<>();
+                itemArrays.put(ActionConstants.ORDER_ORDER_ID, order.getOrderID());
+                itemArrays.put(ActionConstants.ORDER_ITEM_DESCRIPTION, order.getDescription());
+                itemArrays.put(ActionConstants.ORDER_INVOICE_NUMBER, order.getInvoiceNo().toString());
+
+                ((OrderItemsViewholder) viewHolder).orderOptions.setOnClickListener(v ->
+                        mClickListener.onOrderItemShowOptions((ArrayList<String>) order.getActions(), itemArrays));
+            }
+
+            estDeliveryDate.put(order.getOrderID(), order.getEstimatedDeliveryText());
+            mStatusArray.put(order.getOrderID(), order.getStatus());
+
+            viewHolder.itemView.setOnClickListener(view -> mClickListener.onOrderItemClick(mReferenceNumbers.get(position),
+                    mStatusArray, order.getLink(), estDeliveryDate));
         }
-        viewHolder.itemView.setOnClickListener(view -> mClickListener.onOrderItemClick(mReferenceNumbers.get(position)));
+
     }
 
     @Override
@@ -200,6 +231,8 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         @BindView(R.id.estimatedDeliveryTextView)
         TextView estimatedDeliveryText;
+        @BindView(R.id.orders_options)
+        ImageButton orderOptions;
 
         public OrderItemsViewholder(View itemView) {
             super(itemView);

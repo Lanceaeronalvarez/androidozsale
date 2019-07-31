@@ -161,7 +161,7 @@ public class Settings {
                                     "$",
                                     "oo.com.au",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
+                                    "https://gui-oa-pre.mysalegenie-dev.com/",
                                     "https://api.mysaledev.com/")} );
 
         } else if (BuildConfig.FLAVOR.equals("buyinviteRC")){
@@ -194,7 +194,7 @@ public class Settings {
                                     "$",
                                     "buyinvite.com.au",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
+                                    "https://gui-ba-pre.mysalegenie-dev.com/",
                                     "https://api.mysaledev.com/"),
 
                             new Country("New Zealand",
@@ -203,7 +203,7 @@ public class Settings {
                                     "NZ$",
                                     "buyinvite.co.nz",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
+                                    "https://gui-bn-pre.mysalegenie-dev.com/",
                                     "https://api.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("ozsaleRC")){
             populatePackageWithCountries(
@@ -225,8 +225,8 @@ public class Settings {
                                     "$",
                                     "ozsale.com.au",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
-                                    "https://api.mysaledev.com/")} );
+                                    "https://gui-as-pre.mysalegenie-dev.com/",
+                                    "http://api.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("singsaleRC")){
             populatePackageWithCountries(
                     new Country[] {
@@ -247,7 +247,7 @@ public class Settings {
                                     "S$",
                                     "singsale.com.sg",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
+                                    "https://gui-si-pre.mysalegenie-dev.com/",
                                     "https://api.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("dealsDirectRC") || BuildConfig.FLAVOR.equals("dealsDirect2RC")){
             populatePackageWithCountries(
@@ -269,7 +269,7 @@ public class Settings {
                                     "$",
                                     "dealsdirect.com.au",
                                     "EN",
-                                    "https://api.mysaledev.com/",
+                                    "https://gui-da-pre.mysalegenie-dev.com/",
                                     "https://api.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("topbuyRC") || BuildConfig.FLAVOR.equals("topbuy2RC")){
             populatePackageWithCountries(
@@ -345,7 +345,7 @@ public class Settings {
                                     "₱",
                                     "mysale.ph",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
+                                    "https://gui-ph-pre.mysalegenie-dev.com/",
                                     "https://api.mysaledev.com/"),
                             new Country("Thailand",
                                     "TH",
@@ -353,7 +353,7 @@ public class Settings {
                                     "฿",
                                     "mysale.co.th",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
+                                    "https://gui-th-pre.mysalegenie-dev.com/",
                                     "https://api.mysaledev.com/"),
                             new Country("Malaysia",
                                     "MY",
@@ -361,7 +361,7 @@ public class Settings {
                                     "RM",
                                     "mysale.my",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
+                                    "https://gui-my-pre.mysalegenie-dev.com/",
                                     "https://api.mysaledev.com/"),
                             new Country("United Kingdom",
                                     "UK",
@@ -369,7 +369,7 @@ public class Settings {
                                     "£",
                                     "mysale.co.uk",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
+                                    "https://gui-uk-pre.mysalegenie-dev.com/",
                                     "https://api.mysaledev.com/"),
                             new Country("HongKong",
                                     "EN",
@@ -377,7 +377,7 @@ public class Settings {
                                     "HK$",
                                     "mysale.hk",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
+                                    "https://gui-hk-pre.mysalegenie-dev.com/",
                                     "https://api.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("nzsaleRC")){
             populatePackageWithCountries(
@@ -399,7 +399,7 @@ public class Settings {
                                     "NZ$",
                                     "nzsale.co.nz",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
+                                    "https://gui-nz-pre.mysalegenie-dev.com/",
                                     "https://api.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("thaisaleRC")){
             populatePackageWithCountries(

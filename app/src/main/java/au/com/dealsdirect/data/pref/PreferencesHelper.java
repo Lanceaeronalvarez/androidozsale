@@ -22,6 +22,10 @@ public interface PreferencesHelper {
 
     String getCountryId();
 
+    void setCountryIso(String countryIso);
+
+    String getCountryIso();
+
     void setLanguageId(String languageId);
 
     String getLanguageId();
@@ -65,6 +69,26 @@ public interface PreferencesHelper {
     void setIsMasterpassEnabled(boolean val);
 
     boolean isMasterpassEnabled();
+
+    void setIsOurpayEnabled(boolean val);
+
+    boolean isOurpayEnabled();
+
+    void setIsAfterpayEnabled(boolean val);
+
+    boolean isAfterpayEnabled();
+
+    void setAfterpayScriptUri(String uri);
+
+    String getAfterpayScriptUri();
+
+    void setAfterpayLightboxImgUrl(String url);
+
+    String getAfterpayLightboxImageUrl();
+
+    void setAfterpayTermsLink(String link);
+
+    String getAfterpayTermsLink();
 
     void setIsAmexEnabled(boolean val);
 

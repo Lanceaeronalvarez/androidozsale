@@ -10,7 +10,9 @@
     <color name="color_text_option">#F00065</color>
     <color name="color_item_title">#466E87</color>
     <color name="white">#FFFFFF</color>
+    <color name="white_50">#80FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="black_50">#80000000</color>
 
     <color name="recyclerview_overscroll">@color/colorPrimary</color>
 

@@ -421,10 +421,9 @@ public class DateUtils {
         return String.format("%02d:%02d:%02d", hours % 24, minutes % 60, seconds % 60);
     }
 
-    public static boolean hasDayPassed(int pastDay) {
+    public static boolean hasDayPassed(int pastDay){
         Calendar calander = Calendar.getInstance();
         int currentDay = calander.get(Calendar.DAY_OF_YEAR);
         return pastDay != currentDay;
     }
-
 }

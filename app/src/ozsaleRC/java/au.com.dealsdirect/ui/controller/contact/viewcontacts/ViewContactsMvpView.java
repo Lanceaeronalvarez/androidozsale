@@ -23,4 +23,6 @@ public interface ViewContactsMvpView extends MvpView {
 
     void getViewContactsView(ViewContactsMvpView this);
 
+    void sendOrderMessage(boolean isCalledFromOrders, int invoiceNumber, String description);
+
 }

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingPrefix">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel Order "
+        android:textSize="@dimen/text_size_headline2"
+        android:padding="@dimen/margin_medium"
+        android:textStyle="bold"
+        android:textColor="@color/text_dark"
+        android:id="@+id/cancel_order_text"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="@dimen/text_size_headline2"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        android:textStyle="bold"
+        android:textColor="@color/text_dark"
+        android:id="@+id/cancel_order_number_text"
+        android:layout_toRightOf="@+id/cancel_order_text"/>
+
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_close"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_small"
+        android:background="@color/white"
+        android:id="@+id/img_order_button_close"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cancel_order_text"
+        android:textSize="@dimen/text_size_caption1"
+        android:paddingStart="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_small"
+        android:text="@string/dialog_cancel_order_body_text"
+        android:id="@+id/dialog_cancel_body_text"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/dialog_cancel_body_text"
+        android:layout_marginTop="@dimen/margin_huge">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_yes_cancel_order"
+            android:background="@drawable/bg_dialog_cancel_yes_option"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:id="@+id/button_yes_cancel_order"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_no_nevermind"
+            android:background="@drawable/bg_dialog_cancel_no_option"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:id="@+id/button_no_cancel_order"
+            android:layout_marginBottom="@dimen/margin_medium"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

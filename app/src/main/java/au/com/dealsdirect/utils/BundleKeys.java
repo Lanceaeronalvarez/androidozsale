@@ -162,6 +162,7 @@ public class BundleKeys {
     //WebViewController
     public static final String KEY_WEBVIEW_CONTROLLER_TITLE = "WebViewController.Title";
     public static final String KEY_WEBVIEW_CONTROLLER_URL = "WebViewController.Url";
+    public static final String KEY_WEBVIEW_CONTROLLER_IS_JS = "WebViewController.IsJs";
 
     //SavedInstance
     public static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";

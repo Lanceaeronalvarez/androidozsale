@@ -5,10 +5,10 @@ import android.app.Activity;
 
 import com.bluelinelabs.conductor.Controller;
 
+import au.com.dealsdirect.service.event.ActionTrackerInterface;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
 import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.ui.base.BaseActivity;
-import au.com.dealsdirect.service.event.ActionTrackerInterface;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.base.VisaCheckoutPresenter;
@@ -21,6 +21,9 @@ import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressPrese
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpPresenter;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressMvpView;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressPresenter;
+import au.com.dealsdirect.ui.controller.afterpay.AfterpayMvpPresenter;
+import au.com.dealsdirect.ui.controller.afterpay.AfterpayMvpView;
+import au.com.dealsdirect.ui.controller.afterpay.AfterpayPresenter;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersMvpPresenter;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersMvpView;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersPresenter;
@@ -78,6 +81,9 @@ import au.com.dealsdirect.ui.controller.dashboard.scheduledplans.ScheduledPlansP
 import au.com.dealsdirect.ui.controller.details.DetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.details.DetailsMvpView;
 import au.com.dealsdirect.ui.controller.details.DetailsPresenter;
+import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerMvpPresenter;
+import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerMvpView;
+import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerPresenter;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordMvpPresenter;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordMvpView;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordPresenter;
@@ -462,6 +468,16 @@ public class ControllerModule {
 
     @Provides
     WebViewMvpPresenter<WebViewMvpView> provideWebViewPresenter(WebViewPresenter<WebViewMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    AfterpayMvpPresenter<AfterpayMvpView> provideAfterpayMvpPresenter(AfterpayPresenter<AfterpayMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    FloatingImageViewerMvpPresenter<FloatingImageViewerMvpView> provideFloatingImageViewerMvpPresenter(FloatingImageViewerPresenter<FloatingImageViewerMvpView> presenter) {
         return presenter;
     }
 }

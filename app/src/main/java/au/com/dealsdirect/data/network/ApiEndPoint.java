@@ -504,9 +504,29 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "ProcessOurpayInstallment");
     }
 
+    public static String createAfterpayOrder() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "CreateAfterpayOrder");
+    }
+
+    public static String callAfterPayCreatePayment() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "AfterPayCreatePayment");
+    }
+
+    public static String callGetAfterpayData() {
+        return getFormattedUrl(ApiService.productDetails,ACCOUNT_ID_DELIMETER + "/afterpay?amount={amount}");
+    }
+
     /*VISA CHECKOUT*/
     public static String visaCheckoutLogin(){
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "LoginVisa");
+    }
+
+    public static String changeDeliveryAddress() {
+        return getFormattedUrl(ApiService.legacy,  NO_AKAMAI_EXTENSION + "ChangeDeliveryAddress");
+    }
+
+    public static String createRefund() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "CreateRefund");
     }
 
     private ApiEndPoint() {

@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:background="@color/white"
+                android:paddingBottom="@dimen/margin_small"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -154,6 +155,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/total_colon"
                         android:textColor="@color/text_dark"
+                        android:textStyle="bold"
                         android:textSize="@dimen/text_size_headline3" />
 
                     <TextView
@@ -165,6 +167,7 @@
                         android:layout_toEndOf="@id/total_label"
                         android:gravity="end"
                         android:textColor="@color/text_extra_dark"
+                        android:textStyle="bold"
                         android:textSize="@dimen/text_size_headline3"
                         tools:text="$5.00" />
                 </RelativeLayout>
@@ -185,7 +188,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/margin_small">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -193,7 +197,8 @@
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/margin_extra_small"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginBottom="@dimen/margin_extra_small">
+                    android:layout_marginBottom="@dimen/margin_extra_small"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/delivery_address_label"
@@ -221,7 +226,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/border_regular"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:background="@color/border_regular" />
+                    android:background="@color/border_regular"
+                    android:visibility="gone"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

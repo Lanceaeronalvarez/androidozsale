@@ -230,6 +230,11 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
+    public void showAfterpayButton(boolean isAvailable, String description) {
+        mCheckoutDetailView.showAfterpayButton(isAvailable, description);
+    }
+
+    @Override
     public void storeCartDetails(Value value) {
         mCheckoutDetailView.storeCartDetails(value);
     }
