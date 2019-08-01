@@ -120,6 +120,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         mTitleTextView.setText(getString(R.string.account_orders));
 
         mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
+        CommonControllerChangeListener.addToRouter(mCheckoutDetailRouter);
 
         if (!mHasSavedInstance || mActivity.getCheckoutController() == null) {
             mCheckoutController = CheckoutController.newInstance();
