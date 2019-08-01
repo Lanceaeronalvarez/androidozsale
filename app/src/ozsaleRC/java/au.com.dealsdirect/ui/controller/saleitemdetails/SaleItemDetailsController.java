@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -1087,9 +1086,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         Drawable drawable = mActivity.getDrawable(R.drawable.afterpay);
         assert drawable != null;
 
-        float ratio = drawable.getIntrinsicWidth() / (float) (drawable.getIntrinsicHeight());
-        float height = Resources.getSystem().getDisplayMetrics().density * 24;
-        drawable.setBounds(0, 0, (int) (height * ratio), (int) height);
+        drawable.setBounds(0, 0,
+                (int) mActivity.getResources().getDimension(R.dimen.afterpay_logo_width),
+                (int) mActivity.getResources().getDimension(R.dimen.afterpay_logo_height));
 
         ImageSpan imageSpan = new ImageSpan(drawable, DynamicDrawableSpan.ALIGN_BOTTOM);
 

@@ -100,6 +100,7 @@ public class BundleKeys {
     public static final String KEY_INVOICE = "Invoice";
     public static final String KEY_INVOICE_NUMBER = "InvoiceNumber";
     public static final String KEY_ESTIMATED_DELIVERY = "EstimatedDelivery";
+    public static final String KEY_IS_OURPAY_USED = "IsOurpayUsed";
 
     //add vouchers
     public static final String VOUCHERS="Vouchers";

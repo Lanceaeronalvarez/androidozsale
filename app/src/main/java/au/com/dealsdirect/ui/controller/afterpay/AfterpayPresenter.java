@@ -32,7 +32,7 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
         CreateAfterpayOrderRequest request = new CreateAfterpayOrderRequest();
         request.setCountryId(getDataManager().getCountryId());
         request.setLanguageId(getDataManager().getLanguageId());
-        request.setRedirectUrl(String.format("%scheckout.aspx?cid=10", Settings.getSelectedCountry().legacyRoot));
+        request.setRedirectUrl(getRedirectUrlPrefix());
 
         getMvpView().showProgressIndicator();
         mIsBusy = true;
@@ -49,8 +49,7 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
                     if (response.d.getValue().isSuccess()) {
                         getMvpView().showAfterpayWebView(response.d.getValue().getToken());
                     } else {
-                        //TODO: error message
-                        getMvpView().showError("error message");
+                        getMvpView().showError(response.d.getValue().getError());
                     }
                 }, throwable -> {
 
@@ -58,8 +57,7 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
                     mIsBusy = false;
 
                     Log.e(CheckoutPresenter.class.toString(), throwable.toString());
-                    //TODO: error message
-                    getMvpView().showError("error message");
+                    getMvpView().showError(null);
                 })
         );
     }
@@ -113,8 +111,7 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
                     mIsBusy = false;
 
                     Log.e(CheckoutPresenter.class.toString(), throwable.toString());
-                    //TODO: error message
-                    getMvpView().showError("error message");
+                    getMvpView().showError(null);
                 })
         );
     }
@@ -132,5 +129,11 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
     @Override
     public boolean isBusy() {
         return mIsBusy;
+    }
+
+    @Override
+    public String getRedirectUrlPrefix() {
+        // redirect url does not need to be a valid url
+        return "https://www.afterpay_redirect_url.com/placholder";
     }
 }

@@ -38,4 +38,8 @@ public interface MvpView {
     void showOurpayLoading();
 
     void hideOurpayLoading();
+
+    void showAfterpayLoading();
+
+    void hideAfterpayLoading();
 }

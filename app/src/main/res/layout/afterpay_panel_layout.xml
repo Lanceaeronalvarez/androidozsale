@@ -13,10 +13,11 @@
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginBottom="@dimen/margin_medium"
-        android:fontFamily="@string/font_app_regular"
+        android:layout_toLeftOf="@id/afterpay_panel_info_button"
+        android:fontFamily="@string/font_raleway_regular"
         android:text="4 instalments of $14.75 with Afterpay"
-        android:textColor="@color/ourpay_gray"
-        android:textSize="@dimen/text_size_body" />
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_caption1" />
 
     <ImageButton
         android:id="@+id/afterpay_panel_info_button"

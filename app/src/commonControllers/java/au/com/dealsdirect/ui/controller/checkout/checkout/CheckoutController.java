@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.checkout.checkout;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,9 +30,7 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.braintreepayments.api.models.BraintreeRequestCodes;
-import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -195,6 +194,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     LinearLayout mAfterpayHolder;
     @BindView(R.id.partial_checkout_afterpay_description)
     TextView mAfterpayDescription;
+    @BindView(R.id.partial_checkout_afterpay_inlinelogo)
+    ImageView mAfterpayInlineLogo;
     @BindView(R.id.partial_checkout_afterpay_info_button)
     ImageButton mAfterpayInfoButton;
     @BindView(R.id.partial_checkout_button_afterpay)
@@ -287,7 +288,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             showAddAddressController();
             getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.ADD_ADDRESS);
         } else {
-            getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress,false,""))
+            getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress, false, ""))
                     .pushChangeHandler(new HorizontalChangeHandler(false))
                     .popChangeHandler(new HorizontalChangeHandler()));
         }
@@ -919,22 +920,27 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
-    public void showAfterpayButton(boolean isAvailable, String description) {
-        if (isAvailable) {
-            mAfterpayHolder.setVisibility(View.VISIBLE);
+    public void showAfterpayPanel(boolean isAvailable, String description) {
+        mAfterpayHolder.setVisibility(View.VISIBLE);
+        SpannableStringBuilder spannableString = new SpannableStringBuilder(description);
+        StringUtils.applySpanToSubstringsMatching(
+                spannableString,
+                new StyleSpan(BOLD),
+                mActivity.getResources().getString(R.string.regex_currency),
+                SPAN_EXCLUSIVE_INCLUSIVE);
+        mAfterpayDescription.setText(spannableString);
+        mAfterpayDescription.setTypeface(Typeface
+                .createFromAsset(mActivity.getAssets(),
+                        mActivity.getResources().getString(R.string.font_raleway_regular)));
 
-            SpannableStringBuilder spannableString = new SpannableStringBuilder(description);
-            StringUtils.applySpanToSubstringsMatching(
-                    spannableString,
-                    new StyleSpan(BOLD),
-                    mActivity.getResources().getString(R.string.regex_currency),
-                    SPAN_EXCLUSIVE_INCLUSIVE);
 
-            mAfterpayDescription.setText(spannableString);
-        } else {
-            mAfterpayHolder.setVisibility(View.GONE);
-            // TODO: handle Afterpay display when Afterpay is unavailable for current cart
-        }
+        mAfterpayButton.setVisibility(isAvailable ? View.VISIBLE : View.GONE);
+        mAfterpayInlineLogo.setVisibility(isAvailable ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void hideAfterpayPanel() {
+        mAfterpayHolder.setVisibility(View.GONE);
     }
 
     private String getSelectedDeliveryOption() {
@@ -1154,8 +1160,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         AfterpayViewController controller = new AfterpayViewController(bundle);
 
         RouterTransaction routerTransaction = RouterTransaction.with(controller)
-                .popChangeHandler(new VerticalChangeHandler())
-                .pushChangeHandler(new VerticalChangeHandler());
+                .popChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new FadeChangeHandler());
 
         if (mActivity.getHomeController().getPopUpHostRouter() != null) {
             mActivity.getHomeController().getPopUpHostRouter().setRoot(routerTransaction);
@@ -1445,7 +1451,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
-    public void showItemDetail(RecyclerView.ViewHolder viewHolder,int position, String seoIdentifierId, String imageUrl,
+    public void showItemDetail(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
                                String skuId, String saleId, boolean isFreeDelivery,
                                String itemName, String brandName, String price, String oldPrice,
                                String productID) {

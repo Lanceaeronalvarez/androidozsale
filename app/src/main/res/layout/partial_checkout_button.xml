@@ -141,31 +141,54 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:paddingBottom="10dp">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium">
 
-                    <TextView
-                        android:id="@+id/partial_checkout_afterpay_description"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left|center_vertical"
-                        android:layout_weight="1"
-                        android:fontFamily="@string/font_app_regular"
-                        android:text="or 4 installments of $10.00 with Afterpay"
-                        android:textSize="@dimen/com_visa_checkout_global_font_medium" />
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/margin_small"
+                        android:layout_marginRight="@dimen/margin_small"
+                        android:layout_toLeftOf="@id/partial_checkout_afterpay_info_button"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/partial_checkout_afterpay_inlinelogo"
+                            android:layout_width="@dimen/afterpay_logo_width"
+                            android:layout_height="@dimen/afterpay_logo_height"
+                            android:layout_gravity="left|center_vertical"
+                            android:layout_weight="1"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/afterpay" />
+
+                        <TextView
+                            android:id="@+id/partial_checkout_afterpay_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:layout_weight="1"
+                            android:fontFamily="@string/font_raleway_regular"
+                            android:text="is available between $0.00-$1000.00"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_caption1" />
+                    </LinearLayout>
 
                     <ImageButton
                         android:id="@+id/partial_checkout_afterpay_info_button"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="right|center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/margin_small"
                         android:background="@drawable/ourpay_info" />
-                </LinearLayout>
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/partial_checkout_button_afterpay"
@@ -175,7 +198,8 @@
                     android:background="@drawable/bg_afterpay_button"
                     android:clickable="true"
                     android:elevation="1.5dp"
-                    android:padding="6dp">
+                    android:padding="6dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="wrap_content"

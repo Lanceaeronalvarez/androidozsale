@@ -231,8 +231,13 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public void showAfterpayButton(boolean isAvailable, String description) {
-        mCheckoutDetailView.showAfterpayButton(isAvailable, description);
+    public void showAfterpayPanel(boolean isAvailable, String description) {
+        mCheckoutDetailView.showAfterpayPanel(isAvailable, description);
+    }
+
+    @Override
+    public void hideAfterpayPanel() {
+        mCheckoutDetailView.hideAfterpayPanel();
     }
 
     @Override

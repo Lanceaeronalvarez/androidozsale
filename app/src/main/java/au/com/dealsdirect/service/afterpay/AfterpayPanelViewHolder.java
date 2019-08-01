@@ -1,6 +1,7 @@
 package au.com.dealsdirect.service.afterpay;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -30,6 +31,9 @@ public class AfterpayPanelViewHolder {
 
     public void setDescription(CharSequence description) {
         mDescription.setText(description);
+        mDescription.setTypeface(Typeface
+                .createFromAsset(getContext().getAssets(),
+                        getContext().getResources().getString(R.string.font_raleway_regular)));
     }
 
     public void setInfoButtonOnClickListener(View.OnClickListener listener) {

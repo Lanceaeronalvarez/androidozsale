@@ -47,7 +47,9 @@ public interface CheckoutMvpView extends MvpView {
 
     void setPaymentList(List<PaymentMethod> paymentList);
 
-    void showAfterpayButton(boolean isAvailable, String description);
+    void showAfterpayPanel(boolean isAvailable, String description);
+
+    void hideAfterpayPanel();
 
     void storeCartDetails(Value value);
 

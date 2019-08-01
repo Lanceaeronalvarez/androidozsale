@@ -13,4 +13,6 @@ public interface AfterpayMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     String getAfterpayScriptUri();
 
     boolean isBusy();
+
+    String getRedirectUrlPrefix();
 }

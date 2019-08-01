@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.afterpay;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,8 +11,6 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -35,15 +34,6 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
 
     @Inject
     AfterpayMvpPresenter<AfterpayMvpView> mPresenter;
-
-    @BindView(R.id.controller_afterpay_toolbar_container)
-    RelativeLayout mToolbarContainer;
-
-    @BindView(R.id.partial_toolbar_title)
-    TextView mTitleView;
-
-    @BindView(R.id.partial_toolbar_left_view)
-    TextView mBackButton;
 
     @BindView(R.id.controller_afterpay_webview)
     WebView mWebView;
@@ -91,8 +81,6 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
 
     @Override
     protected void setUp(View view) {
-        mTitleView.setText(mActivity.getResources().getString(R.string.afterpay));
-
         hideAfterpayWebView();
         hideProgressIndicator();
     }
@@ -109,7 +97,6 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void showAfterpayWebView(String token) {
-        mToolbarContainer.setVisibility(View.GONE);
         if (mWebView.getUrl() == null || mWebView.getUrl().equals("about:blank")) {
             mInitiliazeToken = token;
             mWebView.getSettings().setJavaScriptEnabled(true);
@@ -126,22 +113,17 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
 
     @Override
     public void hideAfterpayWebView() {
-        mToolbarContainer.setVisibility(View.VISIBLE);
         mWebView.setVisibility(View.GONE);
     }
 
     @Override
     public void showProgressIndicator() {
-        mBackButton.setEnabled(false);
-        mBackButton.setVisibility(View.INVISIBLE);
-        showOurpayLoading();
+        showAfterpayLoading();
     }
 
     @Override
     public void hideProgressIndicator() {
-        mBackButton.setEnabled(true);
-        mBackButton.setVisibility(View.INVISIBLE);
-        hideOurpayLoading();
+        hideAfterpayLoading();
     }
 
     @Override
@@ -182,13 +164,28 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
 
     @Override
     public void showError(String message) {
-        onError(message);
-        dismissSelf();
+        hideAfterpayWebView();
+        hideProgressIndicator();
+
+        if (message == null || message.isEmpty()) {
+            showAlertDialog(mActivity.getResources()
+                    .getString(R.string.afterpay_failed_transaction));
+        } else {
+            showAlertDialog(message);
+        }
     }
 
-    @OnClick({R.id.partial_toolbar_left_view})
-    void onCloseClick() {
-        mActivity.onBackPressed();
+    private void showError() {
+        showError(null);
+    }
+
+    private void showAlertDialog(String message) {
+        new AlertDialog.Builder(mActivity)
+                .setTitle(mActivity.getResources().getString(R.string.afterpay))
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .setOnDismissListener(dialog -> dismissSelf())
+                .show();
     }
 
     private WebViewClient getWebViewClientForInitialize(String token) {
@@ -219,6 +216,11 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
         return new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (!url.contains(mPresenter.getRedirectUrlPrefix())) {
+                    return true;
+                }
+
+
                 Uri uri = Uri.parse(url);
                 String status = uri.getQueryParameter("status");
 
@@ -230,10 +232,17 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
                                 hideAfterpayWebView();
                                 mPresenter.payWithAfterpay(mOrderToken);
                                 break;
+                            } else {
+                                showError("Unexpected error");
                             }
-                            // waterfall on null orderToken
+                            break;
+                        case "failure":
+                            showError();
+                            break;
                         default:
                             dismissSelf();
+                            break;
+
                     }
                 }
                 return true;

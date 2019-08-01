@@ -268,6 +268,10 @@
     <dimen name="ourpay_big_date_text_size">30sp</dimen>
     <dimen name="ourpay_small_date_text_size">@dimen/text_size_caption2</dimen>
 
+    <!--Afterpay-->
+    <dimen name="afterpay_logo_width">93dp</dimen>
+    <dimen name="afterpay_logo_height">20dp</dimen>
+
     <!--Bottom sheet-->
     <dimen name="bottom_sheet_corner_radius">16dp</dimen>
     <dimen name="bottom_sheet_top_padding">8dp</dimen>
