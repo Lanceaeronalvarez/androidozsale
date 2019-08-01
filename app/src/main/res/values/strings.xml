@@ -345,6 +345,7 @@
     <string name="order_packed">Order\nPacked</string>
     <string name="dispatched">Order\nDispatched</string>
     <string name="stock_arrived">Stock\nArrived</string>
+    <string name="received">Received</string>
     <string name="refunded">refunded</string>
     <string name="please_accept_terms_and_conditions">Please accept Terms and Conditions</string>
     <string name="please_fill_out_the_form">Please fill out the form.</string>

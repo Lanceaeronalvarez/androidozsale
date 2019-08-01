@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     private static final int ORDER_PACKED_NEGATIVE_STATE = -3;
     private static final int ORDER_DISPATCHED_ACTIVE_STATE = 4;
     private static final int ORDER_DISPATCHED_NEGATIVE_STATE = -4;
+    private static final int ORDER_RECEIVED_ACTIVE_STATE = 5;
 
     private HashMap<String, String> mStatus = new HashMap<>();
     private String mLink;
@@ -59,6 +61,8 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     private GetOrderPaymentDetails.ResponseValue.Tracker mTracker;
     private String mOrderId = "";
     private String currentStatus = "";
+    private boolean hasReceivedStatus = false;
+    private String getReceiveDate = "";
 
 
     public OrderDetailsRecyclerViewAdapter(Activity mActivity,
@@ -114,6 +118,9 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             mTracker = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getTracker();
             mInvoiceNumber = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getInvoiceNo();
             mOrderId = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getOrderID();
+            hasReceivedStatus = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getActions()
+                    .contains(ActionConstants.ORDER_RECEIVED_STATUS);
+            getReceiveDate = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getReceived();
 
             ((OrderSaleName) holder).saleName.setText(mItemName);
             ((OrderSaleName) holder).address.setText(mItemAddress);
@@ -270,6 +277,11 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         @BindView(R.id.dispatched_date_value)
         TextView dispatchedDateValueTextView;
 
+        @BindView(R.id.received_graph_node)
+        TextView receivedGraphNodeTextView;
+        @BindView(R.id.received_date_value)
+        TextView receivedDateValueTextView;
+
         @BindView(R.id.tracker_first_node)
         TextView orderFirstNodeStatusTextView;
         @BindView(R.id.tracker_second_node)
@@ -278,6 +290,8 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         TextView orderThirdNodeStatusTextView;
         @BindView(R.id.tracker_fourth_node)
         TextView orderFourthNodeStatusTextView;
+        @BindView(R.id.tracker_fifth_node)
+        TextView orderFifthNodeStatusTextView;
 
         @BindView(R.id.connector_to_stock_arrived)
         View orderStockArrivedConnector;
@@ -291,7 +305,13 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         View orderDispatchedConnector;
         @BindView(R.id.connector_to_dispatched_2)
         View orderDispatchedConnector2;
+        @BindView(R.id.connector_to_received)
+        View orderReceivedConnector;
+        @BindView(R.id.connector_to_received_2)
+        View orderReceivedConnector2;
 
+        @BindView(R.id.received_order_layout)
+        LinearLayout receivedOrderLayout;
         @BindView(R.id.estimatedDeliveryTextView)
         TextView estimatedDeliveryText;
 
@@ -351,6 +371,8 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         String stockDate = DateUtils.getDateForOrderProgress(tracker.getStockDate());
         String closeDate = DateUtils.getDateForOrderProgress(tracker.getClosedDate());
         String dispatchDate = DateUtils.getDateForOrderProgress(tracker.getDispatchedDate());
+        String receivedDate = (getReceiveDate == null || getReceiveDate.isEmpty()) ?
+                "" : DateUtils.getDateForOrderProgress(getReceiveDate);
 
         int currentStep = tracker.getStep();
         boolean isRefunded = currentStatus.toLowerCase().contains(mActivity.getString(R.string.refunded));
@@ -387,6 +409,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             holder.stockArrivedValueTextView.setText(stockDate);
             holder.dispatchedDateValueTextView.setText(closeDate);
             holder.orderPackedValueTextView.setText(dispatchDate);
+            holder.receivedDateValueTextView.setText(receivedDate);
         }
 
         switch (currentStep) {
@@ -414,5 +437,26 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 break;
         }
 
+        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE && !hasReceivedStatus) {
+            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
+            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
+            holder.receivedGraphNodeTextView.setOnClickListener(v -> {
+                mClickListener.callOrderReceived(mOrderId);
+                setActiveOrderReceived(holder, orderText);
+            });
+        }
+
+        if (hasReceivedStatus) {
+            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
+            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
+            setActiveOrderReceived(holder, orderText);
+        }
+
+    }
+
+    private void setActiveOrderReceived(OrderItemTrack holder, String orderText) {
+        holder.receivedGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
+        holder.receivedGraphNodeTextView.setText(String.valueOf(ORDER_RECEIVED_ACTIVE_STATE));
+        holder.orderFifthNodeStatusTextView.setText(String.format(orderText,mActivity.getResources().getString(R.string.received)));
     }
 }

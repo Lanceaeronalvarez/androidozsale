@@ -9,4 +9,6 @@ import java.util.HashMap;
 public interface OrderDetailsClickListener {
 
     void showOrderDialog(ArrayList<String> arrayList, HashMap<String,String> hashMap);
+
+    void callOrderReceived(String orderID);
 }

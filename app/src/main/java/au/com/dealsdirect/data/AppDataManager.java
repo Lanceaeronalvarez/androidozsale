@@ -95,6 +95,8 @@ import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactio
 import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
@@ -658,6 +660,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<String> callCreateRefund(CreateRefundRequest request) {
         return mApiHelper.callCreateRefund(request);
+    }
+
+    @Override
+    public Observable<OrderReceivedResponse> callOrderReceived(OrderReceivedRequest receivedRequest) {
+        return mApiHelper.callOrderReceived(receivedRequest);
     }
 
     @Override

@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
@@ -174,5 +175,12 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     @Override
     public void onOrderItemShowOptions(ArrayList<String> arrayList, HashMap<String,String> hashMap) {
         mActivity.showBottomDialog(arrayList, hashMap);
+    }
+
+    @Override
+    public void callOrderReceived(String orderID) {
+        OrderReceivedRequest orderReceivedRequest = new OrderReceivedRequest();
+        orderReceivedRequest.setOrderId(orderID);
+
     }
 }

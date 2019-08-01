@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
@@ -195,5 +196,13 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     @Override
     public void showOrderDialog(ArrayList<String> arrayList, HashMap<String,String> hashMap) {
         mActivity.showBottomDialog(arrayList, hashMap);
+    }
+
+    @Override
+    public void callOrderReceived(String orderID) {
+
+        OrderReceivedRequest orderReceivedRequest = new OrderReceivedRequest();
+        orderReceivedRequest.setOrderId(orderID);
+        mPresenter.callOrderReceived(orderReceivedRequest);
     }
 }

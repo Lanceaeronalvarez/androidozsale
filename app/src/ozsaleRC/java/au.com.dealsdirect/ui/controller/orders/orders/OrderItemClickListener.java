@@ -9,4 +9,6 @@ public interface OrderItemClickListener {
     void onOrderItemTrackingButtonClick(String url, String errorMessage);
 
     void onOrderItemShowOptions(ArrayList<String> arrayList, HashMap<String,String> hashMap);
+
+    void callOrderReceived(String orderID);
 }

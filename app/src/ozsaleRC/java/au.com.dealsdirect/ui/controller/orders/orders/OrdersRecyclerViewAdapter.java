@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,6 +52,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int ORDER_PACKED_NEGATIVE_STATE = -3;
     private static final int ORDER_DISPATCHED_ACTIVE_STATE = 4;
     private static final int ORDER_DISPATCHED_NEGATIVE_STATE = -4;
+    private static final int ORDER_RECEIVED_ACTIVE_STATE = 5;
 
     public OrdersRecyclerViewAdapter(Activity mActivity,
                                      OrderItemClickListener clickListener,
@@ -207,6 +209,11 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         @BindView(R.id.dispatched_date_value)
         TextView dispatchedDateValueTextView;
 
+        @BindView(R.id.received_graph_node)
+        TextView receivedGraphNodeTextView;
+        @BindView(R.id.received_date_value)
+        TextView receivedDateValueTextView;
+
         @BindView(R.id.tracker_first_node)
         TextView orderFirstNodeStatusTextView;
         @BindView(R.id.tracker_second_node)
@@ -215,6 +222,8 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         TextView orderThirdNodeStatusTextView;
         @BindView(R.id.tracker_fourth_node)
         TextView orderFourthNodeStatusTextView;
+        @BindView(R.id.tracker_fifth_node)
+        TextView orderFifthNodeStatusTextView;
 
         @BindView(R.id.connector_to_stock_arrived)
         View orderStockArrivedConnector;
@@ -228,7 +237,14 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         View orderDispatchedConnector;
         @BindView(R.id.connector_to_dispatched_2)
         View orderDispatchedConnector2;
+        @BindView(R.id.connector_to_received)
+        View orderReceivedConnector;
+        @BindView(R.id.connector_to_received_2)
+        View orderReceivedConnector2;
 
+
+        @BindView(R.id.received_order_layout)
+        LinearLayout receivedOrderLayout;
         @BindView(R.id.estimatedDeliveryTextView)
         TextView estimatedDeliveryText;
         @BindView(R.id.orders_options)
@@ -326,5 +342,26 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 break;
         }
 
+        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE) {
+            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
+            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
+            holder.receivedGraphNodeTextView.setOnClickListener(v -> {
+                mClickListener.callOrderReceived(order.getOrderID());
+                setActiveOrderReceived(holder, orderText);
+            });
+        }
+
+        if (order.getActions().contains(ActionConstants.ORDER_RECEIVED_STATUS)) {
+            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
+            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
+            setActiveOrderReceived(holder, orderText);
+        }
+
+    }
+
+    private void setActiveOrderReceived(OrderItemsViewholder holder, String orderText) {
+        holder.receivedGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
+        holder.receivedGraphNodeTextView.setText(String.valueOf(ORDER_RECEIVED_ACTIVE_STATE));
+        holder.orderFifthNodeStatusTextView.setText(String.format(orderText,mActivity.getResources().getString(R.string.received)));
     }
 }

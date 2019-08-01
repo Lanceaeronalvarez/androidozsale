@@ -529,6 +529,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "CreateRefund");
     }
 
+    public static String callOrderReceived() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "SetOrderReceived");
+    }
+
     private ApiEndPoint() {
          // This class is not publicly instantiable
     }
