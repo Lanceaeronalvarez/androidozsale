@@ -119,33 +119,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/margin_extra_small">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/total"
-                fontPath="@string/font_app_bold"
-                android:textColor="@color/text_extra_dark" />
-
-            <TextView
-                android:id="@+id/partial_checkout_summary_total"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textColor="@color/text_extra_dark"
-                fontPath="@string/font_app_bold"
-                android:textSize="@dimen/text_size_body"
-                tools:text="$27" />
-
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/partial_checkout_summary_ourpay_select_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -171,6 +144,33 @@
                 android:textSize="@dimen/text_size_body"
                 android:textStyle="bold"
                 tools:text="$9" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/margin_extra_small">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/total"
+                fontPath="@string/font_app_bold"
+                android:textColor="@color/text_extra_dark" />
+
+            <TextView
+                android:id="@+id/partial_checkout_summary_total"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textColor="@color/text_extra_dark"
+                fontPath="@string/font_app_bold"
+                android:textSize="@dimen/text_size_body"
+                tools:text="$27" />
 
         </LinearLayout>
     </LinearLayout>

@@ -896,6 +896,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mSummaryOurpaySelectContainer.setVisibility(View.VISIBLE);
                 mSummaryShippingFeeContainer.setVisibility(View.GONE);
                 mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(summary.getSelect()));
+                mSummaryTotalTextView.setText(PriceUtils.getPriceStringValue(summary.getTotalWithSelect()));
             } else {
                 mSummaryOurpaySelectContainer.setVisibility(View.GONE);
             }
