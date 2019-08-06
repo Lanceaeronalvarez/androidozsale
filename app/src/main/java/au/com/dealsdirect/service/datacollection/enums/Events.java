@@ -13,7 +13,6 @@ public enum Events {
     ViewedContent("ViewedContent"),
     AddPaymentInfo("AddPaymentInfo"),
     InitiateCheckout("InitiateCheckout"),
-    StartCheckout("StartCheckout"),
     CCScan("CCScan"),
     CVAppLaunch("CVAppLaunch"),
     CVSaleBanners("CVSaleBanners"),

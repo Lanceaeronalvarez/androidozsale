@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import android.content.Context;
+
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
@@ -30,9 +32,10 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
 
     void generateOurpay(Value value);
 
-    void facebookInitiatedCheckout(String paymentType,
-                                   int numItems,
-                                   double price);
+    void logInitiateCheckout(Context context,
+                             String paymentType,
+                             int numItems,
+                             double price);
 
     void updateCart(GetCurrentOrder.ResponseValue responseValue);
 

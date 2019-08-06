@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import android.content.Context;
+
 import com.androidnetworking.error.ANError;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -78,6 +81,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                         fetchUserPaymentMethods();
                         mFetchCartFinished = true;
 
+                        checkIfCartIsChanged(responseValue);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -181,6 +185,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                         view.resetLoaders();
                         updateCart(responseValue);
                         fetchUserPaymentMethods();
+
+                        checkIfCartIsChanged(responseValue);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -298,13 +304,26 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void facebookInitiatedCheckout(String paymentType, int numItems, double price) {
+    public void logInitiateCheckout(Context context, String paymentType, int numItems, double price) {
+        if (getDataManager().hasActiveCheckoutSession()) {
+            return;
+        }
+
         HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, context);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
+        parameters.put(DataCollector.EventParameters.START_CHECKOUT_VALUE, price);
+        parameters.put(DataCollector.EventParameters.START_CHECKOUT_CURRENCY,
+                Settings.getSelectedCountry().currencySign);
+
         parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE, paymentType);
         parameters.put(DataCollector.EventParameters.NUMBER_OF_ITEMS, numItems);
         parameters.put(DataCollector.EventParameters.PRICE, price);
         parameters.put(DataCollector.EventParameters.COUNTRY_ID, getDataManager().getCountryId());
+
         DataCollector.logEvent(Events.InitiateCheckout, parameters);
+
+        getDataManager().setHasActiveCheckoutSession(true);
     }
 
     @Override
@@ -408,5 +427,17 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     @Override
     public boolean isVcoEnabled() {
         return getDataManager().getIsVisaCheckoutEnabled();
+    }
+
+    private void checkIfCartIsChanged(GetCurrentOrder.ResponseValue responseValue) {
+        if (responseValue == null || responseValue.getItems() == null) {
+            getDataManager().setHasActiveCheckoutSession(false);
+            return;
+        }
+        int newHashCode = responseValue.getItems().hashCode();
+        if (getDataManager().getCartHashCode() != newHashCode) {
+            getDataManager().setCartHashCode(newHashCode);
+            getDataManager().setHasActiveCheckoutSession(false);
+        }
     }
 }

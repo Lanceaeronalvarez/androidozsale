@@ -229,7 +229,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
     }
 
-    public static void callEventUser() {
+    private static void callEventUser() {
         getCompositeDisposable().add(getDataManager()
                 .callEventUser()
                 .subscribeOn(getSchedulerProvider().io())

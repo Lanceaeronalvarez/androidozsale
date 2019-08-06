@@ -17,18 +17,21 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
+import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
-import butterknife.OnClick;
 
 public class AfterpayViewController extends BaseController implements AfterpayMvpView {
 
@@ -225,18 +228,20 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
                 String status = uri.getQueryParameter("status");
 
                 if (status != null) {
+                    mOrderToken = uri.getQueryParameter("orderToken");
                     switch (status.toLowerCase()) {
                         case "success":
-                            mOrderToken = uri.getQueryParameter("orderToken");
                             if (mOrderToken != null && !mOrderToken.isEmpty()) {
                                 hideAfterpayWebView();
                                 mPresenter.payWithAfterpay(mOrderToken);
                                 break;
                             } else {
+                                logError(url);
                                 showError("Unexpected error");
                             }
                             break;
                         case "failure":
+                            logError(mOrderToken == null ? "No order token" : mOrderToken);
                             showError();
                             break;
                         default:
@@ -256,5 +261,20 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
 
     public boolean isBusy() {
         return mPresenter.isBusy();
+    }
+
+    private void logError(String errorMessage) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                PaymentInfo.TYPE_AFTERPAY);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.IS_NEW_USER,
+                mPresenter.getIsNewUser());
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, false);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME,
+                AfterpayViewController.class.getSimpleName());
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.FAILED_TRANSACTION_MESSAGE,
+                errorMessage);
+        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.FailedTransaction, parameters);
     }
 }

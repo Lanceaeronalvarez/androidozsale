@@ -132,7 +132,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 super.onSuccess(response);
 
                 getMvpView().showAddToCartResponse(((AddToCartResponse.Response) response).getValue());
-
+                getDataManager().setHasActiveCheckoutSession(false);
             }
 
             @Override

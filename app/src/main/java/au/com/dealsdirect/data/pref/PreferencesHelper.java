@@ -220,6 +220,10 @@ public interface PreferencesHelper {
 
     boolean hasActiveCheckoutSession();
 
+    void setCartHashCode(int hashCode);
+
+    int getCartHashCode();
+
     void resetAddToCartJourneyFlags();
 
     void setHasViewedSale(boolean hasViewedSale);

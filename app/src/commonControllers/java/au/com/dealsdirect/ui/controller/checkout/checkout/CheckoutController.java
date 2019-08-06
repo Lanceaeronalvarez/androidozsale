@@ -519,7 +519,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                             // Successful VCO
                             showLoading();
                             mActivity.callCreatePaymentTransactionVco(visaPaymentSummary);
-                            mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+                            mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
                         }
                         break;
                     }
@@ -557,17 +557,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
 
         mActivity.getMainController().setViewpagerDraggable(false);
-    }
-
-    private void initializeCheckoutParams() {
-        //initialize context for firebase
-        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
-        parameters.put(DataCollector.EventParameters.START_CHECKOUT_VALUE,
-                mValue.getSummary().getTotal());
-        parameters.put(DataCollector.EventParameters.START_CHECKOUT_CURRENCY,
-                Settings.getSelectedCountry().currencySign);
-
     }
 
     @Override
@@ -1033,6 +1022,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void onPayButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
 
         if (!isAddressValid()) {
 
@@ -1040,9 +1030,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             showAddAddressController();
             return;
         }
-
-        initializeCheckoutParams();
-        DataCollector.logEvent(Events.StartCheckout, parameters);
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
@@ -1055,12 +1042,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                         DataCollector.EventParameters.PaymentOption.REGULAR.getValue());
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
             }
         }
     }
 
     private void onPaypalButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
 
         if (!isAddressValid()) {
             //push add new address fragment
@@ -1068,8 +1055,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.PAYPAL);
-        initializeCheckoutParams();
-        DataCollector.logEvent(Events.StartCheckout, parameters);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
@@ -1080,19 +1065,18 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
             }
         }
     }
 
     private void onPaypalCreditButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+
         if (!isAddressValid()) {
             showAddAddressController();
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.PAYPAL);
-        initializeCheckoutParams();
-        DataCollector.logEvent(Events.StartCheckout, parameters);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
@@ -1102,13 +1086,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
             }
         }
 
     }
 
     private void onMasterpassButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
 
         if (!isAddressValid()) {
 
@@ -1117,16 +1101,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.MASTERPASS);
-        initializeCheckoutParams();
-        DataCollector.logEvent(Events.StartCheckout, parameters);
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.MASTERPASS.getValue());
         getRouter().pushController(RouterTransaction.with(MasterpassController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
-
-        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
-
     }
 
     private void onAfterpayInfoButtonClick() {
@@ -1154,6 +1133,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void onAfterpayButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_AFTERPAY, mItemList.size(), mValue.getSummary().getTotal());
+
         Bundle bundle = new BundleBuilder(new Bundle())
                 .build();
 
@@ -1171,6 +1152,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void onOurpayButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
         if (mActivity.isBraintreeInitialized()) {
@@ -1212,7 +1195,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                         }
                     } else {
                         ourpayPaymentSubmit();
-                        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
                     }
                 }
             }
@@ -1402,6 +1384,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void onVisaCheckoutButtonClicked() {
+        mPresenter.logInitiateCheckout(
+                mActivity,
+                PaymentInfo.VISA_CHECKOUT_BRAINTREE,
+                mItemList.size(),
+                mValue.getSummary().getTotal());
+
         if (!isAddressValid()) {
 
             //push add new address fragment.
@@ -1409,8 +1397,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.VISACHECKOUT);
-        initializeCheckoutParams();
-        DataCollector.logEvent(Events.StartCheckout, parameters);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.VCO.getValue());
         mVcoPresenter.payWithVisaCheckout(mValue.getSummary().getTotal());
     }

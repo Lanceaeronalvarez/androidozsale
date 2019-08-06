@@ -10,6 +10,7 @@ public class PaymentInfo {
 
     public static final String TYPE_MYPAY = "mypay";
     public static final String TYPE_BRAINTREE = "braintree";
+    public static final String TYPE_AFTERPAY = "afterpay";
     public static final String VISA_CHECKOUT_CYBERSOURCE = "visacheckoutcybersource";
     public static final String VISA_CHECKOUT_BRAINTREE = "visacheckoutbraintree";
 

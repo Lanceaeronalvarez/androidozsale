@@ -6,6 +6,7 @@ package au.com.dealsdirect.data.network.model.checkout.getcurrentorder;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
 
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
 
@@ -83,4 +84,21 @@ public class Item {
     public String saleID;
     @SerializedName(value = "CustomizableItemDetails", alternate = {"customizableItemDetails"})
     private List<Personalisation.CustomizableItemDetails> customizableItemDetailsList;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                id,
+                itemID,
+                item,
+                size,
+                qty,
+                price,
+                subtotal,
+                brandID,
+                imageID,
+                fileName,
+                saleID,
+                customizableItemDetailsList);
+    }
 }

@@ -1216,6 +1216,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setCartHashCode(int hashCode) {
+        mPreferencesHelper.setCartHashCode(hashCode);
+    }
+
+    @Override
+    public int getCartHashCode() {
+        return mPreferencesHelper.getCartHashCode();
+    }
+
+    @Override
     public void resetAddToCartJourneyFlags() {
         mPreferencesHelper.resetAddToCartJourneyFlags();
     }

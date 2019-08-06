@@ -136,6 +136,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String LAST_REDIRECTION = "LAST_REDIRECTION_SCREEN";
     private static final String IS_NEW_USER = "IS_NEW_USER";
     private static final String HAS_ACTIVE_CHECKOUT_SESSION = "HAS_ACTIVE_CHECKOUT_SESSION";
+    private static final String CART_HASH_CODE = "CART_HASH_CODE";
 
     // AddToCart Journey
     private static final String HAS_VIEWED_SALE = "HAS_VIEWED_SALE";
@@ -767,6 +768,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean hasActiveCheckoutSession() {
         return Prefs.getBoolean(HAS_ACTIVE_CHECKOUT_SESSION, false);
+    }
+
+    @Override
+    public void setCartHashCode(int hashCode) {
+        Prefs.putInt(CART_HASH_CODE, hashCode);
+    }
+
+    @Override
+    public int getCartHashCode() {
+        return Prefs.getInt(CART_HASH_CODE, 0);
     }
 
     @Override
