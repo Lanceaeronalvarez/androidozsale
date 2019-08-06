@@ -890,7 +890,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     }
 
-    public void showViewReturnsDetails(String returnID, String productName) {
+    public void showViewReturnsDetails(String returnID, String productName, boolean isFromOrders) {
         mActivity.setDraggableViewPager(false);
 
         Controller controller = getCurrentControllerOnRouter(mAccountsRouter);
@@ -899,7 +899,7 @@ public class HomeController extends BaseController implements HomeMvpView {
             mAccountMvpView = mActivity.getAccountController();
         }
 
-        mAccountMvpView.showReturnDetails(returnID, productName);
+        mAccountMvpView.showReturnDetails(returnID, productName, isFromOrders);
 
         if (controller instanceof BaseController) {
             ((BaseController) controller).refreshContents();

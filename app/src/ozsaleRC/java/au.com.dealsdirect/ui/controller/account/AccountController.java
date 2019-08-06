@@ -348,9 +348,9 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     @Override
-    public void showReturnDetails(String returnID, String productName) {
+    public void showReturnDetails(String returnID, String productName, boolean isFromOrders) {
 
-        RouterTransaction routerTransaction = RouterTransaction.with(ReturnDetailsController.newInstance(returnID,productName))
+        RouterTransaction routerTransaction = RouterTransaction.with(ReturnDetailsController.newInstance(returnID,productName,isFromOrders))
                 .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
 
         getDisplayRouter().pushController(routerTransaction);

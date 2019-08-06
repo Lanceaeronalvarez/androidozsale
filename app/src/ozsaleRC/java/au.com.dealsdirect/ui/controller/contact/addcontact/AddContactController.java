@@ -256,7 +256,8 @@ public class AddContactController extends BaseController implements AddContactMv
                     saleName,
                     invoiceNo,
                     mAddContactMessageField.getText().toString(),
-                    createContactResponse.getCreateContact().getValue()))
+                    createContactResponse.getCreateContact().getValue(),
+                    false))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler());
 
@@ -271,7 +272,8 @@ public class AddContactController extends BaseController implements AddContactMv
                         saleName,
                         invoiceNo,
                         mAddContactMessageField.getText().toString(),
-                        createContactResponse.getCreateContact().getValue()))
+                        createContactResponse.getCreateContact().getValue(),
+                        false))
                         .pushChangeHandler(new HorizontalChangeHandler())
                         .popChangeHandler(new HorizontalChangeHandler()));
 

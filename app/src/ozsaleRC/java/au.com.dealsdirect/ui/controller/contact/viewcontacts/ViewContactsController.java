@@ -294,7 +294,8 @@ public class ViewContactsController extends BaseController implements ViewContac
                 saleName,
                 invoiceNo,
                 timeStampString,
-                contactList.getContactNo()))
+                contactList.getContactNo(),
+                false))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler());
 
@@ -306,7 +307,8 @@ public class ViewContactsController extends BaseController implements ViewContac
                     saleName,
                     invoiceNo,
                     timeStampString,
-                    contactList.getContactNo()))
+                    contactList.getContactNo(),
+                    false))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         }

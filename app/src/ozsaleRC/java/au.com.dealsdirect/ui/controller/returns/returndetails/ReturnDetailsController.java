@@ -7,19 +7,28 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.data.network.model.returns.returndetails.Item;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.returns.returndetails.adapter.ReturnDetailsAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -40,6 +49,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     private static final String KEY_STATUS = "ReturnDetailsController.STATUS";
     private static final String KEY_RAN = "ReturnDetailsController.RAN";
     private static final String KEY_RETURN_ID = "ReturnDetailsController.RETURN_ID";
+    private static final String KEY_IS_FROM_ORDERS = "ReturnDetailsController.KEY_IS_FROM_ORDERS";
 
     private String mProductName = "";
     private int mOrderNumber = 0;
@@ -48,6 +58,8 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     private String mIsApproved = "";
     private String mStatus = "";
     private String mRAN = "";
+    private boolean isFromOrders = false;
+    private String contactNumber;
 
     @BindView(R.id.controller_return_details_order_number)
     TextView mOrderNumberTextView;
@@ -79,6 +91,33 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     @BindView(R.id.controller_return_details_total_value)
     TextView mReturnDetailsControllerTotalValue;
 
+    @BindView(R.id.controller_return_details_reason_container)
+    RelativeLayout mReturnDetailsReasonContainer;
+
+    @BindView(R.id.controller_return_details_contact_text)
+    TextView mContactNumberText;
+
+    @BindView(R.id.controller_return_details_reason_value)
+    TextView mReturnDetailsReasonText;
+
+    @BindView(R.id.contact_history_message_text_view)
+    TextView mContactMessageText;
+
+    @BindView(R.id.controller_return_details_contact_date)
+    TextView mContactMessageDate;
+
+    @BindView(R.id.controller_return_details_to_contact_layout)
+    RelativeLayout mReturnToContactLayout;
+
+    @BindView(R.id.controller_return_details_subject_text)
+    TextView mReturnDetailsSubjectText;
+
+    @BindView(R.id.controller_return_details_contact_layout)
+    FrameLayout mContactMessageContainer;
+
+    @BindView(R.id.controller_return_details_date_container)
+    RelativeLayout mContactDateContainer;
+
     @Inject
     ReturnDetailsMvpPresenter<ReturnDetailsMvpView> mPresenter;
 
@@ -105,12 +144,14 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
     public static ReturnDetailsController newInstance(
             String returnID,
-            String productName) {
+            String productName,
+            boolean fromOrders) {
 
         return new ReturnDetailsController(
                 new BundleBuilder(new Bundle())
                         .putString(KEY_RETURN_ID, returnID)
                         .putString(KEY_PRODUCT_NAME, productName)
+                        .putBoolean(KEY_IS_FROM_ORDERS, fromOrders)
                         .build());
     }
 
@@ -140,6 +181,10 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
         if (args.containsKey(KEY_RAN)) {
             mRAN = args.getString(KEY_RAN);
+        }
+
+        if (args.containsKey(KEY_IS_FROM_ORDERS)) {
+            isFromOrders = args.getBoolean(KEY_IS_FROM_ORDERS);
         }
     }
 
@@ -172,6 +217,8 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         mReturnDetailsControllerItemStatus.setText(mStatus);
         mReturnDetailsControllerRanValue.setText(mRAN);
 
+        mReturnDetailsReasonContainer.setVisibility(isFromOrders ? View.VISIBLE : View.GONE);
+
         mPresenter.loadCurrentReturnDetails(mReturnID);
     }
 
@@ -194,6 +241,42 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         mReturnDetailsControllerRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
         mReturnDetailsTotalContainer.setVisibility(View.VISIBLE);
+        mContactMessageContainer.setVisibility(getReturnDetailsResponseBody.getValue().getContactNumber() != 0 ?
+                View.VISIBLE : View.GONE);
+        mContactDateContainer.setVisibility(getReturnDetailsResponseBody.getValue().getContactNumber() != 0 ?
+                View.VISIBLE : View.GONE);
+
+        if (isFromOrders) {
+            contactNumber = String.valueOf(getReturnDetailsResponseBody.getValue().getContactNumber());
+            String concatenateContactNo = mActivity.getResources().getString(R.string.contact_number_return_details) + contactNumber;
+            mContactNumberText.setText(concatenateContactNo);
+            mReturnDetailsReasonText.setText(getReturnDetailsResponseBody.getValue().getReason());
+            GetContactHistoryRequest getContactHistoryRequest = new GetContactHistoryRequest();
+            getContactHistoryRequest.contactNo = getReturnDetailsResponseBody.getValue().getContactNumber();
+            mPresenter.loadReturnContacts(getContactHistoryRequest);
+        }
+    }
+
+    @Override
+    public void showContactMessageReturn(GetContactHistoryResponse.ResponseValue responseValue) {
+
+        au.com.dealsdirect.data.network.model.contacthistory.List lastItemPosition = responseValue.getList().get(0);
+
+        mContactMessageDate.setText(DateUtils.getDateForContactMessages(lastItemPosition.getDate()));
+        mContactMessageText.setText(lastItemPosition.getText());
+        mReturnDetailsSubjectText.setText(lastItemPosition.getSubject());
+
+        mReturnToContactLayout.setOnClickListener(v -> {
+           getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+                    lastItemPosition.getSubject(),
+                    "",
+                    lastItemPosition.getInvoiceNo(),
+                    DateUtils.getDateForContactMessages(lastItemPosition.getDate()),
+                    Integer.parseInt(contactNumber),
+                   true))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        });
     }
 
 

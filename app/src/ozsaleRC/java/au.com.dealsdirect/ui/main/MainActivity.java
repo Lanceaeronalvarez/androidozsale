@@ -1425,8 +1425,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         getMainController().getHomeController().showMyReturns(invoiceNumber, calledFromOrder, productId);
     }
 
-    public static void showViewReturnDetails(String returnID, String productName){
-        getMainController().getHomeController().showViewReturnsDetails(returnID,productName);
+    public static void showViewReturnDetails(String returnID, String productName, boolean isFromOrders){
+        getMainController().getHomeController().showViewReturnsDetails(returnID,productName,isFromOrders);
     }
 
     public static void showCancelDialog(String orderNumber, String reason) {

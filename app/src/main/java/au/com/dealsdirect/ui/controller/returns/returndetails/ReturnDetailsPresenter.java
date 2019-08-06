@@ -9,6 +9,10 @@ import com.androidnetworking.error.ANError;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -54,5 +58,20 @@ public class ReturnDetailsPresenter<V extends ReturnDetailsMvpView> extends Base
                                 handleApiError(anError);
                             }
                         }));
+    }
+
+    @Override
+    public void loadReturnContacts(GetContactHistoryRequest request) {
+        doApiCallForResponse(getDataManager().callGetContactHistory(request), new AppApiCallback(){
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+
+                GetContactHistoryResponse.ResponseValue responseValue = (GetContactHistoryResponse.ResponseValue) response;
+                if (responseValue.getList() != null && !responseValue.getList().isEmpty()) {
+                    getMvpView().showContactMessageReturn(responseValue);
+                }
+            }
+        });
     }
 }

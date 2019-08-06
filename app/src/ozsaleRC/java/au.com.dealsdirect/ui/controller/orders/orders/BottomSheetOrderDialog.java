@@ -152,7 +152,7 @@ public class BottomSheetOrderDialog extends BottomSheetDialogFragment {
         mViewReturnItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.showViewReturnDetails(itemReturnID, itemDescription);
+                MainActivity.showViewReturnDetails(itemReturnID, itemDescription, true);
                 BottomSheetOrderDialog.this.dismiss();
             }
         });
