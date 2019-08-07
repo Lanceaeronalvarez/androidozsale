@@ -288,25 +288,25 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             switch (i) {
                 case ORDER_DATE_ACTIVE_STATE:
                     holder.orderDateGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
-                    holder.orderDateGraphNodeView.setText(isCurrentStep ? "" : String.valueOf(ORDER_DATE_ACTIVE_STATE));
+                    holder.orderDateGraphNodeView.setText("");
                     holder.orderFirstNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
                     break;
 
                 case ORDER_STOCK_ARRIVED_ACTIVE_STATE:
                     holder.stockArrivedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
-                    holder.stockArrivedGraphNodeView.setText(isCurrentStep ? "" : String.valueOf(ORDER_STOCK_ARRIVED_ACTIVE_STATE));
+                    holder.stockArrivedGraphNodeView.setText("");
                     holder.orderSecondNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
                     break;
 
                 case ORDER_PACKED_ACTIVE_STATE:
                     holder.orderPackedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
-                    holder.orderPackedGraphNodeView.setText(isCurrentStep ? "" : String.valueOf(ORDER_PACKED_ACTIVE_STATE));
+                    holder.orderPackedGraphNodeView.setText("");
                     holder.orderThirdNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
                     break;
 
                 case ORDER_DISPATCHED_ACTIVE_STATE:
                     holder.dispatchedGraphNodeTextView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
-                    holder.dispatchedGraphNodeTextView.setText(isCurrentStep ? "" : String.valueOf(ORDER_DISPATCHED_ACTIVE_STATE));
+                    holder.dispatchedGraphNodeTextView.setText("");
                     holder.orderFourthNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
                     break;
             }
@@ -361,7 +361,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void setActiveOrderReceived(OrderItemsViewholder holder, String orderText) {
         holder.receivedGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
-        holder.receivedGraphNodeTextView.setText(String.valueOf(ORDER_RECEIVED_ACTIVE_STATE));
+        holder.receivedGraphNodeTextView.setText("");
         holder.orderFifthNodeStatusTextView.setText(String.format(orderText,mActivity.getResources().getString(R.string.received)));
     }
 }
