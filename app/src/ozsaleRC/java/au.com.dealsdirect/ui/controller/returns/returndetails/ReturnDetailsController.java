@@ -217,8 +217,6 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         mReturnDetailsControllerItemStatus.setText(mStatus);
         mReturnDetailsControllerRanValue.setText(mRAN);
 
-        mReturnDetailsReasonContainer.setVisibility(isFromOrders ? View.VISIBLE : View.GONE);
-
         mPresenter.loadCurrentReturnDetails(mReturnID);
     }
 
@@ -246,11 +244,12 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         mContactDateContainer.setVisibility(getReturnDetailsResponseBody.getValue().getContactNumber() != 0 ?
                 View.VISIBLE : View.GONE);
 
-        if (isFromOrders) {
+        mReturnDetailsReasonText.setText(getReturnDetailsResponseBody.getValue().getReason());
+
+        if (getReturnDetailsResponseBody.getValue().getContactNumber() != 0) {
             contactNumber = String.valueOf(getReturnDetailsResponseBody.getValue().getContactNumber());
             String concatenateContactNo = mActivity.getResources().getString(R.string.contact_number_return_details) + contactNumber;
             mContactNumberText.setText(concatenateContactNo);
-            mReturnDetailsReasonText.setText(getReturnDetailsResponseBody.getValue().getReason());
             GetContactHistoryRequest getContactHistoryRequest = new GetContactHistoryRequest();
             getContactHistoryRequest.contactNo = getReturnDetailsResponseBody.getValue().getContactNumber();
             mPresenter.loadReturnContacts(getContactHistoryRequest);
