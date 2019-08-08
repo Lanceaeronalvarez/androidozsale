@@ -122,7 +122,8 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                     .contains(ActionConstants.ORDER_RECEIVED_STATUS);
             getReceiveDate = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getReceived();
 
-            ((OrderSaleName) holder).saleName.setText(mItemName);
+            String invoiceNumber = mActivity.getResources().getString(R.string.order_invoice) +" "+ mInvoiceNumber;
+            ((OrderSaleName) holder).saleName.setText(invoiceNumber);
             ((OrderSaleName) holder).address.setText(mItemAddress);
 
             GetOrderPaymentDetails.ResponseValue.Order order = (GetOrderPaymentDetails.ResponseValue.Order) mData.get(position);
