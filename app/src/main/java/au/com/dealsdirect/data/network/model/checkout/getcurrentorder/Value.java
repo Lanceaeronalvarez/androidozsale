@@ -145,9 +145,18 @@ public class Value {
     }
 
     public static class GetCurrentOrderAfterpay {
+        /*
+           "isAvailable" is an indicator if Afterpay is available for the price of the cart.
+
+           "isAvailableMobileApp" dictates if Afterpay is visible and accessible at all for the user.
+         */
+
         @SerializedName(value = "IsAvailable", alternate = {"isAvailable"})
         @Expose
         private boolean isAvailable;
+        @SerializedName(value = "IsAvailableMobileApp", alternate = "isAvailableMobileApp")
+        @Expose
+        private boolean isAvailableMobileApp;
         @SerializedName(value = "Description", alternate = {"description"})
         @Expose
         private String description;
@@ -166,6 +175,14 @@ public class Value {
 
         public void setDescription(String description) {
             this.description = description;
+        }
+
+        public boolean isAvailableMobileApp() {
+            return isAvailableMobileApp;
+        }
+
+        public void setAvailableMobileApp(boolean availableMobileApp) {
+            isAvailableMobileApp = availableMobileApp;
         }
     }
 

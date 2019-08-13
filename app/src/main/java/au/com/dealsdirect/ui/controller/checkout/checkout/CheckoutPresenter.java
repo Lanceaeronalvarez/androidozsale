@@ -384,7 +384,9 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             getMvpView().showCartDetails(new ArrayList<>());
         }
 
-        if (getDataManager().isAfterpayEnabled() && cartDetailsValue.getAfterpay() != null) {
+        if (getDataManager().isAfterpayEnabled() &&
+                cartDetailsValue.getAfterpay() != null &&
+                cartDetailsValue.getAfterpay().isAvailableMobileApp()) {
             getMvpView().showAfterpayPanel(
                     cartDetailsValue.getAfterpay().isAvailable(),
                     cartDetailsValue.getAfterpay().getDescription());
