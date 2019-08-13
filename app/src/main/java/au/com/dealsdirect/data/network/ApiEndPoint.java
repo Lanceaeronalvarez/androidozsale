@@ -88,6 +88,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.productDetails, ACCOUNT_ID_DELIMETER + "/price/label");
     }
 
+    public static String getPromoInfo() {
+        return getFormattedUrl(ApiService.productDetails, ACCOUNT_ID_DELIMETER + "/promo-info");
+    }
+
     public static String getOurpayData(){
         return getFormattedUrl(ApiService.productDetails,ACCOUNT_ID_DELIMETER + "/ourpaydata");
     }

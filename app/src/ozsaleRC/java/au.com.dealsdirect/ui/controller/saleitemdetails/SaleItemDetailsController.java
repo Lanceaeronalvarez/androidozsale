@@ -239,6 +239,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private boolean mIsFreeDelivery;
     private CountDownTimer mCountDownTimer;
 
+    private boolean shouldAfterpayDetailsBeVisible = false;
+
     @BindView(R.id.arrow_left)
     View mLeftView;
     @BindView(R.id.productImageRecyclerView)
@@ -752,8 +754,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
         mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
-
-        mPresenter.getDynamicDiscount(saleDetail.getSkuId());
         //update Images
         List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
         ((SaleItemDetailsImageAdapter) mProductImagesRv.getAdapter()).replaceData(qualitySaleImages);
@@ -764,6 +764,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         //update Afterpay
         mPresenter.loadAfterpayData(saleDetail.getPrice().getValue());
+
+        mPresenter.loadPromoInfo(saleDetail.getSkuId());
 
         String personalisation = saleDetail.getPersonalisation();
         if (personalisation != null) {
@@ -1143,7 +1145,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
         });
 
-        mAfterpayHolder.setVisibility(View.VISIBLE);
         mAfterpayHolder.removeAllViews();
         mAfterpayHolder.addView(viewHolder.getView());
     }
@@ -1167,23 +1168,27 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void setDynamicDiscount(String discountText) {
-        if (discountText == null) return;
+        if (discountText == null) {
+            mProductDiscountTextView.setVisibility(View.GONE);
+            return;}
         String percentOffText = discountText.trim();
         String[] discountWordArray = discountText.split(" ");
         percentOffText = percentOffText.replace(' ', '\n');
-        if (discountWordArray != null || discountWordArray.length != 0) {
 
-            int percentSymbolLength = 1;
-            int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + discountWordArray[1].length() + percentSymbolLength;
-            SpannableString string = new SpannableString(percentOffText);
-            string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            mProductDiscountTextView.setVisibility(View.VISIBLE);
-            mProductDiscountTextView.setText(string);
-        } else {
-            mProductDiscountTextView.setVisibility(View.GONE);
-        }
+        int percentSymbolLength = 1;
+        int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + discountWordArray[1].length() + percentSymbolLength;
+        SpannableString string = new SpannableString(percentOffText);
+        string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mProductDiscountTextView.setVisibility(View.VISIBLE);
+        mProductDiscountTextView.setText(string);
 
+    }
+
+    @Override
+    public void setIsAfterpayDetailsVisible(boolean visible) {
+        shouldAfterpayDetailsBeVisible = visible;
+        mAfterpayHolder.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -100,6 +100,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.Ve
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
+import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
@@ -165,6 +166,8 @@ public interface ApiHelper {
     Observable<String> callDynamicDiscount(String skuId);
 
     Observable<AddToCartResponse.Response> callAddItemToCart(AddToCartRequest requestValues);
+
+    Observable<PromoInfoResponse> callPromoInfo(String skuId);
 
     // CONFIG API CALLS
     Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId);

@@ -1,5 +1,6 @@
 package au.com.dealsdirect.data.network;
 
+import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -104,6 +105,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.Ve
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
+import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
@@ -278,6 +280,15 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
                 .build()
                 .getObjectObservable(AddToCartResponse.Response.class);
+    }
+
+    @Override
+    public Observable<PromoInfoResponse> callPromoInfo(String skuId) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getPromoInfo())
+                .addHeaders(mApiHeader.get())
+                .addQueryParameter(AppConstants.PARAM_SKUID, skuId)
+                .build()
+                .getObjectObservable(PromoInfoResponse.class);
     }
 
     @Override

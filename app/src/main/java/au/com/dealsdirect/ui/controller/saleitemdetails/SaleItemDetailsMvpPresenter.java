@@ -20,6 +20,8 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 
     void loadAfterpayData(Double price);
 
+    void loadPromoInfo(String skuId);
+
     void addToCart(AddToCartRequest requestValues);
 
     boolean isAuthorized();

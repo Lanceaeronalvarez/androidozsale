@@ -29,4 +29,6 @@ public interface SaleItemDetailsMvpView extends MvpView {
     void toggleClipPadding(boolean isClipped);
 
     void setDynamicDiscount(String discountText);
+
+    void setIsAfterpayDetailsVisible(boolean visible);
 }

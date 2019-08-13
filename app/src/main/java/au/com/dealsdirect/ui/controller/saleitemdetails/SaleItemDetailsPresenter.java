@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 
 import com.androidnetworking.error.ANError;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
@@ -12,6 +14,7 @@ import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
+import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
@@ -118,6 +121,28 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                             }
                         }
                     }
+                });
+    }
+
+    @Override
+    public void loadPromoInfo(String skuId) {
+        doApiCallForResponse(getDataManager().callPromoInfo(skuId),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(List<?> o) {
+                        super.onSuccess(o);
+                        if (o instanceof PromoInfoResponse) {
+                            PromoInfoResponse response = (PromoInfoResponse) o;
+                            getMvpView().setDynamicDiscount(response.getPercentOffText());
+                            getMvpView().setIsAfterpayDetailsVisible(response.getAfterpayEnabled());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                    }
+
                 });
     }
 
