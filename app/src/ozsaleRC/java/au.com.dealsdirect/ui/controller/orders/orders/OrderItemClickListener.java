@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
+import android.view.View;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,7 +10,7 @@ public interface OrderItemClickListener {
 
     void onOrderItemTrackingButtonClick(String url, String errorMessage);
 
-    void onOrderItemShowOptions(ArrayList<String> arrayList, HashMap<String,String> hashMap);
+    void onOrderItemShowOptions(View v, ArrayList<String> arrayList, HashMap<String,String> hashMap);
 
     void callOrderReceived(String orderID);
 }

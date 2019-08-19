@@ -6,93 +6,106 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_bottom_sheet"
     android:orientation="vertical"
-    android:padding="@dimen/margin_medium"
     app:behavior_hideable="true"
     app:behavior_peekHeight="0dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
 
-        <TextView
-            android:id="@+id/bottom_contact_us_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:drawableLeft="@drawable/ic_contact_us"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/margin_small"
-            android:text="Contact Us"
-            android:textSize="@dimen/text_size_body"
-            android:visibility="gone"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/bottom_where_is_order_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:drawableLeft="@drawable/ic_where_is_order"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/margin_small"
-            android:text="Where is My Order?"
-            android:textSize="@dimen/text_size_body"
-            android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/bottom_contact_us_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:drawableLeft="@drawable/ic_contact_us"
+                    android:gravity="center_horizontal"
+                    android:layout_marginRight="@dimen/margin_medium"
+                    android:text="Contact Us"
+                    android:textSize="@dimen/text_size_body"
+                    android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/bottom_change_address_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:drawableLeft="@drawable/ic_change_address"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/margin_small"
-            android:text="Change Address"
-            android:textSize="@dimen/text_size_body"
-            android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/bottom_where_is_order_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:drawableLeft="@drawable/ic_where_is_order"
+                    android:gravity="center_horizontal"
+                    android:layout_marginRight="@dimen/margin_medium"
+                    android:text="Where is My Order?"
+                    android:textSize="@dimen/text_size_body"
+                    android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/bottom_return_item_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:drawableLeft="@drawable/ic_return_item"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/margin_small"
-            android:text="Request Return"
-            android:textSize="@dimen/text_size_body"
-            android:visibility="gone" />
+                <TextView
+                    android:id="@+id/bottom_change_address_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:drawableLeft="@drawable/ic_change_address"
+                    android:gravity="center_horizontal"
+                    android:layout_marginRight="@dimen/margin_medium"
+                    android:text="Change Address"
+                    android:textSize="@dimen/text_size_body"
+                    android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/bottom_view_return_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:drawableLeft="@drawable/ic_return_item"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/margin_small"
-            android:text="View Return Details"
-            android:textSize="@dimen/text_size_body"
-            android:visibility="gone" />
+                <TextView
+                    android:id="@+id/bottom_return_item_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:drawableLeft="@drawable/ic_return_item"
+                    android:gravity="center_horizontal"
+                    android:layout_marginRight="@dimen/margin_medium"
+                    android:text="Request Return"
+                    android:textSize="@dimen/text_size_body"
+                    android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/bottom_view_cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:drawableLeft="@drawable/ic_cancel_order"
-            android:text="Cancel Order"
-            android:padding="@dimen/margin_small"
-            android:textSize="@dimen/text_size_body"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:visibility="gone" />
+                <TextView
+                    android:id="@+id/bottom_view_return_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:drawableLeft="@drawable/ic_return_item"
+                    android:gravity="center_horizontal"
+                    android:layout_marginRight="@dimen/margin_medium"
+                    android:text="View Return Details"
+                    android:textSize="@dimen/text_size_body"
+                    android:visibility="gone" />
 
-        <include
-            android:id="@+id/cancel_item_order"
-            layout="@layout/dialog_cancel_item_order"
-            android:visibility="gone" />
+                <TextView
+                    android:id="@+id/bottom_view_cancel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:drawableLeft="@drawable/ic_cancel_order"
+                    android:text="Cancel Order"
+                    android:textSize="@dimen/text_size_body"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_marginRight="@dimen/margin_medium"
+                    android:visibility="gone" />
 
-        <include
-            android:id="@+id/cancel_order_layout"
-            layout="@layout/dialog_cancel_order"
-            android:visibility="gone" />
+                <include
+                    android:id="@+id/cancel_item_order"
+                    layout="@layout/dialog_cancel_item_order"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/cancel_order_layout"
+                    layout="@layout/dialog_cancel_order"
+                    android:visibility="gone" />
+
+        </LinearLayout>
 
 
 

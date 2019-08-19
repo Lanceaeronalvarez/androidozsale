@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -142,7 +143,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             itemArrays.put(ActionConstants.ORDER_ORDER_ID, order.getOrderID());
             itemArrays.put(ActionConstants.ORDER_REASON, "");
 
-            ((OrderSaleName) holder).moreOptions.setOnClickListener(v -> mClickListener.showOrderDialog((ArrayList<String>) order.getActions(), itemArrays));
+            ((OrderSaleName) holder).moreOptions.setOnClickListener(v -> mClickListener.showOrderDialog(v, (ArrayList<String>) order.getActions(), itemArrays));
         }
 
         if (mData.get(position) instanceof GetOrderPaymentDetails.ResponseValue.Tracker) {
@@ -221,8 +222,9 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             itemHashMap.put(ActionConstants.ORDER_QUANTITY, String.valueOf(item.getQty()));
             itemHashMap.put(ActionConstants.ORDER_SUBTOTAL_ITEM, String.valueOf(item.getSubTotal().getItemsCount()));
 
-            holder.moreOptionsImageButton.setOnClickListener(v ->
-                    mClickListener.showOrderDialog((ArrayList<String>) item.getActions(), itemHashMap));
+            holder.moreOptionsImageButton.setOnClickListener(v -> {
+                    mClickListener.showOrderDialog(v, (ArrayList<String>) item.getActions(), itemHashMap);
+            });
 
         }
     }
@@ -245,8 +247,8 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         @BindView(R.id.order_details_address_text)
         TextView address;
 
-        @BindView(R.id.orders_options)
-        ImageButton moreOptions;
+        @BindView(R.id.img_button_layout)
+        RelativeLayout moreOptions;
 
         public OrderSaleName(View itemView) {
             super(itemView);
@@ -342,8 +344,8 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         @BindView(R.id.controller_order_details_item_imageview)
         ImageView productImageView;
 
-        @BindView(R.id.order_item_details_more)
-        ImageButton moreOptionsImageButton;
+        @BindView(R.id.img_button_layout)
+        RelativeLayout moreOptionsImageButton;
 
         public OrderDetailsItemViewHolder(View itemView) {
             super(itemView);

@@ -14,15 +14,24 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/margin_small"/>
 
-    <ImageButton
-        android:id="@+id/order_item_details_more"
-        android:layout_width="20dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
+    <RelativeLayout
+        android:layout_width="@dimen/margin_huge"
+        android:layout_height="@dimen/margin_huge"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/margin_small"
-        android:background="@drawable/ic_orders_ellipsis"
-        android:padding="@dimen/margin_tiny" />
+        android:id="@+id/img_button_layout">
+
+        <ImageButton
+            android:id="@+id/order_item_details_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_small"
+            android:background="@drawable/ic_orders_ellipsis" />
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:id="@+id/order_item_details_layout"

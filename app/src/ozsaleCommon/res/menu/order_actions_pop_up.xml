@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.main.MainActivity">
+
+        <item
+            android:id="@+id/contact_us"
+            android:icon="@drawable/ic_contact_us"
+            android:title="Contact Us"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/change_address"
+            android:icon="@drawable/ic_change_address"
+            android:title="Change Address"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/return_item"
+            android:icon="@drawable/ic_return_item"
+            android:title="Request Return"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/view_return_details"
+            android:icon="@drawable/ic_return_item"
+            android:title="View Return Details"
+            app:showAsAction="ifRoom" />
+        <item
+            android:id="@+id/cancel_order"
+            android:icon="@drawable/ic_cancel_order"
+            android:title="Cancel Order"
+            app:showAsAction="ifRoom" />
+
+</menu>

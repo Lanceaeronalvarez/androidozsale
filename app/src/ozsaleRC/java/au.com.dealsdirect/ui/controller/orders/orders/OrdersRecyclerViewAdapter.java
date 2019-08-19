@@ -110,7 +110,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 itemArrays.put(ActionConstants.ORDER_INVOICE_NUMBER, order.getInvoiceNo().toString());
 
                 ((OrderItemsViewholder) viewHolder).orderOptions.setOnClickListener(v ->
-                        mClickListener.onOrderItemShowOptions((ArrayList<String>) order.getActions(), itemArrays));
+                        mClickListener.onOrderItemShowOptions(v, (ArrayList<String>) order.getActions(), itemArrays));
             }
 
             estDeliveryDate.put(order.getOrderID(), order.getEstimatedDeliveryText());

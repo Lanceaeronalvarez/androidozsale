@@ -194,8 +194,13 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     }
 
     @Override
-    public void showOrderDialog(ArrayList<String> arrayList, HashMap<String,String> hashMap) {
-        mActivity.showBottomDialog(arrayList, hashMap);
+    public void showOrderDialog(View view, ArrayList<String> arrayList, HashMap<String,String> hashMap) {
+
+        if (mPresenter.isTablet()) {
+            mActivity.showPopupMenu(view, arrayList, hashMap);
+        } else {
+            mActivity.showBottomDialog(arrayList, hashMap);
+        }
     }
 
     @Override

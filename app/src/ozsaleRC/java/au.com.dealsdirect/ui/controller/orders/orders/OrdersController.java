@@ -173,8 +173,13 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     }
 
     @Override
-    public void onOrderItemShowOptions(ArrayList<String> arrayList, HashMap<String,String> hashMap) {
-        mActivity.showBottomDialog(arrayList, hashMap);
+    public void onOrderItemShowOptions(View view, ArrayList<String> arrayList, HashMap<String,String> hashMap) {
+
+        if (mPresenter.isTablet()) {
+            mActivity.showPopupMenu(view, arrayList, hashMap);
+        } else {
+            mActivity.showBottomDialog(arrayList, hashMap);
+        }
     }
 
     @Override

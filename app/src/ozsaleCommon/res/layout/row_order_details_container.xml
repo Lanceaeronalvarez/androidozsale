@@ -38,15 +38,24 @@
             tools:ignore="HardcodedText"
             tools:text="204400890" />
 
+
+    <RelativeLayout
+        android:layout_width="@dimen/margin_medium"
+        android:layout_height="@dimen/margin_extra_huge"
+        android:layout_alignParentRight="true"
+        android:id="@+id/img_button_layout">
+
         <ImageButton
             android:id="@+id/orders_options"
-            android:layout_width="20dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_orders_ellipsis"
             android:padding="@dimen/margin_tiny" />
+
+    </RelativeLayout>
 
     </RelativeLayout>
 

@@ -30,9 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
-            android:gravity="center"
             android:maxLines="1"
-            android:padding="@dimen/margin_small"
+            android:padding="@dimen/margin_tiny"
             android:text=""
             android:textColor="@color/toolbar_text_dark"
             android:textSize="@dimen/text_size_headline2" />
