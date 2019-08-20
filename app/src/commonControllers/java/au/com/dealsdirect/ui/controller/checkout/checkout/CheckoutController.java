@@ -1135,6 +1135,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private void onAfterpayButtonClick() {
         mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_AFTERPAY, mItemList.size(), mValue.getSummary().getTotal());
 
+        if (!isAddressValid()) {
+
+            //push add new address fragment.
+            showAddAddressController();
+            return;
+        }
+
         Bundle bundle = new BundleBuilder(new Bundle())
                 .build();
 
