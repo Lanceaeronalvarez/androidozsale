@@ -27,6 +27,25 @@
     <string name="font_app_thin">fonts/lato/App-Font-Thin.ttf</string>
     <string name="font_app_thin_italic">fonts/lato/App-Font-ThinItalic.ttf</string>
 
+    <string name="font_raleway_black">fonts/raleway/Raleway-Black.ttf</string>
+    <string name="font_raleway_black_italic">fonts/raleway/Raleway-BlackItalic.ttf</string>
+    <string name="font_raleway_bold">fonts/raleway/Raleway-Bold.ttf</string>
+    <string name="font_raleway_bold_italic">fonts/raleway/Raleway-BoldItalic.ttf</string>
+    <string name="font_raleway_hairline">fonts/raleway/Raleway-Hairline.ttf</string>
+    <string name="font_raleway_hairline_italic">fonts/raleway/Raleway-HairlineItalic.ttf</string>
+    <string name="font_raleway_heavy">fonts/raleway/Raleway-Heavy.ttf</string>
+    <string name="font_raleway_heavy_italic">fonts/raleway/Raleway-HeavyItalic.ttf</string>
+    <string name="font_raleway_italic">fonts/raleway/Raleway-Italic.ttf</string>
+    <string name="font_raleway_light">fonts/raleway/Raleway-Light.ttf</string>
+    <string name="font_raleway_light_italic">fonts/raleway/Raleway-LightItalic.ttf</string>
+    <string name="font_raleway_medium">fonts/raleway/Raleway-Medium.ttf</string>
+    <string name="font_raleway_medium_italic">fonts/raleway/Raleway-MediumItalic.ttf</string>
+    <string name="font_raleway_regular">fonts/raleway/Raleway-Regular.ttf</string>
+    <string name="font_raleway_semibold">fonts/raleway/Raleway-Semibold.ttf</string>
+    <string name="font_raleway_semibold_italic">fonts/raleway/Raleway-SemiboldItalic.ttf</string>
+    <string name="font_raleway_thin">fonts/raleway/Raleway-Thin.ttf</string>
+    <string name="font_raleway_thin_italic">fonts/raleway/Raleway-ThinItalic.ttf</string>
+
     <string name="return_policy">Return Policy</string>
 
     <string name="base_html_template_header" formatted="false">
@@ -345,6 +364,7 @@
     <string name="order_packed">Order\nPacked</string>
     <string name="dispatched">Order\nDispatched</string>
     <string name="stock_arrived">Stock\nArrived</string>
+    <string name="received">Received</string>
     <string name="refunded">refunded</string>
     <string name="please_accept_terms_and_conditions">Please accept Terms and Conditions</string>
     <string name="please_fill_out_the_form">Please fill out the form.</string>
@@ -705,6 +725,22 @@
     <string name="ourpay_tnc_title">Terms and Conditions</string>
     <string name="ourpay_empty_view_text">Ourpay is exclusive installment payment plan\nsolution. Ourpay allows you to checkout with all\nthe items you love and pay over four easy,\ninterest free installments.\n\nSimply browse the site and add your preferred\ngoodies to your cart. Proceeed to checkout and\npay less today with Ourpay!\n\n\nMore details about Ourpay, you can visit:\n</string>
 
+    <!--AFTERPAY-->
+    <string name="afterpay">Afterpay</string>
+    <string name="afterpay_javascript_initialize">AfterPay.initialize({countryCode:\"%s\"});</string>
+    <string name="afterpay_javascript_redirect">AfterPay.redirect({token:\"%s\"});</string>
+    <string name="afterpay_panel_description_is_unavailable">\u0020\u0020\u0020is unavailable for this item</string>
+    <string name="afterpay_panel_description_normal">%d installments of %s%.2f with\u0020\u0020\u0020</string>
+    <string name="afterpay_failed_transaction">Your order could not be completed, and you have not been charged. Please try again.</string>
 
+    <string name="regex_currency">[^\\s\\\\]+\\d+(\\.\\d{2})?</string>
+
+    <string name="dialog_cancel_order_body_text">You are about to cancel this order. Are you sure you would like to cancel this order?</string>
+    <string name="dialog_cancel_item_text">You are about to cancel this item. Are you sure you would like to cancel this item?</string>
+    <string name="dialog_yes_cancel_item">Yes, Cancel this Item</string>
+    <string name="dialog_yes_cancel_order">Yes, Cancel this Order</string>
+    <string name="dialog_no_nevermind">No, Nevermind</string>
+    <string name="order_invoice">Invoice</string>
+    <string name="contact_number_return_details">Contact No:</string>
 
 </resources>

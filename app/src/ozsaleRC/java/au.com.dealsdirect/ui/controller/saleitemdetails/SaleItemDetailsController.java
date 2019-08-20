@@ -1,8 +1,11 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -15,6 +18,9 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
@@ -38,6 +44,8 @@ import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
@@ -62,12 +70,14 @@ import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
+import au.com.dealsdirect.service.afterpay.AfterpayPanelViewHolder;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
@@ -85,11 +95,13 @@ import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
+import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
 
 import static android.graphics.Typeface.BOLD;
+import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 
 /*
  * Created by smartwave on 08/06/2017.
@@ -227,6 +239,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private boolean mIsFreeDelivery;
     private CountDownTimer mCountDownTimer;
 
+    private boolean shouldAfterpayDetailsBeVisible = false;
+
     @BindView(R.id.arrow_left)
     View mLeftView;
     @BindView(R.id.productImageRecyclerView)
@@ -275,6 +289,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     LinearLayout mReturnPolicyContainer;
     @BindView(R.id.partial_item_details_ourpay_panel_holder)
     LinearLayout mOurpayHolder;
+    @BindView(R.id.partial_item_details_afterpay_panel_holder)
+    LinearLayout mAfterpayHolder;
     @BindView(R.id.controller_sale_item_detail_scrollview)
     NestedScrollView mProductDetailScrollView;
     @BindView(R.id.product_details_add_to_basket)
@@ -594,6 +610,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             add(mProductPriceCategory);
             add(mAddToCartButton);
             add(mOurpayHolder);
+            add(mAfterpayHolder);
             add(mProductDetailBottomCard);
             add(mAddToCartOverlay);
             add(mMainContentLayout);
@@ -737,8 +754,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
         mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
-
-        mPresenter.getDynamicDiscount(saleDetail.getSkuId());
         //update Images
         List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
         ((SaleItemDetailsImageAdapter) mProductImagesRv.getAdapter()).replaceData(qualitySaleImages);
@@ -746,6 +761,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         //update Ourpay
         mPresenter.loadOurpayData(saleDetail);
+
+        //update Afterpay
+        mPresenter.loadAfterpayData(saleDetail.getPrice().getValue());
+
+        mPresenter.loadPromoInfo(saleDetail.getSkuId());
 
         String personalisation = saleDetail.getPersonalisation();
         if (personalisation != null) {
@@ -1058,6 +1078,77 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
     }
 
+    @SuppressLint("DefaultLocale")
+    @Override
+    public void showAfterpayDetails(int installmentsCount, double installmentAmount, String currency) {
+        AfterpayPanelViewHolder viewHolder = new AfterpayPanelViewHolder(mActivity);
+
+        SpannableStringBuilder spannableString;
+
+        Drawable drawable = mActivity.getDrawable(R.drawable.afterpay);
+        assert drawable != null;
+
+        drawable.setBounds(0, 0,
+                (int) mActivity.getResources().getDimension(R.dimen.afterpay_logo_width),
+                (int) mActivity.getResources().getDimension(R.dimen.afterpay_logo_height));
+
+        ImageSpan imageSpan = new ImageSpan(drawable, DynamicDrawableSpan.ALIGN_BOTTOM);
+
+        if (installmentsCount <= 0 || installmentAmount <= 0 || currency == null || currency.isEmpty()) {
+            String description = mActivity.getResources()
+                    .getString(R.string.afterpay_panel_description_is_unavailable);
+
+            spannableString = new SpannableStringBuilder(description);
+
+            spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        } else {
+            String description = String.format(mActivity.getResources()
+                            .getString(R.string.afterpay_panel_description_normal),
+                    installmentsCount,
+                    currency,
+                    installmentAmount);
+
+            spannableString = new SpannableStringBuilder(description);
+
+            StringUtils.applySpanToSubstringsMatching(
+                    spannableString,
+                    new StyleSpan(BOLD),
+                    mActivity.getResources().getString(R.string.regex_currency),
+                    SPAN_EXCLUSIVE_INCLUSIVE);
+
+            spannableString.setSpan(imageSpan, description.length() - 1, description.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        }
+
+        viewHolder.setDescription(spannableString);
+
+        viewHolder.setInfoButtonOnClickListener(v -> {
+            Bundle bundle = new BundleBuilder(new Bundle())
+                    .putString(FloatingImageViewerController.KEY_SOURCE_URL, mPresenter.getAfterpayLightboxImgUrl())
+                    .build();
+
+            FloatingImageViewerController controller = new FloatingImageViewerController(bundle);
+
+            controller.setImageClickListener((view, x, y) -> {
+                Intent openUrl = new Intent(Intent.ACTION_VIEW);
+                openUrl.setData(Uri.parse(mPresenter.getAfterpayTermsLink()));
+                startActivity(openUrl);
+            });
+
+            RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                    .popChangeHandler(new FadeChangeHandler())
+                    .pushChangeHandler(new FadeChangeHandler());
+
+            if (mActivity.getHomeController().getPopUpHostRouter() != null) {
+                mActivity.getHomeController().getPopUpHostRouter().setRoot(routerTransaction);
+            } else {
+                getRouter().pushController(routerTransaction);
+            }
+        });
+
+        mAfterpayHolder.removeAllViews();
+        mAfterpayHolder.addView(viewHolder.getView());
+    }
+
     @Override
     public void onCallGetBasketItemsQuantity() {
 
@@ -1077,23 +1168,27 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void setDynamicDiscount(String discountText) {
-        if (discountText == null) return;
+        if (discountText == null) {
+            mProductDiscountTextView.setVisibility(View.GONE);
+            return;}
         String percentOffText = discountText.trim();
         String[] discountWordArray = discountText.split(" ");
         percentOffText = percentOffText.replace(' ', '\n');
-        if (discountWordArray != null || discountWordArray.length != 0) {
 
-            int percentSymbolLength = 1;
-            int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + discountWordArray[1].length() + percentSymbolLength;
-            SpannableString string = new SpannableString(percentOffText);
-            string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            mProductDiscountTextView.setVisibility(View.VISIBLE);
-            mProductDiscountTextView.setText(string);
-        } else {
-            mProductDiscountTextView.setVisibility(View.GONE);
-        }
+        int percentSymbolLength = 1;
+        int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + discountWordArray[1].length() + percentSymbolLength;
+        SpannableString string = new SpannableString(percentOffText);
+        string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mProductDiscountTextView.setVisibility(View.VISIBLE);
+        mProductDiscountTextView.setText(string);
 
+    }
+
+    @Override
+    public void setIsAfterpayDetailsVisible(boolean visible) {
+        shouldAfterpayDetailsBeVisible = visible;
+        mAfterpayHolder.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -110,6 +110,22 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         }
     }
 
+    @Override
+    public void showAfterpayLoading() {
+        hideAfterpayLoading();
+        if (!isFinishing() || !isDestroyed()) {
+            mProgressDialog = CommonUtils.showLoadingDialogAfterpay(this);
+        }
+    }
+
+    @Override
+    public void hideAfterpayLoading() {
+        if (mProgressDialog != null && mProgressDialog.isShowing() && (!isFinishing() || !isDestroyed())) {
+            mProgressDialog.cancel();
+        }
+    }
+
+
 
     @Override
     public void hideLoading() {

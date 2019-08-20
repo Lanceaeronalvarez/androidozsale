@@ -77,5 +77,4 @@ public class SaleCategoriesController extends BaseController implements SaleCate
     public void showSaleCategories(GetPublicSalesBannerResponse getPublicSalesBannerResponse) {
 
     }
-
 }

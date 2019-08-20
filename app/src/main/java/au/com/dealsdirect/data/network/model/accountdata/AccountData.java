@@ -2,6 +2,7 @@ package au.com.dealsdirect.data.network.model.accountdata;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by smartwave on 02/08/2018.
  */
@@ -23,6 +24,25 @@ public class AccountData {
     @SerializedName("sorting")
     @Expose
     private Sorting sorting;
+
+    @SerializedName("afterpay")
+    @Expose
+    private Afterpay afterpay;
+    @SerializedName("ourPaySelect")
+    @Expose
+    private OurPaySelect ourPaySelect;
+    @SerializedName("payPal")
+    @Expose
+    private PayPal payPal;
+    @SerializedName("freeDelivery")
+    @Expose
+    private FreeDelivery freeDelivery;
+    @SerializedName("selectDay")
+    @Expose
+    private SelectDay selectDay;
+    @SerializedName("promoEvent")
+    @Expose
+    private PromoEvent promoEvent;
 
     public String getAccountId() {
         return accountId;
@@ -64,6 +84,54 @@ public class AccountData {
         this.sorting = sorting;
     }
 
+    public Afterpay getAfterpay() {
+        return afterpay;
+    }
+
+    public void setAfterpay(Afterpay afterpay) {
+        this.afterpay = afterpay;
+    }
+
+    public OurPaySelect getOurPaySelect() {
+        return ourPaySelect;
+    }
+
+    public void setOurPaySelect(OurPaySelect ourPaySelect) {
+        this.ourPaySelect = ourPaySelect;
+    }
+
+    public PayPal getPayPal() {
+        return payPal;
+    }
+
+    public void setPayPal(PayPal payPal) {
+        this.payPal = payPal;
+    }
+
+    public FreeDelivery getFreeDelivery() {
+        return freeDelivery;
+    }
+
+    public void setFreeDelivery(FreeDelivery freeDelivery) {
+        this.freeDelivery = freeDelivery;
+    }
+
+    public SelectDay getSelectDay() {
+        return selectDay;
+    }
+
+    public void setSelectDay(SelectDay selectDay) {
+        this.selectDay = selectDay;
+    }
+
+    public PromoEvent getPromoEvent() {
+        return promoEvent;
+    }
+
+    public void setPromoEvent(PromoEvent promoEvent) {
+        this.promoEvent = promoEvent;
+    }
+
     public static class Facebook {
 
         @SerializedName("appId")
@@ -86,7 +154,7 @@ public class AccountData {
         @Expose
         private Boolean isEnabled;
 
-        public Boolean getIsEnabled() {
+        public Boolean isEnabled() {
             return isEnabled;
         }
 
@@ -128,4 +196,154 @@ public class AccountData {
 
     }
 
+    public static class Afterpay {
+        @SerializedName("isEnabled")
+        @Expose
+        private Boolean isEnabled;
+
+        public Boolean isEnabled() {
+            return isEnabled;
+        }
+
+        public void setIsEnabled(Boolean enabled) {
+            isEnabled = enabled;
+        }
+    }
+
+    public static class OurPaySelect {
+        @SerializedName("isEnabled")
+        @Expose
+        private Boolean isEnabled;
+
+        public Boolean isEnabled() {
+            return isEnabled;
+        }
+
+        public void setIsEnabled(Boolean enabled) {
+            isEnabled = enabled;
+        }
+    }
+
+    public static class PayPal {
+        @SerializedName("isFreeDeliveryEnabled")
+        @Expose
+        private Boolean isFreeDeliveryEnabled;
+
+        public Boolean isFreeDeliveryEnabled() {
+            return isFreeDeliveryEnabled;
+        }
+
+        public void setisFreeDeliveryEnabled(Boolean enabled) {
+            isFreeDeliveryEnabled = enabled;
+        }
+    }
+
+    public static class FreeDelivery {
+        @SerializedName("isEnabled")
+        @Expose
+        private Boolean isEnabled;
+
+        public Boolean isEnabled() {
+            return isEnabled;
+        }
+
+        public void setIsEnabled(Boolean enabled) {
+            isEnabled = enabled;
+        }
+    }
+
+    public static class SelectDay {
+        @SerializedName("startDate")
+        @Expose
+        private String startDate;
+        @SerializedName("endDate")
+        @Expose
+        private String endDate;
+        @SerializedName("isActive")
+        @Expose
+        private Boolean isActive;
+
+        public String getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(String startDate) {
+            this.startDate = startDate;
+        }
+
+        public String getEndDate() {
+            return endDate;
+        }
+
+        public void setEndDate(String endDate) {
+            this.endDate = endDate;
+        }
+
+        public Boolean isActive() {
+            return isActive;
+        }
+
+        public void setActive(Boolean active) {
+            isActive = active;
+        }
+    }
+
+    public static class PromoEvent {
+        @SerializedName("isEnabled")
+        @Expose
+        private Boolean isEnabled;
+        @SerializedName("timeZoneOffset")
+        @Expose
+        private Integer timeZoneOffset;
+        @SerializedName("startDate")
+        @Expose
+        private String startDate;
+        @SerializedName("endDate")
+        @Expose
+        private String endDate;
+        @SerializedName("isActive")
+        @Expose
+        private Boolean isActive;
+
+        public Boolean isEnabled() {
+            return isEnabled;
+        }
+
+        public void setIsEnabled(Boolean enabled) {
+            isEnabled = enabled;
+        }
+
+
+        public String getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(String startDate) {
+            this.startDate = startDate;
+        }
+
+        public String getEndDate() {
+            return endDate;
+        }
+
+        public void setEndDate(String endDate) {
+            this.endDate = endDate;
+        }
+
+        public Boolean isActive() {
+            return isActive;
+        }
+
+        public void setActive(Boolean active) {
+            isActive = active;
+        }
+
+        public Integer getTimeZoneOffset() {
+            return timeZoneOffset;
+        }
+
+        public void setTimeZoneOffset(Integer timeZoneOffset) {
+            this.timeZoneOffset = timeZoneOffset;
+        }
+    }
 }

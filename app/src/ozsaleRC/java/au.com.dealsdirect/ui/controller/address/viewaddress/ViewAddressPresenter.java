@@ -10,9 +10,11 @@ import au.com.dealsdirect.data.network.model.address.AddressesItem;
 import au.com.dealsdirect.data.network.model.address.ApplyAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
+import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -88,6 +90,25 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
             public void onFailure(Throwable t) {
                 super.onFailure(t);
                 getMvpView().deleteAddressFailed();
+            }
+        });
+    }
+
+    @Override
+    public void changeDeliveryAddress(ChangeDeliveryAddressRequest changeDeliveryAddressRequest) {
+
+        doApiCallForResponse(getDataManager().callChangeDeliveryAddress(changeDeliveryAddressRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                if (response != null && isViewAttached()) {
+                    getMvpView().backToOrders();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
             }
         });
     }

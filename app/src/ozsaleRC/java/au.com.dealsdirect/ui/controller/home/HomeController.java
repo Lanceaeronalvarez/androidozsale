@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.home;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +26,8 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 import javax.inject.Inject;
@@ -31,21 +35,33 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
+import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.controller.main.MainController;
+import au.com.dealsdirect.ui.controller.orders.orders.BottomDialogCancelOrders;
+import au.com.dealsdirect.ui.controller.orders.orders.BottomSheetOrderDialog;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
+import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsMvpView;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePushChangeHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CommonUtils;
+import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -91,8 +107,8 @@ public class HomeController extends BaseController implements HomeMvpView {
     @BindView(R.id.controller_fifth_frame)
     ViewGroup mCheckoutContainer;
 
-    @BindView(R.id.login_host_frame)
-    ViewGroup mLoginHostContainer;
+    @BindView(R.id.popup_host_frame)
+    ViewGroup mPopupHostContainer;
 
     private HashMap<Integer, Pair<Router, ViewGroup>> mRouterContainerMapping;
 
@@ -305,11 +321,9 @@ public class HomeController extends BaseController implements HomeMvpView {
         CommonControllerChangeListener.addToRouter(mCategoriesRouter);
         mCategoriesRouter.setRoot(RouterTransaction.with(ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES)));
 
-        if (mPresenter.isTablet()) {
-            mPopUpHostRouter = getChildRouter(mLoginHostContainer);
-            CommonControllerChangeListener.addToRouter(mPopUpHostRouter);
-            mPopUpHostRouter.setPopsLastView(true);
-        }
+        mPopUpHostRouter = getChildRouter(mPopupHostContainer);
+        CommonControllerChangeListener.addToRouter(mPopUpHostRouter);
+        mPopUpHostRouter.setPopsLastView(true);
 
         resetContactsRouter();
 
@@ -336,7 +350,7 @@ public class HomeController extends BaseController implements HomeMvpView {
                 mShopRouter, mCategoriesRouter, mContactRouter, mAccountsRouter, mCheckoutRouter);
 
         if (mPresenter.isTablet()) {
-            mPopUpHostRouter = getChildRouter(mLoginHostContainer);
+            mPopUpHostRouter = getChildRouter(mPopupHostContainer);
             mPopUpHostRouter.setPopsLastView(true);
 
             CommonControllerChangeListener.addToRouter(mPopUpHostRouter);
@@ -735,6 +749,11 @@ public class HomeController extends BaseController implements HomeMvpView {
         return mPopUpHostRouter != null && mPopUpHostRouter.getBackstackSize() >= 1;
     }
 
+    @Override
+    public void backClick() {
+        mActivity.onBackPressed();
+    }
+
     public Router getPopUpHostRouter() {
         return mPopUpHostRouter;
     }
@@ -813,6 +832,130 @@ public class HomeController extends BaseController implements HomeMvpView {
                 mBottomNavigationView.disableItemAtPosition(TAB_ALL_INDICES[i]);
             }
         }
+    }
+
+    public void showMyAddress(String orderID) {
+            if (!mPresenter.isTablet()) {
+                getCurrentRouter().pushController(RouterTransaction.with(new ViewAddressController(false, null, true, orderID))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+            } else {
+                if (mAccountsRouter != null) {
+                    Controller controller = getCurrentControllerOnRouter(mAccountsRouter);
+                    if (controller instanceof AccountMvpView) {
+                        ((AccountMvpView) controller).showChangeDeliveryAddressController(true, orderID);
+                    }
+
+                    if (controller instanceof BaseController) {
+                        ((BaseController) controller).refreshContents();
+                    }
+                }
+            }
+    }
+
+    public void showSendContactMessage(boolean isCalledFromOrders, int invoiceNumber, String description) {
+        mActivity.setDraggableViewPager(false);
+        setVisibleContainer(TAB_CONTACT_INDEX);
+
+        Controller controller = getCurrentControllerOnRouter(mContactRouter);
+        if (controller instanceof ViewContactsMvpView) {
+            if (mViewContactsMvpView == null) {
+                mViewContactsMvpView = mActivity.getContactsController();
+            }
+
+            mViewContactsMvpView.sendOrderMessage(isCalledFromOrders, invoiceNumber, description);
+        }
+        if (controller instanceof BaseController) {
+            ((BaseController) controller).refreshContents();
+        }
+
+        containerWillBeDisplayed(mContactContainer);
+    }
+
+    public void showMyReturns(int invoiceNumber, boolean calledFromOrder, String productId) {
+        mActivity.setDraggableViewPager(false);
+        Controller controller = getCurrentControllerOnRouter(mAccountsRouter);
+
+        if (mAccountMvpView == null) {
+            mAccountMvpView = mActivity.getAccountController();
+        }
+
+        mAccountMvpView.addNewReturns(invoiceNumber, calledFromOrder, productId);
+
+        if (controller instanceof BaseController) {
+            ((BaseController) controller).refreshContents();
+        }
+
+        containerWillBeDisplayed(mAccountsContainer);
+
+    }
+
+    public void showViewReturnsDetails(String returnID, String productName, boolean isFromOrders) {
+        mActivity.setDraggableViewPager(false);
+
+        Controller controller = getCurrentControllerOnRouter(mAccountsRouter);
+
+        if (mAccountMvpView == null) {
+            mAccountMvpView = mActivity.getAccountController();
+        }
+
+        mAccountMvpView.showReturnDetails(returnID, productName, isFromOrders);
+
+        if (controller instanceof BaseController) {
+            ((BaseController) controller).refreshContents();
+        }
+
+        containerWillBeDisplayed(mAccountsContainer);
+    }
+
+    public void showCancelOrderDialog(String orderNumber, String reason) {
+
+        if (mPresenter.isTablet()) {
+            CustomAlertDialog.showCustomCancelOrderDialog(mActivity, orderNumber, reason);
+        } else {
+            BottomDialogCancelOrders bottomSheetFragment = new BottomDialogCancelOrders();
+            Bundle bundle = new Bundle();
+
+            bundle.putString(ActionConstants.ORDER_INVOICE_NUMBER, orderNumber);
+            bundle.putString(ActionConstants.ORDER_REASON, reason);
+            bundle.putBoolean(ActionConstants.ORDER_SHOULD_SHOW_CANCEL_ORDER, true);
+
+            bottomSheetFragment.setArguments(bundle);
+            bottomSheetFragment.show(mActivity.getSupportFragmentManager(), "DialogBottomCancelOrders");
+        }
+
+    }
+
+    public void showCancelItemDialog(String imageUrl, String itemName, String invoiceNumber, String reason,
+                                     int quantity, int totalItems) {
+
+        if (mPresenter.isTablet()) {
+            CustomAlertDialog.showCancelItemDialog(mActivity, imageUrl, itemName, invoiceNumber, reason,
+                    quantity, totalItems);
+        } else {
+            BottomDialogCancelOrders bottomSheetFragment = new BottomDialogCancelOrders();
+            Bundle bundle = new Bundle();
+
+            bundle.putString(ActionConstants.ORDER_ITEM_IMAGE_URL, imageUrl);
+            bundle.putString(ActionConstants.ORDER_ITEM_DESCRIPTION, itemName);
+            bundle.putString(ActionConstants.ORDER_INVOICE_NUMBER, invoiceNumber);
+            bundle.putString(ActionConstants.ORDER_REASON, reason);
+            bundle.putString(ActionConstants.ORDER_QUANTITY, String.valueOf(quantity));
+            bundle.putString(ActionConstants.ORDER_SUBTOTAL_ITEM, String.valueOf(totalItems));
+            bundle.putBoolean(ActionConstants.ORDER_SHOULD_SHOW_CANCEL_ORDER, false);
+
+            bottomSheetFragment.setArguments(bundle);
+            bottomSheetFragment.show(mActivity.getSupportFragmentManager(), "DialogBottomCancelItemOrders");
+        }
+    }
+
+    public void callCreateOrderRefund(String invoiceNumber, String reason, JSONObject items) {
+        CreateRefundRequest createRefundRequest = new CreateRefundRequest();
+        createRefundRequest.setInvoiceNo(invoiceNumber);
+        createRefundRequest.setReason(reason);
+        createRefundRequest.setItems(items);
+
+        mPresenter.callCreateRefund(createRefundRequest);
     }
 
 }

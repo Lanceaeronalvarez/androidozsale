@@ -20,6 +20,8 @@ public interface SaleItemDetailsMvpView extends MvpView {
 
     void showMyPayDetails(GetSaleItemDetailsResponse value, Ourpay ourpay);
 
+    void showAfterpayDetails(int installmentsCount, double installmentAmount, String currency);
+
     void onCallGetBasketItemsQuantity();
 
     int getVerticalOffset();
@@ -27,4 +29,6 @@ public interface SaleItemDetailsMvpView extends MvpView {
     void toggleClipPadding(boolean isClipped);
 
     void setDynamicDiscount(String discountText);
+
+    void setIsAfterpayDetailsVisible(boolean visible);
 }

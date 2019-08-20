@@ -47,6 +47,10 @@ public interface CheckoutMvpView extends MvpView {
 
     void setPaymentList(List<PaymentMethod> paymentList);
 
+    void showAfterpayPanel(boolean isAvailable, String description);
+
+    void hideAfterpayPanel();
+
     void storeCartDetails(Value value);
 
     void triggerLoginTicket();
@@ -66,5 +70,4 @@ public interface CheckoutMvpView extends MvpView {
     void showPromoCodeApplied(String promoCode, boolean isPromoCodeApplied);
 
     Router getDisplayRouter();
-
 }

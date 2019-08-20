@@ -14,11 +14,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayState;
@@ -60,6 +63,8 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     private String mInvoiceString;
     private String mEstimatedDeliveryString;
 
+    private boolean mIsOurpayUsed;
+
     @BindView(R.id.ourpay_panel_holder)
     ViewGroup mOurpayDetailsContainer;
 
@@ -78,14 +83,26 @@ public class PaymentSuccessController extends BaseController implements PaymentS
                         .build());
     }
 
-    public PaymentSuccessController(CreatePaymentTransaction.ResponseValue responseValue) {
+    public static PaymentSuccessController newInstance(String address, String price, String invoice, String delivery, boolean isOurpayUsed) {
 
+        return new PaymentSuccessController(
+                new BundleBuilder(new Bundle())
+                        .putString(BundleKeys.KEY_ADDRESS, address)
+                        .putString(BundleKeys.KEY_PRICE, price)
+                        .putString(BundleKeys.KEY_INVOICE, invoice)
+                        .putString(BundleKeys.KEY_ESTIMATED_DELIVERY, delivery)
+                        .putBoolean(BundleKeys.KEY_IS_OURPAY_USED, isOurpayUsed)
+                        .build());
+    }
+
+    public PaymentSuccessController(CreatePaymentTransaction.ResponseValue responseValue) {
         this(new BundleBuilder(new Bundle())
                 .putString(BundleKeys.KEY_ADDRESS, responseValue.getD().getValue().getAddressString())
                 .putDouble(BundleKeys.KEY_PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal())
                 .putDouble(BundleKeys.KEY_SHIPPING_FEE, responseValue.getD().getValue().getOrderInfoResult().getShipping())
                 .putString(BundleKeys.KEY_INVOICE, responseValue.getD().getValue().getInvoiceNo() == null ? String.valueOf(responseValue.getD().getValue().getTransactionInvoiceNo()) : responseValue.getD().getValue().getInvoiceNo())
                 .putString(BundleKeys.KEY_ESTIMATED_DELIVERY, responseValue.getD().getValue().getOrderInfoResult().getEstimatedDeliveryText())
+                .putBoolean(BundleKeys.KEY_IS_OURPAY_USED, responseValue.getD().getValue().getPlannedTransactions() != null && !responseValue.getD().getValue().getPlannedTransactions().isEmpty())
                 .build());
     }
 
@@ -96,13 +113,14 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         mShippingFee = args.getDouble(BundleKeys.KEY_SHIPPING_FEE);
         mInvoiceString = args.getString(BundleKeys.KEY_INVOICE, "");
         mEstimatedDeliveryString = args.getString(BundleKeys.KEY_ESTIMATED_DELIVERY, "");
+        mIsOurpayUsed = args.getBoolean(BundleKeys.KEY_IS_OURPAY_USED, false);
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        if (PaymentInfo.getOurpay() != null && PaymentInfo.getOurpay().isCanUse()) {
+        if (mIsOurpayUsed && PaymentInfo.getOurpay() != null && PaymentInfo.getOurpay().isCanUse()) {
             mPresenter.generateOurpay();
         }
 

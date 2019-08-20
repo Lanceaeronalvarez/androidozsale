@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -30,6 +31,16 @@ public class OrdersPresenter<V extends OrdersMvpView> extends BasePresenter<V> i
                 if (((GetPaymentsList.ResponseValue) response).getD().getResult()) {
                     getMvpView().showOrders(((GetPaymentsList.ResponseValue) response).getD().getList());
                 }
+            }
+        });
+    }
+
+    @Override
+    public void callOrderReceived(OrderReceivedRequest receivedRequest) {
+        doApiCallForResponse(getDataManager().callOrderReceived(receivedRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+
             }
         });
     }

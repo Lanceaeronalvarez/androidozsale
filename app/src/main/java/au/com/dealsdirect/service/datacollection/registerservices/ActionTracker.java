@@ -81,7 +81,7 @@ public class ActionTracker implements ActionTrackerInterface {
                 }));
 
         // register start checkout event
-        DataCollector.EventRegistry.register(generateEventKey(Events.StartCheckout, getServiceKey()), Events.StartCheckout,
+        DataCollector.EventRegistry.register(generateEventKey(Events.InitiateCheckout, getServiceKey()), Events.InitiateCheckout,
                 new LoggingService.LogInitiateCheckout(new InitiateCheckOutEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {

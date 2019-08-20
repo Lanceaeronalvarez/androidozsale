@@ -49,6 +49,9 @@ import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
+import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
+import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -333,8 +336,32 @@ public class AccountController extends BaseController implements AccountMvpView,
         if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.VIEW_ADDRESSES, new HorizontalChangeHandler(), new HorizontalChangeHandler());
         } else {
-            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.VIEW_ADDRESSES, RouterTransaction.with(new ViewAddressController(false, null)));
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.VIEW_ADDRESSES, RouterTransaction.with(new ViewAddressController(false, null, false, "")));
         }
+    }
+
+    @Override
+    public void showChangeDeliveryAddressController(boolean calledFromOrder, String orderID) {
+        getDisplayRouter().pushController(RouterTransaction.with(new ViewAddressController(false, null, calledFromOrder, orderID))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    @Override
+    public void showReturnDetails(String returnID, String productName, boolean isFromOrders) {
+
+        RouterTransaction routerTransaction = RouterTransaction.with(ReturnDetailsController.newInstance(returnID,productName,isFromOrders))
+                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
+
+        getDisplayRouter().pushController(routerTransaction);
+    }
+
+    @Override
+    public void addNewReturns(int invoiceNumber, boolean calledFromOrder, String productId) {
+        RouterTransaction routerTransaction = RouterTransaction.with(NewReturnController.newInstance(invoiceNumber, calledFromOrder, productId))
+                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
+
+        getDisplayRouter().pushController(routerTransaction);
     }
 
     @Override

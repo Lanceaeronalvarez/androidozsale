@@ -7,6 +7,7 @@ package au.com.dealsdirect.data.network.model.saleitemdetails;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -214,5 +215,9 @@ public class Personalisation {
             return value;
         }
 
+        @Override
+        public int hashCode() {
+            return Objects.hash(key, value);
+        }
     }
 }

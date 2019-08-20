@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -10,4 +11,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface OrdersMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
     void loadOrders();
+
+    void callOrderReceived(OrderReceivedRequest receivedRequest);
 }

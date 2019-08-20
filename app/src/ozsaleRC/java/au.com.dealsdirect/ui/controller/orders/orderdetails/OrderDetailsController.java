@@ -8,19 +8,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.orders.orders.OrderItemClickListener;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -33,11 +38,14 @@ import butterknife.OnClick;
  * Created by smartwave on 22/06/2017.
  */
 
-public class OrderDetailsController extends BaseController implements OrderDetailsMvpView {
+public class OrderDetailsController extends BaseController implements OrderDetailsMvpView, OrderDetailsClickListener {
 
     private static final String PAYMENT_ITEM = "PAYMENT_ITEM";
     private static final String PAYMENT_REF_NO = "PAYMENT_REF_NO";
     private static final String SELECTED_ITEM = "SELECTED_ITEM";
+    private static final String STATUS = "STATUS";
+    private static final String LINK = "LINK";
+    private static final String ESTIMATED_DELIVERY = "ESTIMATED_DELIVERY";
 
     @Inject
     OrderDetailsMvpPresenter<OrderDetailsMvpView> mPresenter;
@@ -70,10 +78,16 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     TextView mApprovedDateTextView;
 
     String mPaymentReferenceNo;
+    HashMap<String, String> mStatus;
+    String mLink;
+    HashMap<String, String> mEstimatedDelivery;
 
-    public OrderDetailsController(String paymentRefNo) {
+    public OrderDetailsController(String paymentRefNo, HashMap<String, String> status, String link, HashMap<String, String> estimatedDelivery) {
         this(new BundleBuilder(new Bundle())
                 .putString(PAYMENT_REF_NO, paymentRefNo)
+                .putSerializable(STATUS, status)
+                .putString(LINK, link)
+                .putSerializable(ESTIMATED_DELIVERY, estimatedDelivery)
                 .build());
     }
 
@@ -81,6 +95,9 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     public OrderDetailsController(Bundle args) {
         super(args);
         mPaymentReferenceNo = args.getString(PAYMENT_REF_NO, "");
+        mStatus = (HashMap<String, String>) args.getSerializable(STATUS);
+        mLink = args.getString(LINK, "");
+        mEstimatedDelivery = (HashMap<String, String>) args.getSerializable(ESTIMATED_DELIVERY);
     }
 
     @Override
@@ -117,6 +134,14 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
         GetOrderPaymentDetails.RequestValues requestValues = new GetOrderPaymentDetails.RequestValues(mPaymentReferenceNo);
         mPresenter.loadOrderDetails(requestValues);
+
+    }
+
+    @Override
+    public void onRefreshStart() {
+        super.onRefreshStart();
+        GetOrderPaymentDetails.RequestValues requestValues = new GetOrderPaymentDetails.RequestValues(mPaymentReferenceNo);
+        mPresenter.loadOrderDetails(requestValues);
     }
 
 
@@ -145,7 +170,8 @@ public class OrderDetailsController extends BaseController implements OrderDetai
         mApprovedDateTextView.setText(date);
 
         //set adapter
-        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(orderDetails));
+        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity,orderDetails,this, mStatus, mLink,
+                mEstimatedDelivery));
         mRecyclerView.addItemDecoration(new OrderDetailItemDecorator());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
@@ -165,5 +191,23 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     @OnClick(R.id.partial_toolbar_left_view)
     public void onBackClick() {
         mActivity.onBackPressed();
+    }
+
+    @Override
+    public void showOrderDialog(View view, ArrayList<String> arrayList, HashMap<String,String> hashMap) {
+
+        if (mPresenter.isTablet()) {
+            mActivity.showPopupMenu(view, arrayList, hashMap);
+        } else {
+            mActivity.showBottomDialog(arrayList, hashMap);
+        }
+    }
+
+    @Override
+    public void callOrderReceived(String orderID) {
+
+        OrderReceivedRequest orderReceivedRequest = new OrderReceivedRequest();
+        orderReceivedRequest.setOrderId(orderID);
+        mPresenter.callOrderReceived(orderReceivedRequest);
     }
 }

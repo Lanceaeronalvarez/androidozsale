@@ -1,5 +1,6 @@
 package au.com.dealsdirect.data.network;
 
+import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -21,8 +22,13 @@ import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
+import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
+import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderResponse;
+import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -81,8 +87,11 @@ import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
+import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
@@ -96,6 +105,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.Ve
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
+import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
@@ -273,6 +283,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<PromoInfoResponse> callPromoInfo(String skuId) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getPromoInfo())
+                .addHeaders(mApiHeader.get())
+                .addQueryParameter(AppConstants.PARAM_SKUID, skuId)
+                .build()
+                .getObjectObservable(PromoInfoResponse.class);
+    }
+
+    @Override
     public Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId) {
         return Rx2AndroidNetworking.get(ApiEndPoint.getServerSettings())
                 .addHeaders(mApiHeader.get())
@@ -322,6 +341,15 @@ public class AppApiHelper implements ApiHelper {
         return Rx2AndroidNetworking.get(ApiEndPoint.getPublicAppSettingsSection())
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(new GetAppSettingsSection.RequestValue(countryId))
+                .build()
+                .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId, String sectionName) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getPublicAppSettingsSection())
+                .addHeaders(mApiHeader.get())
+                .addQueryParameter(new GetAppSettingsSection.RequestValue(countryId, sectionName))
                 .build()
                 .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
     }
@@ -1014,12 +1042,66 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<CreateAfterpayOrderResponse> createAfterpayOrder(CreateAfterpayOrderRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.createAfterpayOrder())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getObjectObservable(CreateAfterpayOrderResponse.class);
+    }
+
+    @Override
+    public Observable<JSONObject> callAfterPayCreatePayment(AfterPayCreatePaymentRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callAfterPayCreatePayment())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getJSONObjectObservable();
+    }
+
+    @Override
+    public Observable<GetAfterpayDataResponse> callGetAfterpayData(String price) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.callGetAfterpayData())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("amount", price)
+                .build()
+                .getObjectObservable(GetAfterpayDataResponse.class);
+    }
+
+    @Override
     public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest deepLinkDataRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.deepLink())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(deepLinkDataRequest))
                 .build()
                 .getObjectObservable(DeepLinkDataResponse.class);
+    }
+
+    @Override
+    public Observable<String> callChangeDeliveryAddress(ChangeDeliveryAddressRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.changeDeliveryAddress())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<String> callCreateRefund(CreateRefundRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.createRefund())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<OrderReceivedResponse> callOrderReceived(OrderReceivedRequest receivedRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callOrderReceived())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(receivedRequest))
+                .build()
+                .getObjectObservable(OrderReceivedResponse.class);
     }
 }
 

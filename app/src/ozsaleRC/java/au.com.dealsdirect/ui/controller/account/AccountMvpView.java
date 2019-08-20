@@ -21,6 +21,12 @@ public interface AccountMvpView extends MvpView {
 
     void showMyAddressesController();
 
+    void showChangeDeliveryAddressController(boolean calledFromOrder, String orderID);
+
+    void showReturnDetails(String returnID, String productName, boolean isFromOrders);
+
+    void addNewReturns(int invoiceNumber, boolean calledFromOrder, String productId);
+
     void showMyOrders();
 
     void showMyVouchers();

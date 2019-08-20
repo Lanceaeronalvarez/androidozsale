@@ -14,6 +14,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
@@ -79,6 +80,8 @@ public class PopUpHostController extends BaseController implements PopUpHostMvpV
             case STRICT_CONSENT_UI:
                 GateKeeper.setRoot(mPopUpHostChildRouter, GateKeeper.Destination.STRICT_CONSENT_UI, RouterTransaction.with(StrictConsentController.newInstance()));
                 break;
+            case AFTERPAY:
+                mPopUpHostChildRouter.setRoot(RouterTransaction.with(new AfterpayViewController(getArgs())));
             default:
                 break;
         }

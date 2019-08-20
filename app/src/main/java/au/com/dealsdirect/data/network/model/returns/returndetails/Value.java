@@ -14,6 +14,14 @@ public class Value {
     @SerializedName("Total")
     @Expose
     private Double total;
+    @SerializedName("Reason")
+    private String reason;
+    @SerializedName("ContactNo")
+    private int contactNumber;
+    @SerializedName("AttachmentID")
+    private String attachmentId;
+    @SerializedName("Attachments")
+    private List<Attachments> attachments;
 
     public List<Item> getItems() {
         return items;
@@ -29,6 +37,50 @@ public class Value {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public int getContactNumber() {
+        return contactNumber;
+    }
+
+    public String getAttachmentId() {
+        return attachmentId;
+    }
+
+    public List<Attachments> getAttachments() {
+        return attachments;
+    }
+
+    class Attachments {
+
+        @SerializedName("Type")
+        private String type;
+        @SerializedName("Title")
+        private String title;
+        @SerializedName("Description")
+        private String description;
+        @SerializedName("Url")
+        private String url;
+
+        public String getType() {
+            return type;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getUrl() {
+            return url;
+        }
     }
 
 }

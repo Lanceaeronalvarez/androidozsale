@@ -120,6 +120,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         mTitleTextView.setText(getString(R.string.account_orders));
 
         mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
+        CommonControllerChangeListener.addToRouter(mCheckoutDetailRouter);
 
         if (!mHasSavedInstance || mActivity.getCheckoutController() == null) {
             mCheckoutController = CheckoutController.newInstance();
@@ -227,6 +228,16 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     public void setPaymentList(List<PaymentMethod> paymentList) {
         mCheckoutDetailView.setPaymentList(paymentList);
+    }
+
+    @Override
+    public void showAfterpayPanel(boolean isAvailable, String description) {
+        mCheckoutDetailView.showAfterpayPanel(isAvailable, description);
+    }
+
+    @Override
+    public void hideAfterpayPanel() {
+        mCheckoutDetailView.hideAfterpayPanel();
     }
 
     @Override

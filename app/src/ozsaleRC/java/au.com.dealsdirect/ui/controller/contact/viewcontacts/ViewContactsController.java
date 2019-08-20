@@ -30,6 +30,7 @@ import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
+import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.listener.ContactClickListener;
 import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
@@ -293,7 +294,8 @@ public class ViewContactsController extends BaseController implements ViewContac
                 saleName,
                 invoiceNo,
                 timeStampString,
-                contactList.getContactNo()))
+                contactList.getContactNo(),
+                false))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler());
 
@@ -305,7 +307,8 @@ public class ViewContactsController extends BaseController implements ViewContac
                     saleName,
                     invoiceNo,
                     timeStampString,
-                    contactList.getContactNo()))
+                    contactList.getContactNo(),
+                    false))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         }
@@ -324,6 +327,17 @@ public class ViewContactsController extends BaseController implements ViewContac
     @Override
     public void getViewContactsView() {
         mActivity.getMainController().getHomeController().setContactsController(this);
+    }
+
+    @Override
+    public void sendOrderMessage(boolean isCalledFromOrders, int invoiceNumber, String description) {
+        RouterTransaction routerTransaction = RouterTransaction.with(AddContactController.newInstance(invoiceNumber,isCalledFromOrders,description))
+                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
+        if (mPresenter.isTablet()) {
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.ADD_CONTACT, routerTransaction);
+        } else {
+            getDisplayRouter().pushController(routerTransaction);
+        }
     }
 
     public void resetContactDetailRouter() {

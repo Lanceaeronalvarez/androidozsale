@@ -57,6 +57,121 @@
                 android:overScrollMode="never" />
 
             <RelativeLayout
+                android:id="@+id/controller_return_details_reason_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/controller_return_details_reason_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background_default"
+                    android:fontFamily="@string/font_app_bold"
+                    android:padding="@dimen/margin_medium"
+                    android:text="Reason for Return"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_caption1"
+                    tools:ignore="HardcodedText" />
+
+                <RelativeLayout
+                    android:id="@+id/controller_return_details_to_contact_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/controller_return_details_reason_header"
+                    android:background="@color/white"
+                    android:paddingBottom="@dimen/margin_medium">
+
+                    <TextView
+                        android:id="@+id/controller_return_details_reason_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/margin_medium"
+                        android:text="test" />
+
+                    <FrameLayout
+                        android:id="@+id/controller_return_details_contact_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/controller_return_details_reason_value"
+                        android:layout_marginBottom="@dimen/margin_small">
+
+                        <LinearLayout
+                            android:id="@+id/controller_return_details_item_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginEnd="@dimen/margin_small"
+                            android:layout_marginBottom="@dimen/margin_extra_small"
+                            android:background="@drawable/bg_contact_history_item"
+                            android:orientation="vertical"
+                            android:padding="@dimen/margin_medium">
+
+                            <TextView
+                                android:id="@+id/contact_history_message_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxEms="15"
+                                android:textColor="@color/contact_history_text_selector"
+                                tools:text="hi my order is missing " />
+
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/controller_return_details_date_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/controller_return_details_contact_layout">
+
+                        <TextView
+                            android:id="@+id/controller_return_details_contact_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="@dimen/margin_small"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:text="August 01, 2019"
+                            tools:ignore="HardcodedText" />
+
+
+                        <View
+                            android:id="@+id/controller_return_details_divider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@+id/controller_return_details_contact_date"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:background="@color/text_extra_light" />
+
+                        <TextView
+                            android:id="@+id/controller_return_details_subject_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/controller_return_details_divider"
+                            android:layout_marginStart="@dimen/margin_medium"
+                            android:text="Returns Enquiry"
+                            tools:ignore="HardcodedText" />
+
+                        <TextView
+                            android:id="@+id/controller_return_details_contact_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/controller_return_details_divider"
+                            android:layout_alignParentRight="true"
+                            android:drawableRight="@drawable/ic_gray_chevron"
+                            android:drawablePadding="@dimen/margin_small"
+                            android:gravity="center_vertical"
+                            android:text="Contact No:" />
+
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/controller_return_details_total_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,8 +186,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@string/font_app_medium"
-                    android:text="Total inc GST:"
-                    android:textColor="@color/text_dark"
+                    android:text="Total in GST:"
+                    android:textColor="@color/text_extra_dark"
+                    android:textStyle="bold"
                     android:textSize="@dimen/text_size_headline3"
                     tools:ignore="HardcodedText" />
 

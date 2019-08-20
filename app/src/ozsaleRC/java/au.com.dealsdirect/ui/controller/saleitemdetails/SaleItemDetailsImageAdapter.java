@@ -1,30 +1,25 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.github.chrisbanes.photoview.CustomPhotoViewAttacher;
 import com.github.chrisbanes.photoview.ScalableImageView;
 import com.mysale.genie.utility.GenericEvent;
 import com.mysale.genie.utility.RxBus;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,12 +27,9 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -77,7 +69,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     private boolean shouldUpdateData(List<String> currentData, List<String> newData) {
-        if(currentData.size() == 0) {
+        if (currentData.size() == 0) {
             return true;
         }
 
@@ -85,8 +77,8 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
             return true;
         }
 
-        for(int i = 0; i < currentData.size(); i++) {
-            if(!currentData.get(i).equals(newData.get(i))) {
+        for (int i = 0; i < currentData.size(); i++) {
+            if (!currentData.get(i).equals(newData.get(i))) {
                 return true;
             }
         }
@@ -152,7 +144,11 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
         ViewHolder vh = new ViewHolder(view);
         if (vh.image instanceof ScalableImageView) {
             //pass presenter in the future
-            ((ScalableImageView) vh.image).init();
+            ScalableImageView imageView = ((ScalableImageView) vh.image);
+
+            imageView.init();
+            imageView.setOnDoubleTapListener(null);
+            imageView.setZoomSnapBackMode(CustomPhotoViewAttacher.ZoomSnapBackMode.TO_MINIMUM);
         }
 
         initializeViewHolder(vh);
@@ -162,7 +158,6 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ViewHolder vh = (ViewHolder) holder;
-        Context context = vh.image.getContext();
         switch (mViewType) {
             case 1:
                 if (mData.size() > 0) {

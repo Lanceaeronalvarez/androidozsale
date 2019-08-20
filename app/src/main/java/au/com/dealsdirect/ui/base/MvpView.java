@@ -39,4 +39,7 @@ public interface MvpView {
 
     void hideOurpayLoading();
 
+    void showAfterpayLoading();
+
+    void hideAfterpayLoading();
 }

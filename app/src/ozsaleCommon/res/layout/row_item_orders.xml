@@ -9,12 +9,31 @@
     android:layout_marginBottom="@dimen/margin_huge"
     tools:ignore="MissingPrefix">
 
+
+
+    <RelativeLayout
+        android:layout_width="@dimen/margin_medium"
+        android:layout_height="@dimen/margin_huge"
+        android:layout_alignParentRight="true"
+        android:id="@+id/img_button_layout">
+
+        <ImageButton
+            android:id="@+id/orders_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_orders_ellipsis"
+            android:layout_marginTop="@dimen/margin_small" />
+
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/order_image_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
-        android:gravity="left" />
+        android:layout_below="@+id/img_button_layout"
+        android:layout_marginTop="@dimen/margin_large" />
 
     <RelativeLayout
         android:id="@+id/my_order_information_text_content"
@@ -291,6 +310,15 @@
                         tools:ignore="ContentDescription" />
 
                     <View
+                        android:id="@+id/connector_to_received"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/border_thick"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/dispatched_graph_node"
+                        android:background="@color/border_regular"
+                        android:visibility="gone"/>
+
+                    <View
                         android:id="@+id/connector_to_dispatched_2"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/border_thick"
@@ -315,6 +343,69 @@
 
                 <TextView
                     android:id="@+id/dispatched_date_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:textColor="@color/text_light"
+                    android:textSize="@dimen/text_size_caption1"
+                    tools:ignore="HardcodedText"
+                    tools:text="05 Sep" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/received_order_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium">
+
+                    <TextView
+                        android:id="@+id/received_graph_node"
+                        fontPath="@string/font_app_regular"
+                        android:layout_width="@dimen/margin_large"
+                        android:layout_height="@dimen/margin_large"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/bg_orders_graph_white"
+                        android:gravity="center"
+                        android:text="5"
+                        android:textColor="@color/white"
+                        android:textAlignment="center"
+                        tools:ignore="ContentDescription" />
+
+                    <View
+                        android:id="@+id/connector_to_received_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/border_thick"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@id/received_graph_node"
+                        android:background="@color/border_regular" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tracker_fifth_node"
+                    fontPath="@string/font_app_semibold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="@string/received"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_caption1"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/received_date_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

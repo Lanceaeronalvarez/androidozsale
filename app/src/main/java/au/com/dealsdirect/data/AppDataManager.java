@@ -28,8 +28,13 @@ import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
+import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
+import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderResponse;
+import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -87,8 +92,11 @@ import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
+import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
@@ -102,6 +110,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.Ve
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
+import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
@@ -227,6 +236,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<PromoInfoResponse> callPromoInfo(String skuId) {
+        return mApiHelper.callPromoInfo(skuId);
+    }
+
+    @Override
     public Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId) {
         return mApiHelper.callGetServerSettings(countryId);
     }
@@ -255,6 +269,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId) {
         return mApiHelper.callGetPublicAppSettingsSections(countryId);
+    }
+
+    @Override
+    public Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId, String sectionName) {
+        return mApiHelper.callGetPublicAppSettingsSections(countryId, sectionName);
     }
 
     @Override
@@ -620,8 +639,38 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<CreateAfterpayOrderResponse> createAfterpayOrder(CreateAfterpayOrderRequest request) {
+        return mApiHelper.createAfterpayOrder(request);
+    }
+
+    @Override
+    public Observable<JSONObject> callAfterPayCreatePayment(AfterPayCreatePaymentRequest request) {
+        return mApiHelper.callAfterPayCreatePayment(request);
+    }
+
+    @Override
+    public Observable<GetAfterpayDataResponse> callGetAfterpayData(String price) {
+        return mApiHelper.callGetAfterpayData(price);
+    }
+
+    @Override
     public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request) {
         return mApiHelper.callGetDeepLinkData(request);
+    }
+
+    @Override
+    public Observable<String> callChangeDeliveryAddress(ChangeDeliveryAddressRequest request) {
+        return mApiHelper.callChangeDeliveryAddress(request);
+    }
+
+    @Override
+    public Observable<String> callCreateRefund(CreateRefundRequest request) {
+        return mApiHelper.callCreateRefund(request);
+    }
+
+    @Override
+    public Observable<OrderReceivedResponse> callOrderReceived(OrderReceivedRequest receivedRequest) {
+        return mApiHelper.callOrderReceived(receivedRequest);
     }
 
     @Override
@@ -688,6 +737,16 @@ public class AppDataManager implements DataManager {
     @Override
     public String getCountryId() {
         return mPreferencesHelper.getCountryId();
+    }
+
+    @Override
+    public void setCountryIso(String countryIso) {
+        mPreferencesHelper.setCountryIso(countryIso);
+    }
+
+    @Override
+    public String getCountryIso() {
+        return mPreferencesHelper.getCountryIso();
     }
 
     @Override
@@ -798,6 +857,56 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean isMasterpassEnabled() {
         return mPreferencesHelper.isMasterpassEnabled();
+    }
+
+    @Override
+    public void setIsOurpayEnabled(boolean val) {
+        mPreferencesHelper.setIsOurpayEnabled(val);
+    }
+
+    @Override
+    public boolean isOurpayEnabled() {
+        return mPreferencesHelper.isOurpayEnabled();
+    }
+
+    @Override
+    public void setIsAfterpayEnabled(boolean val) {
+        mPreferencesHelper.setIsAfterpayEnabled(val);
+    }
+
+    @Override
+    public boolean isAfterpayEnabled() {
+        return mPreferencesHelper.isAfterpayEnabled();
+    }
+
+    @Override
+    public void setAfterpayScriptUri(String uri) {
+        mPreferencesHelper.setAfterpayScriptUri(uri);
+    }
+
+    @Override
+    public String getAfterpayScriptUri() {
+        return mPreferencesHelper.getAfterpayScriptUri();
+    }
+
+    @Override
+    public void setAfterpayLightboxImgUrl(String url) {
+        mPreferencesHelper.setAfterpayLightboxImgUrl(url);
+    }
+
+    @Override
+    public String getAfterpayLightboxImageUrl() {
+        return mPreferencesHelper.getAfterpayLightboxImageUrl();
+    }
+
+    @Override
+    public void setAfterpayTermsLink(String link) {
+        mPreferencesHelper.setAfterpayTermsLink(link);
+    }
+
+    @Override
+    public String getAfterpayTermsLink() {
+        return mPreferencesHelper.getAfterpayTermsLink();
     }
 
     @Override
@@ -1110,6 +1219,16 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean hasActiveCheckoutSession() {
         return mPreferencesHelper.hasActiveCheckoutSession();
+    }
+
+    @Override
+    public void setCartHashCode(int hashCode) {
+        mPreferencesHelper.setCartHashCode(hashCode);
+    }
+
+    @Override
+    public int getCartHashCode() {
+        return mPreferencesHelper.getCartHashCode();
     }
 
     @Override

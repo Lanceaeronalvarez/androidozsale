@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.custom;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.graphics.Color;
@@ -16,10 +17,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
+import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.ImageUtils;
 
 /*
  * Created by Paul on 7/5/17.
@@ -41,7 +52,8 @@ public class CustomAlertDialog {
 
     public enum CustomDialogGravity {
         TOP,
-        BOTTOM
+        BOTTOM,
+        CENTER
     }
 
     public static AlertDialog showCustomAlertDialogWithTextLink(
@@ -159,6 +171,152 @@ public class CustomAlertDialog {
 
     }
 
+    public static AlertDialog showCustomCancelOrderDialog(
+            Activity activity, String orderNumber, String reason) {
+
+
+        LayoutInflater inflater = activity.getLayoutInflater();
+
+        @SuppressLint("InflateParams")
+        View dialogView = inflater.inflate(R.layout.dialog_cancel_order, null);
+
+        Button mYesButton = (Button) dialogView.findViewById(R.id.button_yes_cancel_order);
+        Button mNoButton = (Button) dialogView.findViewById(R.id.button_no_cancel_order);
+        ImageButton mCloseButton = (ImageButton) dialogView.findViewById(R.id.img_order_button_close);
+        TextView mTextOrderNumber = (TextView) dialogView.findViewById(R.id.cancel_order_number_text);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setView(dialogView);
+
+        AlertDialog newAlertDialog = builder.create();
+
+        setAlertDialogGravity(newAlertDialog, CustomDialogGravity.CENTER);
+        newAlertDialog.getWindow().getAttributes().windowAnimations = R.style.CancelOrderDialog;
+
+        newAlertDialog.getWindow().setDimAmount(WINDOW_DIM_AMOUNT);
+
+        mTextOrderNumber.setText(orderNumber);
+
+        newAlertDialog.show();
+
+        mYesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.callRefundOrder(orderNumber, reason, new JSONObject());
+                dismissCustomDialog();
+            }
+        });
+
+        mNoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissCustomDialog();
+            }
+        });
+
+        mCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissCustomDialog();
+            }
+        });
+
+        alertDialog = newAlertDialog;
+
+        return newAlertDialog;
+    }
+
+    public static AlertDialog showCancelItemDialog(
+            Activity activity, String imageUrl, String itemName, String orderNumber, String reason,
+            int quantity, int totalItems) {
+
+
+        LayoutInflater inflater = activity.getLayoutInflater();
+
+        @SuppressLint("InflateParams")
+        View dialogView = inflater.inflate(R.layout.dialog_cancel_item_order, null);
+
+        Button mYesButton = (Button) dialogView.findViewById(R.id.button_yes_cancel_item);
+        Button mNoButton = (Button) dialogView.findViewById(R.id.button_no_cancel_item);
+        ImageButton mCloseButton = (ImageButton) dialogView.findViewById(R.id.img_button_close);
+        ImageView mItemImage = (ImageView) dialogView.findViewById(R.id.item_cancel_image);
+        TextView mItemName = (TextView) dialogView.findViewById(R.id.item_name);
+        ProductQuantityLayout mQuantity = (ProductQuantityLayout) dialogView.findViewById(R.id.item_quantity);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setView(dialogView);
+
+        AlertDialog newAlertDialog = builder.create();
+
+        setAlertDialogGravity(newAlertDialog, CustomDialogGravity.CENTER);
+        newAlertDialog.getWindow().getAttributes().windowAnimations = R.style.CancelOrderDialog;
+
+        newAlertDialog.getWindow().setDimAmount(WINDOW_DIM_AMOUNT);
+
+        mItemName.setText(itemName);
+
+        ImageUtils.loadImage(imageUrl, mItemImage);
+
+        mQuantity.setQuantity(quantity);
+        mQuantity.setAutoUpdateQuantity(false);
+        mQuantity.setMax(totalItems);
+        mQuantity.setEditTextToNonEditable();
+
+        mQuantity.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
+            @Override
+            public void onQuantityIncrease(ProductQuantityLayout view, int value) {
+                if (value < totalItems) {
+                    value++;
+                }
+                mQuantity.setQuantity(value);
+            }
+
+            @Override
+            public void onQuantityDecrease(ProductQuantityLayout view, int value) {
+                if (value != 1) {
+                    value--;
+                }
+                mQuantity.setQuantity(value);
+            }
+        });
+
+        newAlertDialog.show();
+
+        mYesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put(orderNumber, mQuantity.getQuantity());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                MainActivity.callRefundOrder(orderNumber, reason, jsonObject);
+                dismissCustomDialog();
+            }
+        });
+
+        mNoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissCustomDialog();
+            }
+        });
+
+        mCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissCustomDialog();
+            }
+        });
+
+        alertDialog = newAlertDialog;
+
+        return newAlertDialog;
+    }
+
     private static void setAlertDialogGravity(
             AlertDialog alertDialog,
             CustomDialogGravity customDialogGravity) {
@@ -174,6 +332,10 @@ public class CustomAlertDialog {
 
             case BOTTOM:
                 wlp.gravity = Gravity.BOTTOM;
+                break;
+
+            case CENTER:
+                wlp.gravity = Gravity.CENTER;
                 break;
 
             default:

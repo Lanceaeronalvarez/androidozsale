@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.address.viewaddress;
 
 import au.com.dealsdirect.data.network.model.address.AddressesItem;
+import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.ui.base.BasePresenter;
@@ -18,4 +19,6 @@ public interface ViewAddressMvpPresenter<V extends MvpView> extends MvpPresenter
     void applyDeliveryAddress(String deliveryAddressId);
 
     void deleteUserDeliveryAddress(AddressesItem deliveryAddress);
+
+    void changeDeliveryAddress(ChangeDeliveryAddressRequest changeDeliveryAddressRequest);
 }

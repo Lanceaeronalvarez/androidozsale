@@ -115,6 +115,17 @@ public class GetPaymentsList {
             @SerializedName("Items")
             @Expose
             private List<Item> items = null;
+            @SerializedName("Actions")
+            @Expose
+            private List<String> actions;
+
+            public List<String> getActions() {
+                return actions;
+            }
+
+            public void setActions(List<String> actions) {
+                this.actions = actions;
+            }
 
             public List<Item> getItems() {
                 return items;

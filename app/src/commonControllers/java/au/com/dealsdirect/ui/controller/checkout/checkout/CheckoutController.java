@@ -3,6 +3,8 @@ package au.com.dealsdirect.ui.controller.checkout.checkout;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -10,18 +12,20 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -54,18 +58,19 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
-import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
+import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostMvpView;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
+import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.Settings;
@@ -86,6 +91,7 @@ import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
+import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -93,6 +99,8 @@ import butterknife.Optional;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
+import static android.graphics.Typeface.BOLD;
+import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
 
 
@@ -182,6 +190,16 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     RelativeLayout mPaypalCreditButton;
     @BindView(R.id.partial_checkout_button_masterpass)
     RelativeLayout mMasterpassButton;
+    @BindView(R.id.partial_checkout_afterpay_panel_holder)
+    LinearLayout mAfterpayHolder;
+    @BindView(R.id.partial_checkout_afterpay_description)
+    TextView mAfterpayDescription;
+    @BindView(R.id.partial_checkout_afterpay_inlinelogo)
+    ImageView mAfterpayInlineLogo;
+    @BindView(R.id.partial_checkout_afterpay_info_button)
+    ImageButton mAfterpayInfoButton;
+    @BindView(R.id.partial_checkout_button_afterpay)
+    RelativeLayout mAfterpayButton;
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
     LinearLayout mOurpayHolder;
     @Nullable
@@ -255,8 +273,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private boolean mHasSavedInstance = false;
     private HashMap<String, Object> parameters = new HashMap<>();
 
-    private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
-
     public static CheckoutController newInstance() {
         return new CheckoutController(
                 new BundleBuilder(new Bundle())
@@ -272,7 +288,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             showAddAddressController();
             getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.ADD_ADDRESS);
         } else {
-            getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress))
+            getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress, false, ""))
                     .pushChangeHandler(new HorizontalChangeHandler(false))
                     .popChangeHandler(new HorizontalChangeHandler()));
         }
@@ -340,6 +356,16 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> onMasterpassButtonClick()));
+
+        mClickListeners.add(RxView.clicks(mAfterpayInfoButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onAfterpayInfoButtonClick()));
+
+        mClickListeners.add(RxView.clicks(mAfterpayButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onAfterpayButtonClick()));
 
         mChangeClickListeners = new CompositeDisposable();
         mChangeClickListeners.add(RxView.clicks(mAddressContainerLayout)
@@ -420,10 +446,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     protected void onDestroyView(@NonNull View view) {
-        if (newControllerChangeHandler != null) {
-            getRouter().removeChangeListener(newControllerChangeHandler);
-            newControllerChangeHandler = null;
-        }
         super.onDestroyView(view);
     }
 
@@ -449,29 +471,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         }
 
-        //Code for returning to checkout, call reload
-        CheckoutController currentController = this;
-        newControllerChangeHandler = new ControllerChangeHandler.ControllerChangeListener() {
-            @Override
-            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-                if (to == currentController && (mActivity != null && mActivity.isAuthorized())) {
-                    loadCart();
-                }
-            }
-        };
-        getRouter().addChangeListener(newControllerChangeHandler);
-
         if (mVcoPresenter.isVisaCheckoutEnabled()) {
             mVcoPresenter.setupVisaCheckout();
         }
 
 
-        if(!mActivity.isBraintreeInitialized() && mActivity.isAuthorized()) {
+        if (!mActivity.isBraintreeInitialized() && mActivity.isAuthorized()) {
             mVcoPresenter.initializeBraintree();
         }
     }
@@ -514,7 +519,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                             // Successful VCO
                             showLoading();
                             mActivity.callCreatePaymentTransactionVco(visaPaymentSummary);
-                            mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+                            mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
                         }
                         break;
                     }
@@ -552,17 +557,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
 
         mActivity.getMainController().setViewpagerDraggable(false);
-    }
-
-    private void initializeCheckoutParams() {
-        //initialize context for firebase
-        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
-        parameters.put(DataCollector.EventParameters.START_CHECKOUT_VALUE,
-                mValue.getSummary().getTotal());
-        parameters.put(DataCollector.EventParameters.START_CHECKOUT_CURRENCY,
-                Settings.getSelectedCountry().currencySign);
-
     }
 
     @Override
@@ -723,7 +717,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             displayPaymentDetails();
             displayDeliveryOptionsUI(deliveryOptionName, deliveryOptionPrice);
         } else {
-            if (mDeliveryOptionRootLayout != null) { mDeliveryOptionRootLayout.setVisibility(View.GONE); }
+            if (mDeliveryOptionRootLayout != null) {
+                mDeliveryOptionRootLayout.setVisibility(View.GONE);
+            }
             displayPaymentDetails();
         }
     }
@@ -890,6 +886,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mSummaryOurpaySelectContainer.setVisibility(View.VISIBLE);
                 mSummaryShippingFeeContainer.setVisibility(View.GONE);
                 mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(summary.getSelect()));
+                mSummaryTotalTextView.setText(PriceUtils.getPriceStringValue(summary.getTotalWithSelect()));
             } else {
                 mSummaryOurpaySelectContainer.setVisibility(View.GONE);
             }
@@ -909,6 +906,30 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mActivity.setPaymentMethodSelected(paymentMethod);
         showMyPayDetails(mValue, mOurpay);
         displayPaymentDetails();
+    }
+
+    @Override
+    public void showAfterpayPanel(boolean isAvailable, String description) {
+        mAfterpayHolder.setVisibility(View.VISIBLE);
+        SpannableStringBuilder spannableString = new SpannableStringBuilder(description);
+        StringUtils.applySpanToSubstringsMatching(
+                spannableString,
+                new StyleSpan(BOLD),
+                mActivity.getResources().getString(R.string.regex_currency),
+                SPAN_EXCLUSIVE_INCLUSIVE);
+        mAfterpayDescription.setText(spannableString);
+        mAfterpayDescription.setTypeface(Typeface
+                .createFromAsset(mActivity.getAssets(),
+                        mActivity.getResources().getString(R.string.font_raleway_regular)));
+
+
+        mAfterpayButton.setVisibility(isAvailable ? View.VISIBLE : View.GONE);
+        mAfterpayInlineLogo.setVisibility(isAvailable ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void hideAfterpayPanel() {
+        mAfterpayHolder.setVisibility(View.GONE);
     }
 
     private String getSelectedDeliveryOption() {
@@ -1001,6 +1022,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void onPayButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
 
         if (!isAddressValid()) {
 
@@ -1008,9 +1030,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             showAddAddressController();
             return;
         }
-
-        initializeCheckoutParams();
-        DataCollector.logEvent(Events.StartCheckout, parameters);
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
@@ -1023,12 +1042,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                         DataCollector.EventParameters.PaymentOption.REGULAR.getValue());
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
             }
         }
     }
 
     private void onPaypalButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
 
         if (!isAddressValid()) {
             //push add new address fragment
@@ -1036,8 +1055,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.PAYPAL);
-        initializeCheckoutParams();
-        DataCollector.logEvent(Events.StartCheckout, parameters);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
@@ -1048,19 +1065,18 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
             }
         }
     }
 
     private void onPaypalCreditButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+
         if (!isAddressValid()) {
             showAddAddressController();
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.PAYPAL);
-        initializeCheckoutParams();
-        DataCollector.logEvent(Events.StartCheckout, parameters);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
@@ -1070,13 +1086,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             } else {
                 PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
                 mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
             }
         }
 
     }
 
     private void onMasterpassButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
 
         if (!isAddressValid()) {
 
@@ -1085,19 +1101,59 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.MASTERPASS);
-        initializeCheckoutParams();
-        DataCollector.logEvent(Events.StartCheckout, parameters);
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.MASTERPASS.getValue());
         getRouter().pushController(RouterTransaction.with(MasterpassController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
+    }
 
-        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+    private void onAfterpayInfoButtonClick() {
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .putString(FloatingImageViewerController.KEY_SOURCE_URL, mPresenter.getAfterpayLightboxImgUrl())
+                .build();
 
+        FloatingImageViewerController controller = new FloatingImageViewerController(bundle);
+
+        controller.setImageClickListener((view, x, y) -> {
+            Intent openUrl = new Intent(Intent.ACTION_VIEW);
+            openUrl.setData(Uri.parse(mPresenter.getAfterpayTermsLink()));
+            startActivity(openUrl);
+        });
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .popChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new FadeChangeHandler());
+
+        if (mActivity.getHomeController().getPopUpHostRouter() != null) {
+            mActivity.getHomeController().getPopUpHostRouter().setRoot(routerTransaction);
+        } else {
+            getDisplayRouter().pushController(routerTransaction);
+        }
+    }
+
+    private void onAfterpayButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_AFTERPAY, mItemList.size(), mValue.getSummary().getTotal());
+
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .build();
+
+        AfterpayViewController controller = new AfterpayViewController(bundle);
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .popChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new FadeChangeHandler());
+
+        if (mActivity.getHomeController().getPopUpHostRouter() != null) {
+            mActivity.getHomeController().getPopUpHostRouter().setRoot(routerTransaction);
+        } else {
+            getDisplayRouter().pushController(routerTransaction);
+        }
     }
 
     private void onOurpayButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
         if (mActivity.isBraintreeInitialized()) {
@@ -1139,7 +1195,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                         }
                     } else {
                         ourpayPaymentSubmit();
-                        mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
                     }
                 }
             }
@@ -1208,7 +1263,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
 
     private void setPaymentButtonsVisibility(List<View> buttons, int visibility) {
-        for(View button : buttons) {
+        for (View button : buttons) {
             button.setVisibility(visibility);
         }
     }
@@ -1271,6 +1326,14 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
     }
 
+    @Override
+    public void onViewDidAppear(Controller previousController) {
+        super.onViewDidAppear(previousController);
+        if (!mIsCartLoading) {
+            loadCart();
+        }
+    }
+
     private void ourpayPaymentSubmit() {
         PaymentInfo.setFabricPaymentType(PaymentInfo.isThreeDSecureRequired() ?
                 DataCollector.EventParameters.PaymentOption.OURPAY3DS.getValue() :
@@ -1321,6 +1384,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void onVisaCheckoutButtonClicked() {
+        mPresenter.logInitiateCheckout(
+                mActivity,
+                PaymentInfo.VISA_CHECKOUT_BRAINTREE,
+                mItemList.size(),
+                mValue.getSummary().getTotal());
+
         if (!isAddressValid()) {
 
             //push add new address fragment.
@@ -1328,8 +1397,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.VISACHECKOUT);
-        initializeCheckoutParams();
-        DataCollector.logEvent(Events.StartCheckout, parameters);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.VCO.getValue());
         mVcoPresenter.payWithVisaCheckout(mValue.getSummary().getTotal());
     }
@@ -1370,7 +1437,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
-    public void showItemDetail(RecyclerView.ViewHolder viewHolder,int position, String seoIdentifierId, String imageUrl,
+    public void showItemDetail(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
                                String skuId, String saleId, boolean isFreeDelivery,
                                String itemName, String brandName, String price, String oldPrice,
                                String productID) {

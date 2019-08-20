@@ -5,7 +5,10 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -41,5 +44,15 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
     @Override
     public void showTrackingWeb(String link) {
         getMvpView().showOrderTrackingWeb(link);
+    }
+
+    @Override
+    public void callOrderReceived(OrderReceivedRequest receivedRequest) {
+        doApiCallForResponse(getDataManager().callOrderReceived(receivedRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+
+            }
+        });
     }
 }

@@ -42,6 +42,7 @@ public class ViewContactHistoryController extends BaseController implements View
     private static final String KEY_CONTACT_TIMESTAMP = "ContactHistoryTimeStamp";
     private static final String KEY_CONTACT_NAME = "ContactHistoryName";
     private static final String KEY_CONTACT_SUBJECT = "ContactSubject";
+    private static final String KEY_IS_FROM_RETURN_DETAILS = "KEY_IS_FROM_RETURN_DETAILS";
 
     @BindView(R.id.contact_history_recycler_view)
     RecyclerView mContactHistoryRecyclerView;
@@ -64,6 +65,7 @@ public class ViewContactHistoryController extends BaseController implements View
     private int mContactNumber;
     private String mContactSubject;
     private boolean mHasSavedInstance = false;
+    private boolean isFromReturnDetails = false;
 
     @Inject
     ViewContactHistoryPresenter<ViewContactHistoryMvpView> mPresenter;
@@ -73,7 +75,8 @@ public class ViewContactHistoryController extends BaseController implements View
             String saleName,
             int invoiceNo,
             String lastAnswer,
-            int contactNo) {
+            int contactNo,
+            boolean fromReturnDetails) {
 
         return new ViewContactHistoryController(
                 new BundleBuilder(new Bundle())
@@ -82,6 +85,7 @@ public class ViewContactHistoryController extends BaseController implements View
                         .putInt(KEY_CONTACT_INVOICE_NO, invoiceNo)
                         .putString(KEY_CONTACT_TIMESTAMP, lastAnswer)
                         .putString(KEY_CONTACT_SUBJECT, contactSubject)
+                        .putBoolean(KEY_IS_FROM_RETURN_DETAILS, fromReturnDetails)
                         .build());
     }
 
@@ -92,6 +96,7 @@ public class ViewContactHistoryController extends BaseController implements View
         mTimeStamp = getArgs().getString(KEY_CONTACT_TIMESTAMP);
         mContactNumber = getArgs().getInt(KEY_CONTACT_NO);
         mContactSubject = getArgs().getString(KEY_CONTACT_SUBJECT);
+        isFromReturnDetails = getArgs().getBoolean(KEY_IS_FROM_RETURN_DETAILS);
     }
 
     @Override
@@ -178,7 +183,7 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @OnClick(R.id.partial_toolbar_field_title_left_option)
     void onBackClick() {
-        if (mPresenter.isTablet() && mActivity.getContactsController() != null) {
+        if (mPresenter.isTablet() && mActivity.getContactsController() != null && !isFromReturnDetails) {
             mActivity.getContactsController().resetContactDetailRouter();
         } else {
             mActivity.onBackPressed();

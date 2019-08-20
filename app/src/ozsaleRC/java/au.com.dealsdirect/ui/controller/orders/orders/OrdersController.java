@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,15 +17,15 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
-import au.com.dealsdirect.ui.custom.OrderItemDecorator;
-import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
@@ -151,8 +150,9 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     }
 
     @Override
-    public void showOrderDetails(String referenceNumber) {
-        getRouter().pushController(RouterTransaction.with(new OrderDetailsController(referenceNumber))
+    public void showOrderDetails(String referenceNumber, HashMap<String, String> status, String link, HashMap<String, String> estimatedDelivery) {
+        getRouter().pushController(RouterTransaction.with(new OrderDetailsController(referenceNumber,
+                status, link, estimatedDelivery))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -163,12 +163,29 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     }
 
     @Override
-    public void onOrderItemClick(String referenceNumber) {
-        showOrderDetails(referenceNumber);
+    public void onOrderItemClick(String referenceNumber, HashMap<String, String> status, String link, HashMap<String, String> estimatedDelivery) {
+        showOrderDetails(referenceNumber, status, link, estimatedDelivery);
     }
 
     @Override
     public void onOrderItemTrackingButtonClick(String url, String errorMessage) {
         ActivityLaunchUtil.launchActivity(mActivity, url, errorMessage);
+    }
+
+    @Override
+    public void onOrderItemShowOptions(View view, ArrayList<String> arrayList, HashMap<String,String> hashMap) {
+
+        if (mPresenter.isTablet()) {
+            mActivity.showPopupMenu(view, arrayList, hashMap);
+        } else {
+            mActivity.showBottomDialog(arrayList, hashMap);
+        }
+    }
+
+    @Override
+    public void callOrderReceived(String orderID) {
+        OrderReceivedRequest orderReceivedRequest = new OrderReceivedRequest();
+        orderReceivedRequest.setOrderId(orderID);
+
     }
 }

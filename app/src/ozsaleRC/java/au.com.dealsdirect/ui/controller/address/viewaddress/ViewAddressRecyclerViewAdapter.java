@@ -25,6 +25,7 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.Address;
 import au.com.dealsdirect.data.network.model.address.AddressesItem;
+import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.utils.AppLogger;
@@ -47,19 +48,25 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
     private ViewAddressMvpPresenter mPresenter;
     private int position;
     private boolean isItemViewSelected;
+    private String mOrderID;
+    private boolean mCalledFromOrder;
 
     public ViewAddressRecyclerViewAdapter(
             Boolean calledFromCart,
             List<AddressesItem> addressList,
             Context context,
             DeliveryAddress deliveryAddress,
-            ViewAddressMvpPresenter presenter) {
+            ViewAddressMvpPresenter presenter,
+            String orderID,
+            Boolean calledFromOrder) {
 
         this.isCalledFromCart = calledFromCart;
         this.addressList = addressList;
         this.mContext = context;
         this.mDeliveryAddress = deliveryAddress;
         this.mPresenter = presenter;
+        this.mOrderID = orderID;
+        this.mCalledFromOrder = calledFromOrder;
         setHasStableIds(true);
     }
 
@@ -97,6 +104,15 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
         holder.setMaxLeftSwipeAmount(-0.2f);
         holder.setMaxRightSwipeAmount(0);
         holder.setSwipeItemHorizontalSlideAmount(addressList.get(position).isPinned() ? -0.2f: 0);
+
+        if (mCalledFromOrder) {
+            holder.itemView.setOnClickListener(v -> {
+                ChangeDeliveryAddressRequest changeDeliveryAddressRequest = new ChangeDeliveryAddressRequest();
+                changeDeliveryAddressRequest.setAddressID(addressList.get(position).getAddressId());
+                changeDeliveryAddressRequest.setOrderID(mOrderID);
+                mPresenter.changeDeliveryAddress(changeDeliveryAddressRequest);
+            });
+        }
 
     }
 

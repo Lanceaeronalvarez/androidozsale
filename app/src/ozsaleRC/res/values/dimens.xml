@@ -16,4 +16,9 @@
     <dimen name="viewholder_subcategory_height">44dp</dimen>
     <dimen name="controller_shop_banner_margin">2dp</dimen>
 
+    <!--Bottom sheet-->
+    <dimen name="bottom_sheet_corner_radius">16dp</dimen>
+    <dimen name="bottom_sheet_top_padding">8dp</dimen>
+
+
 </resources>

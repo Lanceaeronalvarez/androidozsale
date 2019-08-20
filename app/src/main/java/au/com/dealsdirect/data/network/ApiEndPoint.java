@@ -88,6 +88,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.productDetails, ACCOUNT_ID_DELIMETER + "/price/label");
     }
 
+    public static String getPromoInfo() {
+        return getFormattedUrl(ApiService.productDetails, ACCOUNT_ID_DELIMETER + "/promo-info");
+    }
+
     public static String getOurpayData(){
         return getFormattedUrl(ApiService.productDetails,ACCOUNT_ID_DELIMETER + "/ourpaydata");
     }
@@ -504,9 +508,33 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "ProcessOurpayInstallment");
     }
 
+    public static String createAfterpayOrder() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "CreateAfterpayOrder");
+    }
+
+    public static String callAfterPayCreatePayment() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "AfterPayCreatePayment");
+    }
+
+    public static String callGetAfterpayData() {
+        return getFormattedUrl(ApiService.productDetails,ACCOUNT_ID_DELIMETER + "/afterpay?amount={amount}");
+    }
+
     /*VISA CHECKOUT*/
     public static String visaCheckoutLogin(){
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "LoginVisa");
+    }
+
+    public static String changeDeliveryAddress() {
+        return getFormattedUrl(ApiService.legacy,  NO_AKAMAI_EXTENSION + "ChangeDeliveryAddress");
+    }
+
+    public static String createRefund() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "CreateRefund");
+    }
+
+    public static String callOrderReceived() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "SetOrderReceived");
     }
 
     private ApiEndPoint() {

@@ -100,7 +100,7 @@ public class ControllerFactory {
             case RETURN_ORDERS:
                 return ReturnOrdersController.newInstance();
             case VIEW_ADDRESSES:
-                return new ViewAddressController(false, null);
+                return new ViewAddressController(false, null, false, "");
             case ADD_NEW_ADDRESS:
                 return new AddNewAddressController(new Bundle());
             case CONTACT_US:

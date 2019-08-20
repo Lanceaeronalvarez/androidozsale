@@ -46,6 +46,9 @@ public class Value {
     private DeliveryServicePackageDetail deliveryServicePackageDetail;
     @SerializedName(value = "IsEmpty", alternate = {"isEmpty"})
     public boolean isEmpty = false;
+    @SerializedName(value = "Afterpay", alternate = {"afterpay", "AfterPay"})
+    @Expose
+    private GetCurrentOrderAfterpay afterpay;
     @SerializedName(value = "OurPay", alternate = {"ourPay"})
     @Expose
     private GetCurrentOrderOurpay ourpay;
@@ -131,6 +134,56 @@ public class Value {
 
     public int getOurPaySelectTermsAndConditions() {
         return ourPaySelect.getTermsAndConditions();
+    }
+
+    public GetCurrentOrderAfterpay getAfterpay() {
+        return afterpay;
+    }
+
+    public void setAfterpay(GetCurrentOrderAfterpay afterpay) {
+        this.afterpay = afterpay;
+    }
+
+    public static class GetCurrentOrderAfterpay {
+        /*
+           "isAvailable" is an indicator if Afterpay is available for the price of the cart.
+
+           "isAvailableMobileApp" dictates if Afterpay is visible and accessible at all for the user.
+         */
+
+        @SerializedName(value = "IsAvailable", alternate = {"isAvailable"})
+        @Expose
+        private boolean isAvailable;
+        @SerializedName(value = "IsAvailableMobileApp", alternate = "isAvailableMobileApp")
+        @Expose
+        private boolean isAvailableMobileApp;
+        @SerializedName(value = "Description", alternate = {"description"})
+        @Expose
+        private String description;
+
+        public boolean isAvailable() {
+            return isAvailable;
+        }
+
+        public void setAvailable(boolean available) {
+            isAvailable = available;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public boolean isAvailableMobileApp() {
+            return isAvailableMobileApp;
+        }
+
+        public void setAvailableMobileApp(boolean availableMobileApp) {
+            isAvailableMobileApp = availableMobileApp;
+        }
     }
 
     private static class GetOurPaySelect {

@@ -44,6 +44,9 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
     public static final String TAG = "NewReturnController";
     private static final String KEY_TEXT = "NewReturnController.KEY_TEXT";
+    private static final String KEY_INVOICE_NUMBER = "NewReturnController.KEY_INVOICE_NUMBER";
+    private static final String KEY_IS_FROM_ORDER = "NewReturnController.KEY_IS_FROM_ORDER";
+    private static final String KEY_PRODUCT_ID = "NewReturnController.KEY_PRODUCT_ID";
 
     private View.OnClickListener onClickListener;
 
@@ -74,6 +77,9 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     NewReturnMvpPresenter<NewReturnMvpView> mPresenter;
     private boolean mHasSavedInstance = false;
     private int mSavedInvoiceNumber;
+    private static int mInvoiceNumber;
+    private static boolean isFromOrder = false;
+    private static String mProductID = "";
 
     public static NewReturnController newInstance(List returnItem) {
 
@@ -83,8 +89,30 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                         .build());
     }
 
+    public static NewReturnController newInstance(int invoiceNumber, boolean calledFromOrder, String productId) {
+
+        mInvoiceNumber = invoiceNumber;
+        isFromOrder = calledFromOrder;
+        mProductID = productId;
+        return new NewReturnController(
+                new BundleBuilder(new Bundle())
+                        .build());
+    }
+
     public NewReturnController(Bundle args) {
         super(args);
+
+        if (args.containsKey(KEY_INVOICE_NUMBER)) {
+            mInvoiceNumber = args.getInt(KEY_INVOICE_NUMBER);
+        }
+
+        if (args.containsKey(KEY_IS_FROM_ORDER)) {
+            isFromOrder = args.getBoolean(KEY_IS_FROM_ORDER);
+        }
+
+        if (args.containsKey(KEY_PRODUCT_ID)) {
+            mProductID = args.getString(KEY_PRODUCT_ID);
+        }
     }
 
     @NonNull
@@ -114,7 +142,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         if (mHasSavedInstance) {
             mPresenter.getReturnOrderDetail(mSavedInvoiceNumber);
         } else {
-            mPresenter.getReturnOrderDetail(mReturnItem.getInvoiceNo());
+            mPresenter.getReturnOrderDetail(isFromOrder ? mInvoiceNumber : mReturnItem.getInvoiceNo());
         }
     }
 
@@ -212,7 +240,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     @Override
     public void loadReturnOrderDetail(NewReturnOrderDetailResponse newReturnsOrderDetail) {
 
-        mAdapter = new NewReturnOrdersAdapter(newReturnsOrderDetail.getList(), mActivity, mPresenter);
+        mAdapter = new NewReturnOrdersAdapter(newReturnsOrderDetail.getList(), mActivity, mPresenter, mProductID);
 
         mNewReturnOrderRecyclerView.setAdapter(mAdapter);
         mNewReturnOrderRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -233,7 +261,13 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     private void validateRequestReturnForm() {
 
         CreateReturnRequest createReturnRequest = new CreateReturnRequest();
-        createReturnRequest.invoiceNo = mHasSavedInstance ? String.valueOf(mSavedInvoiceNumber) : mReturnItem.getInvoiceNo().toString();
+
+        if (mHasSavedInstance) {
+            createReturnRequest.invoiceNo = String.valueOf(mSavedInvoiceNumber);
+        } else {
+            createReturnRequest.invoiceNo = isFromOrder ? String.valueOf(mInvoiceNumber) : mReturnItem.getInvoiceNo().toString();
+        }
+
         createReturnRequest.reason = mNewReturnCreateReasonField.getText().toString();
         createReturnRequest.items = getUpdateRequestList();
 

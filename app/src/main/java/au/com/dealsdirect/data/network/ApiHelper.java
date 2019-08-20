@@ -18,8 +18,13 @@ import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
+import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
+import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRequest;
+import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderResponse;
+import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -38,11 +43,6 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
-import au.com.dealsdirect.data.network.model.events.CategoryRequest;
-import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
-import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
-import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
-import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -55,11 +55,16 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
+import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesRequest;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
@@ -77,8 +82,11 @@ import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
+import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
@@ -92,6 +100,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.Ve
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
+import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
@@ -158,6 +167,8 @@ public interface ApiHelper {
 
     Observable<AddToCartResponse.Response> callAddItemToCart(AddToCartRequest requestValues);
 
+    Observable<PromoInfoResponse> callPromoInfo(String skuId);
+
     // CONFIG API CALLS
     Observable<GetServerSettings.ResponseValue> callGetServerSettings(String countryId);
 
@@ -170,6 +181,8 @@ public interface ApiHelper {
     Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId);
 
     Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId);
+
+    Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId, String sectionName);
 
     Observable<GetAppSettingsConsent.ResponseValue> callGetAppSettingsConsent(String countryId);
 
@@ -347,6 +360,20 @@ public interface ApiHelper {
 
     Observable<GetScheduledPlansResponse> processOurpayInstallment(ProcessOurpayInstallmentRequest request);
 
+    // AFTERPAY
+
+    Observable<CreateAfterpayOrderResponse> createAfterpayOrder(CreateAfterpayOrderRequest request);
+
+    Observable<JSONObject> callAfterPayCreatePayment(AfterPayCreatePaymentRequest request);
+
+    Observable<GetAfterpayDataResponse> callGetAfterpayData(String price);
+
     // DEEPLINK
     Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request);
+
+    Observable<String> callChangeDeliveryAddress(ChangeDeliveryAddressRequest request);
+
+    Observable<String> callCreateRefund(CreateRefundRequest request);
+
+    Observable<OrderReceivedResponse> callOrderReceived(OrderReceivedRequest receivedRequest);
 }

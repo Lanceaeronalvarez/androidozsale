@@ -75,13 +75,27 @@ public final class CommonUtils {
         return progressDialog;
     }
 
+    public static ProgressDialog showLoadingDialogAfterpay(Context context) {
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.show();
+        if (progressDialog.getWindow() != null) {
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            progressDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
+        progressDialog.setContentView(R.layout.afterpay_loading_indicator_layout);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+        return progressDialog;
+    }
+
 
     public static Dialog showLoadingDialog(Context context, String message, boolean cancelable) {
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progress_dialog_modal);
 
-        ((TextView)dialog.findViewById(R.id.progress_dialog_modal_text)).setText(message);
+        ((TextView) dialog.findViewById(R.id.progress_dialog_modal_text)).setText(message);
         dialog.setCancelable(cancelable);
         dialog.setCanceledOnTouchOutside(cancelable);
 
@@ -137,7 +151,7 @@ public final class CommonUtils {
             adView.setAdUnitId(unitId);
         }
 
-        ((RelativeLayout)view).addView(adView);
+        ((RelativeLayout) view).addView(adView);
 
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
@@ -154,7 +168,7 @@ public final class CommonUtils {
             adView.setAdUnitId(unitId);
         }
 
-        ((RelativeLayout)view).addView(adView);
+        ((RelativeLayout) view).addView(adView);
 
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
@@ -165,7 +179,7 @@ public final class CommonUtils {
         settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         editor = settings.edit();
         editor.putString(itemId, seoIdentifier);
-        editor.putString(itemId+KEY_ID, saleId);
+        editor.putString(itemId + KEY_ID, saleId);
         editor.apply();
     }
 
@@ -183,7 +197,7 @@ public final class CommonUtils {
 
     public static String loadSaleId(Context context, String itemID) {
         SharedPreferences preferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return preferences.getString(itemID+KEY_ID, "");
+        return preferences.getString(itemID + KEY_ID, "");
     }
 
 }
