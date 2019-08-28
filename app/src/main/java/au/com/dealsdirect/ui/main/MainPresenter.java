@@ -113,6 +113,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_CONSENT_FULL_TEXT = "ConsentFullTextPTNameV1";
     public static final String KEY_CONSENT_TERMS_AND_CONDITION = "TermsAndConditions_Text";
 
+    // Voucher Keys
+    public static final String KEY_VOUCHER_STATUS_NEW = "_VoucherNew";
+    public static final String KEY_VOUCHER_STATUS_ALREADY_SPENT = "_AlreadySpent";
+    public static final String KEY_VOUCHER_STATUS_EXPIRING_SOON = "_VoucherExpiringSoon";
+    public static final String KEY_VOUCHER_STATUS_EXPIRED = "_VoucherExpired";
+    public static final String KEY_VOUCHER_STATUS_PENDING = "_VoucherPending";
+
     static final String KEY_DEEP_LINK_SALES = "DEEPLINK_SALES";
     static final String KEY_DEEP_LINK_SALE_ITEMS = "DEEPLINK_SALE_ITEMS";
     static final String KEY_DEEP_LINK_SALE_CATEGORY = "DEEPLINK_SALE_CATEGORY";
@@ -148,7 +155,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_CONSENT_WITH_REGISTRATION_TERMS_WARNING,
             KEY_CONSENT_SHORT_TEXT,
             KEY_CONSENT_FULL_TEXT,
-            KEY_CONSENT_TERMS_AND_CONDITION
+            KEY_CONSENT_TERMS_AND_CONDITION,
+            KEY_VOUCHER_STATUS_NEW,
+            KEY_VOUCHER_STATUS_ALREADY_SPENT,
+            KEY_VOUCHER_STATUS_EXPIRED,
+            KEY_VOUCHER_STATUS_EXPIRING_SOON,
+            KEY_VOUCHER_STATUS_PENDING
     };
 
 
@@ -1082,6 +1094,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     getDataManager().setDeliveryOptionsTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setPersonalisationTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setConsentTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
+                    getDataManager().setVoucherStatusTemplateText(getTemplateTextsResponse.getResponse().getValue());
                     getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
 
                 }, throwable -> {

@@ -39,18 +39,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/row_view_voucher_already_spent_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@string/font_app_light"
-            android:maxLines="2"
-            android:text="@string/already_spent"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_headline1"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <TextView
             android:id="@+id/row_view_voucher_value_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,19 +63,6 @@
             android:fontFamily="@string/font_app_light"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_caption2" />
-
-        <TextView
-            android:id="@+id/row_view_voucher_purchased_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-
-        <TextView
-            android:id="@+id/row_view_voucher_activated_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
 
     </LinearLayout>
 

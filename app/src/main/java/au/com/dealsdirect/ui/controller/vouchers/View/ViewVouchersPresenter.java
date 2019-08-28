@@ -79,6 +79,11 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
 
     }
 
+    @Override
+    public String getVoucherStatusString(GetUserVoucherResponse.Status status) {
+        return getDataManager().getVoucherStatusTemplateText(status);
+    }
+
     private <T> Observable<T> wrapObservable(Observable<T> observable) {
         return observable.subscribeOn(getSchedulerProvider().io());
     }

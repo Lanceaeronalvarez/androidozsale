@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.di.ApplicationContext;
 import au.com.dealsdirect.di.PreferenceInfo;
 import au.com.dealsdirect.service.fcm.GNotification;
@@ -128,6 +129,12 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public static final String CONSENT_TNC_CHECKED = "RegAgreementTermsAndConditionCheckboxTicked";
     public static final String CONSENT_EMAILS_CHECKED = "RegAgreementReceiveEmailsCheckboxTicked";
     public static final String SHOW_STRICT_CONSENT = "ShowStrictConsent";
+
+    public static final String VOUCHER_NEW = "VoucherNewTemplateText";
+    public static final String VOUCHER_ALREADY_SPENT = "VoucherAlreadySpentTemplateText";
+    public static final String VOUCHER_EXPIRING_SOON = "VoucherExpiringSoonTemplateText";
+    public static final String VOUCHER_EXPIRED = "VoucherExpiredTemplateText";
+    public static final String VOUCHER_PENDING = "VoucherPendingTemplateText";
 
     /*ACCOUNT DATA*/
     public static final String ACCOUNT_DATA_SORTING = "AccountDataSorting";
@@ -920,5 +927,31 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public String getLastTimeStamp() {
         return Prefs.getString(LAST_TIME_STAMP, "");
+    }
+
+    @Override
+    public void setVoucherStatusTemplateText(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        Prefs.putString(VOUCHER_NEW, value.getVoucherNew());
+        Prefs.putString(VOUCHER_ALREADY_SPENT, value.getVoucherAlreadySpent());
+        Prefs.putString(VOUCHER_EXPIRING_SOON, value.getVoucherExpiringSoon());
+        Prefs.putString(VOUCHER_EXPIRED, value.getVoucherExpired());
+        Prefs.putString(VOUCHER_PENDING, value.getVoucherPending());
+    }
+
+    @Override
+    public String getVoucherStatusTemplateText(GetUserVoucherResponse.Status status) {
+        switch (status) {
+            case NEW:
+                return Prefs.getString(VOUCHER_NEW, "");
+            case ALREADY_SPENT:
+                return Prefs.getString(VOUCHER_ALREADY_SPENT, "");
+            case EXPIRING_SOON:
+                return Prefs.getString(VOUCHER_EXPIRING_SOON, "");
+            case EXPIRED:
+                return Prefs.getString(VOUCHER_EXPIRED, "");
+            case PENDING:
+                return Prefs.getString(VOUCHER_PENDING, "");
+        }
+        return "";
     }
 }

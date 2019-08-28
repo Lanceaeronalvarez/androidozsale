@@ -8,7 +8,6 @@ import com.mysale.genie.utility.LegacyBaseResponseValue;
 import java.util.List;
 
 public class GetVouchersResponse {
-
     private Response d;
 
     public static class Response extends LegacyBaseResponseValue{

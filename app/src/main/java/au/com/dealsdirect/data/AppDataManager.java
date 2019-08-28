@@ -1356,6 +1356,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setVoucherStatusTemplateText(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        mPreferencesHelper.setVoucherStatusTemplateText(value);
+    }
+
+    @Override
+    public String getVoucherStatusTemplateText(GetUserVoucherResponse.Status status) {
+        return mPreferencesHelper.getVoucherStatusTemplateText(status);
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }

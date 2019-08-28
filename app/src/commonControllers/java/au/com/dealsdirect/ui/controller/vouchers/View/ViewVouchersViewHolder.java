@@ -29,17 +29,11 @@ public class ViewVouchersViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.row_view_voucher_value_label)
     TextView mVouchersItemValue;
 
-    @BindView(R.id.row_view_voucher_already_spent_label)
-    TextView mVouchersAlreadySpent;
-
     @BindView(R.id.row_view_voucher_name_text)
     TextView mVoucherName;
 
-    @BindView(R.id.row_view_voucher_purchased_text)
-    TextView mPurchasedValue;
-
-    @BindView(R.id.row_view_voucher_activated_text)
-    TextView mActivatedValue;
+    @BindView(R.id.row_view_voucher_status_text)
+    TextView mStatusText;
 
     public ViewVouchersViewHolder(View itemView) {
         super(itemView);

@@ -5,9 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,11 +23,8 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
 
 /**
  * Created by Paul on 6/23/17.
@@ -114,6 +108,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
 
     @Override
     protected void setUp(View view) {
+        mNoVouchersLayout.setVisibility(View.GONE);
         mTitleText.setText(getString(R.string.account_vouchers));
         mFilterView.setVisibility(View.INVISIBLE);
         mArrowImage.setVisibility(mPresenter.isTablet() ? View.INVISIBLE : View.VISIBLE);
@@ -121,9 +116,11 @@ public class ViewVouchersController extends BaseController implements ViewVouche
             mActivity.onBackPressed();
         });
 
-        mUnusedVouchersAdapter = new ViewVouchersRecyclerViewAdapter(new ArrayList<>(), mActivity);
-        mUsedVouchersAdapter = new ViewVouchersRecyclerViewAdapter
-                (new ArrayList<>(), mActivity);
+        HashMap<String, GetUserVoucherResponse.Status> statusAssociatedString = getStatusAssociatedString();
+        mUnusedVouchersAdapter = new ViewVouchersRecyclerViewAdapter(
+                new ArrayList<>(), statusAssociatedString, mActivity);
+        mUsedVouchersAdapter = new ViewVouchersRecyclerViewAdapter(
+                new ArrayList<>(), statusAssociatedString, mActivity);
 
         LinearLayoutManager unusedVouchersLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager usedVouchersLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -146,6 +143,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
     @Override
     public void updateVoucherList(Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> pair) {
         hideLoading();
+        HashMap<String, GetUserVoucherResponse.Status> statusAssociatedString = getStatusAssociatedString();
         if (pair.first != null && pair.first.size() != 0) {
             mRootLayout.setVisibility(View.VISIBLE);
             mNoVouchersLayout.setVisibility(View.GONE);
@@ -156,12 +154,18 @@ public class ViewVouchersController extends BaseController implements ViewVouche
 
             for (int i = 0; i < pair.first.size(); i++) {
 
-                String discountLeft = pair.first.get(i).getDiscountLeft();
-
-                if (discountLeft.equalsIgnoreCase("Already Spent")) {
-                    usedVouchers.add(pair.first.get(i));
-                } else {
-                    currentVouchers.add(pair.first.get(i));
+                String statusString = pair.first.get(i).getStatus();
+                GetUserVoucherResponse.Status status = statusAssociatedString.get(statusString);
+                if (status == null) {
+                    status = GetUserVoucherResponse.Status.NORMAL;
+                }
+                switch (status) {
+                    case ALREADY_SPENT:
+                    case EXPIRED:
+                        usedVouchers.add(pair.first.get(i));
+                        break;
+                    default:
+                        currentVouchers.add(pair.first.get(i));
                 }
             }
 
@@ -184,5 +188,13 @@ public class ViewVouchersController extends BaseController implements ViewVouche
             mNoVouchersLayout.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    private HashMap<String, GetUserVoucherResponse.Status> getStatusAssociatedString() {
+        HashMap<String, GetUserVoucherResponse.Status> statusAssociatedString = new HashMap<>();
+        for (GetUserVoucherResponse.Status status : GetUserVoucherResponse.AllStatus) {
+            statusAssociatedString.put(mPresenter.getVoucherStatusString(status), status);
+        }
+        return statusAssociatedString;
     }
 }
