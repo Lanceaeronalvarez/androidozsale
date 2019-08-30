@@ -777,116 +777,116 @@ dependencies {
     implementation 'com.android.databinding:adapters:1.3.3'
 
     // android support libraries
-    compile "com.android.support:appcompat-v7:$rootProject.supportLibrary"
-    compile "com.android.support:recyclerview-v7:$rootProject.supportLibrary"
-    compile "com.android.support:cardview-v7:$rootProject.supportLibrary"
-    compile "com.android.support:design:$rootProject.supportLibrary"
-    compile "com.android.support:support-vector-drawable:$rootProject.supportLibrary"
-    compile "com.android.support:animated-vector-drawable:$rootProject.supportLibrary"
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibrary"
+    implementation "com.android.support:recyclerview-v7:$rootProject.supportLibrary"
+    implementation "com.android.support:cardview-v7:$rootProject.supportLibrary"
+    implementation "com.android.support:design:$rootProject.supportLibrary"
+    implementation "com.android.support:support-vector-drawable:$rootProject.supportLibrary"
+    implementation "com.android.support:animated-vector-drawable:$rootProject.supportLibrary"
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
     // font
-    compile "uk.co.chrisjenx:calligraphy:$rootProject.calligraphyVersion"
+    implementation "uk.co.chrisjenx:calligraphy:$rootProject.calligraphyVersion"
 
     // network
-    compile "com.amitshekhar.android:rx2-android-networking:$rootProject.rx2FastAndroidNetworking"
+    implementation "com.amitshekhar.android:rx2-android-networking:$rootProject.rx2FastAndroidNetworking"
 
     // parser
-    compile "com.google.code.gson:gson:$rootProject.gsonVersion"
+    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
 
     // database
-    compile "org.greenrobot:greendao:$rootProject.greenDaoVersion"
+    implementation "org.greenrobot:greendao:$rootProject.greenDaoVersion"
 
     //cookie jar
-    compile "com.github.franmontiel:PersistentCookieJar:$rootProject.cookieJarVersion"
+    implementation "com.github.franmontiel:PersistentCookieJar:$rootProject.cookieJarVersion"
 
     // debug database
-    debugCompile "com.amitshekhar.android:debug-db:$rootProject.debugDBVersion"
+    debugImplementation "com.amitshekhar.android:debug-db:$rootProject.debugDBVersion"
 
     // dependency injection
-    compile "com.google.dagger:dagger:$rootProject.dagger2Version"
+    implementation "com.google.dagger:dagger:$rootProject.dagger2Version"
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'javax.inject:javax.inject:1'
 
     // reactive
-    compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
-    compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
 
     // code generator for view
-    compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
 
     // swipe view
-    compile "com.mindorks:placeholderview:$rootProject.placeholderviewVersion"
+    implementation "com.mindorks:placeholderview:$rootProject.placeholderviewVersion"
 
     // logger
-    compile "com.jakewharton.timber:timber:$rootProject.timberVersion"
+    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
 
     // conductor
-    compile "com.bluelinelabs:conductor:$rootProject.conductorVersion"
-    compile "com.bluelinelabs:conductor-support:$rootProject.conductorVersion"
+    implementation "com.bluelinelabs:conductor:$rootProject.conductorVersion"
+    implementation "com.bluelinelabs:conductor-support:$rootProject.conductorVersion"
 
     // paginate
-    compile "com.github.markomilos:paginate:$rootProject.paginateVersion"
+    implementation "com.github.markomilos:paginate:$rootProject.paginateVersion"
 
     // leak canary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakCanaryVersion"
 
     // recycler view pager
-    compile "com.github.lsjwzh.RecyclerViewPager:lib:$rootProject.recyclerViewPagerVersion"
+    implementation "com.github.lsjwzh.RecyclerViewPager:lib:$rootProject.recyclerViewPagerVersion"
     // advanced recyclerview
     implementation ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar')
     // flow layout
-    compile "com.zhy:flowlayout-lib:$rootProject.flowLayoutVersion"
+    implementation "com.zhy:flowlayout-lib:$rootProject.flowLayoutVersion"
     // photo view
-    compile "com.github.chrisbanes:PhotoView:$rootProject.photoViewVersion"
+    implementation "com.github.chrisbanes:PhotoView:$rootProject.photoViewVersion"
     // bottom navigation
     compile 'com.aurelhubert:ahbottomnavigation:2.1.0'
     // circle indicator
     compile 'me.relex:circleindicator:1.2.2@aar'
 
     // glide
-    compile "com.github.bumptech.glide:glide:$rootProject.glideVersion"
+    implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
 
     // picker
-    compile "com.shawnlin:number-picker:$rootProject.numberPickerVersion"
+    implementation "com.shawnlin:number-picker:$rootProject.numberPickerVersion"
 
     // guava
-    compile "com.google.guava:guava:$rootProject.guavaVersion"
+    implementation "com.google.guava:guava:$rootProject.guavaVersion"
 
     // braintree
-    compile "com.braintreepayments.api:braintree:$rootProject.braintreeVersion"
-    compile "com.braintreepayments.api:data-collector:$rootProject.braintreeVersion"
+    implementation "com.braintreepayments.api:braintree:$rootProject.braintreeVersion"
+    implementation "com.braintreepayments.api:data-collector:$rootProject.braintreeVersion"
 
     // facebook
-    compile "com.facebook.android:facebook-android-sdk:$rootProject.facebookVersion"
+    implementation "com.facebook.android:facebook-android-sdk:$rootProject.facebookVersion"
     implementation "com.facebook.android:facebook-login:$rootProject.facebookVersion"
 
     // GCM
-    compile "com.google.android.gms:play-services-gcm:$rootProject.gcmVersion"
+    implementation "com.google.android.gms:play-services-gcm:$rootProject.gcmVersion"
 
     // Crystal Range Seekbar
-    compile "com.crystal:crystalrangeseekbar:$rootProject.crystalRangeSeekbarVersion"
+    implementation "com.crystal:crystalrangeseekbar:$rootProject.crystalRangeSeekbarVersion"
 
     //viewpager indicator
     compile 'me.relex:circleindicator:1.2.2@aar'
 
     // sticky headers
-    compile "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
+    implementation "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
 
     // dependencies for local unit tests
-    testCompile "junit:junit:$rootProject.ext.junitVersion"
-    testCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    testImplementation "junit:junit:$rootProject.ext.junitVersion"
+    testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
     testCompile 'org.json:json:20160810'
 
     // UI Testing
-    androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
-    androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
-    androidTestCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
+    androidTestImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 
     // Answers
@@ -913,7 +913,7 @@ dependencies {
     compile group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
 
     implementation 'com.google.android.gms:play-services-ads:17.2.1'
-    compile "com.android.support:multidex:1.0.0"
+    implementation "com.android.support:multidex:1.0.0"
 
     // reCAPTCHA
     compile 'com.google.android.gms:play-services-safetynet:16.0.0'
