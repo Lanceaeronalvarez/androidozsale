@@ -181,8 +181,8 @@ android {
         }
 
         dealsDirect2RC {
-            versionCode 152
-            versionName "2.5.8"
+            versionCode 166
+            versionName "2.6.0"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -203,8 +203,8 @@ android {
         }
 
         dealsDirect2Test {
-            versionCode 152
-            versionName "2.5.8"
+            versionCode 166
+            versionName "2.6.0"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -287,8 +287,8 @@ android {
         }
 
         topbuy2RC {
-            versionCode 152
-            versionName "2.5.8"
+            versionCode 166
+            versionName "2.6.0"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -329,8 +329,8 @@ android {
         }
 
         topbuy2Test {
-            versionCode 152
-            versionName "2.5.8"
+            versionCode 166
+            versionName "2.6.0"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
