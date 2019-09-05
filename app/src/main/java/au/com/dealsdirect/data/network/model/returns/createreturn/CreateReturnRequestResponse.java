@@ -18,6 +18,15 @@ public class CreateReturnRequestResponse {
     @SerializedName("Message")
     @Expose
     private String message;
+    @SerializedName("ID")
+    @Expose
+    private String id;
+    @SerializedName("InvoiceNo")
+    @Expose
+    private String invoiceNumber;
+    @SerializedName("ReasonForReturn")
+    @Expose
+    private String reasonForReturn;
 
     public String getType() {
         return type;
@@ -49,6 +58,18 @@ public class CreateReturnRequestResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public String getReasonForReturn() {
+        return reasonForReturn;
     }
 
 }

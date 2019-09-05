@@ -57,6 +57,7 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
 
     @Override
     protected void onAttach(@NonNull View view) {
+        mPresenter.onAttach(this);
         mActivity.getMainController().hideBottomNav();
 
         if (!mPresenter.isBusy()) {

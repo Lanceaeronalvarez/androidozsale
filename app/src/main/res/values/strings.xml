@@ -435,7 +435,7 @@
     <string name="this_is_a_required_field">This is a required field</string>
 
 
-    <string name="voucher_used">Voucher Used</string>
+    <string name="voucher_used">Used Vouchers</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="purchased_colon">Purchased:</string>
     <string name="activated_colon">Activated:</string>
@@ -669,6 +669,7 @@
     <string name="track_order">Track Order</string>
     <string name="default_image_link">https://c1.mysalec.com/brands/%1$s/%2$s/%3$s</string>
     <string name="ourpay_order_schedule">ORDER PAYMENT SCHEDULE</string>
+    <string name="vouchers_balance_prefix">Balance </string>
 
     <!--Country Id Mapping-->
     <string name="country_id_AS">AS</string>

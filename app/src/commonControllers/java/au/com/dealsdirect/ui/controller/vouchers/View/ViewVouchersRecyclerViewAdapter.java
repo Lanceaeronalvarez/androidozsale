@@ -6,15 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
-import au.com.dealsdirect.utils.PriceUtils;
+
+import static au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse.Status;
+import static au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse.Voucher;
 
 /**
  * Created by Paul on 6/27/17.
@@ -22,14 +20,19 @@ import au.com.dealsdirect.utils.PriceUtils;
 
 public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVouchersViewHolder> {
 
-    private HashMap<Integer,String> voucherColorStateCollection = new HashMap<>();
-    private List<GetUserVoucherResponse.Voucher> vouchersList;
+    private static final float GRAYED_OUT_ALPHA = 0.28f;
+
+    private HashMap<Integer, String> voucherColorStateCollection = new HashMap<>();
+    private List<Voucher> vouchersList;
     private Context mContext;
     private static final float UNUSED_VOUCHER_OVERLAY = 0.21f;
+    private HashMap<String, Status> statusAssociatedString;
 
-    public ViewVouchersRecyclerViewAdapter(List<GetUserVoucherResponse.Voucher> vouchersList,
+    public ViewVouchersRecyclerViewAdapter(List<Voucher> vouchersList,
+                                           HashMap<String, Status> statusAssociatedString,
                                            Context context) {
         this.vouchersList = vouchersList;
+        this.statusAssociatedString = statusAssociatedString;
         this.mContext = context;
 
     }
@@ -37,63 +40,66 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
     @Override
     public ViewVouchersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_view_vouchers,
-                parent , false);
+                parent, false);
         ViewVouchersViewHolder viewHolder = new ViewVouchersViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewVouchersViewHolder holder, int position) {
-        GetUserVoucherResponse.Voucher voucher =vouchersList.get(position);
-        Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(voucher.getDiscountLeft());
+        Voucher voucher = vouchersList.get(position);
 
         holder.mVoucherName.setText(voucher.getFullname());
 
-        boolean hasMatch = m.find();
-        boolean hasSpent = voucher.getDiscountLeft().equalsIgnoreCase(mContext.getString(R.string.already_spent));
+        holder.mVouchersItemCostText.setText(voucher.getDiscountGiven());
+        holder.mVouchersItemCostText.setVisibility(View.VISIBLE);
+        holder.mVouchersItemExpiresOnText.setText(voucher.getExpired());
+        holder.mVouchersItemDescText.setText(voucher.getFullname());
+        holder.mVouchersItemDescText.setVisibility(View.GONE);
+        holder.mVouchersItemValue.setVisibility(View.VISIBLE);
 
-        if(hasMatch) {
-            Double doubleValue = Double.parseDouble(m.group(1));
-            String mUseBefore = voucher.getExpired();
-            Float voucherAmount = Float.parseFloat(m.group(1));
-            DecimalFormat df = new DecimalFormat("0.00");
-            df.setMaximumFractionDigits(2);
-
-            String formattedVoucherValue = df.format(voucherAmount);
-
-            String voucherCostWithCurrency = PriceUtils.getVoucherStringValue(formattedVoucherValue);
-            holder.mVouchersItemCostText.setText(voucherCostWithCurrency);
-            holder.mVouchersItemCostText.setVisibility(View.VISIBLE);
-            holder.mVouchersAlreadySpent.setVisibility(View.GONE);
-            holder.mVouchersItemExpiresOnText.setText(mUseBefore);
-            holder.mVouchersItemDescText.setText(voucher.getFullname());
-            holder.mVouchersItemValue.setVisibility(View.VISIBLE);
-            holder.mActivatedValue.setText(String.valueOf(hasMatch));
-            holder.mPurchasedValue.setText(String.valueOf(hasSpent));
-            holder.mVouchersLayout.setBackground(mContext.getResources().getDrawable(R.drawable.bg_voucher_item));
-
-        } else {
-
-            if(hasSpent) {
-                holder.mVouchersItemCostText.setVisibility(View.GONE);
-                holder.mVouchersAlreadySpent.setVisibility(View.VISIBLE);
-                holder.mPurchasedValue.setText(String.valueOf(hasSpent));
-            } else {
-                holder.mVouchersItemCostText.setText(voucher.getDiscountLeft());
-                holder.mPurchasedValue.setText(String.valueOf(hasSpent));
-            }
-
-            holder.mVouchersItemExpiresOnText.setText(voucher.getExpired());
-            holder.mVouchersItemDescText.setText(voucher.getFullname());
-            holder.mVouchersItemValue.setVisibility(View.GONE);
-            holder.mVouchersLayout.setBackground(holder.mVouchersLayout.getContext().getDrawable(R.drawable.bg_voucher_item));
-            holder.mVouchersLayout.setAlpha(UNUSED_VOUCHER_OVERLAY);
-            holder.mActivatedValue.setText(String.valueOf(hasMatch));
+        holder.itemView.setAlpha(1f);
+        holder.mVouchersItemValue.setText("");
+        holder.mStatusText.setText(voucher.getStatus());
+        holder.mVouchersItemExpiresOnText.setVisibility(View.VISIBLE);
+        Status status = statusAssociatedString.get(voucher.getStatus());
+        if (status == null) {
+            status = Status.NORMAL;
+        }
+        switch (status) {
+            case PENDING:
+                holder.mStatusText.setTextColor(mContext.getResources().getColor(R.color.orange));
+                break;
+            case NEW:
+                holder.mStatusText.setTextColor(mContext.getResources().getColor(R.color.green));
+                break;
+            case EXPIRING_SOON:
+                holder.mStatusText.setTextColor(mContext.getResources().getColor(R.color.activered));
+                break;
+            case ALREADY_SPENT:
+                holder.itemView.setAlpha(GRAYED_OUT_ALPHA);
+                holder.mVouchersItemExpiresOnText.setVisibility(View.GONE);
+                holder.mStatusText.setTextColor(mContext.getResources().getColor(R.color.activered));
+                break;
+            case EXPIRED:
+                holder.itemView.setAlpha(GRAYED_OUT_ALPHA);
+                holder.mStatusText.setTextColor(mContext.getResources().getColor(R.color.text_medium));
+                holder.mStatusText.setText("");
+                break;
+            default:
+                holder.mStatusText.setTextColor(mContext.getResources().getColor(R.color.text_medium));
+                if (!voucher.getDiscountLeft().isEmpty()) {
+                    String text = mContext.getResources()
+                            .getString(R.string.vouchers_balance_prefix) + voucher.getDiscountLeft();
+                    holder.mVouchersItemValue.setText(text);
+                }
+                break;
         }
 
+        holder.mVouchersLayout.setBackground(mContext.getResources().getDrawable(R.drawable.bg_voucher_item));
     }
 
-    public void replace(List<GetUserVoucherResponse.Voucher> vouchersList) {
+    public void replace(List<Voucher> vouchersList) {
         this.vouchersList = vouchersList;
         notifyDataSetChanged();
     }

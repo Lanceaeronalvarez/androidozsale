@@ -4,6 +4,7 @@ package au.com.dealsdirect.data.pref;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 
 import java.util.HashSet;
 
@@ -271,4 +272,8 @@ public interface PreferencesHelper {
     void setLastTimeStamp(String timeStamp);
 
     String getLastTimeStamp();
+
+    void setVoucherStatusTemplateText(GetTemplateTextsResponse.GetTemplateTextsValue value);
+
+    String getVoucherStatusTemplateText(GetUserVoucherResponse.Status status);
 }

@@ -125,6 +125,22 @@ public class GetTemplateTextsResponse {
         @SerializedName("TermsAndConditions_Text")
         @Expose
         private String termsAndConditionsText;
+        @SerializedName("_VoucherNew")
+        @Expose
+        private String voucherNew;
+        @SerializedName("_AlreadySpent")
+        @Expose
+        private String voucherAlreadySpent;
+        @SerializedName("_VoucherExpiringSoon")
+        @Expose
+        private String voucherExpiringSoon;
+        @SerializedName("_VoucherExpired")
+        @Expose
+        private String voucherExpired;
+        @SerializedName("_VoucherPending")
+        @Expose
+        private String voucherPending;
+
 
         public String getCheckoutMyPayPayExceedLimit() {
             return checkoutMyPayPayExceedLimit;
@@ -280,6 +296,26 @@ public class GetTemplateTextsResponse {
 
         public String getTermsAndConditionsText() {
             return termsAndConditionsText;
+        }
+
+        public String getVoucherNew() {
+            return voucherNew;
+        }
+
+        public String getVoucherAlreadySpent() {
+            return voucherAlreadySpent;
+        }
+
+        public String getVoucherExpiringSoon() {
+            return voucherExpiringSoon;
+        }
+
+        public String getVoucherExpired() {
+            return voucherExpired;
+        }
+
+        public String getVoucherPending() {
+            return voucherPending;
         }
     }
 }

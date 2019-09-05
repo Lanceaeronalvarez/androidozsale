@@ -71,7 +71,6 @@
     <string name="shop">Shop</string>
     <string name="my_addresses">MY ADDRESSES</string>
     <string name="select_a_sale">SELECT SALE</string>
-    <string name="voucher_used">MY VOUCHERS</string>
     <string name="checkout_order_label">MY ORDERS</string>
     <string name="promo_code">Promo Code</string>
     <string name="enter_voucher_code">Enter voucher code</string>
