@@ -7,12 +7,34 @@
     android:paddingTop="@dimen/margin_tiny"
     tools:ignore="MissingPrefix">
 
-    <ImageView
-        android:id="@+id/controller_order_details_item_imageview"
+
+
+    <RelativeLayout
         android:layout_width="@dimen/order_image_width"
         android:layout_height="@dimen/order_image_height"
+        android:id="@+id/controller_order_details_image_container"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/margin_small"/>
+        android:layout_marginBottom="@dimen/margin_small">
+
+        <ImageView
+            android:id="@+id/controller_order_details_item_imageview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/controller_order_details_cancelled_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelled"
+            android:padding="5dp"
+            android:background="@color/vco_color_true_red"
+            android:textColor="@color/white"
+            android:layout_alignParentRight="true"
+            android:fontFamily="@string/font_app_bold"
+            android:textSize="@dimen/text_size_caption2"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="@dimen/margin_huge"
@@ -37,10 +59,10 @@
         android:id="@+id/order_item_details_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/controller_order_details_item_imageview"
+        android:layout_alignTop="@+id/controller_order_details_image_container"
         android:layout_marginLeft="@dimen/margin_extra_small"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_toRightOf="@+id/controller_order_details_item_imageview"
+        android:layout_toRightOf="@+id/controller_order_details_image_container"
         android:orientation="vertical">
 
         <TextView

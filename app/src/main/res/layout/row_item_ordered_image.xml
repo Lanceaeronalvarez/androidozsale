@@ -29,4 +29,24 @@
         android:textSize="@dimen/text_size_body"
         tools:text="+3" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/controller_order_details_image_container">
+
+        <TextView
+            android:id="@+id/controller_order_cancelled_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelled"
+            android:padding="5dp"
+            android:background="@color/vco_color_true_red"
+            android:textColor="@color/white"
+            android:layout_alignParentRight="true"
+            android:fontFamily="@string/font_app_bold"
+            android:textSize="@dimen/text_size_caption2"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
 </FrameLayout>

@@ -272,6 +272,9 @@ public class GetPaymentsList {
             @SerializedName("FileName")
             @Expose
             private String fileName;
+            @SerializedName("Actions")
+            @Expose
+            private ArrayList<String> actionsList;
 
             public String getID() {
                 return iD;
@@ -353,6 +356,13 @@ public class GetPaymentsList {
                 this.fileName = fileName;
             }
 
+            public ArrayList<String> getActionsList() {
+                return actionsList;
+            }
+
+            public void setActionsList(ArrayList<String> actionsList) {
+                this.actionsList = actionsList;
+            }
         }
 
         public static class Total {

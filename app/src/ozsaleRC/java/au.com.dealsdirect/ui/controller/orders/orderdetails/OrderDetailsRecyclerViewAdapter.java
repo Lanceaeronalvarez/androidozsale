@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
@@ -64,7 +65,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     private String currentStatus = "";
     private boolean hasReceivedStatus = false;
     private String getReceiveDate = "";
-
+    private boolean isOrderCancelled = false;
 
     public OrderDetailsRecyclerViewAdapter(Activity mActivity,
                                            GetOrderPaymentDetails.ResponseValue.Value orderDetails,
@@ -191,6 +192,11 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
         ImageUtils.loadImage(LegacyStringImageUtils.generateImageUrl(brandId, imageId, fileName),
                 holder.productImageView);
+
+        if (item.getActions().contains(ActionConstants.ORDER_ITEM_CANCELLED)) {
+            holder.productCancelledTextView.setVisibility(View.VISIBLE);
+            isOrderCancelled = true;
+        }
 
 
         holder.productNameTextView.setText(item.getItem());
@@ -344,6 +350,9 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         @BindView(R.id.controller_order_details_item_imageview)
         ImageView productImageView;
 
+        @BindView(R.id.controller_order_details_cancelled_text)
+        TextView productCancelledTextView;
+
         @BindView(R.id.img_button_layout)
         RelativeLayout moreOptionsImageButton;
 
@@ -420,6 +429,10 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             case ORDER_DATE_NEGATIVE_STATE:
                 if (currentStatus.equalsIgnoreCase("approved")) {
                     currentStatus = "Date";
+                }
+
+                if (isOrderCancelled) {
+                    currentStatus = mActivity.getString(R.string.cancelled);
                 }
                 holder.orderFirstNodeStatusTextView.setText(String.format(orderText, currentStatus));
                 break;

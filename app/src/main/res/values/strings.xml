@@ -366,6 +366,7 @@
     <string name="stock_arrived">Stock\nArrived</string>
     <string name="received">Received</string>
     <string name="refunded">refunded</string>
+    <string name="cancelled">Cancelled</string>
     <string name="please_accept_terms_and_conditions">Please accept Terms and Conditions</string>
     <string name="please_fill_out_the_form">Please fill out the form.</string>
     <string name="please_select_an_option_for_promotional_emails">Please select an option for promotional emails</string>
