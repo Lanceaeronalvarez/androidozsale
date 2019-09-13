@@ -186,6 +186,8 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     public void callOrderReceived(String orderID) {
         OrderReceivedRequest orderReceivedRequest = new OrderReceivedRequest();
         orderReceivedRequest.setOrderId(orderID);
+        orderReceivedRequest.setSatisfaction("");
+        mPresenter.callOrderReceived(orderReceivedRequest);
 
     }
 }

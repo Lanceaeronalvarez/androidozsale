@@ -11,6 +11,9 @@ public class OrderReceivedRequest {
     @SerializedName("orderID")
     @Expose
     private String orderId;
+    @SerializedName("satisfaction")
+    @Expose
+    private String satisfaction;
 
     public String getOrderId() {
         return orderId;
@@ -20,4 +23,11 @@ public class OrderReceivedRequest {
         this.orderId = orderId;
     }
 
+    public String getSatisfaction() {
+        return satisfaction;
+    }
+
+    public void setSatisfaction(String satisfaction) {
+        this.satisfaction = satisfaction;
+    }
 }

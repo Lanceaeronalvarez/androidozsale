@@ -65,6 +65,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     private String currentStatus = "";
     private boolean hasReceivedStatus = false;
     private String getReceiveDate = "";
+    private boolean isOrderReceived = false;
     private boolean isOrderCancelled = false;
 
     public OrderDetailsRecyclerViewAdapter(Activity mActivity,
@@ -123,6 +124,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             hasReceivedStatus = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getActions()
                     .contains(ActionConstants.ORDER_RECEIVED_STATUS);
             getReceiveDate = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getReceived();
+            isOrderReceived = getReceiveDate != null;
 
             String invoiceNumber = mActivity.getResources().getString(R.string.order_invoice) +" "+ mInvoiceNumber;
             ((OrderSaleName) holder).saleName.setText(invoiceNumber);
@@ -453,7 +455,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 break;
         }
 
-        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE && !hasReceivedStatus) {
+        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE && hasReceivedStatus) {
             holder.receivedOrderLayout.setVisibility(View.VISIBLE);
             holder.orderReceivedConnector.setVisibility(View.VISIBLE);
             holder.receivedGraphNodeTextView.setOnClickListener(v -> {
@@ -462,7 +464,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             });
         }
 
-        if (hasReceivedStatus) {
+        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE && isOrderReceived) {
             holder.receivedOrderLayout.setVisibility(View.VISIBLE);
             holder.orderReceivedConnector.setVisibility(View.VISIBLE);
             setActiveOrderReceived(holder, orderText);

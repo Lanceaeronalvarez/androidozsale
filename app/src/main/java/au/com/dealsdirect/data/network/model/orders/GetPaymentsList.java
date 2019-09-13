@@ -118,6 +118,9 @@ public class GetPaymentsList {
             @SerializedName("Actions")
             @Expose
             private List<String> actions;
+            @SerializedName("Received")
+            @Expose
+            private String received;
 
             public List<String> getActions() {
                 return actions;
@@ -201,6 +204,14 @@ public class GetPaymentsList {
 
             public void setTracker(Tracker tracker) {
                 this.tracker = tracker;
+            }
+
+            public String getReceived() {
+                return received;
+            }
+
+            public void setReceived(String received) {
+                this.received = received;
             }
         }
 

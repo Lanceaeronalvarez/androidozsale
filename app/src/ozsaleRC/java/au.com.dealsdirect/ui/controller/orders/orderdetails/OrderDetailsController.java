@@ -208,6 +208,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
         OrderReceivedRequest orderReceivedRequest = new OrderReceivedRequest();
         orderReceivedRequest.setOrderId(orderID);
+        orderReceivedRequest.setSatisfaction("");
         mPresenter.callOrderReceived(orderReceivedRequest);
     }
 }
