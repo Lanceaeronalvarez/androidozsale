@@ -59,7 +59,6 @@ public class CountryPresenter<V extends CountryMvpView> extends BasePresenter<V>
         if (!previousSelectedCountry.equalsIgnoreCase("") &&
                 !previousSelectedCountry.equalsIgnoreCase(country.getShopCode())) {
             Prefs.clear();
-            CookieUtils.getInstance().clear();
         }
 
         getMvpView().showSelectedCountryDialog(country);
