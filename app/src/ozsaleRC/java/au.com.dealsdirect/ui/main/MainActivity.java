@@ -307,8 +307,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.onActivityResult(requestCode, resultCode, data);
     }
 
+    private boolean isActivityStateValid() {
+        return isViewAttached() &&
+                getHomeController() != null &&
+                getMainController() != null &&
+                getMainController().getHomeViewPager() != null;
+    }
+
     @Override
     public void onBackPressed() {
+        if (!isActivityStateValid()) {
+            return;
+        }
+
         /* gen-8065_ozsale-reskin_bugfixing - dismiss keyboard when changing screen fix  */
         hideKeyboard();
 
