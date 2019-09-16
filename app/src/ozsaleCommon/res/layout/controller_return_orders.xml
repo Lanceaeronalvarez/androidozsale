@@ -27,7 +27,7 @@
             android:layout_marginTop="@dimen/margin_large"
             android:fontFamily="@string/font_app_medium"
             android:padding="@dimen/padding_default"
-            android:text="@string/select_a_sale"
+            android:text="@string/select_invoice"
             android:textColor="@color/text_light"
             android:textSize="@dimen/text_size_body" />
 

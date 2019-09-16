@@ -6,6 +6,7 @@
     android:orientation="vertical"
     tools:ignore="HardcodedText,MissingPrefix">
 
+
     <RelativeLayout
         android:id="@+id/new_return_item_set_detail_container"
         android:layout_width="match_parent"
@@ -16,6 +17,38 @@
         android:padding="@dimen/margin_extra_small">
 
         <LinearLayout
+            android:id="@+id/header_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:padding="@dimen/padding_default"
+                tools:text="Invoice" />
+
+            <TextView
+                android:id="@+id/new_return_item_invoice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:padding="@dimen/padding_default"
+                android:textStyle="bold"
+                tools:text="Philosophy Cotton Sleeveless Plain" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/ic_gray_chevron" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_below="@+id/header_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"

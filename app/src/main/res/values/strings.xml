@@ -744,5 +744,13 @@
     <string name="dialog_no_nevermind">No, Nevermind</string>
     <string name="order_invoice">Invoice</string>
     <string name="contact_number_return_details">Contact No:</string>
+    <string name="invoice_number_text">Invoice Number</string>
+    <string name="invoice_text">Invoice</string>
+    <string name="select_invoice">Select Invoice</string>
+    <string name="new_return_instruction">Please provide as much detail as possible regarding any item you would
+    like to return. If the item is faulty, please give a full description of the fault. Please Note any item
+    returned without a RAN number will not be accepted.</string>
+    <string name="error_upload_image">Image is too large</string>
+    <string name="returns_enquiry">Returns Enquiry</string>
 
 </resources>

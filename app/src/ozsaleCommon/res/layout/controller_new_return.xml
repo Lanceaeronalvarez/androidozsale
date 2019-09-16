@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/new_return_order_request_set_details_fragment"
     android:layout_width="match_parent"
@@ -10,55 +10,122 @@
     android:background="@color/background_default"
     tools:ignore="MissingPrefix">
 
-    <include
-        android:id="@+id/controller_new_return_toolbar"
-        layout="@layout/partial_toolbar_arrow" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/new_returns_set_detail_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/controller_new_return_bottom_container"
-        android:layout_below="@+id/controller_new_return_toolbar"
-        android:orientation="vertical"
-        android:overScrollMode="never" />
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/border_regular"
-        android:background="@color/bt_black_12"
-        android:layout_above="@+id/controller_new_return_bottom_container"/>
-
     <LinearLayout
-        android:id="@+id/controller_new_return_bottom_container"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/contacts_edittext_height"
-        android:background="@color/background_default"
-        android:orientation="horizontal"
-        android:padding="@dimen/padding_default_half"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <au.com.dealsdirect.ui.custom.ClearFocusEditText
-            android:id="@+id/controller_new_return_field"
-            style="@style/DDEditTextStyle"
-            android:layout_width="0dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/margin_small"
-            android:layout_weight="1"
-            android:padding="@dimen/padding_small"
-            android:background="@drawable/bg_add_contact_message"
-            android:hint="@string/write_a_message" />
+        <include
+            android:id="@+id/controller_new_return_toolbar"
+            layout="@layout/partial_toolbar_arrow" />
 
-        <ImageButton
-            android:id="@+id/new_return_create_button"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/new_returns_set_detail_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:overScrollMode="never" />
+
+        <TextView
+            android:id="@+id/header_reason_for_return"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@null"
-            android:src="@drawable/ic_contact_us_send" />
+            android:text="Reason for return"
+            android:textAllCaps="true"
+            android:textColor="@color/text_medium"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginStart="@dimen/margin_small"/>
+
+        <EditText
+            android:id="@+id/new_return_reason_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/white"
+            android:layout_marginTop="@dimen/margin_small"
+            android:textSize="@dimen/text_size_caption1"
+            android:hint="Enter your reason for return..."
+            android:gravity="top"
+            android:padding="@dimen/margin_small"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_caption2"
+            android:textColor="@color/text_light"
+            android:text="@string/new_return_instruction"
+            android:padding="@dimen/margin_small"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_large"
+            android:textColor="@color/text_medium"
+            android:text="Attach File"
+            android:textAllCaps="true" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/new_return_image_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="@dimen/margin_small"
+            android:background="@color/white"
+            android:padding="@dimen/margin_small"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/border_regular"
+            android:background="@color/bt_black_12"
+            android:layout_above="@+id/controller_new_return_bottom_container"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/new_return_confirm_button"
+            style="@style/DDButtonStyle"
+            fontPath="@string/font_app_medium"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:layout_marginLeft="@dimen/margin_extra_small"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_extra_small"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:paddingBottom="@dimen/margin_medium"
+            android:text="Confirm" />
+
+        <LinearLayout
+            android:id="@+id/controller_new_return_bottom_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/contacts_edittext_height"
+            android:background="@color/background_default"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_default_half"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:visibility="gone">
+
+            <au.com.dealsdirect.ui.custom.ClearFocusEditText
+                android:id="@+id/controller_new_return_field"
+                style="@style/DDEditTextStyle"
+                android:layout_width="0dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_weight="1"
+                android:padding="@dimen/padding_small"
+                android:background="@drawable/bg_add_contact_message"
+                android:hint="@string/write_a_message" />
+
+            <ImageButton
+                android:id="@+id/new_return_create_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:src="@drawable/ic_contact_us_send" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

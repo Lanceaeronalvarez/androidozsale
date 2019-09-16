@@ -120,6 +120,8 @@ import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRe
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
@@ -671,6 +673,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<OrderReceivedResponse> callOrderReceived(OrderReceivedRequest receivedRequest) {
         return mApiHelper.callOrderReceived(receivedRequest);
+    }
+
+    @Override
+    public Observable<SetAttachmentResponse> setAttachment(SetAttachmentRequest setAttachmentRequest) {
+        return mApiHelper.setAttachment(setAttachmentRequest);
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -115,6 +116,9 @@ import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRe
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
+import au.com.dealsdirect.data.network.model.returns.newreturn.UploadImageResponse;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
@@ -1102,6 +1106,15 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(receivedRequest))
                 .build()
                 .getObjectObservable(OrderReceivedResponse.class);
+    }
+
+    @Override
+    public Observable<SetAttachmentResponse> setAttachment(SetAttachmentRequest setAttachmentRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.setAttachment())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(setAttachmentRequest))
+                .build()
+                .getObjectObservable(SetAttachmentResponse.class);
     }
 }
 

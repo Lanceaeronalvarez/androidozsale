@@ -17,6 +17,8 @@ public class ReturnOrderViewHolder extends RecyclerView.ViewHolder{
 
     public TextView newReturnsOrderItemName;
 
+    public RecyclerView newReturnsRecyclerView;
+
     public ReturnOrderViewHolder(View itemView) {
         super(itemView);
 
@@ -25,6 +27,9 @@ public class ReturnOrderViewHolder extends RecyclerView.ViewHolder{
 
         newReturnsOrderItemName = (TextView) itemView.
                 findViewById(R.id.new_current_orders_item_name);
+
+        newReturnsRecyclerView = (RecyclerView) itemView.
+                findViewById(R.id.return_orders_recyclerview);
 
     }
 }

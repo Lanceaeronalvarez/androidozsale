@@ -3,6 +3,7 @@ package au.com.dealsdirect.data.network.model.returns.currentreturn;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -37,6 +38,19 @@ public class CurrentReturns {
     @SerializedName("Description")
     @Expose
     private String description;
+    @SerializedName("ItemImages")
+    @Expose
+    private List<ItemImages> itemImagesList;
+    @SerializedName("AttachmentID")
+    @Expose
+    private String attachmentID;
+    @SerializedName("Attachments")
+    @Expose
+    private List<AttachmentItems> attachmentItemsList;
+
+    public List<ItemImages> getItemImagesList() {
+        return itemImagesList;
+    }
 
     public String getID() {
         return iD;
@@ -110,6 +124,14 @@ public class CurrentReturns {
         this.description = description;
     }
 
+    public String getAttachmentID() {
+        return attachmentID;
+    }
+
+    public List<AttachmentItems> getAttachmentItemsList() {
+        return attachmentItemsList;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object != null) {
@@ -143,5 +165,59 @@ public class CurrentReturns {
                 getRan(),
                 getReturnStatus(),
                 getDescription());
+    }
+
+    public class ItemImages {
+        @SerializedName("OrderItemID")
+        private String orderItemId;
+        @SerializedName("BrandID")
+        private String brandId;
+        @SerializedName("ImageID")
+        private String imageId;
+        @SerializedName("FileName")
+        private String fileName;
+
+        public String getOrderItemId() {
+            return orderItemId;
+        }
+
+        public String getBrandId() {
+            return brandId;
+        }
+
+        public String getImageId() {
+            return imageId;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+    }
+
+    public class AttachmentItems {
+        @SerializedName("Type")
+        private String type;
+        @SerializedName("Title")
+        private String title;
+        @SerializedName("Description")
+        private String description;
+        @SerializedName("Url")
+        private String url;
+
+        public String getType() {
+            return type;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getUrl() {
+            return url;
+        }
     }
 }

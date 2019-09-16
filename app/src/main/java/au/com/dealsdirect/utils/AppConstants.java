@@ -51,6 +51,9 @@ public final class AppConstants {
 
     public static final String PARAM_SKUID = "skuid";
 
+    public static final int MAX_SCALED_BITMAP_HEIGHT = 500;
+    public static final int MAX_SCALED_BITMAP_WIDTH = 500;
+
 
     private AppConstants() {
         // This utility class is not publicly instantiable

@@ -28,7 +28,8 @@ public final class ApiEndPoint {
         sale,
         product,
         setting,
-        eventing
+        eventing,
+        attachments
     }
 
     enum ApiUrlVersion {
@@ -67,6 +68,7 @@ public final class ApiEndPoint {
             case product: microServiceUrl = "api/shop/product/"+ version +"/accounts/";break;
             case setting: microServiceUrl = "api/shop/settings/"+ version +"/";break;
             case eventing: microServiceUrl = "api/shop/eventing/"+ version +"/";break;
+            case attachments: microServiceUrl = "api/shop/files/"+ version +"/files/"; break;
             case legacy: microServiceUrl = (BuildConfig.IS_TEST ? "Public/v" : "papi/public/v") + LEGACY_API_VERSION + "/";break;
             case genie: microServiceUrl = HANDLER_PREFIX;break;
         }
@@ -551,6 +553,14 @@ public final class ApiEndPoint {
 
     public static String callOrderReceived() {
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "SetOrderReceived", ApiUrlVersion.emptyVersion.apiVersion());
+    }
+
+    public static String setAttachment() {
+        return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "SetAttachment", ApiUrlVersion.emptyVersion.apiVersion());
+    }
+
+    public static String uploadImage() {
+        return getFormattedUrl(ApiService.attachments, "attachment/", ApiUrlVersion.v1.apiVersion());
     }
 
     private ApiEndPoint() {
