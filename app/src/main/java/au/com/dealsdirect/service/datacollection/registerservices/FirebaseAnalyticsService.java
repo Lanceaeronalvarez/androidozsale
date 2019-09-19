@@ -56,15 +56,6 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static CompositeDisposable mCompositeDisposable;
     static String type;
     static String finalType;
-    private static final String START_CHECKOUT_EVENT = "AnalyticsEventBeginCheckout";
-    private static final String ADD_TO_CART_EVENT = "AnalyticsEventAddToCart";
-    private static final String APP_LAUNCH_EVENT = "AnalyticsEventAppOpen";
-    private static final String ITEM_LIST_EVENT = "AnalyticsEventViewItemList";
-    private static final String ITEM_DETAIL_EVENT = "AnalyticsEventViewItem";
-    private static final String PURCHASE_EVENT = "AnalyticsEventEcommercePurchase";
-    private static final String SIGN_UP_EVENT = "AnalyticsEventSignUp";
-    private static final String LOGIN_EVENT = "AnalyticsEventLogin";
-    private static final String SHARE_EVENT = "AnalyticsEventShare";
     private static final String FAILED_TRANSACTION_EVENT = "FAILED_PAYMENT_TRANSACTION";
     private static final String TOGGLE_LIST_COUNT_EVENT = "PRODUCT_LIST_TOGGLE_COLUMN_COUNT";
 
@@ -119,9 +110,9 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                         Integer numberOfItems = (Integer) parameters.get(EventParameters.NUMBER_OF_ITEMS);
                         bundle.putInt(EventParameters.NUMBER_OF_ITEMS,
                                 numberOfItems == null ? 0 : numberOfItems);
-                        bundle.putString(EventParameters.START_CHECKOUT_VALUE,
+                        bundle.putString(FirebaseAnalytics.Param.VALUE,
                                 String.valueOf(parameters.get(EventParameters.START_CHECKOUT_VALUE)));
-                        bundle.putString(EventParameters.START_CHECKOUT_CURRENCY,
+                        bundle.putString(FirebaseAnalytics.Param.CURRENCY,
                                 String.valueOf(parameters.get(EventParameters.START_CHECKOUT_CURRENCY)));
                         startCheckout((Context) parameters.get(EventParameters.APP_CONTEXT), bundle,
                                 String.valueOf(parameters.get(EventParameters.SCREEN_NAME)));
@@ -134,11 +125,11 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(EventParameters.SHARE_SOURCE,
+                        bundle.putString(FirebaseAnalytics.Param.SOURCE,
                                 String.valueOf(parameters.get(EventParameters.SOURCE)));
-                        bundle.putString(EventParameters.SHARE_CONTENT_TYPE,
+                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE,
                                 String.valueOf(parameters.get(EventParameters.METHOD)));
-                        bundle.putString(EventParameters.SHARE_SUCCESS,
+                        bundle.putString(FirebaseAnalytics.Param.SUCCESS,
                                 String.valueOf(parameters.get(EventParameters.SHARE_SUCCESS)));
                         shareEvent((Context) parameters.get(EventParameters.APP_CONTEXT), bundle,
                                 String.valueOf(parameters.get(EventParameters.SCREEN_NAME)));
@@ -151,7 +142,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(EventParameters.ITEM_LIST_CATEGORY,
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_LIST,
                                 String.valueOf(parameters.get(EventParameters.ITEM_LIST)));
                         bundle.putString(EventParameters.LOAD_TIME,
                                 String.valueOf(parameters.get(EventParameters.MILLISECONDS)));
@@ -167,13 +158,13 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(EventParameters.ITEM_DETAILS_ITEM_ID,
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID,
                                 String.valueOf(parameters.get(EventParameters.ITEM_ID)));
-                        bundle.putString(EventParameters.ITEM_DETAILS_ITEM_NAME,
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,
                                 String.valueOf(parameters.get(EventParameters.ITEM_NAME)));
-                        bundle.putString(EventParameters.ITEM_DETAILS_PRICE,
+                        bundle.putString(FirebaseAnalytics.Param.PRICE,
                                 String.valueOf(parameters.get(EventParameters.PRICE)));
-                        bundle.putString(EventParameters.ITEM_DETAILS_SOURCE,
+                        bundle.putString(FirebaseAnalytics.Param.SOURCE,
                                 String.valueOf(parameters.get(EventParameters.SCREEN_NAME)));
                         itemDetails((Context) parameters.get(EventParameters.APP_CONTEXT), bundle,
                                 String.valueOf(parameters.get(EventParameters.SCREEN_NAME)));
@@ -186,7 +177,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(EventParameters.SIGN_UP_METHOD,
+                        bundle.putString(FirebaseAnalytics.Param.METHOD,
                                 String.valueOf(parameters.get(EventParameters.METHOD)));
                         bundle.putString(EventParameters.SIGN_UP_GAVE_UP,
                                 String.valueOf(parameters.get(EventParameters.RESULT)));
@@ -202,7 +193,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         Boolean result = (Boolean) parameters.get(EventParameters.RESULT);
                         Bundle bundle = new Bundle();
-                        bundle.putString(EventParameters.LOGIN_METHOD,
+                        bundle.putString(FirebaseAnalytics.Param.METHOD,
                                 String.valueOf(parameters.get(EventParameters.METHOD)));
                         bundle.putString(EventParameters.LOGIN_GAVE_UP,
                                 String.valueOf(result == null || !result));
@@ -217,19 +208,19 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(EventParameters.ADD_TO_CART_ITEM_ID,
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID,
                                 String.valueOf(parameters.get(EventParameters.ITEM_ID)));
-                        bundle.putString(EventParameters.ADD_TO_CART_ITEM_NAME,
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,
                                 String.valueOf(parameters.get(EventParameters.ITEM_NAME)));
-                        bundle.putString(EventParameters.ADD_TO_CART_ITEM_CATEGORY,
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY,
                                 String.valueOf(parameters.get(EventParameters.ITEM_CATEGORY)));
-                        bundle.putString(EventParameters.ADD_TO_CART_QUANTITY,
+                        bundle.putString(FirebaseAnalytics.Param.QUANTITY,
                                 String.valueOf(parameters.get(EventParameters.ADD_TO_CART_QUANTITY)));
-                        bundle.putString(EventParameters.ADD_TO_CART_VALUE,
+                        bundle.putString(FirebaseAnalytics.Param.VALUE,
                                 String.valueOf(parameters.get(EventParameters.PRICE)));
-                        bundle.putString(EventParameters.ADD_TO_CART_CURRENCY,
+                        bundle.putString(FirebaseAnalytics.Param.CURRENCY,
                                 String.valueOf(parameters.get(EventParameters.ADD_TO_CART_CURRENCY)));
-                        bundle.putString(EventParameters.ADD_TO_CART_SOURCE,
+                        bundle.putString(FirebaseAnalytics.Param.SOURCE,
                                 String.valueOf(parameters.get(EventParameters.ADD_TO_CART_SOURCE)));
                         bundle.putString(EventParameters.ADD_TO_CART_ATTEMPTS,
                                 String.valueOf(parameters.get(EventParameters.ATTEMPTS)));
@@ -272,15 +263,15 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     public void LogDataEvents(HashMap<String, Object> parameters) {
 
                         Bundle bundle = new Bundle();
-                        bundle.putString(EventParameters.PURCHASE_CHECKOUT_OPTION,
+                        bundle.putString(FirebaseAnalytics.Param.CHECKOUT_OPTION,
                                 String.valueOf(parameters.get(EventParameters.PAYMENT_METHOD_TYPE)));
                         bundle.putString(EventParameters.PURCHASE_NEW_USER,
                                 String.valueOf(parameters.get(EventParameters.IS_NEW_USER)));
-                        bundle.putString(EventParameters.PURCHASE_VALUE,
+                        bundle.putString(FirebaseAnalytics.Param.VALUE,
                                 String.valueOf(parameters.get(EventParameters.PRICE)));
-                        bundle.putString(EventParameters.PURCHASE_CURRENCY,
+                        bundle.putString(FirebaseAnalytics.Param.CURRENCY,
                                 String.valueOf(parameters.get(EventParameters.PURCHASE_CURRENCY)));
-                        bundle.putString(EventParameters.PURCHASE_TRANSACTION_ID,
+                        bundle.putString(FirebaseAnalytics.Param.TRANSACTION_ID,
                                 String.valueOf(parameters.get(EventParameters.PURCHASE_TRANSACTION_ID)));
                         purchase((Context) parameters.get(EventParameters.APP_CONTEXT), bundle,
                                 String.valueOf(parameters.get(EventParameters.SCREEN_NAME)));
@@ -327,7 +318,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         String source = String.valueOf(parameters.get(EventParameters.SOURCE));
                         Bundle bundle = new Bundle();
-                        bundle.putString(EventParameters.ORDER_TRACK_SOURCE, source);
+                        bundle.putString(FirebaseAnalytics.Param.SOURCE, source);
                         orderTrack((Context) parameters.get(EventParameters.APP_CONTEXT), bundle,
                                 String.valueOf(parameters.get(EventParameters.SCREEN_NAME)),
                                 source);
@@ -389,13 +380,13 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
 
     private static void appOpen(Context context, Bundle bundle) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
-        firebaseAnalytics.logEvent(APP_LAUNCH_EVENT, bundle);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, bundle);
     }
 
     private static void startCheckout(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(START_CHECKOUT_EVENT, bundle);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, bundle);
 
         checkoutJourney(context, EventParameters.EventProgress.START.getValue(), screenName);
     }
@@ -403,37 +394,37 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static void shareEvent(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(SHARE_EVENT, bundle);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle);
     }
 
     private static void itemList(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(ITEM_LIST_EVENT, bundle);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST, bundle);
     }
 
     private static void itemDetails(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(ITEM_DETAIL_EVENT, bundle);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle);
     }
 
     private static void signUp(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(SIGN_UP_EVENT, bundle);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle);
     }
 
     private static void login(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(LOGIN_EVENT, bundle);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
     }
 
     private static void addToCart(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(ADD_TO_CART_EVENT, bundle);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_CART, bundle);
 
         if (!mDataManager.hasAddedToCart()) {
             addToCartJourney(context, EventParameters.CartJourneyType.ADD_TO_CART);
@@ -469,7 +460,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static void purchase(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(PURCHASE_EVENT, bundle);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle);
 
         mDataManager.setLastRedirection(EventParameters.LastRedirection.PAY);
         checkoutJourney(context, EventParameters.EventProgress.END.getValue(), screenName);
