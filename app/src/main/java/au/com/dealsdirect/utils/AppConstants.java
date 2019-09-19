@@ -53,6 +53,7 @@ public final class AppConstants {
 
     public static final int MAX_SCALED_BITMAP_HEIGHT = 500;
     public static final int MAX_SCALED_BITMAP_WIDTH = 500;
+    public static final int IMAGE_SIZE = 100;
 
 
     private AppConstants() {

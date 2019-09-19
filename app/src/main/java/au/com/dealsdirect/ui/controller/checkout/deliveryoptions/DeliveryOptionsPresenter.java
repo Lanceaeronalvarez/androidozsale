@@ -15,6 +15,7 @@ import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -53,7 +54,7 @@ public class DeliveryOptionsPresenter<V extends DeliveryOptionsMvpView> extends 
         setDeliveryOption.setCountryId(getDataManager().getCountryId());
         setDeliveryOption.setLanguageId(getDataManager().getLanguageId());
         setDeliveryOption.setOptionParameters(setDeliveryOptionParameters);
-        setDeliveryOption.setImageSize(0);
+        setDeliveryOption.setImageSize(AppConstants.IMAGE_SIZE);
 
         getMvpView().showLoading();
         doApiCallForResponse(getDataManager().callSetDeliveryOption(setDeliveryOption), new AppApiCallback() {

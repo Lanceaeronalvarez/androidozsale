@@ -11,12 +11,13 @@ import java.util.List;
 
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+import au.com.dealsdirect.utils.AppConstants;
 
 public class GetCurrentOrder {
 
     public static class RequestValue {
         private String languageID;
-        private int imageSize = 100;
+        private int imageSize = AppConstants.IMAGE_SIZE;
 
         public RequestValue(String languageID) {
             this.languageID = languageID;

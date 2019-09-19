@@ -20,7 +20,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 
 
 public class ImageUtils {
@@ -58,9 +60,14 @@ public class ImageUtils {
 
         Glide.with(imageView)
                 .asBitmap()
-                .apply(options)
                 .load(url)
-                .into(imageView);
+                .apply(options)
+                .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL) {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        imageView.setImageBitmap(resource);
+                    }
+                });
     }
 
     public static void loadImageWithPlaceholder(String url, ImageView imageView, Drawable placeholder,
