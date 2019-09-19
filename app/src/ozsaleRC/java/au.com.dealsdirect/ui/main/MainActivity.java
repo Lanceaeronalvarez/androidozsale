@@ -1013,6 +1013,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.EventUser, new HashMap<>());
 
         callGCMRegisterSubscriber();
+        mPresenter.callFileSettings();
     }
 
     public void initializeMainController() {

@@ -68,6 +68,10 @@ public class ImageUploadUtil {
         return null;
     }
 
+    public static int convertImageLimitToBytes(int sizeInMb) {
+        return (sizeInMb * 1000000);
+    }
+
     public SetAttachmentRequest attachUploadedImages(String returnID, String url) {
         ArrayList<SetAttachmentRequest.Items> itemsList = new ArrayList<>();
 

@@ -29,4 +29,6 @@ public interface ReturnDetailsMvpPresenter<V extends ReturnDetailsMvpView> exten
     void sendMessage(CreateContactRequest createContactRequest);
 
     void replyMessage(ReplyContactRequest replyContactRequest);
+
+    int getImageLimit();
 }

@@ -140,5 +140,10 @@ public class ReturnDetailsPresenter<V extends ReturnDetailsMvpView> extends Base
 
     }
 
+    @Override
+    public int getImageLimit() {
+        return getDataManager().getFileSizeLimit();
+    }
+
 
 }

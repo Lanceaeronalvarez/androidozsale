@@ -276,4 +276,8 @@ public interface PreferencesHelper {
     void setVoucherStatusTemplateText(GetTemplateTextsResponse.GetTemplateTextsValue value);
 
     String getVoucherStatusTemplateText(GetUserVoucherResponse.Status status);
+
+    int getFileSizeLimit();
+
+    void setFileSizeLimit(int fileSizeLimit);
 }

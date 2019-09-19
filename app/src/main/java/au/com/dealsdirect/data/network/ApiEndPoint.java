@@ -563,6 +563,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.attachments, "attachment/", ApiUrlVersion.v1.apiVersion());
     }
 
+    public static String fileSettings() {
+        return getFormattedUrl(ApiService.attachments, "settings", ApiUrlVersion.v1.apiVersion());
+    }
+
     private ApiEndPoint() {
          // This class is not publicly instantiable
     }

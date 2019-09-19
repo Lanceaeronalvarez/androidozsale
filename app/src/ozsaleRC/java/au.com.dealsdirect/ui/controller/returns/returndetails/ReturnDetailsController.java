@@ -497,7 +497,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
                 mBitmap = MediaStore.Images.Media.getBitmap(mActivity.getContentResolver(), chosenImageUri);
 
                 newBitmap = ImageUploadUtil.imageResizeConversion(mBitmap,
-                        ImageUploadUtil.MAX_SIZE_IN_BYTES,
+                        ImageUploadUtil.convertImageLimitToBytes(mPresenter.getImageLimit()),
                         ImageUploadUtil.getFileSize(mBitmap));
 
                 

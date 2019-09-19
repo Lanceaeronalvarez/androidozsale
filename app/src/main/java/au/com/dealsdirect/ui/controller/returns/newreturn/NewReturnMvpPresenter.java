@@ -23,4 +23,6 @@ public interface NewReturnMvpPresenter<V extends NewReturnMvpView> extends MvpPr
 
     String getEventUser();
 
+    int getImageLimit();
+
 }

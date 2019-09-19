@@ -168,6 +168,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String GOOGLE_ADS = "GOOGLE_ADS";
     private static final String COLUMN_COUNT = "COLUMN_COUNT";
     private static final String LAST_TIME_STAMP = "LAST_TIME_STAMP";
+    private static final String FILE_SIZE_LIMIT = "FILE_SIZE_LIMIT";
 
     private Context mContext;
 
@@ -953,5 +954,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
                 return Prefs.getString(VOUCHER_PENDING, "");
         }
         return "";
+    }
+
+    @Override
+    public int getFileSizeLimit() {
+        return Prefs.getInt(FILE_SIZE_LIMIT, 1);
+    }
+
+    @Override
+    public void setFileSizeLimit(int fileSizeLimit) {
+        Prefs.putInt(FILE_SIZE_LIMIT, fileSizeLimit);
     }
 }

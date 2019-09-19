@@ -100,4 +100,9 @@ public class NewReturnPresenter<V extends NewReturnMvpView> extends BasePresente
     public String getEventUser() {
         return getDataManager().getEventUserId();
     }
+
+    @Override
+    public int getImageLimit() {
+        return getDataManager().getFileSizeLimit();
+    }
 }

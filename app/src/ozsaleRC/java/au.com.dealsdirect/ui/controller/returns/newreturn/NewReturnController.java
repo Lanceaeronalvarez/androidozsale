@@ -430,7 +430,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                 mBitmap = MediaStore.Images.Media.getBitmap(mActivity.getContentResolver(), chosenImageUri);
 
                 Bitmap newBitmap = ImageUploadUtil.imageResizeConversion(mBitmap,
-                        ImageUploadUtil.MAX_SIZE_IN_BYTES,
+                        ImageUploadUtil.convertImageLimitToBytes(mPresenter.getImageLimit()),
                         ImageUploadUtil.getFileSize(mBitmap));
 
 
