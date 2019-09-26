@@ -8,6 +8,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -282,5 +284,59 @@ public class ImageUtils {
         int finalColumnCount = Math.min(actualMaxColumn, computedColumn);
         float ratio = (float) proposedHeight / proposedWidth;
         return getExactGridDefinition(finalColumnCount, ratio, canvasWidth);
+    }
+
+    public static class ImageLink implements Parcelable {
+        String link;
+        boolean isURL;
+
+        public ImageLink(String link, boolean isURL) {
+            this.link = link;
+            this.isURL = isURL;
+        }
+
+        protected ImageLink(Parcel in) {
+            link = in.readString();
+            isURL = in.readByte() != 0;
+        }
+
+        public static final Creator<ImageLink> CREATOR = new Creator<ImageLink>() {
+            @Override
+            public ImageLink createFromParcel(Parcel in) {
+                return new ImageLink(in);
+            }
+
+            @Override
+            public ImageLink[] newArray(int size) {
+                return new ImageLink[size];
+            }
+        };
+
+        public String getLink() {
+            return link;
+        }
+
+        public void setLink(String link) {
+            this.link = link;
+        }
+
+        public boolean isURL() {
+            return isURL;
+        }
+
+        public void setIsURL(boolean isURL) {
+            this.isURL = isURL;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(link);
+            dest.writeByte((byte) (isURL ? 1 : 0));
+        }
     }
 }

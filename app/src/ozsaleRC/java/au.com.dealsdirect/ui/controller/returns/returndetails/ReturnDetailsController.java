@@ -30,9 +30,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
+
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
@@ -49,14 +51,18 @@ import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.returns.returndetails.adapter.ReturnDetailsAdapter;
 import au.com.dealsdirect.ui.controller.returns.returndetails.adapter.ReturnDetailsAddImageAdapter;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.AsyncResponse;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUploadUtil;
+import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+
 import static android.app.Activity.RESULT_OK;
 
 /*
@@ -64,7 +70,7 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class ReturnDetailsController extends BaseController implements ReturnDetailsMvpView,
-        ReturnDetailsListener, AsyncResponse {
+        ReturnDetailsListener {
 
     public static final String TAG = "ReturnDetailsController";
 
@@ -77,7 +83,55 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     private static final String KEY_RAN = "ReturnDetailsController.RAN";
     private static final String KEY_RETURN_ID = "ReturnDetailsController.RETURN_ID";
     private static final String KEY_IS_FROM_ORDERS = "ReturnDetailsController.KEY_IS_FROM_ORDERS";
-
+    ImageUploadUtil.UploadFileToServer uploadFileToServer;
+    @BindView(R.id.controller_return_details_order_number)
+    TextView mOrderNumberTextView;
+    @BindView(R.id.controller_return_details_order_product_delivery_from_date_value)
+    TextView mReturnDetailsControllerRequestDateValue;
+    @BindView(R.id.controller_return_details_product_is_approved_value)
+    TextView mReturnDetailsControllerisApprovedValue;
+    @BindView(R.id.controller_return_details_item_status_value)
+    TextView mReturnDetailsControllerItemStatus;
+    @BindView(R.id.my_current_return_item_RAN_value)
+    TextView mReturnDetailsControllerRanValue;
+    @BindView(R.id.controller_return_details_recyclerview)
+    RecyclerView mReturnDetailsControllerItemList;
+    @BindView(R.id.partial_toolbar_title)
+    TextView mReturnDetailsControllerToolbarTitle;
+    @BindView(R.id.partial_toolbar_right_view)
+    ImageView mReturnDetailsControllerToolbarRightOption;
+    @BindView(R.id.controller_return_details_total_container)
+    ViewGroup mReturnDetailsTotalContainer;
+    @BindView(R.id.controller_return_details_total_value)
+    TextView mReturnDetailsControllerTotalValue;
+    @BindView(R.id.controller_return_details_reason_container)
+    RelativeLayout mReturnDetailsReasonContainer;
+    @BindView(R.id.controller_return_details_contact_text)
+    TextView mContactNumberText;
+    @BindView(R.id.controller_return_details_reason_value)
+    TextView mReturnDetailsReasonText;
+    @BindView(R.id.contact_history_message_text_view)
+    TextView mContactMessageText;
+    @BindView(R.id.controller_return_details_contact_date)
+    TextView mContactMessageDate;
+    @BindView(R.id.controller_return_details_subject_text)
+    TextView mReturnDetailsSubjectText;
+    @BindView(R.id.controller_return_details_contact_layout)
+    FrameLayout mContactMessageContainer;
+    @BindView(R.id.controller_return_details_date_container)
+    RelativeLayout mContactDateContainer;
+    @BindView(R.id.controller_return_details_contact_container)
+    RelativeLayout mReturnDetailsContactContainer;
+    @BindView(R.id.controller_return_details_image_recyclerview)
+    RecyclerView mReturnDetailsImageList;
+    @BindView(R.id.controller_return_details_send_message_edittext)
+    EditText mReturnDetailsWriteMessageEditText;
+    @BindView(R.id.controller_return_details_message_button)
+    Button mReturnDetailsButton;
+    @BindView(R.id.controller_return_details_subtotal_value)
+    TextView mReturnDetailsSubtotal;
+    @Inject
+    ReturnDetailsMvpPresenter<ReturnDetailsMvpView> mPresenter;
     private String mProductName = "";
     private int mOrderNumber = 0;
     private String mReturnID = "";
@@ -94,119 +148,15 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     private Bitmap newBitmap;
     private File imageFile;
     private ArrayList<Bitmap> mBitmapArray = new ArrayList<Bitmap>();
-    private ArrayList<File> mImageFileArray = new ArrayList<>();
-    ImageUploadUtil.UploadFileToServer uploadFileToServer;
+    private HashMap<Integer, File> mImageFileHashMap = new HashMap<>();
     private ArrayList<SetAttachmentRequest.Items> mApiImageItems = new ArrayList<>();
     private boolean shouldUploadImage = false;
     private boolean isBackButtonPressed = false;
     private boolean isFromAddImageAdapter = false;
     private int attachmentSize = 0;
-
-    @BindView(R.id.controller_return_details_order_number)
-    TextView mOrderNumberTextView;
-
-    @BindView(R.id.controller_return_details_order_product_delivery_from_date_value)
-    TextView mReturnDetailsControllerRequestDateValue;
-
-    @BindView(R.id.controller_return_details_product_is_approved_value)
-    TextView mReturnDetailsControllerisApprovedValue;
-
-    @BindView(R.id.controller_return_details_item_status_value)
-    TextView mReturnDetailsControllerItemStatus;
-
-    @BindView(R.id.my_current_return_item_RAN_value)
-    TextView mReturnDetailsControllerRanValue;
-
-    @BindView(R.id.controller_return_details_recyclerview)
-    RecyclerView mReturnDetailsControllerRecyclerView;
-
-    @BindView(R.id.partial_toolbar_title)
-    TextView mReturnDetailsControllerToolbarTitle;
-
-    @BindView(R.id.partial_toolbar_right_view)
-    ImageView mReturnDetailsControllerToolbarRightOption;
-
-    @BindView(R.id.controller_return_details_total_container)
-    ViewGroup mReturnDetailsTotalContainer;
-
-    @BindView(R.id.controller_return_details_total_value)
-    TextView mReturnDetailsControllerTotalValue;
-
-    @BindView(R.id.controller_return_details_reason_container)
-    RelativeLayout mReturnDetailsReasonContainer;
-
-    @BindView(R.id.controller_return_details_contact_text)
-    TextView mContactNumberText;
-
-    @BindView(R.id.controller_return_details_reason_value)
-    TextView mReturnDetailsReasonText;
-
-    @BindView(R.id.contact_history_message_text_view)
-    TextView mContactMessageText;
-
-    @BindView(R.id.controller_return_details_contact_date)
-    TextView mContactMessageDate;
-
-    @BindView(R.id.controller_return_details_subject_text)
-    TextView mReturnDetailsSubjectText;
-
-    @BindView(R.id.controller_return_details_contact_layout)
-    FrameLayout mContactMessageContainer;
-
-    @BindView(R.id.controller_return_details_date_container)
-    RelativeLayout mContactDateContainer;
-
-    @BindView(R.id.controller_return_details_contact_container)
-    RelativeLayout mReturnDetailsContactContainer;
-
-    @BindView(R.id.controller_return_details_image_recyclerview)
-    RecyclerView mReturnDetailsRecyclerview;
-
-    @BindView(R.id.controller_return_details_send_message_edittext)
-    EditText mReturnDetailsWriteMessageEditText;
-
-    @BindView(R.id.controller_return_details_message_button)
-    Button mReturnDetailsButton;
-
-    @BindView(R.id.controller_return_details_subtotal_value)
-    TextView mReturnDetailsSubtotal;
-
-    @Inject
-    ReturnDetailsMvpPresenter<ReturnDetailsMvpView> mPresenter;
-
-    public static ReturnDetailsController newInstance(
-            String productName,
-            int orderNumber,
-            String returnID,
-            String requestDate,
-            String isApproved,
-            String status,
-            String RAN) {
-
-        return new ReturnDetailsController(
-                new BundleBuilder(new Bundle())
-                        .putString(KEY_PRODUCT_NAME,productName)
-                        .putInt(KEY_ORDER_NUMBER, orderNumber)
-                        .putString(KEY_RETURN_ID, returnID)
-                        .putString(KEY_REQUEST_DATE, requestDate)
-                        .putString(KEY_IS_APPROVED, isApproved)
-                        .putString(KEY_STATUS, status)
-                        .putString(KEY_RAN, RAN)
-                        .build());
-    }
-
-    public static ReturnDetailsController newInstance(
-            String returnID,
-            String productName,
-            boolean fromOrders) {
-
-        return new ReturnDetailsController(
-                new BundleBuilder(new Bundle())
-                        .putString(KEY_RETURN_ID, returnID)
-                        .putString(KEY_PRODUCT_NAME, productName)
-                        .putBoolean(KEY_IS_FROM_ORDERS, fromOrders)
-                        .build());
-    }
+    private boolean hasSavedInstance = false;
+    private String userMessage = "";
+    private ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
 
     public ReturnDetailsController(Bundle args) {
         super(args);
@@ -241,6 +191,40 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         }
     }
 
+    public static ReturnDetailsController newInstance(
+            String productName,
+            int orderNumber,
+            String returnID,
+            String requestDate,
+            String isApproved,
+            String status,
+            String RAN) {
+
+        return new ReturnDetailsController(
+                new BundleBuilder(new Bundle())
+                        .putString(KEY_PRODUCT_NAME, productName)
+                        .putInt(KEY_ORDER_NUMBER, orderNumber)
+                        .putString(KEY_RETURN_ID, returnID)
+                        .putString(KEY_REQUEST_DATE, requestDate)
+                        .putString(KEY_IS_APPROVED, isApproved)
+                        .putString(KEY_STATUS, status)
+                        .putString(KEY_RAN, RAN)
+                        .build());
+    }
+
+    public static ReturnDetailsController newInstance(
+            String returnID,
+            String productName,
+            boolean fromOrders) {
+
+        return new ReturnDetailsController(
+                new BundleBuilder(new Bundle())
+                        .putString(KEY_RETURN_ID, returnID)
+                        .putString(KEY_PRODUCT_NAME, productName)
+                        .putBoolean(KEY_IS_FROM_ORDERS, fromOrders)
+                        .build());
+    }
+
     @NonNull
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -260,6 +244,40 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BundleKeys.KEY_PRODUCT_NAME, mProductName);
+        outState.putInt(BundleKeys.KEY_ORDER_NUMBER, mOrderNumber);
+        outState.putString(BundleKeys.KEY_REQUEST_DATE, mRequestDate);
+        outState.putString(BundleKeys.KEY_IS_APPROVED, mIsApproved);
+        outState.putString(BundleKeys.KEY_STATUS, mStatus);
+        outState.putString(BundleKeys.KEY_RAN, mRAN);
+        outState.putString(BundleKeys.KEY_RETURN_ID, mReturnID);
+        outState.putBoolean(BundleKeys.KEY_IS_FROM_ORDER, isFromOrders);
+        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+        outState.putParcelableArrayList(BundleKeys.KEY_IMAGE_URI, mImageUriArray);
+        outState.putString(BundleKeys.KEY_USER_MESSAGE, mReturnDetailsWriteMessageEditText.getText().toString());
+        outState.putBoolean(BundleKeys.KEY_SHOULD_UPLOAD_IMAGE, shouldUploadImage);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mProductName = savedInstanceState.getString(BundleKeys.KEY_PRODUCT_NAME, "");
+        mOrderNumber = savedInstanceState.getInt(BundleKeys.KEY_ORDER_NUMBER, 0);
+        mRequestDate = savedInstanceState.getString(BundleKeys.KEY_REQUEST_DATE, "");
+        mIsApproved = savedInstanceState.getString(BundleKeys.KEY_IS_APPROVED, "");
+        mStatus = savedInstanceState.getString(BundleKeys.KEY_STATUS, "");
+        mRAN = savedInstanceState.getString(BundleKeys.KEY_RAN, "");
+        mReturnID = savedInstanceState.getString(BundleKeys.KEY_RETURN_ID, "");
+        isFromOrders = savedInstanceState.getBoolean(BundleKeys.KEY_IS_FROM_ORDER, false);
+        hasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+        mImageUriArray = savedInstanceState.getParcelableArrayList(BundleKeys.KEY_IMAGE_URI);
+        userMessage = savedInstanceState.getString(BundleKeys.KEY_USER_MESSAGE, "");
+        shouldUploadImage = savedInstanceState.getBoolean(BundleKeys.KEY_SHOULD_UPLOAD_IMAGE);
+    }
+
+    @Override
     protected void setUp(View view) {
 
         mReturnDetailsControllerToolbarRightOption.setVisibility(View.INVISIBLE);
@@ -270,7 +288,12 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         mReturnDetailsControllerItemStatus.setText(mStatus);
         mReturnDetailsControllerRanValue.setText(mRAN);
 
+        if (hasSavedInstance) {
+            mReturnDetailsWriteMessageEditText.setText(userMessage);
+        }
+
         mPresenter.loadCurrentReturnDetails(mReturnID);
+
     }
 
     @Override
@@ -284,7 +307,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
         mApiImageItems.clear();
         mBitmapArray.clear();
-        mImageFileArray.clear();
+        mImageFileHashMap.clear();
 
         List<Item> items = getReturnDetailsResponseBody.getValue().getItems();
         Double subTotal = getReturnDetailsResponseBody.getValue().getTotal();
@@ -296,12 +319,12 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         String subtotal = Settings.getSelectedCountry().currencySign +
                 getReturnDetailsResponseBody.getValue().getTotal();
         mReturnDetailsSubtotal.setText(subtotal);
+        mReturnDetailsControllerTotalValue.setText(PriceUtils.getPriceStringValue(subTotal));
 
         ReturnDetailsAdapter adapter = new ReturnDetailsAdapter(items, subTotal, mActivity);
-
-        mReturnDetailsControllerTotalValue.setText(PriceUtils.getPriceStringValue(subTotal));
-        mReturnDetailsControllerRecyclerView.setAdapter(adapter);
-        mReturnDetailsControllerRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        LinearLayoutManager itemsLayoutManager = new LinearLayoutManager(mActivity);
+        mReturnDetailsControllerItemList.setAdapter(adapter);
+        mReturnDetailsControllerItemList.setLayoutManager(itemsLayoutManager);
 
         mReturnDetailsTotalContainer.setVisibility(View.VISIBLE);
 
@@ -321,12 +344,19 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
         attachmentSize = getReturnDetailsResponseBody.getValue().getAttachments().size();
 
-        ReturnDetailsAddImageAdapter returnDetailsImageAdapter = new ReturnDetailsAddImageAdapter(mActivity,this,
-                new ArrayList<>(),
-                getReturnDetailsResponseBody.getValue().getAttachments());
+        if (mImageUriArray.size() == 0 && attachmentSize != 0) {
+            for (int i = 0; i < attachmentSize; i++) {
+                ImageUtils.ImageLink imageLink = new ImageUtils.ImageLink(getReturnDetailsResponseBody.getValue().getAttachments().get(i).getUrl(),
+                        true);
+                mImageUriArray.add(0, imageLink);
+            }
+        }
+
+        ReturnDetailsAddImageAdapter returnDetailsImageAdapter = new ReturnDetailsAddImageAdapter(mActivity, this,
+                mImageUriArray);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
-        mReturnDetailsRecyclerview.setAdapter(returnDetailsImageAdapter);
-        mReturnDetailsRecyclerview.setLayoutManager(layoutManager);
+        mReturnDetailsImageList.setAdapter(returnDetailsImageAdapter);
+        mReturnDetailsImageList.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -339,13 +369,13 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         mReturnDetailsSubjectText.setText(lastItemPosition.getSubject());
 
         mReturnDetailsContactContainer.setOnClickListener(v -> {
-           getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
+            getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
                     lastItemPosition.getSubject(),
                     "",
                     lastItemPosition.getInvoiceNo(),
                     DateUtils.getDateForContactMessages(lastItemPosition.getDate()),
                     Integer.parseInt(contactNumber),
-                   true))
+                    true))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         });
@@ -373,7 +403,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         items.setUrl(imageUrl);
         itemsList.add(items);
 
-        if (mBitmapArray.size() == itemsList.size()) {
+        if (mImageFileHashMap.size() == itemsList.size()) {
             shouldUploadImage = false;
             SetAttachmentRequest setAttachmentRequest = new SetAttachmentRequest();
             setAttachmentRequest.setId(mReturnID);
@@ -397,7 +427,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
 
     @OnClick(R.id.partial_toolbar_left_view)
-    void onBackClick(){
+    void onBackClick() {
         isBackButtonPressed = true;
         if (shouldUploadImage) {
             uploadImages();
@@ -412,19 +442,17 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     public void getImageFromDirectory(boolean uploadImage) {
         shouldUploadImage = uploadImage;
 
-        if(ActivityCompat.checkSelfPermission(mActivity,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
+        if (ActivityCompat.checkSelfPermission(mActivity,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    2000);
-        }
-        else {
+                    AppConstants.REQUEST_CODE_PERMISSION);
+        } else {
 
             Intent cameraIntent = new Intent(Intent.ACTION_PICK);
             cameraIntent.setType("image/*");
             if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                startActivityForResult(cameraIntent, 1000);
+                startActivityForResult(cameraIntent, AppConstants.REQUEST_CODE_FOR_SUCCESS);
             }
         }
     }
@@ -432,19 +460,20 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     @Override
     public void removeImage(Bitmap image, int position, boolean uploadImage, boolean isAddImageAdapter) {
 
+        ReturnDetailsAddImageAdapter adapter = ((ReturnDetailsAddImageAdapter) mReturnDetailsImageList.getAdapter());
+
         isFromAddImageAdapter = isAddImageAdapter;
 
         shouldUploadImage = uploadImage;
 
-        if (image != null && mBitmapArray.contains(image)) {
-            mBitmapArray.remove(position - 1);
-            mImageFileArray.remove(position - 1);
-            ((ReturnDetailsAddImageAdapter) mReturnDetailsRecyclerview.getAdapter()).removeItem(position);
-        }
+        mImageFileHashMap.remove(adapter.dataPositionToItemPosition(position));
+        mImageUriArray.remove(position);
+
+        adapter.removeItem(adapter.dataPositionToItemPosition(position));
     }
 
     @Override
-    public void addItemFromApi(String url, Bitmap bitmap) {
+    public void addItemFromLink(String url, int position, Bitmap bitmap) {
 
         SetAttachmentRequest.Items items = new SetAttachmentRequest.Items();
         items.setType("image/jpeg");
@@ -453,87 +482,57 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
         mBitmapArray.add(bitmap);
 
-        try {
+        newBitmap = ImageUploadUtil.imageResizeConversion(bitmap,
+                ImageUploadUtil.convertImageLimitToBytes(mPresenter.getImageLimit()),
+                ImageUploadUtil.getFileSize(bitmap));
 
-            File f = new File(mActivity.getCacheDir(), mPresenter.getEventUserId()+mBitmapArray.size()+".jpg");
-            f.createNewFile();
+        if (newBitmap != null && ImageUploadUtil.getFileSizeInMb(
+                ImageUploadUtil.getFileSize(newBitmap)) < mPresenter.getImageLimit()) {
 
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            byte[] bitmapdata = bos.toByteArray();
+                File file = ImageUploadUtil.getFileForUpload(mActivity, position, newBitmap);
+                if (file != null) {
+                    mImageFileHashMap.put(position, file);
+                }
 
-            FileOutputStream fos = null;
-            fos = new FileOutputStream(f);
-            fos.write(bitmapdata);
-            fos.flush();
-            fos.close();
-
-            mImageFileArray.add(f);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    mActivity.getResources().getString(R.string.error_upload_image));
         }
 
-        if (mApiImageItems.size() == attachmentSize && !isBackButtonPressed) {
-            ReturnDetailsAddImageAdapter imageAdapter = new ReturnDetailsAddImageAdapter(mActivity, this, mBitmapArray,
-                    new ArrayList<>());
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
-            mReturnDetailsRecyclerview.setAdapter(imageAdapter);
-            mReturnDetailsRecyclerview.setLayoutManager(layoutManager);
-        }
+
 
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK || resultCode == 1000)
-        {
+        if ((resultCode == RESULT_OK || resultCode == AppConstants.REQUEST_CODE_FOR_SUCCESS) && data != null) {
             Uri chosenImageUri = data.getData();
             Bitmap mBitmap = null;
-            try {
-                mBitmap = MediaStore.Images.Media.getBitmap(mActivity.getContentResolver(), chosenImageUri);
 
-                newBitmap = ImageUploadUtil.imageResizeConversion(mBitmap,
-                        ImageUploadUtil.convertImageLimitToBytes(mPresenter.getImageLimit()),
-                        ImageUploadUtil.getFileSize(mBitmap));
+                ImageUtils.ImageLink imageLink = new ImageUtils.ImageLink(String.valueOf(chosenImageUri), false);
+                mImageUriArray.add(0, imageLink);
 
-                
-                if (newBitmap != null && ImageUploadUtil.getFileSizeInMb(
-                        ImageUploadUtil.getFileSize(newBitmap)) < 1) {
-                    File f = new File(mActivity.getCacheDir(), GNotification.getDeviceID(mActivity)+mBitmapArray.size()+".jpg");
-                    f.createNewFile();
-
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                    byte[] bitmapdata = bos.toByteArray();
-
-                    FileOutputStream fos = new FileOutputStream(f);
-                    fos.write(bitmapdata);
-                    fos.flush();
-                    fos.close();
-                    mImageFileArray.add(0, f);
-                    mBitmapArray.add(0,mBitmap);
-                    ((ReturnDetailsAddImageAdapter) mReturnDetailsRecyclerview.getAdapter()).addItem();
+                if (hasSavedInstance) {
+                    mPresenter.loadCurrentReturnDetails(mReturnID);
                 } else {
-                    CustomAlertDialog.showCustomAlertDialog(mActivity,
-                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                            mActivity.getResources().getString(R.string.error_upload_image));
+
+                    if (mReturnDetailsImageList.getAdapter() != null) {
+                        ((ReturnDetailsAddImageAdapter) mReturnDetailsImageList.getAdapter()).addItem();
+                    } else {
+                        ReturnDetailsAddImageAdapter imageAdapter = new ReturnDetailsAddImageAdapter(mActivity, this,
+                                mImageUriArray);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+                        mReturnDetailsImageList.setAdapter(imageAdapter);
+                        mReturnDetailsImageList.setLayoutManager(layoutManager);
+                    }
                 }
 
                 if (attachmentId == null) {
                     mPresenter.setAttachment(ImageUploadUtil.getAttachmentIdRequest(mReturnID));
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (OutOfMemoryError e) {
-                CustomAlertDialog.showCustomAlertDialog(mActivity,
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        mActivity.getResources().getString(R.string.error_upload_image));
-            }
         }
     }
 
@@ -589,30 +588,29 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     }
 
     private void uploadImages() {
-        if (mBitmapArray != null && mImageFileArray != null) {
+        if (mImageFileHashMap != null) {
             callUploadImage(0);
         }
     }
 
-    @Override
-    public void asyncExecutionFinished(String urlString, int imagePosition) {
-
-        // set image url from response
-        getImageUrl(ImageUploadUtil.convertStringUrltoJSON(urlString));
-
-        int imageUploadedSize = imagePosition + 1;
-        if (imageUploadedSize != mBitmapArray.size()) {
-            int newImagePosition = imagePosition + 1;
-            callUploadImage(newImagePosition);
-        }
-    }
-
     private void callUploadImage(int imagePosition) {
+        if (mImageFileHashMap.get(imagePosition) == null) {
+            if (imagePosition < AppConstants.MAX_IMAGE_COUNT) {
+                callUploadImage(imagePosition + 1);
+            }
+            return;
+        }
         uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity);
-        uploadFileToServer.delegate = this;
+        uploadFileToServer.delegate = (urlString, imagePosition1) -> {
+            getImageUrl(ImageUploadUtil.convertStringUrltoJSON(urlString));
+
+            if (imagePosition1 + 1 < AppConstants.MAX_IMAGE_COUNT) {
+                callUploadImage(imagePosition1 + 1);
+            }
+        };
         uploadFileToServer.execute(attachmentId,
-                mImageFileArray.get(imagePosition), mPresenter.getUserAgent(), imagePosition,
-                GNotification.getDeviceID(mActivity)+System.currentTimeMillis()+".jpg");
+                mImageFileHashMap.get(imagePosition), mPresenter.getUserAgent(), imagePosition,
+                GNotification.getDeviceID(mActivity) + System.currentTimeMillis() + ".jpg");
     }
 
 }

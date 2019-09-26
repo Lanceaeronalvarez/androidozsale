@@ -147,6 +147,12 @@ public class BundleKeys {
     public static final String KEY_STATUS = "ReturnDetailsController.STATUS";
     public static final String KEY_RAN = "ReturnDetailsController.RAN";
     public static final String KEY_RETURN_ID = "ReturnDetailsController.RETURN_ID";
+    public static final String KEY_PRODUCT_NAME = "ReturnDetailsController.PRODUCT_NAME";
+    public static final String KEY_IS_FROM_ORDER = "ReturnDetailsController.IS_FROM_ORDER";
+    public static final String KEY_IMAGE_URI = "ReturnDetailsController.IMAGE_URI";
+    public static final String KEY_USER_MESSAGE = "ReturnDetailsController.USER_MESSAGE";
+    public static final String KEY_PRODUCT_ID = "ReturnDetailsController.PRODUCT_ID";
+    public static final String KEY_SHOULD_UPLOAD_IMAGE = "ReturnDetailsController.SHOULD_UPLOAD_IMAGE";
 
     //Categories
     public static final String CATEGORY_SHOP = "shop";

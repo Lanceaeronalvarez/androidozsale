@@ -455,7 +455,7 @@ public class GetOrderPaymentDetails {
 
         }
 
-        public class Value {
+        public static class Value {
 
             @SerializedName("ApprovedDate")
             @Expose

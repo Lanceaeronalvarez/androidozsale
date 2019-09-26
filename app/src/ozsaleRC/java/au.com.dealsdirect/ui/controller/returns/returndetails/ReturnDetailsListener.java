@@ -11,6 +11,6 @@ public interface ReturnDetailsListener {
 
     void removeImage(Bitmap image, int position, boolean uploadImage, boolean isAddImageAdapter);
 
-    void addItemFromApi(String url, Bitmap bitmap);
+    void addItemFromLink(String url,int position, Bitmap bitmap);
 
 }

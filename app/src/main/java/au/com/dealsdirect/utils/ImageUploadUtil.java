@@ -42,6 +42,7 @@ import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.ApiEndPoint;
 import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
+import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import okhttp3.Cookie;
 
@@ -53,6 +54,7 @@ public class ImageUploadUtil {
     public static final int MAX_SIZE_IN_BYTES = 1000000;
     private static final int MAX_ITERATIONS = 5;
     private static final double PERCENT_IMAGE_RESIZE = 0.85;
+    public static final int JPEG_QUALITY_FACTOR_FOR_UPLOAD = 100;
 
     private static int getMaxIterations() {
         return MAX_ITERATIONS;
@@ -378,6 +380,29 @@ public class ImageUploadUtil {
 
         originalImage = Bitmap.createScaledBitmap(originalImage, width, height, true);
         return originalImage;
+    }
+
+
+    public static File getFileForUpload(Activity activity, int position, Bitmap bitmap){
+
+        try {
+            File file = new File(activity.getCacheDir(), GNotification.getDeviceID(activity) + position + ".jpg");
+            file.createNewFile();
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, JPEG_QUALITY_FACTOR_FOR_UPLOAD, byteArrayOutputStream);
+            byte[] bitmapdata = byteArrayOutputStream.toByteArray();
+
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+            return file;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }
