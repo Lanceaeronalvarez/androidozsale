@@ -118,7 +118,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             mStatusArray.put(order.getOrderID(), order.getStatus());
 
             viewHolder.itemView.setOnClickListener(view -> mClickListener.onOrderItemClick(mReferenceNumbers.get(position),
-                    mStatusArray, order.getLink(), estDeliveryDate));
+                    mStatusArray, order.getLink(), estDeliveryDate, position));
         }
 
     }

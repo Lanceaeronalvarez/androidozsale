@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -106,6 +107,11 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @Override
     protected void setUp(View view) {
+
+    }
+
+    @Override
+    public void onViewDidAppear(Controller previousController) {
         mToolbarLeftView.setVisibility(mPresenter.isTablet() ? View.INVISIBLE : View.VISIBLE);
         mOrdersToolbarTitle.setText(getString(R.string.account_orders));
         mOrdersRightOption.setImageDrawable(null);
@@ -134,7 +140,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
         boolean hasOrders = orders.size() > 0;
 
         if (hasOrders) {
-            mOrders = orders;
+            mOrders.addAll(orders);
             mAdapter = new OrdersRecyclerViewAdapter(mActivity,this, orders);
             mRecyclerView.setAdapter(mAdapter);
         }
@@ -150,9 +156,21 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     }
 
     @Override
-    public void showOrderDetails(String referenceNumber, HashMap<String, String> status, String link, HashMap<String, String> estimatedDelivery) {
-        getRouter().pushController(RouterTransaction.with(new OrderDetailsController(referenceNumber,
-                status, link, estimatedDelivery))
+    public void showOrderDetails(String referenceNumber, HashMap<String, String> status, String link,
+                                 HashMap<String, String> estimatedDelivery, int position) {
+
+        GetPaymentsList.ResponseValue.PaymentItem selectedOrder = mOrders.get(position - 1);
+
+        OrderDetailsController.Parameters.FromOrdersList parameters = new OrderDetailsController.Parameters.FromOrdersList(
+                referenceNumber,
+                status,
+                link,
+                estimatedDelivery,
+                selectedOrder
+
+        );
+
+        getRouter().pushController(RouterTransaction.with(OrderDetailsController.newInstance(parameters))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
@@ -163,8 +181,10 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     }
 
     @Override
-    public void onOrderItemClick(String referenceNumber, HashMap<String, String> status, String link, HashMap<String, String> estimatedDelivery) {
-        showOrderDetails(referenceNumber, status, link, estimatedDelivery);
+    public void onOrderItemClick(String referenceNumber, HashMap<String, String> status, String link,
+                                 HashMap<String, String> estimatedDelivery,
+                                 int position) {
+        showOrderDetails(referenceNumber, status, link, estimatedDelivery, position);
     }
 
     @Override

@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:paddingTop="@dimen/margin_tiny"
-    tools:ignore="MissingPrefix">
+    tools:ignore="MissingPrefix"
+    android:id="@+id/row_item_order_details_layout"
+    android:visibility="gone">
 
 
 

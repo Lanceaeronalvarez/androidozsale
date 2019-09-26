@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface OrderItemClickListener {
-    void onOrderItemClick(String referenceNumber, HashMap<String, String> status, String link, HashMap<String, String> estimatedDelivery);
+    void onOrderItemClick(String referenceNumber, HashMap<String, String> status, String link,
+                          HashMap<String, String> estimatedDelivery, int position);
 
     void onOrderItemTrackingButtonClick(String url, String errorMessage);
 

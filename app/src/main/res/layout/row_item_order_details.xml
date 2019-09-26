@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:paddingTop="@dimen/margin_small"
-    tools:ignore="MissingPrefix">
+    tools:ignore="MissingPrefix"
+    android:id="@+id/row_item_order_details_layout">
 
     <ImageView
         android:id="@+id/controller_order_details_item_imageview"
