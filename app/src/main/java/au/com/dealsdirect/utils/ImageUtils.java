@@ -26,6 +26,9 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 public class ImageUtils {
 
@@ -64,7 +67,7 @@ public class ImageUtils {
                 .asBitmap()
                 .load(url)
                 .apply(options)
-                .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL) {
+                .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                         imageView.setImageBitmap(resource);
@@ -114,11 +117,11 @@ public class ImageUtils {
                     })
                     .into(imageView);
         } else if (imageView != null) {
-                Glide.with(imageView)
-                        .asBitmap()
-                        .apply(options)
-                        .load(url)
-                        .into(imageView);
+            Glide.with(imageView)
+                    .asBitmap()
+                    .apply(options)
+                    .load(url)
+                    .into(imageView);
         }
     }
 
@@ -284,6 +287,28 @@ public class ImageUtils {
         int finalColumnCount = Math.min(actualMaxColumn, computedColumn);
         float ratio = (float) proposedHeight / proposedWidth;
         return getExactGridDefinition(finalColumnCount, ratio, canvasWidth);
+    }
+
+    public static String removeResolutionModifierInImageUrl(String sourceUrl) {
+        String newString = sourceUrl;
+        final String[] extensions = new String[]{
+                "jpg", "jpeg", "png", "webp"
+        };
+
+        for (String extension : extensions) {
+            // This regex matches for "_NUMBERxNUMBER" followed by an extension, and selects only
+            // the "_NUMBERxNUMBER" to remove from the URL.
+            // e.g. in "https://www.itsallogrenow.com/img_200x200/getoutofmyswamp_200x200.jpg",
+            // only, the second "_200x200" will be matched.
+            String regex = "_[0-9]+x[0-9]+(?=\\." + extension + ")";
+            Matcher matcher = Pattern.compile(regex).matcher(sourceUrl);
+            if (matcher.find()) {
+                newString = sourceUrl.replace(matcher.group(), "");
+                break;
+            }
+        }
+
+        return newString;
     }
 
     public static class ImageLink implements Parcelable {

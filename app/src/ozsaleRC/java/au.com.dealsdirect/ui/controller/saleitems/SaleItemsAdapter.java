@@ -161,6 +161,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             GetSaleItemsResponse.Products saleItem = mData.get(position);
             String url = mData.get(position).getImages().isEmpty() ? "" : mData.get(position).getImages().get(0);
 
+            String urlHigherRes = ImageUtils.removeResolutionModifierInImageUrl(url);
+
             holder.name.setText(saleItem.getProductName());
 
             String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
@@ -192,7 +194,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                             holder,
                             position,
                             mData.get(position).getSeoIdentifier(),
-                            url,
+                            urlHigherRes,
                             mData.get(position).getSkus() == null || mData.get(position).getSkus().isEmpty() ? "" :
                                     mData.get(position).getSkus().get(0).getId(),
                             mSaleId,
@@ -253,5 +255,4 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private boolean isPositionFooter(int position) {
         return position == (mData.size() - 1) && mData.size() != 0;
     }
-
 }
