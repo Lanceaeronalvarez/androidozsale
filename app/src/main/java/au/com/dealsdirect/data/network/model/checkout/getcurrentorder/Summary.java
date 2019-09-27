@@ -34,6 +34,10 @@ public class Summary {
         return totalWithSelect;
     }
 
+    public Double getAmountToFreeDelivery() {
+        return amountToFreeDelivery;
+    }
+
     @SerializedName(value = "Subtotal", alternate = {"subtotal"})
     private Double subtotal;
     @SerializedName(value = "Delivery", alternate = {"delivery"})
@@ -48,5 +52,7 @@ public class Summary {
     private Double select;
     @SerializedName("TotalWithSelect")
     private Double totalWithSelect;
+    @SerializedName("AmountToFreeDelivery")
+    private Double amountToFreeDelivery;
 
 }

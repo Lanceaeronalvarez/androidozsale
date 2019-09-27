@@ -133,6 +133,8 @@
     <string name="delivery_address">Delivery Address</string>
     <string name="delivery_method">DELIVERY METHOD</string>
     <string name="delivery_label">Delivery</string>
+    <string name="shipping_text">Shipping</string>
+    <string name="free_shipping_text">Free Shipping</string>
     <string name="deliver_options_title">Add Delivery Method</string>
     <string name="choose_delivery_method">CHOOSE DELIVERY METHOD</string>
     <string name="you_currently_do_not_have_any_addresses">You do not currently have any address.</string>

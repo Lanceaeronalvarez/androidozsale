@@ -237,6 +237,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Nullable
     @BindView(R.id.delivery_option_ourpay_select_description_text_view)
     TextView mDeliveryOptionOurpaySelectDescriptionTextView;
+    @BindView(R.id.partial_checkout_summary_shipping_with_icon)
+    RelativeLayout mFreeShippingLayout;
 
     private RelativeLayout mButtonOurpay;
     private OurPayToggleSwitch mCheckBoxOurpayTC;
@@ -856,8 +858,16 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public void showSummaryDetails(Summary summary) {
         if (summary != null) {
             mSummarySubtotalTextView.setText(PriceUtils.getPriceStringValue(summary.getSubtotal()));
-            mSummaryShippingFeeContainer.setVisibility(summary.getDelivery() == 0 ? View.GONE : View.VISIBLE);
-            mSummaryShippingFeeTextView.setText(PriceUtils.getPriceStringValue(summary.getDelivery()));
+
+            if (summary.getAmountToFreeDelivery() == 0) {
+                mSummaryShippingFeeTextView.setVisibility(View.GONE);
+                mFreeShippingLayout.setVisibility(View.VISIBLE);
+            } else {
+                mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
+                mSummaryShippingFeeTextView.setText(PriceUtils.getPriceStringValue(summary.getDelivery()));
+                mFreeShippingLayout.setVisibility(View.GONE);
+            }
+
             mSummaryVoucherTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()));
             mDiscountValue = summary.getDiscount();
 

@@ -254,5 +254,6 @@
     <color name="ourpay_installment_circle_success">#50d050</color>
 
     <color name="bg_fcm_notif">#F00065</color>
+    <color name="color_free_shipping_text">#00B5E9</color>
 
 </resources>
