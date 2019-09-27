@@ -198,7 +198,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
         if (mPresenter.isTablet()) {
             mActivity.showPopupMenu(view, arrayList, hashMap);
         } else {
-            mActivity.showBottomDialog(arrayList, hashMap);
+            mActivity.showOrderBottomDialog(arrayList, hashMap);
         }
     }
 

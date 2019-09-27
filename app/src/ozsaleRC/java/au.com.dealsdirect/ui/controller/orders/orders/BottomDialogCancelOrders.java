@@ -44,7 +44,7 @@ public class BottomDialogCancelOrders extends BottomSheetDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.bottom_sheet_content, container, false);
+        View v = inflater.inflate(R.layout.bottom_sheet_order_content, container, false);
 
         if (getArguments() != null) {
             Bundle bundle = getArguments();

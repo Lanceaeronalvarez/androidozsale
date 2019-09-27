@@ -433,7 +433,7 @@
     <string name="personalise">Personalise</string>
     <string name="please_fill_up_personalisation_details">Please fill up personalisation details</string>
     <string name="max_characters">Max characters:&#160;</string>
-    <string name="this_is_a_required_field">This is a required field</string>
+    <string name="this_is_a_required_field">* - This is a required field</string>
 
 
     <string name="voucher_used">Used Vouchers</string>
@@ -753,4 +753,5 @@
     <string name="error_upload_image">Image is too large</string>
     <string name="returns_enquiry">Returns Enquiry</string>
 
+    <string name="done">Done</string>
 </resources>

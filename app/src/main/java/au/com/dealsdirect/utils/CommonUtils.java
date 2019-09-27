@@ -16,6 +16,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -200,4 +201,7 @@ public final class CommonUtils {
         return preferences.getString(itemID + KEY_ID, "");
     }
 
+    public static void shakeView(View view) {
+        view.startAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.shake));
+    }
 }

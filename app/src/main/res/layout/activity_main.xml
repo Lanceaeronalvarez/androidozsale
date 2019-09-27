@@ -11,6 +11,6 @@
     <include layout="@layout/content_main" />
 
     <!-- Bottom Sheet Content -->
-    <include layout="@layout/bottom_sheet_content" />
+    <include layout="@layout/bottom_sheet_order_content" />
 
 </android.support.design.widget.CoordinatorLayout>

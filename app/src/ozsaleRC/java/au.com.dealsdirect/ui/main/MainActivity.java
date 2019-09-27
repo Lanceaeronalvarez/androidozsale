@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.main;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,19 +7,12 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.PopupMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
@@ -64,6 +56,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -75,7 +68,6 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
-import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.event.ActionTrackerInterface;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
@@ -102,6 +94,7 @@ import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.orders.orders.BottomSheetOrderDialog;
+import au.com.dealsdirect.ui.controller.saleitemdetails.BottomSheetSizesDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -111,11 +104,9 @@ import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.AppConstants;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BraintreeUtils;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
@@ -1415,13 +1406,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
-    public void showBottomDialog(ArrayList<String> actionArrays, HashMap<String,String> hashMap) {
+    public void showOrderBottomDialog(ArrayList<String> actionArrays, HashMap<String, String> hashMap) {
         BottomSheetOrderDialog bottomSheetFragment = new BottomSheetOrderDialog();
         Bundle bundle = new Bundle();
 
         bundle.putStringArrayList(ActionConstants.ORDER_ARRAYS, actionArrays);
 
-        for (String key: hashMap.keySet()) {
+        for (String key : hashMap.keySet()) {
             bundle.putString(key, hashMap.get(key));
         }
 
@@ -1429,7 +1420,22 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
     }
 
-    public static void showContactUs(boolean isCalledFromOrders, int invoiceNumber, String description){
+    public void showProductDetailsSizesBottomDialog(ArrayList<Pair<String, String>> productSizes,
+                                                    HashSet<Integer> indicesOfSoldOutSizes,
+                                                    BottomSheetSizesDialog.OnSizeGuideTappedListener onSizeGuideTappedListener,
+                                                    BottomSheetSizesDialog.OnDoneListener onDoneListener) {
+        BottomSheetSizesDialog bottomSheetFragment = new BottomSheetSizesDialog();
+
+        bottomSheetFragment.setProductSizes(productSizes);
+        bottomSheetFragment.setIndicesOfSoldOutSizes(indicesOfSoldOutSizes);
+        bottomSheetFragment.setOnSizeGuideTappedListener(onSizeGuideTappedListener);
+        bottomSheetFragment.setOnDoneListener(onDoneListener);
+
+        bottomSheetFragment.setArguments(null);
+        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
+    }
+
+    public static void showContactUs(boolean isCalledFromOrders, int invoiceNumber, String description) {
         getMainController().getHomeController().showSendContactMessage(isCalledFromOrders, invoiceNumber, description);
     }
 
@@ -1445,8 +1451,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         getMainController().getHomeController().showMyReturns(invoiceNumber, calledFromOrder, productId);
     }
 
-    public static void showViewReturnDetails(String returnID, String productName, boolean isFromOrders){
-        getMainController().getHomeController().showViewReturnsDetails(returnID,productName,isFromOrders);
+    public static void showViewReturnDetails(String returnID, String productName, boolean isFromOrders) {
+        getMainController().getHomeController().showViewReturnsDetails(returnID, productName, isFromOrders);
     }
 
     public static void showCancelDialog(String orderNumber, String reason) {
@@ -1459,11 +1465,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 reason, quantity, totalItems);
     }
 
-    public static void callRefundOrder(String invoiceNumber, String reason, JSONObject items){
+    public static void callRefundOrder(String invoiceNumber, String reason, JSONObject items) {
         getMainController().getHomeController().callCreateOrderRefund(invoiceNumber, reason, items);
     }
 
-    public void showPopupMenu(View v, ArrayList<String> actionArrays, HashMap<String,String> hashMap) {
+    public void showPopupMenu(View v, ArrayList<String> actionArrays, HashMap<String, String> hashMap) {
 
         boolean showChangeAddress = actionArrays.contains(ActionConstants.ORDER_ACTION_CHANGE_ADDRESS);
         boolean showRequestReturn = actionArrays.contains(ActionConstants.ORDER_ITEM_RETURN);
@@ -1525,7 +1531,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         return true;
                     case R.id.return_item:
                         showReturnItems(Integer.parseInt(hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER)),
-                        true, hashMap.get(ActionConstants.ORDER_PRODUCT_ID));
+                                true, hashMap.get(ActionConstants.ORDER_PRODUCT_ID));
                         return true;
                     case R.id.view_return_details:
                         showViewReturnDetails(hashMap.get(ActionConstants.ORDER_ITEM_RETURN_ID),

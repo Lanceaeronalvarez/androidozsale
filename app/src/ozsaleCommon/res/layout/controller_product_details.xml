@@ -134,6 +134,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="@dimen/margin_small"
                                 android:background="@color/white"
+                                android:paddingBottom="@dimen/margin_small"
                                 android:visibility="gone">
 
                                 <RelativeLayout
@@ -178,10 +179,23 @@
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/sizeLabel"
                                     android:layout_marginTop="@dimen/margin_extra_small"
-                                    android:layout_marginBottom="@dimen/margin_small"
                                     android:paddingLeft="@dimen/margin_small"
                                     android:paddingRight="@dimen/margin_small"
                                     app:max_select="1" />
+
+                                <TextView
+                                    android:id="@+id/product_details_size_notice"
+                                    fontPath="@string/font_app_semibold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/product_details_size_list"
+                                    android:layout_marginStart="3dp"
+                                    android:paddingLeft="@dimen/margin_extra_small"
+                                    android:text="@string/please_select_size"
+                                    android:textAllCaps="true"
+                                    android:textColor="@color/red"
+                                    android:textSize="@dimen/text_size_caption1"
+                                    android:visibility="gone" />
 
                             </RelativeLayout>
 

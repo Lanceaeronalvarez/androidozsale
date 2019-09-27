@@ -60,9 +60,12 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -99,6 +102,7 @@ import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.StringUtils;
+import au.com.dealsdirect.utils.ViewUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -238,6 +242,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
     }
 
+    private final static int PERSONALIZATION_SHAKE_DELAY = 300; //milliseconds
+
     @Inject
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
 
@@ -275,6 +281,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ViewGroup mSizesContainer;
     @BindView(R.id.product_details_size_list)
     TagFlowLayout mSizesFlowLayout;
+    @BindView(R.id.product_details_size_notice)
+    TextView mSizesNotSelectedNotice;
     @BindView(R.id.product_details_personalisation_layout)
     PersonalisationLayout mPersonalisationLayout;
     @BindView(R.id.product_details_shipping_desc_container)
@@ -382,6 +390,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private boolean isAddToBasketInputBuffered = false;
 
     private Boolean mIsSoldout = null;
+
+    private String mSizeGuideLink = null;
 
     //default sales origin
     private String mOrigin = DataCollector.EventParameters.ViewSource.SALE;
@@ -921,6 +931,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductDescriptionText.loadDataWithBaseURL(null, mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
                 "text/html", "UTF-8", null);
 
+        mSizeGuideLink = getSizeGuideLink(saleDetail.getDescription());
+
         mProductDescriptionText.getSettings()
                 .setJavaScriptEnabled(true);
 
@@ -986,13 +998,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(mSelectedSizeIndex));
             }
 
-            mSizesFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
-                @Override
-                public boolean onTagClick(View view, int position, FlowLayout parent) {
-
-                    return false;
-                }
-            });
+            mSizesFlowLayout.setOnTagClickListener((view, position, parent) -> false);
 
             mSizesFlowLayout.setOnSelectListener(selectPosSet -> {
                 onSelectTag(selectPosSet.isEmpty() ? -1 : selectPosSet.iterator().next());
@@ -1301,17 +1307,82 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mPresenter.getPersonalisationErrorText() :
                 mActivity.getString(R.string.please_fill_up_personalisation_details);
 
-        if (!isSizeValid || !isPersonalisationValid) {
+
+        if (!isPersonalisationValid) {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    !isSizeValid ? mActivity.getString(R.string.please_select_size) :
-                            personalisationError);
+                    personalisationError);
 
-            mProductDetailScrollView.scrollTo(0, mProductDetailBottomCard.getTop());
+            mProductDetailScrollView.smoothScrollTo(0,
+                    mPersonalisationLayout.getTop() + mProductDetailScrollView.getHeight() / 2);
+            new Handler(Looper.getMainLooper())
+                    .postDelayed(() -> CommonUtils.shakeView(mPersonalisationLayout),
+                            PERSONALIZATION_SHAKE_DELAY);
+
+
+        } else if (!isSizeValid) {
+            bringAttentionToSizeSelection();
         } else {
             verifyAddToCart(request);
         }
+    }
+
+    private void bringAttentionToSizeSelection() {
+        if (ViewUtils.isViewVisibleInScrollView(mSizesContainer, mProductDetailScrollView)) {
+            showBottomDialogWithSizeSelection();
+        } else {
+            shakeSizeButtons();
+        }
+        mSizesNotSelectedNotice.setVisibility(View.VISIBLE);
+    }
+
+    private void showBottomDialogWithSizeSelection() {
+        HashSet<Integer> indicesOfSoldOutSizes = new HashSet<>();
+        for (int i = 0; i < mSkuVariants.size(); i++) {
+            if (mSkuVariants.get(i).isSoldOut()) {
+                indicesOfSoldOutSizes.add(i);
+            }
+        }
+        BottomSheetSizesDialog.OnSizeGuideTappedListener onSizeGuideTappedListener = null;
+        if (mSizeGuideLink != null && !mSizeGuideLink.isEmpty()) {
+            onSizeGuideTappedListener = () -> {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mSizeGuideLink));
+                startActivity(browserIntent);
+            };
+        }
+        mActivity.showProductDetailsSizesBottomDialog(mProductSizes,
+                indicesOfSoldOutSizes,
+                onSizeGuideTappedListener,
+                selectedIndex -> {
+                    onSelectTag(selectedIndex);
+                    addToBasket();
+                });
+    }
+
+    private void shakeSizeButtons() {
+        if (mSizesFlowLayout.getAnimation() == null) {
+            CommonUtils.shakeView(mSizesFlowLayout);
+        }
+    }
+
+    private String getSizeGuideLink(String sourceString) {
+        final String[] extensions = new String[]{
+                "pdf", "html", "jpg", "jpeg", "png", "webp"
+        };
+
+        for (String extension : extensions) {
+            // This regex finds the a <a href="http://something">Size Guide</a>
+            // and then selects the url inside the href quotes. Since most
+            // Size Guides are pdfs or images, extensions are also checked.
+            String regex = "(?!<a href=\\\")http.*?:\\/\\/.+\\." + extension + "(?=\\\".*>Size.*?Guide<\\/a>)";
+            Matcher matcher = Pattern.compile(regex).matcher(sourceString);
+            if (matcher.find()) {
+                return matcher.group();
+            }
+        }
+
+        return null;
     }
 
     private void verifyAddToCart(AddToCartRequest request) {
@@ -1506,6 +1577,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (selectedIndex != mSelectedSizeIndex) {
             updatePriceDetails(mSkuVariants.get(selectedIndex));
             mSelectedSizeIndex = selectedIndex;
+        }
+
+        if (mSizesNotSelectedNotice.getVisibility() == View.VISIBLE && mSelectedSizeIndex >= 0) {
+            mSizesNotSelectedNotice.setVisibility(View.GONE);
         }
     }
 
