@@ -126,6 +126,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             private String mSalesOrigin;
             private String mEndDate;
             private boolean mIsFreeDelivery;
+            private Boolean mIsSoldOut;
 
             public FromItemsList(Integer position,
                                  String imageURL,
@@ -138,7 +139,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                  String oldPrice,
                                  String salesOrigin,
                                  String endDate,
-                                 boolean isFreeDelivery) {
+                                 boolean isFreeDelivery,
+                                 Boolean isSoldOut) {
                 mPosition = position;
                 mImageURL = imageURL;
                 mSeoIdentifierId = seoIdentifierId;
@@ -151,6 +153,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mSalesOrigin = salesOrigin;
                 mEndDate = endDate;
                 mIsFreeDelivery = isFreeDelivery;
+                mIsSoldOut = isSoldOut;
             }
 
             public Integer getPosition() {
@@ -199,6 +202,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             public boolean getIsFreeDelivery() {
                 return mIsFreeDelivery;
+            }
+
+            public Boolean isSoldOut() {
+                return mIsSoldOut;
+            }
+
+            public void setIsSoldOut(Boolean isSoldOut) {
+                mIsSoldOut = isSoldOut;
             }
         }
 
@@ -356,6 +367,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private boolean hasLoadedDetails = false;
 
+    private Boolean mIsSoldout = null;
+
     //default sales origin
     private String mOrigin = DataCollector.EventParameters.ViewSource.SALE;
 
@@ -421,6 +434,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             controller.mEndDate = ((Parameters.FromItemsList) parameters).getEndDate();
             controller.mIsFreeDelivery = ((Parameters.FromItemsList) parameters).getIsFreeDelivery();
             controller.mOrigin = origin != null ? origin : DataCollector.EventParameters.ViewSource.SALE;
+            controller.mIsSoldout = ((Parameters.FromItemsList) parameters).isSoldOut();
         } else if (parameters instanceof Parameters.FromDeepLink) {
             controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
             controller.mSkuId = ((Parameters.FromDeepLink) parameters).getSkuId();
@@ -496,6 +510,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         super.onViewBound(view);
         mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
         setUp(view);
+        if (mIsSoldout != null) {
+            showAddToCartButton(mIsSoldout);
+        }
     }
 
     @Override
@@ -974,7 +991,20 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         }
 
-        if (!mIsSoldOutCombined || !saleDetail.isSoldOut()) {
+        showAddToCartButton(saleDetail.isSoldOut());
+
+        boolean isOldPriceInfoVisible = saleDetail.getOriginalPrice().getValue() <= 0;
+        mOldPriceInfoButton.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
+        mProductPreviousPrice.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
+        mProductPreviousPriceLabel.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
+
+        updatePriceDetails(saleDetail);
+
+        hasLoadedDetails = true;
+    }
+
+    private void showAddToCartButton(boolean isSoldOut) {
+        if (!mIsSoldOutCombined || !isSoldOut) {
             if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
                     (mEndDate != null && !mEndDate.isEmpty()) &&
                     DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
@@ -995,15 +1025,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mAddToCartButton.setEnabled(false);
             mAddToCartButton.bringToFront();
         }
-
-        boolean isOldPriceInfoVisible = saleDetail.getOriginalPrice().getValue() <= 0;
-        mOldPriceInfoButton.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
-        mProductPreviousPrice.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
-        mProductPreviousPriceLabel.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
-
-        updatePriceDetails(saleDetail);
-
-        hasLoadedDetails = true;
     }
 
     private void toggleProductInfoWebView(String shippingPricing, boolean isNewPricing) {
@@ -1172,7 +1193,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void setDynamicDiscount(String discountText) {
         if (discountText == null) {
             mProductDiscountTextView.setVisibility(View.GONE);
-            return;}
+            return;
+        }
         String percentOffText = discountText.trim();
         String[] discountWordArray = discountText.split(" ");
         percentOffText = percentOffText.replace(' ', '\n');

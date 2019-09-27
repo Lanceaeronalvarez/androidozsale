@@ -1465,7 +1465,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 oldPrice,
                 "",
                 "",
-                isFreeDelivery);
+                isFreeDelivery,
+                false);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));

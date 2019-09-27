@@ -1177,7 +1177,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString(),
                 mSalesOrigin,
                 mEndDate,
-                isFreeDelivery);
+                isFreeDelivery,
+                mSaleItems.get(position).isSoldOut());
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));
