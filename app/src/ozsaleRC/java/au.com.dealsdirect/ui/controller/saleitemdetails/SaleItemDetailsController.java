@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.util.Pair;
@@ -39,6 +41,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -108,6 +111,8 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
  */
 
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener, SaleDetailsImageListener {
+
+    private final static int ACTIVITY_INDICATOR_DELAY = 2000; // milliseconds
 
     public abstract static class Parameters {
         private Parameters() {
@@ -304,8 +309,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     LinearLayout mAfterpayHolder;
     @BindView(R.id.controller_sale_item_detail_scrollview)
     NestedScrollView mProductDetailScrollView;
+    @BindView(R.id.product_details_add_to_basket_container)
+    ViewGroup mAddToCartButtonContainer;
     @BindView(R.id.product_details_add_to_basket)
     Button mAddToCartButton;
+    @BindView(R.id.product_details_add_to_basket_progress_dialog)
+    ProgressBar mAddToCartProgressBar;
     @BindView(R.id.product_details_button_overlay)
     ImageView mAddToCartOverlay;
     @BindView(R.id.productPreviousPriceLabel)
@@ -333,6 +342,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ImageView mImageViewToAnimate;
     @BindView(R.id.product_details_add_to_basket_timer)
     LinearLayout mAddToCartTimer;
+    @BindView(R.id.product_details_add_to_basket_timer_text_view)
+    TextView mAddToCartTimerTextView;
+    @BindView(R.id.product_details_add_to_basket_timer_progress_dialog)
+    ProgressBar mAddToCartTimerProgressBar;
     @BindView(R.id.product_details_timer)
     TextView mTimerTextView;
     @BindView(R.id.product_details_free_delivery)
@@ -366,6 +379,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mProductId;
 
     private boolean hasLoadedDetails = false;
+    private boolean isAddToBasketInputBuffered = false;
 
     private Boolean mIsSoldout = null;
 
@@ -511,7 +525,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
         setUp(view);
         if (mIsSoldout != null) {
-            showAddToCartButton(mIsSoldout);
+            showAddToCartButton();
         }
     }
 
@@ -991,7 +1005,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         }
 
-        showAddToCartButton(saleDetail.isSoldOut());
+        mIsSoldout = saleDetail.isSoldOut();
+        showAddToCartButton();
 
         boolean isOldPriceInfoVisible = saleDetail.getOriginalPrice().getValue() <= 0;
         mOldPriceInfoButton.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
@@ -1001,29 +1016,59 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         updatePriceDetails(saleDetail);
 
         hasLoadedDetails = true;
+        if (isAddToBasketInputBuffered) {
+            isAddToBasketInputBuffered = false;
+            addToBasket();
+        }
     }
 
-    private void showAddToCartButton(boolean isSoldOut) {
-        if (!mIsSoldOutCombined || !isSoldOut) {
+    private void setupDelayedProgressBar() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showAddToCartButtonContent(isAddToBasketInputBuffered);
+            }
+        }, ACTIVITY_INDICATOR_DELAY);
+    }
+
+    private void showAddToCartButton() {
+        if (!mIsSoldOutCombined || !mIsSoldout) {
             if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
                     (mEndDate != null && !mEndDate.isEmpty()) &&
                     DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
                     DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
                 setupSaleRemainingTime(mEndDate);
                 mAddToCartTimer.setVisibility(View.VISIBLE);
-                mAddToCartButton.setVisibility(View.GONE);
+                mAddToCartButtonContainer.setVisibility(View.GONE);
             } else {
                 mAddToCartTimer.setVisibility(View.GONE);
-                mAddToCartButton.setVisibility(View.VISIBLE);
-                mAddToCartButton.setText(R.string.add_to_cart);
+                mAddToCartButtonContainer.setVisibility(View.VISIBLE);
                 mAddToCartButton.setEnabled(true);
                 mAddToCartButton.bringToFront();
             }
         } else {
-            mAddToCartButton.setText(R.string.sold_out);
-            mAddToCartButton.setVisibility(View.VISIBLE);
+            mAddToCartButtonContainer.setVisibility(View.VISIBLE);
             mAddToCartButton.setEnabled(false);
             mAddToCartButton.bringToFront();
+        }
+        showAddToCartButtonContent(false);
+    }
+
+    private void showAddToCartButtonContent(boolean showProgressBar) {
+        if (showProgressBar) {
+            mAddToCartButton.setText("");
+            mAddToCartTimerTextView.setText("");
+            mAddToCartProgressBar.setVisibility(View.VISIBLE);
+            mAddToCartTimerProgressBar.setVisibility(View.VISIBLE);
+        } else {
+            mAddToCartTimerTextView.setText(R.string.add_to_cart);
+            if (mIsSoldout) {
+                mAddToCartButton.setText(R.string.sold_out);
+            } else {
+                mAddToCartButton.setText(R.string.add_to_cart);
+            }
+            mAddToCartProgressBar.setVisibility(View.GONE);
+            mAddToCartTimerProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -1230,6 +1275,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @OnClick({R.id.product_details_add_to_basket, R.id.product_details_add_to_basket_timer})
     void addToBasket() {
+        if (!hasLoadedDetails) {
+            if (!isAddToBasketInputBuffered) {
+                isAddToBasketInputBuffered = true;
+                setupDelayedProgressBar();
+            }
+            return;
+        }
+
         mAttempts++;
 
         CommonUtils.saveSaleItem(mActivity, mProductId, mSeoIdentifierId, mSaleId);
@@ -1447,7 +1500,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
         mAddToCartButton.setEnabled(!isSizeSoldOut);
-        mAddToCartButton.setVisibility(mAddToCartTimer.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        mAddToCartButtonContainer.setVisibility(mAddToCartTimer.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
         mAddToCartButton.bringToFront();
 
         if (selectedIndex != mSelectedSizeIndex) {
