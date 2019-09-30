@@ -6,6 +6,7 @@ import com.androidnetworking.error.ANError;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -17,8 +18,10 @@ import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
@@ -351,6 +354,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         if (response.getD().getResult()) {
             updateCartValues(response.getD().getValue());
         } else {
+            getDataManager().setCheckoutHasWishlistItem(false);
             getMvpView().showCartDetails(null);
             getMvpView().onError(response.getD().getMessage());
         }
@@ -366,8 +370,11 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
         getMvpView().updateCheckoutBadge();
 
-        if (!cartDetailsValue.isEmpty()) {
+        if (cartDetailsValue != null && !cartDetailsValue.isEmpty()) {
             Value value = cartDetailsValue;
+
+            boolean doesItemsContainAWishlistItem = doesItemsContainAWishlistItem(cartDetailsValue.getItems());
+            getDataManager().setCheckoutHasWishlistItem(doesItemsContainAWishlistItem);
 
             getMvpView().showCartDetails(cartDetailsValue.getItems());
 
@@ -381,6 +388,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
             getMvpView().showSummaryDetails(cartDetailsValue.getSummary());
         } else {
+            getDataManager().setCheckoutHasWishlistItem(false);
             getMvpView().showCartDetails(new ArrayList<>());
         }
 
@@ -393,6 +401,29 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         } else {
             getMvpView().hideAfterpayPanel();
         }
+    }
+
+    private boolean doesItemsContainAWishlistItem(List<Item> items) {
+        for (int i = 0; i < items.size(); i++) {
+            String anId = items.get(i).itemID;
+            if (anId != null && doesIdMatchAnyIdInWishlist(anId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean doesIdMatchAnyIdInWishlist(String anId) {
+        List<WishlistObject> wishlist = getDataManager().getWishlist();
+        for (int i = 0; i < wishlist.size(); i++) {
+            WishlistObject item = wishlist.get(i);
+            if (anId.equals(item.getProductId()) ||
+                    anId.equals(item.getMasterProductId()) ||
+                    anId.equals(item.getSeoId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

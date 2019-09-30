@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/partial_wishlist_empty"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_default"
+    tools:ignore="MissingPrefix">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/placeholder_padding"
+        android:paddingRight="@dimen/placeholder_padding">
+
+        <ImageView
+            android:layout_width="@dimen/placeholder_icon_width"
+            android:layout_height="@dimen/placeholder_icon_height"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_basket_placeholder"
+            android:visibility="@integer/no_items_placeholder_icon_visibility" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="@dimen/placeholder_padding"
+            android:paddingRight="@dimen/placeholder_padding"
+            android:text="Welcome to Wishlist"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_headline1" />
+
+        <TextView
+            fontPath="@string/font_app_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/padding_default"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:gravity="center"
+            android:text="You have no products saved to your wishlist\nSave your favorites by using ♡"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_headline3" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/partial_checkout_empty_button"
+        style="@style/DDButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_regular"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:text="@string/continue_shopping"
+        android:textSize="@dimen/text_size_body" />
+
+</RelativeLayout>

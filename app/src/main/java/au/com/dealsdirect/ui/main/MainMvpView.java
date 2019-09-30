@@ -17,6 +17,7 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.data.wishlist.WishlistChangeListener;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.utils.AppConstants;
 
@@ -81,6 +82,10 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     void showCreatePaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue);
 
     void showCreatePaymentTransactionFailure(String errorMessage);
+
+    void refreshWishlist();
+
+    void updateWishlistCounter(int count);
 
     PaymentMethod getPaymentMethodSelected();
 

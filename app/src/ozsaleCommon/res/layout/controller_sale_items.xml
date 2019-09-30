@@ -8,6 +8,10 @@
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
+    <include
+        layout="@layout/partial_wishlist_empty"
+        android:visibility="gone" />
+
     <include layout="@layout/partial_toolbar_title_details" />
 
     <android.support.design.widget.CoordinatorLayout

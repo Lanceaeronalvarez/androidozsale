@@ -11,6 +11,16 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPresenter<V> {
 
+    void loadWishlist();
+
+    boolean isProductInWishlist(String productId);
+
+    int wishlistCount();
+
+    void addToWishlist(String productId, String seoIdentifier);
+
+    void removeFromWishlist(String productId);
+
     void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest);
 
     void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl, String skuId, String saleId, boolean isFreeDelivery);

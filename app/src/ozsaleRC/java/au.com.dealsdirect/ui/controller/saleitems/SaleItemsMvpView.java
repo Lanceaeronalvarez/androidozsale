@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.content.res.Configuration;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
@@ -18,11 +17,17 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
  * dp Created by Admin on 6/8/17.
  */
 
-public interface SaleItemsMvpView extends MvpView{
+public interface SaleItemsMvpView extends MvpView {
 
     void onLoadSortingFacetsFinished(List<SortingResponse> responseList);
 
     void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection);
+
+    void showWishlist(List<GetSaleItemsResponse.Products> wishlist);
+
+    void updateWishlistWithAddition(String productId);
+
+    void updateWishlistWithRemoval(String productId);
 
     void refresh();
 
@@ -33,7 +38,7 @@ public interface SaleItemsMvpView extends MvpView{
 
     GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, List<SearchChipModel> chipsList);
 
-    void enableSaleItemsScroll(boolean  val);
+    void enableSaleItemsScroll(boolean val);
 
     Map<String, GetCategoryTreeResponse> getCategoryMap();
 

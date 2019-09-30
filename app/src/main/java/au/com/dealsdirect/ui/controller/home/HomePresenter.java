@@ -95,6 +95,17 @@ public class HomePresenter<V extends HomeMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public boolean hasWishlistBeenAccessed() {
+        return getDataManager().hasWishlistBeenAccessed();
+    }
+
+    @Override
+    public void setHasWishlistBeenAccessed(boolean isAccessed) {
+        getDataManager().setHasWishlistBeenAccessed(isAccessed);
+        getDataManager().updateWishlistCount();
+    }
+
+    @Override
     public void setInitialLaunchFalse() {
         getDataManager().setIsInitialLaunch(false);
     }

@@ -62,6 +62,7 @@ import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
+import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
@@ -142,6 +143,8 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
+import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
+import au.com.dealsdirect.data.wishlist.CallAddToWishlistRequest;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.JsonUtils;
 import io.reactivex.Observable;
@@ -988,6 +991,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<String> callWishlistEvent(WishlistEventRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getWishlistEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
     public Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getPaymentMethodNonce())
                 .addHeaders(mApiHeader.get())
@@ -1121,6 +1133,41 @@ public class AppApiHelper implements ApiHelper {
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getObjectObservable(FileSettingsResponse.class);
+    }
+
+    @Override
+    public Observable<List<GetWishlistIdResponse>> callGetWishlistIdsOnly() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getWishlistIdsOnly())
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectListObservable(GetWishlistIdResponse.class);
+    }
+
+    @Override
+    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlist() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getWishlist())
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectListObservable(GetSaleItemsResponse.Products.class);
+    }
+
+    @Override
+    public Observable<String> callAddToWishlist(String productId, String seoIdentifier) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.addToWishlist())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(
+                        new CallAddToWishlistRequest(productId, seoIdentifier)))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<String> callRemoveFromWishlist(String productId) {
+        return Rx2AndroidNetworking.delete(ApiEndPoint.removeFromWishlist())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("product_id", productId)
+                .build()
+                .getStringObservable();
     }
 }
 

@@ -14,6 +14,8 @@ import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.AppApiHelper;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
+import au.com.dealsdirect.data.wishlist.AppWishlistHelper;
+import au.com.dealsdirect.data.wishlist.WishlistHelper;
 import au.com.dealsdirect.di.ApiInfo;
 import au.com.dealsdirect.di.ApplicationContext;
 import au.com.dealsdirect.di.DatabaseInfo;
@@ -66,7 +68,8 @@ public class ApplicationModule {
     DataManager provideDataManager(AppDataManager appDataManager) {
         return appDataManager;
     }
-//
+
+    //
 //    @Provides
 //    @Singleton
 //    DbHelper provideDbHelper(AppDbHelper appDbHelper) {
@@ -87,7 +90,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    AuthHelper provideAuthHelper(Auth auth){
+    AuthHelper provideAuthHelper(Auth auth) {
         return auth;
     }
 
@@ -95,6 +98,12 @@ public class ApplicationModule {
     @Singleton
     ApiHeader provideApiHeader(@ApiInfo String apiKey, PreferencesHelper preferencesHelper) {
         return new ApiHeader(apiKey, preferencesHelper);
+    }
+
+    @Provides
+    @Singleton
+    WishlistHelper provideWishlistHelper(AppWishlistHelper wishlistHelper) {
+        return wishlistHelper;
     }
 
 //    @Provides

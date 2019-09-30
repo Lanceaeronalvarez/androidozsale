@@ -508,31 +508,45 @@
                                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                                 android:orientation="vertical">
 
-                                <LinearLayout
+                                <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical">
+                                    android:layout_height="wrap_content">
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:layout_alignParentLeft="true">
 
-                                    <TextView
-                                        android:id="@+id/productBrand"
-                                        fontPath="@string/font_app_semibold"
+                                        <TextView
+                                            android:id="@+id/productBrand"
+                                            fontPath="@string/font_app_semibold"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="start"
+                                            android:ellipsize="end"
+                                            android:text=""
+                                            android:textColor="@color/text_extra_dark"
+                                            android:textSize="@dimen/text_size_headline1" />
+
+                                        <TextView
+                                            android:id="@+id/productName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text=""
+                                            android:textColor="@color/text_light"
+                                            android:textSize="@dimen/text_size_caption1" />
+
+                                    </LinearLayout>
+                                    <ImageView
+                                        android:id="@+id/share_right"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_gravity="start"
-                                        android:ellipsize="end"
-                                        android:text=""
-                                        android:textColor="@color/text_extra_dark"
-                                        android:textSize="@dimen/text_size_headline1" />
+                                        android:layout_alignParentRight="true"
+                                        android:layout_alignParentTop="true"
+                                        android:src="@drawable/wishlist_product_details_active"
+                                        android:visibility="invisible" />
+                                </RelativeLayout>
 
-                                    <TextView
-                                        android:id="@+id/productName"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text=""
-                                        android:textColor="@color/text_light"
-                                        android:textSize="@dimen/text_size_caption1" />
-
-                                </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -698,34 +712,6 @@
                                     android:overScrollMode="never"
                                     android:paddingBottom="@dimen/margin_large" />
 
-                                <TextView
-                                    android:id="@+id/arrow_left"
-                                    fontPath="@string/font_app_regular"
-                                    android:layout_width="@dimen/partial_toolbar_button_width"
-                                    android:layout_height="@dimen/partial_toolbar_button_height"
-                                    android:layout_alignParentStart="true"
-                                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                                    android:layout_marginTop="@dimen/padding_default"
-                                    android:elevation="@dimen/button_elevation"
-                                    android:gravity="center"
-                                    android:src="@drawable/ic_pink_chevron"
-                                    android:text="@string/back"
-                                    android:textColor="@color/text_medium"
-                                    android:textSize="@dimen/text_size_caption1" />
-
-                                <ImageView
-                                    android:id="@+id/share_right"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignTop="@id/product_details_shared_image"
-                                    android:layout_alignRight="@id/product_details_shared_image"
-                                    android:layout_marginRight="@dimen/margin_small"
-                                    android:elevation="@dimen/button_elevation"
-                                    android:paddingLeft="@dimen/margin_large"
-                                    android:paddingBottom="@dimen/margin_large"
-                                    android:src="@drawable/ic_share"
-                                    android:visibility="invisible" />
-
                                 <RelativeLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -776,7 +762,70 @@
                 android:layout_height="@dimen/sale_details_floating_header_height"
                 android:background="@color/white"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="invisible">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
+                    android:paddingLeft="@dimen/margin_extra_huge"
+                    android:paddingRight="@dimen/margin_extra_huge"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/toolbar_item_brand"
+                        fontPath="@string/font_app_bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_horizontal"
+                        android:paddingLeft="@dimen/margin_tiny"
+                        android:paddingTop="@dimen/margin_large"
+                        android:paddingRight="@dimen/margin_tiny"
+                        android:singleLine="true"
+                        android:textColor="@color/text_extra_dark"
+                        android:textSize="@dimen/text_size_body"
+                        tools:text="Havren and Nougat London" />
+
+                    <TextView
+                        android:id="@+id/toolbar_item_name"
+                        fontPath="@string/font_app_regular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignEnd="@dimen/margin_extra_small"
+                        android:ellipsize="middle"
+                        android:gravity="center_horizontal"
+                        android:paddingLeft="@dimen/margin_tiny"
+                        android:paddingRight="@dimen/margin_tiny"
+                        android:singleLine="true"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/text_size_caption2"
+                        tools:text="Cassie Wrap Dress Wine Includes bonus Cheese and Ice and Mayonnaise, all High Quality Sourced in Switzerland" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/toolbar_right_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginRight="@dimen/margin_small"
+                    android:background="@color/transparent"
+                    android:paddingLeft="@dimen/margin_large"
+                    android:paddingTop="@dimen/margin_medium"
+                    android:src="@drawable/wishlist_product_details_active"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sale_details_floating_header_height"
+                android:background="@color/transparent"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/toolbar_left_view"
@@ -794,62 +843,6 @@
                     android:text="@string/back"
                     android:textColor="@color/text_medium"
                     android:textSize="@dimen/text_size_caption1" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:layout_toLeftOf="@+id/toolbar_right_view"
-                    android:layout_toRightOf="@+id/toolbar_left_view"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/toolbar_item_brand"
-                        fontPath="@string/font_app_bold"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:gravity="center_horizontal"
-                        android:paddingLeft="@dimen/margin_tiny"
-                        android:paddingTop="@dimen/margin_large"
-                        android:paddingRight="@dimen/margin_tiny"
-                        android:singleLine="true"
-                        android:textColor="@color/text_extra_dark"
-                        android:textSize="@dimen/text_size_body"
-                        tools:text="Havren and Nougat London" />
-
-                    <TextView
-                        android:id="@+id/toolbar_item_name"
-                        fontPath="@string/font_app_regular"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignEnd="@dimen/margin_extra_small"
-                        android:ellipsize="middle"
-                        android:gravity="center_horizontal"
-                        android:paddingLeft="@dimen/margin_tiny"
-                        android:paddingRight="@dimen/margin_tiny"
-                        android:singleLine="true"
-                        android:textColor="@color/text_dark"
-                        android:textSize="@dimen/text_size_caption2"
-                        tools:text="Cassie Wrap Dress Wine" />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/toolbar_right_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="@dimen/margin_small"
-                    android:layout_marginRight="@dimen/margin_small"
-                    android:elevation="@dimen/button_elevation"
-                    android:paddingLeft="@dimen/margin_large"
-                    android:paddingTop="@dimen/activity_vertical_margin"
-                    android:paddingBottom="@dimen/margin_large"
-                    android:src="@drawable/ic_share"
-                    android:visibility="invisible" />
-
             </RelativeLayout>
 
         </FrameLayout>

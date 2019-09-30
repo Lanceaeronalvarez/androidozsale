@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -53,6 +54,9 @@ import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.returns.FileSettingsResponse;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
+import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
+import au.com.dealsdirect.data.wishlist.WishlistChangeListener;
+import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.registerservices.GenieEventService;
@@ -172,6 +176,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         super(dataManager, schedulerProvider, compositeDisposable);
         gNotification = new GNotification(getDataManager(), getSchedulerProvider(), getCompositeDisposable());
         dataManager.resetAddToCartJourneyFlags();
+        dataManager.setWishlistChangeListener(newCount -> getMvpView().updateWishlistCounter(newCount));
     }
 
     @Override
@@ -589,6 +594,17 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void callGetWishlistIdsOnly() {
+        doApiCallForResponse(getDataManager().callGetWishlistIdsOnly(), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> response) {
+                super.onSuccess(response);
+                getDataManager().setWishlist((List<WishlistObject>) response);
+            }
+        });
+    }
+
+    @Override
     public void showStrictConsentUI() {
         getMvpView().showStrictConsentUI();
     }
@@ -724,6 +740,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                     }
                 });
+    }
+
+    @Override
+    public boolean doesCheckoutHaveWishlistItem() {
+        return getDataManager().doesCheckoutHaveWishlistItem();
     }
 
     @Override
@@ -1012,6 +1033,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                                 }
 
                                 callGetAppSettings();
+
+                                callGetWishlistIdsOnly();
                             } else {
                                 //On login ticket fail, call logout and go back to shop
                                 callLogout(null);

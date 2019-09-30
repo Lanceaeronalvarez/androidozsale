@@ -62,7 +62,7 @@ public class LoggingService {
 
         private LogDataEvents logInviteEvent;
 
-        public LogInvite (LogDataEvents logInviteEvent) {
+        public LogInvite(LogDataEvents logInviteEvent) {
             this.logInviteEvent = logInviteEvent;
         }
 
@@ -77,7 +77,7 @@ public class LoggingService {
 
         private LogDataEvents logAddPaymentInfo;
 
-        public LogAddPaymentInfo (LogDataEvents logAddPaymentInfo) {
+        public LogAddPaymentInfo(LogDataEvents logAddPaymentInfo) {
             this.logAddPaymentInfo = logAddPaymentInfo;
         }
 
@@ -92,7 +92,7 @@ public class LoggingService {
 
         private LogDataEvents logInitiateCheckout;
 
-        public LogInitiateCheckout (LogDataEvents logInitiateCheckout) {
+        public LogInitiateCheckout(LogDataEvents logInitiateCheckout) {
             this.logInitiateCheckout = logInitiateCheckout;
         }
 
@@ -107,7 +107,7 @@ public class LoggingService {
 
         private LogDataEvents logEventUser;
 
-        public LogEventUser (LogDataEvents logEventUser) {
+        public LogEventUser(LogDataEvents logEventUser) {
             this.logEventUser = logEventUser;
         }
 
@@ -122,7 +122,7 @@ public class LoggingService {
 
         private LogDataEvents logCVAppLaunch;
 
-        public LogCVAppLaunch (LogDataEvents logCVAppLaunch) {
+        public LogCVAppLaunch(LogDataEvents logCVAppLaunch) {
             this.logCVAppLaunch = logCVAppLaunch;
         }
 
@@ -137,7 +137,7 @@ public class LoggingService {
 
         private LogDataEvents logLoginEvent;
 
-        public LogLogin (LogDataEvents logLoginEvent) {
+        public LogLogin(LogDataEvents logLoginEvent) {
             this.logLoginEvent = logLoginEvent;
         }
 
@@ -152,9 +152,10 @@ public class LoggingService {
 
         private LogDataEvents logCCScanEvent;
 
-        public LogCCScan (LogDataEvents logCCScanEvent) {
+        public LogCCScan(LogDataEvents logCCScanEvent) {
             this.logCCScanEvent = logCCScanEvent;
         }
+
         @Override
         public void logEventData(HashMap<String, Object> parameters) {
             logCCScanEvent.LogDataEvents(parameters);
@@ -166,7 +167,7 @@ public class LoggingService {
 
         private LogDataEvents logSaleBannersEvent;
 
-        public LogSaleBanners (LogDataEvents logSaleBannersEvent) {
+        public LogSaleBanners(LogDataEvents logSaleBannersEvent) {
             this.logSaleBannersEvent = logSaleBannersEvent;
         }
 
@@ -181,7 +182,7 @@ public class LoggingService {
 
         private LogDataEvents logItemListEvent;
 
-        public LogItemList (LogDataEvents logItemListEvent) {
+        public LogItemList(LogDataEvents logItemListEvent) {
             this.logItemListEvent = logItemListEvent;
         }
 
@@ -196,7 +197,7 @@ public class LoggingService {
 
         private LogDataEvents logItemDetailsEvent;
 
-        public LogItemDetails (LogDataEvents logItemDetailsEvent) {
+        public LogItemDetails(LogDataEvents logItemDetailsEvent) {
             this.logItemDetailsEvent = logItemDetailsEvent;
         }
 
@@ -211,9 +212,10 @@ public class LoggingService {
 
         private LogDataEvents logTrackOrderEvent;
 
-        public LogTrackOrder (LogDataEvents logTrackOrderEvent) {
+        public LogTrackOrder(LogDataEvents logTrackOrderEvent) {
             this.logTrackOrderEvent = logTrackOrderEvent;
         }
+
         @Override
         public void logEventData(HashMap<String, Object> parameters) {
             logTrackOrderEvent.LogDataEvents(parameters);
@@ -225,9 +227,10 @@ public class LoggingService {
 
         private LogDataEvents logShareEvent;
 
-        public LogShare (LogDataEvents logShareEvent) {
+        public LogShare(LogDataEvents logShareEvent) {
             this.logShareEvent = logShareEvent;
         }
+
         @Override
         public void logEventData(HashMap<String, Object> parameters) {
             logShareEvent.LogDataEvents(parameters);
@@ -239,9 +242,10 @@ public class LoggingService {
 
         private LogDataEvents logAddToCartJourneyViewCartEvent;
 
-        public LogAddToCartJourneyViewCart (LogDataEvents logAddToCartJourneyViewCartEvent) {
+        public LogAddToCartJourneyViewCart(LogDataEvents logAddToCartJourneyViewCartEvent) {
             this.logAddToCartJourneyViewCartEvent = logAddToCartJourneyViewCartEvent;
         }
+
         @Override
         public void logEventData(HashMap<String, Object> parameters) {
             logAddToCartJourneyViewCartEvent.LogDataEvents(parameters);
@@ -253,9 +257,10 @@ public class LoggingService {
 
         private LogDataEvents logViewProductCategory;
 
-        public LogAddToCartJourneyViewProductCategory (LogDataEvents logViewProductCategory) {
+        public LogAddToCartJourneyViewProductCategory(LogDataEvents logViewProductCategory) {
             this.logViewProductCategory = logViewProductCategory;
         }
+
         @Override
         public void logEventData(HashMap<String, Object> parameters) {
             logViewProductCategory.LogDataEvents(parameters);
@@ -267,9 +272,10 @@ public class LoggingService {
 
         private LogDataEvents logCheckoutJourney;
 
-        public LogCheckoutJourney (LogDataEvents logCheckoutJourney) {
+        public LogCheckoutJourney(LogDataEvents logCheckoutJourney) {
             this.logCheckoutJourney = logCheckoutJourney;
         }
+
         @Override
         public void logEventData(HashMap<String, Object> parameters) {
             logCheckoutJourney.LogDataEvents(parameters);
@@ -281,9 +287,10 @@ public class LoggingService {
 
         private LogDataEvents logClickEvent;
 
-        public LogClickEvent (LogDataEvents logClickEvent) {
+        public LogClickEvent(LogDataEvents logClickEvent) {
             this.logClickEvent = logClickEvent;
         }
+
         @Override
         public void logEventData(HashMap<String, Object> parameters) {
             logClickEvent.LogDataEvents(parameters);
@@ -295,9 +302,10 @@ public class LoggingService {
 
         private LogDataEvents logSearchEvent;
 
-        public LogSearchEvent (LogDataEvents logSearchEvent) {
+        public LogSearchEvent(LogDataEvents logSearchEvent) {
             this.logSearchEvent = logSearchEvent;
         }
+
         @Override
         public void logEventData(HashMap<String, Object> parameters) {
             logSearchEvent.LogDataEvents(parameters);
@@ -309,9 +317,10 @@ public class LoggingService {
 
         private LogDataEvents logSaleEvent;
 
-        public LogSaleEvent (LogDataEvents logSaleEvent) {
+        public LogSaleEvent(LogDataEvents logSaleEvent) {
             this.logSaleEvent = logSaleEvent;
         }
+
         @Override
         public void logEventData(HashMap<String, Object> parameters) {
             logSaleEvent.LogDataEvents(parameters);
@@ -322,9 +331,10 @@ public class LoggingService {
 
         private LogDataEvents logFailedTransaction;
 
-        public LogFailedTransaction (LogDataEvents logFailedTransaction) {
+        public LogFailedTransaction(LogDataEvents logFailedTransaction) {
             this.logFailedTransaction = logFailedTransaction;
         }
+
         @Override
         public void logEventData(HashMap<String, Object> parameters) {
             logFailedTransaction.LogDataEvents(parameters);
@@ -336,7 +346,7 @@ public class LoggingService {
 
         private LogDataEvents logRemoveFromCartEvent;
 
-        public LogRemoveFromCart (LogDataEvents logRemoveFromCartEvent) {
+        public LogRemoveFromCart(LogDataEvents logRemoveFromCartEvent) {
             this.logRemoveFromCartEvent = logRemoveFromCartEvent;
         }
 
@@ -350,7 +360,7 @@ public class LoggingService {
 
         private LogDataEvents logToggleColumn;
 
-        public LogToggleColumn (LogDataEvents logToggleColumn) {
+        public LogToggleColumn(LogDataEvents logToggleColumn) {
             this.logToggleColumn = logToggleColumn;
         }
 
@@ -360,4 +370,16 @@ public class LoggingService {
         }
     }
 
+    public static class LogWishlistDataEvent implements LoggingEventData {
+        private LogDataEvents logWishlistDataEvent;
+
+        public LogWishlistDataEvent(LogDataEvents logWishlistDataEvent) {
+            this.logWishlistDataEvent = logWishlistDataEvent;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logWishlistDataEvent.LogDataEvents(parameters);
+        }
+    }
 }

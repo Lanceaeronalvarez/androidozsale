@@ -1,6 +1,8 @@
 
 package au.com.dealsdirect.utils;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -203,5 +205,117 @@ public final class CommonUtils {
 
     public static void shakeView(View view) {
         view.startAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.shake));
+    }
+    
+    public static void fadeInView(View view, AnimatorListenerAdapter listener) {
+        view.setAlpha(0f);
+        view.animate()
+                .alpha(1f)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        super.onAnimationCancel(animation);
+                        view.setAlpha(1f);
+                        if (listener != null) {
+                            listener.onAnimationCancel(animation);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        if (listener != null) {
+                            listener.onAnimationEnd(animation);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+                        super.onAnimationRepeat(animation);
+                        if (listener != null) {
+                            listener.onAnimationRepeat(animation);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        if (listener != null) {
+                            listener.onAnimationStart(animation);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationPause(Animator animation) {
+                        super.onAnimationPause(animation);
+                        if (listener != null) {
+                            listener.onAnimationPause(animation);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationResume(Animator animation) {
+                        super.onAnimationResume(animation);
+                        if (listener != null) {
+                            listener.onAnimationResume(animation);
+                        }
+                    }
+                });
+    }
+
+    public static void fadeOutView(View view, AnimatorListenerAdapter listener) {
+        view.setAlpha(1f);
+        view.animate()
+                .alpha(0f)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        super.onAnimationCancel(animation);
+                        view.setAlpha(0f);
+                        if (listener != null) {
+                            listener.onAnimationCancel(animation);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        if (listener != null) {
+                            listener.onAnimationEnd(animation);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+                        super.onAnimationRepeat(animation);
+                        if (listener != null) {
+                            listener.onAnimationRepeat(animation);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        if (listener != null) {
+                            listener.onAnimationStart(animation);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationPause(Animator animation) {
+                        super.onAnimationPause(animation);
+                        if (listener != null) {
+                            listener.onAnimationPause(animation);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationResume(Animator animation) {
+                        super.onAnimationResume(animation);
+                        if (listener != null) {
+                            listener.onAnimationResume(animation);
+                        }
+                    }
+                });
     }
 }

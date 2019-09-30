@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -49,6 +51,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.facebook.common.Common;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
@@ -73,6 +76,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
@@ -109,6 +113,7 @@ import butterknife.OnClick;
 
 import static android.graphics.Typeface.BOLD;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
+import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
 
 /*
  * Created by smartwave on 08/06/2017.
@@ -263,8 +268,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private boolean shouldAfterpayDetailsBeVisible = false;
 
-    @BindView(R.id.arrow_left)
-    View mLeftView;
+    @BindView(R.id.share_right)
+    ImageView mLikeButton;
+    @BindView(R.id.toolbar_right_view)
+    ImageView mLikeFloatingButton;
     @BindView(R.id.productImageRecyclerView)
     RecyclerView mProductImagesRv;
     @BindView(R.id.otherImagesRecyclerView)
@@ -364,6 +371,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     RelativeLayout mProductDetailsButtonContainer;
     int[] mSharedImageLocation;
 
+    public static final String TAG = SaleItemDetailsController.class.getSimpleName();
+
     private static final int SPANNABLE_STRING_START_INDEX = 6;
     private static final float DISCOUNT_VALUE_SCALE_FACTOR = 1.8f;
 
@@ -385,6 +394,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private boolean mIsSoldOutCombined = true;
     private int mAttempts = 0;
     private String mProductId;
+    private String mMasterProductId;
 
     private boolean hasLoadedDetails = false;
     private boolean isAddToBasketInputBuffered = false;
@@ -558,6 +568,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void onViewDidAppear(Controller previousController) {
         super.onViewDidAppear(previousController);
 
+        mLikeButton.setVisibility(View.INVISIBLE);
+        mLikeFloatingButton.setVisibility(View.INVISIBLE);
         mPresenter.loadSaleItemDetails(mSaleId, mSeoIdentifierId);
         if (mHasSavedInstance) {
             mActivity.getMainController().getHomeController().setSavedCurrentItem();
@@ -646,7 +658,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
 
         ArrayList<View> toggledViews = new ArrayList<View>() {{
-            add(mLeftView);
             add(mOtherImagesRv);
             add(mProductPriceCategory);
             add(mAddToCartButton);
@@ -825,9 +836,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
 
-        mProductId = saleDetail.getAttributes().getProductId();
+        mProductId = saleDetail.getProductId();
+        mMasterProductId = saleDetail.getAttributes().getProductId();
 
         mSkuId = saleDetail.getSkuId();
+
+        mSeoIdentifierId = saleDetail.getSeoIdentifier();
+        mSaleName = saleDetail.getName();
+        mBrandName = saleDetail.getBrandName();
+        mSalePrice = PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue());
+        mSaleOldPrice = PriceUtils.getPriceStringValue(saleDetail.getOriginalPrice().getValue());
 
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
 
@@ -1021,6 +1039,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         updatePriceDetails(saleDetail);
 
+        mLikeButton.setVisibility(View.VISIBLE);
+        mLikeFloatingButton.setVisibility(View.VISIBLE);
+        updateLikeButtonImage(mPresenter.isProductInWishlist(mProductId));
+
         hasLoadedDetails = true;
         if (isAddToBasketInputBuffered) {
             isAddToBasketInputBuffered = false;
@@ -1121,6 +1143,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 Settings.getSelectedCountry().currencySign);
         parameters.put(DataCollector.EventParameters.ADD_TO_CART_SOURCE, SaleItemDetailsController.class.getSimpleName());
         DataCollector.logEvent(Events.AddedToCartEvent, parameters);
+
+        if (mPresenter.isProductInWishlist(mProductId)) {
+            HashMap<String, Object> parametersForWishlistEvent = new HashMap<>();
+            parametersForWishlistEvent.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+            parametersForWishlistEvent.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
+            DataCollector.logEvent(Events.WishlistAddToCartEvent, parametersForWishlistEvent);
+        }
 
         mAttempts = 0;
         //notify bottom navigation view(checkout) with success.
@@ -1291,7 +1320,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mAttempts++;
 
-        CommonUtils.saveSaleItem(mActivity, mProductId, mSeoIdentifierId, mSaleId);
+        CommonUtils.saveSaleItem(mActivity, mMasterProductId, mSeoIdentifierId, mSaleId);
 
         AddToCartRequest request = new AddToCartRequest();
         request.setSkuId(mSkuId);
@@ -1501,22 +1530,93 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @OnClick(R.id.toolbar_left_view)
-    void backPress() {
-        dismissArrowDown();
-    }
-
-    @OnClick(R.id.arrow_left)
     void dismissArrowDown() {
         mActivity.onBackPressed();
+    }
+
+    @OnClick(R.id.share_right)
+    void likeButtonPress() {
+        setLikeStatus(!mPresenter.isProductInWishlist(mProductId));
+    }
+
+    @OnClick(R.id.toolbar_right_view)
+    void floatingLikeButtonPress() {
+        setLikeStatus(!mPresenter.isProductInWishlist(mProductId));
+    }
+
+    private void setLikeStatus(boolean isLiked) {
+        if (isLiked) {
+            mPresenter.addProductToWishlist(mProductId, mSeoIdentifierId, mMasterProductId);
+        } else {
+            mPresenter.removeProductFromWishlist(mProductId);
+        }
+        updateLikeButtonImage(isLiked);
+        logWishlistEvent(mProductId, isLiked);
+    }
+
+    private void updateLikeButtonImage(boolean isLiked) {
+        int drawableId = isLiked ? R.drawable.wishlist_product_details_active : R.drawable.wishlist_product_details_inactive;
+        mLikeButton.setImageDrawable(mLikeFloatingButton.getContext().getResources().getDrawable(drawableId));
+        mLikeFloatingButton.setImageDrawable(mLikeFloatingButton.getContext().getResources().getDrawable(drawableId));
+    }
+
+    private void logWishlistEvent(String productId, boolean liked) {
+        WishlistEventRequest request = new WishlistEventRequest();
+        request.setEventType(EventTypeId.EVENT_WISHLIST);
+
+        WishlistEventRequest.WishListInfo wishlistInfo = new WishlistEventRequest.WishListInfo();
+        request.setWishlistInfo(wishlistInfo);
+
+        wishlistInfo.setOperation(liked ? 1 : 0);
+        wishlistInfo.setProductId(productId);
+        wishlistInfo.setReferrer(PRODUCT_PAGE);
+        wishlistInfo.setProductsQuantity(mPresenter.wishlistCount());
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.WISHLIST_EVENT_REQUEST, request);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+
+        DataCollector.logEvent(Events.WishlistEvent, parameters);
     }
 
     public void onScrollChanged(int scrollY) {
         if (isViewAttached()) {
             mRootView.setIsHorizontalDismissEnabled(scrollY <= 0 && getCarouselPosition() == 0);
             mRootView.setIsVerticalDismissEnabled(scrollY <= 0);
-            boolean isScrollGreater = scrollY >= ScreenUtils.getScreenHeight(mActivity) -
-                    (mProductDetailsTitleLayout.getBottom() + mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight());
-            mProductDetailsToolbar.setVisibility(isScrollGreater && !mPresenter.isTablet() ? View.VISIBLE : View.GONE);
+            int[] location = new int[2];
+            mProductDetailsTitleLayout.getLocationOnScreen(location);
+            float top = location[1];
+            float alphaFactor = 1 - top / (float) mProductDetailsTitleLayout.getHeight();
+
+            if (mProductDetailsToolbar.getAnimation() == null) {
+                switch (mProductDetailsToolbar.getVisibility()) {
+                    case View.GONE:
+                    case View.INVISIBLE:
+                        if (alphaFactor > 0.5) {
+                            mProductDetailsToolbar.setVisibility(View.VISIBLE);
+                            CommonUtils.fadeInView(mProductDetailsToolbar, null);
+                        }
+                        break;
+                    case View.VISIBLE:
+                        if (alphaFactor < 0) {
+                            CommonUtils.fadeOutView(mProductDetailsToolbar, new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+                                    super.onAnimationCancel(animation);
+                                    mProductDetailsToolbar.setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    mProductDetailsToolbar.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                        break;
+                }
+            }
         }
     }
 

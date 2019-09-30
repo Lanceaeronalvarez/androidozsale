@@ -70,6 +70,9 @@ public class GetSaleItemDetailsResponse {
     @SerializedName("seoIdentifier")
     @Expose
     private String seoIdentifier;
+    @SerializedName("productId")
+    @Expose
+    private String productId;
     @SerializedName("rrpText")
     @Expose
     private String rrpText;
@@ -233,5 +236,13 @@ public class GetSaleItemDetailsResponse {
 
     public String getRrpText() {
         return rrpText;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 }

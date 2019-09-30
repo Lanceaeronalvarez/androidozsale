@@ -16,6 +16,10 @@ public interface HomeMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
     boolean isInitialLaunch();
 
+    boolean hasWishlistBeenAccessed();
+
+    void setHasWishlistBeenAccessed(boolean isAccessed);
+
     void setInitialLaunchFalse();
 
     void callCreateRefund(CreateRefundRequest createRefundRequest);

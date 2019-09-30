@@ -133,9 +133,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
     @Override
     public boolean willScreenChange(Context context, String option) {
-        if (option.equals(context.getString(R.string.account_contact_us))) {
-            return false;
-        }
         return true;
     }
 

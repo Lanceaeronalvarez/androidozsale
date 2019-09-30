@@ -37,4 +37,12 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     String getAfterpayLightboxImgUrl();
 
     String getAfterpayTermsLink();
+
+    int wishlistCount();
+
+    boolean isProductInWishlist(String productId);
+
+    void addProductToWishlist(String productId, String seoIdentifier, String masterProductId);
+
+    void removeProductFromWishlist(String productId);
 }

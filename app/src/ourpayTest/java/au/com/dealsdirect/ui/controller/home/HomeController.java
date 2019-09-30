@@ -247,21 +247,21 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 switch (position) {
                     case 0:
-                        showFirstTabController();
+                        showShopController();
                         break;
                     case 1:
-                        showSecondTabController();
+                        showCategoryController();
                         break;
                     case 2:
-                        showThirdTabController();
+                        showAccountController();
                         break;
                     case 3:
                         mActivity.setDraggableViewPager(false);
-                        showFourthTabController();
+                        showContactUsController();
                         break;
                     case 4:
                         mActivity.setDraggableViewPager(false);
-                        showFifthTabController();
+                        showCheckoutControllerController();
                         break;
                     default:
                         break;

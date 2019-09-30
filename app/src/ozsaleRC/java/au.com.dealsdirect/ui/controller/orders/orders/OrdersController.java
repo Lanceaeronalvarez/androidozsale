@@ -122,7 +122,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
         mShopNowButton.setOnClickListener(view1 -> {
             mActivity.getHomeController().getCurrentRouter().popToRoot();
-            mActivity.getHomeController().showFirstTabController();
+            mActivity.getHomeController().showShopController();
         });
 
         mActivity.getMainController().setViewpagerDraggable(false);

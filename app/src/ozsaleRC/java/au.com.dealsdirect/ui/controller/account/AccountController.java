@@ -39,6 +39,7 @@ import au.com.dealsdirect.ui.controller.account.model.AccountItem;
 import au.com.dealsdirect.ui.controller.account.model.AccountSubItem;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
+import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
@@ -51,7 +52,6 @@ import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
-import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -216,7 +216,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
     }
 
-    private void displayAds(){
+    private void displayAds() {
         Display display = mActivity.getWindowManager().getDefaultDisplay();
         int width = (int) (display.getWidth() * 0.4);
 
@@ -350,7 +350,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public void showReturnDetails(String returnID, String productName, boolean isFromOrders) {
 
-        RouterTransaction routerTransaction = RouterTransaction.with(ReturnDetailsController.newInstance(returnID,productName,isFromOrders))
+        RouterTransaction routerTransaction = RouterTransaction.with(ReturnDetailsController.newInstance(returnID, productName, isFromOrders))
                 .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
 
         getDisplayRouter().pushController(routerTransaction);
@@ -437,7 +437,11 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showContactUs() {
-        mActivity.getHomeController().showFourthTabController();
+        if (!mPresenter.isTablet()) {
+            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.CONTACT_US, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        } else {
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CONTACT_US, RouterTransaction.with(ViewContactsController.newInstance()));
+        }
     }
 
     @Override
@@ -543,6 +547,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mActivity.setShopsAsVisibleContainer();
                 mActivity.callPublicSettings();
                 mActivity.refreshBannersFromLogout();
+                mActivity.refreshWishlist();
 
                 String[] array = mActivity.getResources().getStringArray(R.array.gdpr_countries);
                 List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));

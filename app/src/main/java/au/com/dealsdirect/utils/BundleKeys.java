@@ -27,6 +27,7 @@ public class BundleKeys {
     public static final String SALEITEMS_FROM_CATEGORY_DEEPLINK = "SaleItemsController.FROM_CATEGORY_LINK";
     public static final String SALEITEMS_KEY_CATEGORIES = "SaleItemsController.KEY_CATEGORIES";
     public static final String SALEITEMS_FROM_CATEGORIES = "SaleItemsController.FROM_CATEGORIES";
+    public static final String SALEITEMS_IS_WISHLIST = "SaleItemsController.SALEITEMS_IS_WISHLIST";
 
     //sale items from shop
     public static final String SHOP_SALEITEMS_SALE_ID = "SaleItemsController.SHOP_SALEITEMS_SALE_ID";

@@ -10,7 +10,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse.Products;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -36,13 +36,15 @@ import butterknife.ButterKnife;
 public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.ViewHolder> {
     private static final int SCREEN_TRANSITION_DELAY = 2000;
 
-    private List<GetSaleItemsResponse.Products> mData;
+    private List<Products> mData;
     private Activity mActivity;
     private SaleItemsMvpPresenter mPresenter;
     private String mSaleId;
     private int mColumnCount;
     private static final int FOOTER_VIEW = 1;
     private int mMinColumn;
+    private boolean mIsFooterEnabled = true;
+    private int mCurrentItemCount = -1;
 
     private Pair<Integer, Integer> mComputedPair;
 
@@ -53,6 +55,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
         @BindView(R.id.vh_sale_item_sold_out)
         TextView soldout;
+
+        @BindView(R.id.vh_sale_item_like_button)
+        ImageButton likeButton;
 
         @BindView(R.id.vh_sale_item_name)
         public TextView name;
@@ -67,7 +72,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         public TextView oldPrice;
 
         @BindView(R.id.vh_sale_item_frame)
-        FrameLayout layout;
+        RelativeLayout layout;
 
         @BindView(R.id.vh_sale_item_free_delivery)
         ImageView freeDelivery;
@@ -96,11 +101,23 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             super(view);
             ButterKnife.bind(this, view);
         }
+
+        private boolean isLiked = true;
+
+        public boolean isLiked() {
+            return isLiked;
+        }
+
+        public void setLiked(boolean liked) {
+            int drawableId = liked ? R.drawable.wishlist_product_list_active : R.drawable.wishlist_product_list_inactive;
+            likeButton.setImageDrawable(likeButton.getContext().getResources().getDrawable(drawableId));
+            isLiked = liked;
+        }
     }
 
     public SaleItemsAdapter(
             Activity activity,
-            List<GetSaleItemsResponse.Products> saleItems,
+            List<Products> saleItems,
             SaleItemsMvpPresenter presenter,
             String saleId, int minColumn) {
 
@@ -158,47 +175,67 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         if (holder.getItemViewType() == 0 && mData.size() != 0) {
-            GetSaleItemsResponse.Products saleItem = mData.get(position);
-            String url = mData.get(position).getImages().isEmpty() ? "" : mData.get(position).getImages().get(0);
+            Products product = mData.get(position);
+            String url = product.getImages().isEmpty() ? "" : (product.getImages().size() < 4 ? product.getImages().get(0) : product.getImages().get(1));
 
             String urlHigherRes = ImageUtils.removeResolutionModifierInImageUrl(url);
 
-            holder.name.setText(saleItem.getProductName());
+            holder.name.setText(product.getProductName());
 
-            String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
-            String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
+            String saleItemPrice = null;
+            String saleItemOldPrice = null;
+
+            if (product.getPrice() != null) {
+                saleItemPrice = PriceUtils.getPriceStringValue(product.getPrice().getValue());
+            }
+            if (product.getOriginalPrice() != null) {
+                saleItemOldPrice = PriceUtils.getRpStringValue(product.getOriginalPrice().getValue());
+            }
 
             ImageUtils.loadImage(url, holder.image);
 
             holder.image.setTransitionName(mActivity.getString(R.string.transition_sale_image_indexed, position));
 
-            holder.soldout.setVisibility(saleItem.isSoldOut() ? View.VISIBLE : View.GONE);
+            holder.soldout.setVisibility(product.isSoldOut() ? View.VISIBLE : View.GONE);
 
-            holder.brand.setText(saleItem.getBrandName());
+            holder.brand.setText(product.getBrandName());
             holder.price.setText(saleItemPrice);
             holder.oldPrice.setText(saleItemOldPrice);
             holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.freeDelivery.setVisibility(mData.get(position).getFreeDelivery() ? View.VISIBLE : View.GONE);
-            int discountValue = mData.get(position).getSalePercentOff();
-            double salePriceValue = mData.get(position).getSalePrice() != null ?
-                    mData.get(position).getSalePrice().getValue() : 0;
+            holder.freeDelivery.setVisibility(product.getFreeDelivery() ? View.VISIBLE : View.GONE);
+            int discountValue = product.getSalePercentOff();
+            double salePriceValue = product.getSalePrice() != null ?
+                    product.getSalePrice().getValue() : 0;
             holder.discount.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
             holder.salePrice.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
-            holder.discount.setText(mData.get(position).getSalePercentOffText());
+            holder.discount.setText(product.getSalePercentOffText());
             holder.salePrice.setText(PriceUtils.getRpStringValue(salePriceValue));
 
+            holder.setLiked(mPresenter.isProductInWishlist(product.getProductId()));
 
             RxView.clicks(holder.itemView)
                     .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
                     .subscribe(action -> mPresenter.loadProductDetails(
                             holder,
-                            position,
-                            mData.get(position).getSeoIdentifier(),
+                            holder.getAdapterPosition(),
+                            product.getSeoIdentifier(),
                             urlHigherRes,
-                            mData.get(position).getSkus() == null || mData.get(position).getSkus().isEmpty() ? "" :
-                                    mData.get(position).getSkus().get(0).getId(),
+                            product.getSkus() == null || product.getSkus().isEmpty() ? "" :
+                                    product.getSkus().get(0).getId(),
                             mSaleId,
-                            mData.get(position).getFreeDelivery()));
+                            product.getFreeDelivery()));
+
+            holder.likeButton.setOnClickListener(v -> {
+                holder.setLiked(!holder.isLiked());
+                if (holder.isLiked()) {
+                    mPresenter.addToWishlist(
+                            product.getProductId(),
+                            product.getSeoIdentifier());
+                } else {
+                    mPresenter.removeFromWishlist(product.getProductId());
+
+                }
+            });
 
         } else {
             if (holder.adView != null && mPresenter.isGoogleAdsEnabled()) {
@@ -216,23 +253,25 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         super.onViewDetachedFromWindow(holder);
     }
 
-    public void replaceData(List<GetSaleItemsResponse.Products> saleItems) {
+    public void replaceData(List<Products> saleItems) {
         mData = saleItems;
         notifyDataSetChanged();
+        mCurrentItemCount = getItemCount();
     }
 
-    public void addData(List<GetSaleItemsResponse.Products> saleItems) {
+    public void addData(List<Products> saleItems) {
         int previousCount = mData.size();
         mData.addAll(saleItems);
         notifyItemRangeInserted(previousCount, mData.size() - previousCount);
+        mCurrentItemCount = getItemCount();
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mData.size() + (mIsFooterEnabled && !mData.isEmpty() ? 1 : 0);
     }
 
-    public List<GetSaleItemsResponse.Products> getData() {
+    public List<Products> getData() {
         return mData;
     }
 
@@ -253,6 +292,27 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     private boolean isPositionFooter(int position) {
-        return position == (mData.size() - 1) && mData.size() != 0;
+        return mIsFooterEnabled && !mData.isEmpty() && position == getItemCount() - 1;
+    }
+
+    public void reloadCell(int position) {
+        notifyItemChanged(position);
+    }
+
+    public void removeData(int position) {
+        if (getItemCount() == 0 && mCurrentItemCount > 0) {
+            notifyItemRangeRemoved(0, mCurrentItemCount);
+        } else {
+            notifyItemRemoved(position);
+        }
+        mCurrentItemCount = getItemCount();
+    }
+
+    public boolean isFooterEnabled() {
+        return mIsFooterEnabled;
+    }
+
+    public void setFooterEnabled(boolean footerEnabled) {
+        mIsFooterEnabled = footerEnabled;
     }
 }

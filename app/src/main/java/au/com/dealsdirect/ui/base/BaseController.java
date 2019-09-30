@@ -57,6 +57,8 @@ public abstract class BaseController
 
     private ProgressDialog mProgressDialog;
 
+    private boolean mIsViewBound = false;
+
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -85,6 +87,12 @@ public abstract class BaseController
     }
 
     protected abstract void setUp(View view);
+
+    @Override
+    protected void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        mIsViewBound = true;
+    }
 
     @Override
     protected void onActivityResumed(@NonNull Activity activity) {
@@ -311,10 +319,14 @@ public abstract class BaseController
 
     }
 
+    public boolean isViewBound() {
+        return mIsViewBound;
+    }
+
     public static class CommonControllerChangeListener implements com.bluelinelabs.conductor.ControllerChangeHandler.ControllerChangeListener {
 
         public static void addToRouter(Router... routers) {
-            for (Router router: routers) {
+            for (Router router : routers) {
                 if (router != null) {
                     router.addChangeListener(CommonControllerChangeListener.getSharedInstance());
                 }

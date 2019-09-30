@@ -12,6 +12,7 @@ import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
+import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
@@ -38,6 +39,73 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
+    public void loadWishlist() {
+        doApiCallForResponse(getDataManager().callGetWishlist(), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> list) {
+                getMvpView().showWishlist((List<GetSaleItemsResponse.Products>) list);
+            }
+        });
+    }
+
+    @Override
+    public boolean isProductInWishlist(String productId) {
+        return getDataManager().isProductInWishlist(productId);
+    }
+
+    @Override
+    public int wishlistCount() {
+        return getDataManager().getWishlist().size();
+    }
+
+    @Override
+    public void addToWishlist(String productId, String seoIdentifier) {
+        doApiCallForResponse(getDataManager().callAddToWishlist(productId, seoIdentifier), new AppApiCallback());
+        getDataManager().addToWishlist(new WishlistObject() {
+            private String mProductId = productId;
+            private String mSeoId = seoIdentifier;
+
+            @Override
+            public String getProductId() {
+                return mProductId;
+            }
+
+            @Override
+            public void setProductId(String id) {
+                mProductId = id;
+            }
+
+            @Override
+            public String getSeoId() {
+                return mSeoId;
+            }
+
+            @Override
+            public void setSeoId(String id) {
+                mSeoId = id;
+            }
+
+            @Override
+            public String getMasterProductId() {
+                return null;
+            }
+
+            @Override
+            public void setMasterProductId(String masterProductId) {
+
+            }
+        });
+        getMvpView().updateWishlistWithAddition(productId);
+    }
+
+    @Override
+    public void removeFromWishlist(String productId) {
+        doApiCallForResponse(getDataManager().callRemoveFromWishlist(productId), new AppApiCallback());
+        getDataManager().removeFromWishlist(productId);
+        getMvpView().updateWishlistWithRemoval(productId);
+    }
+
+    @Override
     public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
 
         // Cancels any previous loadSaleItems request
@@ -58,7 +126,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                 super.onSuccess(response);
                 clearPreviousGetSaleItemsRequest();
                 Pair pair = (Pair) response;
-                getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>)pair.second);
+                getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) pair.second);
                 getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, !getSaleItemsRequest.hasFilters());
             }
 

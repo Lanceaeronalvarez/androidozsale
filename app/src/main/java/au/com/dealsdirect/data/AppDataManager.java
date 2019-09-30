@@ -69,6 +69,7 @@ import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
+import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
@@ -148,7 +149,11 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
+import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
+import au.com.dealsdirect.data.wishlist.WishlistChangeListener;
+import au.com.dealsdirect.data.wishlist.WishlistHelper;
+import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.di.ApplicationContext;
 import io.reactivex.Observable;
 
@@ -162,16 +167,19 @@ public class AppDataManager implements DataManager {
     private final PreferencesHelper mPreferencesHelper;
     private final ApiHelper mApiHelper;
     private final AuthHelper mAuthHelper;
+    private final WishlistHelper mWishlistHelper;
 
     @Inject
     public AppDataManager(@ApplicationContext Context context,
                           PreferencesHelper preferencesHelper,
                           ApiHelper apiHelper,
-                          AuthHelper authHelper) {
+                          AuthHelper authHelper,
+                          WishlistHelper wishlistHelper) {
         mContext = context;
         mPreferencesHelper = preferencesHelper;
         mApiHelper = apiHelper;
         mAuthHelper = authHelper;
+        mWishlistHelper = wishlistHelper;
     }
 
     @Override
@@ -612,6 +620,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<String> callWishlistEvent(WishlistEventRequest request) {
+        return mApiHelper.callWishlistEvent(request);
+    }
+
+    @Override
     public Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request) {
         return mApiHelper.callGetPaymentMethodNonce(request);
     }
@@ -684,6 +697,26 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<FileSettingsResponse> callGetFileSettings() {
         return mApiHelper.callGetFileSettings();
+    }
+
+    @Override
+    public Observable<List<GetWishlistIdResponse>> callGetWishlistIdsOnly() {
+        return mApiHelper.callGetWishlistIdsOnly();
+    }
+
+    @Override
+    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlist() {
+        return mApiHelper.callGetWishlist();
+    }
+
+    @Override
+    public Observable callAddToWishlist(String productId, String seoIdentifier) {
+        return mApiHelper.callAddToWishlist(productId, seoIdentifier);
+    }
+
+    @Override
+    public Observable callRemoveFromWishlist(String productId) {
+        return mApiHelper.callRemoveFromWishlist(productId);
     }
 
     @Override
@@ -1389,6 +1422,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public boolean hasWishlistBeenAccessed() {
+        return mPreferencesHelper.hasWishlistBeenAccessed();
+    }
+
+    @Override
+    public void setHasWishlistBeenAccessed(boolean isAccessed) {
+        mPreferencesHelper.setHasWishlistBeenAccessed(isAccessed);
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }
@@ -1432,5 +1475,50 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean isAuthorized() {
         return mAuthHelper.isAuthorized();
+    }
+
+    @Override
+    public void setWishlist(List<WishlistObject> wishlist) {
+        mWishlistHelper.setWishlist(wishlist);
+    }
+
+    @Override
+    public List<WishlistObject> getWishlist() {
+        return mWishlistHelper.getWishlist();
+    }
+
+    @Override
+    public void addToWishlist(WishlistObject object) {
+        mWishlistHelper.addToWishlist(object);
+    }
+
+    @Override
+    public void removeFromWishlist(String productId) {
+        mWishlistHelper.removeFromWishlist(productId);
+    }
+
+    @Override
+    public boolean isProductInWishlist(String productId) {
+        return mWishlistHelper.isProductInWishlist(productId);
+    }
+
+    @Override
+    public void setWishlistChangeListener(WishlistChangeListener listener) {
+        mWishlistHelper.setWishlistChangeListener(listener);
+    }
+
+    @Override
+    public void setCheckoutHasWishlistItem(boolean hasWishlistItem) {
+        mWishlistHelper.setCheckoutHasWishlistItem(hasWishlistItem);
+    }
+
+    @Override
+    public boolean doesCheckoutHaveWishlistItem() {
+        return mWishlistHelper.doesCheckoutHaveWishlistItem();
+    }
+
+    @Override
+    public void updateWishlistCount() {
+        mWishlistHelper.updateWishlistCount();
     }
 }

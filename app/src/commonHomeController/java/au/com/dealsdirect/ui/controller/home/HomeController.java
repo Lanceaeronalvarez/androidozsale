@@ -280,23 +280,23 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 switch (position) {
                     case 0:
-                        showFirstTabController();
+                        showShopController();
                         break;
                     case 1:
                         mActivity.setDraggableViewPager(false);
-                        showSecondTabController();
+                        showCategoryController();
                         break;
                     case 2:
                         mActivity.setDraggableViewPager(false);
-                        showThirdTabController();
+                        showAccountController();
                         break;
                     case 3:
                         mActivity.setDraggableViewPager(false);
-                        showFourthTabController();
+                        showContactUsController();
                         break;
                     case 4:
                         mActivity.setDraggableViewPager(false);
-                        showFifthTabController();
+                        showCheckoutControllerController();
                         break;
                 }
             } else {
@@ -611,13 +611,13 @@ public class HomeController extends BaseController implements HomeMvpView {
     private void proceedToController(int id) {
         switch (id){
             case 2:
-                showThirdTabController();
+                showAccountController();
                 break;
             case 3:
-                showFourthTabController();
+                showContactUsController();
                 break;
             case 4:
-                showFifthTabController();
+                showCheckoutControllerController();
                 break;
         }
     }

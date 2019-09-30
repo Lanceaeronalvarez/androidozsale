@@ -328,7 +328,7 @@ public class AccountController extends BaseController implements AccountMvpView 
 //                mActivity.getMainController().getHomeController().removeBasketItemCount();
 
 //                commented. in iOS when logging out, it stays on my accounts.
-//                ((MainActivity) getActivity()).getMainController().getHomeController().showFirstTabController();
+//                ((MainActivity) getActivity()).getMainController().getHomeController().showShopController();
 
                 //reset routers with unique user info
 //                mActivity.getMainController().getHomeController().resetRouters();

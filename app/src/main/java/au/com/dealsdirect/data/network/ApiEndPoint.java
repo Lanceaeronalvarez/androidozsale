@@ -1,6 +1,8 @@
 package au.com.dealsdirect.data.network;
 
 
+import com.google.android.gms.common.api.Api;
+
 import java.util.HashMap;
 import java.util.Set;
 
@@ -27,6 +29,7 @@ public final class ApiEndPoint {
         shop,
         sale,
         product,
+        wishlist,
         setting,
         eventing,
         attachments
@@ -66,6 +69,7 @@ public final class ApiEndPoint {
             case shop: microServiceUrl = "api/shop/shop/"+ version +"/accounts/";break;
             case sale: microServiceUrl = "api/sale/sale/"+ version +"/accounts/";break;
             case product: microServiceUrl = "api/shop/product/"+ version +"/accounts/";break;
+            case wishlist: microServiceUrl = "api/shop/shop/"+ version +"/wishlist/";break;
             case setting: microServiceUrl = "api/shop/settings/"+ version +"/";break;
             case eventing: microServiceUrl = "api/shop/eventing/"+ version +"/";break;
             case attachments: microServiceUrl = "api/shop/files/"+ version +"/files/"; break;
@@ -128,6 +132,10 @@ public final class ApiEndPoint {
 
     public static String getEventUser(){
         return getFormattedUrl(ApiService.eventing,"users/current", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String getWishlistEvent() {
+        return getFormattedUrl(ApiService.eventing, "events", ApiUrlVersion.v1.apiVersion());
     }
 
     /* Deep Link Data */
@@ -553,6 +561,22 @@ public final class ApiEndPoint {
 
     public static String callOrderReceived() {
         return getFormattedUrl(ApiService.legacy, NO_AKAMAI_EXTENSION + "SetOrderReceived", ApiUrlVersion.emptyVersion.apiVersion());
+    }
+
+    public static String getWishlistIdsOnly() {
+        return getFormattedUrl(ApiService.wishlist, "ids", ApiUrlVersion.v4.apiVersion());
+    }
+
+    public static String getWishlist() {
+        return getFormattedUrl(ApiService.shop,ACCOUNT_ID_DELIMETER + "/wishlist", ApiUrlVersion.v4.apiVersion());
+    }
+
+    public static String addToWishlist() {
+        return getFormattedUrl(ApiService.wishlist, "", ApiUrlVersion.v4.apiVersion());
+    }
+
+    public static String removeFromWishlist() {
+        return getFormattedUrl(ApiService.wishlist, "{product_id}", ApiUrlVersion.v4.apiVersion());
     }
 
     public static String setAttachment() {

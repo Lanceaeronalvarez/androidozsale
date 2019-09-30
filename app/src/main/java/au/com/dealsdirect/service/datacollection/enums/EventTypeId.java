@@ -9,4 +9,5 @@ public class EventTypeId {
     public static final int EVENT_SEARCH = 2;
     public static final int EVENT_ENTER_CATEGORY = 1;
     public static final int EVENT_ENTER_SALE = 7;
+    public static final int EVENT_WISHLIST = 11;
 }
