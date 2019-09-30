@@ -302,6 +302,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int mColumnCount;
     private int mCurrentProductDetailPosition = -1;
 
+    @BindView(R.id.controller_sale_items_main_container)
+    ViewGroup mMainContainer;
+
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
 
@@ -322,6 +325,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.partial_wishlist_empty)
     RelativeLayout mWishlistPlaceholder;
+
+    @BindView(R.id.adView_banner)
+    View mFooterAds;
 
     @BindView(R.id.controller_sale_items_text_placeholder)
     LinearLayout mPlaceholder;
@@ -828,7 +834,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId, mColumnCount);
-        mSaleItemsAdapter.setFooterEnabled(mSourceMode == SourceMode.NORMAL);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -905,6 +910,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             DataCollector.logEvent(Events.SaleEvent, parameters);
         }
 
+        mFooterAds.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.partial_toolbar_field_title_right_option)
@@ -1150,6 +1156,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             isKeyboardHidden = false;
         }
 
+        determineWhereToShowAds();
     }
 
     @Override
@@ -1165,13 +1172,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItems = mSaleItemsAdapter.getData();
 
         showPlaceholder(mSaleItems == null || mSaleItems.isEmpty());
+        determineWhereToShowAds();
 
         onRefreshEnd();
+
     }
 
     @Override
     public void updateWishlistWithAddition(String productId) {
         logWishlistEvent(productId, true);
+        determineWhereToShowAds();
     }
 
     @Override
@@ -1188,6 +1198,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
         showPlaceholderWithAnimation(mSaleItems.isEmpty());
+        determineWhereToShowAds();
     }
 
     private void logWishlistEvent(String productId, boolean liked) {
@@ -1295,6 +1306,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 logWishlistHeaderEvent();
                 break;
         }
+        mFooterAds.setVisibility(View.GONE);
     }
 
     void onBackClick() {
@@ -1696,6 +1708,36 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
     }
 
+    private void determineWhereToShowAds() {
+        if (getView() == null) {
+            if (mSaleItemsAdapter != null) {
+                mSaleItemsAdapter.setFooterEnabled(false);
+            }
+            if (mFooterAds != null) {
+                mFooterAds.setVisibility(View.GONE);
+            }
+        }
+
+        int contentHeight = mSaleItemsAdapter.getContentHeight();
+        boolean onlyOneRowLeft = mSaleItemsAdapter.getContentHeight() == mSaleItemsAdapter.getHeightOfCell();
+        int adjustedHeight = getView().getHeight() - (onlyOneRowLeft ? 0 : mSaleItemsAdapter.getHeightOfCell());
+        if (contentHeight > adjustedHeight) {
+            // ads as footer
+            if (mSaleItemsAdapter != null) {
+                mSaleItemsAdapter.setFooterEnabled(true);
+            }
+            mFooterAds.setVisibility(View.GONE);
+        } else {
+            // ads below recyclerview and placeholder
+            if (mSaleItemsAdapter != null) {
+                mSaleItemsAdapter.setFooterEnabled(false);
+            }
+            mFooterAds.setVisibility(View.VISIBLE);
+            CommonUtils.showAdmob(mActivity, mFooterAds,
+                    mActivity.getResources().getString(R.string.admob_products_id));
+        }
+    }
+
     @Override
     public void toggleTabSelection(int tabPos, boolean isTabActive) {
         LinearLayout tabStrip = (LinearLayout) mTabLayout.getChildAt(0);
@@ -1774,7 +1816,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void onOrientationChanged(Configuration newConfig) {
         boolean isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
-        if (mSaleItemsRecyclerView != null) {
+        if (isViewAttached()) {
             GridLayoutManager gridLayoutManager = (GridLayoutManager) mSaleItemsRecyclerView.getLayoutManager();
             int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
             mSaleItemsAdapter.computeItemViewDimensions();
@@ -1782,6 +1824,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             gridLayoutManager.scrollToPosition(currentScrollPosition);
 
             gridLayoutManager.setSpanCount(mSaleItemsAdapter.getColumnCount());
+
+            determineWhereToShowAds();
         }
     }
 
@@ -1884,6 +1928,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         switch (mSourceMode) {
             case NORMAL:
                 mWishlistPlaceholder.setVisibility(View.GONE);
+                mMainContainer.setVisibility(View.VISIBLE);
                 mToolbar.setVisibility(View.VISIBLE);
                 if (show) {
                     mPlaceholder.setVisibility(View.VISIBLE);
@@ -1896,11 +1941,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             case WISHLIST:
                 mPlaceholder.setVisibility(View.GONE);
                 if (show) {
-                    mWishlistPlaceholder.setVisibility(View.VISIBLE);
+                    mMainContainer.setVisibility(View.GONE);
                     mToolbar.setVisibility(View.GONE);
                     mSaleItemsRecyclerView.setVisibility(View.GONE);
+                    mWishlistPlaceholder.setVisibility(View.VISIBLE);
                 } else {
                     mWishlistPlaceholder.setVisibility(View.GONE);
+                    mMainContainer.setVisibility(View.VISIBLE);
                     mToolbar.setVisibility(View.VISIBLE);
                     mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
                 }
@@ -1966,6 +2013,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             super.onAnimationEnd(animation);
                             mWishlistPlaceholder.setVisibility(View.GONE);
                             mWishlistPlaceholder.setAlpha(1f);
+                            mMainContainer.setVisibility(View.VISIBLE);
                             mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
                             CommonUtils.fadeInView(mSaleItemsRecyclerView, null);
                             mToolbar.setVisibility(View.VISIBLE);
@@ -1999,6 +2047,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             super.onAnimationEnd(animation);
                             mSaleItemsRecyclerView.setVisibility(View.GONE);
                             mSaleItemsRecyclerView.setAlpha(1f);
+                            mMainContainer.setVisibility(View.GONE);
                             mWishlistPlaceholder.setVisibility(View.VISIBLE);
                             CommonUtils.fadeInView(mWishlistPlaceholder, null);
                         }

@@ -314,6 +314,23 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     public void setFooterEnabled(boolean footerEnabled) {
+        if (mIsFooterEnabled && !footerEnabled) {
+            notifyItemRemoved(mData.size() + 1);
+        } else if (!mIsFooterEnabled && footerEnabled) {
+            notifyItemInserted(mData.size());
+        }
         mIsFooterEnabled = footerEnabled;
+    }
+
+    public int getContentHeight() {
+        return (int) (Math.ceil(mData.size() / (float) mColumnCount) * mComputedPair.second);
+    }
+
+    public int getWidthOfCell() {
+        return mComputedPair.first;
+    }
+
+    public int getHeightOfCell() {
+        return mComputedPair.second;
     }
 }
