@@ -129,6 +129,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         public static final class FromItemsList extends Parameters {
             private Integer mPosition;
+            private Drawable mLowResImageDrawable;
             private String mImageURL;
             private String mSeoIdentifierId;
             private String mSkuId;
@@ -143,6 +144,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             private Boolean mIsSoldOut;
 
             public FromItemsList(Integer position,
+                                 Drawable lowResImageDrawable,
                                  String imageURL,
                                  String seoIdentifierId,
                                  String skuId,
@@ -156,6 +158,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                  boolean isFreeDelivery,
                                  Boolean isSoldOut) {
                 mPosition = position;
+                mLowResImageDrawable = lowResImageDrawable;
                 mImageURL = imageURL;
                 mSeoIdentifierId = seoIdentifierId;
                 mSkuId = skuId;
@@ -172,6 +175,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             public Integer getPosition() {
                 return mPosition;
+            }
+
+            public Drawable getLowResImageDrawable() {
+                return mLowResImageDrawable;
             }
 
             public String getImageURL() {
@@ -255,6 +262,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mSaleId;
     private String mSkuId;
     private String mItemImageUrl;
+    private Drawable mItemLowResImageDrawable = null;
     private String mSeoIdentifierId;
     private String mSaleName;
     private String mSalePrice;
@@ -457,6 +465,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (parameters instanceof Parameters.FromItemsList) {
             controller.mSaleId = ((Parameters.FromItemsList) parameters).getSaleId();
             controller.mSkuId = ((Parameters.FromItemsList) parameters).getSkuId();
+            controller.mItemLowResImageDrawable = ((Parameters.FromItemsList) parameters).getLowResImageDrawable();
             controller.mItemImageUrl = ((Parameters.FromItemsList) parameters).getImageURL();
             controller.mSeoIdentifierId = ((Parameters.FromItemsList) parameters).getSeoIdentifierId();
             controller.mSaleName = ((Parameters.FromItemsList) parameters).getProductName();
@@ -645,11 +654,23 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleDetailsImageListener = this;
         mProductSharedImage.setTransitionName(getResources().getString(R.string.transition_sale_image_indexed, mFromPosition));
 
-        ImageUtils.loadImageImmediate(mItemImageUrl, mProductSharedImage, null);
+        if (mItemLowResImageDrawable != null) {
+            ImageUtils.loadImageWithPlaceholder(mItemImageUrl, mProductSharedImage, mItemLowResImageDrawable, null);
+            mItemLowResImageDrawable = null;
+        } else {
+            ImageUtils.loadImageImmediate(mItemImageUrl, mProductSharedImage, null);
+        }
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
-        SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(mActivity, mPresenter.isTablet(),
-                mProductDetailScrollView, null, mLoadImagesListener, new ArrayList<>(), 2, null, this,
+        SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(
+                mActivity,
+                mPresenter.isTablet(),
+                mProductDetailScrollView,
+                null,
+                mLoadImagesListener,
+                new ArrayList<>(),
+                2,
+                this,
                 mSaleDetailsImageListener);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
         mOtherImagesRv.setVisibility(View.INVISIBLE);
@@ -670,8 +691,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (mPresenter.isTablet()) toggledViews.add(mAddToCartOverlay);
 
-        SaleItemDetailsImageAdapter mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(mActivity, mPresenter.isTablet(), null,
-                toggledViews, mLoadImagesListener, new ArrayList<>(), 1, mProductSharedImage.getDrawable(), this,
+        SaleItemDetailsImageAdapter mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(
+                mActivity,
+                mPresenter.isTablet(),
+                null,
+                toggledViews,
+                mLoadImagesListener,
+                new ArrayList<>(),
+                1,
+                this,
                 mSaleDetailsImageListener);
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
         mProductImagesRv.setEnabled(false);

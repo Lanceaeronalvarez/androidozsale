@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -1331,8 +1332,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
-                                   String skuId, String saleId, boolean isFreeDelivery) {
+    public void showProductDetails(RecyclerView.ViewHolder viewHolder,
+                                   int position,
+                                   String seoIdentifierId,
+                                   Drawable imagePlaceholderDrawable,
+                                   String imageUrl,
+                                   String skuId,
+                                   String saleId,
+                                   boolean isFreeDelivery) {
         if (mSearchFilterMvpView != null) {
             mSearchFilterMvpView.closeFacets();
         }
@@ -1342,6 +1349,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
                 .Parameters.FromItemsList(position,
+                imagePlaceholderDrawable,
                 imageUrl,
                 seoIdentifierId,
                 skuId,

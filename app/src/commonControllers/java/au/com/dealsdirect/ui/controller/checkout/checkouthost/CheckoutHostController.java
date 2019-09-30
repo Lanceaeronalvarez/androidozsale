@@ -313,6 +313,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
         SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
                 .Parameters.FromItemsList(position,
+                null,
                 imageUrl,
                 CommonUtils.loadSaleItem(mActivity, productID),
                 skuId,

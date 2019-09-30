@@ -219,6 +219,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                             holder,
                             holder.getAdapterPosition(),
                             product.getSeoIdentifier(),
+                            holder.image.getDrawable(),
                             urlHigherRes,
                             product.getSkus() == null || product.getSkus().isEmpty() ? "" :
                                     product.getSkus().get(0).getId(),

@@ -1465,6 +1465,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
                 .Parameters.FromItemsList(position,
+                null,
                 imageUrl,
                 CommonUtils.loadSaleItem(mActivity, productID),
                 skuId,

@@ -38,7 +38,7 @@ public class ImageUtils {
 
     public static abstract class ImageLoadedCallback {
 
-        public void onImageResourceReady() {
+        public void onImageResourceReady(Bitmap resource) {
 
         }
     }
@@ -76,19 +76,38 @@ public class ImageUtils {
     }
 
     public static void loadImageWithPlaceholder(String url, ImageView imageView, Drawable placeholder,
-                                                RequestListener requestListener) {
+                                                ImageLoadedCallback callback) {
         RequestOptions options = new RequestOptions()
                 .placeholder(placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .skipMemoryCache(true)
                 .format(DecodeFormat.PREFER_ARGB_8888);
 
-        Glide.with(imageView)
-                .asBitmap()
-                .apply(options)
-                .load(url)
-                .listener(requestListener)
-                .into(imageView);
+        if (callback != null) {
+            Glide.with(imageView)
+                    .asBitmap()
+                    .apply(options)
+                    .load(url)
+                    .listener(new RequestListener<Bitmap>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                            callback.onImageResourceReady(resource);
+                            return false;
+                        }
+                    })
+                    .into(imageView);
+        } else {
+            Glide.with(imageView)
+                    .asBitmap()
+                    .apply(options)
+                    .load(url)
+                    .into(imageView);
+        }
     }
 
     public static void loadImageImmediate(String url, ImageView imageView, ImageLoadedCallback callback) {
@@ -111,7 +130,7 @@ public class ImageUtils {
 
                         @Override
                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                            callback.onImageResourceReady();
+                            callback.onImageResourceReady(resource);
                             return false;
                         }
                     })
