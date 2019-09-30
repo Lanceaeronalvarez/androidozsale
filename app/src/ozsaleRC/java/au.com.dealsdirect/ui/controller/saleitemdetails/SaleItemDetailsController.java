@@ -601,7 +601,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         stretchImageView();
 
-        if (mBrandName != null && !mBrandName.isEmpty()) {
+        if (mBrandName == null || mBrandName.isEmpty()) {
             mProductBrand.setText(mSaleName);
             mProductName.setText("");
         } else {
