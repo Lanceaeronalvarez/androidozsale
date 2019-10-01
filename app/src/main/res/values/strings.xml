@@ -755,4 +755,6 @@
     <string name="returns_enquiry">Returns Enquiry</string>
 
     <string name="done">Done</string>
+    <string name="free_shipping_text">Free Shipping</string>
+    <string name="shipping_text">Shipping</string>
 </resources>
