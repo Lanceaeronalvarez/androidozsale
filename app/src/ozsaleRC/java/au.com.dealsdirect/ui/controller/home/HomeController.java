@@ -467,8 +467,38 @@ public class HomeController extends BaseController implements HomeMvpView {
         mIsInitialSavedInstanceLoad = savedInstanceState.getBoolean(KEY_HAS_SAVED_INSTANCE);
     }
 
+    private void onTabSwitch() {
+        Controller controller = null;
+        switch (currentVisibleIndex) {
+            case TAB_SHOP_INDEX:
+                controller = getCurrentControllerOnRouter(mShopRouter);
+                break;
+            case TAB_ACCOUNT_INDEX:
+                controller = getCurrentControllerOnRouter(mAccountsRouter);
+                break;
+            case TAB_CATEGORIES_INDEX:
+                controller = getCurrentControllerOnRouter(mCategoriesRouter);
+                break;
+            case TAB_CONTACT_INDEX:
+                controller = getCurrentControllerOnRouter(mContactRouter);
+                break;
+            case TAB_CHECKOUT_INDEX:
+                controller = getCurrentControllerOnRouter(mCheckoutRouter);
+                break;
+            case TAB_WISHLIST_INDEX:
+                controller = getCurrentControllerOnRouter(mWishlistRouter);
+                break;
+            default:
+                break;
+        }
+        if (controller instanceof BaseController) {
+            ((BaseController) controller).onTabSwitch(false);
+        }
+    }
+
     @Override
     public void showShopController() {
+        onTabSwitch();
 
         if (mShopRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
@@ -481,7 +511,9 @@ public class HomeController extends BaseController implements HomeMvpView {
             }
 
             if (controller instanceof BaseController) {
-                ((BaseController) controller).refreshContents();
+                BaseController baseController = ((BaseController) controller);
+                onTabSwitch(true);
+                baseController.refreshContents();
             }
 
         }
@@ -493,6 +525,8 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showCategoryController() {
+        onTabSwitch();
+
         if (mCategoriesRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mCategoriesRouter);
             if (controller instanceof BaseController) {
@@ -508,6 +542,8 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showAccountController() {
+        onTabSwitch();
+
         mIsInitialSavedInstanceLoad = false;
         setVisibleContainer(TAB_ACCOUNT_INDEX);
         mActivity.setDraggableViewPager(false);
@@ -527,6 +563,8 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showContactUsController() {
+        onTabSwitch();
+
         mActivity.setDraggableViewPager(false);
         setVisibleContainer(TAB_CONTACT_INDEX);
         if (!mActivity.isAuthorized() && !mIsInitialSavedInstanceLoad) {
@@ -562,6 +600,8 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showCheckoutControllerController() {
+        onTabSwitch();
+
         if (mCheckoutMvpView == null) {
             resetCheckoutRouter();
         }
@@ -597,6 +637,8 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void showWishlistController() {
+        onTabSwitch();
+
         mPresenter.setHasWishlistBeenAccessed(true);
 
         if (mWishlistRouter != null) {

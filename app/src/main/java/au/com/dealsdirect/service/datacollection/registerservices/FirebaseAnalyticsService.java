@@ -28,6 +28,7 @@ import au.com.dealsdirect.service.datacollection.events.InitiateCheckOutEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemDetailsDataEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemListDataEvent;
 import au.com.dealsdirect.service.datacollection.events.LoginDataEvent;
+import au.com.dealsdirect.service.datacollection.events.ProductListGridViewPreferenceEvent;
 import au.com.dealsdirect.service.datacollection.events.PurchaseDataEvent;
 import au.com.dealsdirect.service.datacollection.events.RegistrationDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SaleBannersDataEvent;
@@ -59,6 +60,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     static String finalType;
     private static final String FAILED_TRANSACTION_EVENT = "FAILED_PAYMENT_TRANSACTION";
     private static final String TOGGLE_LIST_COUNT_EVENT = "PRODUCT_LIST_TOGGLE_COLUMN_COUNT";
+    private static final String PRODUCT_LIST_GRID_VIEW_PREFERENCE = "PRODUCT_LIST_GRID_VIEW_PREFERENCE";
     private static final String WISHLIST_ADDTOCART = "WISHLIST_ADDTOCART";
     private static final String WISHLIST_PAYMENTSUCCESS = "WISHLIST_PAYMENTSUCCESS";
 
@@ -374,6 +376,20 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     }
                 }));
 
+        // register grid view preference
+        DataCollector.EventRegistry.register(generateEventKey(Events.ProductListGridViewPreference, getServiceKey()),
+                Events.ProductListGridViewPreference,
+                new LoggingService.LogProductListGridViewPreference(new ProductListGridViewPreferenceEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(EventParameters.TOGGLE_LIST_PREFERENCE,
+                                String.valueOf(parameters.get(EventParameters.TOGGLE_LIST_PREFERENCE)));
+                        logProductListGridViewPreference((Context) parameters.get(EventParameters.APP_CONTEXT),
+                                bundle, String.valueOf(parameters.get(EventParameters.SCREEN_NAME)));
+                    }
+                }));
+
         // register wishlist item add to cart
         DataCollector.EventRegistry.register(generateEventKey(Events.WishlistAddToCartEvent, getServiceKey()),
                 Events.WishlistEvent,
@@ -554,6 +570,12 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
         firebaseAnalytics.logEvent(TOGGLE_LIST_COUNT_EVENT, bundle);
+    }
+
+    private static void logProductListGridViewPreference(Context context, Bundle bundle, String screenName) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
+        firebaseAnalytics.logEvent(PRODUCT_LIST_GRID_VIEW_PREFERENCE, bundle);
     }
 
     private static void wishlistItemAddToCart(Context context, String screenName) {

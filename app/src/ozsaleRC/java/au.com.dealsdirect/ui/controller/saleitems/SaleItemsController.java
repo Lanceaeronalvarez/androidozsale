@@ -113,6 +113,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         WISHLIST
     }
 
+    public enum GridViewMode {
+        LARGER_IMAGES,
+        MORE_IMAGES
+    }
+
     public SourceMode getSourceMode() {
         return mSourceMode;
     }
@@ -123,6 +128,53 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private SourceMode mSourceMode = SourceMode.NORMAL;
+
+    private void toggleGridViewMode() {
+        switch (mGridViewMode) {
+            case MORE_IMAGES:
+                setGridViewMode(GridViewMode.LARGER_IMAGES);
+                break;
+            case LARGER_IMAGES:
+                setGridViewMode(GridViewMode.MORE_IMAGES);
+                break;
+        }
+    }
+
+    private void setGridViewMode(GridViewMode gridViewMode) {
+        if (mGridViewMode == gridViewMode) {
+            return;
+        }
+
+        mGridViewMode = gridViewMode;
+
+        if (!isViewBound()) {
+            return;
+        }
+        switch (gridViewMode) {
+            case MORE_IMAGES:
+                mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_3_column_view));
+
+                mColumnCount = mActivity.getResources().getInteger(R.integer.items_max_column_portrait);
+                mPresenter.setColumnCount(mColumnCount);
+
+                setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_max_column_portrait),
+                        mActivity.getResources().getInteger(R.integer.items_max_column_landscape));
+                break;
+            case LARGER_IMAGES:
+                mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_2_column_view));
+
+                mColumnCount = mActivity.getResources().getInteger(R.integer.items_min_column_portrait);
+                mPresenter.setColumnCount(mColumnCount);
+
+                setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_min_column_portrait),
+                        mActivity.getResources().getInteger(R.integer.items_min_column_landscape));
+                break;
+        }
+    }
+
+    private GridViewMode mGridViewMode;
+
+    private GridViewModePreferenceHelper mGridViewModePreferenceHelper = new GridViewModePreferenceHelper();
 
     public abstract static class Parameters {
         private Parameters() {
@@ -652,6 +704,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mActivity.setDraggableViewPager(false);
         determineToolbarTitle();
         refreshContents();
+
+        mGridViewModePreferenceHelper.resetTimeElapsed();
+        mGridViewModePreferenceHelper.resetTimestamp();
+    }
+
+
+    @Override
+    public void onViewWillDisappear(Controller nextController) {
+        super.onViewWillDisappear(nextController);
     }
 
     @Override
@@ -683,6 +744,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     break;
             }
         }
+
+        mGridViewModePreferenceHelper.resetTimeElapsed();
+        mGridViewModePreferenceHelper.resetTimestamp();
     }
 
     @Override
@@ -797,6 +861,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void onDestroyView(@NonNull View view) {
+        logGridViewPreferenceEvent();
 
         mPresenter.onDetach();
         mSaleItemsRecyclerView.setAdapter(null);
@@ -820,10 +885,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mColumnView.setVisibility(View.VISIBLE);
         mColumnCount = mPresenter.getColumnCount();
-        mColumnView.setTag(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
-                R.drawable.ic_3_column_view : R.drawable.ic_2_column_view);
-        mColumnView.setImageDrawable(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
-                getResources().getDrawable(R.drawable.ic_3_column_view) : getResources().getDrawable(R.drawable.ic_2_column_view));
+        setGridViewMode(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
+                GridViewMode.MORE_IMAGES : GridViewMode.LARGER_IMAGES);
+        mGridViewModePreferenceHelper.resetTimeElapsed();;
+        mGridViewModePreferenceHelper.resetTimestamp();
 
         //use initialcategory tree map if it came from categories.
         if (!mInitialCategoryTree.isEmpty()) {
@@ -915,26 +980,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @OnClick(R.id.partial_toolbar_field_title_right_option)
     void onColumnClick() {
-        int tag = (int) mColumnView.getTag();
-        if (tag == R.drawable.ic_2_column_view) {
-            mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_3_column_view));
-            mColumnView.setTag(R.drawable.ic_3_column_view);
-
-            mColumnCount = mActivity.getResources().getInteger(R.integer.items_max_column_portrait);
-            mPresenter.setColumnCount(mColumnCount);
-
-            setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_max_column_portrait),
-                    mActivity.getResources().getInteger(R.integer.items_max_column_landscape));
-        } else {
-            mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_2_column_view));
-            mColumnView.setTag(R.drawable.ic_2_column_view);
-
-            mColumnCount = mActivity.getResources().getInteger(R.integer.items_min_column_portrait);
-            mPresenter.setColumnCount(mColumnCount);
-
-            setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_min_column_portrait),
-                    mActivity.getResources().getInteger(R.integer.items_min_column_landscape));
-        }
+        mGridViewModePreferenceHelper.incrementTimeElapsedForGridViewMode(mGridViewMode);
+        toggleGridViewMode();
     }
 
     @Optional
@@ -1284,6 +1331,29 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
 
         DataCollector.logEvent(Events.SearchEvent, parameters);
+    }
+
+    private void logGridViewPreferenceEvent() {
+        mGridViewModePreferenceHelper.incrementTimeElapsedForGridViewMode(mGridViewMode);
+        String output = mGridViewModePreferenceHelper.computeGridViewModePreference().toString();
+
+        HashMap<String, Object> eventParameters = new HashMap<>();
+        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
+        eventParameters.put(DataCollector.EventParameters.TOGGLE_LIST_PREFERENCE, output);
+        DataCollector.logEvent(Events.ProductListGridViewPreference, eventParameters);
+    }
+
+    @Override
+    public void onTabSwitch(boolean intoThisView) {
+        super.onTabSwitch(intoThisView);
+
+        if (intoThisView) {
+            mGridViewModePreferenceHelper.resetTimeElapsed();
+            mGridViewModePreferenceHelper.resetTimestamp();
+        } else {
+            logGridViewPreferenceEvent();
+        }
     }
 
     @Override

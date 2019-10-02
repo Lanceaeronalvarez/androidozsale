@@ -370,6 +370,20 @@ public class LoggingService {
         }
     }
 
+    public static class LogProductListGridViewPreference implements LoggingEventData {
+
+        private LogDataEvents logProductListGridViewPreference;
+
+        public LogProductListGridViewPreference(LogDataEvents logProductListGridViewPreference) {
+            this.logProductListGridViewPreference = logProductListGridViewPreference;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logProductListGridViewPreference.LogDataEvents(parameters);
+        }
+    }
+
     public static class LogWishlistDataEvent implements LoggingEventData {
         private LogDataEvents logWishlistDataEvent;
 

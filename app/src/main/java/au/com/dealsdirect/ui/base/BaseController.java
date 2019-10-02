@@ -319,6 +319,10 @@ public abstract class BaseController
 
     }
 
+    public void onTabSwitch(boolean intoThisView) {
+
+    }
+
     public boolean isViewBound() {
         return mIsViewBound;
     }
