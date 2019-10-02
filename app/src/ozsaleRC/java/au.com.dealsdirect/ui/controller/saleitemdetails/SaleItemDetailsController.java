@@ -1386,10 +1386,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void bringAttentionToSizeSelection() {
-        if (ViewUtils.isViewVisibleInScrollView(mSizesContainer, mProductDetailScrollView)) {
-            showBottomDialogWithSizeSelection();
-        } else {
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mProductDetailsButtonContainer.getLayoutParams();
+        int addToCartButtonHeight = Math.max(mAddToCartButtonContainer.getHeight(), mAddToCartTimer.getHeight());
+        if (ViewUtils.isViewVisibleInScrollView(
+                mSizesFlowLayout,
+                mProductDetailScrollView,
+                mProductDetailsToolbar.getVisibility() == View.VISIBLE ? mProductDetailsToolbar.getHeight() : 0,
+                -(lp.bottomMargin + addToCartButtonHeight))) {
             shakeSizeButtons();
+        } else {
+            showBottomDialogWithSizeSelection();
         }
         mSizesNotSelectedNotice.setVisibility(View.VISIBLE);
     }

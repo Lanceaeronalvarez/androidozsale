@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
                 android:padding="@dimen/margin_extra_small"
-                android:text="@string/please_select_size"
+                android:text="@string/select_size"
                 android:textAllCaps="true"
                 android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_body" />

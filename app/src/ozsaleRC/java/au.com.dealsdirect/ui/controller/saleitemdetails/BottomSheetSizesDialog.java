@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.util.Pair;
@@ -29,6 +30,8 @@ public class BottomSheetSizesDialog extends BottomSheetDialogFragment {
     private OnDoneListener mOnDoneListener = null;
     private OnSizeGuideTappedListener mOnSizeGuideTappedListener = null;
 
+    private View mMainLayout = null;
+
     private int mSelectedSizeIndex = -1;
 
     TextView mHeader;
@@ -51,6 +54,13 @@ public class BottomSheetSizesDialog extends BottomSheetDialogFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from((View) mMainLayout.getParent());
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_sizes_content, container, false);
 
@@ -59,6 +69,8 @@ public class BottomSheetSizesDialog extends BottomSheetDialogFragment {
         setupSizeGuide();
         setupFlowLayout();
         setupDoneButton();
+
+        mMainLayout = v;
 
         return v;
     }

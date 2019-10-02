@@ -47,6 +47,7 @@
     <string name="font_raleway_thin_italic">fonts/raleway/Raleway-ThinItalic.ttf</string>
 
     <string name="return_policy">Return Policy</string>
+    <string name="select_size">Select size</string>
 
     <string name="base_html_template_header" formatted="false">
         <![CDATA["<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">

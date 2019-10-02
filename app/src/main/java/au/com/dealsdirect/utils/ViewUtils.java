@@ -25,22 +25,37 @@ public final class ViewUtils {
     }
 
     public static boolean isViewVisibleInScrollView(View view, ScrollView scrollView) {
+        return isViewVisibleInScrollView(view, scrollView, 0, 0);
+    }
+
+    public static boolean isViewVisibleInScrollView(View view, ScrollView scrollView, float topOffset, float bottomOffset) {
         Rect scrollBounds = new Rect();
         scrollView.getDrawingRect(scrollBounds);
 
-        float top = view.getY();
-        float bottom = top + view.getHeight();
+        Rect offsetViewBounds = new Rect();
+        view.getDrawingRect(offsetViewBounds);
+        scrollView.offsetDescendantRectToMyCoords(view, offsetViewBounds);
 
-        return scrollBounds.top < top && scrollBounds.bottom > bottom;
+        float top = offsetViewBounds.top;
+        float bottom = offsetViewBounds.bottom;
+        return (scrollBounds.top + topOffset) < top && (scrollBounds.bottom + bottomOffset) > bottom;
     }
 
     public static boolean isViewVisibleInScrollView(View view, NestedScrollView scrollView) {
+        return isViewVisibleInScrollView(view, scrollView, 0, 0);
+    }
+
+    public static boolean isViewVisibleInScrollView(View view, NestedScrollView scrollView, float topOffset, float bottomOffset) {
         Rect scrollBounds = new Rect();
         scrollView.getDrawingRect(scrollBounds);
 
-        float top = view.getY();
-        float bottom = top + view.getHeight();
+        Rect offsetViewBounds = new Rect();
+        view.getDrawingRect(offsetViewBounds);
+        scrollView.offsetDescendantRectToMyCoords(view, offsetViewBounds);
 
-        return scrollBounds.top < top && scrollBounds.bottom > bottom;
+        float top = offsetViewBounds.top;
+        float bottom = offsetViewBounds.bottom;
+
+        return (scrollBounds.top + topOffset) < top && (scrollBounds.bottom + bottomOffset) > bottom;
     }
 }
