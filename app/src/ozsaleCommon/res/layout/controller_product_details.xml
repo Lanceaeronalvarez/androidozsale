@@ -151,7 +151,7 @@
                                         android:text="@string/size"
                                         android:textAllCaps="true"
                                         android:textColor="@color/text_medium"
-                                        android:textSize="@dimen/text_size_body" />
+                                        android:textSize="@dimen/text_size_caption1" />
 
                                     <ImageView
                                         android:id="@+id/question_mark"
@@ -214,15 +214,14 @@
                                 android:visibility="gone">
 
                                 <TextView
-                                    fontPath="@string/font_app_semibold"
+                                    fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="3dp"
-                                    android:padding="@dimen/margin_extra_small"
-                                    android:text="@string/estimated_delivery"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/text_medium"
-                                    android:textSize="@dimen/text_size_body" />
+                                    android:layout_marginStart="6dp"
+                                    android:padding="@dimen/margin_small"
+                                    android:text="@string/shipping"
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_caption1" />
 
                                 <WebView
                                     android:id="@+id/product_details_shipping_desc_webview"
@@ -243,15 +242,14 @@
                                 android:visibility="gone">
 
                                 <TextView
-                                    fontPath="@string/font_app_semibold"
+                                    fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="3dp"
-                                    android:padding="@dimen/margin_extra_small"
+                                    android:layout_marginStart="6dp"
+                                    android:padding="@dimen/margin_small"
                                     android:text="@string/return_policy"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/text_medium"
-                                    android:textSize="@dimen/text_size_body" />
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_caption1" />
 
                                 <WebView
                                     android:id="@+id/product_details_return_policy_text"
@@ -858,9 +856,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_regular"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="@dimen/margin_extra_small"
+                android:layout_marginLeft="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_extra_small"
+                android:layout_marginRight="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:background="@drawable/bg_button_rounded"
                 android:orientation="horizontal"
@@ -919,9 +917,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="@dimen/margin_extra_small"
+                android:layout_marginLeft="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_extra_small"
+                android:layout_marginRight="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:clipChildren="false"
                 android:clipToPadding="false">

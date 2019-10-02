@@ -51,7 +51,6 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
-import com.facebook.common.Common;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
@@ -743,8 +742,41 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
         });
 
-        mHtmlHeader = mActivity.getResources()
-                .getString(R.string.base_html_template_header);
+        mHtmlHeader = StringUtils.applyStyleToCSS(new StringUtils.CSSStyle() {
+            @Override
+            public String getBodyFontName() {
+                return StringUtils.typeFaceFamilyFromFilename(
+                        mActivity.getResources().getString(R.string.font_app_regular));
+            }
+
+            @Override
+            public String getBodyFontColor() {
+                String hex = Integer.toHexString(
+                        mActivity.getResources().getColor(R.color.text_extra_dark));
+                if (hex.length() > 6) {
+                    hex = hex.substring(2);
+                }
+                return "#" + hex;
+            }
+
+            @Override
+            public String getBoldFontName() {
+                return StringUtils.typeFaceFamilyFromFilename(
+                        mActivity.getResources().getString(R.string.font_app_regular));
+            }
+
+            @Override
+            public String getBoldFontColor() {
+                String hex = Integer.toHexString(
+                        mActivity.getResources().getColor(R.color.text_extra_dark));
+                if (hex.length() > 6) {
+                    hex = hex.substring(2);
+                }
+                return "#" + hex;
+            }
+        }, mActivity.getResources()
+                .getString(R.string.base_html_template_header));
+
         mHtmlFooter = mActivity.getResources()
                 .getString(R.string.base_html_template_footer);
 

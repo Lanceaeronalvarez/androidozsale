@@ -245,4 +245,49 @@ public class StringUtils {
                                                      int flags) {
         applySpanToRanges(source, what, rangesOfSubstringsMatching(source.toString(), regex), flags);
     }
+
+    public interface CSSStyle {
+        String getBodyFontName();
+        String getBodyFontColor();
+        String getBoldFontName();
+        String getBoldFontColor();
+    }
+
+    public static String applyStyleToCSS(CSSStyle style, String sourceCSS) {
+        final String regexBodyFontName = "__BODY_FONT_NAME__";
+        final String regexBodyFontColor = "__BODY_FONT_COLOR__";
+        final String regexBoldFontName = "__BOLD_FONT_NAME__";
+        final String regexBoldFontColor = "__BOLD_FONT_COLOR__";
+
+        return sourceCSS
+                .replaceAll(regexBodyFontName, style.getBodyFontName())
+                .replaceAll(regexBodyFontColor, style.getBodyFontColor())
+                .replaceAll(regexBoldFontName, style.getBoldFontName())
+                .replaceAll(regexBoldFontColor, style.getBoldFontColor());
+    }
+
+    public static String typeFaceFamilyFromFilename(String filename) {
+        // This may not work if the filename does not represent the family name
+        final String regex = "(?!.*\\/).*(?=-.*\\.ttf)";
+
+        String familyName = null;
+        Matcher matcher = Pattern.compile(regex).matcher(filename);
+        if (matcher.find()) {
+            familyName = matcher.group();
+        }
+
+        if (familyName == null || familyName.isEmpty()) {
+            return null;
+        }
+
+        // Assumes CamelCasing
+        familyName = insertSpaceBetweenLowerCaseAndUppercaseLetters(familyName);
+
+        return familyName;
+    }
+
+    public static String insertSpaceBetweenLowerCaseAndUppercaseLetters(String source) {
+        final String regex = "[a-z](?=[A-Z])";
+        return source.replaceAll(regex, "$0 ");
+    }
 }

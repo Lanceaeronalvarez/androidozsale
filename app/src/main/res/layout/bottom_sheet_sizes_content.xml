@@ -21,7 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:background="@color/white"
             android:paddingBottom="@dimen/margin_small"
             android:visibility="visible">
 
@@ -29,12 +28,12 @@
                 android:id="@+id/bottom_sheet_sizes_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
-                android:padding="@dimen/margin_extra_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_extra_small"
                 android:text="@string/select_size"
                 android:textAllCaps="true"
                 android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_body" />
+                android:textSize="@dimen/text_size_caption1" />
 
             <TextView
                 android:id="@+id/bottom_sheet_sizes_size_guide"
@@ -42,11 +41,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:paddingTop="@dimen/margin_extra_small"
-                android:paddingBottom="@dimen/margin_small"
                 android:paddingLeft="@dimen/margin_small"
+                android:paddingTop="@dimen/margin_extra_small"
                 android:paddingRight="@dimen/margin_small"
-                android:text="size guide"
+                android:paddingBottom="@dimen/margin_small"
+                android:text="@string/size_guide"
+                android:textColor="@color/text_link_color"
                 android:textSize="@dimen/text_size_caption1"
                 android:visibility="visible" />
 
@@ -67,9 +67,9 @@
             style="@style/DDButtonAddCart"
             android:layout_width="match_parent"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="@dimen/margin_extra_small"
+            android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_extra_small"
-            android:layout_marginRight="@dimen/margin_extra_small"
+            android:layout_marginRight="@dimen/margin_small"
             android:layout_marginBottom="@dimen/margin_medium"
             android:clipChildren="false"
             android:clipToPadding="false"

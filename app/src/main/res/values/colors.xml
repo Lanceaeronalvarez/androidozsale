@@ -256,4 +256,6 @@
     <color name="bg_fcm_notif">#F00065</color>
     <color name="color_free_shipping_text">#00B5E9</color>
 
+    <color name="text_link_color">#007CF7</color>
+
 </resources>
