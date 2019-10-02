@@ -38,6 +38,7 @@ public class GetSaleItemsResponse implements Serializable {
     public class Products {
         String id;
         String name;
+        String brandName;
         String description;
 
         String labelText;
@@ -106,6 +107,14 @@ public class GetSaleItemsResponse implements Serializable {
 
         public String getProductName() {
             return name;
+        }
+
+        public String getBrandName() {
+            return brandName;
+        }
+
+        public void setBrandName(String brandName) {
+            this.brandName = brandName;
         }
 
         public String getDescription() {

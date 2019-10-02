@@ -59,10 +59,14 @@ public class BundleKeys {
     public static final String COLOR_FACET_FILTER_TYPE = "color";
     public static final String SIZE_FACET_FILTER_TYPE = "size";
     public static final String PRICE_FACET_FILTER_TYPE = "price";
+    public static final String DELIVERY_FACET_FILTER_TYPE = "delivery";
+    public static final String NEW_ARRIVAL_FACET_FILTER_TYPE = "new arrival";
     public static final String BRANDS_FACETFILTER_NAME = "skus.brandName";
     public static final String SIZES_FACETFILTER_NAME = "skus.attributes.size";
     public static final String COLORS_FACETFILTER_NAME = "color";
     public static final String PRICE_FACETFILTER_NAME = "skus.attributesForFaceting.aud";
+    public static final String DELIVERY_FACETFILTER_NAME = "delivery";
+    public static final String NEW_ARRIVAL_FACETFILTER_NAME = "newArrivals";
     public static final String SEARCH_QUERY_NAME = "search_query";
     public static final String SORT_FACETFILTER_NAME = "sort";
     public static final String CATEGORY_TREE_FACET = "KEY_CATEGORY_FACET";
@@ -143,6 +147,12 @@ public class BundleKeys {
     public static final String KEY_STATUS = "ReturnDetailsController.STATUS";
     public static final String KEY_RAN = "ReturnDetailsController.RAN";
     public static final String KEY_RETURN_ID = "ReturnDetailsController.RETURN_ID";
+    public static final String KEY_PRODUCT_NAME = "ReturnDetailsController.PRODUCT_NAME";
+    public static final String KEY_IS_FROM_ORDER = "ReturnDetailsController.IS_FROM_ORDER";
+    public static final String KEY_IMAGE_URI = "ReturnDetailsController.IMAGE_URI";
+    public static final String KEY_USER_MESSAGE = "ReturnDetailsController.USER_MESSAGE";
+    public static final String KEY_PRODUCT_ID = "ReturnDetailsController.PRODUCT_ID";
+    public static final String KEY_SHOULD_UPLOAD_IMAGE = "ReturnDetailsController.SHOULD_UPLOAD_IMAGE";
 
     //Categories
     public static final String CATEGORY_SHOP = "shop";

@@ -130,12 +130,12 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         }
 
         ImageUtils.Grid gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width) * screenDensity,
-                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mActivity),isLandscape ?
+                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mActivity), isLandscape ?
                         landscapeSize : portraitSize,
                 isLandscape ? landscapeSize : portraitSize);
 
         mColumnCount = gridDefinition.getColumn();
-        mComputedPair = new Pair<>((int) gridDefinition.getItemWidth(),(int) gridDefinition.getItemHeight());
+        mComputedPair = new Pair<>((int) gridDefinition.getItemWidth(), (int) gridDefinition.getItemHeight());
     }
 
     @Override
@@ -163,13 +163,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
             holder.name.setText(saleItem.getProductName());
 
-            String saleItemBrand = saleItem.getProductName();
-
-            if (mData.get(position).getSkus() != null)
-                if (!mData.get(position).getSkus().isEmpty())
-                    if (mData.get(position).getSkus().get(0).getBrandName() != null)
-                        saleItemBrand = mData.get(position).getSkus().get(0).getBrandName();
-
             String saleItemPrice = PriceUtils.getPriceStringValue(mData.get(position).getPrice().getValue());
             String saleItemOldPrice = PriceUtils.getRpStringValue(mData.get(position).getOriginalPrice().getValue());
 
@@ -179,12 +172,12 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
             holder.soldout.setVisibility(saleItem.isSoldOut() ? View.VISIBLE : View.GONE);
 
-            holder.brand.setText(saleItemBrand);
+            holder.brand.setText(saleItem.getBrandName());
             holder.price.setText(saleItemPrice);
             holder.oldPrice.setText(saleItemOldPrice);
             holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.freeDelivery.setVisibility(mData.get(position).getFreeDelivery() ? View.VISIBLE : View.GONE);
-            int discountValue = mData.get(position).getSalePercentOff().intValue();
+            int discountValue = mData.get(position).getSalePercentOff();
             double salePriceValue = mData.get(position).getSalePrice() != null ?
                     mData.get(position).getSalePrice().getValue() : 0;
             holder.discount.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);

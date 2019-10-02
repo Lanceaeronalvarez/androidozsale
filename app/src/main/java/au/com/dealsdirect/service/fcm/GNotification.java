@@ -239,7 +239,7 @@ public class GNotification {
         return appName;
     }
 
-    private static String getDeviceID(Context context) {
+    public static String getDeviceID(Context context) {
         @SuppressLint("HardwareIds")
         String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         String serial = android.os.Build.SERIAL;

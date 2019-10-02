@@ -16,9 +16,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
+import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.ui.controller.orders.orders.OrderItemClickListener;
 import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.AppLogger;
@@ -60,34 +62,54 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     private String mItemAddress = "";
     private int mInvoiceNumber;
     private GetOrderPaymentDetails.ResponseValue.Tracker mTracker;
+    private GetPaymentsList.ResponseValue.Tracker mOrderTracker;
     private String mOrderId = "";
     private String currentStatus = "";
     private boolean hasReceivedStatus = false;
     private String getReceiveDate = "";
-
+    private boolean isOrderReceived = false;
+    private boolean isOrderCancelled = false;
+    private GetPaymentsList.ResponseValue.PaymentItem mOrders;
 
     public OrderDetailsRecyclerViewAdapter(Activity mActivity,
                                            GetOrderPaymentDetails.ResponseValue.Value orderDetails,
                                            OrderDetailsClickListener clickListener,
-                                           HashMap<String, String> status, String link, HashMap<String, String> estimatedDelivery) {
+                                           HashMap<String, String> status, String link,
+                                           HashMap<String, String> estimatedDelivery,
+                                           GetPaymentsList.ResponseValue.PaymentItem orders) {
 
         mClickListener = clickListener;
         this.mActivity = mActivity;
         this.mStatus = status;
         this.mLink = link;
         this.mEstimatedDelivery = estimatedDelivery;
-        ordersTransformation(orderDetails);
+        this.mOrders = orders;
+        ordersTransformation(orderDetails, orders);
 
     }
 
-    public void ordersTransformation(GetOrderPaymentDetails.ResponseValue.Value orderDetails) {
+    public void ordersTransformation(GetOrderPaymentDetails.ResponseValue.Value orderDetails,
+                                     GetPaymentsList.ResponseValue.PaymentItem orders) {
         mData = new ArrayList<>();
-        for (GetOrderPaymentDetails.ResponseValue.Order order : orderDetails.getOrders()) {
-            mData.add(order);
-            for (int i = 0; i < order.getItems().size(); i++) {
-                mData.add(order.getItems().get(i));
+
+        if (orderDetails != null) {
+            for (GetOrderPaymentDetails.ResponseValue.Order order : orderDetails.getOrders()) {
+                mData.add(order);
+                for (int i = 0; i < order.getItems().size(); i++) {
+                    mData.add(order.getItems().get(i));
+                }
+                mData.add(order.getTracker());
             }
-            mData.add(order.getTracker());
+        }
+
+        if (orders != null ) {
+            for (GetPaymentsList.ResponseValue.Order order : orders.getOrders()) {
+                mData.add(order);
+                for (int i = 0; i < order.getItems().size(); i++) {
+                    mData.add(order.getItems().get(i));
+                }
+                mData.add(order.getTracker());
+            }
         }
     }
 
@@ -122,6 +144,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             hasReceivedStatus = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getActions()
                     .contains(ActionConstants.ORDER_RECEIVED_STATUS);
             getReceiveDate = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getReceived();
+            isOrderReceived = getReceiveDate != null;
 
             String invoiceNumber = mActivity.getResources().getString(R.string.order_invoice) +" "+ mInvoiceNumber;
             ((OrderSaleName) holder).saleName.setText(invoiceNumber);
@@ -159,14 +182,40 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             }
             setOrderTrackData((OrderItemTrack) holder, mTracker);
         }
+
+        if (mData.get(position) instanceof GetPaymentsList.ResponseValue.Order) {
+            mOrderTracker = ((GetPaymentsList.ResponseValue.Order) mData.get(position)).getTracker();
+        }
+
+        if (mData.get(position) instanceof GetPaymentsList.ResponseValue.Tracker) {
+            Iterator statusIterator = mStatus.keySet().iterator();
+            while(statusIterator.hasNext()) {
+                String key=(String)statusIterator.next();
+                String value=(String)mStatus.get(key);
+
+                if (key.equalsIgnoreCase(mOrderId)) {
+                    currentStatus = value;
+                }
+            }
+
+            GetOrderPaymentDetails.ResponseValue.Tracker tracker = new GetOrderPaymentDetails.ResponseValue.Tracker();
+            tracker.setApprovedDate(mOrderTracker.getApprovedDate());
+            tracker.setClosedDate(mOrderTracker.getClosedDate());
+            tracker.setDispatchedDate(mOrderTracker.getDispatchedDate());
+            tracker.setStep(mOrderTracker.getStep());
+            tracker.setStockDate(mOrderTracker.getStockDate());
+            setOrderTrackData((OrderItemTrack) holder, tracker);
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
         int viewType = 0;
-        if (mData.get(position) instanceof GetOrderPaymentDetails.ResponseValue.Item) {
+        if (mData.get(position) instanceof GetOrderPaymentDetails.ResponseValue.Item ||
+            mData.get(position) instanceof GetPaymentsList.ResponseValue.Item) {
             viewType = VIEW_TYPE_SALE_DETAILS;
-        } else if (mData.get(position) instanceof GetOrderPaymentDetails.ResponseValue.Tracker) {
+        } else if (mData.get(position) instanceof GetOrderPaymentDetails.ResponseValue.Tracker ||
+                   mData.get(position) instanceof GetPaymentsList.ResponseValue.Tracker) {
             viewType = VIEW_TYPE_SALE_TRACK;
         } else {
             viewType = VIEW_TYPE_SALE_NAME;
@@ -176,12 +225,13 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
     public void setOrderDetailsViewHolderData(OrderDetailsItemViewHolder holder, GetOrderPaymentDetails.ResponseValue.Item item) {
 
-
         String brandId = item.getBrandID();
         String imageId = item.getImageID();
         String fileName = item.getFileName();
         int orderItemCount = item.getQty();
         String productSize = item.getSize();
+
+        holder.orderDetailsItemLayout.setVisibility(View.VISIBLE);
 
         holder.productPriceTextView.setText(PriceUtils.getPriceStringValue(item.getPrice()));
 
@@ -191,6 +241,11 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
         ImageUtils.loadImage(LegacyStringImageUtils.generateImageUrl(brandId, imageId, fileName),
                 holder.productImageView);
+
+        if (item.getActions().contains(ActionConstants.ORDER_ITEM_CANCELLED)) {
+            holder.productCancelledTextView.setVisibility(View.VISIBLE);
+            isOrderCancelled = true;
+        }
 
 
         holder.productNameTextView.setText(item.getItem());
@@ -344,8 +399,14 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         @BindView(R.id.controller_order_details_item_imageview)
         ImageView productImageView;
 
+        @BindView(R.id.controller_order_details_cancelled_text)
+        TextView productCancelledTextView;
+
         @BindView(R.id.img_button_layout)
         RelativeLayout moreOptionsImageButton;
+
+        @BindView(R.id.row_item_order_details_layout)
+        RelativeLayout orderDetailsItemLayout;
 
         public OrderDetailsItemViewHolder(View itemView) {
             super(itemView);
@@ -421,6 +482,10 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 if (currentStatus.equalsIgnoreCase("approved")) {
                     currentStatus = "Date";
                 }
+
+                if (isOrderCancelled) {
+                    currentStatus = mActivity.getString(R.string.cancelled);
+                }
                 holder.orderFirstNodeStatusTextView.setText(String.format(orderText, currentStatus));
                 break;
 
@@ -440,7 +505,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 break;
         }
 
-        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE && !hasReceivedStatus) {
+        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE && hasReceivedStatus) {
             holder.receivedOrderLayout.setVisibility(View.VISIBLE);
             holder.orderReceivedConnector.setVisibility(View.VISIBLE);
             holder.receivedGraphNodeTextView.setOnClickListener(v -> {
@@ -449,7 +514,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             });
         }
 
-        if (hasReceivedStatus) {
+        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE && isOrderReceived) {
             holder.receivedOrderLayout.setVisibility(View.VISIBLE);
             holder.orderReceivedConnector.setVisibility(View.VISIBLE);
             setActiveOrderReceived(holder, orderText);

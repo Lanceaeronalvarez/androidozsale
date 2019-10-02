@@ -118,6 +118,9 @@ public class GetPaymentsList {
             @SerializedName("Actions")
             @Expose
             private List<String> actions;
+            @SerializedName("Received")
+            @Expose
+            private String received;
 
             public List<String> getActions() {
                 return actions;
@@ -202,6 +205,14 @@ public class GetPaymentsList {
             public void setTracker(Tracker tracker) {
                 this.tracker = tracker;
             }
+
+            public String getReceived() {
+                return received;
+            }
+
+            public void setReceived(String received) {
+                this.received = received;
+            }
         }
 
         public static class SubTotal {
@@ -272,6 +283,9 @@ public class GetPaymentsList {
             @SerializedName("FileName")
             @Expose
             private String fileName;
+            @SerializedName("Actions")
+            @Expose
+            private ArrayList<String> actionsList;
 
             public String getID() {
                 return iD;
@@ -353,6 +367,13 @@ public class GetPaymentsList {
                 this.fileName = fileName;
             }
 
+            public ArrayList<String> getActionsList() {
+                return actionsList;
+            }
+
+            public void setActionsList(ArrayList<String> actionsList) {
+                this.actionsList = actionsList;
+            }
         }
 
         public static class Total {

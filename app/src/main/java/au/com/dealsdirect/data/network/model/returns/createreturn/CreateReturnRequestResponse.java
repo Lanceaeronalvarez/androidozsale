@@ -12,6 +12,9 @@ public class CreateReturnRequestResponse {
     @SerializedName("IsAuthenticated")
     @Expose
     private Boolean isAuthenticated;
+    @SerializedName("Value")
+    @Expose
+    private Value value;
     @SerializedName("Result")
     @Expose
     private Boolean result;
@@ -58,6 +61,31 @@ public class CreateReturnRequestResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Value getValue() {
+        return value;
+    }
+
+    public class Value {
+        @SerializedName("ID")
+        private String returnId;
+        @SerializedName("InvoiceNo")
+        private String invoiceNumber;
+        @SerializedName("ReasonForReturn")
+        private String reasonForReturn;
+
+        public String getReturnId() {
+            return returnId;
+        }
+
+        public String getInvoiceNumber() {
+            return invoiceNumber;
+        }
+
+        public String getReasonForReturn() {
+            return reasonForReturn;
+        }
     }
 
     public String getId() {

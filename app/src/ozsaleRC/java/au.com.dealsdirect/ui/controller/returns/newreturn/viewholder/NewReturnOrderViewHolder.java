@@ -31,6 +31,8 @@ public class NewReturnOrderViewHolder extends RecyclerView.ViewHolder {
     public CheckBox newReturnItemCheckBox;
     @BindView(R.id.new_return_order_quantity)
     public ProductQuantityLayout productQuantityLayout;
+    @BindView(R.id.new_return_item_invoice)
+    public TextView newReturnInvoiceText;
 
     public NewReturnOrderViewHolder(View itemView) {
         super(itemView);

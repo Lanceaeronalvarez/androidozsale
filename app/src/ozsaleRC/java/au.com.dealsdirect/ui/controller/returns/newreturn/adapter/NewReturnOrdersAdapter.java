@@ -34,17 +34,19 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
     List<NewReturnOrderList> mCurrentReturnList = Collections.emptyList();
     Context mContext;
     String mProductId;
+    int mInvoiceNumber;
 
     public NewReturnOrdersAdapter(
             List<NewReturnOrderList> orderList,
             Context context,
             NewReturnMvpPresenter mvpPresenter,
-            String productId) {
+            String productId, int invoiceNumber) {
 
         mCurrentReturnList = orderList;
         mContext = context;
         mPresenter = mvpPresenter;
         mProductId = productId;
+        mInvoiceNumber = invoiceNumber;
         mDataChecked = new Boolean[mCurrentReturnList.size()];
         Arrays.fill(this.mDataChecked, false);
     }
@@ -74,6 +76,10 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
         holder.productQuantityLayout.setQuantity(1);
         holder.productQuantityLayout.setEditTextToNonEditable();
 
+        String invoiceNumber = mContext.getResources().getString(R.string.invoice_text)+ " " +
+                mInvoiceNumber;
+        holder.newReturnInvoiceText.setText(invoiceNumber);
+
         if (mProductId != null && !mProductId.isEmpty()) {
             if (productId.equalsIgnoreCase(mProductId)) {
                 holder.newReturnItemCheckBox.setChecked(true);
@@ -82,7 +88,8 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
                 if(quantityVal == 0){
                     holder.productQuantityLayout.setQuantity(1);
                 }
-                mPresenter.updateReturnValue(productId, position, Integer.valueOf(holder.productQuantityLayout.getQuantity()), true);
+                mPresenter.updateReturnValue(productId, position, Integer.valueOf(holder.productQuantityLayout.getQuantity()),
+                        true, productName);
 
             } else {
                 holder.newReturnItemCheckBox.setChecked(mDataChecked[position]);
@@ -99,14 +106,15 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
                 if(isChecked && quantityVal == 0){
                     holder.productQuantityLayout.setQuantity(1);
                 }
-                mPresenter.updateReturnValue(productId, position, Integer.valueOf(holder.productQuantityLayout.getQuantity()), isChecked);
+                mPresenter.updateReturnValue(productId, position, Integer.valueOf(holder.productQuantityLayout.getQuantity()),
+                        isChecked, productName);
             }
         });
 
         holder.productQuantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
             @Override
             public void onQuantityIncrease(ProductQuantityLayout view, int value) {
-                mPresenter.updateReturnValue(productId, position, value, mDataChecked[position]);
+                mPresenter.updateReturnValue(productId, position, value, mDataChecked[position], productName);
                 holder.productQuantityLayout.resetLoaders();
             }
 
@@ -116,7 +124,7 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
                     mDataChecked[position] = false;
                     notifyItemChanged(position);
                 } else {
-                    mPresenter.updateReturnValue(productId, position, value, mDataChecked[position]);
+                    mPresenter.updateReturnValue(productId, position, value, mDataChecked[position], productName);
                 }
                 holder.productQuantityLayout.resetLoaders();
             }

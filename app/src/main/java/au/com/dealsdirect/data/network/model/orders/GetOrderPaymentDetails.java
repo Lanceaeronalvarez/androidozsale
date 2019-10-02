@@ -455,7 +455,7 @@ public class GetOrderPaymentDetails {
 
         }
 
-        public class Value {
+        public static class Value {
 
             @SerializedName("ApprovedDate")
             @Expose
@@ -641,7 +641,7 @@ public class GetOrderPaymentDetails {
 
         }
 
-        public class Tracker {
+        public static class Tracker {
             @SerializedName("Step")
             @Expose
             private int step;

@@ -13,6 +13,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,6 +25,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
+import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
@@ -30,6 +36,7 @@ import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -46,6 +53,54 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     private static final String STATUS = "STATUS";
     private static final String LINK = "LINK";
     private static final String ESTIMATED_DELIVERY = "ESTIMATED_DELIVERY";
+    private static final String ORDER_DETAILS = "ORDER_DETAILS";
+
+    public abstract static class Parameters {
+        private Parameters() {
+        }
+
+        public static final class FromOrdersList extends Parameters {
+            String mPaymentRefNo;
+            HashMap<String, String> mStatus;
+            String mLink;
+            HashMap<String, String> mEstimatedDelivery;
+            GetPaymentsList.ResponseValue.PaymentItem mOrders;
+
+            public FromOrdersList(String paymentRefNo,
+                                  HashMap<String, String>status,
+                                  String link,
+                                  HashMap<String, String>estimatedDelivery,
+                                  GetPaymentsList.ResponseValue.PaymentItem orderDetails) {
+
+                mPaymentRefNo = paymentRefNo;
+                mStatus = status;
+                mLink = link;
+                mEstimatedDelivery = estimatedDelivery;
+                mOrders = orderDetails;
+
+            }
+
+            public String getPaymentRefNo() {
+                return mPaymentRefNo;
+            }
+
+            public HashMap<String, String> getStatus() {
+                return mStatus;
+            }
+
+            public String getLink() {
+                return mLink;
+            }
+
+            public HashMap<String, String> getEstimatedDelivery() {
+                return mEstimatedDelivery;
+            }
+
+            public GetPaymentsList.ResponseValue.PaymentItem getOrderDetails() {
+                return mOrders;
+            }
+        }
+    }
 
     @Inject
     OrderDetailsMvpPresenter<OrderDetailsMvpView> mPresenter;
@@ -81,14 +136,32 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     HashMap<String, String> mStatus;
     String mLink;
     HashMap<String, String> mEstimatedDelivery;
+    GetOrderPaymentDetails.ResponseValue.Value mOrderDetails;
+    GetPaymentsList.ResponseValue.PaymentItem mOrders;
 
-    public OrderDetailsController(String paymentRefNo, HashMap<String, String> status, String link, HashMap<String, String> estimatedDelivery) {
+    public OrderDetailsController(String paymentRefNo, HashMap<String, String> status, String link,
+                                  HashMap<String, String> estimatedDelivery,
+                                  GetOrderPaymentDetails.ResponseValue.Value orderDetails) {
         this(new BundleBuilder(new Bundle())
                 .putString(PAYMENT_REF_NO, paymentRefNo)
                 .putSerializable(STATUS, status)
                 .putString(LINK, link)
                 .putSerializable(ESTIMATED_DELIVERY, estimatedDelivery)
+                .putString(ORDER_DETAILS, orderDetails.toString())
                 .build());
+    }
+
+    public static OrderDetailsController newInstance(Parameters parameters) {
+        OrderDetailsController controller = new OrderDetailsController(
+                new BundleBuilder(new Bundle()).build());
+
+        controller.mPaymentReferenceNo = ((Parameters.FromOrdersList) parameters).getPaymentRefNo();
+        controller.mStatus = ((Parameters.FromOrdersList) parameters).getStatus();
+        controller.mLink = ((Parameters.FromOrdersList) parameters).getLink();
+        controller.mEstimatedDelivery = ((Parameters.FromOrdersList) parameters).getEstimatedDelivery();
+        controller.mOrders = ((Parameters.FromOrdersList) parameters).getOrderDetails();
+
+        return controller;
     }
 
 
@@ -129,12 +202,35 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     @Override
     protected void setUp(View view) {
-        mOrderDetailsToolbarTitle.setText(getString(R.string.account_orders));
-        mOrderDetailsRightOption.setImageDrawable(null);
+
+        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity,null,this, mStatus, mLink,
+                mEstimatedDelivery, mOrders));
+        mRecyclerView.addItemDecoration(new OrderDetailItemDecorator());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
+    }
+
+    @Override
+    public void onViewWillAppear(Controller previousController) {
+
+        if (mOrderDetailsToolbarTitle != null) {
+            mOrderDetailsToolbarTitle.setText(getString(R.string.account_orders));
+            mOrderDetailsRightOption.setImageDrawable(null);
+        }
+
+    }
+
+    @Override
+    public void onViewDidAppear(Controller previousController) {
+
+        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity,null,this, mStatus, mLink,
+                mEstimatedDelivery, mOrders));
+        mRecyclerView.addItemDecoration(new OrderDetailItemDecorator());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
 
         GetOrderPaymentDetails.RequestValues requestValues = new GetOrderPaymentDetails.RequestValues(mPaymentReferenceNo);
         mPresenter.loadOrderDetails(requestValues);
-
     }
 
     @Override
@@ -171,7 +267,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
         //set adapter
         mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity,orderDetails,this, mStatus, mLink,
-                mEstimatedDelivery));
+                mEstimatedDelivery, null));
         mRecyclerView.addItemDecoration(new OrderDetailItemDecorator());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
@@ -208,6 +304,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
         OrderReceivedRequest orderReceivedRequest = new OrderReceivedRequest();
         orderReceivedRequest.setOrderId(orderID);
+        orderReceivedRequest.setSatisfaction("");
         mPresenter.callOrderReceived(orderReceivedRequest);
     }
 }

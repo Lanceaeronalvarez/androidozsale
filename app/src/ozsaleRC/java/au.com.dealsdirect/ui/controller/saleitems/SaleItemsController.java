@@ -1343,6 +1343,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 ArrayList<String> colorFacetFilters = new ArrayList<>();
                 ArrayList<String> sizesFacetFilters = new ArrayList<>();
                 ArrayList<String> priceFacetFilters = new ArrayList<>();
+                ArrayList<String> deliveryFacetFilters = new ArrayList<>();
+                ArrayList<String> newArrivalFacetFilters = new ArrayList<>();
 
                 for (SearchChipModel chip : chipsList) {
                     String facetName = chip.getFilterType();
@@ -1356,6 +1358,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         priceFacetFilters.add(chip.getChipTitle());
                     } else if (facetName.equals(BundleKeys.SORT_FACETFILTER_NAME)) {
                         getSaleItemsRequest.setSorting(mapSortingTitleToKey(chip.getChipTitle()));
+                    } else if (facetName.equals(BundleKeys.DELIVERY_FACETFILTER_NAME)) {
+                        deliveryFacetFilters.add(chip.getChipTitle());
+                    } else if (facetName.equals(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME)) {
+                        newArrivalFacetFilters.add(chip.getChipTitle());
                     }
                 }
 
@@ -1368,11 +1374,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     mSelectedTitle.add(BundleKeys.SIZE_FACET_FILTER_TYPE);
                 if (!priceFacetFilters.isEmpty())
                     mSelectedTitle.add(BundleKeys.PRICE_FACET_FILTER_TYPE);
+                if (!deliveryFacetFilters.isEmpty()) {
+                    mSelectedTitle.add(BundleKeys.DELIVERY_FACET_FILTER_TYPE);
+                }
+                if (!newArrivalFacetFilters.isEmpty()) {
+                    mSelectedTitle.add(BundleKeys.NEW_ARRIVAL_FACET_FILTER_TYPE);
+                }
 
                 facetFilters.put(BundleKeys.BRANDS_FACETFILTER_NAME, brandNameFacetFilters);
                 facetFilters.put(BundleKeys.COLORS_FACETFILTER_NAME, colorFacetFilters);
                 facetFilters.put(BundleKeys.SIZES_FACETFILTER_NAME, sizesFacetFilters);
                 facetFilters.put(BundleKeys.PRICE_FACETFILTER_NAME, priceFacetFilters);
+                facetFilters.put(BundleKeys.DELIVERY_FACETFILTER_NAME, deliveryFacetFilters);
+                facetFilters.put(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME, newArrivalFacetFilters);
 
             }
 

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,6 +44,8 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private LinkedHashMap<String, Object> mLinkedHashMap;
     private HashMap<String, String> estDeliveryDate = new HashMap<>();
     private HashMap<String, String> mStatusArray = new HashMap<>();
+    private boolean isItemReceived = false;
+    private String mLink;
 
     private static final int ORDER_DATE_ACTIVE_STATE = 1;
     private static final int ORDER_DATE_NEGATIVE_STATE = -1;
@@ -87,6 +90,9 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             AppLogger.d("Orders Title Item Position: " + position);
             item = (GetPaymentsList.ResponseValue.PaymentItem) mData.get(position);
             ((OrdersViewHolder) viewHolder).orderNumberTextView.setText(String.valueOf(item.getPaymentReferenceNo()));
+            ((OrdersViewHolder) viewHolder).orderNumberRightArrowImageView.setOnClickListener(view ->
+                    mClickListener.onOrderItemClick(mReferenceNumbers.get(position),
+                            mStatusArray, mLink, estDeliveryDate, position));
         } else if (viewType == DETAILS_VIEW_TYPE) {
             GetPaymentsList.ResponseValue.Order order = (GetPaymentsList.ResponseValue.Order) mData.get(position);
             setOrderTrackData((OrderItemsViewholder) viewHolder, item, order);
@@ -94,14 +100,14 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     mClickListener.onOrderItemTrackingButtonClick(order.getLink(), null));
 
             if (order.getActions().size() == 0) {
-                ((OrderItemsViewholder) viewHolder).orderOptions.setVisibility(View.GONE);
+                ((OrderItemsViewholder) viewHolder).orderOptionsLayout.setVisibility(View.GONE);
             } else {
 
                 if (order.getActions().contains(ActionConstants.ORDER_ACTION_CHECK_STATUS) ||
                     order.getActions().contains(ActionConstants.ORDER_ACTION_CHANGE_ADDRESS) ||
                     order.getActions().contains(ActionConstants.ORDER_ACTION_REFUND)) {
 
-                    ((OrderItemsViewholder) viewHolder).orderOptions.setVisibility(View.VISIBLE);
+                    ((OrderItemsViewholder) viewHolder).orderOptionsLayout.setVisibility(View.VISIBLE);
                 }
 
                 HashMap<String, String> itemArrays = new HashMap<>();
@@ -109,15 +115,17 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 itemArrays.put(ActionConstants.ORDER_ITEM_DESCRIPTION, order.getDescription());
                 itemArrays.put(ActionConstants.ORDER_INVOICE_NUMBER, order.getInvoiceNo().toString());
 
-                ((OrderItemsViewholder) viewHolder).orderOptions.setOnClickListener(v ->
+                ((OrderItemsViewholder) viewHolder).orderOptionsLayout.setOnClickListener(v ->
                         mClickListener.onOrderItemShowOptions(v, (ArrayList<String>) order.getActions(), itemArrays));
             }
 
             estDeliveryDate.put(order.getOrderID(), order.getEstimatedDeliveryText());
             mStatusArray.put(order.getOrderID(), order.getStatus());
 
+            mLink = order.getLink();
+
             viewHolder.itemView.setOnClickListener(view -> mClickListener.onOrderItemClick(mReferenceNumbers.get(position),
-                    mStatusArray, order.getLink(), estDeliveryDate));
+                    mStatusArray, order.getLink(), estDeliveryDate, position));
         }
 
     }
@@ -175,6 +183,9 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         @BindView(R.id.my_order_number_container)
         RelativeLayout orderNumberContainerLayout;
 
+        @BindView(R.id.order_number_right_arrow)
+        ImageView orderNumberRightArrowImageView;
+
         public OrdersViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -185,6 +196,8 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         @BindView(R.id.order_image_recyclerview)
         RecyclerView orderImagesRecyclerView;
+        @BindView(R.id.order_image_options_layout)
+        RelativeLayout orderOptionsLayout;
 
         @BindView(R.id.trackHereButton)
         Button trackHereButton;
@@ -266,6 +279,8 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         String orderStatus = orderItem.getStatus();
 
+        isItemReceived = orderItem.getReceived() != null;
+
         String link = order.getLink();
 
         holder.trackHereButton.setVisibility(link == null || link.isEmpty() ? View.GONE : View.VISIBLE);
@@ -279,6 +294,8 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         String stockDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getStockDate());
         String closeDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getClosedDate());
         String dispatchDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getDispatchedDate());
+        String receivedDate = orderItem.getReceived() != null ?
+                DateUtils.getDateForOrderProgress(orderItem.getReceived()) : "";
 
         int currentStep = orderItem.getTracker().getStep();
         boolean isRefunded = orderStatus.toLowerCase().contains(mActivity.getString(R.string.refunded));
@@ -315,6 +332,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             holder.stockArrivedValueTextView.setText(stockDate);
             holder.dispatchedDateValueTextView.setText(closeDate);
             holder.orderPackedValueTextView.setText(dispatchDate);
+            holder.receivedDateValueTextView.setText(receivedDate);
         }
 
         switch (currentStep) {
@@ -342,7 +360,8 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 break;
         }
 
-        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE) {
+        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE &&
+                order.getActions().contains(ActionConstants.ORDER_RECEIVED_STATUS)) {
             holder.receivedOrderLayout.setVisibility(View.VISIBLE);
             holder.orderReceivedConnector.setVisibility(View.VISIBLE);
             holder.receivedGraphNodeTextView.setOnClickListener(v -> {
@@ -351,7 +370,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             });
         }
 
-        if (order.getActions().contains(ActionConstants.ORDER_RECEIVED_STATUS)) {
+        if (isItemReceived) {
             holder.receivedOrderLayout.setVisibility(View.VISIBLE);
             holder.orderReceivedConnector.setVisibility(View.VISIBLE);
             setActiveOrderReceived(holder, orderText);

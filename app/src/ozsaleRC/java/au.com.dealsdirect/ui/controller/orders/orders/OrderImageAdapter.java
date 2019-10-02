@@ -13,6 +13,7 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
@@ -58,6 +59,10 @@ public class OrderImageAdapter extends RecyclerView.Adapter<OrderImageAdapter.Or
                 holder.orderImageOverlayImageView.setVisibility(View.VISIBLE);
                 holder.orderImageText.setText("+" + String.valueOf(mData.size() - IMAGE_LIMIT_SIZE));
             }
+
+            if (item.getActionsList().contains(ActionConstants.ORDER_ITEM_CANCELLED)) {
+                holder.orderImageCancelledTextView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -91,6 +96,9 @@ public class OrderImageAdapter extends RecyclerView.Adapter<OrderImageAdapter.Or
 
         @BindView(R.id.overlay_image_view)
         ImageView orderImageOverlayImageView;
+
+        @BindView(R.id.controller_order_cancelled_text)
+        TextView orderImageCancelledTextView;
 
         public OrderImagesViewholder(View itemView, ImageUtils.Grid dimensions) {
             super(itemView);

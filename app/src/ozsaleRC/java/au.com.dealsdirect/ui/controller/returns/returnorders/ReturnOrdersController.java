@@ -125,7 +125,7 @@ public class ReturnOrdersController extends BaseController
             mReturnOrdersListContainer.setVisibility(View.VISIBLE);
         }
 
-        final ReturnOrdersAdapter adapter = new ReturnOrdersAdapter(newReturnsOrders, mPresenter);
+        final ReturnOrdersAdapter adapter = new ReturnOrdersAdapter(mActivity, newReturnsOrders, mPresenter);
 
         mReturnOrdersRecyclerView.addItemDecoration(new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL));
 

@@ -105,11 +105,14 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
+import au.com.dealsdirect.data.network.model.returns.FileSettingsResponse;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
@@ -376,4 +379,8 @@ public interface ApiHelper {
     Observable<String> callCreateRefund(CreateRefundRequest request);
 
     Observable<OrderReceivedResponse> callOrderReceived(OrderReceivedRequest receivedRequest);
+
+    Observable<SetAttachmentResponse> setAttachment(SetAttachmentRequest setAttachmentRequest);
+
+    Observable<FileSettingsResponse> callGetFileSettings();
 }

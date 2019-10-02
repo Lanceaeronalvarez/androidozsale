@@ -53,11 +53,6 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
-import au.com.dealsdirect.data.network.model.events.CategoryRequest;
-import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
-import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
-import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
-import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -70,11 +65,16 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
+import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordResponseBody;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.SaveConsentDataResponse;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesRequest;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.invite.GetInviteRequest;
@@ -115,11 +115,14 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
+import au.com.dealsdirect.data.network.model.returns.FileSettingsResponse;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
@@ -671,6 +674,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<OrderReceivedResponse> callOrderReceived(OrderReceivedRequest receivedRequest) {
         return mApiHelper.callOrderReceived(receivedRequest);
+    }
+
+    @Override
+    public Observable<SetAttachmentResponse> setAttachment(SetAttachmentRequest setAttachmentRequest) {
+        return mApiHelper.setAttachment(setAttachmentRequest);
+    }
+
+    @Override
+    public Observable<FileSettingsResponse> callGetFileSettings() {
+        return mApiHelper.callGetFileSettings();
     }
 
     @Override
@@ -1363,6 +1376,16 @@ public class AppDataManager implements DataManager {
     @Override
     public String getVoucherStatusTemplateText(GetUserVoucherResponse.Status status) {
         return mPreferencesHelper.getVoucherStatusTemplateText(status);
+    }
+
+    @Override
+    public int getFileSizeLimit() {
+        return mPreferencesHelper.getFileSizeLimit();
+    }
+
+    @Override
+    public void setFileSizeLimit(int fileSizeLimit) {
+        mPreferencesHelper.setFileSizeLimit(fileSizeLimit);
     }
 
     @Override

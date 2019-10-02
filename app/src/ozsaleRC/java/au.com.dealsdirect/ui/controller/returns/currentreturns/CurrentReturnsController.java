@@ -170,7 +170,7 @@ public class CurrentReturnsController extends BasePullToRefreshController
             mCurrentReturnsRecyclerView.setVisibility(View.VISIBLE);
 
             if (mCurrentReturnsAdapter == null) {
-                mCurrentReturnsAdapter = new CurrentReturnAdapter(currentReturns, returnDetailsResponseBodyList, mPresenter);
+                mCurrentReturnsAdapter = new CurrentReturnAdapter(mActivity, currentReturns, returnDetailsResponseBodyList, mPresenter);
             } else {
                 mCurrentReturnsAdapter.updateCurrentReturnsList(currentReturns);
             }

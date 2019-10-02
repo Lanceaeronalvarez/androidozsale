@@ -44,14 +44,15 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
-import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
+import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
-import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
+import au.com.dealsdirect.data.network.model.returns.FileSettingsResponse;
+import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.registerservices.GenieEventService;
@@ -61,7 +62,6 @@ import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.DeepLinkUrlType;
-import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.utils.GdprUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.fabric.sdk.android.Fabric;
@@ -344,7 +344,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .callGetAppSettingsSection(getDataManager().getCountryId())
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(mAppSettingsSectionAcceptCallback,mAppSettingsSectionThrowableCallback));
+                .subscribe(mAppSettingsSectionAcceptCallback, mAppSettingsSectionThrowableCallback));
     }
 
     @Override
@@ -353,7 +353,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .callGetPublicAppSettingsSections(getDataManager().getCountryId())
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(mAppSettingsSectionAcceptCallback,mAppSettingsSectionThrowableCallback));
+                .subscribe(mAppSettingsSectionAcceptCallback, mAppSettingsSectionThrowableCallback));
     }
 
     @Override
@@ -362,7 +362,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .callGetPublicAppSettingsSections(getDataManager().getCountryId(), "Afterpay")
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(mAppSettingsSectionAcceptAfterpayCallback,mAppSettingsSectionThrowableCallback));
+                .subscribe(mAppSettingsSectionAcceptAfterpayCallback, mAppSettingsSectionThrowableCallback));
     }
 
     private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptAfterpayCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
@@ -456,7 +456,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             if (!isViewAttached()) {
                 return;
             }
-
 
 
             getMvpView().hideLoading();
@@ -711,6 +710,23 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void callFileSettings() {
+        doApiCallForResponse(getDataManager().callGetFileSettings(),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+
+                        if (response != null) {
+                            FileSettingsResponse fileSettingsResponse = (FileSettingsResponse) response;
+                            getDataManager().setFileSizeLimit(fileSettingsResponse.getFileSizeLimit());
+                        }
+
+                    }
+                });
+    }
+
+    @Override
     public void callGCMNotificationEvent(Context context) {
         gNotification.callNotificationEvent(context);
     }
@@ -727,7 +743,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void callGetAccountData() {
-        GenieEventService genieEventService = new GenieEventService(getDataManager(),getSchedulerProvider(),getCompositeDisposable());
+        GenieEventService genieEventService = new GenieEventService(getDataManager(), getSchedulerProvider(), getCompositeDisposable());
         getCompositeDisposable().add(getDataManager()
                 .callGetAccountData()
                 .subscribeOn(getSchedulerProvider().io())
@@ -751,7 +767,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         // Only activate analytics for release versions
         if (!getDataManager().isDebugMode()) {
-
 
 
             // New Relic
@@ -928,48 +943,48 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         CreatePaymentMethod.RequestValue.Request requestValue = new CreatePaymentMethod.RequestValue.Request(paymentType, paymentNonce, deviceData);
         getCompositeDisposable().add(getDataManager()
-                        .callCreatePaymentMethod(new CreatePaymentMethod.RequestValue(requestValue, countryId, languageId))
-                        .subscribeOn(getSchedulerProvider().io())
-                        .observeOn(getSchedulerProvider().ui())
-                        .subscribe(new Consumer<CreatePaymentMethod.ResponseValue>() {
-                            @Override
-                            public void accept(@NonNull CreatePaymentMethod.ResponseValue responseValue) throws Exception {
-                                if (!isViewAttached()) {
-                                    return;
-                                }
+                .callCreatePaymentMethod(new CreatePaymentMethod.RequestValue(requestValue, countryId, languageId))
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<CreatePaymentMethod.ResponseValue>() {
+                    @Override
+                    public void accept(@NonNull CreatePaymentMethod.ResponseValue responseValue) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
-                                getMvpView().hideLoading();
-                                getMvpView().performResetWithAuthFetch();
+                        getMvpView().hideLoading();
+                        getMvpView().performResetWithAuthFetch();
 
-                                if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
-                                    getMvpView().showCreatePaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
+                        if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
+                            getMvpView().showCreatePaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
 
-                                    HashMap<String, Object> parameters = new HashMap<>();
-                                    parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
-                                            responseValue.getD().getValue().getLastPaymentMethod().getPaymentType());
-                                    DataCollector.logEvent(Events.AddPaymentInfo, parameters);
-                                } else {
-                                    getMvpView().onError(responseValue.getMessage());
-                                }
+                            HashMap<String, Object> parameters = new HashMap<>();
+                            parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                                    responseValue.getD().getValue().getLastPaymentMethod().getPaymentType());
+                            DataCollector.logEvent(Events.AddPaymentInfo, parameters);
+                        } else {
+                            getMvpView().onError(responseValue.getMessage());
+                        }
 
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(@NonNull Throwable throwable) throws Exception {
-                                if (!isViewAttached()) {
-                                    return;
-                                }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
 
-                                getMvpView().hideLoading();
-                                getMvpView().onError(throwable.getMessage());
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
 
-                                // handle load accounts error here
-                                if (throwable instanceof ANError) {
-                                    ANError anError = (ANError) throwable;
-                                    handleApiError(anError);
-                                }
-                            }
-                        })
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                })
         );
     }
 
@@ -1150,7 +1165,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     /* May 11, 2018 - Deep Link to Sale Search */
     private void deepLinkSaleSearch(String saleName, String saleIdentifier) {
         getMvpView().deepLinkSaleItems(saleName, saleIdentifier, "");
-       /* Not yet supported */
+        /* Not yet supported */
     }
 
     /* May 11, 2018 - Deep Link to Category Link */

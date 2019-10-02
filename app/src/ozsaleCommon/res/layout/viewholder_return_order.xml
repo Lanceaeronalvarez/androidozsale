@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="9"
             android:padding="@dimen/padding_default"
+            android:textStyle="bold"
             tools:text="Philosophy Cotton Sleeveless Plain" />
 
         <ImageView
@@ -28,6 +29,14 @@
             android:src="@drawable/ic_gray_chevron" />
 
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/return_orders_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_small"/>
 
 </LinearLayout>
 

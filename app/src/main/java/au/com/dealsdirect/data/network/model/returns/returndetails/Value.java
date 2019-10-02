@@ -22,6 +22,8 @@ public class Value {
     private String attachmentId;
     @SerializedName("Attachments")
     private List<Attachments> attachments;
+    @SerializedName("InvoiceNo")
+    private String invoiceNumber;
 
     public List<Item> getItems() {
         return items;
@@ -55,7 +57,11 @@ public class Value {
         return attachments;
     }
 
-    class Attachments {
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public class Attachments {
 
         @SerializedName("Type")
         private String type;

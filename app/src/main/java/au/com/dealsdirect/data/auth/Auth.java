@@ -35,7 +35,6 @@ public class Auth implements AuthHelper {
     public void revokeAuth() {
         Prefs.putBoolean(IS_LOGGED_IN, false);
         setLoginTicket("");
-        CookieUtils.getInstance().clear();
     }
 
     @Override

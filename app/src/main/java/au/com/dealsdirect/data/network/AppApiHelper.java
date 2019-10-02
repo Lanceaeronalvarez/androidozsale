@@ -1,6 +1,5 @@
 package au.com.dealsdirect.data.network;
 
-import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -110,11 +109,14 @@ import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSale
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
 import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
+import au.com.dealsdirect.data.network.model.returns.FileSettingsResponse;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
@@ -1102,6 +1104,23 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(receivedRequest))
                 .build()
                 .getObjectObservable(OrderReceivedResponse.class);
+    }
+
+    @Override
+    public Observable<SetAttachmentResponse> setAttachment(SetAttachmentRequest setAttachmentRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.setAttachment())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(setAttachmentRequest))
+                .build()
+                .getObjectObservable(SetAttachmentResponse.class);
+    }
+
+    @Override
+    public Observable<FileSettingsResponse> callGetFileSettings() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.fileSettings())
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectObservable(FileSettingsResponse.class);
     }
 }
 

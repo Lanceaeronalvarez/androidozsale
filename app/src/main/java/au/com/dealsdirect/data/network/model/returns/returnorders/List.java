@@ -33,6 +33,16 @@ public class List {
     @SerializedName("Description")
     @Expose
     private String description;
+    @SerializedName("ItemImages")
+    private java.util.List<ItemImages> itemImagesList;
+    @SerializedName("AttachmentID")
+    private String attachmentID;
+    @SerializedName("Attachments")
+    private java.util.List<AttachmentsImages> attachmentsList;
+
+    public java.util.List<ItemImages> getItemImagesList() {
+        return itemImagesList;
+    }
 
     public Integer getInvoiceNo() {
         return invoiceNo;
@@ -104,6 +114,68 @@ public class List {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getAttachmentID() {
+        return attachmentID;
+    }
+
+    public java.util.List<AttachmentsImages> getAttachmentsList() {
+        return attachmentsList;
+    }
+
+    public class ItemImages {
+        @SerializedName("OrderItemID")
+        private String orderItemId;
+        @SerializedName("BrandID")
+        private String brandId;
+        @SerializedName("ImageID")
+        private String imageId;
+        @SerializedName("FileName")
+        private String fileName;
+
+        public String getOrderItemId() {
+            return orderItemId;
+        }
+
+        public String getBrandId() {
+            return brandId;
+        }
+
+        public String getImageId() {
+            return imageId;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+    }
+
+    public class AttachmentsImages {
+        @SerializedName("Type")
+        private String type;
+        @SerializedName("Title")
+        private String title;
+        @SerializedName("Description")
+        private String description;
+        @SerializedName("Url")
+        private String url;
+
+        public String getType() {
+            return type;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getUrl() {
+            return url;
+        }
     }
 
 }

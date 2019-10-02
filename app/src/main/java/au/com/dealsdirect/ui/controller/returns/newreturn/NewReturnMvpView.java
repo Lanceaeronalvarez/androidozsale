@@ -6,6 +6,7 @@ package au.com.dealsdirect.ui.controller.returns.newreturn;
 
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponse;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponse;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface NewReturnMvpView extends MvpView {
@@ -14,5 +15,12 @@ public interface NewReturnMvpView extends MvpView {
 
     void loadReturnOrderDetail(NewReturnOrderDetailResponse newReturnsOrderDetail);
 
-    void onReturnValueUpdated(String itemId, int position, int productQuantityValue, boolean isChecked);
+    void onReturnValueUpdated(String itemId, int position, int productQuantityValue,
+                              boolean isChecked, String productName);
+
+    void getAttachmentId(SetAttachmentResponse setAttachmentResponse);
+
+    void getImageUrl(String imageUrl);
+
+    void finishReturnRequestTransaction();
 }

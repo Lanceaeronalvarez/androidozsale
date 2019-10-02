@@ -226,7 +226,7 @@ public class Settings {
                                     "ozsale.com.au",
                                     "EN",
                                     "https://gui-as-pre.mysalegenie-dev.com/",
-                                    "http://api.mysaledev.com/")} );
+                                    "https://api.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("singsaleRC")){
             populatePackageWithCountries(
                     new Country[] {
