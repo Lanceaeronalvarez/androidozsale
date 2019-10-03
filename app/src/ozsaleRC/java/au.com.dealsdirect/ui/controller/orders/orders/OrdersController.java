@@ -159,7 +159,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     public void showOrderDetails(String referenceNumber, HashMap<String, String> status, String link,
                                  HashMap<String, String> estimatedDelivery, int position) {
 
-        GetPaymentsList.ResponseValue.PaymentItem selectedOrder = mOrders.get(position - 1);
+        GetPaymentsList.ResponseValue.PaymentItem selectedOrder = mOrders.get(position);
 
         OrderDetailsController.Parameters.FromOrdersList parameters = new OrderDetailsController.Parameters.FromOrdersList(
                 referenceNumber,

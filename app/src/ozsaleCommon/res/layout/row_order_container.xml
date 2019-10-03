@@ -29,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/order_sharp_colon"
                 android:textColor="@color/text_extra_dark"
+                android:layout_centerVertical="true"
                 android:textSize="@dimen/text_size_headline3"
                 tools:ignore="HardcodedText" />
 
@@ -43,14 +44,17 @@
                 android:layout_toRightOf="@id/order_number_text_identifier"
                 android:textColor="@color/text_extra_dark"
                 android:textSize="@dimen/text_size_headline3"
+                android:layout_centerVertical="true"
                 tools:ignore="HardcodedText"
                 tools:text="204400890" />
 
             <ImageView
+                android:id="@+id/order_number_right_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:padding="@dimen/margin_small"
                 android:src="@drawable/ic_disclosure_indicator" />
 
         </RelativeLayout>
