@@ -35,7 +35,7 @@ public class Summary {
     }
 
     public Double getAmountToFreeDelivery() {
-        return amountToFreeDelivery;
+        return amountToFreeDelivery == null ? 0 : amountToFreeDelivery;
     }
 
     @SerializedName(value = "Subtotal", alternate = {"subtotal"})

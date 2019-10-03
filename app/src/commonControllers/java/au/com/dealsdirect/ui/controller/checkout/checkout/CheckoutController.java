@@ -859,7 +859,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (summary != null) {
             mSummarySubtotalTextView.setText(PriceUtils.getPriceStringValue(summary.getSubtotal()));
 
-            if (summary.getAmountToFreeDelivery() == 0) {
+            if (summary.getDelivery() == 0) {
                 mSummaryShippingFeeTextView.setVisibility(View.GONE);
                 mFreeShippingLayout.setVisibility(View.VISIBLE);
             } else {
