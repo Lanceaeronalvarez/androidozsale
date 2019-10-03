@@ -59,6 +59,7 @@ import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
+import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
@@ -355,6 +356,8 @@ public interface ApiHelper {
     Observable<String> callWishlistEvent(WishlistEventRequest request);
 
     Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request);
+
+    Observable<String> callStartCheckoutEvent(StartCheckoutRequest request);
 
     // OURPAY
     Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String languageId);

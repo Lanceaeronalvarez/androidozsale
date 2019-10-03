@@ -48,6 +48,7 @@ public class DataCollector {
         public static final String CATEGORY_REQUEST = "CATEGORY_REQUEST";
         public static final String SALE_EVENT_REQUEST = "SALE_EVENT_REQUEST";
         public static final String WISHLIST_EVENT_REQUEST = "WISHLIST_EVENT_REQUEST";
+        public static final String START_CHECKOUT_REQUEST = "START_CHECKOUT_REQUEST";
         public static final String APP_CONTEXT = "APP_CONTEXT";
         public static final String ITEM_LIST = "ITEM_LIST";
         public static final String SCREEN_NAME = "SCREEN_NAME";
@@ -195,6 +196,27 @@ public class DataCollector {
             }
 
             public String getValue() {
+                return value;
+            }
+        }
+
+        public enum Operation {
+            REGULAR(8),
+            OURPAY(10),
+            MASTERPASS(11),
+            VCO(12),
+            PAYPALCREDIT(9),
+            PAYPAL(9),
+            AFTERPAY(6),
+            UNKNOWN(8);
+
+            private int value;
+
+            Operation(int value) {
+                this.value = value;
+            }
+
+            public int getValue() {
                 return value;
             }
         }

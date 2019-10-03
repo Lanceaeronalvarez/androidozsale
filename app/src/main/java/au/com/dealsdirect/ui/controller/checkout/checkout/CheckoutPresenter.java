@@ -21,8 +21,10 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrent
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPhoneVerification;
@@ -32,6 +34,7 @@ import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -307,9 +310,35 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void logInitiateCheckout(Context context, String paymentType, int numItems, double price) {
+    public void logInitiateCheckout(Context context, String paymentType, int numItems, double price,
+                                    String selectedPaymentType) {
         if (getDataManager().hasActiveCheckoutSession()) {
             return;
+        }
+
+        StartCheckoutRequest startCheckoutRequest = new StartCheckoutRequest();
+        startCheckoutRequest.setEventType(EventTypeId.EVENT_CHECKOUT);
+        startCheckoutRequest.setErrorDescription("");
+        startCheckoutRequest.setResult(0);
+        startCheckoutRequest.setGuestCheckout(0);
+
+        switch (selectedPaymentType) {
+            case AppConstants.VCO:
+                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.VCO.getValue());
+            case AppConstants.AFTERPAY:
+                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.AFTERPAY.getValue());
+            case AppConstants.REGULAR:
+                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.REGULAR.getValue());
+            case AppConstants.OURPAY:
+                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.OURPAY.getValue());
+            case AppConstants.MASTERPASS:
+                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.MASTERPASS.getValue());
+            case AppConstants.PAYPALCREDIT:
+                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPALCREDIT.getValue());
+            case AppConstants.PAYPAL:
+                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPAL.getValue());
+            case AppConstants.UNKNOWN:
+                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.UNKNOWN.getValue());
         }
 
         HashMap<String, Object> parameters = new HashMap<>();
@@ -323,6 +352,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         parameters.put(DataCollector.EventParameters.NUMBER_OF_ITEMS, numItems);
         parameters.put(DataCollector.EventParameters.PRICE, price);
         parameters.put(DataCollector.EventParameters.COUNTRY_ID, getDataManager().getCountryId());
+        parameters.put(DataCollector.EventParameters.START_CHECKOUT_REQUEST, startCheckoutRequest);
 
         DataCollector.logEvent(Events.InitiateCheckout, parameters);
 

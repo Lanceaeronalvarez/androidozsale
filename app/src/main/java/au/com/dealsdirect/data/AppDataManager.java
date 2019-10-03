@@ -69,6 +69,7 @@ import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
+import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
@@ -627,6 +628,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request) {
         return mApiHelper.callGetPaymentMethodNonce(request);
+    }
+
+    @Override
+    public Observable<String> callStartCheckoutEvent(StartCheckoutRequest request) {
+        return mApiHelper.callStartCheckoutEvent(request);
     }
 
     @Override

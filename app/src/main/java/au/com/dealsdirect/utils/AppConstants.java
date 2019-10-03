@@ -58,6 +58,15 @@ public final class AppConstants {
     public static final int REQUEST_CODE_PERMISSION = 2000;
     public static final int REQUEST_CODE_FOR_SUCCESS = 1000;
 
+    public static final String VCO = "VCO";
+    public static final String REGULAR = "REGULAR";
+    public static final String OURPAY = "OURPAY";
+    public static final String MASTERPASS = "MASTERPASS";
+    public static final String PAYPALCREDIT = "PAYPALCREDIT";
+    public static final String PAYPAL = "PAYPAL";
+    public static final String AFTERPAY = "AFTERPAY";
+    public static final String UNKNOWN = "UNKNOWN";
+
 
     private AppConstants() {
         // This utility class is not publicly instantiable
