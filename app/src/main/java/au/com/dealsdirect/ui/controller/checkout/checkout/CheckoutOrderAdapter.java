@@ -56,7 +56,13 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         //   (1) fix when item.fileName is null
         if (item.fileName != null) {
             if (!item.fileName.isEmpty()) {
-                ImageUtils.loadImageDontAnimate(LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName), holder.image);
+                String newImageFilename = LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName);
+                if (!holder.imageFilename.equals(newImageFilename)) {
+                    holder.imageFilename = newImageFilename;
+                    // rather display nothing than display the wrong image
+                    holder.image.setImageDrawable(null);
+                }
+                ImageUtils.loadImageDontAnimate(holder.imageFilename, holder.image);
             }
         }
 
@@ -140,6 +146,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<CheckoutOrderAdap
         @Nullable
         @BindView(R.id.item_checkout_personalisation_layout)
         PersonalisationLayout personalisationLayout;
+
+        String imageFilename = "";
 
         public ViewHolder(View itemView) {
             super(itemView);
