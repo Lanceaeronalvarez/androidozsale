@@ -100,7 +100,7 @@ public class DataCollector {
         // TOGGLE COLUMN LIST
         public static final String TOGGLE_LIST_PORTRAIT = "PortraitNumberOfColumns";
         public static final String TOGGLE_LIST_LANDSCAPE = "LandscapeNumberOfColumns";
-        public static final String TOGGLE_LIST_PREFERENCE = "ProductDetailsGridViewPreference";
+        public static final String TOGGLE_LIST_PREFERENCE = "ProductListGridViewPreference";
 
         public final class LoginType {
             public final static String FACEBOOK = "LoginFacebook";
