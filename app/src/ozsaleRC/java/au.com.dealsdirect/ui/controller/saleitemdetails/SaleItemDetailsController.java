@@ -1150,7 +1150,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mAddToCartTimerProgressBar.setVisibility(View.VISIBLE);
         } else {
             mAddToCartTimerTextView.setText(R.string.add_to_cart);
-            if (mIsSoldout) {
+            if (mIsSoldout && mIsSoldOutCombined) {
                 mAddToCartButton.setText(R.string.sold_out);
             } else {
                 mAddToCartButton.setText(R.string.add_to_cart);
