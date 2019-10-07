@@ -21,6 +21,7 @@ import au.com.dealsdirect.data.network.model.events.FrontEndInfo;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
+import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.VisitorInfo;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollectionService;
@@ -28,6 +29,7 @@ import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.core.LoggingService;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.events.EventUser;
+import au.com.dealsdirect.service.datacollection.events.InitiateCheckOutEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemDetailsDataEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemListDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SaleBannersDataEvent;
@@ -71,6 +73,8 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
         mSchedulerProvider = schedulerProvider;
         mCompositeDisposable = compositeDisposable;
     }
+
+
 
     private GenieEventService() {
         registerGenieEvents();
@@ -129,6 +133,15 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         callWishlistEvent((WishlistEventRequest) parameters.get(DataCollector.EventParameters.WISHLIST_EVENT_REQUEST));
+                    }
+                }));
+
+        //register start checkout event
+        DataCollector.EventRegistry.register(generateEventKey(Events.InitiateCheckout, getServiceKey()), Events.InitiateCheckout,
+                new LoggingService.LogInitiateCheckout(new InitiateCheckOutEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        callStartCheckoutEvent((StartCheckoutRequest) parameters.get(DataCollector.EventParameters.START_CHECKOUT_REQUEST));
                     }
                 }));
     }
@@ -277,6 +290,31 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                     if (!responseValue.isEmpty()) {
                         getDataManager().setEventUserId(responseValue.replace("\"", ""));
                     }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            Log.d("Error", String.valueOf(anError.getErrorBody()));
+                        }
+                    }
+                }));
+    }
+
+    private static void callStartCheckoutEvent(StartCheckoutRequest request) {
+        request.setFrontEndInfo(includeFrontEndInfo());
+        request.setVisitorInfo(includeVisitorInfo());
+
+        getCompositeDisposable().add(getDataManager()
+                .callStartCheckoutEvent(request)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    Log.d(TAG, response);
+
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {

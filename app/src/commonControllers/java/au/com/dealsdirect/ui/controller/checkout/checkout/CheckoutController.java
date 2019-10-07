@@ -84,6 +84,7 @@ import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -521,7 +522,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                             // Successful VCO
                             showLoading();
                             mActivity.callCreatePaymentTransactionVco(visaPaymentSummary);
-                            mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+                            mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+                                    mValue.getSummary().getTotal(), AppConstants.VCO);
                         }
                         break;
                     }
@@ -1032,7 +1034,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void onPayButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+                mValue.getSummary().getTotal(), AppConstants.REGULAR);
 
         if (!isAddressValid()) {
 
@@ -1057,7 +1060,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void onPaypalButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+                mValue.getSummary().getTotal(), AppConstants.PAYPAL);
 
         if (!isAddressValid()) {
             //push add new address fragment
@@ -1080,7 +1084,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void onPaypalCreditButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+                mValue.getSummary().getTotal(), AppConstants.PAYPALCREDIT);
 
         if (!isAddressValid()) {
             showAddAddressController();
@@ -1102,7 +1107,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void onMasterpassButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+                mValue.getSummary().getTotal(), AppConstants.MASTERPASS);
 
         if (!isAddressValid()) {
 
@@ -1143,7 +1149,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void onAfterpayButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_AFTERPAY, mItemList.size(), mValue.getSummary().getTotal());
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_AFTERPAY, mItemList.size(),
+                mValue.getSummary().getTotal(), AppConstants.AFTERPAY);
 
         if (!isAddressValid()) {
 
@@ -1169,7 +1176,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void onOurpayButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(), mValue.getSummary().getTotal());
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+                mValue.getSummary().getTotal(), AppConstants.OURPAY);
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
@@ -1405,7 +1413,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mActivity,
                 PaymentInfo.VISA_CHECKOUT_BRAINTREE,
                 mItemList.size(),
-                mValue.getSummary().getTotal());
+                mValue.getSummary().getTotal(),
+                AppConstants.VCO);
 
         if (!isAddressValid()) {
 

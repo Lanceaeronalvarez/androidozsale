@@ -62,6 +62,7 @@ import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
+import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
@@ -1006,6 +1007,15 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
                 .getJSONObjectObservable();
+    }
+
+    @Override
+    public Observable<String> callStartCheckoutEvent(StartCheckoutRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
     }
 
     @Override
