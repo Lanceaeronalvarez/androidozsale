@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.orders.orders;
 import android.app.Activity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,22 +32,8 @@ import butterknife.ButterKnife;
 
 public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<GetPaymentsList.ResponseValue.PaymentItem> mPaymentItemList;
-    private Activity mActivity;
-    private OrderItemClickListener mClickListener;
-
     public static final int TITLE_VIEW_TYPE = 10;
     public static final int DETAILS_VIEW_TYPE = 11;
-
-    private ArrayList<Object> mData;
-    private ArrayList<String> mReferenceNumbers;
-    private GetPaymentsList.ResponseValue.PaymentItem item;
-    private LinkedHashMap<String, Object> mLinkedHashMap;
-    private HashMap<String, String> estDeliveryDate = new HashMap<>();
-    private HashMap<String, String> mStatusArray = new HashMap<>();
-    private boolean isItemReceived = false;
-    private String mLink;
-
     private static final int ORDER_DATE_ACTIVE_STATE = 1;
     private static final int ORDER_DATE_NEGATIVE_STATE = -1;
     private static final int ORDER_STOCK_ARRIVED_ACTIVE_STATE = 2;
@@ -56,6 +43,17 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int ORDER_DISPATCHED_ACTIVE_STATE = 4;
     private static final int ORDER_DISPATCHED_NEGATIVE_STATE = -4;
     private static final int ORDER_RECEIVED_ACTIVE_STATE = 5;
+    private ArrayList<GetPaymentsList.ResponseValue.PaymentItem> mPaymentItemList;
+    private Activity mActivity;
+    private OrderItemClickListener mClickListener;
+    private ArrayList<Pair<Object, Integer>> mData;
+    private ArrayList<String> mReferenceNumbers;
+    private GetPaymentsList.ResponseValue.PaymentItem item;
+    private LinkedHashMap<String, Object> mLinkedHashMap;
+    private HashMap<String, String> estDeliveryDate = new HashMap<>();
+    private HashMap<String, String> mStatusArray = new HashMap<>();
+    private boolean isItemReceived = false;
+    private String mLink;
 
     public OrdersRecyclerViewAdapter(Activity mActivity,
                                      OrderItemClickListener clickListener,
@@ -65,13 +63,13 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         this.mClickListener = clickListener;
         this.mActivity = mActivity;
         flattenData();
-        mReferenceNumbers = flattenReferenceNumber(mData);
+        mReferenceNumbers = flattenReferenceNumber(paymentItems);
     }
 
     @Override
     public int getItemViewType(int position) {
         //TODO: logic for determining what viewholder should be shown
-        return mData.get(position) instanceof GetPaymentsList.ResponseValue.PaymentItem ? TITLE_VIEW_TYPE : DETAILS_VIEW_TYPE;
+        return mData.get(position).first instanceof GetPaymentsList.ResponseValue.PaymentItem ? TITLE_VIEW_TYPE : DETAILS_VIEW_TYPE;
     }
 
     @Override
@@ -88,13 +86,17 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         if (viewType == TITLE_VIEW_TYPE) {
             AppLogger.d("Orders Title Item Position: " + position);
-            item = (GetPaymentsList.ResponseValue.PaymentItem) mData.get(position);
+//            item = (GetPaymentsList.ResponseValue.PaymentItem) mData.get(position);
+            item = (GetPaymentsList.ResponseValue.PaymentItem) mData.get(position).first;
             ((OrdersViewHolder) viewHolder).orderNumberTextView.setText(String.valueOf(item.getPaymentReferenceNo()));
-            ((OrdersViewHolder) viewHolder).orderNumberRightArrowImageView.setOnClickListener(view ->
-                    mClickListener.onOrderItemClick(mReferenceNumbers.get(position),
-                            mStatusArray, mLink, estDeliveryDate, position));
+            ((OrdersViewHolder) viewHolder).orderNumberRightArrowImageView.setOnClickListener(view -> {
+                    int index = mData.get(viewHolder.getAdapterPosition()).second;
+                    mClickListener.onOrderItemClick(String.valueOf(item.getPaymentReferenceNo()),
+                            mStatusArray, mLink, estDeliveryDate, index);
+            });
         } else if (viewType == DETAILS_VIEW_TYPE) {
-            GetPaymentsList.ResponseValue.Order order = (GetPaymentsList.ResponseValue.Order) mData.get(position);
+            GetPaymentsList.ResponseValue.Order order =
+                    (GetPaymentsList.ResponseValue.Order) mData.get(position).first;
             setOrderTrackData((OrderItemsViewholder) viewHolder, item, order);
             ((OrderItemsViewholder) viewHolder).trackHereButton.setOnClickListener(v ->
                     mClickListener.onOrderItemTrackingButtonClick(order.getLink(), null));
@@ -104,8 +106,8 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
 
                 if (order.getActions().contains(ActionConstants.ORDER_ACTION_CHECK_STATUS) ||
-                    order.getActions().contains(ActionConstants.ORDER_ACTION_CHANGE_ADDRESS) ||
-                    order.getActions().contains(ActionConstants.ORDER_ACTION_REFUND)) {
+                        order.getActions().contains(ActionConstants.ORDER_ACTION_CHANGE_ADDRESS) ||
+                        order.getActions().contains(ActionConstants.ORDER_ACTION_REFUND)) {
 
                     ((OrderItemsViewholder) viewHolder).orderOptionsLayout.setVisibility(View.VISIBLE);
                 }
@@ -124,8 +126,11 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
             mLink = order.getLink();
 
-            viewHolder.itemView.setOnClickListener(view -> mClickListener.onOrderItemClick(mReferenceNumbers.get(position),
-                    mStatusArray, order.getLink(), estDeliveryDate, position));
+            viewHolder.itemView.setOnClickListener(view -> {
+                int index = mData.get(viewHolder.getAdapterPosition()).second;
+                mClickListener.onOrderItemClick(String.valueOf(item.getPaymentReferenceNo()),
+                        mStatusArray, order.getLink(), estDeliveryDate, index);
+            });
         }
 
     }
@@ -140,14 +145,14 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         return mData.size();
     }
 
-    private ArrayList<String> flattenReferenceNumber(ArrayList<Object> data) {
+    private ArrayList<String> flattenReferenceNumber(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> data) {
         ArrayList<String> referenceNumbers = new ArrayList<>();
         GetPaymentsList.ResponseValue.PaymentItem item = new GetPaymentsList.ResponseValue.PaymentItem();
 
         for (int i = 0; i < data.size(); i++) {
-            if (data.get(i) instanceof GetPaymentsList.ResponseValue.PaymentItem) {
-                item = (GetPaymentsList.ResponseValue.PaymentItem) data.get(i);
-            }
+//            if (data.get(i) instanceof GetPaymentsList.ResponseValue.PaymentItem) {
+//                item = (GetPaymentsList.ResponseValue.PaymentItem) data.get(i);
+//            }
             referenceNumbers.add(String.valueOf(item.getPaymentReferenceNo()));
         }
         return referenceNumbers;
@@ -156,10 +161,12 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private void flattenData() {
         mData = new ArrayList<>();
 
-        for (GetPaymentsList.ResponseValue.PaymentItem item : mPaymentItemList) {
-            mData.add(item);
+//        for (GetPaymentsList.ResponseValue.PaymentItem item : mPaymentItemList) {
+        for (int h = 0; h < mPaymentItemList.size(); h++) {
+            GetPaymentsList.ResponseValue.PaymentItem item = mPaymentItemList.get(h);
+            mData.add(new Pair<>(item, h));
             for (int i = 0; i < item.getOrders().size(); i++) {
-                mData.add(item.getOrders().get(i));
+                mData.add(new Pair<>(item.getOrders().get(i), h));
             }
         }
     }
@@ -173,6 +180,120 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     public void replace(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orders) {
         mPaymentItemList = orders;
         notifyDataSetChanged();
+    }
+
+    public void setOrderTrackData(OrderItemsViewholder holder,
+                                  GetPaymentsList.ResponseValue.PaymentItem paymentItem,
+                                  GetPaymentsList.ResponseValue.Order order) {
+
+
+        GetPaymentsList.ResponseValue.Order orderItem = order;
+
+        String orderStatus = orderItem.getStatus();
+
+        isItemReceived = orderItem.getReceived() != null;
+
+        String link = order.getLink();
+
+        holder.trackHereButton.setVisibility(link == null || link.isEmpty() ? View.GONE : View.VISIBLE);
+        holder.estimatedDeliveryText.setText(orderItem.getEstimatedDeliveryText());
+
+        holder.orderImagesRecyclerView.setAdapter(new OrderImageAdapter(mActivity, orderItem.getItems()));
+        holder.orderImagesRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        holder.orderImagesRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 1, RecyclerView.HORIZONTAL, false));
+
+        String approvedDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getApprovedDate());
+        String stockDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getStockDate());
+        String closeDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getClosedDate());
+        String dispatchDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getDispatchedDate());
+        String receivedDate = orderItem.getReceived() != null ?
+                DateUtils.getDateForOrderProgress(orderItem.getReceived()) : "";
+
+        int currentStep = orderItem.getTracker().getStep();
+        boolean isRefunded = orderStatus.toLowerCase().contains(mActivity.getString(R.string.refunded));
+        String orderText = mActivity.getResources().getString(R.string.order);
+        for (int i = Math.abs(currentStep); i > 0; i--) {
+            boolean isCurrentStep = isRefunded && i == Math.abs(currentStep);
+            switch (i) {
+                case ORDER_DATE_ACTIVE_STATE:
+                    holder.orderDateGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state : R.drawable.bg_orders_graph_active_state);
+                    holder.orderDateGraphNodeView.setText("");
+                    holder.orderFirstNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
+                    break;
+
+                case ORDER_STOCK_ARRIVED_ACTIVE_STATE:
+                    holder.stockArrivedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state : R.drawable.bg_orders_graph_active_state);
+                    holder.stockArrivedGraphNodeView.setText("");
+                    holder.orderSecondNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
+                    break;
+
+                case ORDER_PACKED_ACTIVE_STATE:
+                    holder.orderPackedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state : R.drawable.bg_orders_graph_active_state);
+                    holder.orderPackedGraphNodeView.setText("");
+                    holder.orderThirdNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
+                    break;
+
+                case ORDER_DISPATCHED_ACTIVE_STATE:
+                    holder.dispatchedGraphNodeTextView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state : R.drawable.bg_orders_graph_active_state);
+                    holder.dispatchedGraphNodeTextView.setText("");
+                    holder.orderFourthNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
+                    break;
+            }
+
+            holder.orderDateValueTextView.setText(approvedDate);
+            holder.stockArrivedValueTextView.setText(stockDate);
+            holder.dispatchedDateValueTextView.setText(closeDate);
+            holder.orderPackedValueTextView.setText(dispatchDate);
+            holder.receivedDateValueTextView.setText(receivedDate);
+        }
+
+        switch (currentStep) {
+            case ORDER_DATE_ACTIVE_STATE:
+            case ORDER_DATE_NEGATIVE_STATE:
+                if (orderStatus.equalsIgnoreCase("approved")) {
+                    orderStatus = "Date";
+                }
+                holder.orderFirstNodeStatusTextView.setText(String.format(orderText, orderStatus));
+                break;
+
+            case ORDER_STOCK_ARRIVED_ACTIVE_STATE:
+            case ORDER_STOCK_ARRIVED_NEGATIVE_STATE:
+                holder.orderSecondNodeStatusTextView.setText(String.format(orderText, orderStatus));
+                break;
+
+            case ORDER_PACKED_ACTIVE_STATE:
+            case ORDER_PACKED_NEGATIVE_STATE:
+                holder.orderThirdNodeStatusTextView.setText(String.format(orderText, orderStatus));
+                break;
+
+            case ORDER_DISPATCHED_ACTIVE_STATE:
+            case ORDER_DISPATCHED_NEGATIVE_STATE:
+                holder.orderFourthNodeStatusTextView.setText(String.format(orderText, orderStatus));
+                break;
+        }
+
+        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE &&
+                order.getActions().contains(ActionConstants.ORDER_RECEIVED_STATUS)) {
+            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
+            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
+            holder.receivedGraphNodeTextView.setOnClickListener(v -> {
+                mClickListener.callOrderReceived(order.getOrderID());
+                setActiveOrderReceived(holder, orderText);
+            });
+        }
+
+        if (isItemReceived) {
+            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
+            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
+            setActiveOrderReceived(holder, orderText);
+        }
+
+    }
+
+    private void setActiveOrderReceived(OrderItemsViewholder holder, String orderText) {
+        holder.receivedGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
+        holder.receivedGraphNodeTextView.setText("");
+        holder.orderFifthNodeStatusTextView.setText(String.format(orderText, mActivity.getResources().getString(R.string.received)));
     }
 
     public static class OrdersViewHolder extends RecyclerView.ViewHolder {
@@ -268,119 +389,5 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             ButterKnife.bind(this, itemView);
 
         }
-    }
-
-    public void setOrderTrackData(OrderItemsViewholder holder,
-                                  GetPaymentsList.ResponseValue.PaymentItem paymentItem,
-                                  GetPaymentsList.ResponseValue.Order order) {
-
-
-        GetPaymentsList.ResponseValue.Order orderItem = order;
-
-        String orderStatus = orderItem.getStatus();
-
-        isItemReceived = orderItem.getReceived() != null;
-
-        String link = order.getLink();
-
-        holder.trackHereButton.setVisibility(link == null || link.isEmpty() ? View.GONE : View.VISIBLE);
-        holder.estimatedDeliveryText.setText(orderItem.getEstimatedDeliveryText());
-
-        holder.orderImagesRecyclerView.setAdapter(new OrderImageAdapter(mActivity, orderItem.getItems()));
-        holder.orderImagesRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        holder.orderImagesRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 1, RecyclerView.HORIZONTAL, false));
-
-        String approvedDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getApprovedDate());
-        String stockDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getStockDate());
-        String closeDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getClosedDate());
-        String dispatchDate = DateUtils.getDateForOrderProgress(orderItem.getTracker().getDispatchedDate());
-        String receivedDate = orderItem.getReceived() != null ?
-                DateUtils.getDateForOrderProgress(orderItem.getReceived()) : "";
-
-        int currentStep = orderItem.getTracker().getStep();
-        boolean isRefunded = orderStatus.toLowerCase().contains(mActivity.getString(R.string.refunded));
-        String orderText = mActivity.getResources().getString(R.string.order);
-        for(int i = Math.abs(currentStep); i > 0; i--) {
-            boolean isCurrentStep = isRefunded && i == Math.abs(currentStep);
-            switch (i) {
-                case ORDER_DATE_ACTIVE_STATE:
-                    holder.orderDateGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
-                    holder.orderDateGraphNodeView.setText("");
-                    holder.orderFirstNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
-                    break;
-
-                case ORDER_STOCK_ARRIVED_ACTIVE_STATE:
-                    holder.stockArrivedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
-                    holder.stockArrivedGraphNodeView.setText("");
-                    holder.orderSecondNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
-                    break;
-
-                case ORDER_PACKED_ACTIVE_STATE:
-                    holder.orderPackedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
-                    holder.orderPackedGraphNodeView.setText("");
-                    holder.orderThirdNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
-                    break;
-
-                case ORDER_DISPATCHED_ACTIVE_STATE:
-                    holder.dispatchedGraphNodeTextView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
-                    holder.dispatchedGraphNodeTextView.setText("");
-                    holder.orderFourthNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
-                    break;
-            }
-
-            holder.orderDateValueTextView.setText(approvedDate);
-            holder.stockArrivedValueTextView.setText(stockDate);
-            holder.dispatchedDateValueTextView.setText(closeDate);
-            holder.orderPackedValueTextView.setText(dispatchDate);
-            holder.receivedDateValueTextView.setText(receivedDate);
-        }
-
-        switch (currentStep) {
-            case ORDER_DATE_ACTIVE_STATE:
-            case ORDER_DATE_NEGATIVE_STATE:
-                if (orderStatus.equalsIgnoreCase("approved")) {
-                    orderStatus = "Date";
-                }
-                holder.orderFirstNodeStatusTextView.setText(String.format(orderText, orderStatus));
-                break;
-
-            case ORDER_STOCK_ARRIVED_ACTIVE_STATE:
-            case ORDER_STOCK_ARRIVED_NEGATIVE_STATE:
-                holder.orderSecondNodeStatusTextView.setText(String.format(orderText, orderStatus));
-                break;
-
-            case ORDER_PACKED_ACTIVE_STATE:
-            case ORDER_PACKED_NEGATIVE_STATE:
-                holder.orderThirdNodeStatusTextView.setText(String.format(orderText, orderStatus));
-                break;
-
-            case ORDER_DISPATCHED_ACTIVE_STATE:
-            case ORDER_DISPATCHED_NEGATIVE_STATE:
-                holder.orderFourthNodeStatusTextView.setText(String.format(orderText, orderStatus));
-                break;
-        }
-
-        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE &&
-                order.getActions().contains(ActionConstants.ORDER_RECEIVED_STATUS)) {
-            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
-            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
-            holder.receivedGraphNodeTextView.setOnClickListener(v -> {
-                mClickListener.callOrderReceived(order.getOrderID());
-                setActiveOrderReceived(holder, orderText);
-            });
-        }
-
-        if (isItemReceived) {
-            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
-            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
-            setActiveOrderReceived(holder, orderText);
-        }
-
-    }
-
-    private void setActiveOrderReceived(OrderItemsViewholder holder, String orderText) {
-        holder.receivedGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
-        holder.receivedGraphNodeTextView.setText("");
-        holder.orderFifthNodeStatusTextView.setText(String.format(orderText,mActivity.getResources().getString(R.string.received)));
     }
 }

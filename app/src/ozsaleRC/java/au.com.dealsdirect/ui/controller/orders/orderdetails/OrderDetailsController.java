@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
@@ -205,7 +206,14 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
         mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity,null,this, mStatus, mLink,
                 mEstimatedDelivery, mOrders));
-        mRecyclerView.addItemDecoration(new OrderDetailItemDecorator());
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+
+                getItemDecorationRecyclerView(parent, view, outRect);
+            }
+        });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
     }
@@ -225,7 +233,14 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
         mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity,null,this, mStatus, mLink,
                 mEstimatedDelivery, mOrders));
-        mRecyclerView.addItemDecoration(new OrderDetailItemDecorator());
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+
+                getItemDecorationRecyclerView(parent, view, outRect);
+            }
+        });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
 
@@ -245,6 +260,19 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     protected void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         super.onDestroyView(view);
+    }
+
+    private int getItemDecorationRecyclerView(RecyclerView parent, View view, Rect outRect) {
+        int position = parent.getChildAdapterPosition(view);
+        int viewType = parent.getAdapter().getItemViewType(position);
+
+        if(viewType == OrderDetailsRecyclerViewAdapter.VIEW_TYPE_SALE_NAME && position != 0) {
+            float margin = mActivity.getResources().getDisplayMetrics().density *
+                    mActivity.getResources().getDimension(R.dimen.margin_small);
+            return outRect.top = (int) margin;
+        }
+
+        return 0;
     }
 
     @Override
@@ -268,7 +296,14 @@ public class OrderDetailsController extends BaseController implements OrderDetai
         //set adapter
         mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity,orderDetails,this, mStatus, mLink,
                 mEstimatedDelivery, null));
-        mRecyclerView.addItemDecoration(new OrderDetailItemDecorator());
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+
+                getItemDecorationRecyclerView(parent, view, outRect);
+            }
+        });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
     }
