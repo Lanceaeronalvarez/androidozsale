@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/toolbar_skin"
-    android:contentInsetEnd="0dp"
-    android:contentInsetLeft="0dp"
-    android:contentInsetRight="0dp"
     android:contentInsetStart="0dp"
+    android:contentInsetLeft="0dp"
+    android:contentInsetEnd="0dp"
+    android:contentInsetRight="0dp"
     app:contentInsetEnd="0dp"
     app:contentInsetLeft="0dp"
     app:contentInsetRight="0dp"
@@ -36,6 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
+            android:paddingStart="@dimen/partial_toolbar_button_padding"
+            android:paddingEnd="@dimen/partial_toolbar_button_padding"
             android:singleLine="true"
             android:textColor="@color/toolbar_text_dark"
             android:textSize="@dimen/text_size_headline2"
@@ -47,9 +49,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:textColor="@color/toolbar_text_dark"
+            android:padding="@dimen/partial_toolbar_button_padding"
             android:scaleType="fitCenter"
-            android:padding="@dimen/partial_toolbar_button_padding" />
+            android:textColor="@color/toolbar_text_dark" />
 
     </RelativeLayout>
 

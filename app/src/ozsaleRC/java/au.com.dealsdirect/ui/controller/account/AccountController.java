@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -203,6 +204,10 @@ public class AccountController extends BaseController implements AccountMvpView,
 
         if (mPresenter.isGoogleAdsEnabled()) {
             displayAds();
+        }
+
+        if (mPresenter.isTablet()) {
+            mTitleTextView.setGravity(Gravity.LEFT);
         }
     }
 
