@@ -5,8 +5,8 @@ package au.com.dealsdirect.service.ourpay;
  */
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.widget.TextViewCompat;
+
+import androidx.core.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +21,6 @@ import java.util.Locale;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.ui.controller.main.Settings;
-import au.com.dealsdirect.utils.PriceUtils;
 
 @SuppressWarnings({"ResourceType"})
 public class OurpayGraph {

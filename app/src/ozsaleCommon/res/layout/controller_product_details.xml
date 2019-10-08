@@ -8,7 +8,7 @@
     android:background="@color/background_default"
     tools:ignore="MissingPrefix">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/product_details_coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,7 +25,7 @@
             android:clipToPadding="false"
             android:orientation="vertical">
 
-            <android.support.v4.widget.NestedScrollView
+            <androidx.core.widget.NestedScrollView
                 android:id="@+id/controller_sale_item_detail_scrollview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -389,7 +389,7 @@
                                     android:text="related items"
                                     android:textSize="@dimen/text_size_caption2" />
 
-                                <android.support.v7.widget.RecyclerView
+                                <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/relatedItemsRecyclerView"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -420,7 +420,7 @@
                                     android:text="customers also bought"
                                     android:textSize="@dimen/text_size_caption2" />
 
-                                <android.support.v7.widget.RecyclerView
+                                <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/customersAlsoBoughtRecyclerView"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -443,7 +443,7 @@
                                     android:text="reviews"
                                     android:textSize="@dimen/text_size_caption1" />
 
-                                <android.support.design.widget.FloatingActionButton
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
                                     android:id="@+id/edit_review_fab"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
@@ -454,7 +454,7 @@
                                     android:scaleType="fitXY"
                                     app:backgroundTint="#ffffff" />
 
-                                <android.support.v7.widget.RecyclerView
+                                <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/reviewsRecyclerView"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -687,7 +687,7 @@
                                     android:paddingTop="@dimen/margin_extra_small"
                                     android:paddingBottom="@dimen/margin_extra_small" />
 
-                                <android.support.v7.widget.RecyclerView
+                                <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/productImageRecyclerView"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -700,7 +700,7 @@
                                     android:paddingTop="@dimen/margin_extra_small"
                                     android:paddingBottom="@dimen/margin_extra_small" />
 
-                                <android.support.v7.widget.RecyclerView
+                                <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/otherImagesRecyclerView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -752,7 +752,7 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
-            </android.support.v4.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
 
             <RelativeLayout
                 android:id="@+id/controller_sale_details_toolbar"
@@ -973,6 +973,6 @@
 
         </RelativeLayout>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </au.com.dealsdirect.widget.ElasticDragDismissFrameLayout>

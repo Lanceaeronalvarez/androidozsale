@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
-import android.support.design.widget.TabLayout;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.Set;
 

@@ -4,8 +4,8 @@ package au.com.dealsdirect.ui.controller.saleitems;
  * Created by smartwave on 24/01/2017.
  */
 
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * GridLayoutManager.SpanSizeLookup implementation used to show a header in a RecyclerView when the

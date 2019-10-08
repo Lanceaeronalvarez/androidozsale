@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/myAccountOurpayTabbedHeader"
         android:layout_width="match_parent"
         android:layout_height="152dp">
@@ -234,9 +234,9 @@
 
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/myAccountOurpayTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -244,23 +244,23 @@
         app:layout_constraintStart_toStartOf="parent"
         style="@style/MyAccountsOurpayTabLayout">
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/ourpay_payment_plans" />
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/ourpay_schedule_payments" />
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/ourpay_past_payments" />
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/myAccountOurpayRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

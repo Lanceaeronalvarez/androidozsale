@@ -42,7 +42,7 @@
             android:layout_above="@+id/controller_payment_button"
             android:layout_below="@+id/controller_payment_description_text">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/payment_select_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

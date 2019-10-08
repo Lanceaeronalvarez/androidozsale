@@ -2,7 +2,7 @@ package au.com.dealsdirect.utils;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.support.v4.widget.NestedScrollView;
+import androidx.core.widget.NestedScrollView;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ScrollView;

@@ -1,7 +1,7 @@
 package au.com.dealsdirect.ui.custom;
 
 import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersRecyclerViewAdapter;

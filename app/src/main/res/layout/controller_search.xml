@@ -21,7 +21,7 @@
             android:background="#beffffff"
             android:textColor="#446E87"/>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/controller_search_sale_items_grid_view"
             android:layout_below="@+id/controller_search_popular_subheader"
             android:padding="5dp"

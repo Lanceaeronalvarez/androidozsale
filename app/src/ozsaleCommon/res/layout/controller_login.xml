@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/controller_login_legalities_container"
@@ -63,7 +63,7 @@
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_body" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/controller_login_email_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
                             android:inputType="textEmailAddress"
                             android:maxLines="1" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -103,7 +103,7 @@
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_body" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/controller_login_password_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
                             android:inputType="textPassword"
                             android:textColorHint="@color/colorPrimaryDark" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -220,7 +220,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/controller_login_legalities_container"

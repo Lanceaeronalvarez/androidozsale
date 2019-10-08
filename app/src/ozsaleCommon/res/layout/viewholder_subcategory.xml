@@ -43,7 +43,7 @@
         android:background="@color/border_regular"
         android:visibility="gone" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/viewholder_subcategory_items_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.returns.currentreturns.viewholder;
 
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;

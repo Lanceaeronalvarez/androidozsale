@@ -4,14 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/checkbox_toggle_start"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginEnd="@dimen/padding_small"
         android:layout_marginRight="@dimen/padding_small" />
 
-    <android.support.v7.widget.AppCompatCheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/checkbox_toggle_end"
         android:layout_width="wrap_content"
         android:layout_height="40dp"

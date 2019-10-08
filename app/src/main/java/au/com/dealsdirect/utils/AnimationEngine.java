@@ -11,11 +11,10 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v4.util.ArrayMap;
-import android.support.v4.view.ViewCompat;
+import androidx.collection.ArrayMap;
+import androidx.core.view.ViewCompat;
 import android.util.Property;
 import android.view.View;
-import android.view.animation.Interpolator;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

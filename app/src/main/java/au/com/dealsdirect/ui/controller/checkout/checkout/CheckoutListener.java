@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by MTC on 2019-07-16.

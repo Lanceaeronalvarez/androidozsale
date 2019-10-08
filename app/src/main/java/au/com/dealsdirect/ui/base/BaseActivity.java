@@ -8,11 +8,11 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -206,7 +206,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         sbView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
         sbView.getLayoutParams().height = Math.round(getResources().getDimension(R.dimen.bottom_nav_height));
         TextView textView = (TextView) sbView
-                .findViewById(android.support.design.R.id.snackbar_text);
+                .findViewById(R.id.snackbar_text);
 
 //        support v23 changed behavior for this. ref: https://stackoverflow.com/questions/32668217/android-snackbar-textalignment-in-center
 //        changed last 04/18/18

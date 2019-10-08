@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_caption2"
                 tools:text="subscription for " />
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/delivery_option_ops_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

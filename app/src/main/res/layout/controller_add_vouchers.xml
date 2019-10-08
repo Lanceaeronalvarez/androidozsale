@@ -45,7 +45,7 @@
                     android:paddingBottom="15dp"
                     android:paddingTop="5dp">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/voucherWrapper"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                             android:textColor="#919191"
                             android:textColorHint="#c1c1c1" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <Button
                         android:id="@+id/controller_button_add_voucher"
@@ -127,7 +127,7 @@
 
                 </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/controller_recycler_view_promo_vouchers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

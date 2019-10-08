@@ -1,7 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 import java.util.Map;
