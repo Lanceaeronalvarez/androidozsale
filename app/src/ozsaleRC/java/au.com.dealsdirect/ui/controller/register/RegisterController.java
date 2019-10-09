@@ -174,6 +174,8 @@ public class RegisterController extends VisaCheckoutController implements Regist
         //mPresenter.loadSample(new SampleRequest());
 
         mToolBarTitle.setText(getResources().getString(R.string.register_title));
+        mVisaCheckoutButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
+                View.GONE);
 
         if (getResources().getBoolean(R.bool.is_ozsale_app)) {
             if (mLeftButton != null) {

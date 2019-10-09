@@ -207,6 +207,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     protected void setUp(View view) {
         mViewAddressToolarTitle.setText("Add New Payment");
 
+        mVisaCheckoutButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
+                View.GONE);
+
         if (mActivity.isBraintreeInitialized()) {
             showPaymentButtons();
         } else {
