@@ -55,7 +55,7 @@ android {
     productFlavors {
         buyinviteRC {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -76,7 +76,7 @@ android {
 
         buyinviteTest {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -182,7 +182,7 @@ android {
 
         dealsDirect2RC {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -204,7 +204,7 @@ android {
 
         dealsDirect2Test {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -225,7 +225,7 @@ android {
 
         ooRC {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -246,7 +246,7 @@ android {
 
         ooTest {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -288,7 +288,7 @@ android {
 
         topbuy2RC {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -330,7 +330,7 @@ android {
 
         topbuy2Test {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -374,7 +374,7 @@ android {
 
         ozsaleRC {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -396,7 +396,7 @@ android {
 
         ozsaleTest {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "au.com.ozsale.test"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -418,7 +418,7 @@ android {
 
         singsaleRC {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -440,7 +440,7 @@ android {
 
         singsaleTest {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "sg.com.singsaletest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -461,7 +461,7 @@ android {
 
         nzsaleRC {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -483,7 +483,7 @@ android {
 
         nzsaleTest {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "nz.co.nzsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -505,7 +505,7 @@ android {
 
         mysaleRC {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -526,7 +526,7 @@ android {
 
         mysaleTest {
             versionCode 185
-            versionName "2.6.2"
+            versionName "2.6.2.1"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
