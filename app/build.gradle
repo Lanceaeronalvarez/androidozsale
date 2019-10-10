@@ -54,7 +54,7 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "au.com.buyinvite.bi"
 
@@ -75,7 +75,7 @@ android {
         }
 
         buyinviteTest {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "au.com.buyinvite.bi.test"
 
@@ -181,7 +181,7 @@ android {
         }
 
         dealsDirect2RC {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "au.com.dealsdirect"
 
@@ -203,7 +203,7 @@ android {
         }
 
         dealsDirect2Test {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "au.com.dealsdirect.test"
 
@@ -224,7 +224,7 @@ android {
         }
 
         ooRC {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "au.com.oo"
 
@@ -245,7 +245,7 @@ android {
         }
 
         ooTest {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "au.com.oo.test"
 
@@ -287,7 +287,7 @@ android {
         }
 
         topbuy2RC {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "au.com.topbuy"
 
@@ -329,7 +329,7 @@ android {
         }
 
         topbuy2Test {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "au.com.topbuy.test"
 
@@ -373,7 +373,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "au.com.ozsale"
 
@@ -395,7 +395,7 @@ android {
         }
 
         ozsaleTest {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "au.com.ozsale.test"
 
@@ -417,7 +417,7 @@ android {
         }
 
         singsaleRC {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "sg.com.singsale"
 
@@ -439,7 +439,7 @@ android {
         }
 
         singsaleTest {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "sg.com.singsaletest"
 
@@ -460,7 +460,7 @@ android {
         }
 
         nzsaleRC {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "nz.co.nzsale"
 
@@ -482,7 +482,7 @@ android {
         }
 
         nzsaleTest {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "nz.co.nzsaleTest"
 
@@ -504,7 +504,7 @@ android {
         }
 
         mysaleRC {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "my.mysale.mysale"
 
@@ -525,7 +525,7 @@ android {
         }
 
         mysaleTest {
-            versionCode 182
+            versionCode 185
             versionName "2.6.2.1"
             applicationId "my.mysale.mysaleTest"
 
