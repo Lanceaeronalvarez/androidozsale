@@ -28,6 +28,7 @@ import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -140,6 +141,9 @@ public class OrdersController extends BasePullToRefreshController implements Ord
         boolean hasOrders = orders.size() > 0;
 
         if (hasOrders) {
+            if (mOrders.size() != 0) {
+                mOrders.clear();
+            }
             mOrders.addAll(orders);
             mAdapter = new OrdersRecyclerViewAdapter(mActivity,this, orders);
             mRecyclerView.setAdapter(mAdapter);
@@ -160,9 +164,10 @@ public class OrdersController extends BasePullToRefreshController implements Ord
                                  HashMap<String, String> estimatedDelivery, int position) {
 
         GetPaymentsList.ResponseValue.PaymentItem selectedOrder = mOrders.get(position);
+        String selectedReferenceNumber = String.valueOf(selectedOrder.getPaymentReferenceNo());
 
         OrderDetailsController.Parameters.FromOrdersList parameters = new OrderDetailsController.Parameters.FromOrdersList(
-                referenceNumber,
+                selectedReferenceNumber,
                 status,
                 link,
                 estimatedDelivery,
