@@ -18,6 +18,7 @@ import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
