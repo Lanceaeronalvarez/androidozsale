@@ -753,4 +753,10 @@
     <string name="error_upload_image">Image is too large</string>
     <string name="returns_enquiry">Returns Enquiry</string>
 
+    <string name="done">Done</string>
+    <string name="free_shipping_text">Free Shipping</string>
+    <string name="shipping_text">Shipping</string>
+    <string name="shipping_with_colon">Shipping:\u0020</string>
+    <string name="promo_shipping_text">add extra xxx to get</string>
+    <string name="promo_shipping_text_placeholder">xxx</string>
 </resources>

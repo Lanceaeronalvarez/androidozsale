@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 
@@ -22,10 +21,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
@@ -66,7 +65,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     private boolean isFromCart = false;
     private boolean mIsOurpaySelectDeliveryMethod = false;
     private String mCartTotalCost;
-    private Value mValue;
+    private CheckoutDetailsMapper mValue;
 
 
     public static PaymentSelectController newInstance() {
@@ -86,7 +85,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
         mIsOurpaySelectDeliveryMethod = args.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
-        mValue = new Gson().fromJson(args.getString(BundleKeys.CURRENT_ORDER_VALUE, ""), Value.class);
+        mValue = CheckoutDetailsMapper.decompress(args.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
     }
 
     @Override

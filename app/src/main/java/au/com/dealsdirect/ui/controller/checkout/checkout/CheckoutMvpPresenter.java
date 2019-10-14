@@ -4,8 +4,6 @@ import android.content.Context;
 
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
-import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
@@ -30,7 +28,7 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
 
     boolean checkIsLoggedIn();
 
-    void generateOurpay(Value value);
+    void generateOurpay(CheckoutDetailsMapper value);
 
     void logInitiateCheckout(Context context,
                              String paymentType,
@@ -39,7 +37,7 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
 
     void updateCart(GetCurrentOrder.ResponseValue responseValue);
 
-    void updateCartValues(Value cartDetailsValue);
+    void updateCartValues(CheckoutDetailsMapper mappedValues);
 
     void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters);
 

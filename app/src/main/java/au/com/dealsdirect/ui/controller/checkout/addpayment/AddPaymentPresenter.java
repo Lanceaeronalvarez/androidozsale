@@ -5,7 +5,6 @@ import java.util.HashMap;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
@@ -15,6 +14,7 @@ import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -32,7 +32,7 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
     }
 
     @Override
-    public void generateOurpay(Value value) {
+    public void generateOurpay(CheckoutDetailsMapper value) {
         ourpay = new Ourpay();
         ourpay.setState(OurpayState.ONCART);
 
@@ -40,7 +40,7 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
 
         try {
 
-            if (value!=null)
+            if (value != null)
                 ourpay.setTotalAmount(value.getSummary().getTotal());
 
             GetCurrentOrderOurpay getCurrentOrderOurpay = value.getOurpay();
@@ -111,7 +111,7 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
         parameters.put(DataCollector.EventParameters.NUMBER_OF_ITEMS, numItems);
         parameters.put(DataCollector.EventParameters.PRICE, price);
         parameters.put(DataCollector.EventParameters.COUNTRY_ID, getDataManager().getCountryId());
-        DataCollector.logEvent(Events.InitiateCheckout,parameters);
+        DataCollector.logEvent(Events.InitiateCheckout, parameters);
     }
 
     @Override

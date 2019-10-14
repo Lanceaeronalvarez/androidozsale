@@ -23,6 +23,7 @@ import au.com.dealsdirect.service.ourpay.OurpayError;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CurrencyUtil;
@@ -156,7 +157,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
-                getMvpView().showAddToCartResponse(((AddToCartResponse.Response) response).getValue());
+                getMvpView().showAddToCartResponse(new CheckoutDetailsMapper((AddToCartResponse.Response) response));
                 getDataManager().setHasActiveCheckoutSession(false);
             }
 

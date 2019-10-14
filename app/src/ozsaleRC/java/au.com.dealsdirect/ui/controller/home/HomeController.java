@@ -1,8 +1,6 @@
 package au.com.dealsdirect.ui.controller.home;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,22 +32,16 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
-import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.orders.orders.BottomDialogCancelOrders;
-import au.com.dealsdirect.ui.controller.orders.orders.BottomSheetOrderDialog;
-import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
-import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
-import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
-import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsMvpView;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -60,8 +52,6 @@ import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
-import au.com.dealsdirect.utils.CommonUtils;
-import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -798,7 +788,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
     }
 
-    public void sendSaleItemToCheckout(Value getCurrentOrder) {
+    public void sendSaleItemToCheckout(CheckoutDetailsMapper getCurrentOrder) {
         mCheckoutMvpView.getPresenter().updateCartValues(getCurrentOrder);
     }
 
@@ -835,22 +825,22 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void showMyAddress(String orderID) {
-            if (!mPresenter.isTablet()) {
-                getCurrentRouter().pushController(RouterTransaction.with(new ViewAddressController(false, null, true, orderID))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
-            } else {
-                if (mAccountsRouter != null) {
-                    Controller controller = getCurrentControllerOnRouter(mAccountsRouter);
-                    if (controller instanceof AccountMvpView) {
-                        ((AccountMvpView) controller).showChangeDeliveryAddressController(true, orderID);
-                    }
+        if (!mPresenter.isTablet()) {
+            getCurrentRouter().pushController(RouterTransaction.with(new ViewAddressController(false, null, true, orderID))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        } else {
+            if (mAccountsRouter != null) {
+                Controller controller = getCurrentControllerOnRouter(mAccountsRouter);
+                if (controller instanceof AccountMvpView) {
+                    ((AccountMvpView) controller).showChangeDeliveryAddressController(true, orderID);
+                }
 
-                    if (controller instanceof BaseController) {
-                        ((BaseController) controller).refreshContents();
-                    }
+                if (controller instanceof BaseController) {
+                    ((BaseController) controller).refreshContents();
                 }
             }
+        }
     }
 
     public void showSendContactMessage(boolean isCalledFromOrders, int invoiceNumber, String description) {

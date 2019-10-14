@@ -17,7 +17,6 @@ import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
@@ -80,8 +79,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                         updateCart(responseValue);
                         fetchUserPaymentMethods();
                         mFetchCartFinished = true;
-
-                        checkIfCartIsChanged(responseValue);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -185,8 +182,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                         view.resetLoaders();
                         updateCart(responseValue);
                         fetchUserPaymentMethods();
-
-                        checkIfCartIsChanged(responseValue);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -228,7 +223,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void generateOurpay(Value value) {
+    public void generateOurpay(CheckoutDetailsMapper value) {
         if (!getDataManager().isOurpayEnabled()) {
             return;
         }
@@ -343,22 +338,24 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Override
     public void updateCart(GetCurrentOrder.ResponseValue response) {
+        CheckoutDetailsMapper mappedValues = new CheckoutDetailsMapper(response);
         if (!response.getD().isAuthenticated()) {
             getMvpView().triggerLoginTicket();
             return;
         }
 
         if (response.getD().getResult()) {
-            updateCartValues(response.getD().getValue());
+            updateCartValues(mappedValues);
         } else {
             getMvpView().showCartDetails(null);
             getMvpView().onError(response.getD().getMessage());
         }
 
+        checkIfCartIsChanged(mappedValues);
     }
 
     @Override
-    public void updateCartValues(Value cartDetailsValue) {
+    public void updateCartValues(CheckoutDetailsMapper mappedValues) {
 
         if (!isViewAttached()) {
             return;
@@ -366,30 +363,28 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
         getMvpView().updateCheckoutBadge();
 
-        if (!cartDetailsValue.isEmpty()) {
-            Value value = cartDetailsValue;
+        if (mappedValues != null && !mappedValues.isEmpty()) {
+            getMvpView().showCartDetails(mappedValues.getMappedShipments());
 
-            getMvpView().showCartDetails(cartDetailsValue.getItems());
+            getMvpView().showAddressDetails(mappedValues.getDeliveryAddress(), mappedValues.getDecorationInfoList());
 
-            getMvpView().showAddressDetails(cartDetailsValue.getDeliveryAddress(), cartDetailsValue.getDecorationInfoList());
+            getMvpView().showDeliveryOptions(mappedValues.getDeliveryOptions(), mappedValues.getDeliveryServicePackageDetail());
 
-            getMvpView().showDeliveryOptions(cartDetailsValue.getDeliveryOptions(), cartDetailsValue.getDeliveryServicePackageDetail());
+            getMvpView().storeCartDetails(mappedValues);
 
-            getMvpView().storeCartDetails(value);
+            getMvpView().showVoucherDetails(mappedValues.getVouchers());
 
-            getMvpView().showVoucherDetails(cartDetailsValue.getVouchers());
-
-            getMvpView().showSummaryDetails(cartDetailsValue.getSummary());
+            getMvpView().showSummaryDetails(mappedValues.getSummary());
         } else {
             getMvpView().showCartDetails(new ArrayList<>());
         }
 
         if (getDataManager().isAfterpayEnabled() &&
-                cartDetailsValue.getAfterpay() != null &&
-                cartDetailsValue.getAfterpay().isAvailableMobileApp()) {
+                mappedValues.getAfterpay() != null &&
+                mappedValues.getAfterpay().isAvailableMobileApp()) {
             getMvpView().showAfterpayPanel(
-                    cartDetailsValue.getAfterpay().isAvailable(),
-                    cartDetailsValue.getAfterpay().getDescription());
+                    mappedValues.getAfterpay().isAvailable(),
+                    mappedValues.getAfterpay().getDescription());
         } else {
             getMvpView().hideAfterpayPanel();
         }
@@ -431,12 +426,12 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         return getDataManager().getIsVisaCheckoutEnabled();
     }
 
-    private void checkIfCartIsChanged(GetCurrentOrder.ResponseValue responseValue) {
-        if (responseValue == null || responseValue.getItems() == null) {
+    private void checkIfCartIsChanged(CheckoutDetailsMapper mappedValues) {
+        if (mappedValues == null || mappedValues.getItems() == null) {
             getDataManager().setHasActiveCheckoutSession(false);
             return;
         }
-        int newHashCode = responseValue.getItems().hashCode();
+        int newHashCode = mappedValues.getItems().hashCode();
         if (getDataManager().getCartHashCode() != newHashCode) {
             getDataManager().setCartHashCode(newHashCode);
             getDataManager().setHasActiveCheckoutSession(false);

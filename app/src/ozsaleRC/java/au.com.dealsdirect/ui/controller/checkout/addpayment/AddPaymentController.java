@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,6 @@ import com.braintreepayments.cardform.OnCardFormSubmitListener;
 import com.braintreepayments.cardform.utils.CardType;
 import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
-import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
 import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
@@ -38,7 +36,6 @@ import java.util.HashMap;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
@@ -46,6 +43,7 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
@@ -57,7 +55,6 @@ import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.IntrospectionUtils;
-import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -74,11 +71,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         public static final class FromCheckout extends Parameters {
             private Boolean mIsOurpaySelectDeliveryMethod;
             private String mCartTotalCost;
-            private Value mCurrentOrderValue;
+            private CheckoutDetailsMapper mCurrentOrderValue;
 
             public FromCheckout(Boolean isOurpaySelectDeliveryMethod,
                                 String cartTotalCost,
-                                Value currentOrderValue) {
+                                CheckoutDetailsMapper currentOrderValue) {
                 mIsOurpaySelectDeliveryMethod = isOurpaySelectDeliveryMethod;
                 mCartTotalCost = cartTotalCost;
                 mCurrentOrderValue = currentOrderValue;
@@ -92,7 +89,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 return mCartTotalCost;
             }
 
-            public Value getCurrentOrderValue() {
+            public CheckoutDetailsMapper getCurrentOrderValue() {
                 return mCurrentOrderValue;
             }
         }
@@ -132,7 +129,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     private boolean isPayPalSubmitClicked = false;
     private boolean mIsOurpaySelectDeliveryMethod = false;
     private String mCartTotalCost;
-    private Value mCurrentOrderValue;
+    private CheckoutDetailsMapper mCurrentOrderValue;
 
     public OurpayPanel ourpayPanel;
     private RelativeLayout mButtonOurpay;
@@ -160,7 +157,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
         mIsOurpaySelectDeliveryMethod = args.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
-        mCurrentOrderValue = new Gson().fromJson(args.getString(BundleKeys.CURRENT_ORDER_VALUE, ""), Value.class);
+        mCurrentOrderValue = CheckoutDetailsMapper.decompress(args.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
     }
 
     @Override
@@ -170,7 +167,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         outState.putBoolean(BundleKeys.IS_FROM_CART, isFromCart);
         outState.putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, mIsOurpaySelectDeliveryMethod);
         outState.putString(BundleKeys.CART_TOTAL_COST, mCartTotalCost);
-        outState.putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mCurrentOrderValue));
+        if (mCurrentOrderValue != null) {
+            mCurrentOrderValue.putInBundle(outState, BundleKeys.CURRENT_ORDER_VALUE);
+        }
     }
 
     @Override
@@ -180,7 +179,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         isFromCart = savedInstanceState.getBoolean(BundleKeys.IS_FROM_CART);
         mIsOurpaySelectDeliveryMethod = savedInstanceState.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD);
         mCartTotalCost = savedInstanceState.getString(BundleKeys.CART_TOTAL_COST);
-        mCurrentOrderValue = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.CURRENT_ORDER_VALUE), Value.class);
+        mCurrentOrderValue = CheckoutDetailsMapper.decompress(savedInstanceState.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
     }
 
     @Override
@@ -420,7 +419,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     }
 
     @Override
-    public void showMyPayDetails(Value value, Ourpay ourpay) {
+    public void showMyPayDetails(CheckoutDetailsMapper value, Ourpay ourpay) {
         if (value != null) {
 
             PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
