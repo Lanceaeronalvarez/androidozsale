@@ -16,6 +16,8 @@ public class Value {
     public String saleID;
     @SerializedName(value = "Items", alternate = {"items"})
     public List<Item> items = null;
+    @SerializedName(value = "Shipments", alternate = {"shipments"})
+    public List<Shipment> shipments = null;
     @SerializedName(value = "ItemsCount", alternate = {"itemsCount"})
     public Integer itemsCount;
     @SerializedName(value = "Vouchers", alternate = {"vouchers"})
@@ -108,6 +110,10 @@ public class Value {
         return items;
     }
 
+    public List<Shipment> getShipments() {
+        return shipments;
+    }
+
     public String getSaleID() {
         return saleID;
     }
@@ -186,7 +192,7 @@ public class Value {
         }
     }
 
-    private static class GetOurPaySelect {
+    public static class GetOurPaySelect {
         @SerializedName(value = "TermsAndConditions", alternate = {"termsAndConditions"})
         @Expose
         private int termsAndConditions;
