@@ -7,9 +7,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mysale.genie.utility.LegacyBaseResponseValue;
 
-import java.util.List;
-
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.utils.AppConstants;
 
@@ -24,7 +21,7 @@ public class GetCurrentOrder {
         }
     }
 
-    public static class ResponseValue  {
+    public static class ResponseValue {
         public Response getD() {
             return d;
         }
@@ -41,10 +38,5 @@ public class GetCurrentOrder {
             @SerializedName("Value")
             public Value value;
         }
-
-        public List<Item> getItems() {
-            return getD().getValue().getItems();
-        }
-
     }
 }

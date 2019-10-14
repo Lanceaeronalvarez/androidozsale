@@ -8,14 +8,12 @@ import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.MvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -27,13 +25,13 @@ public interface CheckoutMvpView extends MvpView {
 
     void loadCart();
 
-    void showMyPayDetails(Value value, Ourpay ourpay);
+    void showMyPayDetails(CheckoutDetailsMapper mappedValues, Ourpay ourpay);
 
-    void showCartDetails(List<Item> items);
+    void showCartDetails(List<MappedShipment> items);
 
-    void showCartDetailsOnChild(List<Item> items);
+    void showCartDetailsOnChild(List<MappedShipment> items);
 
-    void showCartDetailsOnHost(List<Item> items);
+    void showCartDetailsOnHost(List<MappedShipment> items);
 
     void showAddressDetails(DeliveryAddress deliveryAddress, List<DecorationInfoList> decorationInfoList);
 
@@ -51,7 +49,7 @@ public interface CheckoutMvpView extends MvpView {
 
     void hideAfterpayPanel();
 
-    void storeCartDetails(Value value);
+    void storeCartDetails(CheckoutDetailsMapper mappedValues);
 
     void triggerLoginTicket();
 

@@ -32,11 +32,11 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountMvpView;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
@@ -893,7 +893,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
     }
 
-    public void sendSaleItemToCheckout(Value getCurrentOrder) {
+    public void sendSaleItemToCheckout(CheckoutDetailsMapper getCurrentOrder) {
         mCheckoutMvpView.getPresenter().updateCartValues(getCurrentOrder);
     }
 
@@ -930,22 +930,22 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void showMyAddress(String orderID) {
-            if (!mPresenter.isTablet()) {
-                getCurrentRouter().pushController(RouterTransaction.with(new ViewAddressController(false, null, true, orderID))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
-            } else {
-                if (mAccountsRouter != null) {
-                    Controller controller = getCurrentControllerOnRouter(mAccountsRouter);
-                    if (controller instanceof AccountMvpView) {
-                        ((AccountMvpView) controller).showChangeDeliveryAddressController(true, orderID);
-                    }
+        if (!mPresenter.isTablet()) {
+            getCurrentRouter().pushController(RouterTransaction.with(new ViewAddressController(false, null, true, orderID))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        } else {
+            if (mAccountsRouter != null) {
+                Controller controller = getCurrentControllerOnRouter(mAccountsRouter);
+                if (controller instanceof AccountMvpView) {
+                    ((AccountMvpView) controller).showChangeDeliveryAddressController(true, orderID);
+                }
 
-                    if (controller instanceof BaseController) {
-                        ((BaseController) controller).refreshContents();
-                    }
+                if (controller instanceof BaseController) {
+                    ((BaseController) controller).refreshContents();
                 }
             }
+        }
     }
 
     public void showSendContactMessage(boolean isCalledFromOrders, int invoiceNumber, String description) {

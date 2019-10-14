@@ -51,9 +51,7 @@ import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
@@ -66,6 +64,7 @@ import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressContr
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostMvpView;
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsController;
@@ -248,7 +247,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private boolean mIsOurPaySelectDeliveryOption;
     private DeliveryServicePackageDetail mDeliveryServicePackageDetail;
 
-    private List<Item> mItemList = new ArrayList<>();
+    private List<MappedShipment> mItemList = new ArrayList<>();
     private ArrayList<PaymentMethod> mPaymentList = new ArrayList<>();
     private DeliveryAddress mDeliveryAddress = null;
     private ArrayList<DecorationInfoList> mDecorationInfoList = new ArrayList<>();
@@ -262,7 +261,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private String mAddressPhoneNumber;
     private Double mDiscountValue;
 
-    private Value mValue;
+    private CheckoutDetailsMapper mValue;
 
     private OurpayPanel ourpayPanel;
 
@@ -574,9 +573,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
 
     @Override
-    public void showMyPayDetails(Value value, Ourpay ourpay) {
+    public void showMyPayDetails(CheckoutDetailsMapper mappedValues, Ourpay ourpay) {
 
-        if (value != null) {
+        if (mappedValues != null) {
             mOurpay = ourpay;
             PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
             boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
@@ -629,7 +628,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
-    public void showCartDetails(List<Item> items) {
+    public void showCartDetails(List<MappedShipment> items) {
 
         showCartDetailsOnHost(items);
 
@@ -637,7 +636,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
-    public void showCartDetailsOnChild(List<Item> items) {
+    public void showCartDetailsOnChild(List<MappedShipment> items) {
         if (items == null) { //do nothing (ie. when increasing order quantity, returns a soldout/out of stock message)
             return;
         }
@@ -659,7 +658,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
-    public void showCartDetailsOnHost(List<Item> items) {
+    public void showCartDetailsOnHost(List<MappedShipment> items) {
         if (mCheckoutHostView != null) {
             mCheckoutHostView.showCartDetails(items);
         }
@@ -980,14 +979,14 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
-    public void storeCartDetails(Value value) {
+    public void storeCartDetails(CheckoutDetailsMapper mappedValues) {
         //Set 3DS value
-        if (value != null) {
-            PaymentInfo.setThreeDSecureRequired(value.threeDSecureRequired);
-            PaymentInfo.setCartCost(value.getSummary().getTotal());
+        if (mappedValues != null) {
+            PaymentInfo.setThreeDSecureRequired(mappedValues.getThreeDSecureRequired());
+            PaymentInfo.setCartCost(mappedValues.getSummary().getTotal());
         }
 
-        mValue = value;
+        mValue = mappedValues;
         mPresenter.generateOurpay(mValue);
     }
 
@@ -1380,7 +1379,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         bundle.putBoolean(BundleKeys.IS_FROM_CART, true);
         bundle.putBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, isOurPaySelectDeliveryMethod());
         bundle.putString(BundleKeys.CART_TOTAL_COST, Double.toString(mValue.getSummary().getTotal()));
-        bundle.putString(BundleKeys.CURRENT_ORDER_VALUE, new Gson().toJson(mValue, Value.class));
+        if (mValue != null) {
+            mValue.putInBundle(bundle, BundleKeys.CURRENT_ORDER_VALUE);
+        }
 
         getRouter().pushController(RouterTransaction.with(new PaymentSelectController(bundle))
                 .pushChangeHandler(new HorizontalChangeHandler(false))

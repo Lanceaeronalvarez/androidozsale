@@ -26,14 +26,14 @@ import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutListener;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
@@ -81,7 +81,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     private CheckoutController mCheckoutController;
     private CheckoutMvpView mCheckoutDetailView;
     private CheckoutOrderAdapter mAdapter;
-    private List<Item> mItemList = new ArrayList<>();
+    private List<MappedShipment> mItemList = new ArrayList<>();
     private boolean mIsCheckoutHostUpdated;
     private boolean mHasSavedInstance = false;
 
@@ -132,6 +132,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         mCheckoutDetailView = mCheckoutController;
 
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
+        mAdapter.setShouldAddSpacerOnTop(mPresenter.isTablet());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
 
@@ -139,7 +140,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public boolean handleBack() {
-        if(mCheckoutDetailRouter.getBackstackSize() == 1){
+        if (mCheckoutDetailRouter.getBackstackSize() == 1) {
             mActivity.getHomeController().goBackToHomePage();
             return true;
         }
@@ -171,12 +172,12 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public void showMyPayDetails(Value value, Ourpay ourpay) {
+    public void showMyPayDetails(CheckoutDetailsMapper value, Ourpay ourpay) {
         mCheckoutDetailView.showMyPayDetails(value, ourpay);
     }
 
     @Override
-    public void showCartDetails(List<Item> items) {
+    public void showCartDetails(List<MappedShipment> items) {
 
         showCartDetailsOnChild(items);
 
@@ -184,15 +185,15 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public void showCartDetailsOnChild(List<Item> items) {
-        if(mCheckoutDetailView != null){
+    public void showCartDetailsOnChild(List<MappedShipment> items) {
+        if (mCheckoutDetailView != null) {
             mCheckoutDetailView.showCartDetailsOnChild(items);
         }
     }
 
     @Override
-    public void showCartDetailsOnHost(List<Item> items) {
-        if(items == null) return;
+    public void showCartDetailsOnHost(List<MappedShipment> items) {
+        if (items == null) return;
         mItemList = items;
 
         mAdapter.replaceData(items);
@@ -241,7 +242,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public void storeCartDetails(Value value) {
+    public void storeCartDetails(CheckoutDetailsMapper value) {
         mCheckoutDetailView.storeCartDetails(value);
     }
 
@@ -302,7 +303,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public void showItemDetail(RecyclerView.ViewHolder viewHolder,int position, String seoIdentifierId, String imageUrl,
+    public void showItemDetail(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
                                String skuId, String saleId, boolean isFreeDelivery,
                                String itemName, String brandName, String price, String oldPrice,
                                String productID) {
