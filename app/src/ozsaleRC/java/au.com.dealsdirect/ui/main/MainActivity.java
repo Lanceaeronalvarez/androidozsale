@@ -659,7 +659,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void refreshWishlist() {
-        mPresenter.callGetWishlistIdsOnly();
+        if (Settings.getSelectedCountry() != null) {
+            mPresenter.callGetWishlistIdsOnly();
+        }
     }
 
     @Override
