@@ -25,7 +25,7 @@ public class GetPaymentsList {
 
         private Response d;
 
-        public static class Response extends LegacyBaseResponseValue{
+        public static class Response extends LegacyBaseResponseValue {
 
             public ArrayList<PaymentItem> getList() {
                 return list;
@@ -121,6 +121,12 @@ public class GetPaymentsList {
             @SerializedName("Received")
             @Expose
             private String received;
+            @SerializedName("ShipTo")
+            @Expose
+            private String shipTo;
+            @SerializedName("ShipFrom")
+            @Expose
+            private String shipFrom;
 
             public List<String> getActions() {
                 return actions;
@@ -212,6 +218,22 @@ public class GetPaymentsList {
 
             public void setReceived(String received) {
                 this.received = received;
+            }
+
+            public String getShipTo() {
+                return shipTo;
+            }
+
+            public void setShipTo(String shipTo) {
+                this.shipTo = shipTo;
+            }
+
+            public String getShipFrom() {
+                return shipFrom;
+            }
+
+            public void setShipFrom(String shipFrom) {
+                this.shipFrom = shipFrom;
             }
         }
 
