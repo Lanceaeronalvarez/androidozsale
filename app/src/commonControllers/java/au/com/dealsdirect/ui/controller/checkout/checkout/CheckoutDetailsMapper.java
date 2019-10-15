@@ -57,13 +57,21 @@ public class CheckoutDetailsMapper {
 
     private void init() {
         itemMap = new HashMap<>();
-        for (Item item : getItems()) {
-            itemMap.put(item.getId(), item);
-        }
-
         mappedShipments = new ArrayList<>();
-        for (Shipment shipment : getShipments()) {
-            mappedShipments.add(new MappedShipment(shipment, getItemsAsMap()));
+
+        if (getItems() != null && getItems().size() > 0) {
+            for (Item item : getItems()) {
+                itemMap.put(item.getId(), item);
+            }
+
+            if (getShipments() != null && getShipments().size() > 0) {
+                for (Shipment shipment : getShipments()) {
+                    mappedShipments.add(new MappedShipment(shipment, getItemsAsMap()));
+                }
+            } else {
+                // Display only items as is
+                mappedShipments.add(new MappedShipment(getItems()));
+            }
         }
     }
 
@@ -208,6 +216,10 @@ public class CheckoutDetailsMapper {
 
     public static class MappedShipment extends Shipment {
         private ArrayList<Item> mappedItems = null;
+
+        public MappedShipment(List<Item> source) {
+            mappedItems = new ArrayList<>(source);
+        }
 
         public MappedShipment(Shipment shipment, Map<String, Item> source) {
             setName(shipment.getName());
