@@ -33,11 +33,11 @@ public class Shipment {
         this.name = name;
     }
 
-    public double getDeliveryPrice() {
-        return deliveryPrice == null ? 0 : deliveryPrice;
+    public Double getDeliveryPrice() {
+        return deliveryPrice;
     }
 
-    public void setDeliveryPrice(double deliveryPrice) {
+    public void setDeliveryPrice(Double deliveryPrice) {
         this.deliveryPrice = deliveryPrice;
     }
 

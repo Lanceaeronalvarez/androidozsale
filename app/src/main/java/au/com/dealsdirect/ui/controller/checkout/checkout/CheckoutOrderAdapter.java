@@ -198,11 +198,13 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             for (Item item : shipment.getMappedItems()) {
                 mFlattenedData.add(new ItemData(item));
             }
-            mFlattenedData.add(new ItemData(
-                    createTitleFromShippingFee(
-                            shipment.getDeliveryPrice(),
-                            shipment.getAmountToPromoPrice()
-                    )));
+            if (shipment.getDeliveryPrice() != null) {
+                mFlattenedData.add(new ItemData(
+                        createTitleFromShippingFee(
+                                shipment.getDeliveryPrice(),
+                                shipment.getAmountToPromoPrice()
+                        )));
+            }
         }
         if (!shouldAddSpacerOnTop) {
             mFlattenedData.remove(0);
@@ -211,7 +213,6 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private SpannableStringBuilder createTitleFromShippingFee(double fee,
                                                               double targetPriceForFreeShipping) {
-        // TODO: formatting
         String shippingString = mContext.getResources().getString(R.string.shipping_with_colon) +
                 PriceUtils.getPriceStringValue(fee);
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(shippingString);
