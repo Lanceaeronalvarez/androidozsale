@@ -18,9 +18,13 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     int wishlistCount();
 
-    void addToWishlist(String productId, String seoIdentifier);
+    void addToWishlist(String productId, String seoIdentifier, WishlistDelayedCallback delayedCallback);
 
-    void removeFromWishlist(String productId);
+    void removeFromWishlist(String productId, WishlistDelayedCallback delayedCallback);
+
+    public interface WishlistDelayedCallback {
+        void performDelayedAction(String productId, boolean isLiked);
+    }
 
     void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest);
 

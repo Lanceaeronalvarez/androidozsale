@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.graphics.drawable.Drawable;
+
 import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,8 +61,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void addToWishlist(String productId, String seoIdentifier) {
-        doApiCallForResponse(getDataManager().callAddToWishlist(productId, seoIdentifier), new AppApiCallback());
+    public void addToWishlist(String productId, String seoIdentifier, WishlistDelayedCallback delayedCallback) {
         getDataManager().addToWishlist(new WishlistObject() {
             private String mProductId = productId;
             private String mSeoId = seoIdentifier;
@@ -95,14 +95,39 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
             public void setMasterProductId(String masterProductId) {
 
             }
+        }, () -> {
+            doApiCallForResponse(
+                    getDataManager().callAddToWishlist(productId, seoIdentifier),
+                    new AppApiCallback() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            super.onSuccess(response);
+                            if (delayedCallback != null) {
+                                delayedCallback.performDelayedAction(productId, true);
+                            }
+                        }
+                    });
         });
         getMvpView().updateWishlistWithAddition(productId);
     }
 
     @Override
-    public void removeFromWishlist(String productId) {
-        doApiCallForResponse(getDataManager().callRemoveFromWishlist(productId), new AppApiCallback());
-        getDataManager().removeFromWishlist(productId);
+    public void removeFromWishlist(String productId, WishlistDelayedCallback delayedCallback) {
+        getDataManager().removeFromWishlist(
+                productId,
+                () -> {
+                    doApiCallForResponse(
+                            getDataManager().callRemoveFromWishlist(productId),
+                            new AppApiCallback() {
+                                @Override
+                                public void onSuccess(Object response) {
+                                    super.onSuccess(response);
+                                    if (delayedCallback != null) {
+                                        delayedCallback.performDelayedAction(productId, false);
+                                    }
+                                }
+                            });
+                });
         getMvpView().updateWishlistWithRemoval(productId);
     }
 

@@ -10,15 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.tabs.TabLayout;
-import androidx.core.util.Pair;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -31,9 +22,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.tabs.TabLayout;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -94,13 +95,13 @@ import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
-import static com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
-import static com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.HEADER;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_LIST;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.WISHLIST;
 import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.ClickType.PRODUCT_CLICK;
+import static com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
+import static com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 
 /**
  * dp Created by Admin on 6/8/17.
@@ -887,7 +888,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mColumnCount = mPresenter.getColumnCount();
         setGridViewMode(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
                 GridViewMode.MORE_IMAGES : GridViewMode.LARGER_IMAGES);
-        mGridViewModePreferenceHelper.resetTimeElapsed();;
+        mGridViewModePreferenceHelper.resetTimeElapsed();
+        ;
         mGridViewModePreferenceHelper.resetTimestamp();
 
         //use initialcategory tree map if it came from categories.
@@ -898,7 +900,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
-        mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId, mColumnCount);
+        mSaleItemsAdapter = new SaleItemsAdapter(mActivity,
+                mSaleItems,
+                mPresenter,
+                mSaleId,
+                mColumnCount,
+                this::logWishlistEvent);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -1011,7 +1018,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             DataCollector.logEvent(Events.ToggleColumn, eventParameters);
         }
 
-        mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId, mColumnCount);
+        mSaleItemsAdapter = new SaleItemsAdapter(
+                mActivity,
+                mSaleItems,
+                mPresenter,
+                mSaleId,
+                mColumnCount,
+                this::logWishlistEvent);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -1227,13 +1240,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void updateWishlistWithAddition(String productId) {
-        logWishlistEvent(productId, true);
         determineWhereToShowAds();
     }
 
     @Override
     public void updateWishlistWithRemoval(String productId) {
-        logWishlistEvent(productId, false);
         if (mSourceMode == SourceMode.NORMAL) {
             return;
         }

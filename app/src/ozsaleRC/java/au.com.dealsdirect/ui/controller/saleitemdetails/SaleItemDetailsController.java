@@ -13,13 +13,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.util.Pair;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -46,6 +39,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.util.Pair;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
@@ -1611,13 +1612,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void setLikeStatus(boolean isLiked) {
+        SaleItemDetailsMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
+            logWishlistEvent(mProductId, isLiked);
+        };
         if (isLiked) {
-            mPresenter.addProductToWishlist(mProductId, mSeoIdentifierId, mMasterProductId);
+            mPresenter.addProductToWishlist(mProductId, mSeoIdentifierId, mMasterProductId, delayedCallback);
         } else {
-            mPresenter.removeProductFromWishlist(mProductId);
+            mPresenter.removeProductFromWishlist(mProductId, delayedCallback);
         }
         updateLikeButtonImage(isLiked);
-        logWishlistEvent(mProductId, isLiked);
     }
 
     private void updateLikeButtonImage(boolean isLiked) {

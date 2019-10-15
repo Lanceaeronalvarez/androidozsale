@@ -42,7 +42,11 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 
     boolean isProductInWishlist(String productId);
 
-    void addProductToWishlist(String productId, String seoIdentifier, String masterProductId);
+    void addProductToWishlist(String productId, String seoIdentifier, String masterProductId, WishlistDelayedCallback delayedCallback);
 
-    void removeProductFromWishlist(String productId);
+    void removeProductFromWishlist(String productId, WishlistDelayedCallback delayedCallback);
+
+    public interface WishlistDelayedCallback {
+        void performDelayedAction();
+    }
 }

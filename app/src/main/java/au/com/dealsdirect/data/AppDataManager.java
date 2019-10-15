@@ -1494,13 +1494,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void addToWishlist(WishlistObject object) {
-        mWishlistHelper.addToWishlist(object);
+    public void addToWishlist(WishlistObject object, WishlistChangeDelayedCallback delayedCallback) {
+        mWishlistHelper.addToWishlist(object, delayedCallback);
     }
 
     @Override
-    public void removeFromWishlist(String productId) {
-        mWishlistHelper.removeFromWishlist(productId);
+    public void removeFromWishlist(String productId, WishlistChangeDelayedCallback delayedCallback) {
+        mWishlistHelper.removeFromWishlist(productId, delayedCallback);
     }
 
     @Override

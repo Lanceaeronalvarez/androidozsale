@@ -7,9 +7,9 @@ public interface WishlistHelper {
 
     List<WishlistObject> getWishlist();
 
-    void addToWishlist(WishlistObject object);
+    void addToWishlist(WishlistObject object, WishlistChangeDelayedCallback delayedCallback);
 
-    void removeFromWishlist(String productId);
+    void removeFromWishlist(String productId, WishlistChangeDelayedCallback delayedCallback);
 
     boolean isProductInWishlist(String productId);
 
@@ -20,4 +20,8 @@ public interface WishlistHelper {
     boolean doesCheckoutHaveWishlistItem();
 
     void updateWishlistCount();
+
+    public interface WishlistChangeDelayedCallback {
+        void performDelayedAction();
+    }
 }

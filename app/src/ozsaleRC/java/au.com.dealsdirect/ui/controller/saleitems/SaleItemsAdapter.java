@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Paint;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +12,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 
@@ -47,6 +48,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private int mCurrentItemCount = -1;
 
     private Pair<Integer, Integer> mComputedPair;
+
+    private SaleItemsMvpPresenter.WishlistDelayedCallback delayedCallbackForWishlist = null;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -119,13 +122,15 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             Activity activity,
             List<Products> saleItems,
             SaleItemsMvpPresenter presenter,
-            String saleId, int minColumn) {
+            String saleId, int minColumn,
+            SaleItemsMvpPresenter.WishlistDelayedCallback delayedCallbackForWishlist) {
 
         this.mActivity = activity;
         this.mData = saleItems;
         this.mPresenter = presenter;
         this.mSaleId = saleId;
         this.mMinColumn = minColumn;
+        this.delayedCallbackForWishlist = delayedCallbackForWishlist;
 
         computeItemViewDimensions();
     }
@@ -231,9 +236,12 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                 if (holder.isLiked()) {
                     mPresenter.addToWishlist(
                             product.getProductId(),
-                            product.getSeoIdentifier());
+                            product.getSeoIdentifier(),
+                            delayedCallbackForWishlist);
                 } else {
-                    mPresenter.removeFromWishlist(product.getProductId());
+                    mPresenter.removeFromWishlist(
+                            product.getProductId(),
+                            delayedCallbackForWishlist);
 
                 }
             });

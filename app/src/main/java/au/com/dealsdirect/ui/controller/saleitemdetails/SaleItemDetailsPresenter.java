@@ -307,8 +307,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
-    public void addProductToWishlist(String productId, String seoIdentifier, String masterProductId) {
-        doApiCallForResponse(getDataManager().callAddToWishlist(productId, seoIdentifier), new AppApiCallback());
+    public void addProductToWishlist(String productId, String seoIdentifier, String masterProductId, WishlistDelayedCallback delayedCallback) {
         getDataManager().addToWishlist(new WishlistObject() {
             private String mProductId = productId;
             private String mSeoId = seoIdentifier;
@@ -343,12 +342,37 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void setMasterProductId(String masterPId) {
                 mMasterProductId = masterPId;
             }
+        }, () -> {
+            doApiCallForResponse(
+                    getDataManager().callAddToWishlist(productId, seoIdentifier),
+                    new AppApiCallback() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            super.onSuccess(response);
+                            if (delayedCallback != null) {
+                                delayedCallback.performDelayedAction();
+                            }
+                        }
+                    });
         });
     }
 
     @Override
-    public void removeProductFromWishlist(String productId) {
-        doApiCallForResponse(getDataManager().callRemoveFromWishlist(productId), new AppApiCallback());
-        getDataManager().removeFromWishlist(productId);
+    public void removeProductFromWishlist(String productId, WishlistDelayedCallback delayedCallback) {
+        getDataManager().removeFromWishlist(
+                productId,
+                () -> {
+                    doApiCallForResponse(
+                            getDataManager().callRemoveFromWishlist(productId),
+                            new AppApiCallback() {
+                                @Override
+                                public void onSuccess(Object response) {
+                                    super.onSuccess(response);
+                                    if (delayedCallback != null) {
+                                        delayedCallback.performDelayedAction();
+                                    }
+                                }
+                            });
+                });
     }
 }
