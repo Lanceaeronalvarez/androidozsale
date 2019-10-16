@@ -171,6 +171,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         mActivity.getResources().getInteger(R.integer.items_min_column_landscape));
                 break;
         }
+
+        determineWhereToShowAds();
     }
 
     private GridViewMode mGridViewMode;
@@ -1797,6 +1799,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             if (mFooterAds != null) {
                 mFooterAds.setVisibility(View.GONE);
             }
+            return;
         }
 
         int contentHeight = mSaleItemsAdapter.getContentHeight();
