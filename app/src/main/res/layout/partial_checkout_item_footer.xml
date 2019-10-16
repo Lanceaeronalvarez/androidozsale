@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:background="@color/row_background_color"
-    android:paddingLeft="@dimen/padding_default"
-    android:paddingRight="@dimen/padding_default">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/partial_checkout_item_footer_title"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:fontFamily="@string/font_app_regular"
-        android:gravity="center"
-        android:paddingTop="@dimen/margin_small"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingLeft="@dimen/margin_medium"
-        android:paddingRight="@dimen/margin_medium"
-        android:text="Shipping: $10.00\nadd extra $10.00 to get\nFREE SHIPPING"
-        android:textColor="@color/text_dark" />
-</RelativeLayout>
+        android:paddingLeft="@dimen/padding_default"
+        android:paddingRight="@dimen/padding_default">
+
+        <TextView
+            android:id="@+id/partial_checkout_item_footer_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@string/font_app_regular"
+            android:gravity="center"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingLeft="@dimen/margin_medium"
+            android:paddingRight="@dimen/margin_medium"
+            android:text="Shipping: $10.00\nadd extra $10.00 to get\nFREE SHIPPING"
+            android:textColor="@color/text_dark" />
+
+    </RelativeLayout>
+
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+</LinearLayout>

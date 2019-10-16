@@ -19,6 +19,12 @@
         android:text="@string/payment_method"
         android:textColor="@color/text_medium" />
 
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+
     <FrameLayout
         android:id="@+id/partial_checkout_payment_container_layout"
         android:layout_width="match_parent"
@@ -60,6 +66,12 @@
 
         </LinearLayout>
     </FrameLayout>
+
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
 
     <!--dummy view-->
     <View

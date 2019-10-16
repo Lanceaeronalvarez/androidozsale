@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/padding_default"
-            android:textColor="@color/row_checkout_text_light_color"
+            android:textColor="@color/checkout_selected_text_color"
             android:textSize="@dimen/text_size_headline2"
             tools:text="@string/row_checkout_name_hint" />
 

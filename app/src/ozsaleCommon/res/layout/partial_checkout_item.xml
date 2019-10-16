@@ -138,9 +138,4 @@
 
     </LinearLayout>
 
-    <View
-        style="@style/horizontalBorderView"
-        android:layout_below="@id/item_checkout_details_container"
-        android:layout_marginTop="@dimen/padding_default_half"/>
-
 </RelativeLayout>

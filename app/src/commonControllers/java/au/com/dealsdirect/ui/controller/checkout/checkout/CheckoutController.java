@@ -740,6 +740,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             mDeliveryOptionTypeText.setText(deliveryOptionName);
             mDeliveryOptionPriceTextView.setText(PriceUtils.getPriceStringValue(deliveryOptionPrice));
+            mDeliveryOptionTypeText.setTypeface(mDeliveryOptionTypeText.getTypeface(), Typeface.BOLD);
         } else if (deliveryOptionName.equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.OURPAYSELECT.toString())) {
 
             if (mDeliveryServicePackageDetail != null) {
@@ -821,6 +822,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
 
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setText(paymentMethod.getPaymentType());
+            ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setTypeface(((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).getTypeface(),
+                    Typeface.BOLD);
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_details)).setText(paymentMethod.getDescription());
 
 //            Hardcoded visa checkout logo if visa checkout is payment type. this is due to api not wanting to update their response LOL.
