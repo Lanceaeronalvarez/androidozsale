@@ -7,7 +7,7 @@
     android:layout_margin="5dp"
     android:layout_width="match_parent"
     android:layout_height="@dimen/return_card_height"
-    android:background="@drawable/bg_rectangle_background"
+    android:background="@drawable/bg_rectangle_background_white"
     tools:ignore="MissingPrefix">
 
     <RelativeLayout

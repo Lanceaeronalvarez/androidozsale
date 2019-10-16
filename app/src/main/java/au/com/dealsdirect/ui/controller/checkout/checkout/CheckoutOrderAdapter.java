@@ -46,12 +46,12 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final static int VIEW_TYPE_ITEM = 0;
     private final static int VIEW_TYPE_FOOTER = 1;
     private final static int VIEW_TYPE_SPACER = 2;
+    private final static int VIEW_TYPE_LINE = 3;
 
     private Context mContext;
     private List<MappedShipment> mSourceData;
     private List<ItemData> mFlattenedData;
     private CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
-    private int resLayout;
     private static final int MAX_ITEM_QTY = 5;
     private CheckoutListener mClickListener;
 
@@ -78,6 +78,11 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                         .from(parent.getContext()).inflate(R.layout.partial_checkout_item_spacer,
                                 parent,
                                 false));
+            case VIEW_TYPE_LINE:
+                return new LineViewHolder(LayoutInflater
+                        .from(parent.getContext()).inflate(R.layout.partial_checkout_item_line,
+                                parent,
+                                false));
             case VIEW_TYPE_ITEM:
             default:
                 return new ItemViewHolder(LayoutInflater
@@ -94,6 +99,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                 return VIEW_TYPE_FOOTER;
             case EMPTY_SPACE:
                 return VIEW_TYPE_SPACER;
+            case LINE:
+                return VIEW_TYPE_LINE;
             case ITEM:
             default:
                 return VIEW_TYPE_ITEM;
@@ -111,6 +118,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             case FOOTER:
                 setupViewHolderForTitle((FooterViewHolder) holder, itemData.getFooterTitle());
                 break;
+            case LINE:
             case EMPTY_SPACE:
                 break;
         }
@@ -201,7 +209,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     private void flattenData() {
         mFlattenedData = new ArrayList<>();
         for (MappedShipment shipment : mSourceData) {
-            mFlattenedData.add(new ItemData());
+            mFlattenedData.add(new ItemData(ItemData.Type.EMPTY_SPACE));
+            mFlattenedData.add(new ItemData(ItemData.Type.LINE));
             for (Item item : shipment.getMappedItems()) {
                 mFlattenedData.add(new ItemData(item));
             }
@@ -212,6 +221,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 shipment.getAmountToPromoPrice()
                         )));
             }
+            mFlattenedData.add(new ItemData(ItemData.Type.LINE));
         }
         if (!shouldAddSpacerOnTop) {
             mFlattenedData.remove(0);
@@ -222,50 +232,74 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                                                               double targetPriceForFreeShipping) {
         String shippingString = mContext.getResources().getString(R.string.shipping_with_colon) +
                 PriceUtils.getPriceStringValue(fee);
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(shippingString);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+
+        spannableStringBuilder.append(" " + shippingString + " ");
+        // the empty spaces is a workaround for a bug with the style span
+        // the bug causes the fee and the next line to be entirely in bold,
+        // or the the fee to be not in bold
+
         StringUtils.applySpanToSubstringsMatching(
                 spannableStringBuilder,
                 new StyleSpan(BOLD),
-                ".{1,}:",
+                mContext.getResources().getString(R.string.regex_currency),
                 SPAN_EXCLUSIVE_INCLUSIVE);
 
         if (targetPriceForFreeShipping > 0) {
+            int start = spannableStringBuilder.length() + 1;
             int color = mContext.getResources().getColor(R.color.color_free_shipping_text);
 
-            String targetPriceString = "\n" +
-                    mContext.getResources().getString(R.string.promo_shipping_text);
+            spannableStringBuilder.append("\n");
+
+            String targetPriceString = mContext.getResources().getString(R.string.promo_shipping_text);
+            String replacementString = PriceUtils.getPriceStringValue(targetPriceForFreeShipping);
             targetPriceString = targetPriceString.replace(
                     mContext.getResources().getString(R.string.promo_shipping_text_placeholder),
-                    PriceUtils.getPriceStringValue(targetPriceForFreeShipping));
+                    replacementString);
             spannableStringBuilder.append(
-                    targetPriceString,
-                    new ForegroundColorSpan(color),
-                    SPAN_EXCLUSIVE_INCLUSIVE);
+                    targetPriceString);
 
-            int start = spannableStringBuilder.length();
+            int imagePosition = spannableStringBuilder.length();
             String freeShippingString = "\n  " +
                     mContext.getResources().getString(R.string.free_shipping_text).toUpperCase();
             spannableStringBuilder.append(
                     freeShippingString,
-                    new ForegroundColorSpan(color),
-                    SPAN_EXCLUSIVE_INCLUSIVE);
-            spannableStringBuilder.setSpan(
                     new StyleSpan(BOLD),
+                    SPAN_EXCLUSIVE_INCLUSIVE);
+
+            spannableStringBuilder.setSpan(
+                    new ForegroundColorSpan(color),
                     start,
                     spannableStringBuilder.length(),
                     SPAN_EXCLUSIVE_INCLUSIVE);
 
             Drawable d = ContextCompat.getDrawable(mContext, R.drawable.ic_free_shipping);
-            d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-            ImageSpan imageSpan = new ImageSpan(d, DynamicDrawableSpan.ALIGN_BASELINE);
-            spannableStringBuilder.setSpan(imageSpan, start + 1, start + 2, SPAN_INCLUSIVE_EXCLUSIVE);
+            if (d != null) {
+                d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+                ImageSpan imageSpan = new ImageSpan(d, DynamicDrawableSpan.ALIGN_BASELINE);
+                spannableStringBuilder.setSpan(imageSpan, imagePosition + 1, imagePosition + 2, SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+
+            StringUtils.applySpanToSubstringsMatching(
+                    spannableStringBuilder,
+                    new StyleSpan(BOLD),
+                    mContext.getResources().getString(R.string.regex_currency),
+                    SPAN_EXCLUSIVE_INCLUSIVE);
         }
+
         return spannableStringBuilder;
     }
 
     @Override
     public int getItemCount() {
         return mFlattenedData == null ? 0 : mFlattenedData.size();
+    }
+
+    public class LineViewHolder extends RecyclerView.ViewHolder {
+        public LineViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
     }
 
     public class SpacerViewHolder extends RecyclerView.ViewHolder {
@@ -321,16 +355,16 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private static class ItemData {
-        private enum Type {
-            ITEM, FOOTER, EMPTY_SPACE
+        enum Type {
+            ITEM, FOOTER, EMPTY_SPACE, LINE
         }
 
         private Type type;
         private Item item = null;
         private SpannableStringBuilder footerTitle = null;
 
-        ItemData() {
-            type = Type.EMPTY_SPACE;
+        ItemData(Type type) {
+            this.type = type;
         }
 
         ItemData(Item item) {
