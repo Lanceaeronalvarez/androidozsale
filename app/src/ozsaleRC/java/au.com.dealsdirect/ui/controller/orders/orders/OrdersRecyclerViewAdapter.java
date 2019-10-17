@@ -1,20 +1,19 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
 import android.app.Activity;
-import android.text.SpannableStringBuilder;
-import android.text.style.StyleSpan;
+
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.core.util.Pair;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,22 +24,14 @@ import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.DateUtils;
-import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.graphics.Typeface.BOLD;
-import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 
 /**
  * Created by smartwave on 22/06/2017.
  */
 
 public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    private static final String SHIP_FROM = "SHIP_FROM";
-    private static final String ESTIMATED_DELIVERY = "ESTIMATED_DELIVERY";
-    private static final String SHIP_TO = "SHIP_TO";
 
     public static final int TITLE_VIEW_TYPE = 10;
     public static final int DETAILS_VIEW_TYPE = 11;
@@ -60,7 +51,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     private ArrayList<String> mReferenceNumbers;
     private GetPaymentsList.ResponseValue.PaymentItem item;
     private LinkedHashMap<String, Object> mLinkedHashMap;
-    private HashMap<String, HashMap<String, String>> deliveryRoutes = new HashMap<>();
+    private HashMap<String, String> estDeliveryDate = new HashMap<>();
     private HashMap<String, String> mStatusArray = new HashMap<>();
     private boolean isItemReceived = false;
     private String mLink;
@@ -100,9 +91,9 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             item = (GetPaymentsList.ResponseValue.PaymentItem) mData.get(position).first;
             ((OrdersViewHolder) viewHolder).orderNumberTextView.setText(String.valueOf(item.getPaymentReferenceNo()));
             ((OrdersViewHolder) viewHolder).orderNumberRightArrowImageView.setOnClickListener(view -> {
-                int index = mData.get(viewHolder.getAdapterPosition()).second;
-                mClickListener.onOrderItemClick(String.valueOf(item.getPaymentReferenceNo()),
-                        mStatusArray, mLink, deliveryRoutes, index);
+                    int index = mData.get(viewHolder.getAdapterPosition()).second;
+                    mClickListener.onOrderItemClick(String.valueOf(item.getPaymentReferenceNo()),
+                            mStatusArray, mLink, estDeliveryDate, index);
             });
         } else if (viewType == DETAILS_VIEW_TYPE) {
             GetPaymentsList.ResponseValue.Order order =
@@ -131,12 +122,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                         mClickListener.onOrderItemShowOptions(v, (ArrayList<String>) order.getActions(), itemArrays));
             }
 
-            HashMap<String, String> deliveryRoute = new HashMap<>();
-            deliveryRoute.put(ESTIMATED_DELIVERY, order.getEstimatedDeliveryText());
-            deliveryRoute.put(SHIP_FROM, order.getShipFrom());
-            deliveryRoute.put(SHIP_TO, order.getShipTo());
-
-            deliveryRoutes.put(order.getOrderID(), deliveryRoute);
+            estDeliveryDate.put(order.getOrderID(), order.getEstimatedDeliveryText());
             mStatusArray.put(order.getOrderID(), order.getStatus());
 
             mLink = order.getLink();
@@ -144,7 +130,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             viewHolder.itemView.setOnClickListener(view -> {
                 int index = mData.get(viewHolder.getAdapterPosition()).second;
                 mClickListener.onOrderItemClick(String.valueOf(item.getPaymentReferenceNo()),
-                        mStatusArray, order.getLink(), deliveryRoutes, index);
+                        mStatusArray, order.getLink(), estDeliveryDate, index);
             });
         }
 
@@ -211,25 +197,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         String link = order.getLink();
 
         holder.trackHereButton.setVisibility(link == null || link.isEmpty() ? View.GONE : View.VISIBLE);
-        holder.shipFromTextView.setText(StringUtils.twoPartStringWithStyles(
-                mActivity.getResources().getString(R.string.ship_from_with_colon),
-                null,
-                orderItem.getShipFrom(),
-                new StyleSpan(BOLD)
-        ));
-        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(orderItem.getEstimatedDeliveryText());
-        StringUtils.applySpanToSubstringsMatching(
-                stringBuilder,
-                new StyleSpan(BOLD),
-                "(?!.*:).{1,}",
-                SPAN_EXCLUSIVE_INCLUSIVE);
-        holder.estimatedDeliveryText.setText(stringBuilder);
-        holder.shipToTextView.setText(StringUtils.twoPartStringWithStyles(
-                mActivity.getResources().getString(R.string.ship_to_with_colon),
-                null,
-                orderItem.getShipFrom(),
-                new StyleSpan(BOLD)
-        ));
+        holder.estimatedDeliveryText.setText(orderItem.getEstimatedDeliveryText());
 
         holder.orderImagesRecyclerView.setAdapter(new OrderImageAdapter(mActivity, orderItem.getItems()));
         holder.orderImagesRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -354,7 +322,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         RelativeLayout orderOptionsLayout;
 
         @BindView(R.id.trackHereButton)
-        ViewGroup trackHereButton;
+        Button trackHereButton;
 
         @BindView(R.id.order_date_graph_node)
         TextView orderDateGraphNodeView;
@@ -414,10 +382,6 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         LinearLayout receivedOrderLayout;
         @BindView(R.id.estimatedDeliveryTextView)
         TextView estimatedDeliveryText;
-        @BindView(R.id.shipFromTextView)
-        TextView shipFromTextView;
-        @BindView(R.id.shipToTextView)
-        TextView shipToTextView;
         @BindView(R.id.orders_options)
         ImageButton orderOptions;
 

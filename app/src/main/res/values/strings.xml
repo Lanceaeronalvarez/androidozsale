@@ -243,9 +243,6 @@
     <string name="your_payment_has_been_successful">Your payment has been successful!</string>
     <string name="your_order_will_arrive_within_14_28_working_days_after_the_sale_has_finished">Your
         order will arrive within 14-28 working days after the sale has finished.</string>
-    <string name="ship_from_with_colon">Shipped From:\u0020</string>
-    <string name="estimated_delivery_with_colon">Estimated Delivery:\u0020</string>
-    <string name="ship_to_with_colon">Shipped To:\u0020</string>
 
     <string name="continue_shopping">continue shopping</string>
     <string name="your_cart_is_currently_empty">welcome to my basket!</string>

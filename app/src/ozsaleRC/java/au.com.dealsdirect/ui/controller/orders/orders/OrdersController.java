@@ -161,7 +161,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @Override
     public void showOrderDetails(String referenceNumber, HashMap<String, String> status, String link,
-                                 HashMap<String, HashMap<String, String>> deliveryRoutes, int position) {
+                                 HashMap<String, String> estimatedDelivery, int position) {
 
         GetPaymentsList.ResponseValue.PaymentItem selectedOrder = mOrders.get(position);
         String selectedReferenceNumber = String.valueOf(selectedOrder.getPaymentReferenceNo());
@@ -170,7 +170,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
                 selectedReferenceNumber,
                 status,
                 link,
-                deliveryRoutes,
+                estimatedDelivery,
                 selectedOrder
 
         );
@@ -187,9 +187,9 @@ public class OrdersController extends BasePullToRefreshController implements Ord
 
     @Override
     public void onOrderItemClick(String referenceNumber, HashMap<String, String> status, String link,
-                                 HashMap<String, HashMap<String, String>> deliveryRoutes,
+                                 HashMap<String, String> estimatedDelivery,
                                  int position) {
-        showOrderDetails(referenceNumber, status, link, deliveryRoutes, position);
+        showOrderDetails(referenceNumber, status, link, estimatedDelivery, position);
     }
 
     @Override
