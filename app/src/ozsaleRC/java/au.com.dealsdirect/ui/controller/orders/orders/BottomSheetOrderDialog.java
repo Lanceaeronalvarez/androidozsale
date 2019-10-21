@@ -1,29 +1,19 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.dynamic.IFragmentWrapper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ActionConstants;
-import au.com.dealsdirect.utils.CommonUtils;
 
 /**
  * Created by MTC on 2019-06-21.
@@ -50,7 +40,7 @@ public class BottomSheetOrderDialog extends BottomSheetDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.bottom_sheet_content, container, false);
+        View v = inflater.inflate(R.layout.bottom_sheet_order_content, container, false);
 
         if (getArguments() != null) {
             Bundle bundle = getArguments();

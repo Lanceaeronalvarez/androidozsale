@@ -2,7 +2,7 @@ package au.com.dealsdirect.ui.controller.contact.addcontact;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +18,16 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderController;
-import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -136,7 +132,6 @@ public class AddContactController extends BaseController implements AddContactMv
         mPresenter.onAttach(this);
         if (mHasSavedInstance) {
             mViewContactsMvpView = mActivity.getContactsController();
-            if (!mPresenter.isTablet()) mActivity.getMainController().hideBottomNav();
         } else {
             mViewContactsMvpView = ((ViewContactsMvpView) mActivity.getHomeController().getCurrentRouter().getControllerWithTag(ViewContactsMvpView.TAG));
         }
@@ -153,14 +148,12 @@ public class AddContactController extends BaseController implements AddContactMv
     protected void setUp(View view) {
         KeyboardUtils.setKeyboardAdjustPan(mActivity);
 
-        if (!mPresenter.isTablet()) mActivity.getMainController().hideBottomNav();
-
         mAddContactToolbarRightOption.setVisibility(View.INVISIBLE);
         mAddContactToolbarTitle.setText(R.string.new_message);
         mActivity.setDraggableViewPager(false);
 
-        if(ContactPreferenceHelper.getChosenInvoice(mActivity).isEmpty() &&
-            !isCalledFromOrders) {
+        if (ContactPreferenceHelper.getChosenInvoice(mActivity).isEmpty() &&
+                !isCalledFromOrders) {
             mAddContactOrderText.setText(getString(R.string.select_a_sale));
         } else {
 
@@ -170,22 +163,22 @@ public class AddContactController extends BaseController implements AddContactMv
             }
 
             mAddContactOrderText.setText(ContactPreferenceHelper.getChosenInvoice(mActivity)
-                            + " " + ContactPreferenceHelper.getChosenOrder(mActivity));
+                    + " " + ContactPreferenceHelper.getChosenOrder(mActivity));
         }
         String message = ContactPreferenceHelper.getContactMessage(mActivity);
-        if(!message.isEmpty()) {
+        if (!message.isEmpty()) {
             mAddContactMessageField.setText(message);
         }
 
         mChosenSubject = ContactPreferenceHelper.getChosenSubject(mActivity);
-        if(!mChosenSubject.isEmpty()) {
+        if (!mChosenSubject.isEmpty()) {
             mAddContactSubjectText.setText(ContactPreferenceHelper.getChosenSubject(mActivity));
         }
 
         mAddContactMessageSend.setOnClickListener(v -> sendMessage());
     }
 
-    private void sendMessage(){
+    private void sendMessage() {
         ContactPreferenceHelper.clear(mActivity);
         hideKeyboard();
         mChosenOptionInvoice = ContactPreferenceHelper.getChosenInvoice(mActivity);
@@ -221,17 +214,11 @@ public class AddContactController extends BaseController implements AddContactMv
     @Override
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
-        if (mHasSavedInstance && !mPresenter.isTablet()) mActivity.getMainController().getHomeController().hideBottomNav();
     }
 
     @OnClick({R.id.partial_toolbar_left_view})
     void onBack() {
-        if (mPresenter.isTablet() && mActivity.getContactsController() != null
-                && getRouter().getBackstack().size() == 1) {
-            mActivity.getContactsController().resetContactDetailRouter();
-        } else {
-            mActivity.onBackPressed();
-        }
+        mActivity.onBackPressed();
     }
 
 
@@ -261,23 +248,8 @@ public class AddContactController extends BaseController implements AddContactMv
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler());
 
-            if (mPresenter.isTablet() && getBoolean(R.bool.master_detail_enabled)) {
-                mViewContactsMvpView.getPresenter().loadContacts();
-                mViewContactsMvpView.getDisplayRouter().popToRoot();
-                GateKeeper.setRoot(mViewContactsMvpView.getDisplayRouter(), GateKeeper.Destination.CONTACT_HISTORY, routerTransaction);
-            } else {
-                getRouter().popToRoot();
-                getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
-                        mChosenSubject,
-                        saleName,
-                        invoiceNo,
-                        mAddContactMessageField.getText().toString(),
-                        createContactResponse.getCreateContact().getValue(),
-                        false))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
-
-            }
+            getRouter().popToRoot();
+            getRouter().pushController(routerTransaction);
 
         } else {
             CustomAlertDialog.showCustomAlertDialog(

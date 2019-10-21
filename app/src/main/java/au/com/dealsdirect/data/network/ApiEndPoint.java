@@ -160,6 +160,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.EVENTING, "users/current", ApiUrlVersion.v1.apiVersion());
     }
 
+    public static String getWishlistEvent() {
+        return getFormattedUrl(ApiService.EVENTING, "events", ApiUrlVersion.v1.apiVersion());
+    }
+
     /* Deep Link Data */
     public static String deepLink() {
         return getFormattedUrl(ApiService.SETTING, "deeplinkdata", ApiUrlVersion.v1.apiVersion());
@@ -583,6 +587,22 @@ public final class ApiEndPoint {
 
     public static String callOrderReceived() {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "SetOrderReceived", ApiUrlVersion.emptyVersion.apiVersion());
+    }
+
+    public static String getWishlistIdsOnly() {
+        return getFormattedUrl(ApiService.WISHLIST, "ids", ApiUrlVersion.v4.apiVersion());
+    }
+
+    public static String getWishlist() {
+        return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/wishlist", ApiUrlVersion.v4.apiVersion());
+    }
+
+    public static String addToWishlist() {
+        return getFormattedUrl(ApiService.WISHLIST, "", ApiUrlVersion.v4.apiVersion());
+    }
+
+    public static String removeFromWishlist() {
+        return getFormattedUrl(ApiService.WISHLIST, "{product_id}", ApiUrlVersion.v4.apiVersion());
     }
 
     public static String setAttachment() {

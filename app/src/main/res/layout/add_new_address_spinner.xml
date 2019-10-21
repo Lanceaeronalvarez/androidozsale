@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/text_extra_dark" />
 
-    <android.support.v7.widget.AppCompatSpinner
+    <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/row_add_address_spinner"
         style="@style/DDEditTextStyle"
         android:layout_width="match_parent"

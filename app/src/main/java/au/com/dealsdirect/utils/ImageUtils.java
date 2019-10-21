@@ -10,7 +10,7 @@ import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
@@ -26,6 +26,9 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 public class ImageUtils {
 
@@ -35,7 +38,7 @@ public class ImageUtils {
 
     public static abstract class ImageLoadedCallback {
 
-        public void onImageResourceReady() {
+        public void onImageResourceReady(Bitmap resource) {
 
         }
     }
@@ -64,7 +67,7 @@ public class ImageUtils {
                 .asBitmap()
                 .load(url)
                 .apply(options)
-                .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL) {
+                .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                         imageView.setImageBitmap(resource);
@@ -73,19 +76,38 @@ public class ImageUtils {
     }
 
     public static void loadImageWithPlaceholder(String url, ImageView imageView, Drawable placeholder,
-                                                RequestListener requestListener) {
+                                                ImageLoadedCallback callback) {
         RequestOptions options = new RequestOptions()
                 .placeholder(placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .skipMemoryCache(true)
                 .format(DecodeFormat.PREFER_ARGB_8888);
 
-        Glide.with(imageView)
-                .asBitmap()
-                .apply(options)
-                .load(url)
-                .listener(requestListener)
-                .into(imageView);
+        if (callback != null) {
+            Glide.with(imageView)
+                    .asBitmap()
+                    .apply(options)
+                    .load(url)
+                    .listener(new RequestListener<Bitmap>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                            callback.onImageResourceReady(resource);
+                            return false;
+                        }
+                    })
+                    .into(imageView);
+        } else {
+            Glide.with(imageView)
+                    .asBitmap()
+                    .apply(options)
+                    .load(url)
+                    .into(imageView);
+        }
     }
 
     public static void loadImageImmediate(String url, ImageView imageView, ImageLoadedCallback callback) {
@@ -108,17 +130,17 @@ public class ImageUtils {
 
                         @Override
                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                            callback.onImageResourceReady();
+                            callback.onImageResourceReady(resource);
                             return false;
                         }
                     })
                     .into(imageView);
         } else if (imageView != null) {
-                Glide.with(imageView)
-                        .asBitmap()
-                        .apply(options)
-                        .load(url)
-                        .into(imageView);
+            Glide.with(imageView)
+                    .asBitmap()
+                    .apply(options)
+                    .load(url)
+                    .into(imageView);
         }
     }
 
@@ -284,6 +306,28 @@ public class ImageUtils {
         int finalColumnCount = Math.min(actualMaxColumn, computedColumn);
         float ratio = (float) proposedHeight / proposedWidth;
         return getExactGridDefinition(finalColumnCount, ratio, canvasWidth);
+    }
+
+    public static String removeResolutionModifierInImageUrl(String sourceUrl) {
+        String newString = sourceUrl;
+        final String[] extensions = new String[]{
+                "jpg", "jpeg", "png", "webp"
+        };
+
+        for (String extension : extensions) {
+            // This regex matches for "_NUMBERxNUMBER" followed by an extension, and selects only
+            // the "_NUMBERxNUMBER" to remove from the URL.
+            // e.g. in "https://www.itsallogrenow.com/img_200x200/getoutofmyswamp_200x200.jpg",
+            // only, the second "_200x200" will be matched.
+            String regex = "_[0-9]+x[0-9]+(?=\\." + extension + ")";
+            Matcher matcher = Pattern.compile(regex).matcher(sourceUrl);
+            if (matcher.find()) {
+                newString = sourceUrl.replace(matcher.group(), "");
+                break;
+            }
+        }
+
+        return newString;
     }
 
     public static class ImageLink implements Parcelable {

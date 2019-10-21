@@ -9,8 +9,6 @@ import android.content.Context;
 import com.visa.checkout.VisaPaymentSummary;
 
 import au.com.dealsdirect.data.auth.AuthHandler;
-import au.com.dealsdirect.data.network.model.country.Country;
-import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.controller.main.Settings;
@@ -39,6 +37,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void callGetConsentData();
 
     void callSaveConsentData();
+
+    void callGetWishlistIdsOnly();
 
     void showStrictConsentUI();
 
@@ -101,4 +101,6 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     boolean shouldShowStrictConsent();
 
     void callFileSettings();
+
+    boolean doesCheckoutHaveWishlistItem();
 }

@@ -10,6 +10,11 @@
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
     <LinearLayout
         android:id="@+id/partial_checkout_voucher_container_layout"
         android:layout_width="match_parent"
@@ -58,13 +63,6 @@
                 android:src="@drawable/ic_gray_chevron" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/border_thin"
-            android:layout_marginStart="@dimen/padding_default"
-            android:background="@color/border_regular" />
-
-
     </LinearLayout>
 
     <!--set visibility to gone. will not be needing as of design. might be used in the future though.. jpaseneta 08/10/2018-->
@@ -91,4 +89,10 @@
             android:textColor="@color/colorAccent"
             tools:text="H27AEJALS" />
     </LinearLayout>
+
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
 </LinearLayout>

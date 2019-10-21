@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -8,14 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.util.Pair;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -25,26 +19,34 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.tabs.TabLayout;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.profiler.Profiler;
 import com.paginate.Paginate;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -57,6 +59,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
+import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
@@ -72,7 +75,6 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.AdaptiveTabLayout;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
-import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -87,21 +89,95 @@ import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
+import butterknife.Optional;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 
-import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
-import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.HEADER;
+import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_LIST;
+import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.WISHLIST;
 import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.ClickType.PRODUCT_CLICK;
+import static com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
+import static com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 
 /**
  * dp Created by Admin on 6/8/17.
  */
 
 public class SaleItemsController extends BaseController implements SaleItemsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener, SearchFilterMvpRepository {
+
+    public enum SourceMode {
+        NORMAL,
+        WISHLIST
+    }
+
+    public enum GridViewMode {
+        LARGER_IMAGES,
+        MORE_IMAGES
+    }
+
+    public SourceMode getSourceMode() {
+        return mSourceMode;
+    }
+
+    public void setSourceMode(SourceMode sourceMode) {
+        mSourceMode = sourceMode;
+        resetViewBasedOnSourceMode();
+    }
+
+    private SourceMode mSourceMode = SourceMode.NORMAL;
+
+    private void toggleGridViewMode() {
+        switch (mGridViewMode) {
+            case MORE_IMAGES:
+                setGridViewMode(GridViewMode.LARGER_IMAGES);
+                break;
+            case LARGER_IMAGES:
+                setGridViewMode(GridViewMode.MORE_IMAGES);
+                break;
+        }
+    }
+
+    private void setGridViewMode(GridViewMode gridViewMode) {
+        if (mGridViewMode == gridViewMode) {
+            return;
+        }
+
+        mGridViewMode = gridViewMode;
+
+        if (!isViewBound()) {
+            return;
+        }
+        switch (gridViewMode) {
+            case MORE_IMAGES:
+                mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_3_column_view));
+
+                mColumnCount = mActivity.getResources().getInteger(R.integer.items_max_column_portrait);
+                mPresenter.setColumnCount(mColumnCount);
+
+                setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_max_column_portrait),
+                        mActivity.getResources().getInteger(R.integer.items_max_column_landscape));
+                break;
+            case LARGER_IMAGES:
+                mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_2_column_view));
+
+                mColumnCount = mActivity.getResources().getInteger(R.integer.items_min_column_portrait);
+                mPresenter.setColumnCount(mColumnCount);
+
+                setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_min_column_portrait),
+                        mActivity.getResources().getInteger(R.integer.items_min_column_landscape));
+                break;
+        }
+
+        determineWhereToShowAds();
+    }
+
+    private GridViewMode mGridViewMode;
+
+    private GridViewModePreferenceHelper mGridViewModePreferenceHelper = new GridViewModePreferenceHelper();
 
     public abstract static class Parameters {
         private Parameters() {
@@ -279,6 +355,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private List<String> mTabTitles = new ArrayList();
     private List<String> mSelectedTitle = new ArrayList<>();
     private int mColumnCount;
+    private int mCurrentProductDetailPosition = -1;
+
+    @BindView(R.id.controller_sale_items_main_container)
+    ViewGroup mMainContainer;
 
     @BindView(R.id.controller_sale_items_grid_view)
     RecyclerView mSaleItemsRecyclerView;
@@ -294,6 +374,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.partial_toolbar_details_subtitle_textview)
     TextView mSaleItemsToolbarSubTitleText;
+
+    @BindView(R.id.partial_toolbar_title_details)
+    Toolbar mToolbar;
+
+    @BindView(R.id.partial_wishlist_empty)
+    RelativeLayout mWishlistPlaceholder;
+
+    @BindView(R.id.adView_banner)
+    View mFooterAds;
 
     @BindView(R.id.controller_sale_items_text_placeholder)
     LinearLayout mPlaceholder;
@@ -501,45 +590,52 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if (mFromCategorySearch) {
-            outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
-            outState.putBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
-            outState.putBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
-            outState.putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey);
-            outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
-            outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
-            outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
-            outState.putString(BundleKeys.SALEITEMS_TITLE, mTitle);
-            if (mSaleItemsToolbarField != null) {
-                outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
-            }
-        } else {
-            outState.putBoolean(BundleKeys.SHOP_KEY_HAS_SAVED_INSTANCE, true);
-            if (mSaleId != null && !mSaleId.isEmpty()) {
-                outState.putString(BundleKeys.SHOP_SALEITEMS_SALE_ID, mSaleId);
-            }
-            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
-            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
-            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
-            outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
-            outState.putString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
-            outState.putString(BundleKeys.SHOP_SALEITEMS_TITLE, mTitle);
-            if (mSaleItemsToolbarField != null) {
-                outState.putString(SHOP_KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
-            }
-            if (mEndDate != null && !mEndDate.isEmpty()) {
-                outState.putString(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE, mEndDate);
-            }
+        switch (mSourceMode) {
+            case NORMAL:
+                if (mFromCategorySearch) {
+                    outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+                    outState.putBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
+                    outState.putBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
+                    outState.putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey);
+                    outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
+                    outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
+                    outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
+                    outState.putString(BundleKeys.SALEITEMS_TITLE, mTitle);
+                    if (mSaleItemsToolbarField != null) {
+                        outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+                    }
+                } else {
+                    outState.putBoolean(BundleKeys.SHOP_KEY_HAS_SAVED_INSTANCE, true);
+                    if (mSaleId != null && !mSaleId.isEmpty()) {
+                        outState.putString(BundleKeys.SHOP_SALEITEMS_SALE_ID, mSaleId);
+                    }
+                    outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
+                    outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
+                    outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
+                    outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
+                    outState.putString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
+                    outState.putString(BundleKeys.SHOP_SALEITEMS_TITLE, mTitle);
+                    if (mSaleItemsToolbarField != null) {
+                        outState.putString(SHOP_KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
+                    }
+                    if (mEndDate != null && !mEndDate.isEmpty()) {
+                        outState.putString(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE, mEndDate);
+                    }
+                }
+                break;
+            case WISHLIST:
+                outState.putBoolean(BundleKeys.SALEITEMS_IS_WISHLIST, true);
+                break;
         }
-
-
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH) &&
+        if (savedInstanceState.getBoolean(BundleKeys.SALEITEMS_IS_WISHLIST, false)) {
+            setSourceMode(SourceMode.WISHLIST);
+        } else if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH) &&
                 savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH)) {
             mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
             mCategoryKey = savedInstanceState.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
@@ -609,6 +705,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.onActivityResumed(activity);
 
         mActivity.setDraggableViewPager(false);
+        determineToolbarTitle();
+        refreshContents();
+
+        mGridViewModePreferenceHelper.resetTimeElapsed();
+        mGridViewModePreferenceHelper.resetTimestamp();
+    }
+
+
+    @Override
+    public void onViewWillDisappear(Controller nextController) {
+        super.onViewWillDisappear(nextController);
     }
 
     @Override
@@ -625,12 +732,42 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.onViewDidAppear(previousController);
 
         if (!mFromCategoryDeeplink && (!(previousController instanceof SaleItemDetailsController) || mSaleItems == null || mSaleItems.size() == 0)) {
-            mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
-            if (mHasSavedInstance) {
-                mActivity.getMainController().getHomeController().setSavedCurrentItem();
-            } else {
-                showKeyboard();
+            resetViewBasedOnSourceMode();
+            switch (mSourceMode) {
+                case NORMAL:
+                    mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
+                    if (mHasSavedInstance) {
+                        mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                    } else {
+                        showKeyboard();
+                    }
+                    break;
+                case WISHLIST:
+                    mPresenter.loadWishlist();
+                    break;
             }
+        }
+
+        mGridViewModePreferenceHelper.resetTimeElapsed();
+        mGridViewModePreferenceHelper.resetTimestamp();
+    }
+
+    @Override
+    public void onViewWillAppear(Controller previousController) {
+        super.onViewWillAppear(previousController);
+
+        if (previousController instanceof SaleItemDetailsController &&
+                mSaleItemsAdapter != null &&
+                mCurrentProductDetailPosition >= 0 &&
+                mCurrentProductDetailPosition < mSaleItems.size()) {
+            if (mSourceMode == SourceMode.WISHLIST &&
+                    !mPresenter.isProductInWishlist(mSaleItems.get(mCurrentProductDetailPosition).getProductId())) {
+                mSaleItems.remove(mCurrentProductDetailPosition);
+                mSaleItemsAdapter.removeData(mCurrentProductDetailPosition);
+            } else {
+                mSaleItemsAdapter.reloadCell(mCurrentProductDetailPosition);
+            }
+            mCurrentProductDetailPosition = -1;
         }
     }
 
@@ -646,61 +783,71 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void determineToolbarTitle() {
 
-        String lookingForText = getString(R.string.search_tag);
+        switch (mSourceMode) {
+            case NORMAL:
+                String lookingForText = getString(R.string.search_tag);
 
-        // bug/gen-8065_ozsale-reskin_bugfixing - always set searchbar hint to 'search'
-        if (mHasSavedInstance && isFromCategories()) {
-            if (mSearchQuery.length() > 0) {
-                mSaleItemsToolbarField.setText(mSearchQuery);
-            } else {
-                mSaleItemsToolbarField.setText("");
-            }
-        } else if (mHasSavedInstance && !isFromCategories()) {
-            if (mShopSearchQuery.length() > 0) {
-                mSearchQuery = mShopSearchQuery;
-                mSaleItemsToolbarField.setText(mSearchQuery);
-            } else {
-                mSaleItemsToolbarField.setText("");
-            }
-        } else {
-            mSaleItemsToolbarField.setHint(lookingForText);
-        }
+                // bug/gen-8065_ozsale-reskin_bugfixing - always set searchbar hint to 'search'
+                if (mHasSavedInstance && isFromCategories()) {
+                    if (mSearchQuery.length() > 0) {
+                        mSaleItemsToolbarField.setText(mSearchQuery);
+                    } else {
+                        mSaleItemsToolbarField.setText("");
+                    }
+                } else if (mHasSavedInstance && !isFromCategories()) {
+                    if (mShopSearchQuery.length() > 0) {
+                        mSearchQuery = mShopSearchQuery;
+                        mSaleItemsToolbarField.setText(mSearchQuery);
+                    } else {
+                        mSaleItemsToolbarField.setText("");
+                    }
+                } else {
+                    mSaleItemsToolbarField.setHint(lookingForText);
+                }
 
-        //determining toolbartitle logic
-        //category precedes above all
-        String[] titles = mTitle.split(CATEGORY_KEY_SEPARATOR_REPLACEMENT, 0);
-        String title = "";
-        String subTitle = "";
-        switch (titles.length) {
-            case 1:
-                title = titles[0];
+                //determining toolbartitle logic
+                //category precedes above all
+                String[] titles = mTitle.split(CATEGORY_KEY_SEPARATOR_REPLACEMENT, 0);
+                String title = "";
+                String subTitle = "";
+                switch (titles.length) {
+                    case 1:
+                        title = titles[0];
+                        break;
+                    case 2:
+                        title = titles[1];
+                        subTitle = titles[0];
+                        break;
+                    default:
+                        title = titles[2];
+                        subTitle = titles[0] + CATEGORY_KEY_SEPARATOR_REPLACEMENT + titles[1];
+                        break;
+                }
+                mSaleItemsCategoryToolbarTitle.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
+                mSaleItemsToolbarSubTitleText.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
+                mSaleItemsRemainingTimeLayout.setVisibility(isFromCategories() || mFromShopSearch ||
+                        !mActivity.getResources()
+                                .getBoolean(R.bool.is_sale_countdown_timer_enabled) ? View.GONE : View.VISIBLE);
+                mSaleItemsToolbarTitle.setVisibility(!isFromCategories() ? View.VISIBLE : View.GONE);
+
+                if (isFromCategories()) {
+                    mSaleItemsCategoryToolbarTitle.setText(title);
+                    mSaleItemsToolbarSubTitleText.setText(subTitle);
+                } else if (!mCategoryForTitle.isEmpty()) {
+                    mSaleItemsToolbarTitle.setText(mCategoryForTitle);
+                } else if (!mTitle.isEmpty()) {
+                    mSaleItemsToolbarTitle.setText(mTitle);
+                } else {
+                    mSaleItemsToolbarTitle.setText(getString(R.string.i_am_looking_for));
+                }
                 break;
-            case 2:
-                title = titles[1];
-                subTitle = titles[0];
-                break;
-            default:
-                title = titles[2];
-                subTitle = titles[0] + CATEGORY_KEY_SEPARATOR_REPLACEMENT + titles[1];
+            case WISHLIST:
+                mSaleItemsToolbarTitle.setVisibility(View.VISIBLE);
+                mSaleItemsCategoryToolbarTitle.setVisibility(View.GONE);
+                mSaleItemsToolbarSubTitleText.setVisibility(View.GONE);
+                mSaleItemsToolbarTitle.setText(getString(R.string.wishlist));
                 break;
         }
-        mSaleItemsCategoryToolbarTitle.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
-        mSaleItemsToolbarSubTitleText.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
-        mSaleItemsRemainingTimeLayout.setVisibility(isFromCategories() || mFromShopSearch ||
-                !mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) ? View.GONE : View.VISIBLE);
-        mSaleItemsToolbarTitle.setVisibility(!isFromCategories() ? View.VISIBLE : View.GONE);
-
-        if (isFromCategories()) {
-            mSaleItemsCategoryToolbarTitle.setText(title);
-            mSaleItemsToolbarSubTitleText.setText(subTitle);
-        } else if (!mCategoryForTitle.isEmpty()) {
-            mSaleItemsToolbarTitle.setText(mCategoryForTitle);
-        } else if (!mTitle.isEmpty()) {
-            mSaleItemsToolbarTitle.setText(mTitle);
-        } else {
-            mSaleItemsToolbarTitle.setText(getString(R.string.i_am_looking_for));
-        }
-
     }
 
     @Override
@@ -717,6 +864,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void onDestroyView(@NonNull View view) {
+        logGridViewPreferenceEvent();
 
         mPresenter.onDetach();
         mSaleItemsRecyclerView.setAdapter(null);
@@ -740,10 +888,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mColumnView.setVisibility(View.VISIBLE);
         mColumnCount = mPresenter.getColumnCount();
-        mColumnView.setTag(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
-                R.drawable.ic_3_column_view : R.drawable.ic_2_column_view);
-        mColumnView.setImageDrawable(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
-                getResources().getDrawable(R.drawable.ic_3_column_view) : getResources().getDrawable(R.drawable.ic_2_column_view));
+        setGridViewMode(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
+                GridViewMode.MORE_IMAGES : GridViewMode.LARGER_IMAGES);
+        mGridViewModePreferenceHelper.resetTimeElapsed();
+        ;
+        mGridViewModePreferenceHelper.resetTimestamp();
 
         //use initialcategory tree map if it came from categories.
         if (!mInitialCategoryTree.isEmpty()) {
@@ -753,7 +902,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
-        mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId, mColumnCount);
+        mSaleItemsAdapter = new SaleItemsAdapter(mActivity,
+                mSaleItems,
+                mPresenter,
+                mSaleId,
+                mColumnCount,
+                this::logWishlistEvent);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -781,7 +935,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch(mSaleItemsAdapter.getItemViewType(position)){
+                switch (mSaleItemsAdapter.getItemViewType(position)) {
                     case 1: // set default column count if not footer
                         return mSaleItemsAdapter.getColumnCount();
                     case 0: // set column count to 1 if it's a footer
@@ -830,31 +984,22 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             DataCollector.logEvent(Events.SaleEvent, parameters);
         }
 
+        mFooterAds.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.partial_toolbar_field_title_right_option)
     void onColumnClick() {
-        int tag = (int) mColumnView.getTag();
-        if( tag == R.drawable.ic_2_column_view ){
-            mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_3_column_view));
-            mColumnView.setTag(R.drawable.ic_3_column_view);
-
-            mColumnCount = mActivity.getResources().getInteger(R.integer.items_max_column_portrait);
-            mPresenter.setColumnCount(mColumnCount);
-
-            setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_max_column_portrait),
-                    mActivity.getResources().getInteger(R.integer.items_max_column_landscape));
-        }else{
-            mColumnView.setImageDrawable(getResources().getDrawable(R.drawable.ic_2_column_view));
-            mColumnView.setTag(R.drawable.ic_2_column_view);
-
-            mColumnCount = mActivity.getResources().getInteger(R.integer.items_min_column_portrait);
-            mPresenter.setColumnCount(mColumnCount);
-
-            setAdapterPerColumnChange(mActivity.getResources().getInteger(R.integer.items_min_column_portrait),
-                    mActivity.getResources().getInteger(R.integer.items_min_column_landscape));
-        }
+        mGridViewModePreferenceHelper.incrementTimeElapsedForGridViewMode(mGridViewMode);
+        toggleGridViewMode();
     }
+
+    @Optional
+    @OnClick(R.id.partial_checkout_empty_button)
+    void shopNow() {
+
+        mActivity.setShopsAsVisibleContainer();
+    }
+
 
     private void setAdapterPerColumnChange(int portraitColumn, int landscapeColumn) {
 
@@ -875,12 +1020,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             DataCollector.logEvent(Events.ToggleColumn, eventParameters);
         }
 
-        mSaleItemsAdapter = new SaleItemsAdapter(mActivity, mSaleItems, mPresenter, mSaleId, mColumnCount);
+        mSaleItemsAdapter = new SaleItemsAdapter(
+                mActivity,
+                mSaleItems,
+                mPresenter,
+                mSaleId,
+                mColumnCount,
+                this::logWishlistEvent);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch(mSaleItemsAdapter.getItemViewType(position)){
+                switch (mSaleItemsAdapter.getItemViewType(position)) {
                     case 1: // set default column count if not footer
                         return mSaleItemsAdapter.getColumnCount();
                     case 0: // set column count to 1 if it's a footer
@@ -1021,8 +1172,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
                 if (items.size() <= getResources().getInteger(R.integer.sale_items_threshold)) {
                     if (mPaginateManager == null || items.size() == 0) {
-                        mPlaceholder.setVisibility(View.VISIBLE);
-                        mSaleItemsRecyclerView.setVisibility(View.GONE);
+                        showPlaceholder(true);
                     } else {
                         mHasLoadedAllItems = true;
                         mPaginateManager.setHasMoreDataToLoad(false);
@@ -1042,14 +1192,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSaleItems = mSaleItemsAdapter.getData();
 
-        if (mSaleItems == null || mSaleItems.isEmpty()) {
-            mPlaceholder.setVisibility(View.VISIBLE);
-            mSaleItemsRecyclerView.setVisibility(View.GONE);
-
-        } else {
-            mPlaceholder.setVisibility(View.GONE);
-            mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
-        }
+        showPlaceholder(mSaleItems == null || mSaleItems.isEmpty());
 
         setupSearchFilters();
         setupTabs();
@@ -1075,6 +1218,87 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             isKeyboardHidden = false;
         }
 
+        determineWhereToShowAds();
+    }
+
+    @Override
+    public void showWishlist(List<GetSaleItemsResponse.Products> wishlist) {
+        mHasLoadedAllItems = true;
+        if (mPaginateManager != null) {
+            mPaginateManager.setHasMoreDataToLoad(false);
+        }
+        mPtrFrameLayout.setPullToRefresh(false);
+        mSaleItemsPageNumber = 0;
+
+        mSaleItemsAdapter.replaceData(wishlist);
+        mSaleItems = mSaleItemsAdapter.getData();
+
+        showPlaceholder(mSaleItems == null || mSaleItems.isEmpty());
+        determineWhereToShowAds();
+
+        onRefreshEnd();
+
+    }
+
+    @Override
+    public void updateWishlistWithAddition(String productId) {
+        determineWhereToShowAds();
+    }
+
+    @Override
+    public void updateWishlistWithRemoval(String productId) {
+        if (mSourceMode == SourceMode.NORMAL) {
+            return;
+        }
+        for (int i = 0; i < mSaleItems.size(); i++) {
+            if (mSaleItems.get(i).getProductId().equals(productId)) {
+                mSaleItems.remove(i);
+                mSaleItemsAdapter.removeData(i);
+                break;
+            }
+        }
+        showPlaceholderWithAnimation(mSaleItems.isEmpty());
+        determineWhereToShowAds();
+    }
+
+    private void logWishlistEvent(String productId, boolean liked) {
+        WishlistEventRequest request = new WishlistEventRequest();
+        request.setEventType(EventTypeId.EVENT_WISHLIST);
+
+        WishlistEventRequest.WishListInfo wishlistInfo = new WishlistEventRequest.WishListInfo();
+        request.setWishlistInfo(wishlistInfo);
+
+        wishlistInfo.setOperation(liked ? 1 : 0);
+        wishlistInfo.setProductId(productId);
+        wishlistInfo.setReferrer(mSourceMode == SourceMode.NORMAL ? PRODUCT_LIST : WISHLIST);
+        wishlistInfo.setProductsQuantity(mPresenter.wishlistCount());
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.WISHLIST_EVENT_REQUEST, request);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+
+        DataCollector.logEvent(Events.WishlistEvent, parameters);
+    }
+
+    private void logWishlistHeaderEvent() {
+        WishlistEventRequest request = new WishlistEventRequest();
+        request.setEventType(EventTypeId.EVENT_WISHLIST);
+
+        WishlistEventRequest.WishListInfo wishlistInfo = new WishlistEventRequest.WishListInfo();
+        request.setWishlistInfo(wishlistInfo);
+
+        wishlistInfo.setOperation(null);
+        wishlistInfo.setProductId(null);
+        wishlistInfo.setReferrer(HEADER);
+        wishlistInfo.setProductsQuantity(mPresenter.wishlistCount());
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.WISHLIST_EVENT_REQUEST, request);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+
+        DataCollector.logEvent(Events.WishlistEvent, parameters);
     }
 
     @Override
@@ -1122,14 +1346,50 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         DataCollector.logEvent(Events.SearchEvent, parameters);
     }
 
+    private void logGridViewPreferenceEvent() {
+        mGridViewModePreferenceHelper.incrementTimeElapsedForGridViewMode(mGridViewMode);
+        String output = mGridViewModePreferenceHelper.computeGridViewModePreference().toString();
+
+        HashMap<String, Object> eventParameters = new HashMap<>();
+        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
+        eventParameters.put(DataCollector.EventParameters.TOGGLE_LIST_PREFERENCE, output);
+        DataCollector.logEvent(Events.ProductListGridViewPreference, eventParameters);
+    }
+
+    @Override
+    public void onTabSwitch(boolean intoThisView) {
+        super.onTabSwitch(intoThisView);
+
+        if (intoThisView) {
+            mGridViewModePreferenceHelper.resetTimeElapsed();
+            mGridViewModePreferenceHelper.resetTimestamp();
+        } else {
+            logGridViewPreferenceEvent();
+        }
+    }
+
     @Override
     public void refreshContents() {
         super.refreshContents();
-        setupSearchFilters();
-        mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
-        if (mAppBar != null) {
-            mAppBar.setExpanded(true, true);
+        resetViewBasedOnSourceMode();
+        switch (mSourceMode) {
+            case NORMAL:
+                setupSearchFilters();
+                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                if (mAppBar != null) {
+                    mAppBar.setExpanded(true, true);
+                }
+                break;
+            case WISHLIST:
+                mWishlistPlaceholder.setVisibility(View.GONE);
+                mToolbar.setVisibility(View.GONE);
+                mSaleItemsRecyclerView.setVisibility(View.GONE);
+                mPresenter.loadWishlist();
+                logWishlistHeaderEvent();
+                break;
         }
+        mFooterAds.setVisibility(View.GONE);
     }
 
     void onBackClick() {
@@ -1147,26 +1407,44 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     public void refresh() {
-        if (!mInitialLoad) {
-            if (mSaleItems.size() < getResources().getInteger(R.integer.sale_items_threshold)) {
-                mHasLoadedAllItems = true;
-                mSaleItemsPageNumber = 0;
-            } else {
-                mIsLoadingProgress = true;
-                mSaleItemsPageNumber++;
-                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleItemsPageNumber, mChipFilters));
-            }
+        switch (mSourceMode) {
+            case NORMAL:
+                if (!mInitialLoad) {
+                    if (mSaleItems.size() < getResources().getInteger(R.integer.sale_items_threshold)) {
+                        mHasLoadedAllItems = true;
+                        mSaleItemsPageNumber = 0;
+                    } else {
+                        mIsLoadingProgress = true;
+                        mSaleItemsPageNumber++;
+                        mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleItemsPageNumber, mChipFilters));
+                    }
+                }
+                break;
+            case WISHLIST:
+                mPresenter.loadWishlist();
+                break;
         }
     }
 
     @Override
-    public void showProductDetails(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
-                                   String skuId, String saleId, boolean isFreeDelivery) {
-        mSearchFilterMvpView.closeFacets();
+    public void showProductDetails(RecyclerView.ViewHolder viewHolder,
+                                   int position,
+                                   String seoIdentifierId,
+                                   Drawable imagePlaceholderDrawable,
+                                   String imageUrl,
+                                   String skuId,
+                                   String saleId,
+                                   boolean isFreeDelivery) {
+        if (mSearchFilterMvpView != null) {
+            mSearchFilterMvpView.closeFacets();
+        }
         mSaleItemsRecyclerView.smoothScrollToPosition(position);
+
+        mCurrentProductDetailPosition = position;
 
         SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
                 .Parameters.FromItemsList(position,
+                imagePlaceholderDrawable,
                 imageUrl,
                 seoIdentifierId,
                 skuId,
@@ -1177,7 +1455,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString(),
                 mSalesOrigin,
                 mEndDate,
-                isFreeDelivery);
+                isFreeDelivery,
+                mSaleItems.get(position).isSoldOut());
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));
@@ -1222,7 +1501,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             } else {
                 destination = GateKeeper.Destination.SEARCH_FILTER_FOR_CATEGORY;
             }
-
 
 
             if (mHasSavedInstance) {
@@ -1513,6 +1791,37 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
     }
 
+    private void determineWhereToShowAds() {
+        if (getView() == null) {
+            if (mSaleItemsAdapter != null) {
+                mSaleItemsAdapter.setFooterEnabled(false);
+            }
+            if (mFooterAds != null) {
+                mFooterAds.setVisibility(View.GONE);
+            }
+            return;
+        }
+
+        int contentHeight = mSaleItemsAdapter.getContentHeight();
+        boolean onlyOneRowLeft = mSaleItemsAdapter.getContentHeight() == mSaleItemsAdapter.getHeightOfCell();
+        int adjustedHeight = getView().getHeight() - (onlyOneRowLeft ? 0 : mSaleItemsAdapter.getHeightOfCell());
+        if (contentHeight > adjustedHeight) {
+            // ads as footer
+            if (mSaleItemsAdapter != null) {
+                mSaleItemsAdapter.setFooterEnabled(true);
+            }
+            mFooterAds.setVisibility(View.GONE);
+        } else {
+            // ads below recyclerview and placeholder
+            if (mSaleItemsAdapter != null) {
+                mSaleItemsAdapter.setFooterEnabled(false);
+            }
+            mFooterAds.setVisibility(View.VISIBLE);
+            CommonUtils.showAdmob(mActivity, mFooterAds,
+                    mActivity.getResources().getString(R.string.admob_products_id));
+        }
+    }
+
     @Override
     public void toggleTabSelection(int tabPos, boolean isTabActive) {
         LinearLayout tabStrip = (LinearLayout) mTabLayout.getChildAt(0);
@@ -1534,7 +1843,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onRefreshBegin(PtrFrameLayout frame) {
-        mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
+        switch (mSourceMode) {
+            case NORMAL:
+                mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
+                break;
+            case WISHLIST:
+                mPresenter.loadWishlist();
+                break;
+        }
     }
 
     @Override
@@ -1584,7 +1900,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void onOrientationChanged(Configuration newConfig) {
         boolean isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
-        if (mSaleItemsRecyclerView != null) {
+        if (isViewAttached()) {
             GridLayoutManager gridLayoutManager = (GridLayoutManager) mSaleItemsRecyclerView.getLayoutManager();
             int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
             mSaleItemsAdapter.computeItemViewDimensions();
@@ -1592,6 +1908,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             gridLayoutManager.scrollToPosition(currentScrollPosition);
 
             gridLayoutManager.setSpanCount(mSaleItemsAdapter.getColumnCount());
+
+            determineWhereToShowAds();
         }
     }
 
@@ -1666,5 +1984,160 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void facetsClosed() {
         enableSaleItemsScroll(true);
         toggleTabSelection();
+    }
+
+    private void resetViewBasedOnSourceMode() {
+        if (!isViewBound()) {
+            return;
+        }
+        switch (mSourceMode) {
+            case NORMAL:
+                mAppBar.setVisibility(View.VISIBLE);
+                mSaleItemsToolbarField.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.VISIBLE);
+                mSaleItemsBackIcon.setVisibility(View.VISIBLE);
+                mSaleItemsBackIcon.setEnabled(true);
+                break;
+            case WISHLIST:
+                mAppBar.setVisibility(View.GONE);
+                mSaleItemsToolbarField.setVisibility(View.GONE);
+                mTabLayout.setVisibility(View.GONE);
+                mSaleItemsBackIcon.setVisibility(View.INVISIBLE);
+                mSaleItemsBackIcon.setEnabled(false);
+                break;
+        }
+    }
+
+    private void showPlaceholder(boolean show) {
+        switch (mSourceMode) {
+            case NORMAL:
+                mWishlistPlaceholder.setVisibility(View.GONE);
+                mMainContainer.setVisibility(View.VISIBLE);
+                mToolbar.setVisibility(View.VISIBLE);
+                if (show) {
+                    mPlaceholder.setVisibility(View.VISIBLE);
+                    mSaleItemsRecyclerView.setVisibility(View.GONE);
+                } else {
+                    mPlaceholder.setVisibility(View.GONE);
+                    mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+                }
+                break;
+            case WISHLIST:
+                mPlaceholder.setVisibility(View.GONE);
+                if (show) {
+                    mMainContainer.setVisibility(View.GONE);
+                    mToolbar.setVisibility(View.GONE);
+                    mSaleItemsRecyclerView.setVisibility(View.GONE);
+                    mWishlistPlaceholder.setVisibility(View.VISIBLE);
+                } else {
+                    mWishlistPlaceholder.setVisibility(View.GONE);
+                    mMainContainer.setVisibility(View.VISIBLE);
+                    mToolbar.setVisibility(View.VISIBLE);
+                    mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+                }
+                break;
+        }
+    }
+
+    private void showPlaceholderWithAnimation(boolean show) {
+        switch (mSourceMode) {
+            case NORMAL:
+                mWishlistPlaceholder.setVisibility(View.GONE);
+                mToolbar.setVisibility(View.VISIBLE);
+
+                if (mPlaceholder.getVisibility() == View.VISIBLE && !show) {
+                    CommonUtils.fadeOutView(mPlaceholder, new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                            super.onAnimationCancel(animation);
+                            onAnimationEnd(animation);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mPlaceholder.setVisibility(View.GONE);
+                            mPlaceholder.setAlpha(1f);
+                            mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+                            CommonUtils.fadeInView(mSaleItemsRecyclerView, null);
+                        }
+                    });
+                } else if (mPlaceholder.getVisibility() == View.GONE && show) {
+                    CommonUtils.fadeOutView(mSaleItemsRecyclerView, new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                            super.onAnimationCancel(animation);
+                            onAnimationEnd(animation);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mSaleItemsRecyclerView.setVisibility(View.GONE);
+                            mSaleItemsRecyclerView.setAlpha(1f);
+                            mPlaceholder.setVisibility(View.VISIBLE);
+                            CommonUtils.fadeInView(mPlaceholder, null);
+                        }
+                    });
+                }
+                break;
+            case WISHLIST:
+                mPlaceholder.setVisibility(View.GONE);
+
+                if (mWishlistPlaceholder.getVisibility() == View.VISIBLE && !show) {
+                    CommonUtils.fadeOutView(mWishlistPlaceholder, new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                            super.onAnimationCancel(animation);
+                            onAnimationEnd(animation);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mWishlistPlaceholder.setVisibility(View.GONE);
+                            mWishlistPlaceholder.setAlpha(1f);
+                            mMainContainer.setVisibility(View.VISIBLE);
+                            mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+                            CommonUtils.fadeInView(mSaleItemsRecyclerView, null);
+                            mToolbar.setVisibility(View.VISIBLE);
+                            CommonUtils.fadeInView(mToolbar, null);
+                        }
+                    });
+                } else if (mWishlistPlaceholder.getVisibility() == View.GONE && show) {
+                    CommonUtils.fadeOutView(mToolbar, new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                            super.onAnimationCancel(animation);
+                            onAnimationEnd(animation);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mToolbar.setVisibility(View.GONE);
+                            mToolbar.setAlpha(1f);
+                        }
+                    });
+                    CommonUtils.fadeOutView(mSaleItemsRecyclerView, new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                            super.onAnimationCancel(animation);
+                            onAnimationEnd(animation);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mSaleItemsRecyclerView.setVisibility(View.GONE);
+                            mSaleItemsRecyclerView.setAlpha(1f);
+                            mMainContainer.setVisibility(View.GONE);
+                            mWishlistPlaceholder.setVisibility(View.VISIBLE);
+                            CommonUtils.fadeInView(mWishlistPlaceholder, null);
+                        }
+                    });
+                }
+                break;
+        }
     }
 }

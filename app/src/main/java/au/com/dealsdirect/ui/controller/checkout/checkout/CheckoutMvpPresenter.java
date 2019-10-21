@@ -33,7 +33,8 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     void logInitiateCheckout(Context context,
                              String paymentType,
                              int numItems,
-                             double price);
+                             double price,
+                             String selectedPaymentType);
 
     void updateCart(GetCurrentOrder.ResponseValue responseValue);
 

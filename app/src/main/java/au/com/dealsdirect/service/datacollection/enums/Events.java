@@ -34,7 +34,11 @@ public enum Events {
     SaleEvent("SaleEvent"),
     RemoveFromCart("RemoveFromCart"),
     FailedTransaction("FailedTransaction"),
-    ToggleColumn("ToggleColumn");
+    ToggleColumn("ToggleColumn"),
+    ProductListGridViewPreference("ProductListGridViewPreference"),
+    WishlistEvent("WishlistEvent"),
+    WishlistAddToCartEvent("WishlistAddToCartEvent"),
+    WishlistPaymentSuccessEvent("WishlistPaymentSuccessEvent");
 
     private String value;
 

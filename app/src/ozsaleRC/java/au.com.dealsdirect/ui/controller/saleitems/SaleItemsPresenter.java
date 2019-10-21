@@ -1,7 +1,9 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.support.v4.util.Pair;
-import android.support.v7.widget.RecyclerView;
+import android.graphics.drawable.Drawable;
+
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -12,6 +14,7 @@ import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
+import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
@@ -38,6 +41,97 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
+    public void loadWishlist() {
+        doApiCallForResponse(getDataManager().callGetWishlist(), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> list) {
+                getMvpView().showWishlist((List<GetSaleItemsResponse.Products>) list);
+            }
+        });
+    }
+
+    @Override
+    public boolean isProductInWishlist(String productId) {
+        return getDataManager().isProductInWishlist(productId);
+    }
+
+    @Override
+    public int wishlistCount() {
+        return getDataManager().getWishlist().size();
+    }
+
+    @Override
+    public void addToWishlist(String productId, String seoIdentifier, WishlistDelayedCallback delayedCallback) {
+        getDataManager().addToWishlist(new WishlistObject() {
+            private String mProductId = productId;
+            private String mSeoId = seoIdentifier;
+
+            @Override
+            public String getProductId() {
+                return mProductId;
+            }
+
+            @Override
+            public void setProductId(String id) {
+                mProductId = id;
+            }
+
+            @Override
+            public String getSeoId() {
+                return mSeoId;
+            }
+
+            @Override
+            public void setSeoId(String id) {
+                mSeoId = id;
+            }
+
+            @Override
+            public String getMasterProductId() {
+                return null;
+            }
+
+            @Override
+            public void setMasterProductId(String masterProductId) {
+
+            }
+        }, () -> {
+            doApiCallForResponse(
+                    getDataManager().callAddToWishlist(productId, seoIdentifier),
+                    new AppApiCallback() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            super.onSuccess(response);
+                            if (delayedCallback != null) {
+                                delayedCallback.performDelayedAction(productId, true);
+                            }
+                        }
+                    });
+        });
+        getMvpView().updateWishlistWithAddition(productId);
+    }
+
+    @Override
+    public void removeFromWishlist(String productId, WishlistDelayedCallback delayedCallback) {
+        getDataManager().removeFromWishlist(
+                productId,
+                () -> {
+                    doApiCallForResponse(
+                            getDataManager().callRemoveFromWishlist(productId),
+                            new AppApiCallback() {
+                                @Override
+                                public void onSuccess(Object response) {
+                                    super.onSuccess(response);
+                                    if (delayedCallback != null) {
+                                        delayedCallback.performDelayedAction(productId, false);
+                                    }
+                                }
+                            });
+                });
+        getMvpView().updateWishlistWithRemoval(productId);
+    }
+
+    @Override
     public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
 
         // Cancels any previous loadSaleItems request
@@ -58,7 +152,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                 super.onSuccess(response);
                 clearPreviousGetSaleItemsRequest();
                 Pair pair = (Pair) response;
-                getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>)pair.second);
+                getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) pair.second);
                 getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, !getSaleItemsRequest.hasFilters());
             }
 
@@ -77,10 +171,24 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadProductDetails(RecyclerView.ViewHolder viewHolder, int position, String
-            seoIdentifierId, String imageUrl, String skuId, String saleId, boolean isFreeDelivery) {
+    public void loadProductDetails(RecyclerView.ViewHolder viewHolder,
+                                   int position,
+                                   String seoIdentifierId,
+                                   Drawable imagePlaceholderDrawable,
+                                   String imageUrl,
+                                   String skuId,
+                                   String saleId,
+                                   boolean isFreeDelivery) {
         getMvpView().hideKeyboard();
-        getMvpView().showProductDetails(viewHolder, position, seoIdentifierId, imageUrl, skuId, saleId, isFreeDelivery);
+        getMvpView().showProductDetails(
+                viewHolder,
+                position,
+                seoIdentifierId,
+                imagePlaceholderDrawable,
+                imageUrl,
+                skuId,
+                saleId,
+                isFreeDelivery);
     }
 
     protected <T> Observable<T> wrapObservable(Observable<T> observable) {

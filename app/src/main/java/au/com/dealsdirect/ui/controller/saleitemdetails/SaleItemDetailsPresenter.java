@@ -18,6 +18,7 @@ import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayError;
 import au.com.dealsdirect.service.ourpay.OurpayState;
@@ -293,5 +294,85 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     @Override
     public String getAfterpayTermsLink() {
         return getDataManager().getAfterpayTermsLink();
+    }
+
+    @Override
+    public int wishlistCount() {
+        return getDataManager().getWishlist().size();
+    }
+
+    @Override
+    public boolean isProductInWishlist(String productId) {
+        return getDataManager().isProductInWishlist(productId);
+    }
+
+    @Override
+    public void addProductToWishlist(String productId, String seoIdentifier, String masterProductId, WishlistDelayedCallback delayedCallback) {
+        getDataManager().addToWishlist(new WishlistObject() {
+            private String mProductId = productId;
+            private String mSeoId = seoIdentifier;
+            private String mMasterProductId = masterProductId;
+
+            @Override
+            public String getProductId() {
+                return mProductId;
+            }
+
+            @Override
+            public void setProductId(String id) {
+                mProductId = id;
+            }
+
+            @Override
+            public String getSeoId() {
+                return mSeoId;
+            }
+
+            @Override
+            public void setSeoId(String id) {
+                mSeoId = id;
+            }
+
+            @Override
+            public String getMasterProductId() {
+                return mMasterProductId;
+            }
+
+            @Override
+            public void setMasterProductId(String masterPId) {
+                mMasterProductId = masterPId;
+            }
+        }, () -> {
+            doApiCallForResponse(
+                    getDataManager().callAddToWishlist(productId, seoIdentifier),
+                    new AppApiCallback() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            super.onSuccess(response);
+                            if (delayedCallback != null) {
+                                delayedCallback.performDelayedAction();
+                            }
+                        }
+                    });
+        });
+    }
+
+    @Override
+    public void removeProductFromWishlist(String productId, WishlistDelayedCallback delayedCallback) {
+        getDataManager().removeFromWishlist(
+                productId,
+                () -> {
+                    doApiCallForResponse(
+                            getDataManager().callRemoveFromWishlist(productId),
+                            new AppApiCallback() {
+                                @Override
+                                public void onSuccess(Object response) {
+                                    super.onSuccess(response);
+                                    if (delayedCallback != null) {
+                                        delayedCallback.performDelayedAction();
+                                    }
+                                }
+                            });
+                });
     }
 }

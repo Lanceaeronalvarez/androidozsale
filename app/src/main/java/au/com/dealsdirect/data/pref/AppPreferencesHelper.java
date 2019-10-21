@@ -170,6 +170,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String LAST_TIME_STAMP = "LAST_TIME_STAMP";
     private static final String FILE_SIZE_LIMIT = "FILE_SIZE_LIMIT";
 
+    private static final String HAS_WISHLIST_BEEN_ACCESSED = "HAS_WISHLIST_BEEN_ACCESSED";
+
     private Context mContext;
 
     @Inject
@@ -964,5 +966,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public void setFileSizeLimit(int fileSizeLimit) {
         Prefs.putInt(FILE_SIZE_LIMIT, fileSizeLimit);
+    }
+
+    @Override
+    public boolean hasWishlistBeenAccessed() {
+        return Prefs.getBoolean(HAS_WISHLIST_BEEN_ACCESSED, false);
+    }
+
+    @Override
+    public void setHasWishlistBeenAccessed(boolean isAccessed) {
+        Prefs.putBoolean(HAS_WISHLIST_BEEN_ACCESSED, isAccessed);
     }
 }

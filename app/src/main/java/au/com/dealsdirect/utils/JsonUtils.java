@@ -4,6 +4,7 @@ package au.com.dealsdirect.utils;
  */
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -14,9 +15,16 @@ import java.lang.reflect.Type;
 
 public class JsonUtils {
 
-    static Gson gson = new Gson();
-
     public static JSONObject convertToJsonObject(Object object) {
+        return convertToJsonObject(object, false);
+    }
+
+    public static JSONObject convertToJsonObject(Object object, boolean willSerializeNulls) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        if (willSerializeNulls) {
+            gsonBuilder = gsonBuilder.serializeNulls();
+        }
+        Gson gson = gsonBuilder.create();
         try {
             return new JSONObject(gson.toJson(object));
         } catch (JSONException e) {
@@ -26,6 +34,15 @@ public class JsonUtils {
     }
 
     public static <T> T convertStringToObject(String jsonString, Class<T> clasz) {
+        return convertStringToObject(jsonString, clasz, false);
+    }
+
+    public static <T> T convertStringToObject(String jsonString, Class<T> clasz, boolean willSerializeNulls) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        if (willSerializeNulls) {
+            gsonBuilder = gsonBuilder.serializeNulls();
+        }
+        Gson gson = gsonBuilder.create();
         try {
             return gson.fromJson(jsonString, clasz);
         } catch (JsonSyntaxException e) {
@@ -35,6 +52,15 @@ public class JsonUtils {
     }
 
     public static <T> T convertStringToObject(String jsonString, Type type) {
+        return convertStringToObject(jsonString, type, false);
+    }
+
+    public static <T> T convertStringToObject(String jsonString, Type type, boolean willSerializeNulls) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        if (willSerializeNulls) {
+            gsonBuilder = gsonBuilder.serializeNulls();
+        }
+        Gson gson = gsonBuilder.create();
         try {
             return gson.fromJson(jsonString, type);
         } catch (JsonSyntaxException e) {

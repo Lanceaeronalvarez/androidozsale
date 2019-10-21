@@ -3,10 +3,10 @@ package au.com.dealsdirect.ui.controller.shops;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import com.google.android.material.appbar.AppBarLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -354,7 +354,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mLayoutManager = new GridLayoutManager(
                 mActivity,
                 mBannersAdapter.getNumberOfColumns(),
-                GridLayoutManager.VERTICAL,
+                RecyclerView.VERTICAL,
                 false);
 
         mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

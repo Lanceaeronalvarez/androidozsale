@@ -25,10 +25,10 @@
         app:showAsAction="collapseActionView" />
 
     <item
-        android:id="@+id/action_contact"
+        android:id="@+id/action_wishlist"
         android:enabled="true"
-        android:icon="@drawable/ic_tab_contact"
-        android:title="@string/account_contact_us"
+        android:icon="@drawable/ic_wishlist_tab_active"
+        android:title="@string/wishlist"
         app:showAsAction="collapseActionView" />
 
     <item

@@ -16,7 +16,6 @@
 
 package au.com.dealsdirect.service.fcm;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,9 +26,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.support.v4.app.JobIntentService;
-import android.support.v4.app.NotificationCompat;
+
+import androidx.core.app.JobIntentService;
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -37,7 +36,6 @@ import au.com.dealsdirect.DDApplication;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.utils.AppLogger;
 
 
 /**

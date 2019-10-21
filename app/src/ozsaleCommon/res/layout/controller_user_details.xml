@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--<au.com.dealsdirect.widget.ElasticHorizontalDragDismissFrameLayout--><!----><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:fillViewport="true"--><!--tools:ignore="MissingPrefix">-->
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/controller_details_button"
@@ -58,7 +58,7 @@
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption1" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
@@ -74,7 +74,7 @@
                             android:maxLines="1"
                             android:textSize="@dimen/text_size_caption1" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -95,7 +95,7 @@
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption1" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
@@ -110,7 +110,7 @@
                             android:inputType="textPersonName"
                             android:textSize="@dimen/text_size_caption1" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -131,7 +131,7 @@
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption1" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/controller_details_firstname_wrapper"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
                             android:inputType="date"
                             android:textSize="@dimen/text_size_caption1" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -201,7 +201,7 @@
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption1" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
@@ -216,7 +216,7 @@
                             android:inputType="textEmailAddress"
                             android:textSize="@dimen/text_size_caption1" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -237,7 +237,7 @@
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption1" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
@@ -251,7 +251,7 @@
                             android:inputType="textPassword"
                             android:textSize="@dimen/text_size_caption1" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
 
@@ -273,7 +273,7 @@
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption1" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -288,7 +288,7 @@
                             android:inputType="textPassword"
                             android:textSize="@dimen/text_size_caption1" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -309,7 +309,7 @@
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_caption1" />
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -324,7 +324,7 @@
                             android:inputType="textPassword"
                             android:textSize="@dimen/text_size_caption1" />
 
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -356,7 +356,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <Button
             android:id="@+id/controller_details_button"
@@ -367,4 +367,4 @@
             android:text="@string/save_changes" />
     </RelativeLayout>
 
-</android.support.design.widget.CoordinatorLayout><!--</au.com.dealsdirect.widget.ElasticHorizontalDragDismissFrameLayout>-->
+</androidx.coordinatorlayout.widget.CoordinatorLayout><!--</au.com.dealsdirect.widget.ElasticHorizontalDragDismissFrameLayout>-->

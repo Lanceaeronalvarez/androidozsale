@@ -25,7 +25,7 @@
                 android:animateLayoutChanges="false"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/categories_recyclerview"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -39,7 +39,7 @@
                 android:layout_height="match_parent"
                 android:background="#d1d1d1"/>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/sub_categories_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

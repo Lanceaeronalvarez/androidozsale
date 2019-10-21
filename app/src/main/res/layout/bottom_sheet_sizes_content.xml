@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomSheetLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet"
+    android:orientation="vertical"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/product_details_sizes_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/bottom_sheet_sizes_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_extra_small"
+                android:text="@string/select_size"
+                android:textAllCaps="true"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption1" />
+
+            <TextView
+                android:id="@+id/bottom_sheet_sizes_size_guide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="@dimen/margin_small"
+                android:paddingTop="@dimen/margin_extra_small"
+                android:paddingRight="@dimen/margin_small"
+                android:paddingBottom="@dimen/margin_small"
+                android:text="@string/size_guide"
+                android:textColor="@color/text_link_color"
+                android:textSize="@dimen/text_size_caption1"
+                android:visibility="visible" />
+
+            <com.zhy.view.flowlayout.TagFlowLayout
+                android:id="@+id/bottom_sheet_sizes_size_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/bottom_sheet_sizes_header"
+                android:layout_marginTop="@dimen/margin_extra_small"
+                android:paddingLeft="@dimen/margin_small"
+                android:paddingRight="@dimen/margin_small"
+                app:max_select="1" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/bottom_sheet_sizes_done_button"
+            style="@style/DDButtonAddCart"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_marginRight="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/margin_medium"
+            android:text="@string/add_to_cart"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

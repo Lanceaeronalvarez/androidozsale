@@ -1,10 +1,10 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -28,7 +27,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.listener.ContactClickListener;
@@ -71,17 +69,11 @@ public class ViewContactsController extends BaseController implements ViewContac
     @BindView(R.id.controller_contacts_new_message_button)
     Button mViewContactsAddNewMessage;
 
-    @Nullable
-    @BindView(R.id.contact_detail_container)
-    ViewGroup mContactDetailContainer;
-
     @Inject
     ViewContactsMvpPresenter<ViewContactsMvpView> mPresenter;
 
     public ViewContactsMvpView viewContactsMvpView;
     private boolean mHasSavedState;
-
-    private Router mContactDetailRouter;
 
     public static ViewContactsController newInstance() {
 
@@ -136,14 +128,10 @@ public class ViewContactsController extends BaseController implements ViewContac
 
         mActivity.setContactsController(this);
 
-        if (mPresenter.isTablet()) {
-            mContactDetailRouter = getChildRouter(mContactDetailContainer);
-        }
-
-        mViewContactsAddNewMessage.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
+        mViewContactsAddNewMessage.setVisibility(View.VISIBLE);
 
         mViewContactsToolarTitle.setText(getResource().getString(R.string.account_contact_us));
-        mViewContactsToolbarLeftOption.setVisibility(View.INVISIBLE);
+        mViewContactsToolbarLeftOption.setVisibility(mPresenter.isTablet() ? View.INVISIBLE : View.VISIBLE);
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
 
         mContactAdapter = new ContactsAdapter(new ArrayList<>(), mPresenter, new ContactClickListener() {
@@ -163,16 +151,6 @@ public class ViewContactsController extends BaseController implements ViewContac
     public void onDetach(View view) {
         hideLoading();
         super.onDetach(view);
-    }
-
-    @Override
-    public boolean handleBack() {
-        if(mContactDetailRouter != null && mContactDetailRouter.getBackstackSize() <= 1){
-            mActivity.getHomeController().goBackToHomePage();
-            return true;
-        }
-
-        return super.handleBack();
     }
 
     @Override
@@ -203,7 +181,7 @@ public class ViewContactsController extends BaseController implements ViewContac
             mContactAdapter.replace(myContacts.getList());
             mViewContactsRecyclerViewContainer.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
-            mViewContactsAddNewMessage.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
+            mViewContactsAddNewMessage.setVisibility(View.VISIBLE);
         } else {
             mPlaceholderLayout.setVisibility(View.VISIBLE);
             mViewContactsRecyclerViewContainer.setVisibility(View.GONE);
@@ -213,11 +191,7 @@ public class ViewContactsController extends BaseController implements ViewContac
         int visibility = getResource().getBoolean(R.bool.contacts_toolbar_addmessage_visibility) ? View.VISIBLE : View.INVISIBLE;
         mViewContactsToolbarRightOption.setVisibility(visibility);
 
-        if (mPresenter.isTablet()) {
-            mViewContactsToolbarRightOption.setPadding(5, 5, 5, 5);
-        } else {
-            mViewContactsToolbarRightOption.setPadding(20, 20, 20, 20);
-        }
+        mViewContactsToolbarRightOption.setPadding(20, 20, 20, 20);
         mViewContactsToolbarRightOption.setImageResource(R.drawable.ic_add);
     }
 
@@ -226,11 +200,7 @@ public class ViewContactsController extends BaseController implements ViewContac
         ContactPreferenceHelper.clear(mActivity);
         RouterTransaction routerTransaction = RouterTransaction.with(ContactSelectSubjectController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
-        if (mPresenter.isTablet()) {
-            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, routerTransaction);
-        } else {
-            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
-        }
+        GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
     }
 
     @OnClick(R.id.controller_contacts_new_message_button)
@@ -299,19 +269,7 @@ public class ViewContactsController extends BaseController implements ViewContac
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler());
 
-        if (mPresenter.isTablet()) {
-            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CONTACT_HISTORY, routerTransaction);
-        } else {
-            getDisplayRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
-                    contactSubject,
-                    saleName,
-                    invoiceNo,
-                    timeStampString,
-                    contactList.getContactNo(),
-                    false))
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
-        }
+        getDisplayRouter().pushController(routerTransaction);
     }
 
     @Override
@@ -321,7 +279,7 @@ public class ViewContactsController extends BaseController implements ViewContac
 
     @Override
     public Router getDisplayRouter() {
-        return mPresenter.isTablet() ? mContactDetailRouter : getRouter();
+        return getRouter();
     }
 
     @Override
@@ -331,20 +289,13 @@ public class ViewContactsController extends BaseController implements ViewContac
 
     @Override
     public void sendOrderMessage(boolean isCalledFromOrders, int invoiceNumber, String description) {
-        RouterTransaction routerTransaction = RouterTransaction.with(AddContactController.newInstance(invoiceNumber,isCalledFromOrders,description))
+        RouterTransaction routerTransaction = RouterTransaction.with(AddContactController.newInstance(invoiceNumber, isCalledFromOrders, description))
                 .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
-        if (mPresenter.isTablet()) {
-            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.ADD_CONTACT, routerTransaction);
-        } else {
-            getDisplayRouter().pushController(routerTransaction);
-        }
+        getDisplayRouter().pushController(routerTransaction);
     }
 
-    public void resetContactDetailRouter() {
-        if (mContactDetailContainer != null && mContactDetailRouter != null) {
-            mContactDetailRouter.popToRoot();
-            mContactDetailRouter.popCurrentController();
-            mContactDetailContainer.removeAllViews();
-        }
+    @OnClick(R.id.partial_toolbar_left_view)
+    public void onBackPress() {
+        mActivity.onBackPressed();
     }
 }

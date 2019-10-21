@@ -13,7 +13,7 @@
         layout="@layout/partial_checkout_empty"
         android:visibility="gone" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/checkout_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
                 android:textColor="@color/text_medium"
                 android:visibility="invisible" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/controller_checkout_recyclerview_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,5 +65,5 @@
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

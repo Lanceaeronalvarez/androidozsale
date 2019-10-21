@@ -8,7 +8,7 @@
     android:background="@color/background_default"
     tools:ignore="MissingPrefix">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/product_details_coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,7 +25,7 @@
             android:clipToPadding="false"
             android:orientation="vertical">
 
-            <android.support.v4.widget.NestedScrollView
+            <androidx.core.widget.NestedScrollView
                 android:id="@+id/controller_sale_item_detail_scrollview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -38,10 +38,10 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/product_details_content_view_bottom_padding"
                     android:clipChildren="false"
                     android:clipToPadding="false"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/product_details_content_view_bottom_padding">
 
                     <LinearLayout
                         android:id="@+id/main_layout"
@@ -134,6 +134,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="@dimen/margin_small"
                                 android:background="@color/white"
+                                android:paddingBottom="@dimen/margin_small"
                                 android:visibility="gone">
 
                                 <RelativeLayout
@@ -150,7 +151,7 @@
                                         android:text="@string/size"
                                         android:textAllCaps="true"
                                         android:textColor="@color/text_medium"
-                                        android:textSize="@dimen/text_size_body" />
+                                        android:textSize="@dimen/text_size_caption1" />
 
                                     <ImageView
                                         android:id="@+id/question_mark"
@@ -178,10 +179,23 @@
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/sizeLabel"
                                     android:layout_marginTop="@dimen/margin_extra_small"
-                                    android:layout_marginBottom="@dimen/margin_small"
                                     android:paddingLeft="@dimen/margin_small"
                                     android:paddingRight="@dimen/margin_small"
                                     app:max_select="1" />
+
+                                <TextView
+                                    android:id="@+id/product_details_size_notice"
+                                    fontPath="@string/font_app_semibold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/product_details_size_list"
+                                    android:layout_marginStart="3dp"
+                                    android:paddingLeft="@dimen/margin_extra_small"
+                                    android:text="@string/please_select_size"
+                                    android:textAllCaps="true"
+                                    android:textColor="@color/red"
+                                    android:textSize="@dimen/text_size_caption1"
+                                    android:visibility="gone" />
 
                             </RelativeLayout>
 
@@ -200,15 +214,14 @@
                                 android:visibility="gone">
 
                                 <TextView
-                                    fontPath="@string/font_app_semibold"
+                                    fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="3dp"
-                                    android:padding="@dimen/margin_extra_small"
-                                    android:text="@string/estimated_delivery"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/text_medium"
-                                    android:textSize="@dimen/text_size_body" />
+                                    android:layout_marginStart="6dp"
+                                    android:padding="@dimen/margin_small"
+                                    android:text="@string/shipping"
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_caption1" />
 
                                 <WebView
                                     android:id="@+id/product_details_shipping_desc_webview"
@@ -229,15 +242,14 @@
                                 android:visibility="gone">
 
                                 <TextView
-                                    fontPath="@string/font_app_semibold"
+                                    fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="3dp"
-                                    android:padding="@dimen/margin_extra_small"
+                                    android:layout_marginStart="6dp"
+                                    android:padding="@dimen/margin_small"
                                     android:text="@string/return_policy"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/text_medium"
-                                    android:textSize="@dimen/text_size_body" />
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_caption1" />
 
                                 <WebView
                                     android:id="@+id/product_details_return_policy_text"
@@ -377,7 +389,7 @@
                                     android:text="related items"
                                     android:textSize="@dimen/text_size_caption2" />
 
-                                <android.support.v7.widget.RecyclerView
+                                <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/relatedItemsRecyclerView"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -408,7 +420,7 @@
                                     android:text="customers also bought"
                                     android:textSize="@dimen/text_size_caption2" />
 
-                                <android.support.v7.widget.RecyclerView
+                                <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/customersAlsoBoughtRecyclerView"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -431,7 +443,7 @@
                                     android:text="reviews"
                                     android:textSize="@dimen/text_size_caption1" />
 
-                                <android.support.design.widget.FloatingActionButton
+                                <com.google.android.material.floatingactionbutton.FloatingActionButton
                                     android:id="@+id/edit_review_fab"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
@@ -442,7 +454,7 @@
                                     android:scaleType="fitXY"
                                     app:backgroundTint="#ffffff" />
 
-                                <android.support.v7.widget.RecyclerView
+                                <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/reviewsRecyclerView"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -494,31 +506,45 @@
                                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                                 android:orientation="vertical">
 
-                                <LinearLayout
+                                <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical">
+                                    android:layout_height="wrap_content">
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:layout_alignParentLeft="true">
 
-                                    <TextView
-                                        android:id="@+id/productBrand"
-                                        fontPath="@string/font_app_semibold"
+                                        <TextView
+                                            android:id="@+id/productBrand"
+                                            fontPath="@string/font_app_semibold"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="start"
+                                            android:ellipsize="end"
+                                            android:text=""
+                                            android:textColor="@color/text_extra_dark"
+                                            android:textSize="@dimen/text_size_headline1" />
+
+                                        <TextView
+                                            android:id="@+id/productName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text=""
+                                            android:textColor="@color/text_light"
+                                            android:textSize="@dimen/text_size_caption1" />
+
+                                    </LinearLayout>
+                                    <ImageView
+                                        android:id="@+id/share_right"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_gravity="start"
-                                        android:ellipsize="end"
-                                        android:text=""
-                                        android:textColor="@color/text_extra_dark"
-                                        android:textSize="@dimen/text_size_headline1" />
+                                        android:layout_alignParentRight="true"
+                                        android:layout_alignParentTop="true"
+                                        android:src="@drawable/wishlist_product_details_active"
+                                        android:visibility="invisible" />
+                                </RelativeLayout>
 
-                                    <TextView
-                                        android:id="@+id/productName"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text=""
-                                        android:textColor="@color/text_light"
-                                        android:textSize="@dimen/text_size_caption1" />
-
-                                </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -661,7 +687,7 @@
                                     android:paddingTop="@dimen/margin_extra_small"
                                     android:paddingBottom="@dimen/margin_extra_small" />
 
-                                <android.support.v7.widget.RecyclerView
+                                <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/productImageRecyclerView"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -674,7 +700,7 @@
                                     android:paddingTop="@dimen/margin_extra_small"
                                     android:paddingBottom="@dimen/margin_extra_small" />
 
-                                <android.support.v7.widget.RecyclerView
+                                <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/otherImagesRecyclerView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -683,34 +709,6 @@
                                     android:isScrollContainer="true"
                                     android:overScrollMode="never"
                                     android:paddingBottom="@dimen/margin_large" />
-
-                                <TextView
-                                    android:id="@+id/arrow_left"
-                                    fontPath="@string/font_app_regular"
-                                    android:layout_width="@dimen/partial_toolbar_button_width"
-                                    android:layout_height="@dimen/partial_toolbar_button_height"
-                                    android:layout_alignParentStart="true"
-                                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                                    android:gravity="center"
-                                    android:src="@drawable/ic_pink_chevron"
-                                    android:text="@string/back"
-                                    android:textColor="@color/text_medium"
-                                    android:layout_marginTop="@dimen/padding_default"
-                                    android:elevation="@dimen/button_elevation"
-                                    android:textSize="@dimen/text_size_caption1" />
-
-                                <ImageView
-                                    android:id="@+id/share_right"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignTop="@id/product_details_shared_image"
-                                    android:layout_alignRight="@id/product_details_shared_image"
-                                    android:layout_marginRight="@dimen/margin_small"
-                                    android:paddingLeft="@dimen/margin_large"
-                                    android:paddingBottom="@dimen/margin_large"
-                                    android:elevation="@dimen/button_elevation"
-                                    android:src="@drawable/ic_share"
-                                    android:visibility="invisible" />
 
                                 <RelativeLayout
                                     android:layout_width="wrap_content"
@@ -754,7 +752,7 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
-            </android.support.v4.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
 
             <RelativeLayout
                 android:id="@+id/controller_sale_details_toolbar"
@@ -762,38 +760,22 @@
                 android:layout_height="@dimen/sale_details_floating_header_height"
                 android:background="@color/white"
                 android:orientation="horizontal"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/toolbar_left_view"
-                    fontPath="@string/font_app_regular"
-                    android:layout_width="@dimen/partial_toolbar_button_width"
-                    android:layout_height="@dimen/partial_toolbar_button_height"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:gravity="center"
-                    android:paddingRight="@dimen/margin_extra_small"
-                    android:src="@drawable/ic_pink_chevron"
-                    android:paddingTop="@dimen/padding_small"
-                    android:text="@string/back"
-                    android:textColor="@color/text_medium"
-                    android:textSize="@dimen/text_size_caption1" />
+                android:visibility="invisible">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_toLeftOf="@+id/toolbar_right_view"
-                    android:layout_toRightOf="@+id/toolbar_left_view"
+                    android:paddingLeft="@dimen/margin_extra_huge"
+                    android:paddingRight="@dimen/margin_extra_huge"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/toolbar_item_brand"
                         fontPath="@string/font_app_bold"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:gravity="center_horizontal"
@@ -808,7 +790,7 @@
                     <TextView
                         android:id="@+id/toolbar_item_name"
                         fontPath="@string/font_app_regular"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignEnd="@dimen/margin_extra_small"
                         android:ellipsize="middle"
@@ -818,7 +800,7 @@
                         android:singleLine="true"
                         android:textColor="@color/text_dark"
                         android:textSize="@dimen/text_size_caption2"
-                        tools:text="Cassie Wrap Dress Wine" />
+                        tools:text="Cassie Wrap Dress Wine Includes bonus Cheese and Ice and Mayonnaise, all High Quality Sourced in Switzerland" />
 
                 </LinearLayout>
 
@@ -829,13 +811,36 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="@dimen/margin_small"
                     android:layout_marginRight="@dimen/margin_small"
+                    android:background="@color/transparent"
                     android:paddingLeft="@dimen/margin_large"
-                    android:paddingTop="@dimen/activity_vertical_margin"
-                    android:paddingBottom="@dimen/margin_large"
-                    android:elevation="@dimen/button_elevation"
-                    android:src="@drawable/ic_share"
-                    android:visibility="invisible" />
+                    android:paddingTop="@dimen/margin_medium"
+                    android:src="@drawable/wishlist_product_details_active"
+                    android:visibility="visible" />
 
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sale_details_floating_header_height"
+                android:background="@color/transparent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/toolbar_left_view"
+                    fontPath="@string/font_app_regular"
+                    android:layout_width="@dimen/partial_toolbar_button_width"
+                    android:layout_height="@dimen/partial_toolbar_button_height"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/padding_small"
+                    android:paddingRight="@dimen/margin_extra_small"
+                    android:src="@drawable/ic_pink_chevron"
+                    android:text="@string/back"
+                    android:textColor="@color/text_medium"
+                    android:textSize="@dimen/text_size_caption1" />
             </RelativeLayout>
 
         </FrameLayout>
@@ -845,18 +850,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_medium">
+
             <LinearLayout
                 android:id="@+id/product_details_add_to_basket_timer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_regular"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="@dimen/margin_extra_small"
+                android:layout_marginLeft="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_extra_small"
+                android:layout_marginRight="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:background="@drawable/bg_button_rounded"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -873,35 +879,78 @@
                         android:drawablePadding="@dimen/margin_extra_small"
                         android:gravity="center"
                         android:textColor="@color/white" />
+
                 </RelativeLayout>
 
-                <TextView
-                    fontPath="@string/font_app_medium"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
-                    android:background="@color/transparent"
-                    android:gravity="center"
-                    android:text="@string/add_to_cart"
-                    android:textColor="@color/white" />
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/product_details_add_to_basket_timer_text_view"
+                        fontPath="@string/font_app_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:background="@color/transparent"
+                        android:text="@string/add_to_cart"
+                        android:textColor="@color/white" />
+
+                    <ProgressBar
+                        android:id="@+id/product_details_add_to_basket_timer_progress_dialog"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/white"
+                        android:indeterminateTintMode="src_atop"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/product_details_add_to_basket"
-                style="@style/DDButtonAddCart"
-                fontPath="@string/font_app_medium"
+            <RelativeLayout
+                android:id="@+id/product_details_add_to_basket_container"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:visibility="gone"
-                android:layout_marginLeft="@dimen/margin_extra_small"
+                android:layout_marginLeft="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_extra_small"
+                android:layout_marginRight="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_medium"
-                android:paddingBottom="@dimen/margin_medium"
-                android:text="@string/add_to_cart" />
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/product_details_add_to_basket"
+                        style="@style/DDButtonAddCart"
+                        fontPath="@string/font_app_medium"
+                        android:layout_width="match_parent"
+                        android:text="@string/add_to_cart" />
+
+                </FrameLayout>
+
+                <ProgressBar
+                    android:id="@+id/product_details_add_to_basket_progress_dialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@color/white"
+                    android:indeterminateTintMode="src_atop"
+                    android:visibility="visible" />
+
+
+            </RelativeLayout>
+
 
             <ImageView
                 android:id="@+id/product_details_button_overlay"
@@ -924,6 +973,6 @@
 
         </RelativeLayout>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </au.com.dealsdirect.widget.ElasticDragDismissFrameLayout>

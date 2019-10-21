@@ -1,20 +1,16 @@
 package au.com.dealsdirect.ui.controller.contact.selectorder.adapter;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactorder.ContactOrderList;
-import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderMvpPresenter;
-import au.com.dealsdirect.ui.controller.contact.selectorder.listener.ContactOrderClickListener;
 import au.com.dealsdirect.ui.controller.contact.selectorder.viewholder.ContactOrderViewHolder;
 
 /**

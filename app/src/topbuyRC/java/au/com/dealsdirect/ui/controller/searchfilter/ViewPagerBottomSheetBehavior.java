@@ -4,21 +4,21 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.os.ParcelableCompat;
-import android.support.v4.os.ParcelableCompatCreatorCallbacks;
-import android.support.v4.view.AbsSavedState;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.NestedScrollingChild;
-import android.support.v4.view.VelocityTrackerCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPagerUtils;
-import android.support.v4.widget.ViewDragHelper;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.VisibleForTesting;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.os.ParcelableCompat;
+import androidx.core.os.ParcelableCompatCreatorCallbacks;
+import androidx.customview.view.AbsSavedState;
+import androidx.core.view.MotionEventCompat;
+import androidx.core.view.NestedScrollingChild;
+import androidx.core.view.VelocityTrackerCompat;
+import androidx.core.view.ViewCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.core.view.ViewPagerUtils;
+import androidx.customview.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -28,11 +28,13 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 
 /**
@@ -801,10 +803,10 @@ public class ViewPagerBottomSheetBehavior<V extends View> extends CoordinatorLay
     }
 
     /**
-     * A utility function to get the {@link android.support.design.widget.BottomSheetBehavior} associated with the {@code view}.
+     * A utility function to get the {@link BottomSheetBehavior} associated with the {@code view}.
      *
-     * @param view The {@link View} with {@link android.support.design.widget.BottomSheetBehavior}.
-     * @return The {@link android.support.design.widget.BottomSheetBehavior} associated with the {@code view}.
+     * @param view The {@link View} with {@link BottomSheetBehavior}.
+     * @return The {@link BottomSheetBehavior} associated with the {@code view}.
      */
     @SuppressWarnings("unchecked")
     public static <V extends View> ViewPagerBottomSheetBehavior<V> from(V view) {

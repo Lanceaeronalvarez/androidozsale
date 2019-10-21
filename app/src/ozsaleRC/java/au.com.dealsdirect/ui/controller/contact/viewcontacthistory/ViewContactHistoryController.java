@@ -2,9 +2,9 @@ package au.com.dealsdirect.ui.controller.contact.viewcontacthistory;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +22,6 @@ import au.com.dealsdirect.data.network.model.contactreply.ReplyContact;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryAdapter;
-import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -143,7 +142,6 @@ public class ViewContactHistoryController extends BaseController implements View
     protected void setUp(View view) {
 
         KeyboardUtils.setKeyboardAdjustResize(mActivity);
-        if (!mPresenter.isTablet()) mActivity.getMainController().hideBottomNav();
 
         mContactHistoryRightOption.setVisibility(View.INVISIBLE);
         mContactHistoryTitle.setText(mContactSubject);
@@ -165,7 +163,6 @@ public class ViewContactHistoryController extends BaseController implements View
     @Override
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
-        if (mHasSavedInstance && !mPresenter.isTablet()) mActivity.getMainController().getHomeController().hideBottomNav();
     }
 
     @Override
@@ -183,11 +180,7 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @OnClick(R.id.partial_toolbar_field_title_left_option)
     void onBackClick() {
-        if (mPresenter.isTablet() && mActivity.getContactsController() != null && !isFromReturnDetails) {
-            mActivity.getContactsController().resetContactDetailRouter();
-        } else {
-            mActivity.onBackPressed();
-        }
+        mActivity.onBackPressed();
     }
 
     @OnClick(R.id.controller_view_contacts_history_reply_button)

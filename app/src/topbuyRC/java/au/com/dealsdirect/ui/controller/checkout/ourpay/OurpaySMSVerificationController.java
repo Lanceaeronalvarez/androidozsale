@@ -1,7 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.ourpay;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;

@@ -2,9 +2,10 @@ package au.com.dealsdirect.ui.controller.checkout.checkouthost;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,7 +134,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
         mAdapter.setShouldAddSpacerOnTop(mPresenter.isTablet());
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
 
     }
 
@@ -313,6 +314,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
         SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
                 .Parameters.FromItemsList(position,
+                null,
                 imageUrl,
                 CommonUtils.loadSaleItem(mActivity, productID),
                 skuId,
@@ -323,7 +325,8 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
                 oldPrice,
                 "",
                 "",
-                isFreeDelivery);
+                isFreeDelivery,
+                false);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));

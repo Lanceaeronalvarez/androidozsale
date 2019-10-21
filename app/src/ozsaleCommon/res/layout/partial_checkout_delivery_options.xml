@@ -22,6 +22,11 @@
         android:textColor="@color/text_dark"
         android:textSize="@dimen/text_size_caption2" />
 
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,9 +75,10 @@
                     android:id="@+id/delivery_option_non_ourpay_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/row_checkout_text_light_color"
+                    android:textColor="@color/checkout_selected_text_color"
                     android:textSize="@dimen/text_size_body"
                     tools:text="Standard"
+                    android:textStyle="bold"
                     android:visibility="visible"/>
             </FrameLayout>
 
@@ -97,5 +103,10 @@
 
 
     </LinearLayout>
+
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
 </LinearLayout>

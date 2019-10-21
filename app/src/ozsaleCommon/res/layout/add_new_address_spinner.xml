@@ -18,7 +18,7 @@
         android:textSize="@dimen/text_size_headline3"
         android:textColor="@color/text_medium" />
 
-    <android.support.v7.widget.AppCompatSpinner
+    <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/row_add_address_spinner"
         android:background="@drawable/bg_edit_text_plain"
         android:layout_width="0dp"

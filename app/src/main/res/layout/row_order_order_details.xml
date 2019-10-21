@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingPrefix">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/order_items_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

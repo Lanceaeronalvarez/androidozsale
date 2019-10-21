@@ -1,8 +1,8 @@
 package au.com.dealsdirect.ui.base;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +52,7 @@ public abstract class SwipeableBaseToolBarController extends BaseController {
     com.mysale.genie.views.custom.BottomSheetCoordinatorLayout mBottom;
 
     @BindView(R.id.toolbar)
-    android.support.v7.widget.Toolbar mToolbar;
+    androidx.appcompat.widget.Toolbar mToolbar;
 
     CoordinatorLayoutAsBottomSheetBehavior mBottomSheetBehavior;
 

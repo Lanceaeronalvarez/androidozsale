@@ -47,6 +47,7 @@
     <string name="font_raleway_thin_italic">fonts/raleway/Raleway-ThinItalic.ttf</string>
 
     <string name="return_policy">Return Policy</string>
+    <string name="select_size">Select size</string>
 
     <string name="base_html_template_header" formatted="false">
         <![CDATA["<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
@@ -64,40 +65,45 @@
                         height: 1px;
                     }
                     a {
-                        color: #1C6CFD;
+                        color: #007CF7;
                         text-decoration: none;
                     }
 
                     a:link{
-                        color: #F00065;
+                        color: #007CF7;
                         text-decoration: underline;
                     }
 
                     li{
-                        font-family: Lato;
-                        color: #757373;
+                        font-family: __BODY_FONT_NAME__;
+                        color: __BODY_FONT_COLOR__;
+                    }
+
+                    ul {
+                        list-style-position: inside;
+                        padding-left:0;
                     }
 
                     b {
-                        font-family: Lato;
-                        color: #466e87;
+                        font-family: __BOLD_FONT_NAME__;
+                        color: __BOLD_FONT_COLOR__;
                     }
 
                     br {
-                        font-family: Lato;
+                        font-family: __BODY_FONT_NAME__;
                         color: #6E6868;
                     }
 
                     body {
                         -webkit-text-size-adjust: none;
-                        font-family: Lato;
-                        color: #6E6868;
-                        font-family: Lato;
-                        font-size: 10pt;
+                        font-family: __BODY_FONT_NAME__;
+                        color: __BOLD_FONT_COLOR__;
+                        font-family: __BODY_FONT_NAME__;
+                        font-size: 14px;
                         background-color: #FFFFFF;
                         word-wrap: break-word;
-                        padding-left: 0px;
-                        padding-right: 0px;
+                        padding-left: 8px;
+                        padding-right: 8px;
                         padding-top: 0px;
                     }
 
@@ -315,6 +321,7 @@
     <string name="about">About</string>
     <string name="pricing">Pricing</string>
     <string name="estimated_delivery">Estimated Delivery</string>
+    <string name="shipping">Shipping</string>
     <string name="subject">Subject:</string>
     <string name="sale">Sale:</string>
     <string name="write_a_message">Write a message...</string>
@@ -433,7 +440,7 @@
     <string name="personalise">Personalise</string>
     <string name="please_fill_up_personalisation_details">Please fill up personalisation details</string>
     <string name="max_characters">Max characters:&#160;</string>
-    <string name="this_is_a_required_field">This is a required field</string>
+    <string name="this_is_a_required_field">* - This is a required field</string>
 
 
     <string name="voucher_used">Used Vouchers</string>
@@ -521,6 +528,7 @@
     <string name="dec_2025">Dec 2025</string>
     <string name="discover_the_products_you_love">discover the products you love</string>
     <string name="shop">Shop</string>
+    <string name="wishlist">Wishlist</string>
     <string name="payment_schedule">Payment Schedule</string>
     <string name="ourpay">Ourpay</string>
     <string name="account">Account</string>
@@ -757,6 +765,6 @@
     <string name="free_shipping_text">Free Shipping</string>
     <string name="shipping_text">Shipping</string>
     <string name="shipping_with_colon">Shipping:\u0020</string>
-    <string name="promo_shipping_text">add extra xxx to get</string>
+    <string name="promo_shipping_text">Add extra xxx to get</string>
     <string name="promo_shipping_text_placeholder">xxx</string>
 </resources>

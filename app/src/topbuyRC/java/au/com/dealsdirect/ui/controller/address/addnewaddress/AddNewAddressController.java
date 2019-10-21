@@ -2,7 +2,7 @@ package au.com.dealsdirect.ui.controller.address.addnewaddress;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;

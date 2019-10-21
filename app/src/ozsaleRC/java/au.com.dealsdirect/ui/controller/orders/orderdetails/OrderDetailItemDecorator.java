@@ -1,7 +1,7 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
 import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 public class OrderDetailItemDecorator extends RecyclerView.ItemDecoration {

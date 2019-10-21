@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,6 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
-import au.com.dealsdirect.ui.controller.searchfilter.adapter.SubCategoriesAdapter;
 
 /**
  * Created by smartwave on 20/07/2017.

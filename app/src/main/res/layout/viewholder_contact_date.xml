@@ -31,13 +31,13 @@
             android:layout_below="@+id/viewholder_contact_date_text"/>
 
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/viewholder_contact_date_items_recycler_view"
             android:layout_below="@+id/viewholder_contact_date_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false">
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
 
     </RelativeLayout>
 

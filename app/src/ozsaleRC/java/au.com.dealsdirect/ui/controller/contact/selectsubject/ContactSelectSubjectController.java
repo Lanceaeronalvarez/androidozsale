@@ -2,9 +2,9 @@ package au.com.dealsdirect.ui.controller.contact.selectsubject;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +25,6 @@ import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.selectsubject.adapter.ContactSubjectAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -47,6 +46,9 @@ public class ContactSelectSubjectController extends BaseController
 
     @Inject
     ContactSelectSubjectMvpPresenter<ContactSelectSubjectMvpView> mPresenter;
+
+    @BindView(R.id.partial_toolbar_left_view)
+    TextView mCancelButton;
 
     @BindView(R.id.partial_toolbar_title)
     TextView mViewContactsToolarTitle;
@@ -87,11 +89,11 @@ public class ContactSelectSubjectController extends BaseController
     @Override
     protected void setUp(View view) {
 
+        mCancelButton.setText(getResource().getString(R.string.cancel));
+
         mViewContactsToolarTitle.setText(getResource().getString(R.string.select_a_subject));
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
         mActivity.setDraggableViewPager(false);
-
-        if (!mPresenter.isTablet()) mActivity.getMainController().getHomeController().hideBottomNav();
 
         mAdapter = new ContactSubjectAdapter(myContactSubjects, mPresenter);
 
@@ -113,7 +115,6 @@ public class ContactSelectSubjectController extends BaseController
 
     @Override
     public void onDestroyView(View view) {
-        if (!mPresenter.isTablet()) getRouter().popController(this);
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
@@ -121,7 +122,6 @@ public class ContactSelectSubjectController extends BaseController
     @Override
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
-        if (mHasSavedInstance && !mPresenter.isTablet()) mActivity.getMainController().getHomeController().hideBottomNav();
     }
 
     @Override
@@ -145,11 +145,6 @@ public class ContactSelectSubjectController extends BaseController
 
     @OnClick(R.id.partial_toolbar_left_view)
     void onBackClick() {
-        if (mPresenter.isTablet() && mActivity.getContactsController() != null
-                && getRouter().getBackstack().size() == 1) {
-            mActivity.getContactsController().resetContactDetailRouter();
-        } else {
-            mActivity.onBackPressed();
-        }
+        mActivity.onBackPressed();
     }
 }

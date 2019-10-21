@@ -4,12 +4,10 @@ package au.com.dealsdirect.ui.controller.login;
  */
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.util.Log;
+import androidx.annotation.NonNull;
 
 import com.androidnetworking.error.ANError;
 import com.google.android.gms.safetynet.SafetyNet;
-import com.google.android.gms.tasks.OnFailureListener;
 
 import javax.inject.Inject;
 
@@ -19,7 +17,6 @@ import au.com.dealsdirect.ui.base.AuthenticationBasePresenter;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 public class LoginPresenter<V extends LoginMvpView> extends AuthenticationBasePresenter<V> implements LoginMvpPresenter<V> {
 

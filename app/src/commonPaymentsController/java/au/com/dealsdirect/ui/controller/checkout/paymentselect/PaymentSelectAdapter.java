@@ -3,7 +3,7 @@ package au.com.dealsdirect.ui.controller.checkout.paymentselect;
  * Created by CodeineBot on 1/11/17.
  */
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

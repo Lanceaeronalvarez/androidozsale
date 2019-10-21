@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -9,13 +11,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.util.Pair;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
-import android.support.v7.widget.RecyclerView;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -39,8 +36,17 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.util.Pair;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
@@ -57,15 +63,19 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
@@ -96,12 +106,14 @@ import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.StringUtils;
+import au.com.dealsdirect.utils.ViewUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
 
 import static android.graphics.Typeface.BOLD;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
+import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
 
 /*
  * Created by smartwave on 08/06/2017.
@@ -109,12 +121,15 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener, SaleDetailsImageListener {
 
+    private final static int ACTIVITY_INDICATOR_DELAY = 2000; // milliseconds
+
     public abstract static class Parameters {
         private Parameters() {
         }
 
         public static final class FromItemsList extends Parameters {
             private Integer mPosition;
+            private Drawable mLowResImageDrawable;
             private String mImageURL;
             private String mSeoIdentifierId;
             private String mSkuId;
@@ -126,8 +141,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             private String mSalesOrigin;
             private String mEndDate;
             private boolean mIsFreeDelivery;
+            private Boolean mIsSoldOut;
 
             public FromItemsList(Integer position,
+                                 Drawable lowResImageDrawable,
                                  String imageURL,
                                  String seoIdentifierId,
                                  String skuId,
@@ -138,8 +155,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                  String oldPrice,
                                  String salesOrigin,
                                  String endDate,
-                                 boolean isFreeDelivery) {
+                                 boolean isFreeDelivery,
+                                 Boolean isSoldOut) {
                 mPosition = position;
+                mLowResImageDrawable = lowResImageDrawable;
                 mImageURL = imageURL;
                 mSeoIdentifierId = seoIdentifierId;
                 mSkuId = skuId;
@@ -151,10 +170,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mSalesOrigin = salesOrigin;
                 mEndDate = endDate;
                 mIsFreeDelivery = isFreeDelivery;
+                mIsSoldOut = isSoldOut;
             }
 
             public Integer getPosition() {
                 return mPosition;
+            }
+
+            public Drawable getLowResImageDrawable() {
+                return mLowResImageDrawable;
             }
 
             public String getImageURL() {
@@ -200,6 +224,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             public boolean getIsFreeDelivery() {
                 return mIsFreeDelivery;
             }
+
+            public Boolean isSoldOut() {
+                return mIsSoldOut;
+            }
+
+            public void setIsSoldOut(Boolean isSoldOut) {
+                mIsSoldOut = isSoldOut;
+            }
         }
 
         public static final class FromDeepLink extends Parameters {
@@ -222,12 +254,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
     }
 
+    private final static int PERSONALIZATION_SHAKE_DELAY = 300; //milliseconds
+
     @Inject
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
 
     private String mSaleId;
     private String mSkuId;
     private String mItemImageUrl;
+    private Drawable mItemLowResImageDrawable = null;
     private String mSeoIdentifierId;
     private String mSaleName;
     private String mSalePrice;
@@ -241,8 +276,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private boolean shouldAfterpayDetailsBeVisible = false;
 
-    @BindView(R.id.arrow_left)
-    View mLeftView;
+    @BindView(R.id.share_right)
+    ImageView mLikeButton;
+    @BindView(R.id.toolbar_right_view)
+    ImageView mLikeFloatingButton;
     @BindView(R.id.productImageRecyclerView)
     RecyclerView mProductImagesRv;
     @BindView(R.id.otherImagesRecyclerView)
@@ -259,6 +296,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ViewGroup mSizesContainer;
     @BindView(R.id.product_details_size_list)
     TagFlowLayout mSizesFlowLayout;
+    @BindView(R.id.product_details_size_notice)
+    TextView mSizesNotSelectedNotice;
     @BindView(R.id.product_details_personalisation_layout)
     PersonalisationLayout mPersonalisationLayout;
     @BindView(R.id.product_details_shipping_desc_container)
@@ -293,8 +332,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     LinearLayout mAfterpayHolder;
     @BindView(R.id.controller_sale_item_detail_scrollview)
     NestedScrollView mProductDetailScrollView;
+    @BindView(R.id.product_details_add_to_basket_container)
+    ViewGroup mAddToCartButtonContainer;
     @BindView(R.id.product_details_add_to_basket)
     Button mAddToCartButton;
+    @BindView(R.id.product_details_add_to_basket_progress_dialog)
+    ProgressBar mAddToCartProgressBar;
     @BindView(R.id.product_details_button_overlay)
     ImageView mAddToCartOverlay;
     @BindView(R.id.productPreviousPriceLabel)
@@ -322,6 +365,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ImageView mImageViewToAnimate;
     @BindView(R.id.product_details_add_to_basket_timer)
     LinearLayout mAddToCartTimer;
+    @BindView(R.id.product_details_add_to_basket_timer_text_view)
+    TextView mAddToCartTimerTextView;
+    @BindView(R.id.product_details_add_to_basket_timer_progress_dialog)
+    ProgressBar mAddToCartTimerProgressBar;
     @BindView(R.id.product_details_timer)
     TextView mTimerTextView;
     @BindView(R.id.product_details_free_delivery)
@@ -331,6 +378,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.controller_product_details_button_container)
     RelativeLayout mProductDetailsButtonContainer;
     int[] mSharedImageLocation;
+
+    public static final String TAG = SaleItemDetailsController.class.getSimpleName();
 
     private static final int SPANNABLE_STRING_START_INDEX = 6;
     private static final float DISCOUNT_VALUE_SCALE_FACTOR = 1.8f;
@@ -353,8 +402,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private boolean mIsSoldOutCombined = true;
     private int mAttempts = 0;
     private String mProductId;
+    private String mMasterProductId;
 
     private boolean hasLoadedDetails = false;
+    private boolean isAddToBasketInputBuffered = false;
+
+    private Boolean mIsSoldout = null;
+
+    private String mSizeGuideLink = null;
 
     //default sales origin
     private String mOrigin = DataCollector.EventParameters.ViewSource.SALE;
@@ -410,6 +465,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (parameters instanceof Parameters.FromItemsList) {
             controller.mSaleId = ((Parameters.FromItemsList) parameters).getSaleId();
             controller.mSkuId = ((Parameters.FromItemsList) parameters).getSkuId();
+            controller.mItemLowResImageDrawable = ((Parameters.FromItemsList) parameters).getLowResImageDrawable();
             controller.mItemImageUrl = ((Parameters.FromItemsList) parameters).getImageURL();
             controller.mSeoIdentifierId = ((Parameters.FromItemsList) parameters).getSeoIdentifierId();
             controller.mSaleName = ((Parameters.FromItemsList) parameters).getProductName();
@@ -421,6 +477,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             controller.mEndDate = ((Parameters.FromItemsList) parameters).getEndDate();
             controller.mIsFreeDelivery = ((Parameters.FromItemsList) parameters).getIsFreeDelivery();
             controller.mOrigin = origin != null ? origin : DataCollector.EventParameters.ViewSource.SALE;
+            controller.mIsSoldout = ((Parameters.FromItemsList) parameters).isSoldOut();
         } else if (parameters instanceof Parameters.FromDeepLink) {
             controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
             controller.mSkuId = ((Parameters.FromDeepLink) parameters).getSkuId();
@@ -496,6 +553,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         super.onViewBound(view);
         mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
         setUp(view);
+        if (mIsSoldout != null) {
+            showAddToCartButton();
+        }
     }
 
     @Override
@@ -517,6 +577,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void onViewDidAppear(Controller previousController) {
         super.onViewDidAppear(previousController);
 
+        mLikeButton.setVisibility(View.INVISIBLE);
+        mLikeFloatingButton.setVisibility(View.INVISIBLE);
         mPresenter.loadSaleItemDetails(mSaleId, mSeoIdentifierId);
         if (mHasSavedInstance) {
             mActivity.getMainController().getHomeController().setSavedCurrentItem();
@@ -548,7 +610,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         stretchImageView();
 
-        if (mBrandName != null && !mBrandName.isEmpty()) {
+        if (mBrandName == null || mBrandName.isEmpty()) {
             mProductBrand.setText(mSaleName);
             mProductName.setText("");
         } else {
@@ -592,11 +654,23 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleDetailsImageListener = this;
         mProductSharedImage.setTransitionName(getResources().getString(R.string.transition_sale_image_indexed, mFromPosition));
 
-        ImageUtils.loadImageImmediate(mItemImageUrl, mProductSharedImage, null);
+        if (mItemLowResImageDrawable != null) {
+            ImageUtils.loadImageWithPlaceholder(mItemImageUrl, mProductSharedImage, mItemLowResImageDrawable, null);
+            mItemLowResImageDrawable = null;
+        } else {
+            ImageUtils.loadImageImmediate(mItemImageUrl, mProductSharedImage, null);
+        }
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
-        SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(mActivity, mPresenter.isTablet(),
-                mProductDetailScrollView, null, mLoadImagesListener, new ArrayList<>(), 2, null, this,
+        SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(
+                mActivity,
+                mPresenter.isTablet(),
+                mProductDetailScrollView,
+                null,
+                mLoadImagesListener,
+                new ArrayList<>(),
+                2,
+                this,
                 mSaleDetailsImageListener);
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
         mOtherImagesRv.setVisibility(View.INVISIBLE);
@@ -605,7 +679,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductImagesRv.setLayoutManager(mProductImagesRvLayoutManager);
 
         ArrayList<View> toggledViews = new ArrayList<View>() {{
-            add(mLeftView);
             add(mOtherImagesRv);
             add(mProductPriceCategory);
             add(mAddToCartButton);
@@ -618,8 +691,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (mPresenter.isTablet()) toggledViews.add(mAddToCartOverlay);
 
-        SaleItemDetailsImageAdapter mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(mActivity, mPresenter.isTablet(), null,
-                toggledViews, mLoadImagesListener, new ArrayList<>(), 1, mProductSharedImage.getDrawable(), this,
+        SaleItemDetailsImageAdapter mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(
+                mActivity,
+                mPresenter.isTablet(),
+                null,
+                toggledViews,
+                mLoadImagesListener,
+                new ArrayList<>(),
+                1,
+                this,
                 mSaleDetailsImageListener);
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
         mProductImagesRv.setEnabled(false);
@@ -663,8 +743,41 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
         });
 
-        mHtmlHeader = mActivity.getResources()
-                .getString(R.string.base_html_template_header);
+        mHtmlHeader = StringUtils.applyStyleToCSS(new StringUtils.CSSStyle() {
+            @Override
+            public String getBodyFontName() {
+                return StringUtils.typeFaceFamilyFromFilename(
+                        mActivity.getResources().getString(R.string.font_app_regular));
+            }
+
+            @Override
+            public String getBodyFontColor() {
+                String hex = Integer.toHexString(
+                        mActivity.getResources().getColor(R.color.text_extra_dark));
+                if (hex.length() > 6) {
+                    hex = hex.substring(2);
+                }
+                return "#" + hex;
+            }
+
+            @Override
+            public String getBoldFontName() {
+                return StringUtils.typeFaceFamilyFromFilename(
+                        mActivity.getResources().getString(R.string.font_app_regular));
+            }
+
+            @Override
+            public String getBoldFontColor() {
+                String hex = Integer.toHexString(
+                        mActivity.getResources().getColor(R.color.text_extra_dark));
+                if (hex.length() > 6) {
+                    hex = hex.substring(2);
+                }
+                return "#" + hex;
+            }
+        }, mActivity.getResources()
+                .getString(R.string.base_html_template_header));
+
         mHtmlFooter = mActivity.getResources()
                 .getString(R.string.base_html_template_footer);
 
@@ -784,9 +897,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
 
-        mProductId = saleDetail.getAttributes().getProductId();
+        mProductId = saleDetail.getProductId();
+        mMasterProductId = saleDetail.getAttributes().getProductId();
 
         mSkuId = saleDetail.getSkuId();
+
+        mSeoIdentifierId = saleDetail.getSeoIdentifier();
+        mSaleName = saleDetail.getName();
+        mBrandName = saleDetail.getBrandName();
+        mSalePrice = PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue());
+        mSaleOldPrice = PriceUtils.getPriceStringValue(saleDetail.getOriginalPrice().getValue());
 
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
 
@@ -890,6 +1010,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductDescriptionText.loadDataWithBaseURL(null, mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
                 "text/html", "UTF-8", null);
 
+        mSizeGuideLink = getSizeGuideLink(saleDetail.getDescription());
+
         mProductDescriptionText.getSettings()
                 .setJavaScriptEnabled(true);
 
@@ -955,13 +1077,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(mSelectedSizeIndex));
             }
 
-            mSizesFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
-                @Override
-                public boolean onTagClick(View view, int position, FlowLayout parent) {
-
-                    return false;
-                }
-            });
+            mSizesFlowLayout.setOnTagClickListener((view, position, parent) -> false);
 
             mSizesFlowLayout.setOnSelectListener(selectPosSet -> {
                 onSelectTag(selectPosSet.isEmpty() ? -1 : selectPosSet.iterator().next());
@@ -974,27 +1090,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         }
 
-        if (!mIsSoldOutCombined || !saleDetail.isSoldOut()) {
-            if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
-                    (mEndDate != null && !mEndDate.isEmpty()) &&
-                    DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
-                    DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
-                setupSaleRemainingTime(mEndDate);
-                mAddToCartTimer.setVisibility(View.VISIBLE);
-                mAddToCartButton.setVisibility(View.GONE);
-            } else {
-                mAddToCartTimer.setVisibility(View.GONE);
-                mAddToCartButton.setVisibility(View.VISIBLE);
-                mAddToCartButton.setText(R.string.add_to_cart);
-                mAddToCartButton.setEnabled(true);
-                mAddToCartButton.bringToFront();
-            }
-        } else {
-            mAddToCartButton.setText(R.string.sold_out);
-            mAddToCartButton.setVisibility(View.VISIBLE);
-            mAddToCartButton.setEnabled(false);
-            mAddToCartButton.bringToFront();
-        }
+        mIsSoldout = saleDetail.isSoldOut();
+        showAddToCartButton();
 
         boolean isOldPriceInfoVisible = saleDetail.getOriginalPrice().getValue() <= 0;
         mOldPriceInfoButton.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
@@ -1003,7 +1100,65 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         updatePriceDetails(saleDetail);
 
+        mLikeButton.setVisibility(View.VISIBLE);
+        mLikeFloatingButton.setVisibility(View.VISIBLE);
+        updateLikeButtonImage(mPresenter.isProductInWishlist(mProductId));
+
         hasLoadedDetails = true;
+        if (isAddToBasketInputBuffered) {
+            isAddToBasketInputBuffered = false;
+            addToBasket();
+        }
+    }
+
+    private void setupDelayedProgressBar() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showAddToCartButtonContent(isAddToBasketInputBuffered);
+            }
+        }, ACTIVITY_INDICATOR_DELAY);
+    }
+
+    private void showAddToCartButton() {
+        if (!mIsSoldOutCombined || !mIsSoldout) {
+            if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
+                    (mEndDate != null && !mEndDate.isEmpty()) &&
+                    DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
+                    DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+                setupSaleRemainingTime(mEndDate);
+                mAddToCartTimer.setVisibility(View.VISIBLE);
+                mAddToCartButtonContainer.setVisibility(View.GONE);
+            } else {
+                mAddToCartTimer.setVisibility(View.GONE);
+                mAddToCartButtonContainer.setVisibility(View.VISIBLE);
+                mAddToCartButton.setEnabled(true);
+                mAddToCartButton.bringToFront();
+            }
+        } else {
+            mAddToCartButtonContainer.setVisibility(View.VISIBLE);
+            mAddToCartButton.setEnabled(false);
+            mAddToCartButton.bringToFront();
+        }
+        showAddToCartButtonContent(false);
+    }
+
+    private void showAddToCartButtonContent(boolean showProgressBar) {
+        if (showProgressBar) {
+            mAddToCartButton.setText("");
+            mAddToCartTimerTextView.setText("");
+            mAddToCartProgressBar.setVisibility(View.VISIBLE);
+            mAddToCartTimerProgressBar.setVisibility(View.VISIBLE);
+        } else {
+            mAddToCartTimerTextView.setText(R.string.add_to_cart);
+            if (mIsSoldout && mIsSoldOutCombined) {
+                mAddToCartButton.setText(R.string.sold_out);
+            } else {
+                mAddToCartButton.setText(R.string.add_to_cart);
+            }
+            mAddToCartProgressBar.setVisibility(View.GONE);
+            mAddToCartTimerProgressBar.setVisibility(View.GONE);
+        }
     }
 
     private void toggleProductInfoWebView(String shippingPricing, boolean isNewPricing) {
@@ -1049,6 +1204,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 Settings.getSelectedCountry().currencySign);
         parameters.put(DataCollector.EventParameters.ADD_TO_CART_SOURCE, SaleItemDetailsController.class.getSimpleName());
         DataCollector.logEvent(Events.AddedToCartEvent, parameters);
+
+        if (mPresenter.isProductInWishlist(mProductId)) {
+            HashMap<String, Object> parametersForWishlistEvent = new HashMap<>();
+            parametersForWishlistEvent.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+            parametersForWishlistEvent.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
+            DataCollector.logEvent(Events.WishlistAddToCartEvent, parametersForWishlistEvent);
+        }
 
         mAttempts = 0;
         //notify bottom navigation view(checkout) with success.
@@ -1209,9 +1371,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @OnClick({R.id.product_details_add_to_basket, R.id.product_details_add_to_basket_timer})
     void addToBasket() {
+        if (!hasLoadedDetails) {
+            if (!isAddToBasketInputBuffered) {
+                isAddToBasketInputBuffered = true;
+                setupDelayedProgressBar();
+            }
+            return;
+        }
+
         mAttempts++;
 
-        CommonUtils.saveSaleItem(mActivity, mProductId, mSeoIdentifierId, mSaleId);
+        CommonUtils.saveSaleItem(mActivity, mMasterProductId, mSeoIdentifierId, mSaleId);
 
         AddToCartRequest request = new AddToCartRequest();
         request.setSkuId(mSkuId);
@@ -1227,17 +1397,88 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mPresenter.getPersonalisationErrorText() :
                 mActivity.getString(R.string.please_fill_up_personalisation_details);
 
-        if (!isSizeValid || !isPersonalisationValid) {
+
+        if (!isPersonalisationValid) {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    !isSizeValid ? mActivity.getString(R.string.please_select_size) :
-                            personalisationError);
+                    personalisationError);
 
-            mProductDetailScrollView.scrollTo(0, mProductDetailBottomCard.getTop());
+            mProductDetailScrollView.smoothScrollTo(0,
+                    mPersonalisationLayout.getTop() + mProductDetailScrollView.getHeight() / 2);
+            new Handler(Looper.getMainLooper())
+                    .postDelayed(() -> CommonUtils.shakeView(mPersonalisationLayout),
+                            PERSONALIZATION_SHAKE_DELAY);
+
+
+        } else if (!isSizeValid) {
+            bringAttentionToSizeSelection();
         } else {
             verifyAddToCart(request);
         }
+    }
+
+    private void bringAttentionToSizeSelection() {
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mProductDetailsButtonContainer.getLayoutParams();
+        int addToCartButtonHeight = Math.max(mAddToCartButtonContainer.getHeight(), mAddToCartTimer.getHeight());
+        if (ViewUtils.isViewVisibleInScrollView(
+                mSizesFlowLayout,
+                mProductDetailScrollView,
+                mProductDetailsToolbar.getVisibility() == View.VISIBLE ? mProductDetailsToolbar.getHeight() : 0,
+                -(lp.bottomMargin + addToCartButtonHeight))) {
+            shakeSizeButtons();
+        } else {
+            showBottomDialogWithSizeSelection();
+        }
+        mSizesNotSelectedNotice.setVisibility(View.VISIBLE);
+    }
+
+    private void showBottomDialogWithSizeSelection() {
+        HashSet<Integer> indicesOfSoldOutSizes = new HashSet<>();
+        for (int i = 0; i < mSkuVariants.size(); i++) {
+            if (mSkuVariants.get(i).isSoldOut()) {
+                indicesOfSoldOutSizes.add(i);
+            }
+        }
+        BottomSheetSizesDialog.OnSizeGuideTappedListener onSizeGuideTappedListener = null;
+        if (mSizeGuideLink != null && !mSizeGuideLink.isEmpty()) {
+            onSizeGuideTappedListener = () -> {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mSizeGuideLink));
+                startActivity(browserIntent);
+            };
+        }
+        mActivity.showProductDetailsSizesBottomDialog(mProductSizes,
+                indicesOfSoldOutSizes,
+                onSizeGuideTappedListener,
+                selectedIndex -> {
+                    onSelectTag(selectedIndex);
+                    addToBasket();
+                });
+    }
+
+    private void shakeSizeButtons() {
+        if (mSizesFlowLayout.getAnimation() == null) {
+            CommonUtils.shakeView(mSizesFlowLayout);
+        }
+    }
+
+    private String getSizeGuideLink(String sourceString) {
+        final String[] extensions = new String[]{
+                "pdf", "html", "jpg", "jpeg", "png", "webp"
+        };
+
+        for (String extension : extensions) {
+            // This regex finds the a <a href="http://something">Size Guide</a>
+            // and then selects the url inside the href quotes. Since most
+            // Size Guides are pdfs or images, extensions are also checked.
+            String regex = "(?!<a href=\\\")http.*?:\\/\\/.+\\." + extension + "(?=\\\".*>Size.*?Guide<\\/a>)";
+            Matcher matcher = Pattern.compile(regex).matcher(sourceString);
+            if (matcher.find()) {
+                return matcher.group();
+            }
+        }
+
+        return null;
     }
 
     private void verifyAddToCart(AddToCartRequest request) {
@@ -1356,22 +1597,95 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @OnClick(R.id.toolbar_left_view)
-    void backPress() {
-        dismissArrowDown();
-    }
-
-    @OnClick(R.id.arrow_left)
     void dismissArrowDown() {
         mActivity.onBackPressed();
+    }
+
+    @OnClick(R.id.share_right)
+    void likeButtonPress() {
+        setLikeStatus(!mPresenter.isProductInWishlist(mProductId));
+    }
+
+    @OnClick(R.id.toolbar_right_view)
+    void floatingLikeButtonPress() {
+        setLikeStatus(!mPresenter.isProductInWishlist(mProductId));
+    }
+
+    private void setLikeStatus(boolean isLiked) {
+        SaleItemDetailsMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
+            logWishlistEvent(mProductId, isLiked);
+        };
+        if (isLiked) {
+            mPresenter.addProductToWishlist(mProductId, mSeoIdentifierId, mMasterProductId, delayedCallback);
+        } else {
+            mPresenter.removeProductFromWishlist(mProductId, delayedCallback);
+        }
+        updateLikeButtonImage(isLiked);
+    }
+
+    private void updateLikeButtonImage(boolean isLiked) {
+        int drawableId = isLiked ? R.drawable.wishlist_product_details_active : R.drawable.wishlist_product_details_inactive;
+        mLikeButton.setImageDrawable(mLikeFloatingButton.getContext().getResources().getDrawable(drawableId));
+        mLikeFloatingButton.setImageDrawable(mLikeFloatingButton.getContext().getResources().getDrawable(drawableId));
+    }
+
+    private void logWishlistEvent(String productId, boolean liked) {
+        WishlistEventRequest request = new WishlistEventRequest();
+        request.setEventType(EventTypeId.EVENT_WISHLIST);
+
+        WishlistEventRequest.WishListInfo wishlistInfo = new WishlistEventRequest.WishListInfo();
+        request.setWishlistInfo(wishlistInfo);
+
+        wishlistInfo.setOperation(liked ? 1 : 0);
+        wishlistInfo.setProductId(productId);
+        wishlistInfo.setReferrer(PRODUCT_PAGE);
+        wishlistInfo.setProductsQuantity(mPresenter.wishlistCount());
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.WISHLIST_EVENT_REQUEST, request);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+
+        DataCollector.logEvent(Events.WishlistEvent, parameters);
     }
 
     public void onScrollChanged(int scrollY) {
         if (isViewAttached()) {
             mRootView.setIsHorizontalDismissEnabled(scrollY <= 0 && getCarouselPosition() == 0);
             mRootView.setIsVerticalDismissEnabled(scrollY <= 0);
-            boolean isScrollGreater = scrollY >= ScreenUtils.getScreenHeight(mActivity) -
-                    (mProductDetailsTitleLayout.getBottom() + mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight());
-            mProductDetailsToolbar.setVisibility(isScrollGreater && !mPresenter.isTablet() ? View.VISIBLE : View.GONE);
+            int[] location = new int[2];
+            mProductDetailsTitleLayout.getLocationOnScreen(location);
+            float top = location[1];
+            float alphaFactor = 1 - top / (float) mProductDetailsTitleLayout.getHeight();
+
+            if (mProductDetailsToolbar.getAnimation() == null) {
+                switch (mProductDetailsToolbar.getVisibility()) {
+                    case View.GONE:
+                    case View.INVISIBLE:
+                        if (alphaFactor > 0.5) {
+                            mProductDetailsToolbar.setVisibility(View.VISIBLE);
+                            CommonUtils.fadeInView(mProductDetailsToolbar, null);
+                        }
+                        break;
+                    case View.VISIBLE:
+                        if (alphaFactor < 0) {
+                            CommonUtils.fadeOutView(mProductDetailsToolbar, new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+                                    super.onAnimationCancel(animation);
+                                    mProductDetailsToolbar.setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    mProductDetailsToolbar.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                        break;
+                }
+            }
         }
     }
 
@@ -1426,12 +1740,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mAddToCartButton.setText(!isSizeSoldOut ? R.string.add_to_cart : R.string.sold_out);
         mAddToCartButton.setEnabled(!isSizeSoldOut);
-        mAddToCartButton.setVisibility(mAddToCartTimer.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        mAddToCartButtonContainer.setVisibility(mAddToCartTimer.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
         mAddToCartButton.bringToFront();
 
         if (selectedIndex != mSelectedSizeIndex) {
             updatePriceDetails(mSkuVariants.get(selectedIndex));
             mSelectedSizeIndex = selectedIndex;
+        }
+
+        if (mSizesNotSelectedNotice.getVisibility() == View.VISIBLE && mSelectedSizeIndex >= 0) {
+            mSizesNotSelectedNotice.setVisibility(View.GONE);
         }
     }
 

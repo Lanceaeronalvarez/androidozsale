@@ -280,4 +280,8 @@ public interface PreferencesHelper {
     int getFileSizeLimit();
 
     void setFileSizeLimit(int fileSizeLimit);
+
+    boolean hasWishlistBeenAccessed();
+
+    void setHasWishlistBeenAccessed(boolean isAccessed);
 }

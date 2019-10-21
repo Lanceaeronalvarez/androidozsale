@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.ApiEndPoint;
-import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -62,7 +61,10 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
         return mMvpView != null && mMvpView.isViewAttached();
     }
 
-    public V getMvpView() {
+    public V getMvpView() throws MvpViewNotAttachedException {
+        if (mMvpView == null) {
+            throw new MvpViewNotAttachedException();
+        }
         return mMvpView;
     }
 
@@ -85,48 +87,6 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     @Override
     public void handleApiError(ANError error) {
 
-//        if (error == null || error.getErrorBody() == null) {
-//            getMvpView().onError(R.string.api_default_error);
-//            return;
-//        }
-//
-//        if (error.getErrorCode() == AppConstants.API_STATUS_CODE_LOCAL_ERROR
-//                && error.getErrorDetail().equals(ANConstants.CONNECTION_ERROR)) {
-//            getMvpView().onError(R.string.connection_error);
-//            return;
-//        }
-//
-//        if (error.getErrorCode() == AppConstants.API_STATUS_CODE_LOCAL_ERROR
-//                && error.getErrorDetail().equals(ANConstants.REQUEST_CANCELLED_ERROR)) {
-//            getMvpView().onError(R.string.api_retry_error);
-//            return;
-//        }
-//
-//        final GsonBuilder builder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation();
-//        final Gson gson = builder.create();
-//
-//        try {
-//            ApiError apiError = gson.fromJson(error.getErrorBody(), ApiError.class);
-//
-//            if (apiError == null || apiError.getMessage() == null) {
-//                getMvpView().onError(R.string.api_default_error);
-//                return;
-//            }
-//
-//            switch (error.getErrorCode()) {
-//                case HttpsURLConnection.HTTP_UNAUTHORIZED:
-//                case HttpsURLConnection.HTTP_FORBIDDEN:
-//                    setUserAsLoggedOut();
-//                    getMvpView().openActivityOnTokenExpire();
-//                case HttpsURLConnection.HTTP_INTERNAL_ERROR:
-//                case HttpsURLConnection.HTTP_NOT_FOUND:
-//                default:
-//                    getMvpView().onError(apiError.getMessage());
-//            }
-//        } catch (JsonSyntaxException | NullPointerException e) {
-//            Log.e(TAG, "handleApiError", e);
-//            getMvpView().onError(R.string.api_default_error);
-//        }
     }
 
     @Override
@@ -166,17 +126,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     }
 
     @Override
-    public Disposable doApiCallForResponse(Observable observable, final ApiCallback callback) {
-//        getMvpView().showLoading();
-
-//        if(getMvpView() instanceof BasePullToRefreshController) {
-//            if(getMvpView().isNetworkConnected()) {
-//                ((BasePullToRefreshController) getMvpView()).hideNoNetworkLayout();
-//            } else {
-//                ((BasePullToRefreshController) getMvpView()).showNoNetworkLayout();
-//            }
-//        }
-
+    public Disposable doApiCallForResponse(Observable observable, ApiCallback callback) {
         Disposable disposable = observable
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
@@ -195,11 +145,11 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                             callback.onSuccess((List) response);
                         } else if (response != null && !cancelled) {
                             callback.onSuccess(response);
-                        } else if (!cancelled){
+                        } else if (!cancelled) {
                             callback.onSuccess();
                         }
 
-                        if(getMvpView() instanceof BasePullToRefreshController) {
+                        if (getMvpView() instanceof BasePullToRefreshController) {
                             getMvpView().hideNoNetworkLayout();
                         }
                     }
@@ -213,13 +163,15 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 
                         getMvpView().hideLoading();
 
-                        if(throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException){
+                        if (throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException) {
                             getMvpView().showNoNetworkLayout();
                         }
 
                         getMvpView().onError(throwable.getMessage());
 
-                        if (!cancelled) { callback.onFailure(throwable); }
+                        if (!cancelled) {
+                            callback.onFailure(throwable);
+                        }
 
                         // handle load accounts error here
                         if (throwable instanceof ANError) {

@@ -3,9 +3,9 @@ package au.com.dealsdirect.ui.controller.home;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +44,7 @@ import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.orders.orders.BottomDialogCancelOrders;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsMvpView;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.SharedArcFadePopChangeHandler;
@@ -67,8 +68,9 @@ public class HomeController extends BaseController implements HomeMvpView {
     private static final int TAB_SHOP_INDEX = 0;
     private static final int TAB_CATEGORIES_INDEX = 1;
     private static final int TAB_ACCOUNT_INDEX = 2;
-    private static final int TAB_CONTACT_INDEX = 3;
+    private static final int TAB_WISHLIST_INDEX = 3;
     private static final int TAB_CHECKOUT_INDEX = 4;
+    private static final int TAB_CONTACT_INDEX = 5; //unused
     private static final int[] TAB_ALL_INDICES = new int[]{0, 1, 2, 3, 4};
     private static final String KEY_CURRENT_INDEX = "KEY_CURRENT_INDEX";
     private static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";
@@ -89,13 +91,17 @@ public class HomeController extends BaseController implements HomeMvpView {
     ViewGroup mCategoriesContainer;
 
     @BindView(R.id.controller_third_frame)
-    ViewGroup mContactContainer;
+    ViewGroup mWishlistContainer;
 
     @BindView(R.id.controller_fourth_frame)
     ViewGroup mAccountsContainer;
 
     @BindView(R.id.controller_fifth_frame)
     ViewGroup mCheckoutContainer;
+
+    @BindView(R.id.controller_sixth_frame)
+    ViewGroup mContactContainer;
+
 
     @BindView(R.id.popup_host_frame)
     ViewGroup mPopupHostContainer;
@@ -108,9 +114,11 @@ public class HomeController extends BaseController implements HomeMvpView {
     private Router mAccountsRouter;
     private Router mCheckoutRouter;
     private Router mPopUpHostRouter;
+    private Router mWishlistRouter;
 
     private AccountMvpView mAccountMvpView;
     private CheckoutMvpView mCheckoutMvpView;
+    private SaleItemsMvpView mWishlistMvpView;
     public ViewContactsMvpView mViewContactsMvpView;
     private AHBottomNavigation mBottomNavigationView;
     private RelativeLayout mFooter;
@@ -176,6 +184,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         mRouterContainerMapping.put(TAB_ACCOUNT_INDEX, new Pair<>(mAccountsRouter, mAccountsContainer));
         mRouterContainerMapping.put(TAB_CONTACT_INDEX, new Pair<>(mContactRouter, mContactContainer));
         mRouterContainerMapping.put(TAB_CHECKOUT_INDEX, new Pair<>(mCheckoutRouter, mCheckoutContainer));
+        mRouterContainerMapping.put(TAB_WISHLIST_INDEX, new Pair<>(mWishlistRouter, mWishlistContainer));
         setAllContainersVisibility(View.GONE);
         setVisibleContainer(mDefaultTab);
 
@@ -243,7 +252,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 switch (position) {
                     case TAB_SHOP_INDEX:
-                        showFirstTabController();
+                        showShopController();
                         break;
                     case TAB_CATEGORIES_INDEX:
                         if (mPresenter.isInitialLaunch()) {
@@ -252,20 +261,24 @@ public class HomeController extends BaseController implements HomeMvpView {
                             mPresenter.setInitialLaunchFalse();
                         }
                         mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
-                        showSecondTabController();
+                        showCategoryController();
                         break;
                     case TAB_ACCOUNT_INDEX:
-                        showThirdTabController();
+                        showAccountController();
                         mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
                         break;
                     case TAB_CONTACT_INDEX:
-                        showFourthTabController();
+                        showContactUsController();
                         mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
                         break;
                     case TAB_CHECKOUT_INDEX:
-                        showFifthTabController();
+                        showCheckoutControllerController();
                         mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
                         break;
+                    case TAB_WISHLIST_INDEX:
+                        showWishlistController();
+                        mActivity.getMainController().getHomeViewPager().setCurrentItem(position);
+
                     default:
                         break;
 
@@ -291,6 +304,8 @@ public class HomeController extends BaseController implements HomeMvpView {
                     case TAB_CHECKOUT_INDEX:
                         mCheckoutRouter.popToRoot();
                         break;
+                    case TAB_WISHLIST_INDEX:
+                        mWishlistRouter.popToRoot();
                 }
             }
             return true;
@@ -320,6 +335,8 @@ public class HomeController extends BaseController implements HomeMvpView {
         resetAccountRouter();
 
         resetCheckoutRouter();
+
+        resetWishlistRouter();
 
         mActivity.setHomeRouter(mShopRouter);
 
@@ -416,6 +433,17 @@ public class HomeController extends BaseController implements HomeMvpView {
         mAccountMvpView = (AccountMvpView) accountController;
     }
 
+    public void resetWishlistRouter() {
+        mWishlistRouter = getChildRouter(mWishlistContainer);
+        CommonControllerChangeListener.addToRouter(mWishlistRouter);
+        mActivity.setWishlistRouter(mWishlistRouter);
+        SaleItemsController wishlistController = (SaleItemsController) ControllerFactory.getInstance(GateKeeper.Destination.SALEITEMS);
+        wishlistController.setSourceMode(SaleItemsController.SourceMode.WISHLIST);
+        mWishlistRouter.setRoot(RouterTransaction.with(wishlistController));
+        mWishlistMvpView = (SaleItemsMvpView) wishlistController;
+
+    }
+
     public ViewContactsMvpView getContactsController() {
         return mViewContactsController;
     }
@@ -439,8 +467,38 @@ public class HomeController extends BaseController implements HomeMvpView {
         mIsInitialSavedInstanceLoad = savedInstanceState.getBoolean(KEY_HAS_SAVED_INSTANCE);
     }
 
+    private void onTabSwitch() {
+        Controller controller = null;
+        switch (currentVisibleIndex) {
+            case TAB_SHOP_INDEX:
+                controller = getCurrentControllerOnRouter(mShopRouter);
+                break;
+            case TAB_ACCOUNT_INDEX:
+                controller = getCurrentControllerOnRouter(mAccountsRouter);
+                break;
+            case TAB_CATEGORIES_INDEX:
+                controller = getCurrentControllerOnRouter(mCategoriesRouter);
+                break;
+            case TAB_CONTACT_INDEX:
+                controller = getCurrentControllerOnRouter(mContactRouter);
+                break;
+            case TAB_CHECKOUT_INDEX:
+                controller = getCurrentControllerOnRouter(mCheckoutRouter);
+                break;
+            case TAB_WISHLIST_INDEX:
+                controller = getCurrentControllerOnRouter(mWishlistRouter);
+                break;
+            default:
+                break;
+        }
+        if (controller instanceof BaseController) {
+            ((BaseController) controller).onTabSwitch(false);
+        }
+    }
+
     @Override
-    public void showFirstTabController() {
+    public void showShopController() {
+        onTabSwitch();
 
         if (mShopRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mShopRouter);
@@ -453,7 +511,9 @@ public class HomeController extends BaseController implements HomeMvpView {
             }
 
             if (controller instanceof BaseController) {
-                ((BaseController) controller).refreshContents();
+                BaseController baseController = ((BaseController) controller);
+                onTabSwitch(true);
+                baseController.refreshContents();
             }
 
         }
@@ -464,7 +524,9 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     @Override
-    public void showSecondTabController() {
+    public void showCategoryController() {
+        onTabSwitch();
+
         if (mCategoriesRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mCategoriesRouter);
             if (controller instanceof BaseController) {
@@ -479,7 +541,9 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     @Override
-    public void showThirdTabController() {
+    public void showAccountController() {
+        onTabSwitch();
+
         mIsInitialSavedInstanceLoad = false;
         setVisibleContainer(TAB_ACCOUNT_INDEX);
         mActivity.setDraggableViewPager(false);
@@ -498,7 +562,9 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     @Override
-    public void showFourthTabController() {
+    public void showContactUsController() {
+        onTabSwitch();
+
         mActivity.setDraggableViewPager(false);
         setVisibleContainer(TAB_CONTACT_INDEX);
         if (!mActivity.isAuthorized() && !mIsInitialSavedInstanceLoad) {
@@ -533,7 +599,9 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     @Override
-    public void showFifthTabController() {
+    public void showCheckoutControllerController() {
+        onTabSwitch();
+
         if (mCheckoutMvpView == null) {
             resetCheckoutRouter();
         }
@@ -567,6 +635,27 @@ public class HomeController extends BaseController implements HomeMvpView {
         containerWillBeDisplayed(mCheckoutContainer);
     }
 
+    @Override
+    public void showWishlistController() {
+        onTabSwitch();
+
+        mPresenter.setHasWishlistBeenAccessed(true);
+
+        if (mWishlistRouter != null) {
+            Controller controller = getCurrentControllerOnRouter(mWishlistRouter);
+            mActivity.setDraggableViewPager(false);
+
+            if (controller instanceof BaseController) {
+                ((BaseController) controller).refreshContents();
+            }
+
+        }
+
+        mIsInitialSavedInstanceLoad = false;
+        setVisibleContainer(TAB_WISHLIST_INDEX);
+        containerWillBeDisplayed(mWishlistContainer);
+    }
+
     public boolean isAccountsActive() {
         return mAccountsContainer != null && mAccountsContainer.isShown();
     }
@@ -581,12 +670,28 @@ public class HomeController extends BaseController implements HomeMvpView {
             removeBasketItemCount();
         } else {
             AHNotification notification = new AHNotification.Builder()
-                    .setText(CartUtil.getCartValue() + "")
+                    .setText(Integer.toString(CartUtil.getCartValue()))
                     .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge))
                     .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
                     .build();
             getBottomNavigationView().setNotification(notification, TAB_CHECKOUT_INDEX);
         }
+    }
+
+    @Override
+    public void updateWishlistItemCount(int count) {
+        String text;
+        if (count == 0) {
+            text = mPresenter.hasWishlistBeenAccessed() ? "" : "NEW";
+        } else {
+            text = Integer.toString(count);
+        }
+        AHNotification notification = new AHNotification.Builder()
+                .setText(text)
+                .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge))
+                .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
+                .build();
+        getBottomNavigationView().setNotification(notification, TAB_WISHLIST_INDEX);
     }
 
     public void removeBasketItemCount() {
@@ -683,7 +788,7 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void goBackToHomePage() {
-        showFirstTabController();
+        showShopController();
     }
 
     @Override

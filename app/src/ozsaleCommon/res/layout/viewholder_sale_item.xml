@@ -5,17 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/margin_extra_small"
-    android:layout_marginRight="@dimen/margin_extra_small"
     android:layout_marginTop="@dimen/margin_small"
+    android:layout_marginRight="@dimen/margin_extra_small"
     android:background="@color/transparent"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/vh_sale_item_frame"
         android:layout_width="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_height="@dimen/sale_item_image_height">
+        android:layout_height="@dimen/sale_item_image_height"
+        android:layout_centerHorizontal="true">
 
         <ImageView
             android:id="@+id/vh_sale_item_image"
@@ -29,26 +29,38 @@
             android:id="@+id/vh_sale_item_free_delivery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_free_delivery"
-            android:layout_gravity="bottom"/>
+            android:layout_alignParentBottom="true"
+            android:padding="7dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_free_delivery" />
 
         <TextView
             android:id="@+id/vh_sale_item_sold_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="@dimen/margin_small"
             android:background="@color/icon_default"
-            android:paddingBottom="@dimen/sale_item_image_padding_bottom"
             android:paddingLeft="@dimen/sale_item_image_padding_left"
-            android:paddingRight="@dimen/sale_item_image_padding_right"
             android:paddingTop="@dimen/sale_item_image_padding_top"
+            android:paddingRight="@dimen/sale_item_image_padding_right"
+            android:paddingBottom="@dimen/sale_item_image_padding_bottom"
             android:text="@string/sold_out"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_body"
             android:visibility="visible" />
 
-    </FrameLayout>
+        <ImageButton
+            android:id="@+id/vh_sale_item_like_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:background="@color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/wishlist_product_list_active" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/vh_sale_item_brand"
@@ -73,10 +85,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/vh_sale_item_brand"
-        android:singleLine="true"
         android:ellipsize="end"
         android:gravity="left"
         android:lines="1"
+        android:singleLine="true"
         android:textColor="@color/text_extra_dark"
         android:textSize="@dimen/text_size_caption1"
         android:visibility="visible"
@@ -86,9 +98,9 @@
         android:id="@+id/vh_sale_item_price_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/vh_sale_item_name"
         android:layout_alignParentStart="true"
         android:gravity="top"
-        android:layout_below="@+id/vh_sale_item_name"
         android:orientation="horizontal">
 
         <TextView
@@ -126,10 +138,10 @@
         fontPath="@string/font_app_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
+        android:layout_below="@+id/vh_sale_item_price_layout"
         android:background="@drawable/bg_product_list_discount"
         android:gravity="left"
-        android:layout_below="@+id/vh_sale_item_price_layout"
+        android:maxLines="1"
         android:padding="@dimen/margin_extra_small"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_caption2"
@@ -140,8 +152,8 @@
         fontPath="@string/font_app_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.5"
         android:layout_below="@+id/vh_sale_item_discount"
+        android:layout_weight="0.5"
         android:gravity="left"
         android:lines="1"
         android:singleLine="true"

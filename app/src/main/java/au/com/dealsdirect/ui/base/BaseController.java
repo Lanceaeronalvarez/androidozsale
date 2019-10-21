@@ -6,12 +6,12 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +57,8 @@ public abstract class BaseController
 
     private ProgressDialog mProgressDialog;
 
+    private boolean mIsViewBound = false;
+
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
@@ -85,6 +87,12 @@ public abstract class BaseController
     }
 
     protected abstract void setUp(View view);
+
+    @Override
+    protected void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+        mIsViewBound = true;
+    }
 
     @Override
     protected void onActivityResumed(@NonNull Activity activity) {
@@ -311,10 +319,18 @@ public abstract class BaseController
 
     }
 
+    public void onTabSwitch(boolean intoThisView) {
+
+    }
+
+    public boolean isViewBound() {
+        return mIsViewBound;
+    }
+
     public static class CommonControllerChangeListener implements com.bluelinelabs.conductor.ControllerChangeHandler.ControllerChangeListener {
 
         public static void addToRouter(Router... routers) {
-            for (Router router: routers) {
+            for (Router router : routers) {
                 if (router != null) {
                     router.addChangeListener(CommonControllerChangeListener.getSharedInstance());
                 }

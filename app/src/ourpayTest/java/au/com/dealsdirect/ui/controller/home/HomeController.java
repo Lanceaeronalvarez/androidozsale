@@ -1,10 +1,10 @@
 package au.com.dealsdirect.ui.controller.home;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -247,21 +247,21 @@ public class HomeController extends BaseController implements HomeMvpView {
 
                 switch (position) {
                     case 0:
-                        showFirstTabController();
+                        showShopController();
                         break;
                     case 1:
-                        showSecondTabController();
+                        showCategoryController();
                         break;
                     case 2:
-                        showThirdTabController();
+                        showAccountController();
                         break;
                     case 3:
                         mActivity.setDraggableViewPager(false);
-                        showFourthTabController();
+                        showContactUsController();
                         break;
                     case 4:
                         mActivity.setDraggableViewPager(false);
-                        showFifthTabController();
+                        showCheckoutControllerController();
                         break;
                     default:
                         break;

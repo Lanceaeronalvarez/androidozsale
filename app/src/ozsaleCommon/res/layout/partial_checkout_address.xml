@@ -18,6 +18,11 @@
         android:textSize="@dimen/text_size_caption2"
         android:textColor="@color/text_medium" />
 
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -90,6 +95,11 @@
         </LinearLayout>
 
     </FrameLayout>
+
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
     <!--dummy view-->
     <View

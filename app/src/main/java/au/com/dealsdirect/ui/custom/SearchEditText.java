@@ -2,7 +2,7 @@ package au.com.dealsdirect.ui.custom;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 
@@ -10,7 +10,7 @@ import android.view.KeyEvent;
  *dp Created by Admin on 8/1/17.
  */
 
-public class SearchEditText extends android.support.v7.widget.AppCompatEditText {
+public class SearchEditText extends androidx.appcompat.widget.AppCompatEditText {
 
     KeyboardListener listener;
 

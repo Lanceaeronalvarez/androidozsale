@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.address.addnewaddress;
 
-import android.support.v7.widget.AppCompatSpinner;
+import androidx.appcompat.widget.AppCompatSpinner;
 import android.view.View;
 import android.widget.EditText;
 

@@ -11,7 +11,6 @@ import com.androidnetworking.error.ANError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 
 import javax.inject.Inject;
 
@@ -22,20 +21,23 @@ import au.com.dealsdirect.data.network.model.events.FrontEndInfo;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
+import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.VisitorInfo;
+import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollectionService;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.core.LoggingService;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.events.EventUser;
+import au.com.dealsdirect.service.datacollection.events.InitiateCheckOutEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemDetailsDataEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemListDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SaleBannersDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SearchDataEvent;
+import au.com.dealsdirect.service.datacollection.events.WishlistDataEvent;
 import au.com.dealsdirect.service.event.FrontEndType;
 import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.service.event.RegionType;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -50,6 +52,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
     private static CompositeDisposable mCompositeDisposable;
 
     private static GenieEventService instance;
+
     public static GenieEventService getInstance() {
         if (instance == null) {
             instance = new GenieEventService();
@@ -71,7 +74,9 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
         mCompositeDisposable = compositeDisposable;
     }
 
-    private GenieEventService(){
+
+
+    private GenieEventService() {
         registerGenieEvents();
     }
 
@@ -90,7 +95,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
         DataCollector.EventRegistry.register(generateEventKey(Events.SearchEvent, getServiceKey()), Events.SearchEvent,
                 new LoggingService.LogSearchEvent(new SearchDataEvent() {
                     @Override
-                    public void LogDataEvents(HashMap<String, Object> parameters){
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
                         callSearchEvent((SearchEventRequest) parameters.get(DataCollector.EventParameters.SEARCH_EVENT_REQUEST));
                     }
                 }));
@@ -121,10 +126,28 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                         callSaleEvent((SaleEventRequest) parameters.get(DataCollector.EventParameters.SALE_EVENT_REQUEST));
                     }
                 }));
+
+        //register wishlist event
+        DataCollector.EventRegistry.register(generateEventKey(Events.WishlistEvent, getServiceKey()), Events.WishlistEvent,
+                new LoggingService.LogWishlistDataEvent(new WishlistDataEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        callWishlistEvent((WishlistEventRequest) parameters.get(DataCollector.EventParameters.WISHLIST_EVENT_REQUEST));
+                    }
+                }));
+
+        //register start checkout event
+        DataCollector.EventRegistry.register(generateEventKey(Events.InitiateCheckout, getServiceKey()), Events.InitiateCheckout,
+                new LoggingService.LogInitiateCheckout(new InitiateCheckOutEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        callStartCheckoutEvent((StartCheckoutRequest) parameters.get(DataCollector.EventParameters.START_CHECKOUT_REQUEST));
+                    }
+                }));
     }
 
     private static String generateEventKey(Events events, String service) {
-        return events+"."+service;
+        return events + "." + service;
     }
 
     private static void callSearchEvent(SearchEventRequest request) {
@@ -236,12 +259,62 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(responseValue -> {
 
-                    AppLogger.d(String.format("%s: %s", TAG, responseValue));
+                    //Save user Id to data manager
+                    if (!responseValue.isEmpty()) {
+                        getDataManager().setEventUserId(responseValue.replace("\"", ""));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            Log.d("Error", String.valueOf(anError.getErrorBody()));
+                        }
+                    }
+                }));
+    }
+
+    private static void callWishlistEvent(WishlistEventRequest request) {
+        request.setFrontEndInfo(includeFrontEndInfo());
+        request.setVisitorInfo(includeVisitorInfo());
+
+        getCompositeDisposable().add(getDataManager()
+                .callWishlistEvent(request)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(responseValue -> {
 
                     //Save user Id to data manager
                     if (!responseValue.isEmpty()) {
                         getDataManager().setEventUserId(responseValue.replace("\"", ""));
                     }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            Log.d("Error", String.valueOf(anError.getErrorBody()));
+                        }
+                    }
+                }));
+    }
+
+    private static void callStartCheckoutEvent(StartCheckoutRequest request) {
+        request.setFrontEndInfo(includeFrontEndInfo());
+        request.setVisitorInfo(includeVisitorInfo());
+
+        getCompositeDisposable().add(getDataManager()
+                .callStartCheckoutEvent(request)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    Log.d(TAG, response);
+
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
@@ -305,7 +378,6 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 for (String anUt : ut) {
                     if (ut.length > 1) {
                         cohorts.add(anUt.split("=")[1]);
-                        AppLogger.d(String.format("%s: cohorts: %s", TAG, anUt.split("=")[1]));
                     }
                 }
                 break;
@@ -324,10 +396,10 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                     String value;
                     // only take first subcookie
                     String[] subCookieParts = subCookies[0].split("=");
-                    if(subCookieParts.length > 1) {
+                    if (subCookieParts.length > 1) {
                         // when equal sign exists
                         value = subCookieParts[1];
-                    } else if (subCookieParts.length == 1){
+                    } else if (subCookieParts.length == 1) {
                         // when value is not actually subcookies
                         value = subCookieParts[0];
                     } else {
@@ -342,8 +414,6 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 break;
             }
         }
-
-        AppLogger.d(String.format("%s: userGroup: %s", TAG, userGroup));
 
         return userGroup;
     }
@@ -362,11 +432,11 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
 
     @Override
     public boolean hasEvent(String eventKey) {
-        return DataCollector.EventRegistry.hasEvent(eventKey+"."+getServiceKey());
+        return DataCollector.EventRegistry.hasEvent(eventKey + "." + getServiceKey());
     }
 
     @Override
     public void logEvent(String eventKey, HashMap<String, Object> parameters) {
-        DataCollector.EventRegistry.logData(eventKey+"."+getServiceKey(),parameters);
+        DataCollector.EventRegistry.logData(eventKey + "." + getServiceKey(), parameters);
     }
 }

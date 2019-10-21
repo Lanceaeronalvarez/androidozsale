@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.androidnetworking.error.ANError;
 import com.mysale.genie.utility.RxBus;

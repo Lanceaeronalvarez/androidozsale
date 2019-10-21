@@ -43,7 +43,7 @@
             android:textSize="@dimen/text_size_headline3"
             android:textColor="#b7b7b7"/>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/controller_returns_select_orders_recyclerview"
             android:layout_below="@+id/controller_return_order_title"

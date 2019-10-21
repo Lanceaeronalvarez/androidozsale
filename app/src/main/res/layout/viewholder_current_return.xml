@@ -7,7 +7,7 @@
     android:layout_margin="5dp"
     android:layout_width="match_parent"
     android:layout_height="@dimen/return_card_height"
-    android:background="@drawable/bg_rectangle_background"
+    android:background="@drawable/bg_rectangle_background_white"
     tools:ignore="MissingPrefix">
 
     <RelativeLayout
@@ -72,7 +72,7 @@
         </View>
 
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/current_return_items_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
 
 
         <RelativeLayout

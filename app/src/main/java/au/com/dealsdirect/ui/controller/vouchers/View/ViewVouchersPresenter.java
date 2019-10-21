@@ -1,8 +1,6 @@
 package au.com.dealsdirect.ui.controller.vouchers.View;
 
-import android.support.v4.util.Pair;
-
-import com.androidnetworking.error.ANError;
+import androidx.core.util.Pair;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -11,7 +9,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
@@ -21,8 +18,6 @@ import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Consumer;
-import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by Paul on 6/23/17.

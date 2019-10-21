@@ -2,19 +2,14 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
-import android.support.v7.widget.RecyclerView;
+import android.graphics.Bitmap;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.CustomPhotoViewAttacher;
 import com.github.chrisbanes.photoview.ScalableImageView;
 import com.mysale.genie.utility.GenericEvent;
@@ -44,18 +39,12 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
     private List<String> mData = new LinkedList<>();
     private LoadImagesListener mLoadImagesListener;
     private int mViewType;
-    private Drawable mPlaceholder;
     private SaleDetailsImageListener mSaleDetailsListener;
-    private RequestListener mRequestListener = new RequestListener() {
+    private ImageUtils.ImageLoadedCallback mImageLoadedCallback = new ImageUtils.ImageLoadedCallback() {
         @Override
-        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
-            return false;
-        }
-
-        @Override
-        public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
+        public void onImageResourceReady(Bitmap resource) {
+            super.onImageResourceReady(resource);
             mLoadImagesListener.imagesLoaded();
-            return false;
         }
     };
     private SaleItemDetailsMvpView mSaleItemDetailsView;
@@ -110,7 +99,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                                        LoadImagesListener loadImagesListener,
                                        List<String> data,
                                        int viewType,
-                                       Drawable placeholder, SaleItemDetailsMvpView saleItemDetailsMvpView,
+                                       SaleItemDetailsMvpView saleItemDetailsMvpView,
                                        SaleDetailsImageListener saleDetailsImageListener) {
 
         this.mActivity = activity;
@@ -120,7 +109,6 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
         this.mLoadImagesListener = loadImagesListener;
         this.mData = data;
         this.mViewType = viewType;
-        this.mPlaceholder = placeholder;
         this.mSaleItemDetailsView = saleItemDetailsMvpView;
         this.mSaleDetailsListener = saleDetailsImageListener;
     }
@@ -163,7 +151,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                 if (mData.size() > 0) {
                     String url = mData.get(position);
                     if (position == 0) {
-                        ImageUtils.loadImageWithPlaceholder(url, vh.image, mPlaceholder, mRequestListener);
+                        ImageUtils.loadImageImmediate(url, vh.image, mImageLoadedCallback);
                     } else {
                         ImageUtils.loadImage(url, vh.image);
                     }
@@ -187,7 +175,6 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
         mViewsToToggle = null;
         mContainerToToggle = null;
         mLoadImagesListener = null;
-        mPlaceholder = null;
         super.onDetachedFromRecyclerView(recyclerView);
     }
 

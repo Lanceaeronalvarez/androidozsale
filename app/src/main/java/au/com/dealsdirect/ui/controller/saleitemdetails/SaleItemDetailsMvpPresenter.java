@@ -37,4 +37,16 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     String getAfterpayLightboxImgUrl();
 
     String getAfterpayTermsLink();
+
+    int wishlistCount();
+
+    boolean isProductInWishlist(String productId);
+
+    void addProductToWishlist(String productId, String seoIdentifier, String masterProductId, WishlistDelayedCallback delayedCallback);
+
+    void removeProductFromWishlist(String productId, WishlistDelayedCallback delayedCallback);
+
+    public interface WishlistDelayedCallback {
+        void performDelayedAction();
+    }
 }
