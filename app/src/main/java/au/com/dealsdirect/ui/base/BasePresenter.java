@@ -138,8 +138,8 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                             return;
                         }
 
-                        getMvpView().hideNoNetworkLayout();
-                        getMvpView().hideLoading();
+                        mMvpView.hideNoNetworkLayout();
+                        mMvpView.hideLoading();
 
                         if (response instanceof List && !cancelled) {
                             callback.onSuccess((List) response);
@@ -149,8 +149,8 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                             callback.onSuccess();
                         }
 
-                        if (getMvpView() instanceof BasePullToRefreshController) {
-                            getMvpView().hideNoNetworkLayout();
+                        if (mMvpView instanceof BasePullToRefreshController) {
+                            mMvpView.hideNoNetworkLayout();
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -161,13 +161,13 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                             return;
                         }
 
-                        getMvpView().hideLoading();
+                        mMvpView.hideLoading();
 
                         if (throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException) {
-                            getMvpView().showNoNetworkLayout();
+                            mMvpView.showNoNetworkLayout();
                         }
 
-                        getMvpView().onError(throwable.getMessage());
+                        mMvpView.onError(throwable.getMessage());
 
                         if (!cancelled) {
                             callback.onFailure(throwable);

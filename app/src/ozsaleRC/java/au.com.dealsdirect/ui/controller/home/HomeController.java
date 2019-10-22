@@ -352,6 +352,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         mActivity.setAccountsRouter(mAccountsRouter);
         mCheckoutRouter = getChildRouter(mCheckoutContainer);
         mActivity.setCheckoutRouter(mCheckoutRouter);
+        mWishlistRouter = getChildRouter(mWishlistContainer);
 
         CommonControllerChangeListener.addToRouter(getRouter(),
                 mShopRouter, mCategoriesRouter, mContactRouter, mAccountsRouter, mCheckoutRouter);

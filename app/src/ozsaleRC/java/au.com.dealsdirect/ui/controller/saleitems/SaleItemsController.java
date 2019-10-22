@@ -1939,7 +1939,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void reselectTabIfFacetsAlreadyVisible() {
-        if (mSearchFilterMvpView.getIsFacetsVisible()) {
+        if ((mSearchFilterMvpView != null && mSearchFilterMvpView.isViewAttached()) && mSearchFilterMvpView.getIsFacetsVisible()) {
             int tabPosition = -1;
             int prevTabPosition = -1;
             for (int i = 0; i < mFacetFilters.size(); i++) {
