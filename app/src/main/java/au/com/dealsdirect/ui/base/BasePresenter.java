@@ -134,49 +134,49 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                     @Override
                     public void accept(Object response) throws Exception {
 
-                        if (!isViewAttached()) {
-                            return;
-                        }
+                        if (mMvpView != null && mMvpView.isViewAttached()) {
 
-                        mMvpView.hideNoNetworkLayout();
-                        mMvpView.hideLoading();
-
-                        if (response instanceof List && !cancelled) {
-                            callback.onSuccess((List) response);
-                        } else if (response != null && !cancelled) {
-                            callback.onSuccess(response);
-                        } else if (!cancelled) {
-                            callback.onSuccess();
-                        }
-
-                        if (mMvpView instanceof BasePullToRefreshController) {
                             mMvpView.hideNoNetworkLayout();
+                            mMvpView.hideLoading();
+
+                            if (response instanceof List && !cancelled) {
+                                callback.onSuccess((List) response);
+                            } else if (response != null && !cancelled) {
+                                callback.onSuccess(response);
+                            } else if (!cancelled) {
+                                callback.onSuccess();
+                            }
+
+                            if (mMvpView instanceof BasePullToRefreshController) {
+                                mMvpView.hideNoNetworkLayout();
+                            }
+
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
 
-                        if (!isViewAttached()) {
-                            return;
-                        }
+                        if (mMvpView != null && mMvpView.isViewAttached()) {
 
-                        mMvpView.hideLoading();
+                            mMvpView.hideLoading();
 
-                        if (throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException) {
-                            mMvpView.showNoNetworkLayout();
-                        }
+                            if (throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException) {
+                                mMvpView.showNoNetworkLayout();
+                            }
 
-                        mMvpView.onError(throwable.getMessage());
+                            mMvpView.onError(throwable.getMessage());
 
-                        if (!cancelled) {
-                            callback.onFailure(throwable);
-                        }
+                            if (!cancelled) {
+                                callback.onFailure(throwable);
+                            }
 
-                        // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
-                            handleApiError(anError);
+                            // handle load accounts error here
+                            if (throwable instanceof ANError) {
+                                ANError anError = (ANError) throwable;
+                                handleApiError(anError);
+                            }
+
                         }
                     }
                 });
