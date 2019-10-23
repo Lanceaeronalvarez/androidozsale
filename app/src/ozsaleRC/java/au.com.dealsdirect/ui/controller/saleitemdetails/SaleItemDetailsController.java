@@ -578,6 +578,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void onViewDidAppear(Controller previousController) {
         super.onViewDidAppear(previousController);
 
+        if (!isViewAttached()) {
+            return;
+        }
+
         mLikeButton.setVisibility(View.INVISIBLE);
         mLikeFloatingButton.setVisibility(View.INVISIBLE);
         mPresenter.loadSaleItemDetails(mSaleId, mSeoIdentifierId);
@@ -590,6 +594,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void onViewWillDisappear(Controller nextController) {
         super.onViewWillDisappear(nextController);
         willViewDisappear = true;
+
+        if (!isViewAttached()) {
+            return;
+        }
+
         mProductDetailsToolbar.clearAnimation();
     }
 

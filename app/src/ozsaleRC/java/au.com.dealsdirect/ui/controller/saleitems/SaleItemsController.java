@@ -782,6 +782,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void determineToolbarTitle() {
+        if (!isViewAttached()) {
+            return;
+        }
 
         switch (mSourceMode) {
             case NORMAL:
@@ -1364,6 +1367,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (intoThisView) {
             mGridViewModePreferenceHelper.resetTimeElapsed();
             mGridViewModePreferenceHelper.resetTimestamp();
+            if (mSourceMode == SourceMode.WISHLIST) {
+                logWishlistHeaderEvent();
+            }
         } else {
             logGridViewPreferenceEvent();
         }
@@ -1386,7 +1392,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mToolbar.setVisibility(View.GONE);
                 mSaleItemsRecyclerView.setVisibility(View.GONE);
                 mPresenter.loadWishlist();
-                logWishlistHeaderEvent();
                 break;
         }
         mFooterAds.setVisibility(View.GONE);

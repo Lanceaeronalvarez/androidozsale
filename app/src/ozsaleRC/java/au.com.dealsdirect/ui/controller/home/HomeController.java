@@ -513,7 +513,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 
             if (controller instanceof BaseController) {
                 BaseController baseController = ((BaseController) controller);
-                onTabSwitch(true);
+                baseController.onTabSwitch(true);
                 baseController.refreshContents();
             }
 
@@ -531,7 +531,9 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (mCategoriesRouter != null) {
             Controller controller = getCurrentControllerOnRouter(mCategoriesRouter);
             if (controller instanceof BaseController) {
-                ((BaseController) controller).refreshContents();
+                BaseController baseController = ((BaseController) controller);
+                baseController.onTabSwitch(true);
+                baseController.refreshContents();
             }
         }
 
@@ -555,7 +557,9 @@ public class HomeController extends BaseController implements HomeMvpView {
                 ((AccountMvpView) controller).initLoginDrawable();
             }
             if (controller instanceof BaseController) {
-                ((BaseController) controller).refreshContents();
+                BaseController baseController = ((BaseController) controller);
+                baseController.onTabSwitch(true);
+                baseController.refreshContents();
             }
         }
 
@@ -591,7 +595,9 @@ public class HomeController extends BaseController implements HomeMvpView {
                 mViewContactsMvpView.getPresenter().loadContacts();
             }
             if (controller instanceof BaseController) {
-                ((BaseController) controller).refreshContents();
+                BaseController baseController = ((BaseController) controller);
+                baseController.onTabSwitch(true);
+                baseController.refreshContents();
             }
         }
 
@@ -628,7 +634,9 @@ public class HomeController extends BaseController implements HomeMvpView {
             if (mCheckoutRouter != null) {
                 Controller controller = getCurrentControllerOnRouter(mCheckoutRouter);
                 if (controller instanceof BaseController) {
-                    ((BaseController) controller).refreshContents();
+                    BaseController baseController = ((BaseController) controller);
+                    baseController.onTabSwitch(true);
+                    baseController.refreshContents();
                 }
             }
         }
@@ -647,7 +655,9 @@ public class HomeController extends BaseController implements HomeMvpView {
             mActivity.setDraggableViewPager(false);
 
             if (controller instanceof BaseController) {
-                ((BaseController) controller).refreshContents();
+                BaseController baseController = ((BaseController) controller);
+                baseController.onTabSwitch(true);
+                baseController.refreshContents();
             }
 
         }

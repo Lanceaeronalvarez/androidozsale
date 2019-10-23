@@ -136,10 +136,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
     private static final String SHOP_SALEITEMS_CHIPS_FILTER = "SHOP_SALEITEMS_CHIPS_FILTER";
     private static final String SHOP_KEY_FROM_CATEGORIES = "SHOP_KEY_FROM_CATEGORIES";
 
-    private static final int PRICE_MAX_VALUE_UNLIMITED = 1000000;
-    // there shouldn't be anything out there that's more than 1M... is there?
-
-
     @Inject
     SearchFilterMvpPresenter<SearchFilterMvpView> mPresenter;
 
@@ -565,10 +561,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mSeekbar.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
             @Override
             public void finalValue(Number minValue, Number maxValue) {
-
-                if (mSeekbar.getSelectedMaxValue().equals(maxValue)) {
-                    maxValue = PRICE_MAX_VALUE_UNLIMITED;
-                }
 
                 //remove previously selected price range
                 for (SearchChipModel chip : mSearchItemsList) {

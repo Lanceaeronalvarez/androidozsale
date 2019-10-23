@@ -119,13 +119,14 @@ public class MainController extends BaseController implements MainMvpView {
 
         mActivity.setMainController(this);
 
-        if (!mHasSavedInstance) {
+        if (!mHasSavedInstance || mHomeController == null) {
             mHomeController = HomeController.newInstance();
-            mBannerFiltersController = BannerFiltersController.newInstance();
-        } else {
-            mHomeController = getHomeController();
-            mBannerFiltersController = getBannerFiltersController();
         }
+
+        if (!mHasSavedInstance || mBannerFiltersController == null) {
+            mBannerFiltersController = BannerFiltersController.newInstance();
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
