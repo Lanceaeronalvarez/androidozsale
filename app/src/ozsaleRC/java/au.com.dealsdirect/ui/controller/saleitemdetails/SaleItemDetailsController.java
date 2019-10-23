@@ -416,6 +416,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     int[] mCheckoutLocation = new int[2];
     boolean isAnimating = false;
+    boolean willViewDisappear = false;
 
     ElasticDragDismissFrameLayout mRootView;
     View mCheckoutView;
@@ -583,6 +584,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mHasSavedInstance) {
             mActivity.getMainController().getHomeController().setSavedCurrentItem();
         }
+    }
+
+    @Override
+    public void onViewWillDisappear(Controller nextController) {
+        super.onViewWillDisappear(nextController);
+        willViewDisappear = true;
+        mProductDetailsToolbar.clearAnimation();
     }
 
     @Override
@@ -1358,6 +1366,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public boolean handleBack() {
+        willViewDisappear = true;
         if (!isAnimating) {
             mProductDetailScrollView.scrollTo(0, 0);
             if (mRootView != null) {
@@ -1658,7 +1667,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             float top = location[1];
             float alphaFactor = 1 - top / (float) mProductDetailsTitleLayout.getHeight();
 
-            if (mProductDetailsToolbar.getAnimation() == null) {
+            if (mProductDetailsToolbar.getAnimation() == null && !willViewDisappear) {
                 switch (mProductDetailsToolbar.getVisibility()) {
                     case View.GONE:
                     case View.INVISIBLE:
