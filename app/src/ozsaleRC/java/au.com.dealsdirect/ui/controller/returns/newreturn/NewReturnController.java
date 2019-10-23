@@ -197,7 +197,9 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             outState.putInt(BundleKeys.KEY_INVOICE_NUMBER, mReturnItem.getInvoiceNo());
         }
         outState.putParcelableArrayList(BundleKeys.KEY_IMAGE_URI, mImageUriArray);
-        outState.putString(BundleKeys.KEY_USER_MESSAGE, mReasonEditText.getText().toString());
+        if (mReasonEditText != null && mReasonEditText.getText() != null) {
+            outState.putString(BundleKeys.KEY_USER_MESSAGE, mReasonEditText.getText().toString());
+        }
         outState.putString(BundleKeys.KEY_PRODUCT_ID, mProductID);
         outState.putBoolean(BundleKeys.KEY_IS_FROM_ORDER, isFromOrder);
         outState.putString(BundleKeys.KEY_PRODUCT_NAME, mProductName);
