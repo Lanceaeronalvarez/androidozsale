@@ -149,6 +149,10 @@ public class HomeController extends BaseController implements HomeMvpView {
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
+
+        if (mHasSavedStateInstance) {
+            refreshAllTopControllers();
+        }
     }
 
     @Override
@@ -187,10 +191,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         mRouterContainerMapping.put(TAB_WISHLIST_INDEX, new Pair<>(mWishlistRouter, mWishlistContainer));
         setAllContainersVisibility(View.GONE);
         setVisibleContainer(mDefaultTab);
-
-        if (mHasSavedStateInstance) {
-            refreshAllTopControllers();
-        }
 
         AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);

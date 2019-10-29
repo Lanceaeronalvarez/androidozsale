@@ -705,8 +705,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.onActivityResumed(activity);
 
         mActivity.setDraggableViewPager(false);
-        determineToolbarTitle();
-        refreshContents();
+
+        if (isViewAttached()) {
+            determineToolbarTitle();
+            refreshContents();
+        }
 
         mGridViewModePreferenceHelper.resetTimeElapsed();
         mGridViewModePreferenceHelper.resetTimestamp();

@@ -1211,7 +1211,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 Controller currentController = getCurrentController(getCurrentRouter());
                 BaseController baseController = currentController instanceof BaseController ?
                         (BaseController) getCurrentController(getCurrentRouter()) : null;
-                if (baseController != null) {
+                if (baseController != null && baseController.isViewAttached()) {
                     baseController.refreshContents();
                 }
             }
