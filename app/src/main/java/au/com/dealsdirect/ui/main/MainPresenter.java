@@ -34,6 +34,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.auth.AuthHandler;
@@ -795,7 +796,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         }
 
         // Fabric
-        Fabric.with(activityContext, new Crashlytics());
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(activityContext, new Crashlytics());
+        }
         Fabric.with(activityContext, new Answers());
         // Facebook Events
         initFacebookAnalytics();
