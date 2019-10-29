@@ -433,6 +433,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private Map<String, String> mSavedPersonalizationData;
     private SaleDetailsImageListener mSaleDetailsImageListener;
 
+    private Handler addToCartDelayHandler;
+    private Runnable addToCartDelayRunnable;
+
     final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = new
             ViewTreeObserver.OnScrollChangedListener() {
 
@@ -594,6 +597,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void onViewWillDisappear(Controller nextController) {
         super.onViewWillDisappear(nextController);
         willViewDisappear = true;
+
+        stopDelayedProgressBar();
 
         if (!isViewAttached()) {
             return;
@@ -914,6 +919,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void showSaleDetails(GetSaleItemDetailsResponse saleDetail) {
 
+        if (willViewDisappear) {
+            return;
+        }
+
         mProductId = saleDetail.getProductId();
         mMasterProductId = saleDetail.getAttributes().getProductId();
 
@@ -1129,12 +1138,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void setupDelayedProgressBar() {
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showAddToCartButtonContent(isAddToBasketInputBuffered);
-            }
-        }, ACTIVITY_INDICATOR_DELAY);
+        stopDelayedProgressBar();
+        addToCartDelayHandler = new Handler(Looper.getMainLooper());
+        addToCartDelayRunnable = () -> showAddToCartButtonContent(isAddToBasketInputBuffered);
+        addToCartDelayHandler.postDelayed(addToCartDelayRunnable, ACTIVITY_INDICATOR_DELAY);
+    }
+
+    private void stopDelayedProgressBar() {
+        if (addToCartDelayHandler != null && addToCartDelayRunnable != null) {
+            addToCartDelayHandler.removeCallbacks(addToCartDelayRunnable);
+            addToCartDelayHandler = null;
+            addToCartDelayRunnable = null;
+        }
     }
 
     private void showAddToCartButton() {
