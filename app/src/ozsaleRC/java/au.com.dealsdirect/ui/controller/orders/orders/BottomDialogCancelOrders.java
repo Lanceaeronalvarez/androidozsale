@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import androidx.fragment.app.DialogFragment;
@@ -35,6 +37,11 @@ public class BottomDialogCancelOrders extends BottomSheetDialogFragment {
     private String quantity = "";
     private String totalItems = "";
     private String itemDescription = "";
+    private BottomDialogButtonListener listener;
+
+    public BottomDialogCancelOrders(@NonNull BottomDialogButtonListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,48 +86,41 @@ public class BottomDialogCancelOrders extends BottomSheetDialogFragment {
         }
 
         if (shouldShowCancelOrder) {
-            RelativeLayout mCancelOrderLayout = (RelativeLayout) v.findViewById(R.id.cancel_order_layout);
+            RelativeLayout mCancelOrderLayout = v.findViewById(R.id.cancel_order_layout);
             mCancelOrderLayout.setVisibility(View.VISIBLE);
 
-            Button mYesButton = (Button) v.findViewById(R.id.button_yes_cancel_order);
-            Button mNoButton = (Button) v.findViewById(R.id.button_no_cancel_order);
-            ImageButton mCloseButton = (ImageButton) v.findViewById(R.id.img_order_button_close);
-            TextView mTextOrderNumber = (TextView) v.findViewById(R.id.cancel_order_number_text);
+            Button mYesButton = v.findViewById(R.id.button_yes_cancel_order);
+            Button mNoButton = v.findViewById(R.id.button_no_cancel_order);
+            ImageButton mCloseButton = v.findViewById(R.id.img_order_button_close);
+            TextView mTextOrderNumber = v.findViewById(R.id.cancel_order_number_text);
 
             mTextOrderNumber.setText(invoiceNumber);
 
-            mYesButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MainActivity.callRefundOrder(invoiceNumber, reason, new JSONObject());
-                    BottomDialogCancelOrders.this.dismiss();
-                }
+            mYesButton.setOnClickListener(v1 -> {
+                BottomDialogCancelOrders.this.dismiss();
+                listener.onYes(null);
             });
 
-            mNoButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BottomDialogCancelOrders.this.dismiss();
-                }
+            mNoButton.setOnClickListener(v12 -> {
+                BottomDialogCancelOrders.this.dismiss();
+                listener.onNo(null);
             });
 
-            mCloseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BottomDialogCancelOrders.this.dismiss();
-                }
+            mCloseButton.setOnClickListener(v13 -> {
+                BottomDialogCancelOrders.this.dismiss();
+                listener.onClose(null);
             });
 
         } else {
-            RelativeLayout mCancelItemOrderLayout = (RelativeLayout) v.findViewById(R.id.cancel_item_order);
+            RelativeLayout mCancelItemOrderLayout = v.findViewById(R.id.cancel_item_order);
             mCancelItemOrderLayout.setVisibility(View.VISIBLE);
 
-            Button mYesButton = (Button) v.findViewById(R.id.button_yes_cancel_item);
-            Button mNoButton = (Button) v.findViewById(R.id.button_no_cancel_item);
-            ImageButton mItemCloseButton = (ImageButton) v.findViewById(R.id.img_button_close);
-            ImageView mItemImage = (ImageView) v.findViewById(R.id.item_cancel_image);
-            TextView mItemName = (TextView) v.findViewById(R.id.item_name);
-            ProductQuantityLayout mQuantity = (ProductQuantityLayout) v.findViewById(R.id.item_quantity);
+            Button mYesButton = v.findViewById(R.id.button_yes_cancel_item);
+            Button mNoButton = v.findViewById(R.id.button_no_cancel_item);
+            ImageButton mItemCloseButton = v.findViewById(R.id.img_button_close);
+            ImageView mItemImage = v.findViewById(R.id.item_cancel_image);
+            TextView mItemName = v.findViewById(R.id.item_name);
+            ProductQuantityLayout mQuantity = v.findViewById(R.id.item_quantity);
 
             mItemName.setText(itemDescription);
 
@@ -149,34 +149,20 @@ public class BottomDialogCancelOrders extends BottomSheetDialogFragment {
                 }
             });
 
-            mYesButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    JSONObject jsonObject = new JSONObject();
-                    try {
-                        jsonObject.put(invoiceNumber, mQuantity.getQuantity());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    MainActivity.callRefundOrder(invoiceNumber, reason, jsonObject);
-                    BottomDialogCancelOrders.this.dismiss();
-                }
+            mYesButton.setOnClickListener(v14 -> {
+                BottomDialogCancelOrders.this.dismiss();
+                listener.onYes(mQuantity.getQuantity());
             });
 
-            mNoButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BottomDialogCancelOrders.this.dismiss();
-                }
+            mNoButton.setOnClickListener(v15 -> {
+                BottomDialogCancelOrders.this.dismiss();
+                listener.onNo(null);
             });
 
-            mItemCloseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AppLogger.d("close button clicked");
-                    BottomDialogCancelOrders.this.dismiss();
-                }
+            mItemCloseButton.setOnClickListener(v16 -> {
+                AppLogger.d("close button clicked");
+                BottomDialogCancelOrders.this.dismiss();
+                listener.onClose(null);
             });
         }
 
@@ -184,4 +170,15 @@ public class BottomDialogCancelOrders extends BottomSheetDialogFragment {
         return v;
     }
 
+    public void setListener(BottomDialogButtonListener listener) {
+        this.listener = listener;
+    }
+
+    public interface BottomDialogButtonListener {
+        void onYes(Object object);
+
+        void onNo(Object object);
+
+        void onClose(Object object);
+    }
 }

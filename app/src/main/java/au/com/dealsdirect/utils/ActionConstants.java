@@ -15,6 +15,7 @@ public class ActionConstants {
     public static final String ORDER_ITEM_RETURN_ID = "ORDER_ITEM_RETURN_ID";
     public static final String ORDER_ITEM_NAME = "ORDER_ITEM_NAME";
     public static final String ORDER_PRODUCT_ID = "ORDER_PRODUCT_ID";
+    public static final String ORDER_ITEM_ID = "ORDER_ITEM_ID";
     public static final String ORDER_CONTEXT = "ORDER_CONTEXT";
     public static final String ORDER_ITEM_IMAGE_URL = "ORDER_ITEM_IMAGE_URL";
     public static final String ORDER_REASON = "ORDER_REASON";

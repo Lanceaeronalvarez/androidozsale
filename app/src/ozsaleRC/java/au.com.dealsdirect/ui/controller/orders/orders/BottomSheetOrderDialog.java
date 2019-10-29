@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import androidx.fragment.app.DialogFragment;
@@ -21,16 +23,11 @@ import au.com.dealsdirect.utils.ActionConstants;
 public class BottomSheetOrderDialog extends BottomSheetDialogFragment {
 
     private ArrayList<String> arrayList = new ArrayList<>();
-    private String orderID = "";
-    private String invoiceNumber;
-    private String itemDescription = "";
-    private String itemReturnID = "";
-    private String productID = "";
-    private boolean isItemCancel = false;
-    private String imageUrl = "";
-    private String reason = "";
-    private String quantity = "";
-    private String totalItems = "";
+    private BottomSheetButtonListener listener;
+
+    public BottomSheetOrderDialog(@NonNull BottomSheetButtonListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,103 +45,42 @@ public class BottomSheetOrderDialog extends BottomSheetDialogFragment {
             if (bundle.containsKey(ActionConstants.ORDER_ARRAYS)) {
                 arrayList = bundle.getStringArrayList(ActionConstants.ORDER_ARRAYS);
             }
-
-            if (bundle.containsKey(ActionConstants.ORDER_ORDER_ID)) {
-                orderID = bundle.getString(ActionConstants.ORDER_ORDER_ID);
-            }
-
-            if (bundle.containsKey(ActionConstants.ORDER_INVOICE_NUMBER)) {
-                invoiceNumber = bundle.getString(ActionConstants.ORDER_INVOICE_NUMBER);
-            }
-
-            if (bundle.containsKey(ActionConstants.ORDER_ITEM_DESCRIPTION)) {
-                itemDescription = bundle.getString(ActionConstants.ORDER_ITEM_DESCRIPTION);
-            }
-
-            if (bundle.containsKey(ActionConstants.ORDER_ITEM_RETURN_ID)) {
-                itemReturnID = bundle.getString(ActionConstants.ORDER_ITEM_RETURN_ID);
-            }
-
-            if (bundle.containsKey(ActionConstants.ORDER_PRODUCT_ID)) {
-                productID = bundle.getString(ActionConstants.ORDER_PRODUCT_ID);
-            }
-
-            if (bundle.containsKey(ActionConstants.ORDER_ITEM_IMAGE_URL)) {
-                imageUrl = bundle.getString(ActionConstants.ORDER_ITEM_IMAGE_URL);
-            }
-
-            if (bundle.containsKey(ActionConstants.ORDER_REASON)) {
-                reason = bundle.getString(ActionConstants.ORDER_REASON);
-            }
-
-            if (bundle.containsKey(ActionConstants.ORDER_QUANTITY)) {
-                quantity = bundle.getString(ActionConstants.ORDER_QUANTITY);
-            }
-
-            if (bundle.containsKey(ActionConstants.ORDER_SUBTOTAL_ITEM)) {
-                totalItems = bundle.getString(ActionConstants.ORDER_SUBTOTAL_ITEM);
-            }
         }
 
-        TextView mContactUsText = (TextView) v.findViewById(R.id.bottom_contact_us_text);
-        mContactUsText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.showContactUs(true, Integer.parseInt(invoiceNumber), itemDescription);
-                BottomSheetOrderDialog.this.dismiss();
-            }
+        TextView mContactUsText = v.findViewById(R.id.bottom_contact_us_text);
+        mContactUsText.setOnClickListener(v6 -> {
+            BottomSheetOrderDialog.this.dismiss();
+            listener.onContactUsPressed();
         });
 
-        TextView mOrderText = (TextView) v.findViewById(R.id.bottom_where_is_order_text);
-        mOrderText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.showWhereIsOrder();
-                BottomSheetOrderDialog.this.dismiss();
-            }
+        TextView mOrderText = v.findViewById(R.id.bottom_where_is_order_text);
+        mOrderText.setOnClickListener(v5 -> {
+            BottomSheetOrderDialog.this.dismiss();
+            listener.onOrderPressed();
         });
 
-        TextView mChangeAddress = (TextView) v.findViewById(R.id.bottom_change_address_text);
-        mChangeAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.showChangeAddress(orderID);
-                BottomSheetOrderDialog.this.dismiss();
-            }
+        TextView mChangeAddress = v.findViewById(R.id.bottom_change_address_text);
+        mChangeAddress.setOnClickListener(v4 -> {
+            BottomSheetOrderDialog.this.dismiss();
+            listener.onChangeAddressPressed();
         });
 
-        TextView mReturnItem = (TextView) v.findViewById(R.id.bottom_return_item_text);
-        mReturnItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.showReturnItems(Integer.parseInt(invoiceNumber), true, productID);
-                BottomSheetOrderDialog.this.dismiss();
-            }
+        TextView mReturnItem = v.findViewById(R.id.bottom_return_item_text);
+        mReturnItem.setOnClickListener(v3 -> {
+            BottomSheetOrderDialog.this.dismiss();
+            listener.onReturnItemPressed();
         });
 
-        TextView mCancelOrder = (TextView) v.findViewById(R.id.bottom_view_cancel);
-        mCancelOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                BottomSheetOrderDialog.this.dismiss();
-
-                if (!isItemCancel) {
-                    MainActivity.showCancelDialog(invoiceNumber, reason);
-                } else {
-                    MainActivity.showCancelItemDialog(imageUrl, itemDescription, invoiceNumber, reason,
-                            Integer.parseInt(quantity), Integer.parseInt(totalItems));
-                }
-            }
+        TextView mCancelOrder = v.findViewById(R.id.bottom_view_cancel);
+        mCancelOrder.setOnClickListener(v2 -> {
+            BottomSheetOrderDialog.this.dismiss();
+            listener.onCancelOrderPressed();
         });
 
-        TextView mViewReturnItem = (TextView) v.findViewById(R.id.bottom_view_return_text);
-        mViewReturnItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.showViewReturnDetails(itemReturnID, itemDescription, true);
-                BottomSheetOrderDialog.this.dismiss();
-            }
+        TextView mViewReturnItem = v.findViewById(R.id.bottom_view_return_text);
+        mViewReturnItem.setOnClickListener(v1 -> {
+            BottomSheetOrderDialog.this.dismiss();
+            listener.onViewReturnItemPressed();
         });
 
         // Determine which button will be shown
@@ -165,8 +101,6 @@ public class BottomSheetOrderDialog extends BottomSheetDialogFragment {
                 mViewReturnItem.setVisibility(View.VISIBLE);
             }
 
-            isItemCancel = arrayList.contains(ActionConstants.ORDER_ITEM_ACTION_REFUND);
-
             if (arrayList.contains(ActionConstants.ORDER_ITEM_ACTION_REFUND) ||
                 arrayList.contains(ActionConstants.ORDER_ACTION_REFUND)) {
 
@@ -179,4 +113,17 @@ public class BottomSheetOrderDialog extends BottomSheetDialogFragment {
         return v;
     }
 
+    public interface BottomSheetButtonListener {
+        void onContactUsPressed();
+
+        void onOrderPressed();
+
+        void onChangeAddressPressed();
+
+        void onReturnItemPressed();
+
+        void onCancelOrderPressed();
+
+        void onViewReturnItemPressed();
+    }
 }

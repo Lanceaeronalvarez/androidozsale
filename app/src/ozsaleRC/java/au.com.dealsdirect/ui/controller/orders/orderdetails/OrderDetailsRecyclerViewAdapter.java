@@ -267,6 +267,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             itemHashMap.put(ActionConstants.ORDER_ITEM_NAME, item.getItem());
             itemHashMap.put(ActionConstants.ORDER_ITEM_DESCRIPTION, mItemName);
             itemHashMap.put(ActionConstants.ORDER_PRODUCT_ID, item.getID());
+            itemHashMap.put(ActionConstants.ORDER_ITEM_ID, item.getItemID());
             itemHashMap.put(ActionConstants.ORDER_INVOICE_NUMBER, String.valueOf(mInvoiceNumber));
             itemHashMap.put(ActionConstants.ORDER_ITEM_IMAGE_URL, LegacyStringImageUtils.generateImageUrl(brandId, imageId, fileName));
             itemHashMap.put(ActionConstants.ORDER_REASON, "");
