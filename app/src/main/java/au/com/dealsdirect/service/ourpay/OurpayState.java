@@ -6,5 +6,6 @@ public class OurpayState {
     public static final int ONCART = 1<<2; // 0x04
     public static final int POSTCART = 1<<3; // 0x08
     public static final int ERROR = 1<<4; // 0x16
+    public static final int ADDPAYMENT = 1<<5; // 0x04
 
 }

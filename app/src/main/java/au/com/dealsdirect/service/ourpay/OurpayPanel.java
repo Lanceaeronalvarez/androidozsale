@@ -146,6 +146,23 @@ public class OurpayPanel {
                 mPanelHolder.addView(getThankYouFooter());
             }
 
+        } else if (0 != (ourpay.getState() & OurpayState.ADDPAYMENT)) {
+
+            mPanelHolder.addView(getTemplateText(ourpay.getDescription()), 0);
+            if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
+                mPanelHolder.addView(getTermsAndConditions(ourpay), 1);
+            }
+            mPanelHolder.addView(getButton(), 2);
+
+            mPanelHolder.addView(getOrderScheduleView(),3);
+
+            View panelRows = getPanelRows(ourpay.getPlannedTransactions(), false);
+            View panelTotalRow = getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getTotalAmount()));
+            mHolderInBorder.addView(panelRows);
+            mHolderInBorder.addView(panelTotalRow);
+
+            panelRows.setVisibility(View.VISIBLE);
+            panelTotalRow.setVisibility(View.VISIBLE);
         }
 
         return mPanelHolder;

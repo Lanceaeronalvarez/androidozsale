@@ -33,6 +33,9 @@ public class Value {
     @SerializedName(value = "DeliveryOptions", alternate = {"deliveryOptions"})
     @Expose
     private List<DeliveryOption> deliveryOptions = null;
+    @SerializedName(value = "AvailablePaymentOptions", alternate = {"availablePaymentOptions"})
+    @Expose
+    private List<PaymentOption> availablePaymentOptions = null;
     @SerializedName(value = "LastPaymentMethod", alternate = {"lastPaymentMethod"})
     public String lastPaymentMethod;
     @SerializedName(value = "ThreeDSecureRequired", alternate = {"threeDSecureRequired"})
@@ -126,6 +129,14 @@ public class Value {
         this.deliveryOptions = deliveryOptions;
     }
 
+    public List<PaymentOption> getAvailablePaymentOptions() {
+        return availablePaymentOptions;
+    }
+
+    public void setAvailablePaymentOptions(List<PaymentOption> availablePaymentOptions) {
+        this.availablePaymentOptions = availablePaymentOptions;
+    }
+
     public DeliveryServicePackageDetail getDeliveryServicePackageDetail() {
         return deliveryServicePackageDetail;
     }
@@ -199,6 +210,20 @@ public class Value {
 
         private int getTermsAndConditions() {
             return termsAndConditions;
+        }
+    }
+
+    public static class PaymentOption {
+        @SerializedName(value = "Name", alternate = {"name"})
+        @Expose
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
 }

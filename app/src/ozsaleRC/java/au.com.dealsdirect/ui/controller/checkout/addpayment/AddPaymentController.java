@@ -33,6 +33,7 @@ import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -58,6 +59,8 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.*;
 
 /*
  * Created by smartwave on 29/06/2017.
@@ -161,7 +164,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         isFromCart = args.getBoolean(BundleKeys.IS_FROM_CART, false);
         mIsOurpaySelectDeliveryMethod = args.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD, false);
         mCartTotalCost = args.getString(BundleKeys.CART_TOTAL_COST, "");
-        mCurrentOrderValue = CheckoutDetailsMapper.decompress(args.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
+        mCurrentOrderValue = decompress(args.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
     }
 
     @Override
@@ -183,7 +186,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         isFromCart = savedInstanceState.getBoolean(BundleKeys.IS_FROM_CART);
         mIsOurpaySelectDeliveryMethod = savedInstanceState.getBoolean(BundleKeys.IS_OURPAY_SELECT_DELIVERY_METHOD);
         mCartTotalCost = savedInstanceState.getString(BundleKeys.CART_TOTAL_COST);
-        mCurrentOrderValue = CheckoutDetailsMapper.decompress(savedInstanceState.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
+        mCurrentOrderValue = decompress(savedInstanceState.getByteArray(BundleKeys.CURRENT_ORDER_VALUE));
     }
 
     @Override
@@ -201,7 +204,12 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         if (isFromCart) {
-            mPresenter.generateOurpay(mCurrentOrderValue);
+
+            Set<PaymentOption> paymentOptions = mCurrentOrderValue.getAvailablePaymentOptions();
+
+            if (paymentOptions.contains(PaymentOption.OURPAY)) {
+                mPresenter.generateOurpay(mCurrentOrderValue);
+            }
         }
         setUp(view);
     }
@@ -363,10 +371,40 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     }
 
     private void checkVisiblePaymentButtons() {
-        mPayButton.setVisibility(View.VISIBLE);
-        mPaypalButton.setVisibility(mPresenter.isPayPalEnabled() ? View.VISIBLE : View.GONE);
-        mMasterpassButton.setVisibility(isFromCart && mPresenter.isMasterPassEnabled() && !mIsOurpaySelectDeliveryMethod ? View.VISIBLE : View.GONE);
-        mPaypalCreditButton.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
+        if (mCurrentOrderValue == null) {
+            mPayButton.setVisibility(View.VISIBLE);
+            mPaypalButton.setVisibility(mPresenter.isPayPalEnabled() ? View.VISIBLE : View.GONE);
+            mMasterpassButton.setVisibility(isFromCart && mPresenter.isMasterPassEnabled() && !mIsOurpaySelectDeliveryMethod ? View.VISIBLE : View.GONE);
+            mPaypalCreditButton.setVisibility(mPresenter.isPaypalCreditEnabled() ? View.VISIBLE : View.GONE);
+        } else {
+            mPaypalCreditButton.setVisibility(View.GONE);
+
+            Set<PaymentOption> paymentOptions = mCurrentOrderValue.getAvailablePaymentOptions();
+
+            if (paymentOptions.contains(PaymentOption.BRAINTREE)) {
+                mPayButton.setVisibility(View.VISIBLE);
+            } else {
+                mPayButton.setVisibility(View.GONE);
+            }
+
+            if (paymentOptions.contains(PaymentOption.BRAINTREEPAYPAL)) {
+                mPaypalButton.setVisibility(View.VISIBLE);
+            } else {
+                mPaypalButton.setVisibility(View.GONE);
+            }
+
+            if (paymentOptions.contains(PaymentOption.MASTERPASSPAYMENT)) {
+                mMasterpassButton.setVisibility(View.VISIBLE);
+            } else {
+                mMasterpassButton.setVisibility(View.GONE);
+            }
+
+            if (paymentOptions.contains(PaymentOption.VISACHECKOUT) && mVcoPresenter.isVisaCheckoutEnabled()) {
+                mVisaCheckoutButton.setVisibility(View.VISIBLE);
+            } else {
+                mVisaCheckoutButton.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
