@@ -230,10 +230,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Override
     public void generateOurpay(CheckoutDetailsMapper value) {
-        if (!getDataManager().isOurpayEnabled()) {
-            return;
-        }
-
         ourpay = new Ourpay();
         ourpay.setState(OurpayState.ONCART);
 
