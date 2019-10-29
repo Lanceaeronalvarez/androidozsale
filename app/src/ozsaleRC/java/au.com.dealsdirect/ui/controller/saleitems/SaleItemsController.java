@@ -1631,6 +1631,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 ArrayList<String> priceFacetFilters = new ArrayList<>();
                 ArrayList<String> deliveryFacetFilters = new ArrayList<>();
                 ArrayList<String> newArrivalFacetFilters = new ArrayList<>();
+                ArrayList<String> sortFacetFilters = new ArrayList<>();
 
                 for (SearchChipModel chip : chipsList) {
                     String facetName = chip.getFilterType();
@@ -1644,6 +1645,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         priceFacetFilters.add(chip.getChipTitle());
                     } else if (facetName.equals(BundleKeys.SORT_FACETFILTER_NAME)) {
                         getSaleItemsRequest.setSorting(mapSortingTitleToKey(chip.getChipTitle()));
+                        sortFacetFilters.add(chip.getChipTitle());
                     } else if (facetName.equals(BundleKeys.DELIVERY_FACETFILTER_NAME)) {
                         deliveryFacetFilters.add(chip.getChipTitle());
                     } else if (facetName.equals(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME)) {
@@ -1665,6 +1667,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 }
                 if (!newArrivalFacetFilters.isEmpty()) {
                     mSelectedTitle.add(BundleKeys.NEW_ARRIVAL_FACET_FILTER_TYPE);
+                }
+                if (!sortFacetFilters.isEmpty()) {
+                    mSelectedTitle.add(BundleKeys.SORT_FACET_FILTER_TYPE);
                 }
 
                 facetFilters.put(BundleKeys.BRANDS_FACETFILTER_NAME, brandNameFacetFilters);

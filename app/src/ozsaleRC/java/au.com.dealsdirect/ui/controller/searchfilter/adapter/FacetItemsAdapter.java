@@ -37,7 +37,6 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private Set<Integer> mSelectedFacets = new HashSet<Integer>();
     private String mFilterType = "";
-    private int selectedPos = -1;
     private RecyclerView mRecyclerView;
     private List<SearchChipModel> mSearchItemsList;
 
@@ -66,29 +65,19 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 switch (mFilterType) {
                     //single selection, allows unselection logic for sort type of facet.
                     case BundleKeys.SORT_FACETFILTER_NAME:
-                        if (!vh.isSelected) {
-                            if (selectedPos == -1) {
-                                vh.toggle();
-                                vh.itemView.setSelected(true);
-                                addChip(currentPosition);
-                                selectedPos = currentPosition;
-                            } else if (selectedPos != currentPosition) {
-                                FacetItemsViewHolder oldVH = (FacetItemsViewHolder) mRecyclerView.findViewHolderForLayoutPosition(selectedPos);
-                                oldVH.toggle();
-                                oldVH.itemView.setSelected(false);
-                                removeChip(currentPosition);
+                        int index = -1;
+                        if (!mSearchItemsList.isEmpty()) {
+                            index = getData().indexOf(mSearchItemsList.get(0).getChipTitle());
+                            FacetItemsViewHolder oldVH = (FacetItemsViewHolder) mRecyclerView.findViewHolderForLayoutPosition(index);
+                            oldVH.toggle();
+                            oldVH.itemView.setSelected(false);
+                            removeChip(index);
+                        }
 
-                                vh.toggle();
-                                vh.itemView.setSelected(true);
-                                addChip(currentPosition);
-                                selectedPos = currentPosition;
-                            }
-
-                        } else if (selectedPos == currentPosition) {
+                        if (index != currentPosition) {
                             vh.toggle();
-                            vh.itemView.setSelected(false);
-                            removeChip(currentPosition);
-                            selectedPos = -1;
+                            vh.itemView.setSelected(true);
+                            addChip(currentPosition);
                         }
                         break;
 
