@@ -71,6 +71,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
     private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
     private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
+    private static final String KEY_IS_FROM_CATEGORIES = "ShopController.KEY_IS_FROM_CATEGORIES";
     private static final String KEY_BANNERS_LAYOUT_MANAGER_STATE = "KEY_BANNERS_LAYOUT_MANAGER_STATE";
     private static final String KEY_BANNERS_OFFSET = "KEY_BANNERS_OFFSET";
     private static final String TEXT_ALL = "• All";
@@ -119,6 +120,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private String mCategoryID;
     private String mCategoryName;
     private String mCategoryKey;
+
+    private boolean mIsFromCategories = false;
 
     private boolean mIsDeeplink = false;
     private boolean mHasSavedInstance = false;
@@ -339,8 +342,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
 
         if (mHasSavedInstance) {
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
             mActivity.getMainController().getHomeController().setSavedCurrentItem();
+            mHasSavedInstance = false;
+
+            if (mIsFromCategories && mCategoryID != null && mCategoryKey != null) {
+                goToSalesFromCategories(mCategoryID, mCategoryKey);
+            }
         }
     }
 
@@ -549,6 +556,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         outState.putString(KEY_CATEGORY_ID, mCategoryID);
         outState.putString(KEY_CATEGORY_NAME, mCategoryName);
         outState.putString(KEY_CATEGORY_MAP, mCategoryKey);
+        outState.putBoolean(KEY_IS_FROM_CATEGORIES, mIsFromCategories);
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
     }
 
@@ -558,6 +566,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mCategoryID = savedInstanceState.getString(KEY_CATEGORY_ID);
         mCategoryName = savedInstanceState.getString(KEY_CATEGORY_NAME);
         mCategoryKey = savedInstanceState.getString(KEY_CATEGORY_MAP);
+        mIsFromCategories = savedInstanceState.getBoolean(KEY_IS_FROM_CATEGORIES, false);
         mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
@@ -646,24 +655,28 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-    public void goToSalesFromCategories(GetCategoryTreeResponse getCategoryTreeResponse) {
-        resetShopsBanners(getCategoryTreeResponse.getId());
+    public void goToSalesFromCategories(String id, String key) {
+        resetShopsBanners(id);
+        mCategoryKey = key;
+        mCategoryName = key;
 
-        if (getCategoryTreeResponse.getKey() != null) {
-            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getId(), bannerOffset, bannerLimit), false);
+        if (key != null) {
+            mPresenter.loadShopsBanner(createBannerRequest(id, bannerOffset, bannerLimit), false);
             if (mShopsControllerToolbarLogo != null) {
                 mShopsControllerToolbarLogo.setVisibility(View.GONE);
             }
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
             mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
-            mShopsControllerToolbarTextView.setText(getCategoryParentKey(getCategoryTreeResponse.getKey()));
+            mShopsControllerToolbarTextView.setText(getCategoryParentKey(key));
             shopsControllerSearchView.setVisibility(View.INVISIBLE);
             mActivity.setIsFromCategories(true);
+            mIsFromCategories = true;
         } else {
             assert (mActivity) != null;
             mActivity.setIsFromCategories(false);
+            mIsFromCategories = false;
             showLogoHeader();
-            mPresenter.loadShopsBanner(createBannerRequest(getCategoryTreeResponse.getId(), bannerOffset, bannerLimit), false);
+            mPresenter.loadShopsBanner(createBannerRequest(id, bannerOffset, bannerLimit), false);
         }
     }
 

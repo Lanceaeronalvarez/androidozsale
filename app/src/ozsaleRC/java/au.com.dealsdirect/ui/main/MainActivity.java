@@ -1256,7 +1256,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse) {
-        mShopController.goToSalesFromCategories(getCategoryTreeResponse);
+        mShopController.goToSalesFromCategories(getCategoryTreeResponse.getId(), getCategoryTreeResponse.getKey());
         setRootViewpagerItem(SHOP_INDEX);
     }
 
