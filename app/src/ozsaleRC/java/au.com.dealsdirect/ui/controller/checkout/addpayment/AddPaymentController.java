@@ -119,7 +119,10 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     ScrollView mNestedScrollView;
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mCameraButton;
-
+    @BindView(R.id.partial_checkout_line_above_afterpay)
+    View mLineView;
+    @BindView(R.id.partial_checkout_afterpay_panel_holder)
+    View mAfterpayPanel;
 
     @BindView(R.id.partial_toolbar_title)
     TextView mViewAddressToolarTitle;
@@ -206,6 +209,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @Override
     protected void setUp(View view) {
         mViewAddressToolarTitle.setText("Add New Payment");
+
+        mLineView.setVisibility(View.GONE);
+        mAfterpayPanel.setVisibility(View.GONE);
 
         mVisaCheckoutButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
                 View.GONE);
