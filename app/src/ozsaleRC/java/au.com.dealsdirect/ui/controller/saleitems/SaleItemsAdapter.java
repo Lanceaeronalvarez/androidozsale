@@ -139,7 +139,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
         int orientation = mActivity.getResources().getConfiguration().orientation;
         boolean isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE;
-        int screenDensity = (int) ScreenUtils.getScreenDensity(mActivity);
+        float screenDensity = ScreenUtils.getScreenDensity(mActivity);
 
         int portraitSize;
         int landscapeSize;
@@ -151,8 +151,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             landscapeSize = mActivity.getResources().getInteger(R.integer.items_max_column_landscape);
         }
 
-        ImageUtils.Grid gridDefinition = ImageUtils.getRangedGridDefinition((int) getInteger(R.integer.item_image_width) * screenDensity,
-                (int) getInteger(R.integer.item_image_height) * screenDensity, (float) ScreenUtils.getScreenWidth(mActivity), isLandscape ?
+        ImageUtils.Grid gridDefinition = ImageUtils.getRangedGridDefinition((int) (getInteger(R.integer.item_image_width) * screenDensity),
+                (int) (getInteger(R.integer.item_image_height) * screenDensity), (float) ScreenUtils.getScreenWidth(mActivity), isLandscape ?
                         landscapeSize : portraitSize,
                 isLandscape ? landscapeSize : portraitSize);
 
