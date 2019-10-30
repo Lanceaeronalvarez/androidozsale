@@ -67,11 +67,21 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     case BundleKeys.SORT_FACETFILTER_NAME:
                         int index = -1;
                         if (!mSearchItemsList.isEmpty()) {
-                            index = getData().indexOf(mSearchItemsList.get(0).getChipTitle());
-                            FacetItemsViewHolder oldVH = (FacetItemsViewHolder) mRecyclerView.findViewHolderForLayoutPosition(index);
-                            oldVH.toggle();
-                            oldVH.itemView.setSelected(false);
-                            removeChip(index);
+                            for (SearchChipModel chip : mSearchItemsList) {
+                                if (chip.getFilterType()
+                                        .equalsIgnoreCase(BundleKeys.SORT_FACETFILTER_NAME)) {
+                                    index = getData().indexOf(chip.getChipTitle());
+                                    break;
+                                }
+                            }
+                            if (index >= 0) {
+                                FacetItemsViewHolder oldVH = (FacetItemsViewHolder) mRecyclerView.findViewHolderForLayoutPosition(index);
+                                if (oldVH != null) {
+                                    oldVH.toggle();
+                                    oldVH.itemView.setSelected(false);
+                                }
+                                removeChip(index);
+                            }
                         }
 
                         if (index != currentPosition) {
