@@ -621,6 +621,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 }
 
             } else {
+                removeOurpayView();
                 Log.d(CheckoutController.class.getName(), "mypay disabled");
             }
         }
