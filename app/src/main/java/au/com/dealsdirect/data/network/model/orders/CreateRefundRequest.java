@@ -3,9 +3,7 @@ package au.com.dealsdirect.data.network.model.orders;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.json.JSONObject;
-
-import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created by MTC on 2019-07-10.
@@ -21,7 +19,7 @@ public class CreateRefundRequest {
 
     @SerializedName("items")
     @Expose
-    private JSONObject items;
+    private HashMap<String, Integer> items;
 
     public String getInvoiceNo() {
         return invoiceNo;
@@ -39,11 +37,11 @@ public class CreateRefundRequest {
         this.reason = reason;
     }
 
-    public JSONObject getItems() {
+    public HashMap<String, Integer> getItems() {
         return items;
     }
 
-    public void setItems(JSONObject items) {
+    public void setItems(HashMap<String, Integer> items) {
         this.items = items;
     }
 

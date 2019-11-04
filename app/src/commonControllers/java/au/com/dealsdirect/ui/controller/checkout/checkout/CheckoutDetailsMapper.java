@@ -2,6 +2,8 @@ package au.com.dealsdirect.ui.controller.checkout.checkout;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 
 import java.io.ByteArrayInputStream;
@@ -9,8 +11,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -32,10 +36,12 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 
 public class CheckoutDetailsMapper {
+
     private Value sourceValue;
 
     private HashMap<String, Item> itemMap;
     private ArrayList<MappedShipment> mappedShipments;
+    private HashSet<PaymentOption> availablePaymentOptions;
 
     public CheckoutDetailsMapper(Value value) {
         this.sourceValue = value;
@@ -58,6 +64,7 @@ public class CheckoutDetailsMapper {
     private void init() {
         itemMap = new HashMap<>();
         mappedShipments = new ArrayList<>();
+        availablePaymentOptions = new HashSet<>();
 
         if (getItems() != null && getItems().size() > 0) {
             for (Item item : getItems()) {
@@ -71,6 +78,14 @@ public class CheckoutDetailsMapper {
             } else {
                 // Display only items as is
                 mappedShipments.add(new MappedShipment(getItems()));
+            }
+        }
+
+        List<Value.PaymentOption> paymentOptions = sourceValue.getAvailablePaymentOptions();
+        for (Value.PaymentOption paymentOption : paymentOptions) {
+            String name = paymentOption.getName();
+            if (name != null) {
+                availablePaymentOptions.add(PaymentOption.fromValue(name));
             }
         }
     }
@@ -182,6 +197,10 @@ public class CheckoutDetailsMapper {
         return sourceValue.getDeliveryServicePackageDetail();
     }
 
+    public Set<PaymentOption> getAvailablePaymentOptions() {
+        return availablePaymentOptions;
+    }
+
     public GetCurrentOrderOurpay getOurpay() {
         return sourceValue.getOurpay();
     }
@@ -242,6 +261,43 @@ public class CheckoutDetailsMapper {
                     mappedItems.add(item);
                 }
             }
+        }
+    }
+
+    public static class PaymentOption {
+        public static final PaymentOption AFTERPAY = new PaymentOption("Afterpay");
+        public static final PaymentOption BRAINTREE = new PaymentOption("BrainTree");
+        public static final PaymentOption BRAINTREEPAYPAL = new PaymentOption("BrainTreePayPal");
+        public static final PaymentOption OURPAY = new PaymentOption("OurPay");
+        public static final PaymentOption MASTERPASSPAYMENT = new PaymentOption("MasterPassPayment");
+        public static final PaymentOption VISACHECKOUT = new PaymentOption("VisaCheckout");
+        public static final PaymentOption IPAY88PAYMENTS = new PaymentOption("IPay88Payments");
+
+        private static final HashMap<String, PaymentOption> paymentOptions =
+                new HashMap<String, PaymentOption>() {{
+                    put("Afterpay".toLowerCase(), AFTERPAY);
+                    put("BrainTree".toLowerCase(), BRAINTREE);
+                    put("BrainTreePayPal".toLowerCase(), BRAINTREEPAYPAL);
+                    put("OurPay".toLowerCase(), OURPAY);
+                    put("MasterPassPayment".toLowerCase(), MASTERPASSPAYMENT);
+                    put("VisaCheckoutBrainTree".toLowerCase(), VISACHECKOUT);
+                    put("VisaCheckoutCyberSource".toLowerCase(), VISACHECKOUT);
+                    put("IPay88Payments".toLowerCase(), IPAY88PAYMENTS);
+                }};
+
+        private String value;
+
+        private PaymentOption(String value) {
+            this.value = value;
+        }
+
+        public static PaymentOption fromValue(String value) {
+            return paymentOptions.get(value.toLowerCase());
+        }
+
+        @NonNull
+        public String toString() {
+            return value;
         }
     }
 }

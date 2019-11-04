@@ -301,10 +301,10 @@ public class ImageUtils {
 
     public static Grid getRangedGridDefinition(int proposedWidth, int proposedHeight,
                                                float canvasWidth, int minColumn, int maxColumn) {
-        int computedColumn = Math.max((int) canvasWidth / proposedWidth, minColumn);
+        int computedColumn = Math.max((int) canvasWidth / Math.max(1, proposedWidth), minColumn);
         int actualMaxColumn = maxColumn == NO_MAX_COLUMN ? computedColumn : maxColumn;
         int finalColumnCount = Math.min(actualMaxColumn, computedColumn);
-        float ratio = (float) proposedHeight / proposedWidth;
+        float ratio = (float) proposedHeight / Math.max(1, proposedWidth);
         return getExactGridDefinition(finalColumnCount, ratio, canvasWidth);
     }
 

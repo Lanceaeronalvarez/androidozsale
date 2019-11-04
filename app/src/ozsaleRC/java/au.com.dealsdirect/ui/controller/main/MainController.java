@@ -174,7 +174,9 @@ public class MainController extends BaseController implements MainMvpView {
 
             @Override
             public void onPageSelected(int position) {
-                if (position == BANNER_FILTER_INDEX && mBannerFiltersController != null) {
+                if (position == BANNER_FILTER_INDEX &&
+                        mBannerFiltersController != null &&
+                        mBannerFiltersController.isViewAttached()) {
                     mBannerFiltersController.refreshContents();
                 }
             }

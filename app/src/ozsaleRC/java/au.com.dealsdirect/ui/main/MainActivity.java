@@ -7,12 +7,13 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.core.util.Pair;
-import androidx.appcompat.widget.PopupMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.util.Pair;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
@@ -48,8 +49,6 @@ import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 import com.visa.checkout.VisaPaymentSummary;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -124,7 +123,7 @@ import static au.com.dealsdirect.ui.controller.main.MainController.SHOP_INDEX;
 public class MainActivity extends BaseActivity implements MainMvpView {
 
     private static final String TAG = "MainActivity";
-    private static Router mRouter;
+    private Router mRouter;
 
     protected ActionTrackerInterface mActionTracker;
 
@@ -148,7 +147,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private BraintreeFragment mBraintreeFragment;
     private FetchTokenHandler mFetchTokenHandler;
 
-    private static MainController mMainController;
+    private MainController mMainController;
     private ShopsController mShopController;
     private CategoriesController mCategoriesController;
     private CheckoutController mCheckoutController;
@@ -156,7 +155,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private AccountController mAccountController;
     private SearchFilterController mSearchFilterController;
     private SearchFilterController mShopSearchFilterController;
-    private MainActivity mMainActivity;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -212,8 +210,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
         CommonControllerChangeListener.addToRouter(mRouter);
 
-        if (!mAppHasSavedInstance) {
+        if (mMainController == null) {
             mMainController = MainController.newInstance();
+        }
+
+        if (!mAppHasSavedInstance) {
             mProfiler.setEndLogTime(EventParameters.CustomEventType.CV_APPLAUNCH.getValue());
 
             HashMap<String, Object> parameters = new HashMap<>();
@@ -953,7 +954,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mShopController = shopsController;
     }
 
-    public static MainController getMainController() {
+    public MainController getMainController() {
         return mMainController;
     }
 
@@ -1211,7 +1212,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 Controller currentController = getCurrentController(getCurrentRouter());
                 BaseController baseController = currentController instanceof BaseController ?
                         (BaseController) getCurrentController(getCurrentRouter()) : null;
-                if (baseController != null) {
+                if (baseController != null && baseController.isViewAttached()) {
                     baseController.refreshContents();
                 }
             }
@@ -1256,7 +1257,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void goToSalesFromCategory(GetCategoryTreeResponse getCategoryTreeResponse) {
-        mShopController.goToSalesFromCategories(getCategoryTreeResponse);
+        mShopController.goToSalesFromCategories(getCategoryTreeResponse.getId(), getCategoryTreeResponse.getKey());
         setRootViewpagerItem(SHOP_INDEX);
     }
 
@@ -1434,14 +1435,67 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void showOrderBottomDialog(ArrayList<String> actionArrays, HashMap<String, String> hashMap) {
-        BottomSheetOrderDialog bottomSheetFragment = new BottomSheetOrderDialog();
+        String orderID = hashMap.get(ActionConstants.ORDER_ORDER_ID);
+        String invoiceNumber = hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER);
+        String itemDescription = hashMap.get(ActionConstants.ORDER_ITEM_DESCRIPTION);
+        String itemReturnID = hashMap.get(ActionConstants.ORDER_ITEM_RETURN_ID);
+        String productID = hashMap.get(ActionConstants.ORDER_PRODUCT_ID);
+        String itemId = hashMap.get(ActionConstants.ORDER_ITEM_ID);
+        String imageUrl = hashMap.get(ActionConstants.ORDER_ITEM_IMAGE_URL);
+        String reason = hashMap.get(ActionConstants.ORDER_REASON);
+        String quantity = hashMap.get(ActionConstants.ORDER_QUANTITY);
+        String totalItems = hashMap.get(ActionConstants.ORDER_SUBTOTAL_ITEM);
+        boolean isItemCancel = actionArrays.contains(ActionConstants.ORDER_ITEM_ACTION_REFUND);
+
+        BottomSheetOrderDialog bottomSheetFragment = new BottomSheetOrderDialog(
+                new BottomSheetOrderDialog.BottomSheetButtonListener() {
+                    @Override
+                    public void onContactUsPressed() {
+                        if (invoiceNumber != null) {
+                            showContactUs(true, Integer.parseInt(invoiceNumber), itemDescription);
+                        }
+                    }
+
+                    @Override
+                    public void onOrderPressed() {
+                        showWhereIsOrder();
+                    }
+
+                    @Override
+                    public void onChangeAddressPressed() {
+                        showChangeAddress(orderID);
+                    }
+
+                    @Override
+                    public void onReturnItemPressed() {
+                        if (invoiceNumber != null) {
+                            showReturnItems(Integer.parseInt(invoiceNumber), true, productID);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelOrderPressed() {
+                        if (!isItemCancel) {
+                            showCancelDialog(invoiceNumber, reason);
+                        } else if (quantity != null && totalItems != null) {
+                            showCancelItemDialog(
+                                    imageUrl,
+                                    itemDescription,
+                                    productID,
+                                    invoiceNumber,
+                                    reason,
+                                    Integer.parseInt(quantity), Integer.parseInt(totalItems));
+                        }
+                    }
+
+                    @Override
+                    public void onViewReturnItemPressed() {
+                        showViewReturnDetails(itemReturnID, itemDescription, true);
+                    }
+                });
         Bundle bundle = new Bundle();
 
         bundle.putStringArrayList(ActionConstants.ORDER_ARRAYS, actionArrays);
-
-        for (String key : hashMap.keySet()) {
-            bundle.putString(key, hashMap.get(key));
-        }
 
         bottomSheetFragment.setArguments(bundle);
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
@@ -1462,37 +1516,37 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
     }
 
-    public static void showContactUs(boolean isCalledFromOrders, int invoiceNumber, String description) {
+    public void showContactUs(boolean isCalledFromOrders, int invoiceNumber, String description) {
         getMainController().getHomeController().showSendContactMessage(isCalledFromOrders, invoiceNumber, description);
     }
 
-    public static void showWhereIsOrder() {
+    public void showWhereIsOrder() {
 
     }
 
-    public static void showChangeAddress(String orderID) {
+    public void showChangeAddress(String orderID) {
         getMainController().getHomeController().showMyAddress(orderID);
     }
 
-    public static void showReturnItems(int invoiceNumber, boolean calledFromOrder, String productId) {
+    public void showReturnItems(int invoiceNumber, boolean calledFromOrder, String productId) {
         getMainController().getHomeController().showMyReturns(invoiceNumber, calledFromOrder, productId);
     }
 
-    public static void showViewReturnDetails(String returnID, String productName, boolean isFromOrders) {
+    public void showViewReturnDetails(String returnID, String productName, boolean isFromOrders) {
         getMainController().getHomeController().showViewReturnsDetails(returnID, productName, isFromOrders);
     }
 
-    public static void showCancelDialog(String orderNumber, String reason) {
+    public void showCancelDialog(String orderNumber, String reason) {
         getMainController().getHomeController().showCancelOrderDialog(orderNumber, reason);
     }
 
-    public static void showCancelItemDialog(String imageUrl, String itemName, String invoiceNumber,
-                                            String reason, int quantity, int totalItems) {
-        getMainController().getHomeController().showCancelItemDialog(imageUrl, itemName, invoiceNumber,
+    public void showCancelItemDialog(String imageUrl, String itemName, String itemId, String invoiceNumber,
+                                     String reason, int quantity, int totalItems) {
+        getMainController().getHomeController().showCancelItemDialog(imageUrl, itemName, itemId, invoiceNumber,
                 reason, quantity, totalItems);
     }
 
-    public static void callRefundOrder(String invoiceNumber, String reason, JSONObject items) {
+    public void callRefundOrder(String invoiceNumber, String reason, HashMap<String, Integer> items) {
         getMainController().getHomeController().callCreateOrderRefund(invoiceNumber, reason, items);
     }
 
@@ -1546,40 +1600,40 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         cancel.setIcon(getResources().getDrawable(R.drawable.ic_cancel_order));
         cancel.setVisible(showCancel);
 
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.contact_us:
-                        showContactUs(true, Integer.parseInt(hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER)),
-                                hashMap.get(ActionConstants.ORDER_ITEM_DESCRIPTION));
-                        return true;
-                    case R.id.change_address:
-                        showChangeAddress(hashMap.get(ActionConstants.ORDER_ORDER_ID));
-                        return true;
-                    case R.id.return_item:
-                        showReturnItems(Integer.parseInt(hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER)),
-                                true, hashMap.get(ActionConstants.ORDER_PRODUCT_ID));
-                        return true;
-                    case R.id.view_return_details:
-                        showViewReturnDetails(hashMap.get(ActionConstants.ORDER_ITEM_RETURN_ID),
-                                hashMap.get(ActionConstants.ORDER_ITEM_DESCRIPTION), true);
-                        return true;
-                    case R.id.cancel_order:
-                        if (!isItemCancel) {
-                            showCancelDialog(hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER),
-                                    hashMap.get(ActionConstants.ORDER_REASON));
-                        } else {
-                            showCancelItemDialog(hashMap.get(ActionConstants.ORDER_ITEM_IMAGE_URL),
-                                    hashMap.get(ActionConstants.ORDER_ITEM_DESCRIPTION),
-                                    hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER),
-                                    hashMap.get(ActionConstants.ORDER_REASON),
-                                    Integer.parseInt(hashMap.get(ActionConstants.ORDER_QUANTITY)),
-                                    Integer.parseInt(hashMap.get(ActionConstants.ORDER_SUBTOTAL_ITEM)));
-                        }
-                        return true;
-                    default:
-                        return false;
-                }
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.contact_us:
+                    showContactUs(true, Integer.parseInt(hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER)),
+                            hashMap.get(ActionConstants.ORDER_ITEM_DESCRIPTION));
+                    return true;
+                case R.id.change_address:
+                    showChangeAddress(hashMap.get(ActionConstants.ORDER_ORDER_ID));
+                    return true;
+                case R.id.return_item:
+                    showReturnItems(Integer.parseInt(hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER)),
+                            true, hashMap.get(ActionConstants.ORDER_PRODUCT_ID));
+                    return true;
+                case R.id.view_return_details:
+                    showViewReturnDetails(hashMap.get(ActionConstants.ORDER_ITEM_RETURN_ID),
+                            hashMap.get(ActionConstants.ORDER_ITEM_DESCRIPTION), true);
+                    return true;
+                case R.id.cancel_order:
+                    if (!isItemCancel) {
+                        showCancelDialog(hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER),
+                                hashMap.get(ActionConstants.ORDER_REASON));
+                    } else {
+                        showCancelItemDialog(
+                                hashMap.get(ActionConstants.ORDER_ITEM_IMAGE_URL),
+                                hashMap.get(ActionConstants.ORDER_ITEM_DESCRIPTION),
+                                hashMap.get(ActionConstants.ORDER_PRODUCT_ID),
+                                hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER),
+                                hashMap.get(ActionConstants.ORDER_REASON),
+                                Integer.parseInt(hashMap.get(ActionConstants.ORDER_QUANTITY)),
+                                Integer.parseInt(hashMap.get(ActionConstants.ORDER_SUBTOTAL_ITEM)));
+                    }
+                    return true;
+                default:
+                    return false;
             }
         });
 

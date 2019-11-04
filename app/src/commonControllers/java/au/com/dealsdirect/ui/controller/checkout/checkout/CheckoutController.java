@@ -578,9 +578,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (mappedValues != null) {
             mOurpay = ourpay;
             PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
-            boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
 
-            if (ourpay != null && isMyPayEnabled && ourpay.isCanUse()) {
+            if (ourpay != null && ourpay.isCanUse()) {
 
                 if (((MainActivity) getActivity()).getMainController().getHomeController().isCheckoutRouterVisible()) {
                     Log.d("ourpay", "checkout controller is visible");
@@ -622,6 +621,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 }
 
             } else {
+                removeOurpayView();
                 Log.d(CheckoutController.class.getName(), "mypay disabled");
             }
         }

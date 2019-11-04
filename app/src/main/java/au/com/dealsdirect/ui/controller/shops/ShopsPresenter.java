@@ -17,10 +17,13 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> implements
         ShopsMvpPresenter<V> {
+
+    private Disposable mPreviousLoadShopsBannerRequest = null;
 
     @Inject
     public ShopsPresenter(
@@ -38,20 +41,29 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
     @Override
     public void loadShopsBanner(GetBannerRequest request, boolean getOnlyFromNetwork) {
+        cancelPreviousLoadShopsBannerRequest();
 
-        doApiCallForResponse(getDataManager().callGetBanners(request, getOnlyFromNetwork), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                getMvpView().showShopBanners((GetBannerResponse) response, request.getCategory());
-            }
+        mPreviousLoadShopsBannerRequest = doApiCallForResponse(
+                getDataManager().callGetBanners(request, getOnlyFromNetwork), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        getMvpView().showShopBanners((GetBannerResponse) response, request.getCategory());
+                    }
 
-            @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
-                getMvpView().unBindPaginate();
-            }
-        });
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                        getMvpView().unBindPaginate();
+                    }
+                });
+    }
+
+    private void cancelPreviousLoadShopsBannerRequest() {
+        if (mPreviousLoadShopsBannerRequest != null) {
+            getCompositeDisposable().delete(mPreviousLoadShopsBannerRequest);
+            mPreviousLoadShopsBannerRequest = null;
+        }
     }
 
     @Override

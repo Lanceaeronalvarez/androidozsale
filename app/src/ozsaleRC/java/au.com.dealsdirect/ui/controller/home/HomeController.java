@@ -3,9 +3,6 @@ package au.com.dealsdirect.ui.controller.home;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +12,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
@@ -23,8 +24,6 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -149,6 +148,10 @@ public class HomeController extends BaseController implements HomeMvpView {
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
+
+        if (mHasSavedStateInstance) {
+            refreshAllTopControllers();
+        }
     }
 
     @Override
@@ -187,10 +190,6 @@ public class HomeController extends BaseController implements HomeMvpView {
         mRouterContainerMapping.put(TAB_WISHLIST_INDEX, new Pair<>(mWishlistRouter, mWishlistContainer));
         setAllContainersVisibility(View.GONE);
         setVisibleContainer(mDefaultTab);
-
-        if (mHasSavedStateInstance) {
-            refreshAllTopControllers();
-        }
 
         AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(getActivity(), R.menu.bottom_navigation_menu);
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
@@ -233,6 +232,10 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
             MainController mainController = mActivity.getMainController();
+
+            if (mainController == null) {
+                return false;
+            }
 
             if (!mainController.shouldBottomNavigationViewEnabled() ||
                     mainController.isHomeViewPagerDragging()) {
@@ -1017,9 +1020,47 @@ public class HomeController extends BaseController implements HomeMvpView {
     public void showCancelOrderDialog(String orderNumber, String reason) {
 
         if (mPresenter.isTablet()) {
-            CustomAlertDialog.showCustomCancelOrderDialog(mActivity, orderNumber, reason);
+            CustomAlertDialog.showCustomCancelOrderDialog(
+                    mActivity,
+                    orderNumber,
+                    new CustomAlertDialog.CustomDialogButtonListener() {
+                        @Override
+                        public void onYes(Object object) {
+                            mActivity.callRefundOrder(orderNumber, reason, new HashMap<>());
+                        }
+
+                        @Override
+                        public void onNo(Object object) {
+
+                        }
+
+                        @Override
+                        public void onClose(Object object) {
+
+                        }
+                    });
         } else {
-            BottomDialogCancelOrders bottomSheetFragment = new BottomDialogCancelOrders();
+            BottomDialogCancelOrders bottomSheetFragment = new BottomDialogCancelOrders(
+                    new BottomDialogCancelOrders.BottomDialogButtonListener() {
+                        @Override
+                        public void onYes(Object object) {
+                            HashMap<String, Integer> map = new HashMap<>();
+                            if (object instanceof String) {
+                                map.put(orderNumber, Integer.parseInt((String) object));
+                            }
+                            mActivity.callRefundOrder(orderNumber, reason, map);
+                        }
+
+                        @Override
+                        public void onNo(Object object) {
+
+                        }
+
+                        @Override
+                        public void onClose(Object object) {
+
+                        }
+                    });
             Bundle bundle = new Bundle();
 
             bundle.putString(ActionConstants.ORDER_INVOICE_NUMBER, orderNumber);
@@ -1032,14 +1073,58 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     }
 
-    public void showCancelItemDialog(String imageUrl, String itemName, String invoiceNumber, String reason,
+    public void showCancelItemDialog(String imageUrl, String itemName, String itemId, String invoiceNumber, String reason,
                                      int quantity, int totalItems) {
 
         if (mPresenter.isTablet()) {
-            CustomAlertDialog.showCancelItemDialog(mActivity, imageUrl, itemName, invoiceNumber, reason,
-                    quantity, totalItems);
+            CustomAlertDialog.showCancelItemDialog(
+                    mActivity,
+                    imageUrl,
+                    itemName,
+                    quantity,
+                    totalItems,
+                    new CustomAlertDialog.CustomDialogButtonListener() {
+                        @Override
+                        public void onYes(Object object) {
+                            HashMap<String, Integer> map = new HashMap<>();
+                            if (object instanceof String) {
+                                map.put(itemId, Integer.parseInt((String) object));
+                            }
+                            mActivity.callRefundOrder(invoiceNumber, reason, map);
+                        }
+
+                        @Override
+                        public void onNo(Object object) {
+
+                        }
+
+                        @Override
+                        public void onClose(Object object) {
+
+                        }
+                    });
         } else {
-            BottomDialogCancelOrders bottomSheetFragment = new BottomDialogCancelOrders();
+            BottomDialogCancelOrders bottomSheetFragment = new BottomDialogCancelOrders(
+                    new BottomDialogCancelOrders.BottomDialogButtonListener() {
+                        @Override
+                        public void onYes(Object object) {
+                            HashMap<String, Integer> map = new HashMap<>();
+                            if (object instanceof String) {
+                                map.put(itemId, Integer.parseInt((String) object));
+                            }
+                            mActivity.callRefundOrder(invoiceNumber, reason, map);
+                        }
+
+                        @Override
+                        public void onNo(Object object) {
+
+                        }
+
+                        @Override
+                        public void onClose(Object object) {
+
+                        }
+                    });
             Bundle bundle = new Bundle();
 
             bundle.putString(ActionConstants.ORDER_ITEM_IMAGE_URL, imageUrl);
@@ -1055,7 +1140,7 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
     }
 
-    public void callCreateOrderRefund(String invoiceNumber, String reason, JSONObject items) {
+    public void callCreateOrderRefund(String invoiceNumber, String reason, HashMap<String, Integer> items) {
         CreateRefundRequest createRefundRequest = new CreateRefundRequest();
         createRefundRequest.setInvoiceNo(invoiceNumber);
         createRefundRequest.setReason(reason);

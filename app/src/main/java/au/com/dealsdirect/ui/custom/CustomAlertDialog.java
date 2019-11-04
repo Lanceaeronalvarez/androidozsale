@@ -2,8 +2,6 @@ package au.com.dealsdirect.ui.custom;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-
-import androidx.appcompat.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
@@ -21,11 +19,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import androidx.appcompat.app.AlertDialog;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ImageUtils;
 
 /*
@@ -67,9 +63,9 @@ public class CustomAlertDialog {
         @SuppressLint("InflateParams")
         View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
 
-        ImageView mDialogIcon = (ImageView) dialogView.findViewById(R.id.dialog_alert_icon);
-        TextView mDialogDescription = (TextView) dialogView.findViewById(R.id.dialog_alert_description);
-        TextView mDialogTextLink = (TextView) dialogView.findViewById(R.id.dialog_alert_clickable_text);
+        ImageView mDialogIcon = dialogView.findViewById(R.id.dialog_alert_icon);
+        TextView mDialogDescription = dialogView.findViewById(R.id.dialog_alert_description);
+        TextView mDialogTextLink = dialogView.findViewById(R.id.dialog_alert_clickable_text);
 
 
         setAlertDialogDrawable(mDialogIcon, customDialogIconState);
@@ -84,7 +80,10 @@ public class CustomAlertDialog {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity.getApplicationContext());
         builder.setView(dialogView);
         AlertDialog newAlertDialog = builder.create();
-        newAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        if (newAlertDialog.getWindow() != null) {
+            newAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
 
         setAlertDialogGravity(newAlertDialog, CustomDialogGravity.TOP);
         newAlertDialog.getWindow()
@@ -125,9 +124,9 @@ public class CustomAlertDialog {
         @SuppressLint("InflateParams")
         View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
 
-        ImageView mDialogIcon = (ImageView) dialogView.findViewById(R.id.dialog_alert_icon);
-        TextView mDialogDescription = (TextView) dialogView.findViewById(R.id.dialog_alert_description);
-        TextView mDialogTextLink = (TextView) dialogView.findViewById(R.id.dialog_alert_clickable_text);
+        ImageView mDialogIcon = dialogView.findViewById(R.id.dialog_alert_icon);
+        TextView mDialogDescription = dialogView.findViewById(R.id.dialog_alert_description);
+        TextView mDialogTextLink = dialogView.findViewById(R.id.dialog_alert_clickable_text);
 
 
         mDialogTextLink.setVisibility(View.GONE);
@@ -138,7 +137,9 @@ public class CustomAlertDialog {
         builder.setView(dialogView);
 
         AlertDialog newAlertDialog = builder.create();
-        newAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        if (newAlertDialog.getWindow() != null) {
+            newAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
 
         setAlertDialogGravity(newAlertDialog, CustomDialogGravity.TOP);
         newAlertDialog.getWindow().getAttributes().windowAnimations = R.style.AppearDialog;
@@ -168,7 +169,9 @@ public class CustomAlertDialog {
     }
 
     public static AlertDialog showCustomCancelOrderDialog(
-            Activity activity, String orderNumber, String reason) {
+            Activity activity,
+            String orderNumber,
+            CustomDialogButtonListener listener) {
 
 
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -176,10 +179,10 @@ public class CustomAlertDialog {
         @SuppressLint("InflateParams")
         View dialogView = inflater.inflate(R.layout.dialog_cancel_order, null);
 
-        Button mYesButton = (Button) dialogView.findViewById(R.id.button_yes_cancel_order);
-        Button mNoButton = (Button) dialogView.findViewById(R.id.button_no_cancel_order);
-        ImageButton mCloseButton = (ImageButton) dialogView.findViewById(R.id.img_order_button_close);
-        TextView mTextOrderNumber = (TextView) dialogView.findViewById(R.id.cancel_order_number_text);
+        Button mYesButton = dialogView.findViewById(R.id.button_yes_cancel_order);
+        Button mNoButton = dialogView.findViewById(R.id.button_no_cancel_order);
+        ImageButton mCloseButton = dialogView.findViewById(R.id.img_order_button_close);
+        TextView mTextOrderNumber = dialogView.findViewById(R.id.cancel_order_number_text);
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -188,34 +191,34 @@ public class CustomAlertDialog {
         AlertDialog newAlertDialog = builder.create();
 
         setAlertDialogGravity(newAlertDialog, CustomDialogGravity.CENTER);
-        newAlertDialog.getWindow().getAttributes().windowAnimations = R.style.CancelOrderDialog;
-
-        newAlertDialog.getWindow().setDimAmount(WINDOW_DIM_AMOUNT);
+        if (newAlertDialog.getWindow() != null) {
+            newAlertDialog.getWindow().getAttributes().windowAnimations = R.style.CancelOrderDialog;
+            newAlertDialog.getWindow().setDimAmount(WINDOW_DIM_AMOUNT);
+        }
 
         mTextOrderNumber.setText(orderNumber);
 
         newAlertDialog.show();
 
-        mYesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.callRefundOrder(orderNumber, reason, new JSONObject());
-                dismissCustomDialog();
+        mYesButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onYes(null);
             }
+            dismissCustomDialog();
         });
 
-        mNoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismissCustomDialog();
+        mNoButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onNo(null);
             }
+            dismissCustomDialog();
         });
 
-        mCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismissCustomDialog();
+        mCloseButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClose(null);
             }
+            dismissCustomDialog();
         });
 
         alertDialog = newAlertDialog;
@@ -224,8 +227,12 @@ public class CustomAlertDialog {
     }
 
     public static AlertDialog showCancelItemDialog(
-            Activity activity, String imageUrl, String itemName, String orderNumber, String reason,
-            int quantity, int totalItems) {
+            Activity activity,
+            String imageUrl,
+            String itemName,
+            int quantity,
+            int totalItems,
+            CustomDialogButtonListener listener) {
 
 
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -233,12 +240,12 @@ public class CustomAlertDialog {
         @SuppressLint("InflateParams")
         View dialogView = inflater.inflate(R.layout.dialog_cancel_item_order, null);
 
-        Button mYesButton = (Button) dialogView.findViewById(R.id.button_yes_cancel_item);
-        Button mNoButton = (Button) dialogView.findViewById(R.id.button_no_cancel_item);
-        ImageButton mCloseButton = (ImageButton) dialogView.findViewById(R.id.img_button_close);
-        ImageView mItemImage = (ImageView) dialogView.findViewById(R.id.item_cancel_image);
-        TextView mItemName = (TextView) dialogView.findViewById(R.id.item_name);
-        ProductQuantityLayout mQuantity = (ProductQuantityLayout) dialogView.findViewById(R.id.item_quantity);
+        Button mYesButton = dialogView.findViewById(R.id.button_yes_cancel_item);
+        Button mNoButton = dialogView.findViewById(R.id.button_no_cancel_item);
+        ImageButton mCloseButton = dialogView.findViewById(R.id.img_button_close);
+        ImageView mItemImage = dialogView.findViewById(R.id.item_cancel_image);
+        TextView mItemName = dialogView.findViewById(R.id.item_name);
+        ProductQuantityLayout mQuantity = dialogView.findViewById(R.id.item_quantity);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setView(dialogView);
@@ -246,9 +253,10 @@ public class CustomAlertDialog {
         AlertDialog newAlertDialog = builder.create();
 
         setAlertDialogGravity(newAlertDialog, CustomDialogGravity.CENTER);
-        newAlertDialog.getWindow().getAttributes().windowAnimations = R.style.CancelOrderDialog;
-
-        newAlertDialog.getWindow().setDimAmount(WINDOW_DIM_AMOUNT);
+        if (newAlertDialog.getWindow() != null) {
+            newAlertDialog.getWindow().getAttributes().windowAnimations = R.style.CancelOrderDialog;
+            newAlertDialog.getWindow().setDimAmount(WINDOW_DIM_AMOUNT);
+        }
 
         mItemName.setText(itemName);
 
@@ -279,33 +287,25 @@ public class CustomAlertDialog {
 
         newAlertDialog.show();
 
-        mYesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put(orderNumber, mQuantity.getQuantity());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                MainActivity.callRefundOrder(orderNumber, reason, jsonObject);
-                dismissCustomDialog();
+        mYesButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onYes(mQuantity.getQuantity());
             }
+            dismissCustomDialog();
         });
 
-        mNoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismissCustomDialog();
+        mNoButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onNo(null);
             }
+            dismissCustomDialog();
         });
 
-        mCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismissCustomDialog();
+        mCloseButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClose(null);
             }
+            dismissCustomDialog();
         });
 
         alertDialog = newAlertDialog;
@@ -318,30 +318,31 @@ public class CustomAlertDialog {
             CustomDialogGravity customDialogGravity) {
 
         Window window = alertDialog.getWindow();
-        WindowManager.LayoutParams wlp = window.getAttributes();
+        if (window != null) {
+            WindowManager.LayoutParams wlp = window.getAttributes();
 
-        switch (customDialogGravity) {
+            switch (customDialogGravity) {
 
-            case TOP:
-                wlp.gravity = Gravity.TOP;
-                break;
+                case TOP:
+                    wlp.gravity = Gravity.TOP;
+                    break;
 
-            case BOTTOM:
-                wlp.gravity = Gravity.BOTTOM;
-                break;
+                case BOTTOM:
+                    wlp.gravity = Gravity.BOTTOM;
+                    break;
 
-            case CENTER:
-                wlp.gravity = Gravity.CENTER;
-                break;
+                case CENTER:
+                    wlp.gravity = Gravity.CENTER;
+                    break;
 
-            default:
-                wlp.gravity = Gravity.CENTER;
-                break;
+                default:
+                    wlp.gravity = Gravity.CENTER;
+                    break;
+            }
+
+            wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+            window.setAttributes(wlp);
         }
-
-        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-        window.setAttributes(wlp);
-
     }
 
 
@@ -383,5 +384,13 @@ public class CustomAlertDialog {
             //Window is leaked cause of activity change
             alertDialog = null;
         }
+    }
+
+    public interface CustomDialogButtonListener {
+        void onYes(Object object);
+
+        void onNo(Object object);
+
+        void onClose(Object object);
     }
 }

@@ -138,6 +138,7 @@
 
 
         <View
+            android:id="@+id/partial_checkout_line_above_afterpay"
             style="@style/horizontalBorderView"
             android:layout_width="match_parent"
             android:layout_height="1dp"

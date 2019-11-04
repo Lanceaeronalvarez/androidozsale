@@ -34,7 +34,7 @@ public class AddPaymentPresenter<V extends AddPaymentMvpView> extends BasePresen
     @Override
     public void generateOurpay(CheckoutDetailsMapper value) {
         ourpay = new Ourpay();
-        ourpay.setState(OurpayState.ONCART);
+        ourpay.setState(OurpayState.ADDPAYMENT);
 
         assert ourpay != null;
 
