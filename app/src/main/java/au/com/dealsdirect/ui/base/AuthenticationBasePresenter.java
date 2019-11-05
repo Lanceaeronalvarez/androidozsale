@@ -45,10 +45,6 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
 
     private static final String TAG = "BasePresenter";
 
-    private final DataManager mDataManager;
-    private final SchedulerProvider mSchedulerProvider;
-    private final CompositeDisposable mCompositeDisposable;
-
     private final List<String> permissions = Arrays.asList("public_profile", "email");
 
     private String strEmail = "";
@@ -57,45 +53,9 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
     private String strFBUserID;
     private String strFBSignedRequest;
 
-    private V mMvpView;
-
     @Inject
     public AuthenticationBasePresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
-        this.mDataManager = dataManager;
-        this.mSchedulerProvider = schedulerProvider;
-        this.mCompositeDisposable = compositeDisposable;
-    }
-
-    @Override
-    public void onAttach(V mvpView) {
-        mMvpView = mvpView;
-    }
-
-    @Override
-    public void onDetach() {
-        mCompositeDisposable.dispose();
-        mMvpView = null;
-    }
-
-    public boolean isViewAttached() {
-        return mMvpView != null;
-    }
-
-    public V getMvpView() {
-        return mMvpView;
-    }
-
-    public DataManager getDataManager() {
-        return mDataManager;
-    }
-
-    public SchedulerProvider getSchedulerProvider() {
-        return mSchedulerProvider;
-    }
-
-    public CompositeDisposable getCompositeDisposable() {
-        return mCompositeDisposable;
     }
 
     @Override
@@ -143,11 +103,6 @@ public class AuthenticationBasePresenter<V extends AuthenticationMvpView> extend
 //            Log.e(TAG, "handleApiError", e);
 //            getMvpView().onError(R.string.api_default_error);
 //        }
-    }
-
-    @Override
-    public boolean isTablet() {
-        return getDataManager().isTablet();
     }
 
     @Override
