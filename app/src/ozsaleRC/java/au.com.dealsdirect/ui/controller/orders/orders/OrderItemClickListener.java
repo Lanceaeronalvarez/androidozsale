@@ -7,11 +7,11 @@ import java.util.HashMap;
 
 public interface OrderItemClickListener {
     void onOrderItemClick(String referenceNumber, HashMap<String, String> status, String link,
-                          HashMap<String, String> estimatedDelivery, int position);
+                          HashMap<String, HashMap<String, String>> deliveryRoutes, int position);
 
     void onOrderItemTrackingButtonClick(String url, String errorMessage);
 
-    void onOrderItemShowOptions(View v, ArrayList<String> arrayList, HashMap<String,String> hashMap);
+    void onOrderItemShowOptions(View v, ArrayList<String> arrayList, HashMap<String, String> hashMap);
 
     void callOrderReceived(String orderID);
 }

@@ -1,16 +1,17 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
 import android.app.Activity;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,8 +25,12 @@ import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
+import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.graphics.Typeface.BOLD;
+import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 
 /**
  * Created by smartwave on 22/06/2017.
@@ -51,9 +56,13 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     private static final int ORDER_DISPATCHED_NEGATIVE_STATE = -4;
     private static final int ORDER_RECEIVED_ACTIVE_STATE = 5;
 
+    private static final String SHIP_FROM = "SHIP_FROM";
+    private static final String ESTIMATED_DELIVERY = "ESTIMATED_DELIVERY";
+    private static final String SHIP_TO = "SHIP_TO";
+
     private HashMap<String, String> mStatus = new HashMap<>();
     private String mLink;
-    private HashMap<String, String> mEstimatedDelivery = new HashMap<>();
+    private HashMap<String, HashMap<String, String>> mDeliveryRoutes;
     private String mItemName = "";
     private String mItemAddress = "";
     private int mInvoiceNumber;
@@ -71,14 +80,14 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                                            GetOrderPaymentDetails.ResponseValue.Value orderDetails,
                                            OrderDetailsClickListener clickListener,
                                            HashMap<String, String> status, String link,
-                                           HashMap<String, String> estimatedDelivery,
+                                           HashMap<String, HashMap<String, String>> deliveryRoutes,
                                            GetPaymentsList.ResponseValue.PaymentItem orders) {
 
         mClickListener = clickListener;
         this.mActivity = mActivity;
         this.mStatus = status;
         this.mLink = link;
-        this.mEstimatedDelivery = estimatedDelivery;
+        this.mDeliveryRoutes = deliveryRoutes;
         this.mOrders = orders;
         ordersTransformation(orderDetails, orders);
 
@@ -98,7 +107,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             }
         }
 
-        if (orders != null ) {
+        if (orders != null) {
             for (GetPaymentsList.ResponseValue.Order order : orders.getOrders()) {
                 mData.add(order);
                 for (int i = 0; i < order.getItems().size(); i++) {
@@ -142,7 +151,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             getReceiveDate = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getReceived();
             isOrderReceived = getReceiveDate != null;
 
-            String invoiceNumber = mActivity.getResources().getString(R.string.order_invoice) +" "+ mInvoiceNumber;
+            String invoiceNumber = mActivity.getResources().getString(R.string.order_invoice) + " " + mInvoiceNumber;
             ((OrderSaleName) holder).saleName.setText(invoiceNumber);
             ((OrderSaleName) holder).address.setText(mItemAddress);
 
@@ -168,9 +177,9 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         if (mData.get(position) instanceof GetOrderPaymentDetails.ResponseValue.Tracker) {
 
             Iterator statusIterator = mStatus.keySet().iterator();
-            while(statusIterator.hasNext()) {
-                String key=(String)statusIterator.next();
-                String value=(String)mStatus.get(key);
+            while (statusIterator.hasNext()) {
+                String key = (String) statusIterator.next();
+                String value = (String) mStatus.get(key);
 
                 if (key.equalsIgnoreCase(mOrderId)) {
                     currentStatus = value;
@@ -185,9 +194,9 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
         if (mData.get(position) instanceof GetPaymentsList.ResponseValue.Tracker) {
             Iterator statusIterator = mStatus.keySet().iterator();
-            while(statusIterator.hasNext()) {
-                String key=(String)statusIterator.next();
-                String value=(String)mStatus.get(key);
+            while (statusIterator.hasNext()) {
+                String key = (String) statusIterator.next();
+                String value = (String) mStatus.get(key);
 
                 if (key.equalsIgnoreCase(mOrderId)) {
                     currentStatus = value;
@@ -208,10 +217,10 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     public int getItemViewType(int position) {
         int viewType = 0;
         if (mData.get(position) instanceof GetOrderPaymentDetails.ResponseValue.Item ||
-            mData.get(position) instanceof GetPaymentsList.ResponseValue.Item) {
+                mData.get(position) instanceof GetPaymentsList.ResponseValue.Item) {
             viewType = VIEW_TYPE_SALE_DETAILS;
         } else if (mData.get(position) instanceof GetOrderPaymentDetails.ResponseValue.Tracker ||
-                   mData.get(position) instanceof GetPaymentsList.ResponseValue.Tracker) {
+                mData.get(position) instanceof GetPaymentsList.ResponseValue.Tracker) {
             viewType = VIEW_TYPE_SALE_TRACK;
         } else {
             viewType = VIEW_TYPE_SALE_NAME;
@@ -253,8 +262,8 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         } else {
 
             if (item.getActions().contains(ActionConstants.ORDER_ITEM_VIEW_RETURN) ||
-                item.getActions().contains(ActionConstants.ORDER_ITEM_RETURN) ||
-                item.getActions().contains(ActionConstants.ORDER_ITEM_ACTION_REFUND)) {
+                    item.getActions().contains(ActionConstants.ORDER_ITEM_RETURN) ||
+                    item.getActions().contains(ActionConstants.ORDER_ITEM_ACTION_REFUND)) {
 
                 holder.moreOptionsImageButton.setVisibility(View.VISIBLE);
 
@@ -275,7 +284,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             itemHashMap.put(ActionConstants.ORDER_SUBTOTAL_ITEM, String.valueOf(item.getSubTotal().getItemsCount()));
 
             holder.moreOptionsImageButton.setOnClickListener(v -> {
-                    mClickListener.showOrderDialog(v, (ArrayList<String>) item.getActions(), itemHashMap);
+                mClickListener.showOrderDialog(v, (ArrayList<String>) item.getActions(), itemHashMap);
             });
 
         }
@@ -310,7 +319,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
     static class OrderItemTrack extends RecyclerView.ViewHolder {
         @BindView(R.id.trackHereButton)
-        Button trackHereButton;
+        ViewGroup trackHereButton;
 
         @BindView(R.id.order_date_graph_node)
         TextView orderDateGraphNodeView;
@@ -369,6 +378,12 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         LinearLayout receivedOrderLayout;
         @BindView(R.id.estimatedDeliveryTextView)
         TextView estimatedDeliveryText;
+        @BindView(R.id.shipFromTextView)
+        TextView shipFromTextView;
+        @BindView(R.id.shipToTextView)
+        TextView shipToTextView;
+        @BindView(R.id.my_order_information_text_content)
+        ViewGroup deliveryRouteView;
 
         public OrderItemTrack(View itemView) {
             super(itemView);
@@ -418,14 +433,39 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
         holder.trackHereButton.setVisibility(mLink == null || mLink.isEmpty() ? View.GONE : View.VISIBLE);
 
-        Iterator keyIterator = mEstimatedDelivery.keySet().iterator();
-        while(keyIterator.hasNext()) {
-            String key=(String)keyIterator.next();
-            String value=(String)mEstimatedDelivery.get(key);
+        HashMap<String, String> deliveryRoute = mDeliveryRoutes.get(mOrderId);
+        if (deliveryRoute == null) {
+            Iterator keyIterator = mDeliveryRoutes.keySet().iterator();
+            while (keyIterator.hasNext() && deliveryRoute == null) {
+                String key = (String) keyIterator.next();
 
-            if (key.equalsIgnoreCase(mOrderId)) {
-                holder.estimatedDeliveryText.setText(value);
+                if (key.equalsIgnoreCase(mOrderId)) {
+                    deliveryRoute = mDeliveryRoutes.get(key);
+                }
             }
+        }
+
+        if (deliveryRoute == null) {
+            holder.deliveryRouteView.setVisibility(View.GONE);
+        } else {
+            holder.deliveryRouteView.setVisibility(View.VISIBLE);
+            holder.shipFromTextView.setText(StringUtils.twoPartStringWithStyles(
+                    mActivity.getResources().getString(R.string.ship_from_with_colon),
+                    null,
+                    deliveryRoute.get(SHIP_FROM),
+                    new StyleSpan(BOLD)
+            ));
+            holder.estimatedDeliveryText.setText(StringUtils.applySpanToSubstringsMatching(
+                    new SpannableStringBuilder(deliveryRoute.get(ESTIMATED_DELIVERY)),
+                    new StyleSpan(BOLD),
+                    "(?!.*:).{1,}",
+                    SPAN_EXCLUSIVE_INCLUSIVE));
+            holder.shipToTextView.setText(StringUtils.twoPartStringWithStyles(
+                    mActivity.getResources().getString(R.string.ship_to_with_colon),
+                    null,
+                    deliveryRoute.get(SHIP_TO),
+                    new StyleSpan(BOLD)
+            ));
         }
 
         String approvedDate = DateUtils.getDateForOrderProgress(tracker.getApprovedDate());
@@ -438,29 +478,29 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         int currentStep = tracker.getStep();
         boolean isRefunded = currentStatus.toLowerCase().contains(mActivity.getString(R.string.refunded));
         String orderText = mActivity.getResources().getString(R.string.order);
-        for(int i = Math.abs(currentStep); i > 0; i--) {
+        for (int i = Math.abs(currentStep); i > 0; i--) {
             boolean isCurrentStep = isRefunded && i == Math.abs(currentStep);
             switch (i) {
                 case ORDER_DATE_ACTIVE_STATE:
-                    holder.orderDateGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
+                    holder.orderDateGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state : R.drawable.bg_orders_graph_active_state);
                     holder.orderDateGraphNodeView.setText("");
                     holder.orderFirstNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
                     break;
 
                 case ORDER_STOCK_ARRIVED_ACTIVE_STATE:
-                    holder.stockArrivedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
+                    holder.stockArrivedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state : R.drawable.bg_orders_graph_active_state);
                     holder.stockArrivedGraphNodeView.setText("");
                     holder.orderSecondNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
                     break;
 
                 case ORDER_PACKED_ACTIVE_STATE:
-                    holder.orderPackedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
+                    holder.orderPackedGraphNodeView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state : R.drawable.bg_orders_graph_active_state);
                     holder.orderPackedGraphNodeView.setText("");
                     holder.orderThirdNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
                     break;
 
                 case ORDER_DISPATCHED_ACTIVE_STATE:
-                    holder.dispatchedGraphNodeTextView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state :R.drawable.bg_orders_graph_active_state);
+                    holder.dispatchedGraphNodeTextView.setBackgroundResource(isCurrentStep ? R.drawable.bg_orders_negative_state : R.drawable.bg_orders_graph_active_state);
                     holder.dispatchedGraphNodeTextView.setText("");
                     holder.orderFourthNodeStatusTextView.setTextColor(mActivity.getResources().getColor(isCurrentStep ? R.color.refunded_state_color : R.color.text_medium));
                     break;
@@ -522,6 +562,6 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     private void setActiveOrderReceived(OrderItemTrack holder, String orderText) {
         holder.receivedGraphNodeTextView.setBackgroundResource(R.drawable.bg_orders_graph_active_state);
         holder.receivedGraphNodeTextView.setText("");
-        holder.orderFifthNodeStatusTextView.setText(String.format(orderText,mActivity.getResources().getString(R.string.received)));
+        holder.orderFifthNodeStatusTextView.setText(String.format(orderText, mActivity.getResources().getString(R.string.received)));
     }
 }

@@ -2,15 +2,16 @@ package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
 import android.graphics.Rect;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
 
@@ -45,7 +46,9 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     private static final String SELECTED_ITEM = "SELECTED_ITEM";
     private static final String STATUS = "STATUS";
     private static final String LINK = "LINK";
+    private static final String SHIP_FROM = "SHIP_FROM";
     private static final String ESTIMATED_DELIVERY = "ESTIMATED_DELIVERY";
+    private static final String SHIP_TO = "SHIP_TO";
     private static final String ORDER_DETAILS = "ORDER_DETAILS";
 
     public abstract static class Parameters {
@@ -56,19 +59,19 @@ public class OrderDetailsController extends BaseController implements OrderDetai
             String mPaymentRefNo;
             HashMap<String, String> mStatus;
             String mLink;
-            HashMap<String, String> mEstimatedDelivery;
+            HashMap<String, HashMap<String, String>> mDeliveryRoutes;
             GetPaymentsList.ResponseValue.PaymentItem mOrders;
 
             public FromOrdersList(String paymentRefNo,
-                                  HashMap<String, String>status,
+                                  HashMap<String, String> status,
                                   String link,
-                                  HashMap<String, String>estimatedDelivery,
+                                  HashMap<String, HashMap<String, String>> deliveryRoutes,
                                   GetPaymentsList.ResponseValue.PaymentItem orderDetails) {
 
                 mPaymentRefNo = paymentRefNo;
                 mStatus = status;
                 mLink = link;
-                mEstimatedDelivery = estimatedDelivery;
+                mDeliveryRoutes = deliveryRoutes;
                 mOrders = orderDetails;
 
             }
@@ -85,8 +88,8 @@ public class OrderDetailsController extends BaseController implements OrderDetai
                 return mLink;
             }
 
-            public HashMap<String, String> getEstimatedDelivery() {
-                return mEstimatedDelivery;
+            public HashMap<String, HashMap<String, String>> getDeliveryRoutes() {
+                return mDeliveryRoutes;
             }
 
             public GetPaymentsList.ResponseValue.PaymentItem getOrderDetails() {
@@ -128,21 +131,9 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     String mPaymentReferenceNo;
     HashMap<String, String> mStatus;
     String mLink;
-    HashMap<String, String> mEstimatedDelivery;
+    HashMap<String, HashMap<String, String>> mDeliveryRoutes;
     GetOrderPaymentDetails.ResponseValue.Value mOrderDetails;
     GetPaymentsList.ResponseValue.PaymentItem mOrders;
-
-    public OrderDetailsController(String paymentRefNo, HashMap<String, String> status, String link,
-                                  HashMap<String, String> estimatedDelivery,
-                                  GetOrderPaymentDetails.ResponseValue.Value orderDetails) {
-        this(new BundleBuilder(new Bundle())
-                .putString(PAYMENT_REF_NO, paymentRefNo)
-                .putSerializable(STATUS, status)
-                .putString(LINK, link)
-                .putSerializable(ESTIMATED_DELIVERY, estimatedDelivery)
-                .putString(ORDER_DETAILS, orderDetails.toString())
-                .build());
-    }
 
     public static OrderDetailsController newInstance(Parameters parameters) {
         OrderDetailsController controller = new OrderDetailsController(
@@ -151,7 +142,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
         controller.mPaymentReferenceNo = ((Parameters.FromOrdersList) parameters).getPaymentRefNo();
         controller.mStatus = ((Parameters.FromOrdersList) parameters).getStatus();
         controller.mLink = ((Parameters.FromOrdersList) parameters).getLink();
-        controller.mEstimatedDelivery = ((Parameters.FromOrdersList) parameters).getEstimatedDelivery();
+        controller.mDeliveryRoutes = ((Parameters.FromOrdersList) parameters).getDeliveryRoutes();
         controller.mOrders = ((Parameters.FromOrdersList) parameters).getOrderDetails();
 
         return controller;
@@ -160,10 +151,6 @@ public class OrderDetailsController extends BaseController implements OrderDetai
 
     public OrderDetailsController(Bundle args) {
         super(args);
-        mPaymentReferenceNo = args.getString(PAYMENT_REF_NO, "");
-        mStatus = (HashMap<String, String>) args.getSerializable(STATUS);
-        mLink = args.getString(LINK, "");
-        mEstimatedDelivery = (HashMap<String, String>) args.getSerializable(ESTIMATED_DELIVERY);
     }
 
     @Override
@@ -196,8 +183,8 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     @Override
     protected void setUp(View view) {
 
-        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity,null,this, mStatus, mLink,
-                mEstimatedDelivery, mOrders));
+        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity, null, this, mStatus, mLink,
+                mDeliveryRoutes, mOrders));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -223,8 +210,8 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     @Override
     public void onViewDidAppear(Controller previousController) {
 
-        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity,null,this, mStatus, mLink,
-                mEstimatedDelivery, mOrders));
+        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity, null, this, mStatus, mLink,
+                mDeliveryRoutes, mOrders));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -258,7 +245,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
         int position = parent.getChildAdapterPosition(view);
         int viewType = parent.getAdapter().getItemViewType(position);
 
-        if(viewType == OrderDetailsRecyclerViewAdapter.VIEW_TYPE_SALE_NAME && position != 0) {
+        if (viewType == OrderDetailsRecyclerViewAdapter.VIEW_TYPE_SALE_NAME && position != 0) {
             float margin = mActivity.getResources().getDisplayMetrics().density *
                     mActivity.getResources().getDimension(R.dimen.margin_small);
             return outRect.top = (int) margin;
@@ -286,8 +273,8 @@ public class OrderDetailsController extends BaseController implements OrderDetai
         mApprovedDateTextView.setText(date);
 
         //set adapter
-        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity,orderDetails,this, mStatus, mLink,
-                mEstimatedDelivery, null));
+        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity, orderDetails, this, mStatus, mLink,
+                mDeliveryRoutes, null));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -317,7 +304,7 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     }
 
     @Override
-    public void showOrderDialog(View view, ArrayList<String> arrayList, HashMap<String,String> hashMap) {
+    public void showOrderDialog(View view, ArrayList<String> arrayList, HashMap<String, String> hashMap) {
 
         if (mPresenter.isTablet()) {
             mActivity.showPopupMenu(view, arrayList, hashMap);

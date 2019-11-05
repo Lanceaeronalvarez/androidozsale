@@ -2,6 +2,7 @@ package au.com.dealsdirect.utils;
 
 import android.content.Context;
 import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.util.Range;
 
@@ -17,6 +18,8 @@ import java.util.regex.Pattern;
 
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
+
+import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 
 
 /*
@@ -215,35 +218,37 @@ public class StringUtils {
         return ranges;
     }
 
-    public static void applySpanToRange(SpannableStringBuilder source,
+    public static SpannableStringBuilder applySpanToRange(SpannableStringBuilder source,
                                         Object what,
                                         Range<Integer> range,
                                         int flags) {
         source.setSpan(what, range.getLower(), range.getUpper(), flags);
+        return source;
     }
 
-    public static void applySpanToRanges(SpannableStringBuilder source,
+    public static SpannableStringBuilder applySpanToRanges(SpannableStringBuilder source,
                                          Object what,
                                          List<Range<Integer>> ranges,
                                          int flags) {
         for (int i = 0; i < ranges.size(); i++) {
             applySpanToRange(source, what, ranges.get(i), flags);
         }
+        return source;
     }
 
-    public static void applySpanToSubstringsMatching(SpannableStringBuilder source,
+    public static SpannableStringBuilder applySpanToSubstringsMatching(SpannableStringBuilder source,
                                                      Object what,
                                                      char delimiter,
                                                      String regex,
                                                      int flags) {
-        applySpanToRanges(source, what, rangesOfSubstringsMatching(source.toString(), delimiter, regex), flags);
+        return applySpanToRanges(source, what, rangesOfSubstringsMatching(source.toString(), delimiter, regex), flags);
     }
 
-    public static void applySpanToSubstringsMatching(SpannableStringBuilder source,
+    public static SpannableStringBuilder applySpanToSubstringsMatching(SpannableStringBuilder source,
                                                      Object what,
                                                      String regex,
                                                      int flags) {
-        applySpanToRanges(source, what, rangesOfSubstringsMatching(source.toString(), regex), flags);
+        return applySpanToRanges(source, what, rangesOfSubstringsMatching(source.toString(), regex), flags);
     }
 
     public interface CSSStyle {
@@ -289,5 +294,19 @@ public class StringUtils {
     public static String insertSpaceBetweenLowerCaseAndUppercaseLetters(String source) {
         final String regex = "[a-z](?=[A-Z])";
         return source.replaceAll(regex, "$0 ");
+    }
+
+    public static SpannableStringBuilder twoPartStringWithStyles(String firstString,
+                                                                 StyleSpan firstStyle,
+                                                                 String secondString,
+                                                                 StyleSpan secondStyle) {
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(firstString + secondString);
+        if (firstStyle != null) {
+            stringBuilder.setSpan(firstStyle, 0, firstString.length(), SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        if (secondString != null) {
+            stringBuilder.setSpan(secondStyle, firstString.length(), stringBuilder.length(), SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        return stringBuilder;
     }
 }
