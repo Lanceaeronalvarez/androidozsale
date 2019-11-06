@@ -850,7 +850,10 @@ dependencies {
     implementation 'me.relex:circleindicator:1.2.2@aar'
 
     // glide
-    implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
+    def GLIDE_VERSION = "4.10.0"
+    implementation "com.zlc.glide:webpdecoder:1.6.${GLIDE_VERSION}"
+    implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
 
     // picker
     implementation "com.shawnlin:number-picker:$rootProject.numberPickerVersion"
