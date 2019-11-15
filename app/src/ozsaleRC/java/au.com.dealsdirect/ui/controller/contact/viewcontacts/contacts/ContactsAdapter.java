@@ -66,15 +66,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewCo
         holder.contactUsTimeStampTextView.setText(DateUtils.getDateForContactMessages(itemLastAnswer));
         holder.contactItem.setOnClickListener(v -> mPresenter.selectContact(mCurrentContactsList.get(position)));
 
-        if (mPresenter.isTablet() && position == getItemCount() - 1){
-            holder.contactUsCreateMessageButton.setVisibility(View.VISIBLE);
-            holder.contactUsCreateMessageButton.setOnClickListener(view -> {
-                mContactClickListener.onCreateMessageClick();
-            });
-        } else {
-            holder.contactUsCreateMessageButton.setVisibility(View.GONE);
-        }
-
     }
 
     @Override
