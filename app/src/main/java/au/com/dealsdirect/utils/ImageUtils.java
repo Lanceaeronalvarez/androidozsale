@@ -16,10 +16,18 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.integration.webp.decoder.WebpDrawable;
+import com.bumptech.glide.integration.webp.decoder.WebpDrawableTransformation;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.load.resource.bitmap.CenterInside;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -43,6 +51,18 @@ public class ImageUtils {
         }
     }
 
+    static class Headers {
+
+        static GlideUrl applyHeadersForWebPContent(String url){
+            return new GlideUrl(url, new LazyHeaders.Builder()
+                    .addHeader("Accept", "image/webp")
+                    .addHeader("Accept-Encoding", "gzip")
+                    .build());
+        }
+    }
+
+    static Transformation<Bitmap> centerInside = new CenterInside();
+
     public static void loadImage(String url, ImageView imageView) {
         RequestOptions options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
@@ -52,7 +72,8 @@ public class ImageUtils {
         Glide.with(imageView)
                 .asBitmap()
                 .apply(options)
-                .load(url)
+                .load(Headers.applyHeadersForWebPContent(url))
+                .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                 .into(imageView);
     }
 
@@ -65,8 +86,9 @@ public class ImageUtils {
 
         Glide.with(imageView)
                 .asBitmap()
-                .load(url)
+                .load(Headers.applyHeadersForWebPContent(url))
                 .apply(options)
+                .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                 .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
@@ -87,7 +109,8 @@ public class ImageUtils {
             Glide.with(imageView)
                     .asBitmap()
                     .apply(options)
-                    .load(url)
+                    .load(Headers.applyHeadersForWebPContent(url))
+                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                     .listener(new RequestListener<Bitmap>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
@@ -105,7 +128,8 @@ public class ImageUtils {
             Glide.with(imageView)
                     .asBitmap()
                     .apply(options)
-                    .load(url)
+                    .load(Headers.applyHeadersForWebPContent(url))
+                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                     .into(imageView);
         }
     }
@@ -121,7 +145,8 @@ public class ImageUtils {
             Glide.with(imageView)
                     .asBitmap()
                     .apply(options)
-                    .load(url)
+                    .load(Headers.applyHeadersForWebPContent(url))
+                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                     .listener(new RequestListener<Bitmap>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
@@ -139,7 +164,8 @@ public class ImageUtils {
             Glide.with(imageView)
                     .asBitmap()
                     .apply(options)
-                    .load(url)
+                    .load(Headers.applyHeadersForWebPContent(url))
+                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                     .into(imageView);
         }
     }
