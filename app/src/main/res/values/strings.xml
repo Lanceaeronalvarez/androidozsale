@@ -770,4 +770,8 @@
     <string name="shipping_with_colon">Shipping:\u0020</string>
     <string name="promo_shipping_text">Add extra xxx to get</string>
     <string name="promo_shipping_text_placeholder">xxx</string>
+    <string name="expiration_required">Expiration date is required</string>
+    <string name="expiration_invalid">Expiration date is invalid</string>
+    <string name="stripe_add_card_error">Please verify your card details then try again.</string>
+    <string name="stripe_error_occured">An Error has Occurred</string>
 </resources>

@@ -48,7 +48,7 @@ public class Value {
     private Integer paymentType;
     @SerializedName("response")
     @Expose
-    private Object response;
+    private String response;
     @SerializedName("threeDsStatus")
     @Expose
     private Object threeDsStatus;
@@ -59,6 +59,18 @@ public class Value {
     @SerializedName("PlannedTransactions")
     @Expose
     private java.util.List<GetCurrentOrderOurpay.PlannedTransaction> plannedTransactions;
+    @SerializedName("clientSecret")
+    @Expose
+    private String clientSecret;
+    @SerializedName("payPalPayerEmail")
+    @Expose
+    private String payPalPayerEmail;
+    @SerializedName("un")
+    @Expose
+    private String un;
+    @SerializedName("errorMessage")
+    @Expose
+    private String errorMessage;
 
     public String getAddressString() {
         return addressString;
@@ -132,11 +144,11 @@ public class Value {
         this.paymentType = paymentType;
     }
 
-    public Object getResponse() {
+    public String getResponse() {
         return response;
     }
 
-    public void setResponse(Object response) {
+    public void setResponse(String response) {
         this.response = response;
     }
 
@@ -186,5 +198,37 @@ public class Value {
 
     public void setTransactionIsPaid(Boolean transactionIsPaid) {
         this.transactionIsPaid = transactionIsPaid;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
+    public String getPayPalPayerEmail() {
+        return payPalPayerEmail;
+    }
+
+    public void setPayPalPayerEmail(String payPalPayerEmail) {
+        this.payPalPayerEmail = payPalPayerEmail;
+    }
+
+    public String getUn() {
+        return un;
+    }
+
+    public void setUn(String un) {
+        this.un = un;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

@@ -53,4 +53,12 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     boolean isPaypalEnabled();
 
     boolean isVcoEnabled();
+
+    String stripePaymentMethodId();
+
+    void setStripePaymentMethodId(String paymentMethodId);
+
+    boolean isStripeEnabled();
+
+    String getStripePublicKey();
 }

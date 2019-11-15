@@ -284,4 +284,16 @@ public interface PreferencesHelper {
     boolean hasWishlistBeenAccessed();
 
     void setHasWishlistBeenAccessed(boolean isAccessed);
+
+    String getStripePublicKey();
+
+    void setStripePublicKey(String stripePublicKey);
+
+    boolean isStripeEnabled();
+
+    void setStripeEnabled(boolean stripeEnabled);
+
+    String getStripePaymentMethodId();
+
+    void setStripePaymentMethodId(String paymentMethodId);
 }

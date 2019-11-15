@@ -41,8 +41,10 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.accountdata.AccountData;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentIntentStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
@@ -64,6 +66,7 @@ import au.com.dealsdirect.service.datacollection.registerservices.GenieEventServ
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.main.Settings;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.DeepLinkUrlType;
@@ -304,6 +307,15 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     getDataManager().setVisaCheckoutApiUrl(value.getPayments().getVisaCheckout().getVisaCheckoutApiUrl());
                     getDataManager().setVisaCheckoutProviderType(value.getPayments().getVisaCheckout().getVisaCheckoutProviderType());
                 }
+
+                if (value.getPayments().getStripe() != null) {
+                    getDataManager().setStripePublicKey(value.getPayments().getStripe().getStripePublicKey());
+                    getDataManager().setStripeEnabled(value.getPayments().getStripe().isStripeEnabled());
+                } else {
+                    getDataManager().setStripePublicKey(null);
+                    getDataManager().setStripeEnabled(false);
+                }
+
             }
 
             getMvpView().onGetAppSettings();
@@ -749,6 +761,21 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public String stripePublicKey() {
+        return getDataManager().getStripePublicKey();
+    }
+
+    @Override
+    public void setPaymentMethodId(String paymentMethodId) {
+        getDataManager().setStripePaymentMethodId(paymentMethodId);
+    }
+
+    @Override
+    public boolean isStripeEnabled() {
+        return getDataManager().isStripeEnabled();
+    }
+
+    @Override
     public void callGCMNotificationEvent(Context context) {
         gNotification.callNotificationEvent(context);
     }
@@ -957,6 +984,72 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 })
         );
     }
+
+    @Override
+    public void createPaymentTransactionStripe(String paymentType, String paymentMethodId) {
+        String languageId = getDataManager().getLanguageId();
+        String countryId = getDataManager().getCountryId();
+        CreatePaymentTransactionStripe.RequestValue.Request requestValue =
+                new CreatePaymentTransactionStripe.RequestValue.Request(paymentType, paymentMethodId);
+        getCompositeDisposable().add(getDataManager()
+                .callCreatePaymentTransactionStripe(new CreatePaymentTransactionStripe.RequestValue(requestValue, countryId, languageId))
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(mStripePaymentCallback, mStripePaymentThrowableCallback)
+        );
+    }
+
+    @Override
+    public void createPaymentTransactionStripePaymentIntent(String paymentType, String paymentIntent) {
+        String languageId = getDataManager().getLanguageId();
+        String countryId = getDataManager().getCountryId();
+        CreatePaymentIntentStripe.RequestValue.Request requestValue =
+                new CreatePaymentIntentStripe.RequestValue.Request(paymentType, paymentIntent);
+        getCompositeDisposable().add(getDataManager()
+                .callCreatePaymentIntentStripe(new CreatePaymentIntentStripe.RequestValue(requestValue, countryId, languageId))
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(mStripePaymentCallback, mStripePaymentThrowableCallback)
+        );
+    }
+
+    private Consumer<CreatePaymentTransaction.ResponseValue> mStripePaymentCallback = new Consumer<CreatePaymentTransaction.ResponseValue>() {
+        @Override
+        public void accept(@NonNull CreatePaymentTransaction.ResponseValue responseValue) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            if (responseValue.getD().getValue().getErrorMessage() != null) {
+                getMvpView().showErrorMessage(responseValue.getD().getValue().getErrorMessage());
+            } else if (responseValue.getD().getResult() && responseValue.getD().getValue().getIsPaid()) {
+                getMvpView().showCreatePaymentTransactionSuccess(responseValue.getD().getValue().getPaymentType().toString(),
+                        responseValue);
+            } else if (!responseValue.getD().getValue().getIsPaid() && responseValue.getD().getValue().getResponse().equalsIgnoreCase(AppConstants.USE_STRIPE_SDK)) {
+                getMvpView().show3DSecureStripe(responseValue.getD().getValue().getClientSecret());
+            }
+
+        }
+    };
+
+    private Consumer<Throwable> mStripePaymentThrowableCallback = new Consumer<Throwable>() {
+        @Override
+        public void accept(@NonNull Throwable throwable) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            getMvpView().hideLoading();
+
+            getMvpView().onError(throwable.getMessage());
+
+            // handle load accounts error here
+            if (throwable instanceof ANError) {
+                ANError anError = (ANError) throwable;
+                handleApiError(anError);
+            }
+        }
+    };
 
 
     @Override

@@ -1,11 +1,20 @@
 package au.com.dealsdirect.utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import androidx.core.widget.NestedScrollView;
+
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ScrollView;
+
+import au.com.dealsdirect.R;
 
 
 public final class ViewUtils {
@@ -57,5 +66,25 @@ public final class ViewUtils {
         float bottom = offsetViewBounds.bottom;
 
         return (scrollBounds.top + topOffset) < top && (scrollBounds.bottom + bottomOffset) > bottom;
+    }
+
+    public static int dp2px(Context context, float dp) {
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                context.getResources().getDisplayMetrics()));
+    }
+
+    public static boolean isDarkBackground(Activity activity) {
+        int color = activity.getResources().getColor(R.color.ed_white);
+        try {
+            Drawable background = activity.getWindow().getDecorView().getRootView().getBackground();
+            if (background instanceof ColorDrawable) {
+                color = ((ColorDrawable) background).getColor();
+            }
+        } catch (Exception ignored) {}
+
+        double luminance = (0.2126 * Color.red(color)) + (0.7152 * Color.green(color)) +
+                (0.0722 * Color.blue(color));
+
+        return luminance < 128;
     }
 }

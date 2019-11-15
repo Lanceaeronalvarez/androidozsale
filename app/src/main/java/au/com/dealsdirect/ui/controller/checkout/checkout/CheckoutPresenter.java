@@ -482,6 +482,26 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         return getDataManager().getIsVisaCheckoutEnabled();
     }
 
+    @Override
+    public String stripePaymentMethodId() {
+        return getDataManager().getStripePaymentMethodId();
+    }
+
+    @Override
+    public void setStripePaymentMethodId(String paymentMethodId) {
+        getDataManager().setStripePaymentMethodId(paymentMethodId);
+    }
+
+    @Override
+    public boolean isStripeEnabled() {
+        return getDataManager().isStripeEnabled();
+    }
+
+    @Override
+    public String getStripePublicKey() {
+        return getDataManager().getStripePublicKey();
+    }
+
     private void checkIfCartIsChanged(CheckoutDetailsMapper mappedValues) {
         if (mappedValues == null || mappedValues.getItems() == null) {
             getDataManager().setHasActiveCheckoutSession(false);

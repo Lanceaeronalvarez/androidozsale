@@ -922,6 +922,8 @@ dependencies {
     // reCAPTCHA
     implementation 'com.google.android.gms:play-services-safetynet:16.0.0'
 
+    implementation 'com.stripe:stripe-android:11.1.4'
+
     implementation project(path: ':genie-utility')
     implementation project(path: ':genie-animation')
     implementation project(path: ':genie-views')

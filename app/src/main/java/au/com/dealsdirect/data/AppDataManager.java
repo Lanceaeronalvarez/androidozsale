@@ -43,8 +43,10 @@ import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
 import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
 import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentIntentStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetDeliveryServicePackageDetails;
@@ -484,6 +486,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionVco(CreatePaymentTransactionVco.RequestValue requestValue) {
         return mApiHelper.callCreatePaymentTransactionVco(requestValue);
+    }
+
+    @Override
+    public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionStripe(CreatePaymentTransactionStripe.RequestValue requestValue) {
+        return mApiHelper.callCreatePaymentTransactionStripe(requestValue);
+    }
+
+    @Override
+    public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentIntentStripe(CreatePaymentIntentStripe.RequestValue requestValue) {
+        return mApiHelper.callCreatePaymentIntentStripe(requestValue);
     }
 
     @Override
@@ -1435,6 +1447,36 @@ public class AppDataManager implements DataManager {
     @Override
     public void setHasWishlistBeenAccessed(boolean isAccessed) {
         mPreferencesHelper.setHasWishlistBeenAccessed(isAccessed);
+    }
+
+    @Override
+    public String getStripePublicKey() {
+        return mPreferencesHelper.getStripePublicKey();
+    }
+
+    @Override
+    public void setStripePublicKey(String stripePublicKey) {
+        mPreferencesHelper.setStripePublicKey(stripePublicKey);
+    }
+
+    @Override
+    public boolean isStripeEnabled() {
+        return mPreferencesHelper.isStripeEnabled();
+    }
+
+    @Override
+    public void setStripeEnabled(boolean stripeEnabled) {
+        mPreferencesHelper.setStripeEnabled(stripeEnabled);
+    }
+
+    @Override
+    public String getStripePaymentMethodId() {
+        return mPreferencesHelper.getStripePaymentMethodId();
+    }
+
+    @Override
+    public void setStripePaymentMethodId(String paymentMethodId) {
+        mPreferencesHelper.setStripePaymentMethodId(paymentMethodId);
     }
 
     @Override

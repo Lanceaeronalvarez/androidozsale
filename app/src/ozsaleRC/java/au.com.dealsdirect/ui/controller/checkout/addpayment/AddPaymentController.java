@@ -1,13 +1,25 @@
 package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.widget.NestedScrollView;
+
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,16 +40,24 @@ import com.braintreepayments.cardform.OnCardFormSubmitListener;
 import com.braintreepayments.cardform.utils.CardType;
 import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
+import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
+import com.stripe.android.model.Card;
+import com.stripe.android.view.CardNumberEditText;
 import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
 
+import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
@@ -56,7 +76,10 @@ import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.ExpiryDateDialog;
+import au.com.dealsdirect.utils.ExpiryDateEditText;
 import au.com.dealsdirect.utils.IntrospectionUtils;
+import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -127,6 +150,17 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @BindView(R.id.partial_checkout_afterpay_panel_holder)
     View mAfterpayPanel;
 
+    // Stripe
+    @BindView(R.id.stripe_form_layout)
+    LinearLayout mStripeLayout;
+    @BindView(R.id.stripe_card_form_card_number)
+    CardNumberEditText mStripeCardNumber;
+    @BindView(R.id.stripe_card_form_expiration)
+    ExpiryDateEditText mStripeExpiryDate;
+    @BindView(R.id.stripe_card_form_cvv)
+    CardNumberEditText mStripeCVV;
+
+
     @BindView(R.id.partial_toolbar_title)
     TextView mViewAddressToolarTitle;
 
@@ -141,6 +175,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     public OurpayPanel ourpayPanel;
     private RelativeLayout mButtonOurpay;
     private OurPayToggleSwitch mOurpayTncCheckBox;
+    private ExpiryDateDialog mExpirationDateDialog;
 
     public static AddPaymentController newInstance() {
         return new AddPaymentController(new BundleBuilder(new Bundle()).build());
@@ -251,13 +286,20 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             });
         }
 
-        mCardForm.cardRequired(true)
-                .expirationRequired(true)
-                .cvvRequired(true)
-                .actionLabel("Purchase")
-                .setup(getActivity());
-        mCardForm.setOnCardFormSubmitListener(this);
-        mCardForm.setOnCardTypeChangedListener(this);
+        if (!isFromCart) {
+            mStripeLayout.setVisibility(View.GONE);
+            mCardForm.setVisibility(View.VISIBLE);
+            mCardForm.cardRequired(true)
+                    .expirationRequired(true)
+                    .cvvRequired(true)
+                    .actionLabel("Purchase")
+                    .setup(getActivity());
+            mCardForm.setOnCardFormSubmitListener(this);
+            mCardForm.setOnCardTypeChangedListener(this);
+        } else {
+            mStripeLayout.setVisibility(View.VISIBLE);
+            mCardForm.setVisibility(View.GONE);
+        }
         mCardForm.setOnCardFormScanListener(this);
         mCameraButton.setBackground(null);
         mCameraButton.setImageDrawable(getResources().getDrawable(R.drawable.bg_credit_card));
@@ -327,6 +369,26 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         }
 
 
+        mStripeCardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, Card.getBrandIcon(Card.CardBrand.UNKNOWN), 0);
+
+        mStripeCardNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mStripeCardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, Card.getBrandIcon(mStripeCardNumber.getCardBrand()), 0);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mStripeCardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, Card.getBrandIcon(mStripeCardNumber.getCardBrand()), 0);
+            }
+        });
+
+        mStripeExpiryDate.setActivity(mActivity);
     }
 
     @Override
@@ -411,18 +473,35 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     public void onCardFormSubmit() {
         hideKeyboard();
 
-        if (mCardForm.isValid() && mActivity.getBraintreeFragment() != null) {
-            showLoading();
-            mActivity.onPurchase(mCardForm);
+        if (isFromCart) {
+            String expiryDate = mStripeExpiryDate.getText().toString();
 
-        } else if (mCardForm.isValid() && mActivity.getBraintreeFragment() == null) {
-            CustomAlertDialog.showCustomAlertDialog(
-                    mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    "Please wait for payments to finish initializing");
+            if (!expiryDate.equalsIgnoreCase("") && !mStripeCVV.getText().toString().equalsIgnoreCase("")
+                && !mStripeCardNumber.getText().toString().equalsIgnoreCase("")) {
+                mActivity.setCardInfoFromAddPayment(mStripeCardNumber.getText().toString(),
+                        Integer.parseInt(mStripeExpiryDate.getMonth()),
+                        Integer.parseInt(mStripeExpiryDate.getYear()), mStripeCVV.getText().toString());
+            } else {
+                CustomAlertDialog.showCustomAlertDialog(
+                        mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        mActivity.getResources().getString(R.string.stripe_add_card_error));
+            }
 
         } else {
-            mCardForm.validate();
+            if (mCardForm.isValid() && mActivity.getBraintreeFragment() != null) {
+                showLoading();
+                mActivity.onPurchase(mCardForm);
+
+            } else if (mCardForm.isValid() && mActivity.getBraintreeFragment() == null) {
+                CustomAlertDialog.showCustomAlertDialog(
+                        mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        "Please wait for payments to finish initializing");
+
+            } else {
+                mCardForm.validate();
+            }
         }
+
     }
 
     @Override
@@ -533,7 +612,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     public void onCardFormScan() {
         //This callback is called when successful CC scanning
 
-        mCardForm.getCardEditText().setEnabled(false);
+        if (!isFromCart) {
+            mCardForm.getCardEditText().setEnabled(false);
+        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(DataCollector.EventParameters.EVENT_PROGRESS, DataCollector.EventParameters.EventProgress.SUCCESS);
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
