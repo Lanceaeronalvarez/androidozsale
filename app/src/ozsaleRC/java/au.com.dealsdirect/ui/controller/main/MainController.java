@@ -319,6 +319,9 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public Controller getCurrentViewPagerController() {
+        if (getHomeViewPager() == null) {
+            return null;
+        }
         if (SHOP_INDEX == getHomeViewPager().getCurrentItem()) {
             return mHomeController;
         } else {

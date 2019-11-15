@@ -7,11 +7,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -24,6 +19,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
@@ -932,7 +933,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 getSelectedDeliveryOption());
         mActivity.setPaymentMethodSelected(paymentMethod);
 
-        if (paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
+        if (paymentMethod != null &&
+                paymentMethod.getProviderType() != null &&
+                paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
             mPresenter.setStripePaymentMethodId(paymentMethod.getToken());
         }
 

@@ -811,6 +811,9 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public Router getCurrentRouter() {
+        if (mPresenter == null) {
+            return null;
+        }
         if (mPresenter.isTablet() && isPopUpControllerVisible()) {
             return mPopUpHostRouter;
         } else {
@@ -819,6 +822,9 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public Controller getCurrentControllerOnRouter(Router router) {
+        if (router == null) {
+            return null;
+        }
         int topIndex = router.getBackstackSize() - 1;
         if (topIndex >= 0) {
             return router.getBackstack().get(topIndex).controller();

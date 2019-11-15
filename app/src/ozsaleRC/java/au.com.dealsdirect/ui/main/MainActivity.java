@@ -1170,10 +1170,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public Router getCurrentRouter() {
-        try {
-            return getMainController().getHomeController().getCurrentRouter();
-        } catch (NullPointerException e) {
+        if (getMainController() == null || getMainController().getHomeController() == null) {
             return getHomeRouter();
+        } else {
+            return getMainController().getHomeController().getCurrentRouter();
         }
     }
 
