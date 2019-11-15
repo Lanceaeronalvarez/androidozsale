@@ -1068,7 +1068,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         if (mActivity.getPaymentMethodSelected().getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
             if (mPresenter.isStripeEnabled() && mPresenter.getStripePublicKey() != null) {
-                mActivity.createStripePaymentMethod();
+                if (mActivity.getPaymentMethodSelected().getToken() == null ||
+                        mActivity.getPaymentMethodSelected().getToken().isEmpty()) {
+                    mActivity.createStripePaymentMethod();
+                } else {
+                    mActivity.callCreatePaymentTransactionStripe(AppConstants.STRIPE,
+                            mActivity.getPaymentMethodSelected().getToken());
+                }
             } else {
                 CustomAlertDialog.showCustomAlertDialog(
                         mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
