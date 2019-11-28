@@ -986,7 +986,7 @@
 
                                 </LinearLayout>
 
-                            </LinearLayout>
+                            </au.com.dealsdirect.widget.ElasticDragDismissFrameLayout>
 
                         </RelativeLayout>
 
@@ -994,7 +994,7 @@
 
                 </LinearLayout>
 
-            </android.support.v4.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
 
             <RelativeLayout
             android:id="@+id/controller_product_details_button_container"
@@ -1080,7 +1080,7 @@
 
             </RelativeLayout>
 
-        </android.support.design.widget.CoordinatorLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </RelativeLayout>
 

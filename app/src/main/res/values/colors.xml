@@ -259,4 +259,17 @@
     <color name="text_link_color">#007CF7</color>
     <color name="checkout_selected_text_color">#000000</color>
 
+    <!--  Expiry Dialog -->
+    <color name="ed_black_87">#de000000</color>
+    <color name="ed_white_87">#deffffff</color>
+    <color name="ed_black_38">#61000000</color>
+    <color name="ed_white_38">#61ffffff</color>
+    <color name="ed_white">#ffffff</color>
+    <color name="expiration_date_sheet_background_light">#eceff0</color>
+    <color name="expiration_date_sheet_background_dark">#20272b</color>
+    <color name="black_54">#8a000000</color>
+    <color name="white_54">#8affffff</color>
+    <color name="black_12">#1e000000</color>
+    <color name="white_12">#1effffff</color>
+
 </resources>

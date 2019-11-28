@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.util.Pair;
 
@@ -48,7 +49,21 @@ import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
+import com.stripe.android.ApiResultCallback;
+import com.stripe.android.PaymentAuthConfig;
+import com.stripe.android.PaymentIntentResult;
+import com.stripe.android.Stripe;
+import com.stripe.android.exception.APIConnectionException;
+import com.stripe.android.exception.APIException;
+import com.stripe.android.exception.InvalidRequestException;
+import com.stripe.android.model.ConfirmPaymentIntentParams;
+import com.stripe.android.model.PaymentIntent;
+import com.stripe.android.model.PaymentMethodCreateParams;
+import com.stripe.android.model.StripeIntent;
+import com.stripe.android.model.Token;
 import com.visa.checkout.VisaPaymentSummary;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -103,6 +118,7 @@ import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BraintreeUtils;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -110,6 +126,7 @@ import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
+import au.com.dealsdirect.utils.StripeUtils;
 import au.com.dealsdirect.utils.legacycookie.LegacyCookie;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -155,6 +172,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private AccountController mAccountController;
     private SearchFilterController mSearchFilterController;
     private SearchFilterController mShopSearchFilterController;
+    private MainActivity mMainActivity;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -176,7 +194,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public boolean mAppHasSavedInstance = false;
     public boolean hasShownSplash = false;
-
+    private static Stripe mStripe;
+    private boolean hasCalledStripeIntent = false;
+    private String clientSecret;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -285,6 +305,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onNewIntent(Intent intent) {
 
+        super.onNewIntent(intent);
         String url = "";
         if (intent.getData() != null) url = intent.getData().toString();
 
@@ -299,7 +320,49 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Call router for callbacks after going out the app and back inside
-        mRouter.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (hasCalledStripeIntent) {
+            hasCalledStripeIntent = false;
+            mStripe.onPaymentResult(requestCode, data,
+                    new ApiResultCallback<PaymentIntentResult>() {
+                        @Override
+                        public void onSuccess(@NonNull PaymentIntentResult result) {
+                            // If authentication succeeded, the PaymentIntent will
+                            // have user actions resolved; otherwise, handle the
+                            // PaymentIntent status as appropriate (e.g. the
+                            // customer may need to choose a new payment method)
+
+                            final PaymentIntent paymentIntent = result.getIntent();
+                            final PaymentIntent.Status status =
+                                    paymentIntent.getStatus();
+
+                            if (status == PaymentIntent.Status.Succeeded ||
+                                    PaymentIntent.Status.RequiresConfirmation == status) {
+                                // show success UI
+                                mPresenter.createPaymentTransactionStripePaymentIntent(AppConstants.STRIPE,
+                                        paymentIntent.getId());
+                            } else if (PaymentIntent.Status.RequiresPaymentMethod
+                                    == status) {
+                                // attempt authentication again or
+                                // ask for a new Payment Method
+                                CustomAlertDialog.showCustomAlertDialog(MainActivity.this, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                                        "We are unable to authenticate your payment method. Please choose a different payment method and try again.");
+                            }
+                        }
+
+                        @Override
+                        public void onError(@NonNull Exception e) {
+                            // handle error
+                            CustomAlertDialog.showCustomAlertDialog(MainActivity.this, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                                    e.getLocalizedMessage());
+                        }
+                    });
+        } else {
+            mRouter.onActivityResult(requestCode, resultCode, data);
+        }
+
+
     }
 
     private boolean isActivityStateValid() {
@@ -543,6 +606,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             DataCollector.collectDeviceData(mBraintreeFragment, handler);
         }
 
+    }
+
+    @Override
+    public void callCreatePaymentTransactionStripe(String paymentType, String paymentMethodId) {
+        mPresenter.createPaymentTransactionStripe(AppConstants.STRIPE, paymentMethodId);
     }
 
     @Override
@@ -1102,10 +1170,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public Router getCurrentRouter() {
-        try {
-            return getMainController().getHomeController().getCurrentRouter();
-        } catch (NullPointerException e) {
+        if (getMainController() == null || getMainController().getHomeController() == null) {
             return getHomeRouter();
+        } else {
+            return getMainController().getHomeController().getCurrentRouter();
         }
     }
 
@@ -1342,6 +1410,22 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onGetAppSettings() {
         getAccountController().reloadAccountItems();
+        mStripe = new Stripe(this, mPresenter.stripePublicKey());
+    }
+
+    @Override
+    public void show3DSecureStripe(String clientSecret) {
+        hasCalledStripeIntent = true;
+
+        this.clientSecret = clientSecret;
+
+        mStripe.authenticatePayment(this, clientSecret);
+    }
+
+    @Override
+    public void showErrorMessage(String errorMessage) {
+        CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                errorMessage);
     }
 
     private void deepLinkSuceeded() {
@@ -1638,5 +1722,71 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         });
 
         popup.show();
+    }
+
+
+    public void createStripePaymentMethod() {
+
+        PaymentInfo.setPaymentType(AppConstants.STRIPE);
+
+        com.stripe.android.model.Card card = com.stripe.android.model.Card.create(
+                CardInfo.getCardNumber(), CardInfo.getCardMonth(), CardInfo.getCardYear(), CardInfo.getCardCVV()
+        );
+
+        final PaymentMethodCreateParams.Card paymentMethodParamsCard =
+                card.toPaymentMethodParamsCard();
+        final PaymentMethodCreateParams paymentMethodCreateParams =
+                PaymentMethodCreateParams.create(paymentMethodParamsCard,
+                        null);
+
+        mStripe.createPaymentMethod(paymentMethodCreateParams, new ApiResultCallback<com.stripe.android.model.PaymentMethod>() {
+            @Override
+            public void onSuccess(@NonNull com.stripe.android.model.PaymentMethod result) {
+
+                mPresenter.setPaymentMethodId(result.id);
+
+                callCreatePaymentTransactionStripe(AppConstants.STRIPE, result.id);
+
+            }
+
+            @Override
+            public void onError(@NonNull Exception e) {
+
+                CustomAlertDialog.showCustomAlertDialog(
+                        MainActivity.this, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        getResources().getString(R.string.stripe_add_card_error));
+
+            }
+        });
+    }
+
+    public void setCardInfoFromAddPayment(String cardNumber, int month, int year, String cvv) {
+        CardInfo.setCardNumber(cardNumber);
+        CardInfo.setCardMonth(month);
+        CardInfo.setCardYear(year);
+        CardInfo.setCardCVV(cvv);
+
+        com.stripe.android.model.Card card = com.stripe.android.model.Card.create(
+                cardNumber, month, year, cvv);
+
+        PaymentMethod paymentMethod = new PaymentMethod();
+        paymentMethod.setPaymentType(card.getBrand());
+        paymentMethod.setDescription("******"+card.getLast4());
+        paymentMethod.setProviderType(AppConstants.STRIPE);
+        setPaymentMethodSelected(paymentMethod);
+
+        HomeController homeController = getMainController().getHomeController();
+        Controller currentController = homeController.getCurrentControllerOnRouter(homeController.getCurrentRouter());
+
+        if (currentController instanceof CheckoutHostController || currentController instanceof AddPaymentController) {
+            Router router = currentController instanceof CheckoutHostController ? ((CheckoutHostController) currentController).getDisplayRouter() : getCurrentRouter();
+            if (router.getBackstackSize() > 2) {
+                router.popToRoot();
+            } else {
+                router.handleBack();
+            }
+        } else {
+            currentController.getRouter().handleBack();
+        }
     }
 }

@@ -20,6 +20,9 @@ public class PaymentMethod implements Serializable {
     @SerializedName("ImageUrl")
     @Expose
     private String imageUrl;
+    @SerializedName("ProviderType")
+    @Expose
+    private String providerType;
 
     public static final String PAYPAL = "paypal";
     public static final String PAYPAL_CREDIT = "paypalcredit";
@@ -27,6 +30,7 @@ public class PaymentMethod implements Serializable {
     public static final String VISA_CHECKOUT = "visacheckout";
     public static final String VISA_CHECKOUT_BRAINTREE = "visacheckoutbraintree";
     public static final String PAY = "pay";
+    public static final String STRIPE = "stripe";
 
     private boolean isPinned;
 
@@ -80,13 +84,20 @@ public class PaymentMethod implements Serializable {
         isPinned = pinned;
     }
 
+    public String getProviderType() {
+        return providerType;
+    }
+
+    public void setProviderType(String providerType) {
+        this.providerType = providerType;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj instanceof PaymentMethod &&
                 ((PaymentMethod) obj).getPaymentType().equals(paymentType) &&
                 ((PaymentMethod) obj).getDescription().equals(description) &&
-                ((PaymentMethod) obj).getToken().equals(token) &&
-                ((PaymentMethod) obj).getImageUrl().equals(imageUrl);
+                ((PaymentMethod) obj).getToken().equals(token);
     }
 
 

@@ -19,6 +19,7 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstant
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionDefault;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
+import com.stripe.android.model.Card;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +64,16 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
 
         PaymentMethod item = mData.get(position);
 
-        ImageUtils.loadImage(item.getImageUrl(), holder.cardImageView);
+        if (item.getImageUrl() != null) {
+            ImageUtils.loadImage(item.getImageUrl(), holder.cardImageView);
+        }
+
+        if (item.getPaymentType().equalsIgnoreCase(AppConstants.AMEX) ||
+                item.getPaymentType().equalsIgnoreCase(AppConstants.AMERICAN_EXPRESS)) {
+            holder.cardImageView.setImageResource(Card.getBrandIcon(Card.CardBrand.AMERICAN_EXPRESS));
+        } else {
+            holder.cardImageView.setImageResource(Card.getBrandIcon(Card.asCardBrand(item.getPaymentType())));
+        }
 
         holder.nameTextView.setText(item.getPaymentType());
         holder.detailsText.setText(item.getDescription());

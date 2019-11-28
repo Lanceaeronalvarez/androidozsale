@@ -7,11 +7,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -25,6 +20,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -35,6 +36,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.utility.RxBus;
+import com.stripe.android.model.Card;
 import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaPaymentSummary;
 
@@ -832,8 +834,21 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             if (paymentMethod.getPaymentType().equalsIgnoreCase("VisaCheckoutBraintree") || paymentMethod.getPaymentType().equalsIgnoreCase("VisaCheckoutCyberSource")) {
                 paymentMethodImageUrl = visaCheckoutLogoUrl;
             }
-            ImageUtils.loadImage(paymentMethodImageUrl,
-                    mPaymentLayout.findViewById(R.id.partial_checkout_payment_image));
+
+            if (paymentMethodImageUrl != null) {
+                ImageUtils.loadImage(paymentMethodImageUrl,
+                        mPaymentLayout.findViewById(R.id.partial_checkout_payment_image));
+            }
+
+            //set brand icon for stripe
+            ImageView cardBrandImageView = mPaymentLayout.findViewById(R.id.partial_checkout_payment_image);
+
+            if (paymentMethod.getPaymentType().equalsIgnoreCase(AppConstants.AMEX) ||
+                    paymentMethod.getPaymentType().equalsIgnoreCase(AppConstants.AMERICAN_EXPRESS)) {
+                cardBrandImageView.setImageResource(Card.getBrandIcon(Card.CardBrand.AMERICAN_EXPRESS));
+            } else {
+                cardBrandImageView.setImageResource(Card.getBrandIcon(Card.asCardBrand(paymentMethod.getPaymentType())));
+            }
 
             mAddNewPaymentLayout.setVisibility(View.GONE);
             mPaymentLayout.setVisibility(View.VISIBLE);
@@ -917,6 +932,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 paymentList,
                 getSelectedDeliveryOption());
         mActivity.setPaymentMethodSelected(paymentMethod);
+
+        if (paymentMethod != null &&
+                paymentMethod.getProviderType() != null &&
+                paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
+            mPresenter.setStripePaymentMethodId(paymentMethod.getToken());
+        }
+
         showMyPayDetails(mValue, mOurpay);
         displayPaymentDetails();
     }
@@ -1047,15 +1069,31 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
-        if (mActivity.isBraintreeInitialized()) {
-            if (mActivity.getPaymentMethodSelected() == null) {
-                showAddPaymentMethodController();
+        if (mActivity.getPaymentMethodSelected().getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
+            if (mPresenter.isStripeEnabled() && mPresenter.getStripePublicKey() != null) {
+                if (mActivity.getPaymentMethodSelected().getToken() == null ||
+                        mActivity.getPaymentMethodSelected().getToken().isEmpty()) {
+                    mActivity.createStripePaymentMethod();
+                } else {
+                    mActivity.callCreatePaymentTransactionStripe(AppConstants.STRIPE,
+                            mActivity.getPaymentMethodSelected().getToken());
+                }
             } else {
-                PaymentInfo.setFabricPaymentType(PaymentInfo.isThreeDSecureRequired() ?
-                        DataCollector.EventParameters.PaymentOption.THREEDS.getValue() :
-                        DataCollector.EventParameters.PaymentOption.REGULAR.getValue());
-                PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
-                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                CustomAlertDialog.showCustomAlertDialog(
+                        mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                        mActivity.getResources().getString(R.string.stripe_error_occured));
+            }
+        } else {
+            if (mActivity.isBraintreeInitialized()) {
+                if (mActivity.getPaymentMethodSelected() == null) {
+                    showAddPaymentMethodController();
+                } else {
+                    PaymentInfo.setFabricPaymentType(PaymentInfo.isThreeDSecureRequired() ?
+                            DataCollector.EventParameters.PaymentOption.THREEDS.getValue() :
+                            DataCollector.EventParameters.PaymentOption.REGULAR.getValue());
+                    PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
+                    mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                }
             }
         }
     }

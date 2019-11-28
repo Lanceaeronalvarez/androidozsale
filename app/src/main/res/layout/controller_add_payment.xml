@@ -34,7 +34,12 @@
             <com.braintreepayments.cardform.view.CardForm
                 android:id="@+id/card_form"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <include
+                layout="@layout/partial_add_payment_cardform"
+                android:id="@+id/stripe_form_layout"/>
 
             <include layout="@layout/partial_checkout_button" />
 

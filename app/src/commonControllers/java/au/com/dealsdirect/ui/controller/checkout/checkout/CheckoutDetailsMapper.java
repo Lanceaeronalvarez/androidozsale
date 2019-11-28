@@ -82,10 +82,12 @@ public class CheckoutDetailsMapper {
         }
 
         List<Value.PaymentOption> paymentOptions = sourceValue.getAvailablePaymentOptions();
-        for (Value.PaymentOption paymentOption : paymentOptions) {
-            String name = paymentOption.getName();
-            if (name != null) {
-                availablePaymentOptions.add(PaymentOption.fromValue(name));
+        if (paymentOptions != null) {
+            for (Value.PaymentOption paymentOption : paymentOptions) {
+                String name = paymentOption.getName();
+                if (name != null) {
+                    availablePaymentOptions.add(PaymentOption.fromValue(name));
+                }
             }
         }
     }

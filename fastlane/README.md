@@ -110,6 +110,16 @@ fastlane fabric_deploy_nzsale_rc
 fastlane fabric_deploy_nzsale_test
 ```
 
+### fabric_deploy_mysale_rc
+```
+fastlane fabric_deploy_mysale_rc
+```
+
+### fabric_deploy_mysale_test
+```
+fastlane fabric_deploy_mysale_test
+```
+
 
 ----
 

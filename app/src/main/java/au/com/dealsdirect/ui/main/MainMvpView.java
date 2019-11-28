@@ -79,6 +79,8 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void callCreatePaymentTransactionVco(VisaPaymentSummary visaPaymentSummary);
 
+    void callCreatePaymentTransactionStripe(String paymentType, String paymentMethodId);
+
     void showCreatePaymentTransactionSuccess(String paymentType, CreatePaymentTransaction.ResponseValue responseValue);
 
     void showCreatePaymentTransactionFailure(String errorMessage);
@@ -122,4 +124,8 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     void showIntrospectionUtils(ArrayList<Android> androidArrayList);
 
     void onGetAppSettings();
+
+    void show3DSecureStripe(String clientSecret);
+
+    void showErrorMessage(String errorMessage);
 }

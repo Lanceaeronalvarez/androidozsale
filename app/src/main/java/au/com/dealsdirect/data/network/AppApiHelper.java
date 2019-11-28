@@ -36,8 +36,10 @@ import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
 import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
 import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentIntentStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetDeliveryServicePackageDetails;
@@ -605,6 +607,24 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionVco(CreatePaymentTransactionVco.RequestValue requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.createPaymentTransaction())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(CreatePaymentTransaction.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionStripe(CreatePaymentTransactionStripe.RequestValue requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.createPaymentTransaction())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(CreatePaymentTransaction.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentIntentStripe(CreatePaymentIntentStripe.RequestValue requestValues) {
         return Rx2AndroidNetworking.post(ApiEndPoint.createPaymentTransaction())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))

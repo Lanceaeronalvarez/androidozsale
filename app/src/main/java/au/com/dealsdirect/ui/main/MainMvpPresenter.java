@@ -50,6 +50,10 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void createPaymentTransactionVco(VisaPaymentSummary visaPaymentSummary);
 
+    void createPaymentTransactionStripe(String paymentType, String paymentMethodId);
+
+    void createPaymentTransactionStripePaymentIntent(String paymentType, String paymentMethodId);
+
     void createPaymentMethod(String deviceData, String paymentNonce, String paymentType);
 
     void callLoginTicket(Context context, boolean isGdprCountry);
@@ -103,4 +107,10 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void callFileSettings();
 
     boolean doesCheckoutHaveWishlistItem();
+
+    String stripePublicKey();
+
+    void setPaymentMethodId(String paymentMethodId);
+
+    boolean isStripeEnabled();
 }

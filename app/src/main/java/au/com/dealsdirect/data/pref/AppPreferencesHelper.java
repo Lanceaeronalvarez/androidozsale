@@ -171,6 +171,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String FILE_SIZE_LIMIT = "FILE_SIZE_LIMIT";
 
     private static final String HAS_WISHLIST_BEEN_ACCESSED = "HAS_WISHLIST_BEEN_ACCESSED";
+    private static final String STRIPE_PUBLIC_KEY = "STRIPE_PUBLIC_KEY";
+    private static final String STRIPE_ENABLED = "STRIPE_ENABLED";
+    private static final String STRIPE_PAYMENT_METHOD_ID = "STRIPE_PAYMENT_METHOD_ID";
 
     private Context mContext;
 
@@ -976,5 +979,35 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public void setHasWishlistBeenAccessed(boolean isAccessed) {
         Prefs.putBoolean(HAS_WISHLIST_BEEN_ACCESSED, isAccessed);
+    }
+
+    @Override
+    public String getStripePublicKey() {
+        return Prefs.getString(STRIPE_PUBLIC_KEY, "");
+    }
+
+    @Override
+    public void setStripePublicKey(String stripePublicKey) {
+        Prefs.putString(STRIPE_PUBLIC_KEY, stripePublicKey);
+    }
+
+    @Override
+    public boolean isStripeEnabled() {
+        return Prefs.getBoolean(STRIPE_ENABLED, false);
+    }
+
+    @Override
+    public void setStripeEnabled(boolean stripeEnabled) {
+        Prefs.putBoolean(STRIPE_ENABLED, stripeEnabled);
+    }
+
+    @Override
+    public String getStripePaymentMethodId() {
+        return Prefs.getString(STRIPE_PAYMENT_METHOD_ID, "");
+    }
+
+    @Override
+    public void setStripePaymentMethodId(String paymentMethodId) {
+        Prefs.putString(STRIPE_PAYMENT_METHOD_ID, paymentMethodId);
     }
 }

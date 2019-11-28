@@ -304,4 +304,18 @@
     <dimen name="login_host_padding_top">100dp</dimen>
     <dimen name="login_host_padding_bottom">100dp</dimen>
 
+    <dimen name="expiration_date_sheet_height">260dp</dimen>
+    <dimen name="ed_margin">8dp</dimen>
+    <dimen name="edit_text_icon_padding">24dp</dimen>
+    <dimen name="no_edit_text_icon_padding">49dp</dimen>
+    <dimen name="mobile_number_explanation_padding">53dp</dimen>
+    <dimen name="input_text_size">16sp</dimen>
+    <dimen name="expiration_date_item_text_size">16sp</dimen>
+
+    <dimen name="expiration_date_sheet_left_right_margin">8dp</dimen>
+    <dimen name="expiration_date_sheet_top_bottom_margin">8dp</dimen>
+    <dimen name="expiration_date_sheet_label_padding_top">8dp</dimen>
+    <dimen name="expiration_date_sheet_label_padding_bottom">8dp</dimen>
+    <dimen name="expiration_date_item_selected_background_radius">2dp</dimen>
+
 </resources>
