@@ -81,6 +81,7 @@ import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
+import au.com.dealsdirect.ui.main.CardInfo;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
@@ -340,60 +341,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         super.onAttach(view);
         mPresenter.onAttach(this);
 
-        mClickListeners = new CompositeDisposable();
-        mClickListeners.add(RxView.clicks(mPayButton)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> onPayButtonClick()));
-        mClickListeners.add(RxView.clicks(mPaypalButton)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> onPaypalButtonClick()));
-
-        mClickListeners.add(RxView.clicks(mPaypalCreditButton)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> onPaypalCreditButtonClick()));
-
-        mClickListeners.add(RxView.clicks(mMasterpassButton)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> onMasterpassButtonClick()));
-
-        mClickListeners.add(RxView.clicks(mAfterpayInfoButton)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> onAfterpayInfoButtonClick()));
-
-        mClickListeners.add(RxView.clicks(mAfterpayButton)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> onAfterpayButtonClick()));
-
-        mChangeClickListeners = new CompositeDisposable();
-        mChangeClickListeners.add(RxView.clicks(mAddressContainerLayout)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> changeAddress()));
-        mChangeClickListeners.add(RxView.clicks(mAddressChangeView)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> changeAddress()));
-
-        mChangeClickListeners.add(RxView.clicks(mPaymentContainerLayout)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> changePayment()));
-        mChangeClickListeners.add(RxView.clicks(mPaymentChangeView)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> changePayment()));
-
-        mChangeClickListeners.add(RxView.clicks(mVoucherContainerLayout)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> changeVoucher()));
-
+//        registerClickListeners();
     }
 
     @Override
@@ -436,15 +384,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public void onDetach(View view) {
         hideLoading();
         super.onDetach(view);
-        if (mClickListeners != null) {
-            mClickListeners.dispose();
-        }
-        mClickListeners = null;
 
-        if (mChangeClickListeners != null) {
-            mChangeClickListeners.dispose();
-        }
-        mChangeClickListeners = null;
+//        unregisterClickListeners();
     }
 
     @Override
@@ -1069,7 +1010,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
-        if (mActivity.getPaymentMethodSelected().getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
+        if (mActivity.getPaymentMethodSelected() == null) {
+            showAddPaymentMethodController();
+        } else if (mActivity.getPaymentMethodSelected().getProviderType() != null &&
+                    mActivity.getPaymentMethodSelected().getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
             if (mPresenter.isStripeEnabled() && mPresenter.getStripePublicKey() != null) {
                 if (mActivity.getPaymentMethodSelected().getToken() == null ||
                         mActivity.getPaymentMethodSelected().getToken().isEmpty()) {
@@ -1393,9 +1337,87 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Override
     public void onViewDidAppear(Controller previousController) {
         super.onViewDidAppear(previousController);
+
+        registerClickListeners();
+
         if (!mIsCartLoading) {
             loadCart();
         }
+    }
+
+    @Override
+    public void onViewDidDisappear(Controller nextController) {
+        super.onViewDidDisappear(nextController);
+
+        unregisterClickListeners();
+    }
+
+    private void registerClickListeners() {
+        mClickListeners = new CompositeDisposable();
+        mClickListeners.add(RxView.clicks(mPayButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onPayButtonClick()));
+        mClickListeners.add(RxView.clicks(mPaypalButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onPaypalButtonClick()));
+
+        mClickListeners.add(RxView.clicks(mPaypalCreditButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onPaypalCreditButtonClick()));
+
+        mClickListeners.add(RxView.clicks(mMasterpassButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onMasterpassButtonClick()));
+
+        mClickListeners.add(RxView.clicks(mAfterpayInfoButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onAfterpayInfoButtonClick()));
+
+        mClickListeners.add(RxView.clicks(mAfterpayButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onAfterpayButtonClick()));
+
+        mChangeClickListeners = new CompositeDisposable();
+        mChangeClickListeners.add(RxView.clicks(mAddressContainerLayout)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> changeAddress()));
+        mChangeClickListeners.add(RxView.clicks(mAddressChangeView)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> changeAddress()));
+
+        mChangeClickListeners.add(RxView.clicks(mPaymentContainerLayout)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> changePayment()));
+        mChangeClickListeners.add(RxView.clicks(mPaymentChangeView)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> changePayment()));
+
+        mChangeClickListeners.add(RxView.clicks(mVoucherContainerLayout)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> changeVoucher()));
+    }
+
+    private void unregisterClickListeners() {
+        if (mClickListeners != null) {
+            mClickListeners.dispose();
+        }
+        mClickListeners = null;
+
+        if (mChangeClickListeners != null) {
+            mChangeClickListeners.dispose();
+        }
+        mChangeClickListeners = null;
     }
 
     private void ourpayPaymentSubmit() {

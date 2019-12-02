@@ -21,6 +21,7 @@ import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.main.Settings;
+import au.com.dealsdirect.ui.main.CardInfo;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -132,6 +133,8 @@ public class PaymentSuccessController extends BaseController implements PaymentS
         mThankyouTextview.setText(thankYouMessage);
 
         mPresenter.incrementPayCount();
+
+        CardInfo.clearCardInfo();
     }
 
     @Override

@@ -1182,6 +1182,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         getDataManager().revokeAuth();
                         //Clear payment info
                         PaymentInfo.resetPaymentInfo();
+                        CardInfo.clearCardInfo();
                         //Clear braintree
                         getMvpView().performBraintreeReset();
                         //Call Public App Settings

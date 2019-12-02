@@ -294,12 +294,19 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                     .cvvRequired(true)
                     .actionLabel("Purchase")
                     .setup(getActivity());
-            mCardForm.setOnCardFormSubmitListener(this);
-            mCardForm.setOnCardTypeChangedListener(this);
         } else {
             mStripeLayout.setVisibility(View.VISIBLE);
+
+            mCardForm.cardRequired(true)
+                    .expirationRequired(false)
+                    .cvvRequired(false)
+                    .actionLabel("Purchase")
+                    .setup(getActivity());
             mCardForm.setVisibility(View.GONE);
         }
+
+        mCardForm.setOnCardFormSubmitListener(this);
+        mCardForm.setOnCardTypeChangedListener(this);
         mCardForm.setOnCardFormScanListener(this);
         mCameraButton.setBackground(null);
         mCameraButton.setImageDrawable(getResources().getDrawable(R.drawable.bg_credit_card));
@@ -474,19 +481,22 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         hideKeyboard();
 
         if (isFromCart) {
-            String expiryDate = mStripeExpiryDate.getText().toString();
+            if (!mStripeCVV.getText().toString().equalsIgnoreCase("")
+                    && !mStripeCardNumber.getText().toString().equalsIgnoreCase("")) {
 
-            if (!expiryDate.equalsIgnoreCase("") && !mStripeCVV.getText().toString().equalsIgnoreCase("")
-                && !mStripeCardNumber.getText().toString().equalsIgnoreCase("")) {
-                mActivity.setCardInfoFromAddPayment(mStripeCardNumber.getText().toString(),
-                        Integer.parseInt(mStripeExpiryDate.getMonth()),
-                        Integer.parseInt(mStripeExpiryDate.getYear()), mStripeCVV.getText().toString());
+                mStripeExpiryDate.validate();
+
+                if (mStripeExpiryDate.isValid()) {
+                    mActivity.setCardInfoFromAddPayment(mStripeCardNumber.getText().toString(),
+                            Integer.parseInt(mStripeExpiryDate.getMonth()),
+                            Integer.parseInt(mStripeExpiryDate.getYear()), mStripeCVV.getText().toString());
+                }
+
             } else {
                 CustomAlertDialog.showCustomAlertDialog(
                         mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                         mActivity.getResources().getString(R.string.stripe_add_card_error));
             }
-
         } else {
             if (mCardForm.isValid() && mActivity.getBraintreeFragment() != null) {
                 showLoading();
@@ -612,15 +622,22 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     public void onCardFormScan() {
         //This callback is called when successful CC scanning
 
-        if (!isFromCart) {
-            mCardForm.getCardEditText().setEnabled(false);
-        }
+//        if (!isFromCart) {
+//            mCardForm.getCardEditText().setEnabled(false);
+//        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(DataCollector.EventParameters.EVENT_PROGRESS, DataCollector.EventParameters.EventProgress.SUCCESS);
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, AddPaymentController.class.getSimpleName());
         DataCollector.logEvent(Events.CCScan, parameters);
 
+    }
+
+    @Override
+    public void onScanCardResult(String cardNumber) {
+        if (isFromCart) {
+            mStripeCardNumber.setText(cardNumber);
+        }
     }
 
     @Override
