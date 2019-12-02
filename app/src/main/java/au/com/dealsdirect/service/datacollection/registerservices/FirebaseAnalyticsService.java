@@ -272,8 +272,8 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                                 String.valueOf(parameters.get(EventParameters.PAYMENT_METHOD_TYPE)));
                         bundle.putString(EventParameters.PURCHASE_NEW_USER,
                                 String.valueOf(parameters.get(EventParameters.IS_NEW_USER)));
-                        bundle.putString(FirebaseAnalytics.Param.VALUE,
-                                String.valueOf(parameters.get(EventParameters.PRICE)));
+                        bundle.putDouble(FirebaseAnalytics.Param.VALUE,
+                                (Double) parameters.get(EventParameters.PRICE));
                         bundle.putString(FirebaseAnalytics.Param.CURRENCY,
                                 String.valueOf(parameters.get(EventParameters.PURCHASE_CURRENCY)));
                         bundle.putString(FirebaseAnalytics.Param.TRANSACTION_ID,

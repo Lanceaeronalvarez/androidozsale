@@ -626,7 +626,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
 
             HashMap<String, Object> parameters = new HashMap<>();
-            parameters.put(EventParameters.PAYMENT_METHOD_TYPE, PaymentInfo.getFabricPaymentType());
+            parameters.put(EventParameters.PAYMENT_METHOD_TYPE, paymentType);
             parameters.put(EventParameters.IS_NEW_USER, mPresenter.getIsNewUser());
             parameters.put(EventParameters.RESULT, true);
             parameters.put(EventParameters.APP_CONTEXT, this);
@@ -636,7 +636,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     responseValue.getD().getValue().getOrderInfoResult().getTotal());
             parameters.put(EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
             parameters.put(EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
-            parameters.put(EventParameters.PURCHASE_CURRENCY, Settings.getSelectedCountry().currencySign);
+            parameters.put(EventParameters.PURCHASE_CURRENCY, Settings.getSelectedCountry().currencyCode);
             parameters.put(EventParameters.PURCHASE_TRANSACTION_ID, responseValue.getD().getValue().getPaymentID());
             logEvent(Events.PurchaseEvent, parameters);
 
