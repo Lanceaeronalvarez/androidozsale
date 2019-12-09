@@ -194,7 +194,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public boolean mAppHasSavedInstance = false;
     public boolean hasShownSplash = false;
-    private static Stripe mStripe;
+    private Stripe mStripe;
     private boolean hasCalledStripeIntent = false;
     private String clientSecret;
 
@@ -324,7 +324,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         if (hasCalledStripeIntent) {
             hasCalledStripeIntent = false;
-            mStripe.onPaymentResult(requestCode, data,
+            getStripeObject().onPaymentResult(requestCode, data,
                     new ApiResultCallback<PaymentIntentResult>() {
                         @Override
                         public void onSuccess(@NonNull PaymentIntentResult result) {
@@ -1410,7 +1410,22 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void onGetAppSettings() {
         getAccountController().reloadAccountItems();
-        mStripe = new Stripe(this, mPresenter.stripePublicKey());
+        initializeStripeObject();
+    }
+    
+    private void initializeStripeObject() {
+        if (mStripe == null) {
+            String key = mPresenter.stripePublicKey();
+            if (key != null && !key.isEmpty()) {
+                mStripe = new Stripe(this, key);
+            }
+        }
+    }
+    
+    private Stripe getStripeObject() {
+        initializeStripeObject();
+        //TODO: throw exception when mStripe is null
+        return mStripe;
     }
 
     @Override
@@ -1419,7 +1434,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         this.clientSecret = clientSecret;
 
-        mStripe.authenticatePayment(this, clientSecret);
+        getStripeObject().authenticatePayment(this, clientSecret);
     }
 
     @Override
@@ -1739,7 +1754,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 PaymentMethodCreateParams.create(paymentMethodParamsCard,
                         null);
 
-        mStripe.createPaymentMethod(paymentMethodCreateParams, new ApiResultCallback<com.stripe.android.model.PaymentMethod>() {
+        getStripeObject().createPaymentMethod(paymentMethodCreateParams, new ApiResultCallback<com.stripe.android.model.PaymentMethod>() {
             @Override
             public void onSuccess(@NonNull com.stripe.android.model.PaymentMethod result) {
 
