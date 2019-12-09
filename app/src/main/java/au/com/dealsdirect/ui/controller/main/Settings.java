@@ -22,9 +22,10 @@ public class Settings {
         public String languageId;
         public String genieRoot;
         public String legacyRoot;
+        public String currencyCode;
 
         Country(String countryName, String countryId, String accountId, String currencySign, String siteName,
-                String languageId, String genieRoot, String legacyRoot) {
+                String languageId, String genieRoot, String legacyRoot, String currencyCode) {
             this.countryName = countryName;
             this.countryId = countryId;
             this.accountId = accountId;
@@ -33,6 +34,7 @@ public class Settings {
             this.languageId = languageId;
             this.genieRoot = genieRoot;
             this.legacyRoot = legacyRoot;
+            this.currencyCode = currencyCode;
         }
     }
 
@@ -95,7 +97,8 @@ public class Settings {
                                     "cocosa.co.uk",
                                     "EN",
                                     "https://www.cocosa.co.uk/",
-                                    "https://www.cocosa.co.uk/"),
+                                    "https://www.cocosa.co.uk/",
+                                    "GBP"),
                             new Country("Australia",
                                     "CA",
                                     "954775B6-28C9-4C5C-880C-88F195C8E4F0",
@@ -103,7 +106,8 @@ public class Settings {
                                     "cocosa.com.au",
                                     "EN",
                                     "https://www.cocosa.com.au/",
-                                    "https://www.cocosa.com.au/"),
+                                    "https://www.cocosa.com.au/",
+                                    "AUD"),
                             new Country("New Zealand",
                                     "CN",
                                     "2B2D335D-0365-4D56-97B0-C6CE7F3AE2C7",
@@ -111,7 +115,8 @@ public class Settings {
                                     "cocosa.co.nz",
                                     "EN",
                                     "https://www.cocosa.co.nz/",
-                                    "https://www.cocosa.co.nz/")});
+                                    "https://www.cocosa.co.nz/",
+                                    "NZD")});
         } else if (BuildConfig.FLAVOR.equals("cocosaTest"))  {
             populatePackageWithCountries(
                     new Country[]{
@@ -122,7 +127,8 @@ public class Settings {
                                     "cocosa.co.uk",
                                     "EN",
                                     "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
-                                    "https://api.mysaledev.com/"),
+                                    "https://api.mysaledev.com/",
+                                    "GBP"),
                             new Country("Australia",
                                     "CA",
                                     "954775B6-28C9-4C5C-880C-88F195C8E4F0",
@@ -130,7 +136,8 @@ public class Settings {
                                     "cocosa.com.au",
                                     "EN",
                                     "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
-                                    "https://api.mysaledev.com/"),
+                                    "https://api.mysaledev.com/",
+                                    "AUD"),
                             new Country("New Zealand",
                                     "CN",
                                     "2B2D335D-0365-4D56-97B0-C6CE7F3AE2C7",
@@ -138,7 +145,8 @@ public class Settings {
                                     "cocosa.co.nz",
                                     "EN",
                                     "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
-                                    "https://api.mysaledev.com/")
+                                    "https://api.mysaledev.com/",
+                                    "NZD")
                     });
         } else if (BuildConfig.FLAVOR.equals("ooRC")){
             populatePackageWithCountries(
@@ -150,7 +158,8 @@ public class Settings {
                                         "oo.com.au",
                                         "EN",
                                         "https://www.oo.com.au/",
-                                        "https://www.oo.com.au/")} );
+                                        "https://www.oo.com.au/",
+                                        "AUD")} );
 
         } else if (BuildConfig.FLAVOR.equals("ooTest")){
             populatePackageWithCountries(
@@ -162,7 +171,8 @@ public class Settings {
                                     "oo.com.au",
                                     "EN",
                                     "https://gui-oa-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/")} );
+                                    "https://api.mysaledev.com/",
+                                    "AUD")} );
 
         } else if (BuildConfig.FLAVOR.equals("buyinviteRC")){
             populatePackageWithCountries(
@@ -174,7 +184,8 @@ public class Settings {
                                         "buyinvite.com.au",
                                         "EN",
                                         "https://www.buyinvite.com.au/",
-                                        "https://www.buyinvite.com.au/"),
+                                        "https://www.buyinvite.com.au/",
+                                        "AUD"),
 
                             new Country("New Zealand",
                                         "BN",
@@ -183,7 +194,8 @@ public class Settings {
                                         "buyinvite.co.nz",
                                         "EN",
                                         "https://www.buyinvite.co.nz/",
-                                        "https://www.buyinvite.co.nz/")} );
+                                        "https://www.buyinvite.co.nz/",
+                                        "NZD")} );
 
         } else if (BuildConfig.FLAVOR.equals("buyinviteTest")){
             populatePackageWithCountries(
@@ -195,7 +207,8 @@ public class Settings {
                                     "buyinvite.com.au",
                                     "EN",
                                     "https://gui-ba-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/"),
+                                    "https://api.mysaledev.com/",
+                                    "AUD"),
 
                             new Country("New Zealand",
                                     "BN",
@@ -204,7 +217,8 @@ public class Settings {
                                     "buyinvite.co.nz",
                                     "EN",
                                     "https://gui-bn-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/")} );
+                                    "https://api.mysaledev.com/",
+                                    "NZD")} );
         } else if (BuildConfig.FLAVOR.equals("ozsaleRC")){
             populatePackageWithCountries(
                     new Country[] {
@@ -215,7 +229,8 @@ public class Settings {
                                         "ozsale.com.au",
                                         "EN",
                                         "https://www.ozsale.com.au/",
-                                        "https://www.ozsale.com.au/")} );
+                                        "https://www.ozsale.com.au/",
+                                        "AUD")} );
         } else if (BuildConfig.FLAVOR.equals("ozsaleTest")){
             populatePackageWithCountries(
                     new Country[] {
@@ -226,7 +241,8 @@ public class Settings {
                                     "ozsale.com.au",
                                     "EN",
                                     "https://gui-as-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/")} );
+                                    "https://api.mysaledev.com/",
+                                    "AUD")} );
         } else if (BuildConfig.FLAVOR.equals("singsaleRC")){
             populatePackageWithCountries(
                     new Country[] {
@@ -237,7 +253,8 @@ public class Settings {
                                         "singsale.com.sg",
                                         "EN",
                                         "https://www.singsale.com.sg/",
-                                        "https://www.singsale.com.sg/")} );
+                                        "https://www.singsale.com.sg/",
+                                        "SGD")} );
         } else if (BuildConfig.FLAVOR.equals("singsaleTest")){
             populatePackageWithCountries(
                     new Country[] {
@@ -248,7 +265,8 @@ public class Settings {
                                     "singsale.com.sg",
                                     "EN",
                                     "https://gui-si-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/")} );
+                                    "https://api.mysaledev.com/",
+                                    "SGD")} );
         } else if (BuildConfig.FLAVOR.equals("dealsDirectRC") || BuildConfig.FLAVOR.equals("dealsDirect2RC")){
             populatePackageWithCountries(
                     new Country[] {
@@ -259,7 +277,8 @@ public class Settings {
                                         "dealsdirect.com.au",
                                         "EN",
                                         "https://www.dealsdirect.com.au/",
-                                        "https://www.dealsdirect.com.au/")} );
+                                        "https://www.dealsdirect.com.au/",
+                                        "AUD")} );
         } else if (BuildConfig.FLAVOR.equals("dealsDirectTest") || BuildConfig.FLAVOR.equals("dealsDirect2Test")){
             populatePackageWithCountries(
                     new Country[] {
@@ -270,7 +289,8 @@ public class Settings {
                                     "dealsdirect.com.au",
                                     "EN",
                                     "https://gui-da-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/")} );
+                                    "https://api.mysaledev.com/",
+                                    "AUD")} );
         } else if (BuildConfig.FLAVOR.equals("topbuyRC") || BuildConfig.FLAVOR.equals("topbuy2RC")){
             populatePackageWithCountries(
                     new Country[] {
@@ -281,7 +301,8 @@ public class Settings {
                                         "topbuy.com.au",
                                         "EN",
                                         "https://www.topbuy.com.au/",
-                                        "https://www.topbuy.com.au/")} );
+                                        "https://www.topbuy.com.au/",
+                                        "AUD")} );
         } else if (BuildConfig.FLAVOR.equals("topbuyTest") || BuildConfig.FLAVOR.equals("topbuy2Test")){
             populatePackageWithCountries(
                     new Country[] {
@@ -292,7 +313,8 @@ public class Settings {
                                     "topbuy.com.au",
                                     "EN",
                                     "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
-                                    "https://api.mysaledev.com/")} );
+                                    "https://api.mysaledev.com/",
+                                    "AUD")} );
         } else if (BuildConfig.FLAVOR.equals("mysaleRC")){
             populatePackageWithCountries(
                     new Country[] {
@@ -303,7 +325,8 @@ public class Settings {
                                         "mysale.ph",
                                         "EN",
                                         "https://www.mysale.ph/",
-                                        "https://www.mysale.ph/"),
+                                        "https://www.mysale.ph/",
+                                        "PHP"),
                             new Country("Thailand",
                                         "TH",
                                         "28F20D19-6E9E-4B43-98AB-765F96DC0E5C",
@@ -311,7 +334,8 @@ public class Settings {
                                         "mysale.co.th",
                                         "EN",
                                         "https://www.mysale.co.th/",
-                                        "https://www.mysale.co.th/"),
+                                        "https://www.mysale.co.th/",
+                                        "THB"),
                             new Country("Malaysia",
                                         "MY",
                                         "34849BC9-EB96-4E2B-9698-B71F11F73297",
@@ -319,7 +343,8 @@ public class Settings {
                                         "mysale.my",
                                         "EN",
                                         "https://www.mysale.my/",
-                                        "https://www.mysale.my/"),
+                                        "https://www.mysale.my/",
+                                        "MYR"),
                             new Country("United Kingdom",
                                         "UK",
                                         "314D2B32-21F9-431D-975C-129BE4ED6BA0",
@@ -327,7 +352,8 @@ public class Settings {
                                         "mysale.co.uk",
                                         "EN",
                                         "https://www.mysale.co.uk/",
-                                        "https://www.mysale.co.uk/"),
+                                        "https://www.mysale.co.uk/",
+                                        "GBP"),
                             new Country("HongKong",
                                         "HK",
                                         "ED03076F-912B-4287-9580-6E2F52D33580",
@@ -335,7 +361,8 @@ public class Settings {
                                         "mysale.hk",
                                         "EN",
                                         "https://www.mysale.hk/",
-                                        "https://www.mysale.hk/")} );
+                                        "https://www.mysale.hk/",
+                                        "HKD")} );
         } else if (BuildConfig.FLAVOR.equals("mysaleTest")){
             populatePackageWithCountries(
                     new Country[] {
@@ -346,7 +373,8 @@ public class Settings {
                                     "mysale.ph",
                                     "EN",
                                     "https://gui-ph-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/"),
+                                    "https://api.mysaledev.com/",
+                                    "PHP"),
                             new Country("Thailand",
                                     "TH",
                                     "28F20D19-6E9E-4B43-98AB-765F96DC0E5C",
@@ -354,7 +382,8 @@ public class Settings {
                                     "mysale.co.th",
                                     "EN",
                                     "https://gui-th-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/"),
+                                    "https://api.mysaledev.com/",
+                                    "THB"),
                             new Country("Malaysia",
                                     "MY",
                                     "34849BC9-EB96-4E2B-9698-B71F11F73297",
@@ -362,7 +391,8 @@ public class Settings {
                                     "mysale.my",
                                     "EN",
                                     "https://gui-my-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/"),
+                                    "https://api.mysaledev.com/",
+                                    "MYR"),
                             new Country("United Kingdom",
                                     "UK",
                                     "314D2B32-21F9-431D-975C-129BE4ED6BA0",
@@ -370,7 +400,8 @@ public class Settings {
                                     "mysale.co.uk",
                                     "EN",
                                     "https://gui-uk-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/"),
+                                    "https://api.mysaledev.com/",
+                                    "GBP"),
                             new Country("HongKong",
                                     "EN",
                                     "ED03076F-912B-4287-9580-6E2F52D33580",
@@ -378,7 +409,8 @@ public class Settings {
                                     "mysale.hk",
                                     "EN",
                                     "https://gui-hk-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/")} );
+                                    "https://api.mysaledev.com/",
+                                    "HKD")} );
         } else if (BuildConfig.FLAVOR.equals("nzsaleRC")){
             populatePackageWithCountries(
                     new Country[] {
@@ -389,7 +421,8 @@ public class Settings {
                                         "nzsale.co.nz",
                                         "EN",
                                         "https://www.nzsale.co.nz/",
-                                        "https://www.nzsale.co.nz/")} );
+                                        "https://www.nzsale.co.nz/",
+                                        "NZD")} );
         } else if (BuildConfig.FLAVOR.equals("nzsaleTest")){
             populatePackageWithCountries(
                     new Country[] {
@@ -400,7 +433,8 @@ public class Settings {
                                     "nzsale.co.nz",
                                     "EN",
                                     "https://gui-nz-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/")} );
+                                    "https://api.mysaledev.com/",
+                                    "NZD")} );
         } else if (BuildConfig.FLAVOR.equals("thaisaleRC")){
             populatePackageWithCountries(
                     new Country[] {
@@ -411,7 +445,8 @@ public class Settings {
                                     "mysale.co.th",
                                     "EN",
                                     "https://www.mysale.co.th/",
-                                    "https://www.mysale.co.th/")} );
+                                    "https://www.mysale.co.th/",
+                                    "THB")} );
         }
         else if (BuildConfig.FLAVOR.equals("thaisaleTest")){
             populatePackageWithCountries(
@@ -423,7 +458,8 @@ public class Settings {
                                         "mysale.co.th",
                                         "EN",
                                         "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
-                                        "https://api.mysaledev.com/")} );
+                                        "https://api.mysaledev.com/",
+                                        "THB")} );
         }
 
         if (!getIsMultiCountry()) setCountry(Settings.getDefaultCountry());

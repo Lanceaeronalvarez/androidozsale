@@ -16,11 +16,13 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.crashlytics.android.Crashlytics;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse.Products;
 import au.com.dealsdirect.utils.CommonUtils;
@@ -195,6 +197,12 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             }
             if (product.getOriginalPrice() != null) {
                 saleItemOldPrice = PriceUtils.getRpStringValue(product.getOriginalPrice().getValue());
+            }
+
+            //Added key to check for crash report
+            if (!BuildConfig.DEBUG) {
+                Crashlytics.setString("Brand Name", product.getBrandName());
+                Crashlytics.setString("Image Url", url);
             }
 
             ImageUtils.loadImage(url, holder.image);

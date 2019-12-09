@@ -181,6 +181,10 @@
             android:required="false" />
         <!--[END ADMOB CRASH WORKAROUND]-->
 
+        <meta-data
+            android:name="au.com.dealsdirect.utils.GlideImage.GlideSetup"
+            android:value="GlideModule" />
+
     </application>
 
 </manifest>

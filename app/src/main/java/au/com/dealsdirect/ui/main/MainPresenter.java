@@ -944,21 +944,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         if (responseValue.getD().getResult()) {
                             getMvpView().showCreatePaymentTransactionSuccess(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE, responseValue);
-                            HashMap<String, Object> parameters = new HashMap<>();
-                            parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
-                                    PaymentInfo.VISA_CHECKOUT_CYBERSOURCE);
-                            parameters.put(DataCollector.EventParameters.NUMBER_OF_ITEMS,
-                                    responseValue.getD().getValue().getOrderInfoResult().getItems().size());
-                            parameters.put(DataCollector.EventParameters.PRICE,
-                                    responseValue.getD().getValue().getOrderInfoResult().getTotal());
-                            parameters.put(DataCollector.EventParameters.COUNTRY_ID, getDataManager().getCountryId());
-                            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
-                                    .EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
-                            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
-                                    .EventParameters.PURCHASE_CURRENCY, Settings.getSelectedCountry().currencySign);
-                            parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector
-                                    .EventParameters.PURCHASE_TRANSACTION_ID, responseValue.getD().getValue().getPaymentID());
-                            DataCollector.logEvent(Events.PurchaseEvent, parameters);
                         } else {
                             getMvpView().showCreatePaymentTransactionFailure(responseValue.getD().getMessage());
                         }
