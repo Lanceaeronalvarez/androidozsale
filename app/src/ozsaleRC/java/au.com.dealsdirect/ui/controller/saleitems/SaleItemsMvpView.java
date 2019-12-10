@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
@@ -31,6 +32,8 @@ public interface SaleItemsMvpView extends MvpView {
     void updateWishlistWithRemoval(String productId);
 
     void refresh();
+
+    void showSaleBannerDetails(GetSaleBannerDetailsResponse response);
 
     void showProductDetails(RecyclerView.ViewHolder viewHolder,
                             int position,

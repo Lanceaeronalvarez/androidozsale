@@ -22,4 +22,6 @@
 
     <bool name="is_using_old_banner">true</bool>
     <bool name="is_using_test_ads">true</bool>
+
+    <bool name="is_pull_to_refresh_enabled">false</bool>
 </resources>

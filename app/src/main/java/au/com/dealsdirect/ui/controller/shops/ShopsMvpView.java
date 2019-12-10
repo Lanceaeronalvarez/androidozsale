@@ -13,6 +13,10 @@ public interface ShopsMvpView extends MvpView {
 
     void showShopBanners(GetBannerResponse getBannerResponses, String categoryID);
 
+    void showSlidingBanners(GetBannerResponse getBannerResponses);
+
+    void showSponsoredBanners(GetBannerResponse getBannerResponses);
+
     void storeCategories(List<GetCategoryTreeResponse> categories);
 
     void refresh();

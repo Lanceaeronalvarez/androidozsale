@@ -27,6 +27,7 @@ import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRespons
 import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
@@ -154,6 +155,8 @@ public interface ApiHelper {
     Observable<SampleResponse> doSampleApiCall(SampleRequest request);
 
     Observable<GetBannerResponse> callGetBanners(GetBannerRequest getPublicSalesBannerRequest, boolean getOnlyFromNetwork);
+
+    Observable<GetSaleBannerDetailsResponse> callGetSaleBannerDetails(String saleId);
 
     Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request);
 

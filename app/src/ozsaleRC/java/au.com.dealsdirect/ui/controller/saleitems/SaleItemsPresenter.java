@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
@@ -129,6 +130,18 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                             });
                 });
         getMvpView().updateWishlistWithRemoval(productId);
+    }
+
+    @Override
+    public void loadSaleBannerDetails(String saleId) {
+        doApiCallForResponse(getDataManager().callGetSaleBannerDetails(saleId), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                if (o instanceof GetSaleBannerDetailsResponse) {
+                    getMvpView().showSaleBannerDetails((GetSaleBannerDetailsResponse) o);
+                }
+            }
+        });
     }
 
     @Override

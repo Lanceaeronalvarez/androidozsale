@@ -28,7 +28,7 @@
                 android:id="@+id/controller_shop_banner_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/border_regular"
+                android:background="@color/background_default"
                 android:padding="@dimen/controller_shop_banner_margin"/>
         </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 

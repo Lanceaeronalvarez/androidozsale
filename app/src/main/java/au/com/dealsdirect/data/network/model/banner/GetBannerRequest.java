@@ -33,6 +33,10 @@ public class GetBannerRequest {
     @SerializedName("categoryId")
     private String categoryId;
 
+    @Expose
+    @SerializedName("includeCampaignBanners")
+    private Boolean includeCampaignBanners;
+
     public void setOffset(String offset) {
         this.offset = offset;
     }
@@ -59,5 +63,13 @@ public class GetBannerRequest {
 
     public void setLastGroupType(String lastGroupType) {
         this.lastGroupType = lastGroupType;
+    }
+
+    public Boolean getIncludeCampaignBanners() {
+        return includeCampaignBanners;
+    }
+
+    public void setIncludeCampaignBanners(Boolean includeCampaignBanners) {
+        this.includeCampaignBanners = includeCampaignBanners;
     }
 }

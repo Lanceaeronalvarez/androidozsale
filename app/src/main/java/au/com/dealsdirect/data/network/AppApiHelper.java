@@ -30,6 +30,7 @@ import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRespons
 import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
@@ -195,6 +196,15 @@ public class AppApiHelper implements ApiHelper {
                     .build()
                     .getObjectObservable(GetBannerResponse.class);
         }
+    }
+
+    @Override
+    public Observable<GetSaleBannerDetailsResponse> callGetSaleBannerDetails(String saleId) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getSaleBannerDetails())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("sale_id", saleId)
+                .build()
+                .getObjectObservable(GetSaleBannerDetailsResponse.class);
     }
 
     @Override

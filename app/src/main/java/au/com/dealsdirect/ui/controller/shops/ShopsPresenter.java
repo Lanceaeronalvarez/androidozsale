@@ -59,6 +59,43 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                 });
     }
 
+    @Override
+    public void loadSlidingBanners(GetBannerRequest request) {
+        doApiCallForResponse(
+                getDataManager().callGetBanners(request, false), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        getMvpView().showSlidingBanners((GetBannerResponse) response);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                        getMvpView().showSlidingBanners(null);
+                    }
+                });
+    }
+
+    @Override
+    public void loadSponsoredBanners(GetBannerRequest request) {
+        doApiCallForResponse(
+                getDataManager().callGetBanners(request, false), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        getMvpView().showSponsoredBanners((GetBannerResponse) response);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                        getMvpView().showSponsoredBanners(null);
+                    }
+                });
+    }
+
+
     private void cancelPreviousLoadShopsBannerRequest() {
         if (mPreviousLoadShopsBannerRequest != null) {
             getCompositeDisposable().delete(mPreviousLoadShopsBannerRequest);

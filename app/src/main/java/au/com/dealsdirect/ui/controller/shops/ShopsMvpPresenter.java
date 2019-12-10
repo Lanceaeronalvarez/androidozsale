@@ -13,6 +13,10 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     void loadShopsBanner(GetBannerRequest request, boolean getOnlyFromNetwork);
 
+    void loadSlidingBanners(GetBannerRequest request);
+
+    void loadSponsoredBanners(GetBannerRequest request);
+
     void loadCategoryTree();
 
     boolean isAccessAnonymousEnabled();

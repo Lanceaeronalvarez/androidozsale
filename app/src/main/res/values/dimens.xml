@@ -91,6 +91,8 @@
     <dimen name="banner_mobile_height">143dp</dimen>
     <dimen name="banner_tablet_width">313dp</dimen>
     <dimen name="banner_tablet_height">294dp</dimen>
+    <dimen name="horizontal_banner_spacing">2dp</dimen>
+    <dimen name="horizontal_banner_spacer_size">14dp</dimen>
 
     <!-- Checkout -->
     <dimen name="row_checkout_image_width">100dp</dimen>

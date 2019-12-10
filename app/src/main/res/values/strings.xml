@@ -774,4 +774,6 @@
     <string name="expiration_invalid">Expiration date is invalid</string>
     <string name="stripe_add_card_error">Please verify your card details then try again.</string>
     <string name="stripe_error_occured">An Error has Occurred</string>
+
+    <string name="sponsored">Sponsored</string>
 </resources>

@@ -3,10 +3,6 @@ package au.com.dealsdirect.ui.controller.shops;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.appbar.AppBarLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +13,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.google.android.material.appbar.AppBarLayout;
 import com.mysale.genie.profiler.Profiler;
 import com.paginate.Paginate;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -44,12 +45,14 @@ import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
+import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
+import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -201,6 +204,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         super.onViewBound(view);
         mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_SALEBANNERS.getValue());
         setUp(view);
+        mShopPtrLayout.setEnabled(mActivity.getResources().getBoolean(R.bool.is_pull_to_refresh_enabled));
     }
 
     @Override
@@ -251,6 +255,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         if (!(previousController instanceof SaleItemsController)
                 && !(mActivity.getMainController().getCurrentViewPagerController() instanceof ShopsController)) {
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
+            loadSlidingBanners();
+            loadSponsoredBanners();
             mActivity.getMainController().getHomeController().setSavedCurrentItem();
         }
 
@@ -331,6 +337,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         } else {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
+            loadSlidingBanners();
+            loadSponsoredBanners();
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         }
 
@@ -352,10 +360,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private void displayBanners() {
+        int orientation = ScreenUtils.getOrientation(mActivity);
         if (mBannersAdapter == null) {
-            mBannersAdapter = new BannersAdapter(mActivity, mPresenter, sales);
+            mBannersAdapter = new BannersAdapter(
+                    mActivity,
+                    mPresenter,
+                    sales,
+                    orientation);
+            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         } else {
-            mBannersAdapter.setupDimensions();
+            mBannersAdapter.setupDimensions(orientation);
         }
 
         mLayoutManager = new GridLayoutManager(
@@ -367,19 +381,21 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch(mBannersAdapter.getItemViewType(position)){
-                    case 1: // if view is not a footer, set default columns
+                switch (mBannersAdapter.getItemViewType(position) & (~BannersAdapter.VIEW_HOLDER_TYPE_LANDSCAPE)) {
+                    case BannersAdapter.VIEW_HOLDER_TYPE_SPACER:
+                    case BannersAdapter.VIEW_HOLDER_TYPE_SLIDING_BANNER:
+                    case BannersAdapter.VIEW_HOLDER_TYPE_CATEGORY_BANNER:
+                    case BannersAdapter.VIEW_HOLDER_TYPE_SPONSORED_BANNER:
+                    case BannersAdapter.VIEW_HOLDER_TYPE_FOOTER:
                         return mBannersAdapter.getNumberOfColumns();
-                    case 0: // if view is a footer, set column count to 1
-                        return 1;
                     default:
-                        return -1;
+                        return 1;
                 }
             }
         });
 
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
-        shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+        shopsControllerBannerRecyclerView.getRecycledViewPool().clear();
     }
 
     private void setupPtrHeader() {
@@ -400,6 +416,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         } else {
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
         }
+        loadSlidingBanners();
+        loadSponsoredBanners();
     }
 
     @Override
@@ -529,6 +547,56 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     @Override
+    public void showSlidingBanners(GetBannerResponse getBannerResponses) {
+        HorizontalScrollingBannerAdapter adapter = null;
+        if (getBannerResponses != null) {
+            List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
+            List<GetBannerResponse.Group> groups = getBannerResponses.getGroups();
+            if (groups != null) {
+                for (GetBannerResponse.Group group : groups) {
+                    if (group.getType().equalsIgnoreCase("campaign")) {
+                        slidingBanners.addAll(group.getBanners());
+                    }
+                }
+            }
+            if (!slidingBanners.isEmpty()) {
+                adapter = new HorizontalScrollingBannerAdapter();
+                adapter.setDataSource(slidingBanners);
+            }
+        }
+        mBannersAdapter.setSlidingBannersAdapter(adapter);
+    }
+
+    @Override
+    public void showSponsoredBanners(GetBannerResponse getBannerResponses) {
+        HorizontalScrollingBannerAdapter adapter = null;
+        if (getBannerResponses != null) {
+            List<GetBannerResponse.Banner> sponsoredBanners = new ArrayList<>();
+            List<GetBannerResponse.Group> groups = getBannerResponses.getGroups();
+            if (groups != null) {
+                for (GetBannerResponse.Group group : groups) {
+                    List<GetBannerResponse.Banner> banners = group.getBanners();
+                    if (banners != null) {
+                        for (GetBannerResponse.Banner banner : banners) {
+                            List<String> categories = banner.getCategories();
+                            for (String category : categories) {
+                                if (category.equalsIgnoreCase("sponsored")) {
+                                    sponsoredBanners.add(banner);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (!sponsoredBanners.isEmpty()) {
+                adapter = new HorizontalScrollingBannerAdapter();
+                adapter.setDataSource(sponsoredBanners);
+            }
+        }
+        mBannersAdapter.setSponsoredBannersAdapter(adapter);
+    }
+
+    @Override
     public void refreshContents() {
         super.refreshContents();
         if (isViewAttached() &&
@@ -537,6 +605,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 shopsControllerBannerRecyclerView != null) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, INITIAL_BANNER_COUNT));
+            loadSlidingBanners();
+            loadSponsoredBanners();
         }
         resetBannerLayout();
         if (mShopAppBarLayout != null) {
@@ -600,8 +670,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void onError(String message) {
         super.onError(message);
 
-        bannerOffset -= INITIAL_BANNER_COUNT;
-        page--;
+        bannerOffset = Math.max(0, bannerOffset - INITIAL_BANNER_COUNT);
+        page = Math.max(0, page - 1);
 
         loadingInProgress = false;
         if (mBannersAdapter != null) {
@@ -678,6 +748,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             showLogoHeader();
             mPresenter.loadShopsBanner(createBannerRequest(id, bannerOffset, bannerLimit), false);
         }
+        loadSlidingBanners();
+        loadSponsoredBanners();
     }
 
     private void resetShopsBanners(String categoryID) {
@@ -770,7 +842,40 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             showLogoHeader();
         }
         mPresenter.loadShopsBanner(createBannerRequest("", 0, 0));
+        loadSlidingBanners();
+        loadSponsoredBanners();
     }
+
+    public void clearHorizontalBanners() {
+        if (mBannersAdapter != null) {
+            mBannersAdapter.setSlidingBannersAdapter(null);
+            mBannersAdapter.setCategoryBannersAdapter(null);
+            mBannersAdapter.setSponsoredBannersAdapter(null);
+        }
+    }
+
+    public void loadSlidingBanners() {
+        GetBannerRequest request = new GetBannerRequest();
+        if (mCategoryID != null && !mCategoryID.isEmpty()) {
+            request.setCategory(mCategoryID);
+        }
+        request.setOffset(null);
+        request.setLimit("10");
+        request.setIncludeCampaignBanners(true);
+
+        mPresenter.loadSlidingBanners(request);
+    }
+
+    public void loadSponsoredBanners() {
+        GetBannerRequest request = new GetBannerRequest();
+        request.setCategory("U3BvbnNvcmVk");
+        request.setOffset(null);
+        request.setLimit("999");
+        request.setIncludeCampaignBanners(true);
+
+        mPresenter.loadSponsoredBanners(request);
+    }
+
 
     private void showLogoHeader() {
         mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
@@ -805,6 +910,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         } else {
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit), true);
         }
+        loadSlidingBanners();
+        loadSponsoredBanners();
     }
 
     private GetBannerRequest createBannerRequest(String categoryId, int bannerOffset, int bannerLimit) {
@@ -851,6 +958,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             getBannerRequest.setCategoryId(saleCategoryId);
         }
 
+        getBannerRequest.setIncludeCampaignBanners(true);
+
         return getBannerRequest;
     }
 
@@ -869,6 +978,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         } else {
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
         }
+        loadSlidingBanners();
+        loadSponsoredBanners();
     }
 
     @Override
@@ -897,7 +1008,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private void resetBannerLayout() {
         if (mBannersAdapter != null && shopsControllerBannerRecyclerView != null && mLayoutManager != null) {
-            int currentScrollPosition = mLayoutManager.findFirstVisibleItemPosition();
+            int currentScrollPosition = Math.max(0, mLayoutManager.findFirstVisibleItemPosition());
             displayBanners();
             mLayoutManager.scrollToPosition(currentScrollPosition);
         }
@@ -913,6 +1024,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
             if (mIsDeeplink) {
                 mPresenter.loadShopsBanner(createDeepLinkBannerRequest(categoryId, 0, 0));
+                loadSlidingBanners();
+                loadSponsoredBanners();
             }
 
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
@@ -960,6 +1073,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         bannerGroupType = "";
         resetShopsBanners("");
         mPresenter.loadShopsBanner(createBannerRequest("", 0, bannerLimit), true);
+        loadSlidingBanners();
+        loadSponsoredBanners();
     }
 
 }
