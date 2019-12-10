@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
@@ -16,11 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
 import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
 import au.com.dealsdirect.utils.ActionConstants;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
@@ -75,6 +79,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     private boolean isOrderReceived = false;
     private boolean isOrderCancelled = false;
     private GetPaymentsList.ResponseValue.PaymentItem mOrders;
+    private List<GetOrderPaymentDetails.ResponseValue.RefundItems> mRefundedItems;
 
     public OrderDetailsRecyclerViewAdapter(Activity mActivity,
                                            GetOrderPaymentDetails.ResponseValue.Value orderDetails,
@@ -150,6 +155,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                     .contains(ActionConstants.ORDER_RECEIVED_STATUS);
             getReceiveDate = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getReceived();
             isOrderReceived = getReceiveDate != null;
+            mRefundedItems = ((GetOrderPaymentDetails.ResponseValue.Order) mData.get(position)).getRefundItems();
 
             String invoiceNumber = mActivity.getResources().getString(R.string.order_invoice) + " " + mInvoiceNumber;
             ((OrderSaleName) holder).saleName.setText(invoiceNumber);
@@ -211,6 +217,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             tracker.setStockDate(mOrderTracker.getStockDate());
             setOrderTrackData((OrderItemTrack) holder, tracker);
         }
+
     }
 
     @Override
@@ -287,6 +294,37 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 mClickListener.showOrderDialog(v, (ArrayList<String>) item.getActions(), itemHashMap);
             });
 
+        }
+
+        if (mRefundedItems != null && mRefundedItems.size() != 0) {
+            for (int i = 0; i < mRefundedItems.size(); i++) {
+                GetOrderPaymentDetails.ResponseValue.RefundItems refundItems = mRefundedItems.get(i);
+
+                if (item.getID().equalsIgnoreCase(refundItems.getOrderItemId())) {
+
+                    int currentQuantity = orderItemCount - refundItems.getSubTotal().getItemsCount();
+
+                    if (currentQuantity != 0) {
+                        holder.productQuantityRefunded.setVisibility(View.VISIBLE);
+                        holder.productSubtotalRefunded.setVisibility(View.VISIBLE);
+
+                        holder.productQuantityRefunded.setText(String.valueOf(currentQuantity));
+
+                        holder.productQuantityTextView.setPaintFlags(holder.productSubtotalTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+                        String removeCurrency = refundItems.getSubTotal().getItemsAmount().substring(1);
+                        double totalRefund = Double.parseDouble(removeCurrency);
+                        double currentTotal = item.getSubTotal().getItemsAmount() - totalRefund;
+                        holder.productSubtotalRefunded.setText(PriceUtils.getPriceStringValue(currentTotal));
+
+                        holder.productSubtotalTextView.setPaintFlags(holder.productSubtotalTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+                    }
+                }
+            }
+        } else {
+            holder.productQuantityRefunded.setVisibility(View.GONE);
+            holder.productSubtotalRefunded.setVisibility(View.GONE);
         }
     }
 
@@ -419,6 +457,12 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
         @BindView(R.id.row_item_order_details_layout)
         RelativeLayout orderDetailsItemLayout;
+
+        @BindView(R.id.controller_order_details_quantity_refunded_textview)
+        TextView productQuantityRefunded;
+
+        @BindView(R.id.controller_order_details_subtotal_refunded_textview)
+        TextView productSubtotalRefunded;
 
         public OrderDetailsItemViewHolder(View itemView) {
             super(itemView);

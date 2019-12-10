@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/margin_tiny"
     tools:ignore="MissingPrefix"
     android:id="@+id/row_item_order_details_layout"
-    android:visibility="gone">
+    android:visibility="visible">
 
 
 
@@ -33,7 +33,7 @@
             android:textColor="@color/white"
             android:layout_alignParentRight="true"
             android:fontFamily="@string/font_app_bold"
-            android:textSize="@dimen/text_size_caption2"
+            android:textSize="@dimen/text_size_caption3"
             android:visibility="gone"/>
 
     </RelativeLayout>
@@ -132,6 +132,17 @@
                 tools:ignore="HardcodedText"
                 tools:text="5" />
 
+            <TextView
+                android:id="@+id/controller_order_details_quantity_refunded_textview"
+                fontPath="@string/font_app_semibold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_extra_small"
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_body"
+                tools:ignore="HardcodedText"
+                tools:text="5" />
+
         </LinearLayout>
 
 
@@ -182,6 +193,17 @@
 
             <TextView
                 android:id="@+id/controller_order_details_item_subtotal_textview"
+                fontPath="@string/font_app_semibold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_extra_small"
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_body"
+                tools:ignore="HardcodedText"
+                tools:text="$1.00" />
+
+            <TextView
+                android:id="@+id/controller_order_details_subtotal_refunded_textview"
                 fontPath="@string/font_app_semibold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

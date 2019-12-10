@@ -539,7 +539,7 @@ public class GetOrderPaymentDetails {
             private String description;
             @SerializedName("RefundItems")
             @Expose
-            private Object refundItems;
+            private List<RefundItems> refundItems;
             @SerializedName("InvoiceNo")
             @Expose
             private Integer invoiceNo;
@@ -591,14 +591,6 @@ public class GetOrderPaymentDetails {
                 this.description = description;
             }
 
-            public Object getRefundItems() {
-                return refundItems;
-            }
-
-            public void setRefundItems(Object refundItems) {
-                this.refundItems = refundItems;
-            }
-
             public Integer getInvoiceNo() {
                 return invoiceNo;
             }
@@ -639,6 +631,13 @@ public class GetOrderPaymentDetails {
                 this.tracker = tracker;
             }
 
+            public List<RefundItems> getRefundItems() {
+                return refundItems;
+            }
+
+            public void setRefundItems(List<RefundItems> refundItems) {
+                this.refundItems = refundItems;
+            }
         }
 
         public static class Tracker {
@@ -698,6 +697,89 @@ public class GetOrderPaymentDetails {
                 this.closedDate = closedDate;
             }
 
+        }
+
+        public static class RefundItems {
+            @SerializedName("OrderItemID")
+            @Expose
+            private String orderItemId;
+            @SerializedName("Item")
+            @Expose
+            private String item;
+            @SerializedName("Size")
+            @Expose
+            private String size;
+            @SerializedName("Price")
+            @Expose
+            private String price;
+            @SerializedName("SubTotal")
+            @Expose
+            private RefundItemSubtotal subTotal;
+
+            public String getOrderItemId() {
+                return orderItemId;
+            }
+
+            public void setOrderItemId(String orderItemId) {
+                this.orderItemId = orderItemId;
+            }
+
+            public String getItem() {
+                return item;
+            }
+
+            public void setItem(String item) {
+                this.item = item;
+            }
+
+            public String getSize() {
+                return size;
+            }
+
+            public void setSize(String size) {
+                this.size = size;
+            }
+
+            public String getPrice() {
+                return price;
+            }
+
+            public void setPrice(String price) {
+                this.price = price;
+            }
+
+            public RefundItemSubtotal getSubTotal() {
+                return subTotal;
+            }
+
+            public void setSubTotal(RefundItemSubtotal subTotal) {
+                this.subTotal = subTotal;
+            }
+        }
+
+        public static class RefundItemSubtotal {
+            @SerializedName("ItemsCount")
+            @Expose
+            private Integer itemsCount;
+            @SerializedName("ItemsAmount")
+            @Expose
+            private String itemsAmount;
+
+            public Integer getItemsCount() {
+                return itemsCount;
+            }
+
+            public void setItemsCount(Integer itemsCount) {
+                this.itemsCount = itemsCount;
+            }
+
+            public String getItemsAmount() {
+                return itemsAmount;
+            }
+
+            public void setItemsAmount(String itemsAmount) {
+                this.itemsAmount = itemsAmount;
+            }
         }
     }
 }
