@@ -72,7 +72,7 @@ public class ImageUtils {
         Glide.with(imageView)
                 .asBitmap()
                 .apply(options)
-                .load(Headers.applyHeadersForWebPContent(url))
+                .load(url)
                 .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                 .into(imageView);
     }
@@ -86,7 +86,7 @@ public class ImageUtils {
 
         Glide.with(imageView)
                 .asBitmap()
-                .load(Headers.applyHeadersForWebPContent(url))
+                .load(url)
                 .apply(options)
                 .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                 .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
@@ -109,7 +109,7 @@ public class ImageUtils {
             Glide.with(imageView)
                     .asBitmap()
                     .apply(options)
-                    .load(Headers.applyHeadersForWebPContent(url))
+                    .load(url)
                     .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                     .listener(new RequestListener<Bitmap>() {
                         @Override
@@ -128,7 +128,7 @@ public class ImageUtils {
             Glide.with(imageView)
                     .asBitmap()
                     .apply(options)
-                    .load(Headers.applyHeadersForWebPContent(url))
+                    .load(url)
                     .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                     .into(imageView);
         }
@@ -145,7 +145,7 @@ public class ImageUtils {
             Glide.with(imageView)
                     .asBitmap()
                     .apply(options)
-                    .load(Headers.applyHeadersForWebPContent(url))
+                    .load(url)
                     .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                     .listener(new RequestListener<Bitmap>() {
                         @Override
@@ -164,7 +164,7 @@ public class ImageUtils {
             Glide.with(imageView)
                     .asBitmap()
                     .apply(options)
-                    .load(Headers.applyHeadersForWebPContent(url))
+                    .load(url)
                     .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
                     .into(imageView);
         }
