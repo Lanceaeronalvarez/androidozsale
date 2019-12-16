@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.categories.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,14 +32,17 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
     private SubCategoryItemClickListener mCategoryAdapterClickListener;
     private int lastPosition = -1;
     private boolean mAnimateInsert = true;
+    private Context mContext;
 
     private SubCategoryItemViewHolder mLastSelectedViewHolder = null;
 
     public SubCategoryItemsAdapter(
+            Context context,
             List<GetCategoryTreeResponse> data,
             SubCategoryItemClickListener subCategoryItemClickListener,
             boolean animateInsert) {
 
+        mContext = context;
         mData = data;
         mCategoryAdapterClickListener = subCategoryItemClickListener;
         mAnimateInsert = animateInsert;
@@ -45,9 +50,15 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
     @Override
     public SubCategoryItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_subcategory_item, parent, false);
-        SubCategoryItemViewHolder vh = new SubCategoryItemViewHolder(view);
-        return vh;
+        View view = null;
+
+        if (mContext.getResources().getBoolean(R.bool.should_use_old_category_layout)) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_subcategory_item, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_salesubcategory_item, parent, false);
+        }
+
+        return new SubCategoryItemViewHolder(view);
     }
 
     @Override

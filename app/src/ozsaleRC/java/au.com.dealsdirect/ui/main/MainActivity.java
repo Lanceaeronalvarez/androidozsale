@@ -94,6 +94,7 @@ import au.com.dealsdirect.ui.base.BaseController.CommonControllerChangeListener;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.categories.SaleCategoryController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
@@ -173,6 +174,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private SearchFilterController mSearchFilterController;
     private SearchFilterController mShopSearchFilterController;
     private MainActivity mMainActivity;
+    private SaleCategoryController mSaleCategoryController;
 
     private Router mHomeRouter;
     private Router mCategoriesRouter;
@@ -1162,6 +1164,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public CategoriesController getCategoriesController() {
         return mCategoriesController;
+    }
+
+    public SaleCategoryController getSaleCategoryController() {
+        return mSaleCategoryController;
+    }
+
+    public void setSaleCategoryController(SaleCategoryController saleCategoryController) {
+        this.mSaleCategoryController = saleCategoryController;
     }
 
     public boolean getIsMyPayEnabled() {

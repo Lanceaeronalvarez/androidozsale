@@ -118,6 +118,7 @@
     <dimen name="category_image_padding">15dp</dimen>
     <dimen name="viewholder_subcategory_width">25dp</dimen>
     <dimen name="viewholder_subcategory_height">25dp</dimen>
+    <dimen name="viewholder_salecategory_height">80dp</dimen>
 
     <!-- Facet Filters -->
     <dimen name="row_facet_check_icon_width">30dp</dimen>
