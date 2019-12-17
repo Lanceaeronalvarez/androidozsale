@@ -769,6 +769,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         sales.clear();
         mBannersAdapter.clear();
         mLayoutManager.scrollToPosition(0);
+
+        int orientation = ScreenUtils.getOrientation(mActivity);
+        mBannersAdapter.setupDimensions(orientation);
     }
 //
 //    @SuppressWarnings({"deprecation", "ConstantConditions"})
