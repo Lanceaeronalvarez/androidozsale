@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -52,6 +53,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
@@ -91,10 +93,13 @@ import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerC
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
+import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
@@ -114,6 +119,7 @@ import butterknife.OnClick;
 import static android.graphics.Typeface.BOLD;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 
 /*
  * Created by smartwave on 08/06/2017.
@@ -633,10 +639,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         stretchImageView();
 
         if (mBrandName == null || mBrandName.isEmpty()) {
-            mProductBrand.setText(mSaleName);
+            mProductBrand.setText(Html.fromHtml("<u>"+mSaleName+"</u>"));
             mProductName.setText("");
         } else {
-            mProductBrand.setText(mBrandName);
+            mProductBrand.setText(Html.fromHtml("<u>"+mBrandName+"</u>"));
             mProductName.setText(mSaleName);
         }
 
@@ -830,6 +836,40 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             });
         }
 
+        mProductBrand.setOnClickListener(v -> {
+            showProductList(mProductBrand.getText().toString());
+        });
+
+    }
+
+    private void showProductList(String searchKey) {
+
+        Bundle args = new Bundle();
+        args.putBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
+
+        SaleItemsController.Parameters.FromShopSearch parameters = new SaleItemsController.Parameters
+                .FromShopSearch(null, searchKey);
+
+        SaleItemsController saleItemsController = SaleItemsController.newInstance(parameters);
+
+
+        Controller controller = getRouter().getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
+        if (controller != null) {
+            getRouter().popController(controller);
+            getRouter().replaceTopController(RouterTransaction.with(saleItemsController)
+                    .tag(getResources().getString(R.string.sale_items_controller_tag))
+                    .pushChangeHandler(new ArcZoomChangeHandler())
+                    .popChangeHandler(new ArcZoomChangeHandler()));
+        } else {
+            getRouter().popToRoot(new ArcZoomChangeHandler());
+            getRouter().pushController(RouterTransaction.with(saleItemsController)
+                    .tag(getResources().getString(R.string.sale_items_controller_tag))
+                    .pushChangeHandler(new ArcZoomChangeHandler())
+                    .popChangeHandler(new ArcZoomChangeHandler()));
+        }
+
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+
     }
 
     private void setupSaleRemainingTime(String endDate) {
@@ -980,11 +1020,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mToolbarItemBrandTextView.setText(brandName);
             mToolbarItemNameTextView.setText(name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
             mProductName.setText(name.trim());
-            mProductBrand.setText(brandName.trim());
+            mProductBrand.setText(Html.fromHtml("<u>"+brandName.trim()+"</u>"));
         } else {
             mToolbarItemBrandTextView.setText(name.trim());
             mToolbarItemNameTextView.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
-            mProductBrand.setText(name.trim());
+            mProductBrand.setText(Html.fromHtml("<u>"+name.trim()+"</u>"));
         }
 
         if (personalisation != null) {

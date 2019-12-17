@@ -527,6 +527,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else if (parameters instanceof Parameters.FromShopSearch) {
             title = ((Parameters.FromShopSearch) parameters).getTitle();
             controller.mFromShopSearch = true;
+            controller.mSearchQuery = ((Parameters.FromShopSearch) parameters).getSearchKey();
         } else if (parameters instanceof Parameters.FromCategory) {
             title = ((Parameters.FromCategory) parameters).getTitle();
             controller.mCategoryKey = ((Parameters.FromCategory) parameters).getCategoryMap();
@@ -813,6 +814,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     } else {
                         mSaleItemsToolbarField.setText("");
                     }
+                } else if (mSearchQuery != null && mSearchQuery.length() > 0) {
+                    mSaleItemsToolbarField.setText(mSearchQuery);
                 } else {
                     mSaleItemsToolbarField.setHint(lookingForText);
                 }
@@ -1074,7 +1077,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void showKeyboard() {
-        if (mFromShopSearch) {
+        if (mFromShopSearch && (mSearchQuery == null || mSearchQuery.isEmpty())) {
             activateSearch();
             KeyboardUtils.showSoftInput(mSaleItemsToolbarField, mActivity);
             InputMethodManager inputMethodManager = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
