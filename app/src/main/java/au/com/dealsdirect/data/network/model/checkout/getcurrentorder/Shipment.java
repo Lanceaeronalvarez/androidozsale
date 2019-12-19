@@ -65,6 +65,10 @@ public class Shipment {
         this.amountToPromoPrice = amountToPromoPrice;
     }
 
+    public void setLocationFilterHash(String locationFilterHash) {
+        this.locationFilterHash = locationFilterHash;
+    }
+
     public String getLocationFilterHash() {
         return locationFilterHash;
     }

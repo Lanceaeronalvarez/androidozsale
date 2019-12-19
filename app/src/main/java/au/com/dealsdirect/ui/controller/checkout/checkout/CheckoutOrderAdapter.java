@@ -3,10 +3,13 @@ package au.com.dealsdirect.ui.controller.checkout.checkout;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -56,6 +60,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     private CheckoutListener mClickListener;
 
     private boolean shouldAddSpacerOnTop = false;
+
+    private EligibleProductsLinkListener eligibleProductsLinkListener = null;
 
     public CheckoutOrderAdapter(Context context, List<MappedShipment> data, CheckoutMvpPresenter<CheckoutMvpView> presenter,
                                 CheckoutListener clickListener) {
@@ -218,7 +224,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
                 mFlattenedData.add(new ItemData(
                         createTitleFromShippingFee(
                                 shipment.getDeliveryPrice(),
-                                shipment.getAmountToPromoPrice()
+                                shipment.getAmountToPromoPrice(),
+                                shipment.getLocationFilterHash()
                         )));
             }
             mFlattenedData.add(new ItemData(ItemData.Type.LINE));
@@ -229,7 +236,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private SpannableStringBuilder createTitleFromShippingFee(double fee,
-                                                              double targetPriceForFreeShipping) {
+                                                              double targetPriceForFreeShipping,
+                                                              String locationFilterHash) {
         String shippingString = mContext.getResources().getString(R.string.shipping_with_colon) +
                 PriceUtils.getPriceStringValue(fee);
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
@@ -259,8 +267,24 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             spannableStringBuilder.append(
                     targetPriceString);
 
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View widget) {
+                    onEligibleProductsTapped(locationFilterHash);
+                }
+            };
+
+            String eligibleProductsString = mContext.getResources().getString(R.string.promo_shipping_eligible_products);
+            int eligibleProductsStart = targetPriceString.indexOf(eligibleProductsString) + start;
+
+            spannableStringBuilder.setSpan(
+                    clickableSpan,
+                    eligibleProductsStart,
+                    eligibleProductsStart + eligibleProductsString.length(),
+                    SPAN_EXCLUSIVE_INCLUSIVE);
+
             int imagePosition = spannableStringBuilder.length();
-            String freeShippingString = "\n  " +
+            String freeShippingString = "   " +
                     mContext.getResources().getString(R.string.free_shipping_text).toUpperCase();
             spannableStringBuilder.append(
                     freeShippingString,
@@ -290,6 +314,16 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         return spannableStringBuilder;
     }
 
+    private void onEligibleProductsTapped(String locationFilterHash) {
+        if (eligibleProductsLinkListener != null) {
+            eligibleProductsLinkListener.onTapped(locationFilterHash);
+        }
+    }
+
+    public void setEligibleProductsLinkListener(EligibleProductsLinkListener eligibleProductsLinkListener) {
+        this.eligibleProductsLinkListener = eligibleProductsLinkListener;
+    }
+
     @Override
     public int getItemCount() {
         return mFlattenedData == null ? 0 : mFlattenedData.size();
@@ -316,6 +350,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         public FooterViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            titleTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 
@@ -388,5 +423,9 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         Type getType() {
             return type;
         }
+    }
+
+    public interface EligibleProductsLinkListener {
+        void onTapped(String locationFilterHash);
     }
 }

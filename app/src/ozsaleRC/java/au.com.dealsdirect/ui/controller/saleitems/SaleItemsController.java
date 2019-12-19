@@ -321,6 +321,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 return mCategoryMapKey;
             }
         }
+
+        public static final class FromLocationFilterHash extends Parameters {
+            private String mLocationFilterHash;
+
+            public FromLocationFilterHash(String locationFilterHash) {
+                this.mLocationFilterHash = locationFilterHash;
+            }
+
+            public String getLocationFilterHash() {
+                return mLocationFilterHash;
+            }
+        }
     }
 
     public static final String TAG = SaleItemsController.class.getSimpleName();
@@ -442,6 +454,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean mInitialLoad = false;
     private boolean mHasSavedInstance = false;
 
+    private String locationFilterHash = null;
+
     private String mSalesOrigin = DataCollector.EventParameters.ViewSource.SALE;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
@@ -540,6 +554,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             title = ((Parameters.FromCategoryDeepLink) parameters).getTitle();
             controller.mCategoryKey = ((Parameters.FromCategoryDeepLink) parameters).getCategoryMapKey();
             controller.mFromCategoryDeeplink = true;
+        } else if (parameters instanceof  Parameters.FromLocationFilterHash) {
+            controller.locationFilterHash = ((Parameters.FromLocationFilterHash) parameters).getLocationFilterHash();
         }
 
         title = title != null ? title.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT) : "";
@@ -1625,7 +1641,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public GetSaleItemsRequest createSaleItemsRequest(String categoryKey, int pageNumber, List<SearchChipModel> chipsList) {
-        List<String> saleIds = new LinkedList<>();
         HashMap<String, List<String>> facetFilters = new HashMap<>();
 
         GetSaleItemsRequest getSaleItemsRequest = new GetSaleItemsRequest();
@@ -1637,9 +1652,26 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         getSaleItemsRequest.setQuery(mSearchQuery);
         getSaleItemsRequest.setPageSize("50");
 
-        if (!(mSaleId == "")) {
+        if (mSaleId != null && !mSaleId.isEmpty()) {
+            List<String> saleIds = facetFilters.get("saleId");
+            if (saleIds == null) {
+                saleIds = new LinkedList<>();
+            } else {
+                saleIds = new LinkedList<>(saleIds);
+            }
             saleIds.add(mSaleId);
             facetFilters.put("saleId", saleIds);
+        }
+
+        if (locationFilterHash != null && !locationFilterHash.isEmpty()) {
+            List<String> supplier = facetFilters.get("supplier");
+            if (supplier == null) {
+                supplier = new LinkedList<>();
+            } else {
+                supplier = new LinkedList<>(supplier);
+            }
+            supplier.add(locationFilterHash);
+            facetFilters.put("supplier", supplier);
         }
 
         //clear SelectedTitle Array and add filter category if any

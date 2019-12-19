@@ -411,6 +411,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (!mPresenter.isTablet() || !getBoolean(R.bool.master_detail_enabled)) {
             mRecyclerView.setVisibility(View.VISIBLE);
             mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
+            mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getHomeController().openLocationFilterHash(locationFilterHash));
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         }
