@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/viewholder_new_return_imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/category_width"
+        android:layout_height="@dimen/category_height"
         android:scaleType="centerCrop"/>
 
     <ImageButton
@@ -17,5 +17,13 @@
         android:background="@drawable/ic_alert_dialog_cross"
         android:layout_alignParentEnd="true"
         android:padding="@dimen/margin_small"/>
+
+    <ProgressBar
+        android:id="@+id/viewholder_progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

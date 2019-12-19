@@ -252,18 +252,23 @@ public class ImageUploadUtil {
        int imageCount = 0;
        private ProgressDialog progressDialog;
        private final Context mContext;
+       private boolean showProgressDialog = true;
 
-       public UploadFileToServer(final Context context) {
+       public UploadFileToServer(final Context context, boolean showLoading) {
            mContext = context;
+           showProgressDialog = showLoading;
        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-           progressDialog = new ProgressDialog(mContext);
-           progressDialog.setMessage("Loading...");
-           progressDialog.show();
-           progressDialog.setCanceledOnTouchOutside(false);
+
+            if (showProgressDialog) {
+                progressDialog = new ProgressDialog(mContext);
+                progressDialog.setMessage("Loading...");
+                progressDialog.show();
+                progressDialog.setCanceledOnTouchOutside(false);
+            }
         }
 
         @Override
@@ -289,7 +294,7 @@ public class ImageUploadUtil {
         protected void onPostExecute(String result) {
             // view response from server
             AppLogger.d("Response from server: " + result);
-            progressDialog.dismiss();
+            if (showProgressDialog) { progressDialog.dismiss(); }
             delegate.asyncExecutionFinished(result, imageCount);
             super.onPostExecute(result);
         }
@@ -387,6 +392,7 @@ public class ImageUploadUtil {
 
         try {
             File file = new File(activity.getCacheDir(), GNotification.getDeviceID(activity) + position + ".jpg");
+
             file.createNewFile();
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

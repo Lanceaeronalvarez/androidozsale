@@ -594,7 +594,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
             }
             return;
         }
-        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity);
+        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity, true);
         uploadFileToServer.delegate = (urlString, imagePosition1) -> {
             getImageUrl(ImageUploadUtil.convertStringUrltoJSON(urlString));
 
