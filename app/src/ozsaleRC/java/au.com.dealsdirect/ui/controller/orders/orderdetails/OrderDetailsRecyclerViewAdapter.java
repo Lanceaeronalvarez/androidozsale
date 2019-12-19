@@ -261,8 +261,8 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
 
         holder.productNameTextView.setText(item.getItem());
-        holder.productQuantityTextView.setText(String.valueOf(orderItemCount));
-        holder.productSubtotalTextView.setText(PriceUtils.getPriceStringValue(Double.valueOf(item.getSubTotal().getItemsAmount())));
+        holder.productQuantityTextView.setText(" "+String.valueOf(orderItemCount)+" ");
+        holder.productSubtotalTextView.setText(" "+PriceUtils.getPriceStringValue(Double.valueOf(item.getSubTotal().getItemsAmount()))+" ");
 
         if (item.getActions().size() == 0) {
             holder.moreOptionsImageButton.setVisibility(View.GONE);
