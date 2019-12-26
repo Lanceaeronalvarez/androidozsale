@@ -5,13 +5,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -216,12 +221,17 @@ public class ViewContactHistoryController extends BaseController implements View
             mMessageId = myContactItems.get(0).getId();
 
             for (int i = 0; i < mImageUriArray.size(); i++) {
-                ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder vh = (ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder)
-                        mImageRecyclerView.findViewHolderForLayoutPosition(i);
-
-                if (vh != null) {
-                    Bitmap bitmap = ((BitmapDrawable)vh.viewContactsImageView.getDrawable()).getBitmap();
+                try {
+                    Uri uri = Uri.parse(mImageUriArray.get(i).getLink());
+                    Bitmap bitmap;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getActivity().getContentResolver(), uri));
+                    } else {
+                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                    }
                     addItemFromLink("", i, bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -423,12 +433,12 @@ public class ViewContactHistoryController extends BaseController implements View
         {
             Uri chosenImageUri = data.getData();
 
+            mImageRecyclerView.setVisibility(View.VISIBLE);
+
             ImageUtils.ImageLink imageLink = new ImageUtils.ImageLink(String.valueOf(chosenImageUri), false);
             mImageUriArray.add(0, imageLink);
 
             ((ViewContactsAddImageAdapter) Objects.requireNonNull(mImageRecyclerView.getAdapter())).addItem();
-
-            mImageRecyclerView.setVisibility(View.VISIBLE);
 
         }
     }

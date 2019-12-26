@@ -5,14 +5,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -332,12 +336,17 @@ public class AddContactController extends BaseController implements AddContactMv
         mMessageId = myContactItems.get(0).getId();
 
         for (int i = 0; i < mImageUriArray.size(); i++) {
-            ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder vh = (ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder)
-                    mImageRecyclerView.findViewHolderForLayoutPosition(i);
-
-            if (vh != null) {
-                Bitmap bitmap = ((BitmapDrawable)vh.viewContactsImageView.getDrawable()).getBitmap();
+            try {
+                Uri uri = Uri.parse(mImageUriArray.get(i).getLink());
+                Bitmap bitmap;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getActivity().getContentResolver(), uri));
+                } else {
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                }
                 addItemFromLink("", i, bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
@@ -443,11 +452,13 @@ public class AddContactController extends BaseController implements AddContactMv
     public void asyncExecutionFinished(String imageUrl, int imagePosition) {
         getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
 
-        ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder vh = (ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder)
-                mImageRecyclerView.findViewHolderForLayoutPosition(imagePosition);
+        if (mImageRecyclerView != null) {
+            ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder vh = (ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder)
+                    mImageRecyclerView.findViewHolderForLayoutPosition(imagePosition);
 
-        if (vh != null) {
-            ((ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter()).hideVisibility(vh);
+            if (vh != null) {
+                ((ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter()).hideVisibility(vh);
+            }
         }
 
         if (imagePosition + 1 < AppConstants.MAX_IMAGE_COUNT) {
@@ -478,11 +489,13 @@ public class AddContactController extends BaseController implements AddContactMv
             return;
         }
 
-        ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder vh = (ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder)
-                mImageRecyclerView.findViewHolderForLayoutPosition(imageCount);
+        if (mImageRecyclerView != null) {
+            ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder vh = (ViewContactsAddImageAdapter.ViewContactsAddImageViewHolder)
+                    mImageRecyclerView.findViewHolderForLayoutPosition(imageCount);
 
-        if (vh != null) {
-            ((ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter()).showProgressBar(vh);
+            if (vh != null) {
+                ((ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter()).showProgressBar(vh);
+            }
         }
 
         uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity, false);
