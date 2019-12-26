@@ -87,6 +87,17 @@ public class GetBannerResponse {
         @SerializedName("percentOffText")
         @Expose
         private String percentOffText;
+        @SerializedName("link")
+        @Expose
+        private String link;
+
+        public String getLink() {
+            return link;
+        }
+
+        public void setLink(String link) {
+            this.link = link;
+        }
 
         public Integer getPercentOff() {
             return percentOff;

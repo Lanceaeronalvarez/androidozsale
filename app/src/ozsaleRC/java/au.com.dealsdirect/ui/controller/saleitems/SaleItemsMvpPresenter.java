@@ -26,6 +26,8 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
         void performDelayedAction(String productId, boolean isLiked);
     }
 
+    void loadSaleBannerDetails(String saleId);
+
     void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest);
 
     void loadProductDetails(RecyclerView.ViewHolder viewHolder,

@@ -38,6 +38,7 @@ public final class ApiEndPoint {
         v2("v2"),
         v3("v3"),
         v4("v4"),
+        v5("v5"),
         emptyVersion("");
 
         private String apiVersion;
@@ -114,6 +115,10 @@ public final class ApiEndPoint {
 
     public static String getSales() {
         return getFormattedUrl(ApiService.SALE, ACCOUNT_ID_DELIMETER + "/banners/grouped/", ApiUrlVersion.v3.apiVersion());
+    }
+
+    public static String getSaleBannerDetails() {
+        return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/sales/{sale_id}", ApiUrlVersion.v2.apiVersion());
     }
 
     public static String getSorting() {

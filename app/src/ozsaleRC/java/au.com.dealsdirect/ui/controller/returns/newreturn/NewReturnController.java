@@ -323,7 +323,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             }
             return;
         }
-        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity);
+        uploadFileToServer = new ImageUploadUtil.UploadFileToServer(mActivity, true);
         uploadFileToServer.delegate = this;
         uploadFileToServer.execute(mAttachmentId,
                 mImageFileHashMap.get(imageCount), mPresenter.getUserAgent(), imageCount,

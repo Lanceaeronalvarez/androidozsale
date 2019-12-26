@@ -61,6 +61,8 @@ public class MainController extends BaseController implements MainMvpView {
 
     private View mPreviousSubcategoryItem;
 
+    private View mLastSelectedCategory;
+
     private String mChosenSubCategoryItemKey = "";
 
     private boolean mHasSavedInstance = false;
@@ -273,6 +275,14 @@ public class MainController extends BaseController implements MainMvpView {
 
     public View getPreviousSubcategoryItem() {
         return mPreviousSubcategoryItem;
+    }
+
+    public View getLastSelectedCategory() {
+        return mLastSelectedCategory;
+    }
+
+    public void setLastSelectedCategory(View lastSelectedCategory) {
+        this.mLastSelectedCategory = lastSelectedCategory;
     }
 
     public String getChosenCategoryItemKey() {

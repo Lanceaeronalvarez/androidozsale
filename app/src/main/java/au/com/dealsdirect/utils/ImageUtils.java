@@ -66,7 +66,6 @@ public class ImageUtils {
     public static void loadImage(String url, ImageView imageView) {
         RequestOptions options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .skipMemoryCache(true)
                 .format(DecodeFormat.PREFER_ARGB_8888);
 
         Glide.with(imageView)

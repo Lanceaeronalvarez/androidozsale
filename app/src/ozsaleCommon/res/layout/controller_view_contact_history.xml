@@ -29,38 +29,12 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_above="@id/controller_add_contact_message_container"
-            android:background="@color/border_regular" />
+            android:background="@color/border_regular"
+            android:visibility="gone"/>
 
-        <LinearLayout
-            android:id="@+id/controller_add_contact_message_container"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/contacts_edittext_height"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:elevation="5dp"
-            android:orientation="horizontal"
-            android:padding="@dimen/padding_default_half">
+        <include
+            layout="@layout/partial_bottom_bar_write_message"/>
 
-            <EditText
-                android:id="@+id/controller_view_contacts_history_message_field"
-                style="@style/DDEditTextStyle"
-                android:layout_width="0dp"
-                android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/margin_small"
-                android:layout_weight="1"
-                android:padding="@dimen/padding_small"
-                android:background="@drawable/bg_add_contact_message"
-                android:hint="@string/write_a_message" />
-
-            <ImageButton
-                android:id="@+id/controller_view_contacts_history_reply_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@null"
-                android:src="@drawable/ic_contact_us_send" />
-
-        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>
 

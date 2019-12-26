@@ -327,7 +327,12 @@ public class HomeController extends BaseController implements HomeMvpView {
 
         mCategoriesRouter = getChildRouter(mCategoriesContainer);
         CommonControllerChangeListener.addToRouter(mCategoriesRouter);
-        mCategoriesRouter.setRoot(RouterTransaction.with(ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES)));
+
+        Controller categoryController = mActivity.getResources().getBoolean(R.bool.should_use_old_category_layout) ?
+                ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES) : ControllerFactory.getInstance(GateKeeper.Destination.SALECATEGORY);
+
+        mCategoriesRouter.setRoot(RouterTransaction.with(categoryController));
+
 
         mPopUpHostRouter = getChildRouter(mPopupHostContainer);
         CommonControllerChangeListener.addToRouter(mPopUpHostRouter);

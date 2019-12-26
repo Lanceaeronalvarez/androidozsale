@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthisto
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import au.com.dealsdirect.R;
@@ -24,6 +25,8 @@ public class ContactHistoryViewHolder extends RecyclerView.ViewHolder{
     ViewGroup contactHistoryItemContainer;
     @BindView(R.id.contact_history_message_text_view)
     TextView contactHistoryMessageTextView;
+    @BindView(R.id.contact_history_recyclerview)
+    RecyclerView contactHistoryMessageRecyclerView;
 
     public ContactHistoryViewHolder(View itemView) {
         super(itemView);

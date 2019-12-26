@@ -55,6 +55,7 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
@@ -738,6 +739,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             resetViewBasedOnSourceMode();
             switch (mSourceMode) {
                 case NORMAL:
+                    if (mSaleId != null && !mSaleId.isEmpty()) {
+                        mPresenter.loadSaleBannerDetails(mSaleId);
+                    }
                     mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
                     if (mHasSavedInstance) {
                         mActivity.getMainController().getHomeController().setSavedCurrentItem();
@@ -782,6 +786,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         setUp(view);
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+
+        mPtrFrameLayout.setEnabled(mActivity.getResources().getBoolean(R.bool.is_pull_to_refresh_enabled));
     }
 
     private void determineToolbarTitle() {
@@ -1385,6 +1391,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         switch (mSourceMode) {
             case NORMAL:
                 setupSearchFilters();
+                if (mSaleId != null && !mSaleId.isEmpty()) {
+                    mPresenter.loadSaleBannerDetails(mSaleId);
+                }
                 mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
                 if (mAppBar != null) {
                     mAppBar.setExpanded(true, true);
@@ -1424,6 +1433,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     } else {
                         mIsLoadingProgress = true;
                         mSaleItemsPageNumber++;
+                        if (mSaleId != null && !mSaleId.isEmpty()) {
+                            mPresenter.loadSaleBannerDetails(mSaleId);
+                        }
                         mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), mSaleItemsPageNumber, mChipFilters));
                     }
                 }
@@ -1431,6 +1443,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             case WISHLIST:
                 mPresenter.loadWishlist();
                 break;
+        }
+    }
+
+    @Override
+    public void showSaleBannerDetails(GetSaleBannerDetailsResponse response) {
+        if (response != null &&
+                response.getSaleName() != null &&
+                !response.getSaleName().isEmpty()) {
+            mTitle = response.getSaleName();
+            determineToolbarTitle();
         }
     }
 
@@ -1858,6 +1880,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void onRefreshBegin(PtrFrameLayout frame) {
         switch (mSourceMode) {
             case NORMAL:
+                if (mSaleId != null && !mSaleId.isEmpty()) {
+                    mPresenter.loadSaleBannerDetails(mSaleId);
+                }
                 mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
                 break;
             case WISHLIST:
@@ -1985,6 +2010,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mGenieMaxPrice = maxPrice;
         mGenieSizesCount = sizeList.size();
         isFacetClicked = true;
+        if (mSaleId != null && !mSaleId.isEmpty()) {
+            mPresenter.loadSaleBannerDetails(mSaleId);
+        }
         mPresenter.loadSaleItems(createSaleItemsRequest(categoryKeys, 0, chipsList));
     }
 

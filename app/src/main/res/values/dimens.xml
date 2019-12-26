@@ -91,6 +91,8 @@
     <dimen name="banner_mobile_height">143dp</dimen>
     <dimen name="banner_tablet_width">313dp</dimen>
     <dimen name="banner_tablet_height">294dp</dimen>
+    <dimen name="horizontal_banner_spacing">2dp</dimen>
+    <dimen name="horizontal_banner_spacer_size">14dp</dimen>
 
     <!-- Checkout -->
     <dimen name="row_checkout_image_width">100dp</dimen>
@@ -116,6 +118,7 @@
     <dimen name="category_image_padding">15dp</dimen>
     <dimen name="viewholder_subcategory_width">25dp</dimen>
     <dimen name="viewholder_subcategory_height">25dp</dimen>
+    <dimen name="viewholder_salecategory_height">80dp</dimen>
 
     <!-- Facet Filters -->
     <dimen name="row_facet_check_icon_width">30dp</dimen>
@@ -303,6 +306,9 @@
 
     <dimen name="login_host_padding_top">100dp</dimen>
     <dimen name="login_host_padding_bottom">100dp</dimen>
+
+    <dimen name="contact_us_image_height">80dp</dimen>
+    <dimen name="contact_us_image_width">80dp</dimen>
 
     <dimen name="expiration_date_sheet_height">260dp</dimen>
     <dimen name="ed_margin">8dp</dimen>

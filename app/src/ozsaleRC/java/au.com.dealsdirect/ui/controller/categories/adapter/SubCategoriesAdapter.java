@@ -54,7 +54,13 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     @Override
     public SubCategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_subcategory, parent, false);
+        View view = null;
+        if (mContext.getResources().getBoolean(R.bool.should_use_old_category_layout)) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_subcategory, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_salesubcategory, parent, false);
+        }
+
         return new SubCategoriesViewHolder(view);
     }
 
@@ -62,7 +68,8 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     public void onBindViewHolder(SubCategoriesViewHolder holder, int position) {
         if (!mData.isEmpty() && !mData.get(position).getName().equals("empty")) {
             holder.subCategoryTitle.setText(mData.get(position).getName());
-            holder.subCategoryBorder.setVisibility(View.VISIBLE);
+            holder.subCategoryBorder.setVisibility(mContext.getResources().getBoolean(R.bool.should_use_old_category_layout) ?
+                    View.VISIBLE : View.GONE);
 
             MainController mainController = ((MainActivity) mContext).getMainController();
             List<GetCategoryTreeResponse> subCategoryItems = getSubCategoryItems(mData.get(position).getKey());
@@ -114,7 +121,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                     AppLogger.d("boolean: " + bool + " haschildren " + !(mData.get(position).getChildren().size() > 0)  + " isItemActivated: " +  isItemViewActivated);
 
                     if (!isItemViewActivated) {
-                        mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(subCategoryItems, mSubCategoryItemClickListener, mAnimateInsert);
+                        mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mContext, subCategoryItems, mSubCategoryItemClickListener, mAnimateInsert);
                         holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                         holder.subCategoryItemsRecyclerView.setMotionEventSplittingEnabled(false);
                         holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);

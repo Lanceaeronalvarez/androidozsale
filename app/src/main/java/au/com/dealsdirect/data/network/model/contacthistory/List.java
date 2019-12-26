@@ -24,6 +24,15 @@ public class List {
     @SerializedName("Date")
     @Expose
     private String date;
+    @SerializedName("AttachmentID")
+    @Expose
+    private String attachmentId;
+    @SerializedName("Attachments")
+    @Expose
+    private java.util.List<Attachments> attachments;
+    @SerializedName("ID")
+    @Expose
+    private String id;
 
     public Boolean getIsStaff() {
         return isStaff;
@@ -71,6 +80,77 @@ public class List {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getAttachmentId() {
+        return attachmentId;
+    }
+
+    public void setAttachmentId(String attachmentId) {
+        this.attachmentId = attachmentId;
+    }
+
+    public java.util.List<Attachments> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(java.util.List<Attachments> attachments) {
+        this.attachments = attachments;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public static class Attachments {
+        @SerializedName("Type")
+        @Expose
+        private String type;
+        @SerializedName("Title")
+        @Expose
+        private String title;
+        @SerializedName("Description")
+        @Expose
+        private String description;
+        @SerializedName("Url")
+        @Expose
+        private String url;
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
     }
 
 }

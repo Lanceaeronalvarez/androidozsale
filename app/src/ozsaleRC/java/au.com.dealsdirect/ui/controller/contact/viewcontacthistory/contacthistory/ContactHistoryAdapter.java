@@ -1,6 +1,9 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory;
 
 import android.content.Context;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,7 +16,9 @@ import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ImageDisplayAdapter;
 import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.ImageUtils;
 
 /**
  * dp Created by Admin on 6/22/17.
@@ -67,6 +72,17 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
         }
 
         holder.contactHistoryMessageTextView.setText(contactMessage);
+
+        holder.contactHistoryMessageRecyclerView.setVisibility(mCurrentContactsHistoryList.get(position).getAttachments().size() != 0 ?
+                View.VISIBLE : View.GONE);
+
+        if (mCurrentContactsHistoryList.get(position).getAttachments().size() != 0) {
+            ImageDisplayAdapter mAdapter = new ImageDisplayAdapter(mContext,
+                    mCurrentContactsHistoryList.get(position).getAttachments());
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false);
+            holder.contactHistoryMessageRecyclerView.setAdapter(mAdapter);
+            holder.contactHistoryMessageRecyclerView.setLayoutManager(layoutManager);
+        }
 
 //        if (!contactDate.isEmpty()) {
 //            String itemLastAnswerTimeFormat = DateUtils.getTimeFromDateString(contactDate.toString());

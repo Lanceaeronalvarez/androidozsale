@@ -51,6 +51,12 @@
             tools:text="hi my order is missing "
             android:textColor="@color/contact_history_text_selector" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_tiny"
+            android:id="@+id/contact_history_recyclerview"/>
+
     </LinearLayout>
 
 </FrameLayout>

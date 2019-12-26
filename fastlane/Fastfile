@@ -48,31 +48,6 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
 
 default_platform :android
 
-# Uploads the app to Fabric
-def uploadToFabric(app_name, emails, apk_name, app_path, app_flavor, app_notes_path)
-projectDir = app_path + '/app/build/outputs/apk/' + app_flavor + '/release/'
-  puts "Uploading to fabric"
-    tries = 3
-    begin
-      # Optional, lets you filter out merge commits
-      #changelog_from_git_commits(merge_commit_filtering: 'exclude_merges')
-
-      crashlytics(api_token: API_TOKEN,
-           build_secret: BUILD_SECRET,
-                 emails: emails,
-               apk_path: projectDir + apk_name,
-          notifications: true,
-             notes_path: app_notes_path)
-    rescue Exception => e
-      puts e
-      if tries > 0
-        retry
-      else
-        puts "Error uploading"
-      end
-    end
-end
-
 # Builds the app with scheme name
 def build(build_variant)
   gradle(task: "assemble", flavor: build_variant)
@@ -101,168 +76,186 @@ lane :dd_build do |options|
 
   showNotePath(options[:app_notes_path])
 
-  uploadToFabric(options[:app_name], emails, options[:apk_name], options[:app_path], options[:app_flavor], options[:app_notes_path])
+  uploadToFirebase(options[:app_name], emails, options[:apk_name], options[:app_path], options[:app_flavor], options[:app_notes_path], options[:app_id])
 
   increment_version_code_android(product_flavor: options[:app_flavor])
 
 end
 
-lane :fabric_deploy_ba_test do
+# Uploads the app to Fabric
+desc "Distribut app using Firebase app distribution"
+def uploadToFirebase(app_name, emails, apk_name, app_path, app_flavor, app_notes_path, app_id)
+projectDir = app_path + '/app/build/outputs/apk/' + app_flavor + '/release/'
+  puts "Uploading to firebase"
+    tries = 3
+    begin
+      # Optional, lets you filter out merge commits
+      #changelog_from_git_commits(merge_commit_filtering: 'exclude_merges')
+
+      # crashlytics(api_token: API_TOKEN,
+      #      build_secret: BUILD_SECRET,
+      #            emails: emails,
+      #          apk_path: projectDir + apk_name,
+      #     notifications: true,
+      #        notes_path: app_notes_path)
+
+             firebase_app_distribution(
+                app: app_id,
+                testers: emails,
+                release_notes: app_notes_path,
+                firebase_cli_path: “/usr/local/bin/firebase”,
+                apk_path: projectDir + apk_name
+              )
+    rescue Exception => e
+      puts e
+      if tries > 0
+        retry
+      else
+        puts "Error uploading"
+      end
+    end
+end
+
+lane :firebase_deploy_ba_test do
   Dir.chdir("..")
   app_dir = Dir.pwd
-
-  #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'BuyinviteTest' emails:" + dev_emails + " apk_name:" + 'app-buyinviteTest-release.apk' + " build_variant:" + 'buyinviteTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'buyinviteTest' + " app_notes_path:" + app_dir + '/fastlane/BuyInviteReleaseNotes'
+  #
+  # #Change apk_name and app_name for other flavors
+  sh "fastlane dd_build app_name:'BuyinviteTest' emails:" + dev_emails + " apk_name:" + 'app-buyinviteTest-release.apk' + " build_variant:" + 'buyinviteTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'buyinviteTest' + " app_notes_path:" + app_dir + '/fastlane/BuyInviteReleaseNotes' +
+  " app_id:" + '1:310856029549:android:f217ab1c79011184'
  end
 
-lane :fabric_deploy_ba_rc do
+ lane :firebase_deploy_ba_rc do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'Buyinvite' emails:" + dev_emails + " apk_name:" + 'app-buyinviteRC-release.apk' + " build_variant:" + 'buyinviteRCRelease' + " app_path:" + app_dir+ " app_flavor:" + 'buyinviteRC' + " app_notes_path:" + app_dir + '/fastlane/BuyInviteReleaseNotes'
+  sh "fastlane dd_build app_name:'Buyinvite' emails:" + dev_emails + " apk_name:" + 'app-buyinviteRC-release.apk' + " build_variant:" + 'buyinviteRCRelease' + " app_path:" + app_dir+ " app_flavor:" + 'buyinviteRC' + " app_notes_path:" + app_dir + '/fastlane/BuyInviteReleaseNotes' +
+  " app_id:" + '1:310856029549:android:bc2123c0ec7dee59'
  end
 
-lane :fabric_deploy_dd_test do
+ lane :firebase_deploy_dd_test do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'DealsDirectTest' emails:" + dev_emails + " apk_name:" + 'app-dealsDirect2Test-release.apk' + " build_variant:" + 'DealsDirect2TestRelease' + " app_path:" + app_dir + " app_flavor:" + 'dealsDirect2Test' + " app_notes_path:" + app_dir + '/fastlane/DealsDirectReleaseNotes'
+  sh "fastlane dd_build app_name:'DealsDirectTest' emails:" + dev_emails + " apk_name:" + 'app-dealsDirect2Test-release.apk' + " build_variant:" + 'DealsDirect2TestRelease' + " app_path:" + app_dir + " app_flavor:" + 'dealsDirect2Test' + " app_notes_path:" + app_dir + '/fastlane/DealsDirectReleaseNotes' +
+  " app_id:" + '1:135798231877:android:07f40fddda7f7c6a0ce42c'
  end
 
-lane :fabric_deploy_dd_rc do
+ lane :firebase_deploy_dd_rc do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'DealsDirect' emails:" + dev_emails + " apk_name:" + 'app-dealsDirect2RC-release.apk' + " build_variant:" + 'DealsDirect2RCRelease' + " app_path:" + app_dir+ " app_flavor:" + 'dealsDirect2RC' + " app_notes_path:" + app_dir + '/fastlane/DealsDirectReleaseNotes'
+  sh "fastlane dd_build app_name:'DealsDirect' emails:" + dev_emails + " apk_name:" + 'app-dealsDirect2RC-release.apk' + " build_variant:" + 'DealsDirect2RCRelease' + " app_path:" + app_dir+ " app_flavor:" + 'dealsDirect2RC' + " app_notes_path:" + app_dir + '/fastlane/DealsDirectReleaseNotes' +
+  " app_id:" + '1:135798231877:android:d1712d1f61e17b08'
  end
 
- lane :fabric_deploy_oo_rc do
-   Dir.chdir("..")
-   app_dir = Dir.pwd
-
-   #Change apk_name and app_name for other flavors
-   sh "fastlane dd_build app_name:'ooRC' emails:" + dev_emails + " apk_name:" + 'app-ooRC-release.apk' + " build_variant:" + 'ooRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'ooRC' + " app_notes_path:" + app_dir + '/fastlane/OOReleaseNotes'
-  end
-
-lane :fabric_deploy_oo_test do
+ lane :firebase_deploy_oo_rc do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'ooTest' emails:" + dev_emails + " apk_name:" + 'app-ooTest-release.apk' + " build_variant:" + 'ooTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'ooTest' + " app_notes_path:" + app_dir + '/fastlane/OOReleaseNotes'
+  sh "fastlane dd_build app_name:'ooRC' emails:" + dev_emails + " apk_name:" + 'app-ooRC-release.apk' + " build_variant:" + 'ooRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'ooRC' + " app_notes_path:" + app_dir + '/fastlane/OOReleaseNotes' +
+  " app_id:" + '1:461445694369:android:a4e0fae8297e663c'
  end
 
-lane :fabric_deploy_lc_test do
+ lane :firebase_deploy_oo_test do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'londonChicTest' emails:" + dev_emails + " apk_name:" + 'app-londonChicTest-release.apk' + " build_variant:" + 'londonChicTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'londonChicTest' + " app_notes_path:" + app_dir + '/fastlane/LondonChicReleaseNotes'
+  sh "fastlane dd_build app_name:'ooTest' emails:" + dev_emails + " apk_name:" + 'app-ooTest-release.apk' + " build_variant:" + 'ooTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'ooTest' + " app_notes_path:" + app_dir + '/fastlane/OOReleaseNotes' +
+  " app_id:" + '1:461445694369:android:dece612b12dc3aee'
+ end
+
+ lane :firebase_deploy_tb_rc do
+  Dir.chdir("..")
+  app_dir = Dir.pwd
+
+  #Change apk_name and app_name for other flavors
+  sh "fastlane dd_build app_name:'topbuy RC Test' emails:" + dev_emails + " apk_name:" + 'app-topbuy2RC-release.apk' + " build_variant:" + 'topbuy2RCRelease' + " app_path:" + app_dir + " app_flavor:" + 'topbuy2RC' + " app_notes_path:" + app_dir + '/fastlane/TopBuyReleaseNotes' +
+  " app_id:" + '1:493241976299:android:e301635b7d8bf4be'
 end
 
-lane :fabric_deploy_tb_rc do
+lane :firebase_deploy_tb_test do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'topbuy RC Test' emails:" + dev_emails + " apk_name:" + 'app-topbuy2RC-release.apk' + " build_variant:" + 'topbuy2RCRelease' + " app_path:" + app_dir + " app_flavor:" + 'topbuy2RC' + " app_notes_path:" + app_dir + '/fastlane/TopBuyReleaseNotes'
+  sh "fastlane dd_build app_name:'topbuy Test' emails:" + dev_emails + " apk_name:" + 'app-topbuy2Test-release.apk' + " build_variant:" + 'topbuy2TestRelease' + " app_path:" + app_dir + " app_flavor:" + 'topbuy2Test' + " app_notes_path:" + app_dir + '/fastlane/TopBuyReleaseNotes' +
+  " app_id:" + '1:493241976299:android:3b2f2878c50c82d6'
 end
 
-lane :fabric_deploy_tb_test do
+lane :firebase_deploy_ozsale_rc do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'topbuy Test' emails:" + dev_emails + " apk_name:" + 'app-topbuy2Test-release.apk' + " build_variant:" + 'topbuy2TestRelease' + " app_path:" + app_dir + " app_flavor:" + 'topbuy2Test' + " app_notes_path:" + app_dir + '/fastlane/TopBuyReleaseNotes'
+  sh "fastlane dd_build app_name:'ozsale' emails:" + dev_emails + " apk_name:" + 'app-ozSaleRC-release.apk' + " build_variant:" + 'ozsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'ozsaleRC' + " app_notes_path:" + app_dir + '/fastlane/OzsaleReleaseNotes' +
+  " app_id:" + '1:211462705866:android:c4f2b9eb127b6973'
 end
 
-lane :fabric_deploy_ourpay_test do
+lane :firebase_deploy_ozsale_test do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'ourpay Test' emails:" + dev_emails + " apk_name:" + 'app-ourpayTest-release.apk' + " build_variant:" + 'ourpayTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'ourpayTest' + " app_notes_path:" + app_dir + '/fastlane/OurPayReleaseNotes'
+  sh "fastlane dd_build app_name:'ozsale test' emails:" + dev_emails + " apk_name:" + 'app-ozSaleTest-release.apk' + " build_variant:" + 'ozsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'ozsaleTest' + " app_notes_path:" + app_dir + '/fastlane/OzsaleReleaseNotes' +
+  " app_id:" + '1:211462705866:android:105c1b4cebd5f295'
 end
 
-lane :fabric_deploy_ozsale_rc do
+lane :firebase_deploy_singsale_rc do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'ozsale' emails:" + dev_emails + " apk_name:" + 'app-ozSaleRC-release.apk' + " build_variant:" + 'ozsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'ozsaleRC' + " app_notes_path:" + app_dir + '/fastlane/OzsaleReleaseNotes'
+  sh "fastlane dd_build app_name:'singsale' emails:" + dev_emails + " apk_name:" + 'app-singsaleRC-release.apk' + " build_variant:" + 'singsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'singsaleRC' + " app_notes_path:" + app_dir + '/fastlane/SingsaleReleaseNotes' +
+  " app_id:" + '1:390674118206:android:49eddd6c1c298210'
 end
 
-lane :fabric_deploy_ozsale_test do
+lane :firebase_deploy_singsale_test do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'ozsale test' emails:" + dev_emails + " apk_name:" + 'app-ozSaleTest-release.apk' + " build_variant:" + 'ozsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'ozsaleTest' + " app_notes_path:" + app_dir + '/fastlane/OzsaleReleaseNotes'
+  sh "fastlane dd_build app_name:'singsale test' emails:" + dev_emails + " apk_name:" + 'app-singsaleTest-release.apk' + " build_variant:" + 'singsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'singsaleTest' + " app_notes_path:" + app_dir + '/fastlane/SingsaleReleaseNotes' +
+  " app_id:" + '1:390674118206:android:94b3627773b56ddd'
 end
 
-lane :fabric_deploy_singsale_rc do
+lane :firebase_deploy_nzsale_rc do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'singsale' emails:" + dev_emails + " apk_name:" + 'app-singsaleRC-release.apk' + " build_variant:" + 'singsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'singsaleRC' + " app_notes_path:" + app_dir + '/fastlane/SingsaleReleaseNotes'
+  sh "fastlane dd_build app_name:'nzsale' emails:" + dev_emails + " apk_name:" + 'app-nzsaleRC-release.apk' + " build_variant:" + 'nzsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'nzsaleRC' + " app_notes_path:" + app_dir + '/fastlane/NzsaleReleaseNotes' +
+  " app_id:" + '1:118822854515:android:9605bf6aef24e3fe'
 end
 
-lane :fabric_deploy_singsale_test do
+lane :firebase_deploy_nzsale_test do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'singsale test' emails:" + dev_emails + " apk_name:" + 'app-singsaleTest-release.apk' + " build_variant:" + 'singsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'singsaleTest' + " app_notes_path:" + app_dir + '/fastlane/SingsaleReleaseNotes'
+  sh "fastlane dd_build app_name:'nzsale test' emails:" + dev_emails + " apk_name:" + 'app-nzsaleTest-release.apk' + " build_variant:" + 'nzsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'nzsaleTest' + " app_notes_path:" + app_dir + '/fastlane/NzsaleReleaseNotes' +
+  " app_id:" + '1:118822854515:android:ef23b033ff685bed'
 end
 
-lane :fabric_deploy_cocosa_rc do
+lane :firebase_deploy_mysale_rc do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'cocosa' emails:" + dev_emails + " apk_name:" + 'app-cocosaRC-release.apk' + " build_variant:" + 'cocosaRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'cocosaRC' + " app_notes_path:" + app_dir + '/fastlane/CocosaReleaseNotes'
+  sh "fastlane dd_build app_name:'mysale' emails:" + dev_emails + " apk_name:" + 'app-mysaleRC-release.apk' + " build_variant:" + 'mysaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'mysaleRC' + " app_notes_path:" + app_dir + '/fastlane/MysaleReleaseNotes' +
+  " app_id:" + '1:387103789802:android:7afe94bd87a5773f'
 end
 
-lane :fabric_deploy_cocosa_test do
+lane :firebase_deploy_mysale_test do
   Dir.chdir("..")
   app_dir = Dir.pwd
 
   #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'cocosa test' emails:" + dev_emails + " apk_name:" + 'app-cocosaTest-release.apk' + " build_variant:" + 'cocosaTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'cocosaTest' + " app_notes_path:" + app_dir + '/fastlane/CocosaReleaseNotes'
-end
-
-lane :fabric_deploy_nzsale_rc do
-  Dir.chdir("..")
-  app_dir = Dir.pwd
-
-  #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'nzsale' emails:" + dev_emails + " apk_name:" + 'app-nzsaleRC-release.apk' + " build_variant:" + 'nzsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'nzsaleRC' + " app_notes_path:" + app_dir + '/fastlane/NzsaleReleaseNotes'
-end
-
-lane :fabric_deploy_nzsale_test do
-  Dir.chdir("..")
-  app_dir = Dir.pwd
-
-  #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'nzsale test' emails:" + dev_emails + " apk_name:" + 'app-nzsaleTest-release.apk' + " build_variant:" + 'nzsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'nzsaleTest' + " app_notes_path:" + app_dir + '/fastlane/NzsaleReleaseNotes'
-end
-
-lane :fabric_deploy_mysale_rc do
-  Dir.chdir("..")
-  app_dir = Dir.pwd
-
-  #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'mysale' emails:" + dev_emails + " apk_name:" + 'app-mysaleRC-release.apk' + " build_variant:" + 'mysaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'mysaleRC' + " app_notes_path:" + app_dir + '/fastlane/MysaleReleaseNotes'
-end
-
-lane :fabric_deploy_mysale_test do
-  Dir.chdir("..")
-  app_dir = Dir.pwd
-
-  #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'mysale test' emails:" + dev_emails + " apk_name:" + 'app-mysaleTest-release.apk' + " build_variant:" + 'mysaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'mysaleTest' + " app_notes_path:" + app_dir + '/fastlane/MysaleReleaseNotes'
+  sh "fastlane dd_build app_name:'mysale test' emails:" + dev_emails + " apk_name:" + 'app-mysaleTest-release.apk' + " build_variant:" + 'mysaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'mysaleTest' + " app_notes_path:" + app_dir + '/fastlane/MysaleReleaseNotes' +
+  " app_id:" + '1:387103789802:android:b174fdb1b78ff50e'
 end

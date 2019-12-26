@@ -22,4 +22,10 @@
     <integer name="items_min_column_landscape">3</integer>
     <integer name="items_max_column_portrait">3</integer>
     <integer name="items_max_column_landscape">4</integer>
+    <integer name="sponsored_banner_width">313</integer>
+    <integer name="sponsored_banner_height">603</integer>
+    <integer name="sponsored_banner_column_count">4</integer>
+    <integer name="sponsored_banner_column_count_for_tablet">6</integer>
+    <integer name="sliding_banner_width">980</integer>
+    <integer name="sliding_banner_height">350</integer>
 </resources>

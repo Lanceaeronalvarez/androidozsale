@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.contact.viewcontacthistory;
 
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 /**
@@ -13,4 +14,10 @@ public interface ViewContactHistoryMvpPresenter<V extends ViewContactHistoryMvpV
     void loadContactHistory(GetContactHistoryRequest contactHistoryRequest);
 
     void replyContact(ReplyContactRequest replyContactRequest);
+
+    int getImageLimit();
+
+    String getUserAgent();
+
+    void setAttachment(SetAttachmentRequest setAttachmentRequest, boolean hasUploadedImage);
 }

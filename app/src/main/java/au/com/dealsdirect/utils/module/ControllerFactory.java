@@ -8,6 +8,7 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.categories.SaleCategoryController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
@@ -75,6 +76,8 @@ public class ControllerFactory {
                 return PopUpHostController.newInstance();
             case CATEGORIES:
                 return CategoriesController.newInstance();
+            case SALECATEGORY:
+                return SaleCategoryController.newInstance();
             case CHECKOUT:
                 return CheckoutController.newInstance();
             case CHECKOUT_HOST:
@@ -162,6 +165,8 @@ public class ControllerFactory {
                 return new PopUpHostController(bundle);
             case CATEGORIES:
                 return new CategoriesController(bundle);
+            case SALECATEGORY:
+                return new SaleCategoryController(bundle);
             case CHECKOUT:
                 return new CheckoutController(bundle);
             case CHECKOUT_HOST:
@@ -247,6 +252,10 @@ public class ControllerFactory {
 
         if (controller instanceof CategoriesController) {
             return GateKeeper.Destination.CATEGORIES;
+        }
+
+        if (controller instanceof SaleCategoryController) {
+            return GateKeeper.Destination.SALECATEGORY;
         }
 
         if (controller instanceof CheckoutController) {

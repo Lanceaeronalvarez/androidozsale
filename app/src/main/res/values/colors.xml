@@ -272,4 +272,6 @@
     <color name="black_12">#1e000000</color>
     <color name="white_12">#1effffff</color>
 
+<!--    Category Selector-->
+    <color name="sale_category_selector">#EBEBEB</color>
 </resources>
