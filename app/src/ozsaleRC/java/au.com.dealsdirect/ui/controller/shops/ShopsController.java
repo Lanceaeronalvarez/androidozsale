@@ -560,7 +560,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 }
             }
             if (!slidingBanners.isEmpty()) {
-                adapter = new HorizontalScrollingBannerAdapter();
+                adapter = new HorizontalScrollingBannerAdapter(mActivity);
                 adapter.setDataSource(slidingBanners);
             }
         }
@@ -589,7 +589,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 }
             }
             if (!sponsoredBanners.isEmpty()) {
-                adapter = new HorizontalScrollingBannerAdapter();
+                adapter = new HorizontalScrollingBannerAdapter(mActivity);
                 adapter.setDataSource(sponsoredBanners);
             }
         }

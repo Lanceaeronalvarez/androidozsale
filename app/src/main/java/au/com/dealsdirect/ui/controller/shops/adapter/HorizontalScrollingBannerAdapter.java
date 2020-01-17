@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.shops.adapter;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,10 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     private static final int THROTTLE_FIRST_WINDOW_DURATION = 1000;
 
-    public HorizontalScrollingBannerAdapter() {
-        super();
+    private Activity mActivity;
+
+    public HorizontalScrollingBannerAdapter(Activity activity) {
+        mActivity = activity;
     }
 
     @NonNull
@@ -66,7 +69,9 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         }
         String imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), width, height);
 
-        ImageUtils.loadImage(imgUrl, holder.image);
+        if (mActivity != null && !mActivity.isDestroyed()) {
+            ImageUtils.loadImage(imgUrl, holder.image);
+        }
 
         if (holder.subscription != null) {
             holder.subscription.dispose();
