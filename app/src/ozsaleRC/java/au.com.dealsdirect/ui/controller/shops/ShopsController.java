@@ -921,13 +921,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         String lastBannerType = mBannersAdapter.getItemCount() > 0 ? mBannersAdapter.getLastGroupType() : "";
 
         //start from 0 offset when bannerGroupType changes
-        if (!lastBannerType.equals("") && !lastBannerType.equals(bannerGroupType) && !bannerGroupType.equals("")) {
+        if (lastBannerType != null && bannerGroupType != null && !lastBannerType.equals("") &&
+                !lastBannerType.equals(bannerGroupType) && !bannerGroupType.equals("")) {
             bannerOffset = mBannersAdapter.getOffset();
         }
         bannerGroupType = lastBannerType;
 
         GetBannerRequest getBannerRequest = new GetBannerRequest();
-        if (!bannerGroupType.equals("")) {
+        if (bannerGroupType != null && !bannerGroupType.equals("")) {
             getBannerRequest.setOffset(String.valueOf(bannerOffset));
             getBannerRequest.setLastGroupType(bannerGroupType);
         }

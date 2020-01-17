@@ -66,7 +66,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int mHeight;
     private int mNumberOfColumns;
     private int mOffset;
-    private String mLastGroupType;
+    private String mLastGroupType = "";
     private static final int SPANNABLE_STRING_START_INDEX = 6;
     private static final float DISCOUNT_VALUE_SCALE_FACTOR = 1.8f;
 
