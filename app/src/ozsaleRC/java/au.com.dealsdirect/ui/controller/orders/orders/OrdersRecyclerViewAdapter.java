@@ -305,21 +305,25 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 break;
         }
 
-        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE &&
-                order.getActions().contains(ActionConstants.ORDER_RECEIVED_STATUS)) {
-            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
-            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
-            holder.receivedGraphNodeTextView.setOnClickListener(v -> {
-                mClickListener.callOrderReceived(order.getOrderID());
-                setActiveOrderReceived(holder, orderText);
-            });
-        }
+////        Commented for the meantime
+//        if (currentStep == ORDER_DISPATCHED_ACTIVE_STATE &&
+//                order.getActions().contains(ActionConstants.ORDER_RECEIVED_STATUS)) {
+//            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
+//            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
+//            holder.receivedGraphNodeTextView.setOnClickListener(v -> {
+//                mClickListener.callOrderReceived(order.getOrderID());
+//                setActiveOrderReceived(holder, orderText);
+//            });
+//        }
+//
+//        if (isItemReceived) {
+//            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
+//            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
+//            setActiveOrderReceived(holder, orderText);
+//        }
 
-        if (isItemReceived) {
-            holder.receivedOrderLayout.setVisibility(View.VISIBLE);
-            holder.orderReceivedConnector.setVisibility(View.VISIBLE);
-            setActiveOrderReceived(holder, orderText);
-        }
+        holder.receivedOrderLayout.setVisibility(View.GONE);
+        holder.orderReceivedConnector.setVisibility(View.GONE);
 
     }
 
