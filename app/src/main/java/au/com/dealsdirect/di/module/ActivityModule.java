@@ -3,6 +3,8 @@ package au.com.dealsdirect.di.module;
 import android.app.Activity;
 import android.content.Context;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.mysale.genie.profiler.Profiler;
@@ -89,7 +91,7 @@ public class ActivityModule {
 
     @Provides
     @Singleton
-    BraintreeFragment provideBrainTreeFragment(Activity activity, String authorization){
+    BraintreeFragment provideBrainTreeFragment(AppCompatActivity activity, String authorization){
         try {
             return BraintreeFragment.newInstance(activity, authorization);
         } catch (InvalidArgumentException e) {
