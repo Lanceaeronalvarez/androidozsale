@@ -113,7 +113,16 @@ public class BannerFiltersController extends BaseController implements BannerFil
 
     @Override
     public void showCategories(List<GetCategoryTreeResponse> categories) {
-        bannerFiltersAdapter.replaceData(categories);
+
+        List<GetCategoryTreeResponse> filteredCategories = new ArrayList<>();
+        for (int i = 0; i < categories.size(); i++) {
+            GetCategoryTreeResponse categoryTreeResponse = categories.get(i);
+            if (categoryTreeResponse.getLinkOptions() == null) {
+                filteredCategories.add(categoryTreeResponse);
+            }
+        }
+
+        bannerFiltersAdapter.replaceData(filteredCategories);
     }
 
     @Override

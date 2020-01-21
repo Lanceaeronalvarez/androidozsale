@@ -36,6 +36,7 @@ import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryClickList
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailItemDecorator;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
@@ -195,7 +196,7 @@ public class CategoriesController extends BaseController
 
             mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, !mCategories.isEmpty() && mCategories.get(0).getChildren() != null ?
                     mCategories.get(0).getChildren() : new ArrayList<>(), mPresenter,
-                    mSubCategoryItemClickListener, mCategoryMap);
+                    mSubCategoryItemClickListener, this, mCategoryMap);
 
             mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
@@ -211,14 +212,14 @@ public class CategoriesController extends BaseController
 
         //noinspection ConstantConditions
         if (mCategories != null && mCategories.get(position).getChildren() != null) {
-            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, (mCategories.get(position).getChildren()), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
+            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, (mCategories.get(position).getChildren()), mPresenter, mSubCategoryItemClickListener, this, mCategoryMap);
             mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
             mSubCategoryAdapter.notifyDataSetChanged();
 
         } else {
             ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
-            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, emptyChildren, mPresenter, mSubCategoryItemClickListener, mCategoryMap);
+            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, emptyChildren, mPresenter, mSubCategoryItemClickListener, this, mCategoryMap);
             mSubCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
             mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
         }
@@ -227,12 +228,18 @@ public class CategoriesController extends BaseController
     }
 
     @Override
-    public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
+    public void onSubCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
+
+    }
+
+    @Override
+    public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey,
+                                         List<SearchChipModel> chipFilters) {
 
         mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
 
         SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
-                .FromCategory(categoryKey, categoryKey, mCategories);
+                .FromCategory(categoryKey, categoryKey, mCategories, chipFilters);
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 

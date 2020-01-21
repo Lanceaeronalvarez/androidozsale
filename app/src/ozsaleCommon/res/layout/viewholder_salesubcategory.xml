@@ -10,8 +10,14 @@
         android:id="@+id/viewholder_subcategory_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/viewholder_subcategory_height"
-        android:paddingEnd="@dimen/padding_default"
         android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/viewholder_subcategory_check"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/row_facet_item_height"
+            android:background="@color/sale_category_selector"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/viewholder_subcategory_title"
@@ -25,14 +31,6 @@
             android:layout_gravity="left|center_vertical"
             tools:ignore="MissingPrefix"
             tools:text="Category" />
-
-        <ImageView
-            android:id="@+id/viewholder_subcategory_check"
-            android:layout_width="@dimen/viewholder_subcategory_width"
-            android:layout_height="@dimen/viewholder_subcategory_height"
-            android:layout_gravity="right|center_vertical"
-            android:visibility="gone"
-            android:src="@drawable/ic_check"/>
 
     </FrameLayout>
 

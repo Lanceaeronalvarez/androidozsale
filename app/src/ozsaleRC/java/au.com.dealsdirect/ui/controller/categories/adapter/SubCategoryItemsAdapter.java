@@ -17,7 +17,10 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -33,19 +36,22 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
     private int lastPosition = -1;
     private boolean mAnimateInsert = true;
     private Context mContext;
-
+    private GetCategoryTreeResponse.LinkOptions mMainLinkOption;
     private SubCategoryItemViewHolder mLastSelectedViewHolder = null;
+    private List<SearchChipModel> mChipFilter = new ArrayList<>();
 
     public SubCategoryItemsAdapter(
             Context context,
             List<GetCategoryTreeResponse> data,
             SubCategoryItemClickListener subCategoryItemClickListener,
-            boolean animateInsert) {
+            boolean animateInsert,
+            GetCategoryTreeResponse.LinkOptions mainLinkOption) {
 
         mContext = context;
         mData = data;
         mCategoryAdapterClickListener = subCategoryItemClickListener;
         mAnimateInsert = animateInsert;
+        mMainLinkOption = mainLinkOption;
     }
 
     @Override
@@ -72,7 +78,56 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
             holder.itemView.setActivated(false);
             holder.subCategoryTitle.setText(mData.get(position).getName());
 
+
             holder.itemView.setOnClickListener(view -> {
+
+                String categoryItemName = "";
+                String categoryItemKey = "";
+                String categoryItemId = "";
+
+                if (mData.get(position).getLinkOptions() != null) {
+                    categoryItemId = mData.get(position).getLinkOptions().getCategory().getId();
+                    categoryItemName = mData.get(position).getLinkOptions().getCategory().getName();
+                    categoryItemKey = mData.get(position).getLinkOptions().getCategory().getName();
+
+                    if (mData.get(position).getLinkOptions().getFacets() != null) {
+                        for (int i = 0; i < mData.get(position).getLinkOptions().getFacets().getNewArrivals().size(); i++) {
+                            SearchChipModel searchChipModel = new SearchChipModel(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME,
+                                    mData.get(position).getLinkOptions().getFacets().getNewArrivals().get(i), i);
+                            mChipFilter.add(searchChipModel);
+                        }
+                    }
+                } else {
+
+                    if (mMainLinkOption != null && mMainLinkOption.getCategory() != null) {
+                        categoryItemId = mMainLinkOption.getCategory().getId();
+                        categoryItemName = mMainLinkOption.getCategory().getName();
+                        categoryItemKey = mMainLinkOption.getCategory().getName();
+
+                        if (mMainLinkOption.getFacets() != null) {
+                            for (int i = 0; i < mMainLinkOption.getFacets().getNewArrivals().size(); i++) {
+                                SearchChipModel searchChipModel = new SearchChipModel(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME,
+                                        mMainLinkOption.getFacets().getNewArrivals().get(i), i);
+                                mChipFilter.add(searchChipModel);
+                            }
+                        }
+
+                    } else if (mMainLinkOption != null && mMainLinkOption.getFacets() != null) {
+
+                        for (int i = 0; i < mMainLinkOption.getFacets().getNewArrivals().size(); i++) {
+                            SearchChipModel searchChipModel = new SearchChipModel(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME,
+                                    mMainLinkOption.getFacets().getNewArrivals().get(i), i);
+                            mChipFilter.add(searchChipModel);
+                        }
+
+                    } else {
+                        categoryItemId = mData.get(position).getId();
+                        categoryItemName = mData.get(position).getName();
+                        categoryItemKey = mData.get(position).getKey();
+                    }
+
+                }
+
                 if (mLastSelectedViewHolder != null) {
                     mLastSelectedViewHolder.subCategoryCheck.setVisibility(View.INVISIBLE);
                 }
@@ -88,9 +143,9 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                 mLastSelectedViewHolder = holder;
 
                 mCategoryAdapterClickListener.onSubCategoryItemClicked(
-                        mData.get(position).getId(),
-                        mData.get(position).getName(),
-                        mData.get(position).getKey());
+                        categoryItemId,
+                        categoryItemName,
+                        categoryItemKey, mChipFilter);
 
 
                 View lastItemView = activity.getMainController().getPreviousSubcategoryItem();

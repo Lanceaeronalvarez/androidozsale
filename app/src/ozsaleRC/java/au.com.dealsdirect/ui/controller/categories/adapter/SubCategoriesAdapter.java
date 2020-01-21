@@ -18,6 +18,7 @@ import java.util.Map;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
+import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -34,6 +35,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
     private List<GetCategoryTreeResponse> mData = new ArrayList<>();
     private CategoriesMvpPresenter mPresenter;
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
+    private CategoryClickListener mCategoryAdapterClickListener;
     private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private boolean mAnimateInsert = true;
@@ -43,6 +45,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                                 List<GetCategoryTreeResponse> data,
                                 CategoriesMvpPresenter presenter,
                                 SubCategoryItemClickListener subCategoryItemClickListener,
+                                CategoryClickListener categoryClickListener,
                                 Map<String, List<GetCategoryTreeResponse>> categoryMap) {
 
         mContext = context;
@@ -50,6 +53,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
         mPresenter = presenter;
         mSubCategoryItemClickListener = subCategoryItemClickListener;
         mCategoryMap = categoryMap;
+        mCategoryAdapterClickListener = categoryClickListener;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
 
     @Override
     public void onBindViewHolder(SubCategoriesViewHolder holder, int position) {
-        if (!mData.isEmpty() && !mData.get(position).getName().equals("empty")) {
+        if (mData != null && !mData.isEmpty() && !mData.get(position).getName().equals("empty")) {
             holder.subCategoryTitle.setText(mData.get(position).getName());
             holder.subCategoryBorder.setVisibility(mContext.getResources().getBoolean(R.bool.should_use_old_category_layout) ?
                     View.VISIBLE : View.GONE);
@@ -79,7 +83,9 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                 holder.subCategoryCheckImageView.setVisibility(View.GONE);
 
                 holder.subcategoryContainer.setOnClickListener(v -> {
-                    mSubCategoryItemClickListener.onSubCategoryItemClicked(subCategoryItems.get(0).getKey(), subCategoryItems.get(0).getName(), subCategoryItems.get(0).getKey());
+
+                    mSubCategoryItemClickListener.onSubCategoryItemClicked(subCategoryItems.get(0).getKey(), subCategoryItems.get(0).getName(),
+                            subCategoryItems.get(0).getKey(), new ArrayList<>());
 
                     if (mainController.getSelectedSubCategoryItem() != null) {
                         mainController.getSelectedSubCategoryItem().setActivated(false);
@@ -121,10 +127,15 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
                     AppLogger.d("boolean: " + bool + " haschildren " + !(mData.get(position).getChildren().size() > 0)  + " isItemActivated: " +  isItemViewActivated);
 
                     if (!isItemViewActivated) {
-                        mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mContext, subCategoryItems, mSubCategoryItemClickListener, mAnimateInsert);
-                        holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
-                        holder.subCategoryItemsRecyclerView.setMotionEventSplittingEnabled(false);
-                        holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
+                        if (mContext.getResources().getBoolean(R.bool.should_use_old_category_layout)) {
+                            mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mContext, subCategoryItems, mSubCategoryItemClickListener, mAnimateInsert,
+                                    mData.get(position).getLinkOptions());
+                            holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
+                            holder.subCategoryItemsRecyclerView.setMotionEventSplittingEnabled(false);
+                            holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
+                        } else {
+                            mCategoryAdapterClickListener.onSubCategoryClicked(position, mData.get(position));
+                        }
                     }
                 });
             }
@@ -146,7 +157,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
         notifyDataSetChanged();
     }
 
-    static class SubCategoriesViewHolder extends RecyclerView.ViewHolder {
+    public static class SubCategoriesViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.viewholder_subcategory_container)
         FrameLayout subcategoryContainer;
@@ -155,7 +166,7 @@ public class SubCategoriesAdapter extends RecyclerView.Adapter<SubCategoriesAdap
         TextView subCategoryTitle;
 
         @BindView(R.id.viewholder_subcategory_items_recyclerview)
-        RecyclerView subCategoryItemsRecyclerView;
+        public RecyclerView subCategoryItemsRecyclerView;
 
         @BindView(R.id.viewholder_subcategory_border)
         View subCategoryBorder;

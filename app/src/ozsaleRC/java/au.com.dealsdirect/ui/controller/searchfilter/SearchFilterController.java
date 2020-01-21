@@ -69,6 +69,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
             private List<String> mBrandList;
             private String mCategoryKey;
             private List<SearchChipModel> mChipsFilter;
+            private List<SearchChipModel> mPreselectedFilter;
             private boolean mIsFromCategory;
 
             public FromItemsList(List<GetSaleItemsResponse.Facets> facets,
@@ -77,7 +78,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
                                 List<String> brandList,
                                 String categoryKey,
                                 List<SearchChipModel> chipsFilter,
-                                 boolean isFromCategory) {
+                                 boolean isFromCategory,
+                                 List<SearchChipModel> preselectedFilter) {
                 mFacets = facets;
                 mSortingFacets = sortingFacets;
                 mCategoryTree = categoryTree;
@@ -85,6 +87,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
                 mCategoryKey = categoryKey;
                 mChipsFilter = chipsFilter;
                 mIsFromCategory = isFromCategory;
+                mPreselectedFilter = preselectedFilter;
             }
 
             public ArrayList<GetSaleItemsResponse.Facets> getFacets() {
@@ -113,6 +116,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
                 return mIsFromCategory;
             }
 
+            public List<SearchChipModel> getPreselectedFilter() {
+                return mPreselectedFilter;
+            }
         }
     }
 
@@ -211,6 +217,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     private ArrayList<SearchChipModel> mPreviousSearchChips = new ArrayList<>();
     private ControllerChangeHandler.ControllerChangeListener newControllerChangeHandler;
+    private List<SearchChipModel> mPreselectedFilter = new ArrayList<>();
 
     public static SearchFilterController newInstance() {
         return new SearchFilterController(new BundleBuilder(new Bundle()).build());
@@ -230,6 +237,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
             }
             controller.mPreviousSearchChips = ((Parameters.FromItemsList) parameters).getChipsFilter();
             controller.isFromCategory = ((Parameters.FromItemsList) parameters).isFromCategory();
+            controller.mPreselectedFilter = ((Parameters.FromItemsList) parameters).getPreselectedFilter();
         }
 
         return controller;
@@ -389,7 +397,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mFilterCategoriesRecyclerView.setHasFixedSize(true);
 
         //      SETUP FACET ITEMS (sub of facets)
-        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(), mFacetItemsRecyclerView);
+        mFacetItemsAdapter = new FacetItemsAdapter(new ArrayList<>(), mPresenter, new HashSet<Integer>(), mFacetItemsRecyclerView,
+                mPreselectedFilter);
         mFacetItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mFacetItemsRecyclerView.setAdapter(mFacetItemsAdapter);
         mFacetItemsRecyclerView.setHasFixedSize(true);

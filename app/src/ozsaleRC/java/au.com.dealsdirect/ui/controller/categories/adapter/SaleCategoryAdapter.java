@@ -93,29 +93,12 @@ public class SaleCategoryAdapter extends RecyclerView.Adapter<SaleCategoryAdapte
             if (holder.subCategoryImageButton.getDrawable().getConstantState() == mContext.getResources().getDrawable(R.drawable.ic_chevron_down).getConstantState()) {
                 holder.subCategoryImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_chevron_up));
                 holder.subCategoryRecyclerView.setVisibility(View.VISIBLE);
-                showSubCategory(holder, position, mData.get(position));
+                mCategoryAdapterClickListener.onCategoryClicked(position, mData.get(position));
             } else {
                 holder.subCategoryImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_chevron_down));
                 holder.subCategoryRecyclerView.setVisibility(View.GONE);
             }
         });
-    }
-
-    private void showSubCategory(SaleCategoryViewHolder holder,int position, GetCategoryTreeResponse getCategoryTreeResponse) {
-
-        if (getCategoryTreeResponse != null && getCategoryTreeResponse.getChildren() != null) {
-            mSubCategoryAdapter = new SubCategoriesAdapter(mContext, (getCategoryTreeResponse.getChildren()), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
-            holder.subCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, RecyclerView.VERTICAL, false));
-            holder.subCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
-            mSubCategoryAdapter.notifyDataSetChanged();
-
-        } else {
-            ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
-            mSubCategoryAdapter = new SubCategoriesAdapter(mContext, emptyChildren, mPresenter, mSubCategoryItemClickListener, mCategoryMap);
-            holder.subCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, RecyclerView.VERTICAL, false));
-            holder.subCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
-        }
-
     }
 
     public GetCategoryTreeResponse getItem(int position) {
@@ -158,7 +141,7 @@ public class SaleCategoryAdapter extends RecyclerView.Adapter<SaleCategoryAdapte
         ImageButton subCategoryImageButton;
 
         @BindView(R.id.viewholder_salecategory_items_recyclerview)
-        RecyclerView subCategoryRecyclerView;
+        public RecyclerView subCategoryRecyclerView;
 
         public CategoriesMvpPresenter mPresenter;
 

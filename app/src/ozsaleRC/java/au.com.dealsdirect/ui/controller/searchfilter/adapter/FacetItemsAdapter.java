@@ -9,11 +9,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,12 +41,15 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private String mFilterType = "";
     private RecyclerView mRecyclerView;
     private List<SearchChipModel> mSearchItemsList;
+    private List<SearchChipModel> mPreSelectedFilters;
 
-    public FacetItemsAdapter(List<String> data, SearchFilterMvpPresenter presenter, Set<Integer> selectedFacets, RecyclerView recyclerView) {
+    public FacetItemsAdapter(List<String> data, SearchFilterMvpPresenter presenter, Set<Integer> selectedFacets, RecyclerView recyclerView,
+                             List<SearchChipModel> preSelectedFilters) {
         mData = data;
         mPresenter = presenter;
         mSelectedFacets = selectedFacets;
         mRecyclerView = recyclerView;
+        mPreSelectedFilters = preSelectedFilters;
     }
 
     @Override
@@ -119,6 +124,7 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         vh.isSelected = isFacetItemActive(position);
         vh.itemView.setSelected(vh.isSelected);
         vh.mFacetCheck.setVisibility(vh.isSelected ? View.VISIBLE : View.GONE);
+
     }
 
     @Override
@@ -140,6 +146,14 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return true;
             }
         }
+
+        if (mPreSelectedFilters != null && mPreSelectedFilters.size() != 0) {
+            for (SearchChipModel chip : mPreSelectedFilters) {
+                if (chip.getChipTitle().equals(mData.get(position))) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -152,6 +166,16 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void removeChip(int position) {
         SearchChipModel chipToRemove = null;
         String chipTitle = getData().get(position);
+
+        if (mPreSelectedFilters != null && mPreSelectedFilters.size() != 0) {
+            for(Iterator<SearchChipModel> it = mPreSelectedFilters.iterator(); it.hasNext();) {
+                SearchChipModel chip = it.next();
+                if(chip.getChipTitle().equals(mData.get(position))) {
+                    it.remove();
+                }
+            }
+        }
+
         for (SearchChipModel chip : mSearchItemsList) {
             if (getFilterType() == BundleKeys.SORT_FACETFILTER_NAME && chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)
                     || chip.getChipTitle().equals(chipTitle)) {

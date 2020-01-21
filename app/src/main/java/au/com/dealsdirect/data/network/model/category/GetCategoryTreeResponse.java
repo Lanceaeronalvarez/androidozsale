@@ -3,6 +3,8 @@ package au.com.dealsdirect.data.network.model.category;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class GetCategoryTreeResponse implements Parcelable {
     int count;
     boolean isSelected;
     List<GetCategoryTreeResponse> children;
+    LinkOptions linkOptions;
 
     public GetCategoryTreeResponse() {
 
@@ -87,6 +90,14 @@ public class GetCategoryTreeResponse implements Parcelable {
         this.children = children;
     }
 
+    public LinkOptions getLinkOptions() {
+        return linkOptions;
+    }
+
+    public void setLinkOptions(LinkOptions linkOptions) {
+        this.linkOptions = linkOptions;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -150,4 +161,65 @@ public class GetCategoryTreeResponse implements Parcelable {
 
         Object transformOption(GetCategoryTreeResponse parent, Object option);
     }
+
+   public class LinkOptions {
+        @SerializedName("category")
+        public Category category;
+        @SerializedName("facets")
+        public Facets facets;
+
+        public Category getCategory() {
+            return category;
+        }
+
+        public void setCategory(Category category) {
+            this.category = category;
+        }
+
+        public Facets getFacets() {
+            return facets;
+        }
+
+        public void setFacets(Facets facets) {
+            this.facets = facets;
+        }
+
+        public class Category {
+            @SerializedName("id")
+            public String id;
+            @SerializedName("name")
+            public String name;
+
+            public String getId() {
+                return id;
+            }
+
+            public void setId(String id) {
+                this.id = id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+        }
+
+        public class Facets {
+            @SerializedName("newArrivals")
+            public List<String> newArrivals;
+
+            public List<String> getNewArrivals() {
+                return newArrivals;
+            }
+
+            public void setNewArrivals(List<String> newArrivals) {
+                this.newArrivals = newArrivals;
+            }
+        }
+
+    }
+
 }

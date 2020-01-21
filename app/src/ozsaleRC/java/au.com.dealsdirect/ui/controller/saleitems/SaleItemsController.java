@@ -235,13 +235,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             private String mTitle;
             private String mCategoryMap;
             private List<GetCategoryTreeResponse> mCategories;
+            private List<SearchChipModel> mPreSelectedFilter;
 
             public FromCategory(String title,
                                 String categoryMap,
-                                List<GetCategoryTreeResponse> categories) {
+                                List<GetCategoryTreeResponse> categories,
+                                List<SearchChipModel> preSelectedFilter) {
                 mTitle = title;
                 mCategoryMap = categoryMap;
                 mCategories = categories;
+                mPreSelectedFilter = preSelectedFilter;
             }
 
             public String getTitle() {
@@ -254,6 +257,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             public List<GetCategoryTreeResponse> getCategories() {
                 return mCategories;
+            }
+
+            public List<SearchChipModel> getPreSelectedFilter() {
+                return mPreSelectedFilter;
             }
         }
 
@@ -459,6 +466,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mSalesOrigin = DataCollector.EventParameters.ViewSource.SALE;
 
     private List<SearchChipModel> mChipFilters = new ArrayList<>();
+    private List<SearchChipModel> mPreSelectedFilter = new ArrayList<>();
 
     //store state of selection from filters
     private String mPreviousSelectedFacetIndicesJsonString = "";
@@ -547,6 +555,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             controller.mCategoryKey = ((Parameters.FromCategory) parameters).getCategoryMap();
             controller.mInitialCategoryTree = ((Parameters.FromCategory) parameters).getCategories();
             controller.mFromCategorySearch = true;
+            controller.mChipFilters = ((Parameters.FromCategory) parameters).getPreSelectedFilter();
+            controller.mPreSelectedFilter = ((Parameters.FromCategory) parameters).getPreSelectedFilter();
         } else if (parameters instanceof Parameters.FromSaleItemDeepLink) {
             title = ((Parameters.FromSaleItemDeepLink) parameters).getBannerTitle();
             controller.mSaleId = ((Parameters.FromSaleItemDeepLink) parameters).getSaleId();
@@ -1542,7 +1552,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     null,
                     mCategoryKey,
                     mChipFilters,
-                    mFromCategorySearch);
+                    mFromCategorySearch,
+                    mPreSelectedFilter);
 
             GateKeeper.Destination destination;
             if (mFromBannerSearch || mFromShopSearch) {
@@ -1788,7 +1799,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             //Remove selected state by default setup
             mCurrentTabName = "";
             mPreviousTabName = "";
-            toggleTabSelection(0, false);
+
+
+            if (isFromCategories()) {
+                toggleTabSelection(0, true);
+            } else {
+                toggleTabSelection(0, false);
+            }
 
             mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override

@@ -890,7 +890,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void goToSaleItemsFromCategorySearch() {
 
         SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
-                .FromCategory(null, null, null);
+                .FromCategory(null, null, null, new ArrayList<>());
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
