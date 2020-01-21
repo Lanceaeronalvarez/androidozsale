@@ -798,13 +798,28 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    private int getHorizontalPaddingForHorizontalBanners() {
+        float dimen = mActivity.getResources().getDimension(R.dimen.horizontal_banner_spacing);
+        return (int) Math.ceil(dimen) * 2;
+    }
+
+    private int getBottomPaddingForHorizontalBanners() {
+        float dimen = mActivity.getResources().getDimension(R.dimen.horizontal_banner_bottom_padding);
+        return (int) Math.ceil(dimen);
+    }
+
     private ImageUtils.Grid computeSlidingBannersGrid() {
         int width = mActivity.getResources().getInteger(R.integer.sliding_banner_width);
         int height = mActivity.getResources().getInteger(R.integer.sliding_banner_height);
-        return ImageUtils.getRangedGridDefinition(
+        ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
                 width, height,
                 ScreenUtils.getScreenWidth(mActivity) * SLIDING_BANNER_WIDTH_PERCENT,
                 1, 1);
+        return new ImageUtils.Grid(
+                1,
+                grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(),
+                grid.getItemHeight() + getBottomPaddingForHorizontalBanners()
+        );
     }
 
     private void setupSlidingBannersDimensions() {
@@ -819,10 +834,15 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private ImageUtils.Grid computeCategoryBannersGrid() {
         int width = mActivity.getResources().getInteger(R.integer.sponsored_banner_width);
         int height = mActivity.getResources().getInteger(R.integer.sponsored_banner_height);
-        return ImageUtils.getRangedGridDefinition(
+        ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
                 width, height,
                 ScreenUtils.getScreenWidth(mActivity),
                 1, 1);
+        return new ImageUtils.Grid(
+                1,
+                grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(),
+                grid.getItemHeight() + getBottomPaddingForHorizontalBanners()
+        );
     }
 
     private void setupCategoryBannersDimensions() {
@@ -841,10 +861,15 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 mActivity.getResources().getInteger(R.integer.sponsored_banner_column_count);
         int width = mActivity.getResources().getInteger(R.integer.sponsored_banner_width);
         int height = mActivity.getResources().getInteger(R.integer.sponsored_banner_height);
-        return ImageUtils.getRangedGridDefinition(
+        ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
                 width, height,
                 ScreenUtils.getScreenWidth(mActivity),
                 numberOfColumns, numberOfColumns);
+        return new ImageUtils.Grid(
+                1,
+                grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(),
+                grid.getItemHeight() + getBottomPaddingForHorizontalBanners()
+        );
     }
 
     private void setupSponsoredBannersDimensions() {
