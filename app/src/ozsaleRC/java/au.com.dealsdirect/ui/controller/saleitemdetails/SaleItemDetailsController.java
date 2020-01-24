@@ -99,6 +99,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -1461,6 +1462,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         request.setItemName(mSaleName);
         request.setPrice(Double.valueOf(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length())));
         request.setPersonalizationData(mPersonalisationLayout.getDataForAddToCart());
+        request.setUserClientType(String.valueOf(mPresenter.isTablet() ? AppConstants.ADD_TO_CART_TABLET :
+                AppConstants.ADD_TO_CART_PHONE));
 
         boolean isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
 
