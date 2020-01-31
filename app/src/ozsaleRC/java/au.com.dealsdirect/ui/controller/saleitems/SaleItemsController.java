@@ -1163,7 +1163,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         }
 
-        if (!mFromShopSearch) {
+        if (mFromCategorySearch) {
             String categories = mTitle.replaceAll(CATEGORY_KEY_SEPARATOR_REPLACEMENT, "/");
             CategoryRequest categoryRequest = new CategoryRequest();
             categoryRequest.setEventType(EventTypeId.EVENT_ENTER_CATEGORY);
