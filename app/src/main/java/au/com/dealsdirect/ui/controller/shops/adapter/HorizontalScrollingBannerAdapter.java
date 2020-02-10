@@ -30,74 +30,113 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     private int cellHeight;
 
     private List<GetBannerResponse.Banner> dataSource;
+    private List<GetBannerResponse.Banner> indicatorSource;
 
     private RecyclerView recyclerView = null;
 
     private OnBannerTappedListener onBannerTappedListener = null;
 
     private static final int THROTTLE_FIRST_WINDOW_DURATION = 1000;
+    private static final int VIEW_TYPE_PAGE_INDICATOR = 2;
+    private static final int VIEW_TYPE_BANNER = 1;
 
     private Activity mActivity;
 
-    public HorizontalScrollingBannerAdapter(Activity activity) {
+    private int mViewType;
+    private int mCurrentIndicatorPosition;
+
+    public HorizontalScrollingBannerAdapter(Activity activity, int viewType, int currentIndicatorPosition) {
         mActivity = activity;
+        mViewType = viewType;
+        mCurrentIndicatorPosition = currentIndicatorPosition;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.viewholder_banner_for_horizontal, parent, false);
+
+        View view = null;
+
+        switch (viewType) {
+            case VIEW_TYPE_BANNER:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.viewholder_banner_for_horizontal, parent, false);
+                break;
+            case VIEW_TYPE_PAGE_INDICATOR:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.circle_indicator_image_layout, parent, false);
+                break;
+        }
 
         return new ViewHolder(view, cellWidth);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int virtualPosition = position % dataSource.size();
 
-        GetBannerResponse.Banner item = dataSource.get(virtualPosition);
+        switch (mViewType) {
+            case VIEW_TYPE_BANNER:
+                int virtualPosition = position % dataSource.size();
 
-        int width;
-        int height;
-        if (cellWidth > cellHeight) {
-            width = holder.itemView.getContext().getResources().getInteger(R.integer.sliding_banner_width);
-            height = holder.itemView.getContext().getResources().getInteger(R.integer.sliding_banner_height);
-        } else {
-            width = holder.itemView.getContext().getResources().getInteger(R.integer.sponsored_banner_width);
-            height = holder.itemView.getContext().getResources().getInteger(R.integer.sponsored_banner_height);
-        }
-        String imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), width, height);
+                GetBannerResponse.Banner item = dataSource.get(virtualPosition);
 
-        if (mActivity != null && !mActivity.isDestroyed()) {
-            ImageUtils.loadImage(imgUrl, holder.image);
-        }
+                int width;
+                int height;
+                if (cellWidth > cellHeight) {
+                    width = holder.itemView.getContext().getResources().getInteger(R.integer.sliding_banner_width);
+                    height = holder.itemView.getContext().getResources().getInteger(R.integer.sliding_banner_height);
+                } else {
+                    width = holder.itemView.getContext().getResources().getInteger(R.integer.sponsored_banner_width);
+                    height = holder.itemView.getContext().getResources().getInteger(R.integer.sponsored_banner_height);
+                }
+                String imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), width, height);
 
-        if (holder.subscription != null) {
-            holder.subscription.dispose();
-        }
+                if (mActivity != null && !mActivity.isDestroyed()) {
+                    ImageUtils.loadImage(imgUrl, holder.image);
+                }
 
-        if (item.getGroup().getIsClickable()) {
-            holder.subscription = RxView.clicks(holder.layout)
-                    .throttleFirst(
-                            THROTTLE_FIRST_WINDOW_DURATION,
-                            TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(action -> {
-                        if (onBannerTappedListener != null) {
-                            onBannerTappedListener.onBannerTapped(item);
-                        }
-                    });
+                if (holder.subscription != null) {
+                    holder.subscription.dispose();
+                }
+
+                if (item.getGroup().getIsClickable()) {
+                    holder.subscription = RxView.clicks(holder.layout)
+                            .throttleFirst(
+                                    THROTTLE_FIRST_WINDOW_DURATION,
+                                    TimeUnit.MILLISECONDS)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(action -> {
+                                if (onBannerTappedListener != null) {
+                                    onBannerTappedListener.onBannerTapped(item);
+                                }
+                            });
+                }
+                break;
+            case VIEW_TYPE_PAGE_INDICATOR:
+                if (position != mCurrentIndicatorPosition) {
+                    holder.circleIndicatorImage.setImageResource(R.drawable.circle_indicator_inactive);
+                } else {
+                    holder.circleIndicatorImage.setImageResource(R.drawable.circle_indicator_active);
+                }
+                break;
+            default:
+                break;
         }
     }
 
     @Override
     public int getItemCount() {
-        return dataSource.size() + getEdgeBufferSize() * 2;
+        return (dataSource != null && dataSource.size() != 0) ? dataSource.size() + getEdgeBufferSize() * 2 :
+                indicatorSource.size();
     }
 
     public List<GetBannerResponse.Banner> getDataSource() {
         return dataSource;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return mViewType;
     }
 
     public void setDataSource(List<GetBannerResponse.Banner> dataSource) {
@@ -105,6 +144,14 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         if (recyclerView != null && !recyclerView.isComputingLayout()) {
             notifyDataSetChanged();
         }
+    }
+
+    public List<GetBannerResponse.Banner> getIndicatorSource() {
+        return indicatorSource;
+    }
+
+    public void setIndicatorSource(List<GetBannerResponse.Banner> indicatorSource) {
+        this.indicatorSource = indicatorSource;
     }
 
     public void setupDimensions(int width, int height) {
@@ -180,13 +227,18 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         return getCellWidth() * getDataSource().size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.viewholder_banner_layout)
         ViewGroup layout;
 
         @BindView(R.id.viewholder_banner_image)
+        public
         ImageView image;
+
+        @BindView(R.id.vh_sale_item_image)
+        public
+        ImageView circleIndicatorImage;
 
         ViewHolder(View view, int width) {
             super(view);

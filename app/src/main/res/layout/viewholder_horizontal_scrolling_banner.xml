@@ -7,6 +7,25 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/viewholder_horizontal_scrolling_banner_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/border_light"
+        android:layout_alignParentBottom="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/viewholder_horizontal_scrolling_banner_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:isScrollContainer="true"
+            android:overScrollMode="never"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

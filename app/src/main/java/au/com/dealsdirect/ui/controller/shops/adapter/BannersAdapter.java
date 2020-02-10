@@ -25,7 +25,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jakewharton.rxbinding2.view.RxView;
+import com.mysale.genie.views.custom.recyclerview.CustomLinearLayoutManager;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ import java.util.regex.Pattern;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.listeners.OnHorizontalSwipeTouchListener;
+import au.com.dealsdirect.ui.controller.shops.ShopsListener;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -44,7 +47,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.graphics.Typeface.BOLD;
 
@@ -62,6 +67,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Activity mActivity;
     private ShopsMvpPresenter mPresenter;
     private RecyclerView recyclerView = null;
+    private RecyclerView circleIndicatorRecyclerview = null;
+    private ShopsListener mListener;
     private int mWidth;
     private int mHeight;
     private int mNumberOfColumns;
@@ -88,7 +95,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private static final int THROTTLE_FIRST_WINDOW_DURATION = 1000;
 
-    private static final float SLIDING_BANNER_WIDTH_PERCENT = 0.8f;
 
     private int removeViewHolderOrientationModifier(int viewHolderType) {
         return viewHolderType & (~VIEW_HOLDER_TYPE_LANDSCAPE);
@@ -105,11 +111,16 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private HorizontalScrollingBannerAdapter mCategoryBannersAdapter = null;
     private HorizontalScrollingBannerAdapter mSponsoredBannersAdapter = null;
 
+    private HorizontalScrollingBannerAdapter mCircleIndicatorAdapter = null;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     public BannersAdapter(
             Activity activity,
             ShopsMvpPresenter presenter,
             List<GetBannerResponse.Group> sales,
-            int orientation) {
+            int orientation,
+            ShopsListener listener) {
 
         mGroups = sales;
         mSales = new ArrayList<>();
@@ -123,6 +134,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mHeight = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_height : R.integer.banner_mobile_height);
 
         mOrientation = orientation;
+
+        mListener = listener;
 
         setupDimensions(orientation);
     }
@@ -141,7 +154,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
+    public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private boolean isAutoScroll;
 
@@ -156,6 +169,9 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @BindView(R.id.viewholder_horizontal_scrolling_banner_recycler_view)
         RecyclerView recyclerView;
+
+        @BindView(R.id.viewholder_horizontal_scrolling_banner_indicator)
+        public RecyclerView circleIndicatorRecyclerview;
 
         HorizontalRecyclerViewHolder(View view,
                                      int height,
@@ -273,14 +289,20 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         private void startAutoscroll() {
+
             stopAutoScroll();
-            autoScrollDisposable = Observable
-                    .interval(
-                            SCROLL_INTERVAL,
-                            SCROLL_INTERVAL_TIME_UNIT,
-                            AndroidSchedulers.mainThread())
-                    .doOnNext(o -> scrollToNext(true))
+            autoScrollDisposable = Observable.interval(SCROLL_INTERVAL, TimeUnit.SECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .takeWhile(o -> {
+                        return compositeDisposable.size() != 0 && !compositeDisposable.isDisposed();
+                    })
+                    .doOnNext(o -> {
+                        scrollToNext(true);
+                    })
                     .subscribe();
+
+            compositeDisposable.add(autoScrollDisposable);
         }
 
         private void stopAutoScroll() {
@@ -307,6 +329,11 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             };
             mainHandler.post(myRunnable);
+
+            if (mListener != null) {
+                mListener.updateIndicatorPosition((mCircleIndicatorAdapter.getItemCount() - 1), circleIndicatorRecyclerview);
+            }
+
         }
 
         private void scrollToPrevious(boolean withAnimation) {
@@ -330,6 +357,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             };
             mainHandler.post(myRunnable);
+
+            if (mListener != null) {
+                mListener.updatePreviousIndicatorPosition(circleIndicatorRecyclerview);
+            }
         }
 
         public void snapToCenter(boolean withAnimation) {
@@ -345,7 +376,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (adapter == null) {
                 return 0;
             }
-            return (recyclerView.computeHorizontalScrollOffset() + (recyclerView.getWidth() - adapter.getCellWidth()) / 2) % adapter.getCellWidth();
+            return (recyclerView.computeHorizontalScrollOffset() + (recyclerView.getWidth() - adapter.getCellWidth())) % adapter.getCellWidth();
         }
 
         private int getXBeforeNextPosition() {
@@ -526,7 +557,21 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 break;
             case VIEW_HOLDER_TYPE_SLIDING_BANNER:
                 setupSlidingBannersDimensions();
-                horizontalRecyclerViewHolder.setAdapter(mSlidingBannersAdapter);
+
+
+                horizontalRecyclerViewHolder.recyclerView.setAdapter(mSlidingBannersAdapter);
+
+                horizontalRecyclerViewHolder.circleIndicatorRecyclerview.setVisibility(View.VISIBLE);
+
+                circleIndicatorRecyclerview = horizontalRecyclerViewHolder.circleIndicatorRecyclerview;
+
+                CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(
+                        circleIndicatorRecyclerview.getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+                layoutManager.setScrollEnabled(false);
+                circleIndicatorRecyclerview.setLayoutManager(layoutManager);
+                circleIndicatorRecyclerview.setAdapter(mCircleIndicatorAdapter);
+
                 if (mSlidingBannersAdapter != null) {
                     mSlidingBannersAdapter.resetReyclerViewPosition();
                     horizontalRecyclerViewHolder.snapToCenter(false);
@@ -690,6 +735,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             HorizontalRecyclerViewHolder viewHolder = (HorizontalRecyclerViewHolder) holder;
             viewHolder.onViewRecycled();
             viewHolder.recyclerView.setAdapter(null);
+            viewHolder.circleIndicatorRecyclerview.setAdapter(null);
         }
         super.onViewRecycled(holder);
     }
@@ -769,6 +815,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void setupDimensions(int orientation) {
+
         int resId;
         switch (ScreenUtils.getOrientation(mActivity)) {
             case Configuration.ORIENTATION_LANDSCAPE:
@@ -809,17 +856,13 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private ImageUtils.Grid computeSlidingBannersGrid() {
+        int numberOfColumns = 1;
         int width = mActivity.getResources().getInteger(R.integer.sliding_banner_width);
         int height = mActivity.getResources().getInteger(R.integer.sliding_banner_height);
-        ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
+        return ImageUtils.getRangedGridDefinition(
                 width, height,
-                ScreenUtils.getScreenWidth(mActivity) * SLIDING_BANNER_WIDTH_PERCENT,
-                1, 1);
-        return new ImageUtils.Grid(
-                1,
-                grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(),
-                grid.getItemHeight() + getBottomPaddingForHorizontalBanners()
-        );
+                ScreenUtils.getScreenWidth(mActivity),
+                numberOfColumns, numberOfColumns);
     }
 
     private void setupSlidingBannersDimensions() {
@@ -897,6 +940,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (recyclerView != null && !recyclerView.isComputingLayout()) {
             notifyDataSetChanged();
         }
+
+        if (circleIndicatorRecyclerview != null) {
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -953,6 +1000,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    public void setCircleIndicatorAdapter(HorizontalScrollingBannerAdapter circleIndicatorAdapter) {
+        this.mCircleIndicatorAdapter = circleIndicatorAdapter;
+    }
+
     public HorizontalScrollingBannerAdapter getCategoryBannersAdapter() {
         return mCategoryBannersAdapter;
     }
@@ -1002,5 +1053,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
         this.recyclerView = null;
+        this.circleIndicatorRecyclerview = null;
+    }
+
+    public void stopSlidingBanner() {
+        compositeDisposable.clear();
     }
 }

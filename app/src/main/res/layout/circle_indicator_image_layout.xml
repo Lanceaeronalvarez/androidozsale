@@ -13,4 +13,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <RelativeLayout
+        android:id="@+id/viewholder_banner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/horizontal_banner_spacing"
+        android:paddingRight="@dimen/horizontal_banner_spacing"
+        android:paddingBottom="@dimen/horizontal_banner_bottom_padding"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/viewholder_banner_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:transitionName="image" />
+
+    </RelativeLayout>
+
 </LinearLayout>
