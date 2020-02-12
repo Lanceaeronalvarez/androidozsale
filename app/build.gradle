@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'newrelic'
 
+def buildType
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -10,7 +12,7 @@ android {
         disable 'MissingTranslation'
     }
 
-    defaultConfig {
+        defaultConfig {
         applicationId "au.com.dealsdirect.rc"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -36,17 +38,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseConfig
             zipAlignEnabled true
+            ext.debugMode = "false"
 
-            resValue "bool", "debug_mode", "false"
+            resValue "bool", "debug_mode", ext.debugMode
             aaptOptions.cruncherEnabled = true
             ext.alwaysUpdateBulidId = true
+
         }
 
         // Always use debug variant during development
         debug {
-            resValue "bool", "debug_mode", "true"
+            ext.debugMode = "true"
+            resValue "bool", "debug_mode", ext.debugMode
             aaptOptions.cruncherEnabled = false
             ext.alwaysUpdateBulidId = false
+
         }
     }
 
@@ -61,11 +67,15 @@ android {
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            resValue "string", "app_name", "buyinvite"
+            ext.appName = "buyinvite"
+            ext.facebookAppId = "391019637656000"
+            ext.facebookAppSecret = "1dea9436118690813bcc315ecfc28705"
+
+            resValue "string", "app_name", ext.appName
             def facebookAppId = "391019637656000"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "1dea9436118690813bcc315ecfc28705"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "facebook_app_id", ext.facebookAppId
+            resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "153472458025053"
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
             resValue "string", "app_uri_hostname", "www.buyinvite.com.au"
@@ -188,11 +198,15 @@ android {
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            resValue "string", "app_name", "DealsDirect"
+            ext.appName = "DealsDirect"
+            ext.facebookAppId = "1650094968544406"
+            ext.facebookAppSecret = "94da0f48bd2ffea25981e52c56f9260a"
+
+            resValue "string", "app_name", ext.appName
             def facebookAppId = "1650094968544406"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "facebook_app_id", ext.facebookAppId
+            resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
             resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
@@ -231,11 +245,15 @@ android {
             buildConfigField "String", "APP_NAME", "\"oo\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            resValue "string", "app_name", "OO"
+            ext.appName = "OO"
+            ext.facebookAppId = "1654976038100746"
+            ext.facebookAppSecret = "f372b6a78ffbb38215f796d1a8838bb2"
+
+            resValue "string", "app_name", ext.appName
             def facebookAppId = "1654976038100746"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "f372b6a78ffbb38215f796d1a8838bb2"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "facebook_app_id", ext.facebookAppId
+            resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "10357598833"
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "app_uri_hostname", "www.oo.com.au"
@@ -294,11 +312,15 @@ android {
             buildConfigField "String", "APP_NAME", "\"topbuy\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            resValue "string", "app_name", "TopBuy"
+            ext.appName = "TopBuy"
+            ext.facebookAppId = "1544909069170785"
+            ext.facebookAppSecret = "fb7a6db2221738ebe78810dff07e1223"
+
+            resValue "string", "app_name", ext.appName
             def facebookAppId = "1544909069170785"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "fb7a6db2221738ebe78810dff07e1223"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "facebook_app_id", ext.facebookAppId
+            resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "47143367223"
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
             resValue "string", "app_uri_hostname", "www.topbuy.com.au"
@@ -380,11 +402,15 @@ android {
             buildConfigField "String", "APP_NAME", "\"ozsale\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            resValue "string", "app_name", "Ozsale"
+            ext.appName = "Ozsale"
+            ext.facebookAppId = "421544284547550"
+            ext.facebookAppSecret = "f08401cb63ac18241e51e2184d8cd80a"
+
+            resValue "string", "app_name", ext.appName
             def facebookAppId = "421544284547550"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "f08401cb63ac18241e51e2184d8cd80a"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "facebook_app_id", ext.facebookAppId
+            resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "160420993982663"
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
             resValue "string", "app_uri_hostname", "www.ozsale.com.au"
@@ -399,14 +425,17 @@ android {
             versionName "4.1.4"
             applicationId "au.com.ozsale.test"
 
+            ext.appName = "Ozsale Test"
+            ext.facebookAppId = "437865102935987"
+            ext.facebookAppSecret = "5c6326d03e5d2ba866ecada5b206b6d6"
+
             buildConfigField "String", "APP_NAME", "\"ozsale\""
             buildConfigField "boolean", "IS_TEST", "true"
 
-            resValue "string", "app_name", "Ozsale Test"
-            def facebookAppId = "437865102935987"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "5c6326d03e5d2ba866ecada5b206b6d6"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "app_name", ext.appName
+            resValue "string", "facebook_app_id", ext.facebookAppId
+            resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "160420993982663"
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
             resValue "string", "app_uri_hostname", "www.ozsale.com.au"
@@ -424,11 +453,15 @@ android {
             buildConfigField "String", "APP_NAME", "\"singsale\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            resValue "string", "app_name", "Singsale"
+            ext.appName = "Singsale"
+            ext.facebookAppId = "213701285425668"
+            ext.facebookAppSecret = "586750a24521ba339ff775ff2d729eb8"
+
+            resValue "string", "app_name", ext.appName
             def facebookAppId = "213701285425668"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "586750a24521ba339ff775ff2d729eb8"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "facebook_app_id", ext.facebookAppId
+            resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "181383195228374"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524844978"
             resValue "string", "app_uri_hostname", "www.singsale.com.sg"
@@ -467,11 +500,15 @@ android {
             buildConfigField "String", "APP_NAME", "\"nzsale\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            resValue "string", "app_name", "Nzsale"
+            ext.appName = "Nzsale"
+            ext.facebookAppId = "122094841270614"
+            ext.facebookAppSecret = "c427c4000b760c98c818350619930764"
+
+            resValue "string", "app_name", ext.appName
             def facebookAppId = "122094841270614"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "c427c4000b760c98c818350619930764"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "facebook_app_id", ext.facebookAppId
+            resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "293974924171"
             resValue "string", "twitter_user_id", "twitter://user?user_id=61630958"
             resValue "string", "app_uri_hostname", "www.nzsale.co.nz"
@@ -511,11 +548,15 @@ android {
             buildConfigField "String", "APP_NAME", "\"mysale\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            resValue "string", "app_name", "Mysale"
+            ext.appName = "Mysale"
+            ext.facebookAppId = "485479254797079"
+            ext.facebookAppSecret = "fee7b274d99b23eca0c283d48b2f453a"
+
+            resValue "string", "app_name", ext.appName
             def facebookAppId = "485479254797079"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "fee7b274d99b23eca0c283d48b2f453a"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
+            resValue "string", "facebook_app_id", ext.facebookAppId
+            resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "161478120632146"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524892602"
             resValue "string", "app_uri_hostname", "www.mysale.ph"
@@ -938,6 +979,7 @@ dependencies {
 File newRelicProperties = new File("${project.projectDir.absolutePath}/newrelic.properties")
 newRelicProperties.createNewFile()
 
+
 android.applicationVariants.all { variant ->
     variant.productFlavors.each { flavor ->
         def variantSuffix = variant.name.capitalize()
@@ -950,10 +992,378 @@ android.applicationVariants.all { variant ->
         }
         generateResourcesTask.dependsOn generatePropertiesTask
     }
+
+    buildType = variant.name
+
 }
 
 configurations.all {
     resolutionStrategy.force "com.android.support:support-annotations:$supportLibrary"
+}
+
+//Below tasks is for automation checklist
+task printVersionName{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println flavor.versionName
+                }
+        }
+    }
+}
+
+task printVersionCode{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println flavor.versionCode
+                }
+        }
+    }
+}
+
+task printApplicationId{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println flavor.applicationId
+                }
+        }
+    }
+}
+
+task printCompileSdkVersion{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    def value = project.getProperties().get("APP_NAME")
+                    println rootProject.ext.compileSdkVersion
+                }
+        }
+    }
+}
+
+task printMinSdkVersion{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println rootProject.ext.minSdkVersion
+                }
+        }
+    }
+}
+
+task printTargetSdkVersion{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println rootProject.ext.targetSdkVersion
+                }
+        }
+    }
+}
+
+task printBuildToolsVersion{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println rootProject.ext.buildToolsVersion
+                }
+        }
+    }
+}
+
+task printSupportLibrary{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println rootProject.ext.supportLibrary
+                }
+        }
+    }
+}
+
+task printAppName{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println flavor.ext.appName
+                }
+        }
+    }
+}
+
+task printFacebookAppId{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println flavor.ext.facebookAppId
+                }
+        }
+    }
+}
+
+task printFacebookAppSecret{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println flavor.ext.facebookAppSecret
+                }
+        }
+    }
+}
+
+task printNewRelicAppToken{
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println flavor.ext.newRelicAppToken
+                }
+        }
+    }
+}
+
+
+
+task printDebugMode {
+
+    android.applicationVariants.all {
+        com.android.build.gradle.api.ApplicationVariant variant ->
+
+            doLast {
+                android.productFlavors.all {
+                    flavor ->
+                        if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
+                            if (variant.buildType.name.equalsIgnoreCase("Release")) {
+                                println false
+                            } else {
+                                println true
+                            }
+                        }
+                }
+            }
+
+
+    }
+}
+
+task parseAdmobAppId {
+
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    def xmlFile = "app/src/"+flavorName+"/res/values/strings.xml"
+                    def parseXml = new XmlParser().parse(xmlFile)
+
+                    def getAdmobAppId = parseXml.children().get(0)
+
+                    getAdmobAppId.each {
+                        println it
+                    }
+                }
+        }
+    }
+
+}
+
+task parseAdmobBanners {
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    def xmlFile = "app/src/"+flavorName+"/res/values/strings.xml"
+                    def parseXml = new XmlParser().parse(xmlFile)
+
+                    def getAdmobBanners = parseXml.children().get(1)
+
+                    getAdmobBanners.each {
+                        println it
+                    }
+                }
+        }
+    }
+}
+
+task parseAdmobProducts {
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    def xmlFile = "app/src/"+flavorName+"/res/values/strings.xml"
+                    def parseXml = new XmlParser().parse(xmlFile)
+
+                    def getAdmobProducts = parseXml.children().get(2)
+
+                    getAdmobProducts.each {
+                        println it
+                    }
+                }
+        }
+    }
+}
+
+task parseAdmobAccount {
+    doLast {
+        android.productFlavors.all {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    def xmlFile = "app/src/"+flavorName+"/res/values/strings.xml"
+                    def parseXml = new XmlParser().parse(xmlFile)
+
+                    def getAdmobAccount = parseXml.children().get(3)
+
+                    getAdmobAccount.each {
+                        println it
+                    }
+                }
+        }
+    }
+}
+
+task getLegacyVersion {
+
+    android.applicationVariants.all {
+        com.android.build.gradle.api.ApplicationVariant variant ->
+
+            doLast {
+                android.productFlavors.all {
+                    flavor ->
+                        if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
+                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            javaexec {
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                main = "au.com.dealsdirect.data.network.ApiEndPoint"
+                            }
+                        }
+
+                }
+
+            }
+
+    }
+}
+
+task printCountryId {
+    android.applicationVariants.all {
+        com.android.build.gradle.api.ApplicationVariant variant ->
+
+            doLast {
+                android.productFlavors.all {
+                    flavor ->
+                        if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
+                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            javaexec {
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                main = "au.com.dealsdirect.ui.controller.main.Settings"
+                                args countryName, flavorName, "PRINT_COUNTRY_ID"
+                            }
+                        }
+
+                }
+
+            }
+    }
+}
+
+task printAccountId {
+    android.applicationVariants.all {
+        com.android.build.gradle.api.ApplicationVariant variant ->
+
+            doLast {
+                android.productFlavors.all {
+                    flavor ->
+                        if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
+                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            javaexec {
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                main = "au.com.dealsdirect.ui.controller.main.Settings"
+                                args countryName, flavorName, "PRINT_ACCOUNT_ID"
+                            }
+                        }
+
+                }
+
+            }
+    }
+}
+
+task printGenieApi {
+    android.applicationVariants.all {
+        com.android.build.gradle.api.ApplicationVariant variant ->
+
+            doLast {
+                android.productFlavors.all {
+                    flavor ->
+                        if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
+                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            javaexec {
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                main = "au.com.dealsdirect.ui.controller.main.Settings"
+                                args countryName, flavorName, "PRINT_GENIE_API"
+                            }
+                        }
+
+                }
+
+            }
+    }
+}
+
+task printCurrencyCode {
+    android.applicationVariants.all {
+        com.android.build.gradle.api.ApplicationVariant variant ->
+
+            doLast {
+                android.productFlavors.all {
+                    flavor ->
+                        if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
+                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            javaexec {
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                main = "au.com.dealsdirect.ui.controller.main.Settings"
+                                args countryName, flavorName, "PRINT_CURRENCY_CODE"
+                            }
+                        }
+
+                }
+
+            }
+    }
+}
+
+task printRecaptcha {
+    android.applicationVariants.all {
+        com.android.build.gradle.api.ApplicationVariant variant ->
+
+            doLast {
+                android.productFlavors.all {
+                    flavor ->
+                        if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
+                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            javaexec {
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                main = "au.com.dealsdirect.ui.controller.main.Settings"
+                                args "", flavorName, "PRINT_RECAPTCHA"
+                            }
+                        }
+
+                }
+
+            }
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -478,4 +478,88 @@ public class Settings {
             reCaptchaSiteKey = "6LehI6cUAAAAACrjaAGPQLQx1eomvLqrb0S_QxSi";
         }
     }
+
+
+    // Below is for automation build purposes
+
+    public static void main(String[] args){
+
+        load();
+        setupReCaptchaSiteKey();
+
+        String country = args[0];
+        String appName = args[1];
+        String task = args[2];
+
+        switch (task) {
+            case "PRINT_COUNTRY_ID":
+                System.out.println(printSelectedCountryID(country,appName));
+                break;
+            case "PRINT_ACCOUNT_ID":
+                System.out.println(printAccountId(country, appName));
+                break;
+            case "PRINT_GENIE_API":
+                System.out.println(printGenieRoot(country, appName));
+                break;
+            case "PRINT_CURRENCY_CODE":
+                System.out.println(printCurrencyCode(country, appName));
+                break;
+            case "PRINT_RECAPTCHA":
+                System.out.println(reCaptchaSiteKey);
+                break;
+        }
+    }
+
+    private static String printSelectedCountryID(String country, String appName) {
+        if (getIsMultiCountry()) {
+            for (Country supportedCountry : supportedCountries) {
+                if (supportedCountry.countryName.equalsIgnoreCase(country) && BuildConfig.FLAVOR.equalsIgnoreCase(appName)) {
+                    return supportedCountry.countryId;
+                }
+            }
+        } else {
+            //if app is single country
+            return supportedCountries[0].countryId;
+        }
+        return "";
+    }
+
+    private static String printAccountId(String country, String appName) {
+        if (getIsMultiCountry()) {
+            for (Country supportedCountry : supportedCountries) {
+                if (supportedCountry.countryName.equalsIgnoreCase(country) && BuildConfig.FLAVOR.equalsIgnoreCase(appName)) {
+                    return supportedCountry.accountId;
+                }
+            }
+        } else {
+            return supportedCountries[0].accountId;
+        }
+        return "";
+    }
+
+    private static String printGenieRoot(String country, String appName) {
+        if (getIsMultiCountry()) {
+            for (Country supportedCountry : supportedCountries) {
+                if (supportedCountry.countryName.equalsIgnoreCase(country) && BuildConfig.FLAVOR.equalsIgnoreCase(appName)) {
+                    return supportedCountry.genieRoot;
+                }
+            }
+        } else {
+            return supportedCountries[0].genieRoot;
+        }
+        return "";
+    }
+
+    private static String printCurrencyCode(String country, String appName) {
+        if (getIsMultiCountry()) {
+            for (Country supportedCountry : supportedCountries) {
+                if (supportedCountry.countryName.equalsIgnoreCase(country) && BuildConfig.FLAVOR.equalsIgnoreCase(appName)) {
+                    return supportedCountry.currencyCode;
+                }
+            }
+        } else {
+            return supportedCountries[0].currencyCode;
+        }
+        return "";
+    }
 }

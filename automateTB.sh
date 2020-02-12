@@ -1,0 +1,268 @@
+PROJECT_DIR='/users/admin/documents/project/AndroidDD/'
+OUTPUT_DIR='/users/admin/desktop/'
+
+flavorName=topbuy2RC
+buildTypeAssemble=Topbuy2RCRelease
+defaultCountry=Australia
+expectedVersionName="4.1.4"
+expectedVersionCode="216"
+
+print_green(){
+    printf "\e[1;32m$1\e[0m"
+}
+
+print_blue(){
+    printf "\e[1;34m$1\e[0m"
+}
+
+print_red(){
+    printf "\e[1;31m$1\e[0m"
+}
+
+print_yellow(){
+    printf "\e[1;33m$1\e[0m"
+}
+
+print_yellow "\n\nSTARTING AUTOMATION"
+
+#Start Clean Process
+print_green "\n\n\nClean app...\n"
+./gradlew clean
+
+# Install APK on device / emulator
+print_blue "installing Release build...\n"
+./gradlew installtopbuy2RCRelease
+print_blue "\n\n\n Done Installing\n"
+
+#Launch Main Activity
+adb shell am start -n "au.com.topbuy/au.com.dealsdirect.ui.main.MainActivity" -a android.intent.action.MAIN -c android.intent.category.LAUNCHER
+print_blue "\n\n\n Launched main activity\n"
+
+# Getting Compile SDK Version
+print_blue "\n\nCHECKING COMPILE SDK"
+expectedCompileSDK="28"
+currentCompileSDK=$(./gradlew -q printCompileSdkVersion -PflavorName=$flavorName)
+if [ $expectedCompileSDK = "$currentCompileSDK" ]; then
+print_green "\nexpected: $expectedCompileSDK and current: $currentCompileSDK is the same\n"
+else
+print_red "\nexpected: $expectedCompileSDK and current: $currentCompileSDK is not the same\n"
+fi
+
+# Checking min sdk version
+print_blue "\n\nCHECKING MIN SDK"
+expectedMinSDK="21"
+currentMinSDK=$(./gradlew -q printMinSdkVersion -PflavorName=$flavorName)
+if [ $expectedMinSDK = "$currentMinSDK" ]; then
+print_green "\nexpected: $expectedMinSDK and current: $currentMinSDK is the same\n"
+else
+print_red "\nexpected: $expectedMinSDK and current: $currentMinSDK is not the same\n"
+fi
+
+# Checking target sdk version
+print_blue "\n\nCHECKING TARGET SDK"
+expectedTargetSDK="28"
+currentTargetSDK=$(./gradlew -q printTargetSdkVersion -PflavorName=$flavorName)
+if [ $expectedTargetSDK = "$currentTargetSDK" ]; then
+print_green "\nexpected: $expectedTargetSDK and current: $currentTargetSDK is the same\n"
+else
+print_red "\nexpected: $expectedTargetSDK and current: $currentTargetSDK is not the same\n"
+fi
+
+# Checking Build tools version
+print_blue "\n\nCHECKING BUILD TOOLS VERSION"
+expectedBuildToolsVersion="28.0.3"
+currentBuildToolsVersion=$(./gradlew -q printBuildToolsVersion -PflavorName=$flavorName)
+if [ $expectedBuildToolsVersion = "$currentBuildToolsVersion" ]; then
+print_green "\nexpected: $expectedBuildToolsVersion and current: $currentBuildToolsVersion is the same\n"
+else
+print_red "\nexpected: $expectedBuildToolsVersion and current: $currentBuildToolsVersion is not the same\n"
+fi
+
+# Checking Support library
+print_blue "\n\nCHECKING SUPPORT LIBRARY"
+expectedSupportLibrary="28.0.0"
+currentSupportLibrary=$(./gradlew -q printSupportLibrary -PflavorName=$flavorName)
+if [ $expectedSupportLibrary = "$currentSupportLibrary" ]; then
+print_green "\nexpected: $expectedSupportLibrary and current: $currentSupportLibrary is the same\n"
+else
+print_red "\nexpected: $expectedSupportLibrary and current: $currentSupportLibrary is not the same\n"
+fi
+
+#Checking Version Name
+print_blue "\n\nCHECKING VERSION NAME"
+currentVersionName=$(./gradlew -q printVersionName -PflavorName=$flavorName)
+if [ $expectedVersionName = "$currentVersionName" ]; then
+print_green "\nexpected: $expectedVersionName and current: $currentVersionName is the same\n"
+else
+print_red "\nexpected: $expectedVersionName and current: $currentVersionName is not the same\n"
+fi
+
+# Checking Version Code
+print_blue "\n\nCHECKING VERSION CODE"
+currentVersionCode=$(./gradlew -q printVersionCode -PflavorName=$flavorName)
+if [ $expectedVersionCode = "$currentVersionCode" ]; then
+print_green "\nexpected: $expectedVersionCode and current: $currentVersionCode is the same\n"
+else
+print_red "\nexpected: $expectedVersionCode and current: $currentVersionCode is not the same\n"
+fi
+
+# Check Application Id
+print_blue "\n\nCHECKING APPLICATION ID"
+expectedAppId="au.com.topbuy"
+currentAppId=$(./gradlew -q printApplicationId -PflavorName=$flavorName)
+if [ $expectedAppId = "$currentAppId" ]; then
+print_green "\nexpected: $expectedAppId and current: $currentAppId is the same\n"
+else
+print_red "\nexpected: $expectedAppId and current: $currentAppId is not the same\n"
+fi
+
+# Checking App name
+print_blue "\n\nCHECKING APP NAME"
+expectedAppName="TopBuy"
+currentAppName=$(./gradlew -q printAppName -PflavorName=$flavorName)
+if [[ $expectedAppName = "$currentAppName" ]]; then
+print_green "\nexpected: $expectedAppName and current: $currentAppName is the same\n"
+else
+print_red "\nexpected: $expectedAppName and current: $currentAppName is not the same\n"
+fi
+
+# Checking Facebook app Id
+print_blue "\n\nCHECKING FACEBOOK APP ID"
+expectedFbAppId=1544909069170785
+currentFbAppId=$(./gradlew -q printFacebookAppId -PflavorName=$flavorName)
+if [[ $currentFbAppId -eq $expectedFbAppId ]]; then
+print_green "\nexpected: $expectedFbAppId and current: $currentFbAppId is the same\n"
+else
+print_red "\nexpected: $expectedFbAppId and current: $currentFbAppId is not the same\n"
+fi
+
+# Checking Facebook app secret
+print_blue "\n\nCHECKING FACEBOOK APP SECRET"
+expectedFacebookAppSecret="fb7a6db2221738ebe78810dff07e1223"
+currentFacebookAppSecret=$(./gradlew -q printFacebookAppSecret -PflavorName=$flavorName)
+if [ $expectedFacebookAppSecret = "$currentFacebookAppSecret" ]; then
+print_green "\nexpected: $expectedFacebookAppSecret and current: $currentFacebookAppSecret is the same\n"
+else
+print_red "\nexpected: $expectedFacebookAppSecret and current: $currentFacebookAppSecret is not the same\n"
+fi
+
+# Checking New Relic app token
+print_blue "\n\nCHECKING NEW RELIC APP TOKEN"
+expectedNewRelicToken="AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
+currentNewRelicToken=$(./gradlew -q printNewRelicAppToken -PflavorName=$flavorName)
+if [ $expectedNewRelicToken = "$currentNewRelicToken" ]; then
+print_green "\nexpected: $expectedNewRelicToken and current: $currentNewRelicToken is the same\n"
+else
+print_red "\nexpected: $expectedNewRelicToken and current: $currentNewRelicToken is not the same\n"
+fi
+
+# Check Build Type
+print_blue "\n\nCHECKING BUILD TYPE"
+currentBuildType=$(./gradlew -q printDebugMode -PflavorName=$flavorName -PbuildTypeAssemble=$buildTypeAssemble)
+print_green "\nIs debug mode: $currentBuildType\n"
+
+#Check Admob app id
+print_blue "\n\nCHECKING ADMOB APP ID"
+expectedAdmobId="ca-app-pub-4114338578467810~6949554253"
+currentAdmobId=$(./gradlew -q parseAdmobAppId -PflavorName=$flavorName)
+if [ $expectedAdmobId = "$currentAdmobId" ]; then
+print_green "\nexpected: $expectedAdmobId and current: $currentAdmobId is the same\n"
+else
+print_red "\nexpected: $expectedAdmobId and current: $currentAdmobId is not the same\n"
+fi
+
+# Check Admob banners id
+print_blue "\n\nCHECKING ADMOB BANNERS ID"
+expectedAdmobBanners="ca-app-pub-4114338578467810/5044132565"
+currentAdmobBanners=$(./gradlew -q parseAdmobBanners -PflavorName=$flavorName)
+if [ $expectedAdmobBanners = "$currentAdmobBanners" ]; then
+print_green "\nexpected: $expectedAdmobBanners and current: $currentAdmobBanners is the same\n"
+else
+print_red "\nexpected: $expectedAdmobBanners and current: $currentAdmobBanners is not the same\n"
+fi
+
+# Check Admob products id
+print_blue "\nCHECKING ADMOB PRODUCTS ID"
+expectedAdmobProducts="ca-app-pub-4114338578467810/6566410870"
+currentAdmobProducts=$(./gradlew -q parseAdmobProducts -PflavorName=$flavorName)
+if [ $expectedAdmobProducts = "$currentAdmobProducts" ]; then
+print_green "\nexpected: $expectedAdmobProducts and current: $currentAdmobProducts is the same\n"
+else
+print_red "\nexpected: $expectedAdmobProducts and current: $currentAdmobProducts is not the same\n"
+fi
+
+# Check Admob account id
+print_blue "\nCHECKING ADMOB ACCOUNT ID"
+expectedAdmobAccount="ca-app-pub-4114338578467810/7193096833"
+currentAdmobAccount=$(./gradlew -q parseAdmobAccount -PflavorName=$flavorName)
+if [ $expectedAdmobAccount = "$currentAdmobAccount" ]; then
+print_green "\nexpected: $expectedAdmobAccount and current: $currentAdmobAccount is the same\n"
+else
+print_red "\nexpected: $expectedAdmobAccount and current: $currentAdmobAccount is not the same\n"
+fi
+
+#Get Legacy Version after Main Activity launch
+print_blue "\nCHECKING LEGACY API VERSION"
+expectedLegacyVersion="3.29"
+currentLegacyVersion=$(./gradlew -q getLegacyVersion -PflavorName=$flavorName -PbuildTypeAssemble=$buildTypeAssemble)
+if [ $expectedLegacyVersion = "$currentLegacyVersion" ]; then
+print_green "\nexpected: $expectedLegacyVersion and current: $currentLegacyVersion is the same\n"
+else
+print_red "\nexpected: $expectedLegacyVersion and current: $currentLegacyVersion is not the same\n"
+fi
+
+#Check country id
+print_blue "\nCHECKING COUNTRY ID"
+expectedCountryId="TA"
+currentCountryId=$(./gradlew -q printCountryId -PflavorName=$flavorName -PbuildTypeAssemble=$buildTypeAssemble -PcountryName=$defaultCountry)
+if [ $expectedCountryId = "$currentCountryId" ]; then
+print_green "\nexpected: $expectedCountryId and current: $currentCountryId is the same\n"
+else
+print_red "\nexpected: $expectedCountryId and current: $currentCountryId is not the same\n"
+fi
+
+#Check account id
+print_blue "\nCHECKING ACCOUNT ID"
+expectedAccountId="909E0AC5-908A-4A73-8E5C-5312DEEBD24C"
+currentAccountId=$(./gradlew -q printAccountId -PflavorName=$flavorName -PbuildTypeAssemble=$buildTypeAssemble -PcountryName=$defaultCountry)
+if [ $expectedAccountId = "$currentAccountId" ]; then
+print_green "\nexpected: $expectedAccountId and current: $currentAccountId is the same\n"
+else
+print_red "\nexpected: $expectedAccountId and current: $currentAccountId is not the same\n"
+fi
+
+#Check genie api root
+print_blue "\nCHECKING GENIE API ROOT"
+expectedGenieRoot="https://www.topbuy.com.au/"
+currentGenieRoot=$(./gradlew -q printGenieApi -PflavorName=$flavorName -PbuildTypeAssemble=$buildTypeAssemble -PcountryName=$defaultCountry)
+if [ $expectedGenieRoot = "$currentGenieRoot" ]; then
+print_green "\nexpected: $expectedGenieRoot and current: $currentGenieRoot is the same\n"
+else
+print_red "\nexpected: $expectedGenieRoot and current: $currentGenieRoot is not the same\n"
+fi
+
+#Check currency code
+print_blue "\nCHECKING CURRENCY CODE"
+expectedCurrencyCode="AUD"
+currenctCurrencyCode=$(./gradlew -q printCurrencyCode -PflavorName=$flavorName -PbuildTypeAssemble=$buildTypeAssemble -PcountryName=$defaultCountry)
+if [ $expectedCurrencyCode = "$currenctCurrencyCode" ]; then
+print_green "\nexpected: $expectedCurrencyCode and current: $currenctCurrencyCode is the same\n"
+else
+print_red "\nexpected: $expectedCurrencyCode and current: $currenctCurrencyCode is not the same\n"
+fi
+
+# Check recaptcha
+print_blue "\nCHECKING RECAPTCHA KEY"
+expectedRecaptchaKey="6LehI6cUAAAAACrjaAGPQLQx1eomvLqrb0S_QxSi"
+currentRecaptchaKey=$(./gradlew -q printRecaptcha -PflavorName=$flavorName -PbuildTypeAssemble=$buildTypeAssemble)
+if [ $expectedRecaptchaKey = "$currentRecaptchaKey" ]; then
+print_green "\nexpected: $expectedRecaptchaKey and current: $currentRecaptchaKey is the same\n"
+else
+print_red "\nexpected: $expectedRecaptchaKey and current: $currentRecaptchaKey is not the same\n"
+fi
+
+#Copy APK to output folder
+cp "$PROJECT_DIR"app/build/outputs/apk/"$flavorName"/release/app-"$flavorName"-release.apk $OUTPUT_DIR
+print_blue "\n\n\n Finished Copying APK to output directory\n"
+
+print_yellow "\n\nFINISHED AUTOMATION\n"

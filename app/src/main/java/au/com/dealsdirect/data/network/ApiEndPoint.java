@@ -626,4 +626,9 @@ public final class ApiEndPoint {
         // This class is not publicly instantiable
     }
 
+
+    public static void main(String[] args){
+        System.out.println(LEGACY_API_VERSION);
+    }
+
 }
