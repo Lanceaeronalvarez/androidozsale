@@ -13,7 +13,6 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
-import androidx.multidex.BuildConfig;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -34,6 +33,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 
 public final class CommonUtils {
@@ -148,7 +148,7 @@ public final class CommonUtils {
         AdView adView = new AdView(activity);
         adView.setAdSize(AdSize.SMART_BANNER);
 
-        if (activity.getResources().getBoolean(R.bool.is_using_test_ads)) {
+        if (BuildConfig.DEBUG || BuildConfig.IS_TEST) {
             adView.setAdUnitId(activity.getResources().getString(R.string.admob_test_unit_id));
         } else {
             adView.setAdUnitId(unitId);
@@ -165,7 +165,7 @@ public final class CommonUtils {
         AdSize adSize = new AdSize(width, 90);
         adView.setAdSize(adSize);
 
-        if (activity.getResources().getBoolean(R.bool.is_using_test_ads)) {
+        if (BuildConfig.DEBUG || BuildConfig.IS_TEST) {
             adView.setAdUnitId(activity.getResources().getString(R.string.admob_test_unit_id));
         } else {
             adView.setAdUnitId(unitId);
