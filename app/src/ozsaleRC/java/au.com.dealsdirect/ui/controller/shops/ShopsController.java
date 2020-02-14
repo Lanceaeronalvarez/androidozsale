@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
@@ -49,7 +48,6 @@ import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
@@ -70,8 +68,7 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
  * dp Created by Admin on 6/6/17.
  */
 
-public class ShopsController extends BaseController implements ShopsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener,
-        ShopsListener{
+public class ShopsController extends BaseController implements ShopsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
 
     public static final String TAG = "ShopsController";
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
@@ -149,9 +146,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private boolean mIsChangeInProgress = false;
     private int currentBannerPosition = 0;
-    HorizontalScrollingBannerAdapter circleIndicatorAdapter = null;
-    List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
-    int previousPosition = 0;
 
     @Override
     protected void onAttach(@NonNull View view) {
@@ -373,8 +367,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                     mActivity,
                     mPresenter,
                     sales,
-                    orientation,
-                    this);
+                    orientation);
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         } else {
             mBannersAdapter.setupDimensions(orientation);
@@ -557,7 +550,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void showSlidingBanners(GetBannerResponse getBannerResponses) {
         HorizontalScrollingBannerAdapter adapter = null;
-        slidingBanners.clear();
+        List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
 
         if (getBannerResponses != null) {
             List<GetBannerResponse.Group> groups = getBannerResponses.getGroups();
@@ -569,15 +562,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 }
             }
             if (!slidingBanners.isEmpty()) {
-                adapter = new HorizontalScrollingBannerAdapter(mActivity, 1, 0);
+                adapter = new HorizontalScrollingBannerAdapter(mActivity);
                 adapter.setDataSource(slidingBanners);
-
-                circleIndicatorAdapter = new HorizontalScrollingBannerAdapter(mActivity, 2, 0);
-                circleIndicatorAdapter.setIndicatorSource(slidingBanners);
             }
         }
         mBannersAdapter.setSlidingBannersAdapter(adapter);
-        mBannersAdapter.setCircleIndicatorAdapter(circleIndicatorAdapter);
     }
 
     @Override
@@ -602,7 +591,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 }
             }
             if (!sponsoredBanners.isEmpty()) {
-                adapter = new HorizontalScrollingBannerAdapter(mActivity, 1, 0);
+                adapter = new HorizontalScrollingBannerAdapter(mActivity);
                 adapter.setDataSource(sponsoredBanners);
             }
         }
@@ -1018,10 +1007,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         super.onTabSwitch(intoThisView);
         if (!intoThisView) {
             mBannersAdapter.stopSlidingBanner();
-        } else {
-            circleIndicatorAdapter = new HorizontalScrollingBannerAdapter(mActivity, 2, currentBannerPosition);
-            circleIndicatorAdapter.setIndicatorSource(slidingBanners);
-            mBannersAdapter.setCircleIndicatorAdapter(circleIndicatorAdapter);
         }
     }
 
@@ -1034,10 +1019,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         super.onOrientationChanged(newConfiguration);
         resetBannerLayout();
         mBannersAdapter.stopSlidingBanner();
-        circleIndicatorAdapter = new HorizontalScrollingBannerAdapter(mActivity, 2, currentBannerPosition);
-        circleIndicatorAdapter.setIndicatorSource(slidingBanners);
-        mBannersAdapter.setCircleIndicatorAdapter(circleIndicatorAdapter);
-
     }
 
     private void resetBannerLayout() {
@@ -1110,72 +1091,4 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSlidingBanners();
         loadSponsoredBanners();
     }
-
-    @Override
-    public void updateIndicatorPosition(int position, RecyclerView recyclerView) {
-
-        BannersAdapter.HorizontalRecyclerViewHolder vhShopRecyclerView = (BannersAdapter.HorizontalRecyclerViewHolder) shopsControllerBannerRecyclerView.findViewHolderForLayoutPosition(1);
-
-        if (vhShopRecyclerView != null && mBannersAdapter.getSlidingBannersAdapter().getDataSource().size() != 0) {
-
-            currentBannerPosition = currentBannerPosition + 1;
-            if (currentBannerPosition > (mBannersAdapter.getSlidingBannersAdapter().getDataSource().size() - 1)) {
-                currentBannerPosition = 0;
-            }
-
-            if (recyclerView != null) {
-                HorizontalScrollingBannerAdapter.ViewHolder view = (HorizontalScrollingBannerAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(currentBannerPosition);
-
-                if (view != null) {
-
-                    view.circleIndicatorImage.setImageResource(R.drawable.circle_indicator_active);
-
-                    previousPosition = (currentBannerPosition - 1) == -1 ? (mBannersAdapter.getSlidingBannersAdapter().getDataSource().size() - 1) : (currentBannerPosition - 1);
-                    HorizontalScrollingBannerAdapter.ViewHolder previousView = (HorizontalScrollingBannerAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(previousPosition);
-
-                    if (previousView != null) {
-                        previousView.circleIndicatorImage.setImageResource(R.drawable.circle_indicator_inactive);
-                    }
-
-                }
-            }
-
-        }
-
-    }
-
-    @Override
-    public void updatePreviousIndicatorPosition(RecyclerView recyclerView) {
-
-        BannersAdapter.HorizontalRecyclerViewHolder vhShopRecyclerView = (BannersAdapter.HorizontalRecyclerViewHolder) shopsControllerBannerRecyclerView.findViewHolderForLayoutPosition(1);
-
-        if (vhShopRecyclerView != null && mBannersAdapter.getSlidingBannersAdapter().getDataSource().size() != 0) {
-
-            previousPosition = currentBannerPosition - 1;
-
-            if (previousPosition < 0) {
-                previousPosition = (mBannersAdapter.getSlidingBannersAdapter().getDataSource().size() - 1);
-            }
-
-            if (recyclerView != null) {
-                HorizontalScrollingBannerAdapter.ViewHolder view = (HorizontalScrollingBannerAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(previousPosition);
-
-                if (view != null) {
-
-                    view.circleIndicatorImage.setImageResource(R.drawable.circle_indicator_active);
-
-                    HorizontalScrollingBannerAdapter.ViewHolder previousView = (HorizontalScrollingBannerAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(currentBannerPosition);
-
-                    if (previousView != null) {
-                        previousView.circleIndicatorImage.setImageResource(R.drawable.circle_indicator_inactive);
-                        currentBannerPosition = previousPosition;
-                    }
-                }
-
-            }
-
-        }
-
-    }
-
 }
