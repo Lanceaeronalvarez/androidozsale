@@ -768,11 +768,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             if (currentController instanceof CheckoutHostController || currentController instanceof AddPaymentController) {
                 Router router = currentController instanceof CheckoutHostController ? ((CheckoutHostController) currentController).getDisplayRouter() : getCurrentRouter();
-                if (router.getBackstackSize() > 2) {
-                    router.popToRoot();
-                } else {
-                    router.handleBack();
+                switch (router.getBackstackSize()) {
+                    case 1:
+                        ((BaseController) currentController).refreshContents();
+                        break;
+                    case 2:
+                        router.handleBack();
+                        break;
+                    default:
+                        router.popToRoot();
+                        break;
                 }
+
             } else {
                 currentController.getRouter().handleBack();
             }

@@ -323,14 +323,14 @@
                         </LinearLayout>
                     </RelativeLayout>
 
-                    <com.visa.checkout.widget.VisaCheckoutButton
+                    <Button
                         android:id="@+id/button_visa_checkout"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/default_button_height"
                         android:layout_marginTop="@dimen/margin_small"
                         android:layout_gravity="center"
-                        app:animation="true"
-                        android:enabled="false"/>
+                        android:background="@drawable/vco_button"
+                        app:animation="true"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"

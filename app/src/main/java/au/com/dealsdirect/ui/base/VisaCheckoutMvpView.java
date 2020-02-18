@@ -17,13 +17,13 @@ public interface VisaCheckoutMvpView extends MvpView {
 
     void onSetupVisaCheckoutNative(Profile profile);
 
-    void onSetupVisaCheckoutBraintree(String paymentToken, String paymentType);
+    void onSetupVisaCheckoutBraintree(String paymentToken, String paymentType, boolean isFromCheckout);
 
     void onStartVisaCheckoutIntent(PurchaseInfo purchaseInfo);
 
     void doAuthenticateLoginWithVisaCheckoutBraintree(VisaCheckoutNonce visaCheckoutNonce);
 
-    void onStartVisaCheckoutAuthorize(PurchaseInfo.PurchaseInfoBuilder purchaseInfoBuilder);
+    void initializeVisaCheckoutButton(PurchaseInfo.PurchaseInfoBuilder purchaseInfoBuilder, boolean fromCheckout);
 
     void showPasswordVerification(LoginVisa.RequestValue.Data requestData, boolean isAccountExists, String accountEmail);
 

@@ -68,4 +68,6 @@ public interface CheckoutMvpView extends MvpView {
     void showPromoCodeApplied(String promoCode, boolean isPromoCodeApplied);
 
     Router getDisplayRouter();
+
+    void initializeVisaCheckout();
 }

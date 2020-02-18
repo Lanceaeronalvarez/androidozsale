@@ -132,6 +132,9 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @BindView(R.id.partial_toolbar_left_view)
     TextView mLeftButton;
 
+    @BindView(R.id.button_visa_checkout)
+    Button mVcoButton;
+
     private String mRegisterMethod = NO_ACTION;
     private boolean isRegisterSuccess = false;
     private boolean hasClearedBackstack = false;
@@ -174,7 +177,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
         //mPresenter.loadSample(new SampleRequest());
 
         mToolBarTitle.setText(getResources().getString(R.string.register_title));
-        mVisaCheckoutButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
+        mVcoButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
                 View.GONE);
 
         if (getResources().getBoolean(R.bool.is_ozsale_app)) {
@@ -194,7 +197,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
         mSignUpButton.setOnClickListener(v -> onSignUpClicked());
 
         if (mVcoPresenter.isVisaCheckoutEnabled()) {
-            mVcoPresenter.setupVisaCheckout();
+            mVcoPresenter.setupVisaCheckout(false);
         }
 
         if (mLegalitiesContainer != null) {
@@ -223,6 +226,10 @@ public class RegisterController extends VisaCheckoutController implements Regist
         if (mEmailsToggle != null && mPresenter.getGdprIsChecked(AppPreferencesHelper.CONSENT_EMAILS_CHECKED)) {
             mEmailsToggle.setCheckedTogglePosition(0);
         }
+
+        mVcoButton.setOnClickListener(action -> {
+            onVisaCheckoutButtonClicked();
+        });
     }
 
     @Override
@@ -232,14 +239,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
             AppLogger.d("VC_onActivityResult", "Result got back from Visa Checkout SDK");
             String msg = "";
 
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                VisaPaymentSummary visaPaymentSummary = data.getParcelableExtra(VisaCheckoutSdk.INTENT_PAYMENT_SUMMARY);
-                if (visaPaymentSummary != null) {
-                    // Successful VCO
-                    showLoading();
-                    mVcoPresenter.authenticateLoginWithVisaCheckoutNative(visaPaymentSummary);
-                }
-            } else if (resultCode == Activity.RESULT_CANCELED) {
+            if (resultCode == Activity.RESULT_CANCELED) {
                 msg = "User Canceled, Result Code : " + resultCode;
             } else if (resultCode == VisaCheckoutSdk.ResultCode.RESULT_SDK_NOT_INITIALIZED) {
                 msg = "Sdk not initialized  failed, Result Code : " + resultCode;
@@ -371,6 +371,10 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @Override
     public void onVisaCheckoutButtonClicked() {
         mRegisterMethod = VCO;
+
+        if (isProcessingVco) {
+            isProcessingVco = false;
+        }
 
         if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
                 (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {

@@ -140,6 +140,14 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
+    public void refreshContents() {
+        super.refreshContents();
+        if (mCheckoutDetailView != null) {
+           loadCart();
+        }
+    }
+
+    @Override
     public boolean handleBack() {
         if (mCheckoutDetailRouter.getBackstackSize() == 1) {
             mActivity.getHomeController().goBackToHomePage();
@@ -290,6 +298,11 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     public Router getDisplayRouter() {
         return mCheckoutDetailRouter;
+    }
+
+    @Override
+    public void initializeVisaCheckout() {
+
     }
 
     private void showNoCartItemsLayout() {

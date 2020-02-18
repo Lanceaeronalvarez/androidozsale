@@ -92,8 +92,8 @@ ext {
     flowLayoutVersion = '1.0.3'
     recyclerViewPagerVersion = 'v1.1.1'
 
-    braintreeVersion = '3.7.2'
-    facebookVersion = '4.28.0'
+    braintreeVersion = '3.8.0'
+    facebookVersion = '5.15.3'
 
     gcmVersion = '16.1.0'
     crystalRangeSeekbarVersion = '1.1.1'

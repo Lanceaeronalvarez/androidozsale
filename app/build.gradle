@@ -950,9 +950,9 @@ dependencies {
     implementation 'com.loopj.android:android-async-http:1.4.9'
 
     //VISA CHECKOUT
-    // Visa checkout
-    implementation 'com.braintreepayments.api:visa-checkout:1.0.0'
-    implementation(name: 'visacheckout-android-sdk-5.5.2', ext: 'aar')
+    implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
+    implementation(group: 'com.visa.checkout', name: 'visacheckout-android-sdk', version: '6.6.1', ext: 'aar')
+
     implementation 'com.squareup.okio:okio:1.13.0'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
     implementation group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'

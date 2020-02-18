@@ -7,16 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 
 import com.braintreepayments.api.VisaCheckout;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.braintreepayments.api.models.VisaCheckoutNonce;
+import com.visa.checkout.CheckoutButton;
+import com.visa.checkout.ManualCheckoutSession;
 import com.visa.checkout.Profile;
 import com.visa.checkout.PurchaseInfo;
 import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaCheckoutSdkInitListener;
+import com.visa.checkout.VisaPaymentSummary;
 import com.visa.checkout.widget.VisaCheckoutButton;
+
+import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
@@ -29,6 +35,7 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ViewUtils;
 
@@ -46,13 +53,17 @@ public abstract class VisaCheckoutController extends BaseController implements V
     @Inject
     protected VisaCheckoutMvpPresenter<VisaCheckoutMvpView> mVcoPresenter;
 
-    protected VisaCheckoutButton mVisaCheckoutButton;
+    protected Button mVcoButton;
 
     private ControllerComponent mControllerComponent;
 
     private ViewGroup mVisaCheckoutBtnParent;
 
     private ViewTreeObserver.OnGlobalLayoutListener mVisaCheckoutOnGlobalLayoutListener;
+
+    private Profile mProfile;
+
+    public boolean isProcessingVco = false;
 
     @NonNull
     @Override
@@ -69,16 +80,7 @@ public abstract class VisaCheckoutController extends BaseController implements V
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
-        mVisaCheckoutButton = (VisaCheckoutButton) view.findViewById(R.id.button_visa_checkout);
-        if (mVisaCheckoutButton != null) {
-            mVisaCheckoutBtnParent = ((ViewGroup) mVisaCheckoutButton.getParent());
-            mVisaCheckoutButton.setCheckoutListener(new VisaCheckoutButton.CheckoutWithVisaListener() {
-                @Override
-                public void onClick() {
-                    onVisaCheckoutButtonClicked();
-                }
-            });
-        }
+        mVcoButton = (Button) view.findViewById(R.id.button_visa_checkout);
     }
 
     @Override
@@ -87,27 +89,6 @@ public abstract class VisaCheckoutController extends BaseController implements V
 
 //      Reattach presenter, global layout listeners
         mVcoPresenter.onAttach(this);
-
-//        Commented 07/10/2018 - still experiencing weird issues in tablet. abandoned resizing it for the moment for tablet.
-//        This logic is only done on phones.
-        if (mVisaCheckoutButton != null && !mVcoPresenter.isTablet()) {
-            mVisaCheckoutOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    int width = (int) ViewUtils.pxToDp(((ViewGroup) mVisaCheckoutButton.getParent()).getWidth());
-                    if (width != 0) {
-                        mVisaCheckoutButton.setButtonWidth(width);
-                        mVisaCheckoutButton.invalidate();
-                        mVisaCheckoutButton.postDelayed(()->{
-                            mVisaCheckoutButton.requestLayout();
-                            mVisaCheckoutBtnParent.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        },1000);
-                    }
-                }
-            };
-
-            mVisaCheckoutBtnParent.getViewTreeObserver().addOnGlobalLayoutListener(mVisaCheckoutOnGlobalLayoutListener);
-        }
     }
 
     @Override
@@ -123,15 +104,15 @@ public abstract class VisaCheckoutController extends BaseController implements V
 
                 AppLogger.d("VC_Init", "Code:" + code + "  Message:" + message);
 
-                if (mVisaCheckoutButton != null) {
+                if (mVcoButton != null) {
                     switch (code) {
                         case VisaCheckoutSdk.Status.SUCCESS:
                         case VisaCheckoutSdk.Status.SDK_PAUSED:
                         case VisaCheckoutSdk.Status.SDK_RESUMED:
-                            mVisaCheckoutButton.setEnabled(true);
+                            mVcoButton.setEnabled(true);
                             break;
                         default:
-                            mVisaCheckoutButton.setEnabled(false);
+                            mVcoButton.setEnabled(false);
                             break;
                     }
                 }
@@ -142,10 +123,11 @@ public abstract class VisaCheckoutController extends BaseController implements V
     @Override
     public void onSetupVisaCheckoutNative(Profile profile) {
         initSdk(profile);
+        mProfile = profile;
     }
 
     @Override
-    public void onSetupVisaCheckoutBraintree(String paymentToken, String paymentType) {
+    public void onSetupVisaCheckoutBraintree(String paymentToken, String paymentType, boolean isFromCheckout) {
         initializeBrainTree(paymentToken, paymentType);
 
         if (mActivity.getBraintreeFragment() != null) {
@@ -155,6 +137,9 @@ public abstract class VisaCheckoutController extends BaseController implements V
 
                     // On success of fetching of profile builder, initialize visa sdk
                     initSdk(profileBuilder.build());
+
+                    profileBuilder.setDisplayName(mActivity.getResources().getString(R.string.app_name));
+                    mProfile = profileBuilder.build();
                 }
             });
         }
@@ -168,9 +153,58 @@ public abstract class VisaCheckoutController extends BaseController implements V
         startActivityForResult(intent, BraintreeRequestCodes.VISA_CHECKOUT);
     }
 
-    @Override
-    public void onStartVisaCheckoutAuthorize(PurchaseInfo.PurchaseInfoBuilder purchaseInfoBuilder) {
-        VisaCheckout.authorize(mActivity.getBraintreeFragment(), purchaseInfoBuilder);
+    public void initializeVisaCheckoutButton(PurchaseInfo.PurchaseInfoBuilder purchaseInfoBuilder,
+                                             boolean fromCheckout) {
+
+        if (mProfile == null && mActivity.getBraintreeFragment() != null) {
+            VisaCheckout.createProfileBuilder(mActivity.getBraintreeFragment(), new BraintreeResponseListener<Profile.ProfileBuilder>() {
+                @Override
+                public void onResponse(Profile.ProfileBuilder profileBuilder) {
+
+                    // On success of fetching of profile builder, initialize visa sdk
+                    initSdk(profileBuilder.build());
+
+                    profileBuilder.setDisplayName(mActivity.getResources().getString(R.string.app_name));
+                    mProfile = profileBuilder.build();
+
+                }
+            });
+        }
+
+        VisaCheckoutSdk.initManualCheckoutSession(mActivity, mProfile, purchaseInfoBuilder.build(),
+                new ManualCheckoutSession() {
+                    @Override
+                    public void onReady(ManualCheckoutLaunchHandler manualCheckoutLaunchHandler) {
+
+                        if (isProcessingVco) {
+                            return;
+                        }
+
+                        isProcessingVco = true;
+                        manualCheckoutLaunchHandler.launch();
+                    }
+
+                    @Override
+                    public void onResult(VisaPaymentSummary visaPaymentSummary) {
+                        switch(visaPaymentSummary.getStatusName()) {
+                            case VisaPaymentSummary.PAYMENT_CANCEL:
+                                // The customer canceled the Visa Checkout flow
+                                break;
+                            case VisaPaymentSummary.PAYMENT_SUCCESS:
+                                VisaCheckout.tokenize(mActivity.getBraintreeFragment(), visaPaymentSummary);
+                                break;
+                            case VisaPaymentSummary.PAYMENT_ERROR:
+                                break;
+                            case VisaPaymentSummary.PAYMENT_FAILURE:
+                                break;
+                            default:
+                                // There was an issue processing Visa Checkout
+                                break;
+                        }
+
+                    }
+                });
+
     }
 
     @Override

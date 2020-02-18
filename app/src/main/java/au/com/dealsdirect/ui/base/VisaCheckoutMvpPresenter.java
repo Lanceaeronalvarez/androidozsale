@@ -13,7 +13,7 @@ import au.com.dealsdirect.data.network.model.login.LoginVisa;
 
 public interface VisaCheckoutMvpPresenter<V extends VisaCheckoutMvpView> extends MvpPresenter<V>{
 
-    void setupVisaCheckout();
+    void setupVisaCheckout(boolean isFromCheckout);
 
     void loginWithVisaCheckout();
 

@@ -243,8 +243,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         public void setCircleIndicatorItemCount(int count) {
-            getCircleIndicatorAdapter().setItemCount(count);
-            getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition());
+            if (getCircleIndicatorAdapter() != null) {
+                getCircleIndicatorAdapter().setItemCount(count);
+                getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition());
+            }
         }
 
         public HorizontalCircleIndicatorAdapter getCircleIndicatorAdapter() {
@@ -577,15 +579,17 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 setupSlidingBannersDimensions();
 
 
-                horizontalRecyclerViewHolder.recyclerView.setAdapter(mSlidingBannersAdapter);
+                if (horizontalRecyclerViewHolder != null) {
+                    horizontalRecyclerViewHolder.recyclerView.setAdapter(mSlidingBannersAdapter);
 
-                horizontalRecyclerViewHolder.circleIndicatorRecyclerView.setVisibility(View.VISIBLE);
+                    horizontalRecyclerViewHolder.circleIndicatorRecyclerView.setVisibility(View.VISIBLE);
 
-                if (mSlidingBannersAdapter != null) {
-                    mSlidingBannersAdapter.resetReyclerViewPosition();
-                    horizontalRecyclerViewHolder.setCircleIndicatorItemCount(mSlidingBannersAdapter.getDataSource().size());
-                } else {
-                    horizontalRecyclerViewHolder.setCircleIndicatorItemCount(0);
+                    if (mSlidingBannersAdapter != null) {
+                        mSlidingBannersAdapter.resetReyclerViewPosition();
+                        horizontalRecyclerViewHolder.setCircleIndicatorItemCount(mSlidingBannersAdapter.getDataSource().size());
+                    } else {
+                        horizontalRecyclerViewHolder.setCircleIndicatorItemCount(0);
+                    }
                 }
 
                 break;
