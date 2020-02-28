@@ -250,7 +250,11 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         public HorizontalCircleIndicatorAdapter getCircleIndicatorAdapter() {
-            return (HorizontalCircleIndicatorAdapter) circleIndicatorRecyclerView.getAdapter();
+            if (circleIndicatorRecyclerView != null) {
+                return (HorizontalCircleIndicatorAdapter) circleIndicatorRecyclerView.getAdapter();
+            } else {
+                return null;
+            }
         }
 
         private final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = () ->
@@ -354,7 +358,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 } else {
                     recyclerView.scrollBy(displacement, 0);
                 }
-                getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition(displacement));
+
+                if (getCircleIndicatorAdapter() != null) {
+                    getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition(displacement));
+                }
             };
             mainHandler.post(myRunnable);
         }
@@ -378,7 +385,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 } else {
                     recyclerView.scrollBy(displacement, 0);
                 }
-                getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition(displacement));
+
+                if (getCircleIndicatorAdapter() != null) {
+                    getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition(displacement));
+                }
             };
             mainHandler.post(myRunnable);
         }
