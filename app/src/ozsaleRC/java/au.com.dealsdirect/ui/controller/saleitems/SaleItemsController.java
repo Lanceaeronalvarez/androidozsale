@@ -512,11 +512,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     new TimerTask() {
                         @Override
                         public void run() {
-                            mActivity.runOnUiThread(() -> showLoading());
+                            mActivity.runOnUiThread(SaleItemsController.this::showLoading);
                             if (mSearchFilterMvpView != null) {
-                                mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(),
-                                        0,
-                                        mChipFilters));
+                                mActivity.runOnUiThread(() ->
+                                        mPresenter.loadSaleItems(
+                                                createSaleItemsRequest(
+                                                        mSearchFilterMvpView.getCategoryKeys(),
+                                                        0,
+                                                        mChipFilters))
+                                );
                             }
                         }
                     }, count >= before ? SEARCH_DELAY_MS : DELETE_DELAY_MS);
