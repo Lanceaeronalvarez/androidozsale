@@ -491,7 +491,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mGenieFilters = "";
 
     private TextWatcher mTextWatcher = new TextWatcher() {
-        private Timer timer = new Timer();
+        private Timer mTextWatcherTimer = null;
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -506,12 +506,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mIsSearch = true;
             hasLoggedSearch = false;
 
-            timer.cancel();
-            timer = new Timer();
-            timer.schedule(
+            if (mTextWatcherTimer != null) {
+                mTextWatcherTimer.cancel();
+            }
+
+            mTextWatcherTimer = new Timer();
+            mTextWatcherTimer.schedule(
                     new TimerTask() {
                         @Override
                         public void run() {
+                            if (!isViewAttached()) {
+                                return;
+                            }
                             mActivity.runOnUiThread(SaleItemsController.this::showLoading);
                             if (mSearchFilterMvpView != null) {
                                 mActivity.runOnUiThread(() ->
