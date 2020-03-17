@@ -519,7 +519,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
         if(!isViewAttached()) return;
 
         mIsSearchFilterControllerActive = false;
-        mFacetsFrame.setVisibility(View.INVISIBLE);
+        if (mFacetsFrame != null) {
+            mFacetsFrame.setVisibility(View.INVISIBLE);
+        }
         mPresenter.facetsClosed();
     }
 
@@ -531,13 +533,15 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     private void setupPriceFacet() {
         mOrigMaxValue = mPresenter.getSearchMaxPrice();
-        mOrigMinValue = mSeekbar.getSelectedMinValue().intValue();
+        mOrigMinValue = mSeekbar != null ? mSeekbar.getSelectedMinValue().intValue() : 0;
 
         if (mOrigMaxValue == mOrigMinValue) {
             mOrigMaxValue = DEFAULT_PRICE_THRESHOLD;
         }
 
-        mSeekbar.setMaxValue(mOrigMaxValue);
+        if (mSeekbar != null) {
+            mSeekbar.setMaxValue(mOrigMaxValue);
+        }
 
         mClearText.setOnClickListener((v) -> {
             if (!mHasSeekbarReset) {
@@ -555,52 +559,52 @@ public class SearchFilterController extends BaseController implements SearchFilt
             }
         });
 
-        mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
-        mSeekbar.setMaxPriceMovingLayout(mMaxPriceMovingLayout);
-        mSeekbar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
-            minPrice = minValue.intValue();
-            maxPrice = maxValue.intValue();
-            mMinPrice.setText(Settings.getSelectedCountry().currencySign + minValue.intValue());
-            mMaxPrice.setText(Settings.getSelectedCountry().currencySign + maxValue.intValue());
-            if (maxValue.intValue() == mOrigMaxValue) {
-                mMaxPrice.setText(Settings.getSelectedCountry().currencySign + maxValue.intValue() + "+");
-            }
-        });
+        if (mSeekbar != null) {
+            mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
+            mSeekbar.setMaxPriceMovingLayout(mMaxPriceMovingLayout);
+            mSeekbar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
+                minPrice = minValue.intValue();
+                maxPrice = maxValue.intValue();
+                mMinPrice.setText(Settings.getSelectedCountry().currencySign + minValue.intValue());
+                mMaxPrice.setText(Settings.getSelectedCountry().currencySign + maxValue.intValue());
+                if (maxValue.intValue() == mOrigMaxValue) {
+                    mMaxPrice.setText(Settings.getSelectedCountry().currencySign + maxValue.intValue() + "+");
+                }
+            });
 
-        mSeekbar.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
-            @Override
-            public void finalValue(Number minValue, Number maxValue) {
+            mSeekbar.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
+                @Override
+                public void finalValue(Number minValue, Number maxValue) {
 
-                //remove previously selected price range
-                for (SearchChipModel chip : mSearchItemsList) {
-                    if (chip.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
-                        mSearchItemsList.remove(chip);
-                        break;
+                    //remove previously selected price range
+                    for (SearchChipModel chip : mSearchItemsList) {
+                        if (chip.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
+                            mSearchItemsList.remove(chip);
+                            break;
+                        }
                     }
+
+                    //add newly selected price range
+                    if (mOrigMinValue != minValue.intValue() || mOrigMaxValue != maxValue.intValue()) {
+                        SearchChipModel priceChip = new SearchChipModel(BundleKeys.PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(), -1);
+                        priceChip.setMaxValue(maxValue.intValue());
+                        priceChip.setMinValue(minValue.intValue());
+                        mSearchItemsList.add(priceChip);
+                    }
+
+                    mHasSeekbarReset = false;
+
+                    mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList,mBrandList, minPrice, maxPrice, mSizeList);
+
                 }
+            });
 
-                //add newly selected price range
-                if (mOrigMinValue != minValue.intValue() || mOrigMaxValue != maxValue.intValue()) {
-                    SearchChipModel priceChip = new SearchChipModel(BundleKeys.PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(), -1);
-                    priceChip.setMaxValue(maxValue.intValue());
-                    priceChip.setMinValue(minValue.intValue());
-                    mSearchItemsList.add(priceChip);
-                }
+            SearchChipModel priceChip = findPriceChip();
 
-                mHasSeekbarReset = false;
-
-                mPresenter.requestUpdate(mCategoryKeys, mSearchItemsList,mBrandList, minPrice, maxPrice, mSizeList);
-
+            if (priceChip != null) {
+                mSeekbar.setMinStartValue(priceChip.getMinValue()).apply();
+                mSeekbar.setMaxStartValue(priceChip.getMaxValue()).apply();
             }
-        });
-
-        SearchChipModel priceChip = findPriceChip();
-
-        if (priceChip != null) {
-            mSeekbar.setMinStartValue(priceChip.getMinValue()).apply();
-            mSeekbar.setMaxStartValue(priceChip.getMaxValue()).apply();
-
-
         }
     }
 
@@ -635,11 +639,13 @@ public class SearchFilterController extends BaseController implements SearchFilt
     @Override
     public void showFacetItem(int position) {
         hideKeyboard();
-        mFacetsFrame.setVisibility(View.VISIBLE);
+        if (mFacetsFrame != null) {
+            mFacetsFrame.setVisibility(View.VISIBLE);
+        }
 
-        if (getFacetFilterType(position) != BundleKeys.PRICE_FACETFILTER_NAME) { //only do this logic if facet clicked != price
+        if (!getFacetFilterType(position).equals(BundleKeys.PRICE_FACETFILTER_NAME)) { //only do this logic if facet clicked != price
 
-            if (getFacetFilterType(position) == BundleKeys.CATEGORY_TREE_FACET) {
+            if (getFacetFilterType(position).equals(BundleKeys.CATEGORY_TREE_FACET)) {
 
                 mFilterCategoriesRecyclerView.setVisibility(View.VISIBLE);
                 mFacetItemsRecyclerView.setVisibility(View.GONE);
@@ -870,7 +876,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public boolean getIsFacetsVisible() {
-        return mFacetsFrame.getVisibility() == View.VISIBLE;
+        return mFacetsFrame != null && mFacetsFrame.getVisibility() == View.VISIBLE;
     }
 
     @Override

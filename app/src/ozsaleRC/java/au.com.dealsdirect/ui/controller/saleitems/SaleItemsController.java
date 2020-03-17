@@ -687,7 +687,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
 
             if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) {
-                mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT);
+                mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT, "");
             }
             mTitle = savedInstanceState.getString(BundleKeys.SALEITEMS_TITLE);
         } else {
@@ -1261,7 +1261,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         reselectTabIfFacetsAlreadyVisible();
 
-        if ((!hasLoggedSearch && mGenieQuery.equalsIgnoreCase(mSearchQuery) && !mGenieQuery.isEmpty()
+        if ((!hasLoggedSearch && mGenieQuery != null && !mGenieQuery.isEmpty() &&
+                mGenieQuery.equalsIgnoreCase(mSearchQuery)
                 && isKeyboardHidden) || isFacetClicked) {
             logSearchEvent();
             hasLoggedSearch = true;
