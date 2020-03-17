@@ -1,10 +1,13 @@
 package au.com.dealsdirect.ui.base;
 
 
+import androidx.core.util.Pair;
+
 import com.androidnetworking.error.ANError;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,6 +34,9 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     private final SchedulerProvider mSchedulerProvider;
     private final CompositeDisposable mCompositeDisposable;
 
+    private List<Pair<Object, ApiCallback>> successHandlers = new LinkedList<>();
+    private List<Pair<Throwable, ApiCallback>> failureHandlers = new LinkedList<>();
+
     private boolean cancelled;
 
     private V mMvpView;
@@ -49,6 +55,8 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     public void onAttach(V mvpView) {
         mMvpView = mvpView;
         cancelled = false;
+        executeAllQueuedHandlers();
+        clearQueuedHandlers();
     }
 
     @Override
@@ -135,22 +143,9 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                     public void accept(Object response) throws Exception {
 
                         if (mMvpView != null && mMvpView.isViewAttached()) {
-
-                            mMvpView.hideNoNetworkLayout();
-                            mMvpView.hideLoading();
-
-                            if (response instanceof List && !cancelled) {
-                                callback.onSuccess((List) response);
-                            } else if (response != null && !cancelled) {
-                                callback.onSuccess(response);
-                            } else if (!cancelled) {
-                                callback.onSuccess();
-                            }
-
-                            if (mMvpView instanceof BasePullToRefreshController) {
-                                mMvpView.hideNoNetworkLayout();
-                            }
-
+                            handleApiCallSuccess(response, callback);
+                        } else {
+                            queueSuccessResponse(response, callback);
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -158,25 +153,9 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                     public void accept(Throwable throwable) throws Exception {
 
                         if (mMvpView != null && mMvpView.isViewAttached()) {
-
-                            mMvpView.hideLoading();
-
-                            if (throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException) {
-                                mMvpView.showNoNetworkLayout();
-                            }
-
-                            mMvpView.onError(throwable.getMessage());
-
-                            if (!cancelled) {
-                                callback.onFailure(throwable);
-                            }
-
-                            // handle load accounts error here
-                            if (throwable instanceof ANError) {
-                                ANError anError = (ANError) throwable;
-                                handleApiError(anError);
-                            }
-
+                            handleApiCallFailure(throwable, callback);
+                        } else {
+                            queueFailureResponse(throwable, callback);
                         }
                     }
                 });
@@ -184,6 +163,65 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
         getCompositeDisposable().add(disposable);
 
         return disposable;
+    }
+
+    private void handleApiCallSuccess(Object response, ApiCallback callback) {
+        mMvpView.hideNoNetworkLayout();
+        mMvpView.hideLoading();
+
+        if (response instanceof List && !cancelled) {
+            callback.onSuccess((List) response);
+        } else if (response != null && !cancelled) {
+            callback.onSuccess(response);
+        } else if (!cancelled) {
+            callback.onSuccess();
+        }
+
+        if (mMvpView instanceof BasePullToRefreshController) {
+            mMvpView.hideNoNetworkLayout();
+        }
+    }
+
+    private void handleApiCallFailure(Throwable throwable, ApiCallback callback) {
+        mMvpView.hideLoading();
+
+        if (throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException) {
+            mMvpView.showNoNetworkLayout();
+        }
+
+        mMvpView.onError(throwable.getMessage());
+
+        if (!cancelled) {
+            callback.onFailure(throwable);
+        }
+
+        // handle load accounts error here
+        if (throwable instanceof ANError) {
+            ANError anError = (ANError) throwable;
+            handleApiError(anError);
+        }
+    }
+
+    private void queueSuccessResponse(Object response, ApiCallback callback) {
+        successHandlers.add(new Pair<>(response, callback));
+    }
+
+    private void queueFailureResponse(Throwable throwable, ApiCallback callback) {
+        failureHandlers.add(new Pair<>(throwable, callback));
+    }
+
+    private void executeAllQueuedHandlers() {
+        for (Pair<Object, ApiCallback> successHandler : successHandlers) {
+            handleApiCallSuccess(successHandler.first, successHandler.second);
+        }
+        for (Pair<Throwable, ApiCallback> failureHandler : failureHandlers) {
+            handleApiCallFailure(failureHandler.first, failureHandler.second);
+        }
+    }
+
+    private void clearQueuedHandlers() {
+        successHandlers.clear();
+        failureHandlers.clear();
     }
 
     public static class MvpViewNotAttachedException extends RuntimeException {
