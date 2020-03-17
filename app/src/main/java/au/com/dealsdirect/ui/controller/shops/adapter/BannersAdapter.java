@@ -966,6 +966,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mSales.clear();
         mGroups.clear();
         if (recyclerView != null && !recyclerView.isComputingLayout()) {
+            recyclerView.getRecycledViewPool().clear();
             notifyDataSetChanged();
         }
     }
@@ -1012,6 +1013,9 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int index = getPositionOfSlidingBanners();
             mSlidingBannersAdapter.setOnBannerTappedListener(null);
             mSlidingBannersAdapter = null;
+            if (recyclerView != null) {
+                recyclerView.getRecycledViewPool().clear();
+            }
             notifyDataSetChanged();
         } else {
             mSlidingBannersAdapter = slidingBannersAdapter;
@@ -1019,6 +1023,9 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 mSlidingBannersAdapter
                         .setOnBannerTappedListener(banner -> BannersAdapter.this
                                 .onBannerTapped(banner, -1, ""));
+            }
+            if (recyclerView != null) {
+                recyclerView.getRecycledViewPool().clear();
             }
             notifyDataSetChanged();
         }
@@ -1034,9 +1041,15 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (willDelete) {
             int index = getPositionOfCategoryBanners();
             mCategoryBannersAdapter = null;
+            if (recyclerView != null) {
+                recyclerView.getRecycledViewPool().clear();
+            }
             notifyDataSetChanged();
         } else {
             mCategoryBannersAdapter = categoryBannersAdapter;
+            if (recyclerView != null) {
+                recyclerView.getRecycledViewPool().clear();
+            }
             notifyDataSetChanged();
         }
     }
@@ -1052,12 +1065,18 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int index = getPositionOfSponsoredBanners();
             mSponsoredBannersAdapter.setOnBannerTappedListener(null);
             mSponsoredBannersAdapter = null;
+            if (recyclerView != null) {
+                recyclerView.getRecycledViewPool().clear();
+            }
             notifyDataSetChanged();
         } else {
             mSponsoredBannersAdapter = sponsoredBannersAdapter;
             if (mSponsoredBannersAdapter != null) {
                 mSponsoredBannersAdapter.setOnBannerTappedListener(banner -> BannersAdapter.this
                         .onBannerTapped(banner, -1, ""));
+            }
+            if (recyclerView != null) {
+                recyclerView.getRecycledViewPool().clear();
             }
             notifyDataSetChanged();
         }

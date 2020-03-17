@@ -377,7 +377,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 mActivity,
                 mBannersAdapter.getNumberOfColumns(),
                 RecyclerView.VERTICAL,
-                false);
+                false) {
+            @Override
+            public boolean supportsPredictiveItemAnimations() {
+                return false;
+            }
+        };
 
         mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
