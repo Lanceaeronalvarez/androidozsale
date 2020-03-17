@@ -109,6 +109,7 @@ import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.orders.orders.BottomSheetOrderDialog;
+import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.BottomSheetSizesDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
@@ -556,9 +557,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
         HomeController homeController = getMainController().getHomeController();
         Router currentRouter = homeController.getCurrentRouter();
-        Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
+        Controller currentController;
 
-        if (currentController instanceof VisaCheckoutController && paymentMethodNonce instanceof VisaCheckoutNonce) {
+        if (mPresenter.isTablet()) {
+            currentController = !isAuthorized() ? getCurrentController(getMainController().getHomeController().getPopUpHostRouter()) :
+                    getCurrentController(getMainController().getHomeController().getCheckoutRouter());
+        } else {
+            currentController = homeController.getCurrentControllerOnRouter(currentRouter);
+        }
+
+            if (currentController instanceof PopUpHostController) {
+                currentController = getCurrentController(
+                        ((PopUpHostController) currentController).getPopUpHostChildRouter());
+            } else if (currentController instanceof CheckoutHostController) {
+                currentController = getCurrentController(
+                        ((CheckoutHostController) currentController).getCheckoutDetailRouter());
+            }
+
+
+            if (currentController instanceof VisaCheckoutController && paymentMethodNonce instanceof VisaCheckoutNonce) {
             switch (getVisaCheckoutActionType()) {
                 case VisaCheckoutController.VISA_CHECKOUT_LOGIN:
                     ((VisaCheckoutController) currentController).doAuthenticateLoginWithVisaCheckoutBraintree((VisaCheckoutNonce) paymentMethodNonce);
@@ -1013,7 +1030,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public Router getAccountsRouter() {
         return mAccountsRouter;
     }
-
 
     public Router getWishlistRouter() {
         return mWishlistRouter;

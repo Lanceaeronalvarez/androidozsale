@@ -110,4 +110,8 @@ public class PopUpHostController extends BaseController implements PopUpHostMvpV
 
         return super.handleBack();
     }
+
+    public Router getPopUpHostChildRouter() {
+        return mPopUpHostChildRouter;
+    }
 }

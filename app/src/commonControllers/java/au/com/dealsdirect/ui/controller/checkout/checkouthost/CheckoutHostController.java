@@ -358,4 +358,8 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         getRouter().pushController(routerTransaction);
 
     }
+
+    public Router getCheckoutDetailRouter() {
+        return mCheckoutDetailRouter;
+    }
 }
