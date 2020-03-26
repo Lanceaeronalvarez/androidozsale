@@ -488,10 +488,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         return false;
     }
 
+    private final Runnable onClickLogoRunnable = () -> {
+        shopsControllerBannerRecyclerView.stopScroll();
+        shopsControllerBannerRecyclerView.scrollToPosition(0);
+    };
+
     @OnClick(R.id.partial_toolbar_logo)
     void onClickLogo() {
         shopsControllerBannerRecyclerView.smoothScrollToPosition(0);
-        shopsControllerBannerRecyclerView.postDelayed(() -> shopsControllerBannerRecyclerView.scrollToPosition(0), 500);
+        if (shopsControllerBannerRecyclerView.getHandler() != null) {
+            shopsControllerBannerRecyclerView.getHandler().removeCallbacks(onClickLogoRunnable);
+            shopsControllerBannerRecyclerView.getHandler().postDelayed(onClickLogoRunnable, 500);
+        }
     }
 
     @SuppressWarnings({"ConstantConditions", "deprecation"})

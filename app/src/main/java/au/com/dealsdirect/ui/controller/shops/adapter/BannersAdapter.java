@@ -61,7 +61,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private int mComputedHeight = -1;
     private List<GetBannerResponse.Group> mGroups;
-    private List<GetBannerResponse.Banner> mSales;
+    private final List<GetBannerResponse.Banner> mSales = new ArrayList<>();
+    ;
     private Activity mActivity;
     private ShopsMvpPresenter mPresenter;
     private RecyclerView recyclerView = null;
@@ -116,7 +117,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int orientation) {
 
         mGroups = sales;
-        mSales = new ArrayList<>();
         for (GetBannerResponse.Group group : sales) {
             mSales.addAll(group.getBanners());
         }
@@ -494,23 +494,30 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void replace(List<GetBannerResponse.Group> bannerResponses) {
-        mSales.clear();
+        synchronized (mSales) {
+            mSales.clear();
+            if (recyclerView != null && !recyclerView.isComputingLayout()) {
+                notifyDataSetChanged();
+            }
+        }
         addAll(bannerResponses);
     }
 
     public void addAll(List<GetBannerResponse.Group> bannerResponses) {
-        int previousCount = mSales.size();
+        synchronized (mSales) {
+            int previousCount = mSales.size();
 
-        for (GetBannerResponse.Group group : bannerResponses) {
-            mSales.addAll(group.getBanners());
-        }
+            for (GetBannerResponse.Group group : bannerResponses) {
+                mSales.addAll(group.getBanners());
+            }
 
-        if (!bannerResponses.isEmpty()) {
-            GetBannerResponse.Group bannerGroup = bannerResponses.get(bannerResponses.size() - 1);
-            mOffset = bannerGroup.getBanners().size();
-            mLastGroupType = bannerGroup.getType();
-            if (recyclerView != null && !recyclerView.isComputingLayout()) {
-                notifyItemRangeInserted(previousCount, mSales.size() - previousCount);
+            if (!bannerResponses.isEmpty()) {
+                GetBannerResponse.Group bannerGroup = bannerResponses.get(bannerResponses.size() - 1);
+                mOffset = bannerGroup.getBanners().size();
+                mLastGroupType = bannerGroup.getType();
+                if (recyclerView != null && !recyclerView.isComputingLayout()) {
+                    notifyItemRangeInserted(previousCount, mSales.size() - previousCount);
+                }
             }
         }
     }
@@ -627,59 +634,61 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
                 break;
             default:
-                GetBannerResponse.Banner item = mSales.get(position - getPositionOfNormalBanners());
-                if (item.getDescription() != null && !item.getDescription().isEmpty()) {
-                    bannerViewHolder.name.setVisibility(View.VISIBLE);
-                    bannerViewHolder.name.setText(item.getDescription());
-                } else {
-                    bannerViewHolder.name.setVisibility(View.GONE);
-                }
+                synchronized (mSales) {
+                    GetBannerResponse.Banner item = mSales.get(position - getPositionOfNormalBanners());
+                    if (item.getDescription() != null && !item.getDescription().isEmpty()) {
+                        bannerViewHolder.name.setVisibility(View.VISIBLE);
+                        bannerViewHolder.name.setText(item.getDescription());
+                    } else {
+                        bannerViewHolder.name.setVisibility(View.GONE);
+                    }
 
-                if (item.getBannerText() != null && !item.getBannerText().isEmpty()) {
-                    bannerViewHolder.discount.setVisibility(View.VISIBLE);
-                    bannerViewHolder.discount.setText(item.getBannerText());
-                } else {
-                    bannerViewHolder.discount.setVisibility(View.GONE);
-                }
+                    if (item.getBannerText() != null && !item.getBannerText().isEmpty()) {
+                        bannerViewHolder.discount.setVisibility(View.VISIBLE);
+                        bannerViewHolder.discount.setText(item.getBannerText());
+                    } else {
+                        bannerViewHolder.discount.setVisibility(View.GONE);
+                    }
 
-                if (item.getPercentOffText() != null &&
-                        item.getPercentOffText().length() > 0 &&
-                        bannerViewHolder.itemView.getContext().getResources().getBoolean(R.bool.is_dynamic_discount_banners_enabled)) {
-                    String percentOffValue = item.getPercentOffText().trim();
-                    String[] discountWordArray = percentOffValue.split(" ");
-                    percentOffValue = percentOffValue.replace(' ', '\n');
-                    int percentSymbolLength = 1;
-                    int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + discountWordArray[1].length() + percentSymbolLength;
+                    if (item.getPercentOffText() != null &&
+                            item.getPercentOffText().length() > 0 &&
+                            bannerViewHolder.itemView.getContext().getResources().getBoolean(R.bool.is_dynamic_discount_banners_enabled)) {
+                        String percentOffValue = item.getPercentOffText().trim();
+                        String[] discountWordArray = percentOffValue.split(" ");
+                        percentOffValue = percentOffValue.replace(' ', '\n');
+                        int percentSymbolLength = 1;
+                        int spannableStringEndParameter = SPANNABLE_STRING_START_INDEX + discountWordArray[1].length() + percentSymbolLength;
 
-                    SpannableString string = new SpannableString(percentOffValue);
-                    string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    bannerViewHolder.percentOff.setVisibility(View.VISIBLE);
-                    bannerViewHolder.percentOff.setText(string);
-                } else {
-                    bannerViewHolder.percentOff.setVisibility(View.GONE);
-                }
-
-
-                bannerViewHolder.deliveryImage.setVisibility(item.getFreeDelivery() ? View.VISIBLE : View.GONE);
-                String imgUrl;
-
-                imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), mWidth, mHeight);
+                        SpannableString string = new SpannableString(percentOffValue);
+                        string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        bannerViewHolder.percentOff.setVisibility(View.VISIBLE);
+                        bannerViewHolder.percentOff.setText(string);
+                    } else {
+                        bannerViewHolder.percentOff.setVisibility(View.GONE);
+                    }
 
 
-                ImageUtils.loadImage(imgUrl, bannerViewHolder.image);
+                    bannerViewHolder.deliveryImage.setVisibility(item.getFreeDelivery() ? View.VISIBLE : View.GONE);
+                    String imgUrl;
 
-                if (bannerViewHolder.subscription != null) {
-                    bannerViewHolder.subscription.dispose();
-                }
+                    imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), mWidth, mHeight);
 
-                if (item.getGroup().getIsClickable()) {
-                    bannerViewHolder.subscription = RxView.clicks(bannerViewHolder.layout)
-                            .throttleFirst(
-                                    THROTTLE_FIRST_WINDOW_DURATION,
-                                    TimeUnit.MILLISECONDS)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(action -> onBannerTapped(item, holder.getAdapterPosition(), imgUrl));
+
+                    ImageUtils.loadImage(imgUrl, bannerViewHolder.image);
+
+                    if (bannerViewHolder.subscription != null) {
+                        bannerViewHolder.subscription.dispose();
+                    }
+
+                    if (item.getGroup().getIsClickable()) {
+                        bannerViewHolder.subscription = RxView.clicks(bannerViewHolder.layout)
+                                .throttleFirst(
+                                        THROTTLE_FIRST_WINDOW_DURATION,
+                                        TimeUnit.MILLISECONDS)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(action -> onBannerTapped(item, holder.getAdapterPosition(), imgUrl));
+                    }
                 }
                 break;
         }
@@ -721,12 +730,14 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private String titleForHeader(int position) {
-        if (position == getPositionOfSponsoredBanners()) {
-            return mActivity.getResources().getString(R.string.sponsored);
-        } else if (position >= getPositionOfNormalBanners()) {
-            return position < getItemCount() ? mSales.get(position - getPositionOfNormalBanners()).getGroup().getTitle() : "";
+        synchronized (mSales) {
+            if (position == getPositionOfSponsoredBanners()) {
+                return mActivity.getResources().getString(R.string.sponsored);
+            } else if (position >= getPositionOfNormalBanners()) {
+                return position < getItemCount() ? mSales.get(position - getPositionOfNormalBanners()).getGroup().getTitle() : "";
+            }
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -770,7 +781,9 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return mSales.size() + getPositionOfNormalBanners();
+        synchronized (mSales) {
+            return mSales.size() + getPositionOfNormalBanners();
+        }
     }
 
     private boolean isViewTypeVisible(int viewType) {
@@ -834,8 +847,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public GetBannerResponse.Banner getItem(int position) {
-        int adjustedPos = position - getPositionOfNormalBanners();
-        return adjustedPos > 0 && adjustedPos < mSales.size() ? mSales.get(adjustedPos) : null;
+        synchronized (mSales) {
+            int adjustedPos = position - getPositionOfNormalBanners();
+            return adjustedPos > 0 && adjustedPos < mSales.size() ? mSales.get(adjustedPos) : null;
+        }
     }
 
     public List<GetBannerResponse.Group> getData() {
@@ -961,13 +976,15 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void clear() {
-        mLastGroupType = "";
-        mOffset = 0;
-        mSales.clear();
-        mGroups.clear();
-        if (recyclerView != null && !recyclerView.isComputingLayout()) {
-            recyclerView.getRecycledViewPool().clear();
-            notifyDataSetChanged();
+        synchronized (mSales) {
+            mLastGroupType = "";
+            mOffset = 0;
+            mSales.clear();
+            mGroups.clear();
+            if (recyclerView != null && !recyclerView.isComputingLayout()) {
+                recyclerView.getRecycledViewPool().clear();
+                notifyDataSetChanged();
+            }
         }
     }
 
