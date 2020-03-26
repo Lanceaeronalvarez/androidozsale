@@ -674,6 +674,10 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void onResetPriceRange() {
+        mHasSeekbarReset = true;
+        if (mSeekbar == null) {
+            return;
+        }
         mSeekbar.setMinStartValue(mOrigMinValue);
         mSeekbar.setMaxStartValue(mOrigMaxValue);
 
@@ -681,7 +685,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mSeekbar.setMinThumbPosition(0);
         mSeekbar.setMaxThumbPosition(1);
 
-        mHasSeekbarReset = true;
         mSeekbar.resetMovingLayoutVisibility();
     }
 
