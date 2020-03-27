@@ -337,16 +337,28 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void showMyAddressesController() {
+
+        ViewAddressController.Parameters.DisplayViewAddress parameters = new ViewAddressController.Parameters
+                .DisplayViewAddress(false, null, false, "");
+
+        ViewAddressController controller = ViewAddressController.newInstance(parameters);
+
         if (!mPresenter.isTablet()) {
-            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.VIEW_ADDRESSES, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+            getDisplayRouter().pushController(RouterTransaction.with(controller)
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
         } else {
-            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.VIEW_ADDRESSES, RouterTransaction.with(new ViewAddressController(false, null, false, "")));
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.VIEW_ADDRESSES, RouterTransaction.with(controller));
         }
     }
 
     @Override
     public void showChangeDeliveryAddressController(boolean calledFromOrder, String orderID) {
-        getDisplayRouter().pushController(RouterTransaction.with(new ViewAddressController(false, null, calledFromOrder, orderID))
+        ViewAddressController.Parameters.DisplayViewAddress parameters = new ViewAddressController.Parameters
+                .DisplayViewAddress(false, null, calledFromOrder, orderID);
+
+        ViewAddressController controller = ViewAddressController.newInstance(parameters);
+        getDisplayRouter().pushController(RouterTransaction.with(controller)
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
     }

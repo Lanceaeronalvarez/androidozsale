@@ -150,20 +150,18 @@ public class BottomSheetSizesDialog extends BottomSheetDialogFragment {
     private void onSelectTag(int index) {
         int selectedIndex = index;
 
-        // if selection is invalid, try reselecting previous index
-        if (index < 0) {
-            if (mSelectedSizeIndex >= 0) {
-                selectedIndex = mSelectedSizeIndex;
-            } else {
-                return;
-            }
+        if (selectedIndex < 0) {
+            return;
         }
 
-        boolean isSizeSoldOut = mIndicesOfSoldOutSizes.contains(index);
+
+        boolean isSizeSoldOut = mIndicesOfSoldOutSizes.contains(selectedIndex);
         if (isSizeSoldOut) {
-            // if current selection is sold out, try selecting previous index
-            onSelectTag(-1);
-            return;
+            selectedIndex = mSelectedSizeIndex;
+            if (selectedIndex < 0) {
+                return;
+            }
+            isSizeSoldOut = mIndicesOfSoldOutSizes.contains(selectedIndex);
         }
 
         // force selection - this prevents deselecting tags

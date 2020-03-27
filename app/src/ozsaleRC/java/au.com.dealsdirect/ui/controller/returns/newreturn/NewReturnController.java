@@ -196,7 +196,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         if (mReturnItem != null) {
             outState.putInt(BundleKeys.KEY_INVOICE_NUMBER, mReturnItem.getInvoiceNo());
         }
-        outState.putParcelableArrayList(BundleKeys.KEY_IMAGE_URI, mImageUriArray);
         if (mReasonEditText != null && mReasonEditText.getText() != null) {
             outState.putString(BundleKeys.KEY_USER_MESSAGE, mReasonEditText.getText().toString());
         }
@@ -212,7 +211,6 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         if (savedInstanceState.containsKey(BundleKeys.KEY_INVOICE_NUMBER)) {
             mSavedInvoiceNumber = savedInstanceState.getInt(BundleKeys.KEY_INVOICE_NUMBER);
         }
-        mImageUriArray = savedInstanceState.getParcelableArrayList(BundleKeys.KEY_IMAGE_URI);
         mReasonReturnText = savedInstanceState.getString(BundleKeys.KEY_USER_MESSAGE, "");
         mProductID = savedInstanceState.getString(BundleKeys.KEY_PRODUCT_ID);
         isFromOrder = savedInstanceState.getBoolean(BundleKeys.KEY_IS_FROM_ORDER);
@@ -466,8 +464,10 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         {
             Uri chosenImageUri = data.getData();
 
-            ImageUtils.ImageLink imageLink = new ImageUtils.ImageLink(String.valueOf(chosenImageUri), false);
-            mImageUriArray.add(0, imageLink);
+            ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
+            imageLinks.setIsURL(false);
+            imageLinks.setLink(String.valueOf(chosenImageUri));
+            mImageUriArray.add(0, imageLinks);
 
             ((ReturnDetailsAddImageAdapter) Objects.requireNonNull(mImageRecyclerView.getAdapter())).addItem();
 

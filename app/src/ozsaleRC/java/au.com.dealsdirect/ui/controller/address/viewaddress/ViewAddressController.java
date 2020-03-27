@@ -64,33 +64,74 @@ public class ViewAddressController extends BaseController implements ViewAddress
     @BindView(R.id.partial_toolbar_title)
     TextView mViewAddressToolarTitle;
     private List<AddressesItem> mAddressList;
-    boolean mCalledFromCart;
+    boolean mCalledFromCart = false;
     private ViewAddressRecyclerViewAdapter mRecyclerViewAdapter;
     private List<DecorationInfoList> mDecorationInfoList;
     private boolean mAddressesLoaded = false;
     private DeliveryAddress mDeliveryAddress;
-    boolean mCalledFromOrder;
-    private String mOrderID;
+    boolean mCalledFromOrder = false;
+    private String mOrderID = "";
 
     @Inject
     ViewAddressMvpPresenter<ViewAddressMvpView> mPresenter;
 
-    public ViewAddressController(boolean mCalledFromCart, DeliveryAddress deliveryAddress, boolean calledFromOrder,
-                                 String orderID) {
-        this(new BundleBuilder(new Bundle())
-                .putBoolean(CALLED_FROM_CART, mCalledFromCart)
-                .putParcelable(DELIVERY_ADDRESS, deliveryAddress)
-                .putBoolean(CALLED_FROM_ORDER, calledFromOrder)
-                .putString(ORDER_ID, orderID)
-                .build());
+    public ViewAddressController() {
+
     }
 
     public ViewAddressController(Bundle args) {
         super(args);
-        mCalledFromCart = args.getBoolean(CALLED_FROM_CART, false);
-        mDeliveryAddress = args.getParcelable(DELIVERY_ADDRESS);
-        mCalledFromOrder = args.getBoolean(CALLED_FROM_ORDER, false);
-        mOrderID = args.getString(ORDER_ID, "");
+    }
+
+    public static ViewAddressController newInstance() {
+        return new ViewAddressController(new BundleBuilder(new Bundle()).build());
+    }
+
+    public static ViewAddressController newInstance(Parameters parameters) {
+        ViewAddressController controller = ViewAddressController.newInstance();
+
+        controller.mCalledFromCart = ((Parameters.DisplayViewAddress) parameters).isCalledFromCart();
+        controller.mDeliveryAddress = ((Parameters.DisplayViewAddress) parameters).getDeliveryAddress();
+        controller.mCalledFromOrder = ((Parameters.DisplayViewAddress) parameters).isCalledFromOrder();
+        controller.mOrderID = ((Parameters.DisplayViewAddress) parameters).getOrderID();
+
+        return controller;
+    }
+
+    public abstract static class Parameters {
+        private Parameters() {
+        }
+
+        public static final class DisplayViewAddress extends Parameters {
+            private boolean mCalledFromCart;
+            private DeliveryAddress mDeliveryAddress;
+            private boolean mCalledFromOrder;
+            private String mOrderID;
+
+            public DisplayViewAddress(boolean calledFromCart, DeliveryAddress deliveryAddress,
+                                      boolean calledFromOrder, String orderId) {
+                mCalledFromCart = calledFromCart;
+                mDeliveryAddress = deliveryAddress;
+                mCalledFromOrder = calledFromOrder;
+                mOrderID = orderId;
+            }
+
+            public boolean isCalledFromCart() {
+                return mCalledFromCart;
+            }
+
+            public DeliveryAddress getDeliveryAddress() {
+                return mDeliveryAddress;
+            }
+
+            public boolean isCalledFromOrder() {
+                return mCalledFromOrder;
+            }
+
+            public String getOrderID() {
+                return mOrderID;
+            }
+        }
     }
 
     @Override

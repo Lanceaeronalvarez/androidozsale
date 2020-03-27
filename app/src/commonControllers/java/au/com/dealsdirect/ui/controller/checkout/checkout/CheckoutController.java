@@ -295,7 +295,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             showAddAddressController();
             getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.ADD_ADDRESS);
         } else {
-            getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress, false, ""))
+            ViewAddressController.Parameters.DisplayViewAddress parameters = new ViewAddressController.Parameters
+                    .DisplayViewAddress(true, null, false, "");
+
+            ViewAddressController controller = ViewAddressController.newInstance(parameters);
+            getRouter().pushController(RouterTransaction.with(controller)
                     .pushChangeHandler(new HorizontalChangeHandler(false))
                     .popChangeHandler(new HorizontalChangeHandler()));
         }

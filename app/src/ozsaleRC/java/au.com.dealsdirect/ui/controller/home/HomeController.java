@@ -975,7 +975,11 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void showMyAddress(String orderID) {
         if (!mPresenter.isTablet()) {
-            getCurrentRouter().pushController(RouterTransaction.with(new ViewAddressController(false, null, true, orderID))
+            ViewAddressController.Parameters.DisplayViewAddress parameters = new ViewAddressController.Parameters
+                    .DisplayViewAddress(false, null, true, orderID);
+
+            ViewAddressController controller = ViewAddressController.newInstance(parameters);
+            getCurrentRouter().pushController(RouterTransaction.with(controller)
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         } else {

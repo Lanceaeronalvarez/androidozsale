@@ -1793,20 +1793,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private void onSelectTag(int index) {
         int selectedIndex = index;
 
-        // if selection is invalid, try reselecting previous index
-        if (index < 0) {
-            if (mSelectedSizeIndex >= 0) {
-                selectedIndex = mSelectedSizeIndex;
-            } else {
-                return;
-            }
+        if (selectedIndex < 0) {
+            return;
         }
 
         boolean isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
         if (isSizeSoldOut && !mAllowSelectingSoldoutSizes) {
-            // if current selection is sold out, try selecting previous index
-            onSelectTag(-1);
-            return;
+            selectedIndex = mSelectedSizeIndex;
+            if (selectedIndex < 0) {
+                return;
+            }
+            isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
         }
 
         // force selection - this prevents deselecting tags
