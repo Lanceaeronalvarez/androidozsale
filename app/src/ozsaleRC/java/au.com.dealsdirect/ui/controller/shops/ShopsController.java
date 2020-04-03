@@ -401,7 +401,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         });
 
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
-        shopsControllerBannerRecyclerView.getRecycledViewPool().clear();
     }
 
     private void setupPtrHeader() {
@@ -773,19 +772,23 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mPresenter.onAttach(this);
         hasLoadedAllItems = true;
 
+        //reset adapter
+        mBannersAdapter.clear();
+        
         if (shopsControllerBannerRecyclerView != null) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
+            shopsControllerBannerRecyclerView.getRecycledViewPool().clear();
+            if (!shopsControllerBannerRecyclerView.isComputingLayout() && mBannersAdapter != null) {
+                mBannersAdapter.notifyDataSetChanged();
+            }
         }
+
+        sales.clear();
 
         //reset for values for Get_sales API call
         page = 0;
         bannerOffset = 0;
         mCategoryID = categoryID;
-
-        //reset adapter
-        sales.clear();
-        mBannersAdapter.clear();
-        mLayoutManager.scrollToPosition(0);
 
         int orientation = ScreenUtils.getOrientation(mActivity);
         mBannersAdapter.setupDimensions(orientation);
