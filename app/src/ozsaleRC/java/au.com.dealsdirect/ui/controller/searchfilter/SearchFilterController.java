@@ -516,7 +516,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
     }
 
     public void closeFacets() {
-        if(!isViewAttached()) return;
+        if(!isViewAttached() || !isViewBound()) return;
 
         mIsSearchFilterControllerActive = false;
         if (mFacetsFrame != null) {
@@ -638,6 +638,8 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void showFacetItem(int position) {
+        if(!isViewAttached() || !isViewBound()) return;
+
         hideKeyboard();
         if (mFacetsFrame != null) {
             mFacetsFrame.setVisibility(View.VISIBLE);

@@ -574,7 +574,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             title = ((Parameters.FromCategoryDeepLink) parameters).getTitle();
             controller.mCategoryKey = ((Parameters.FromCategoryDeepLink) parameters).getCategoryMapKey();
             controller.mFromCategoryDeeplink = true;
-        } else if (parameters instanceof  Parameters.FromLocationFilterHash) {
+        } else if (parameters instanceof Parameters.FromLocationFilterHash) {
             controller.locationFilterHash = ((Parameters.FromLocationFilterHash) parameters).getLocationFilterHash();
         }
 
@@ -744,7 +744,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setDraggableViewPager(false);
 
-        if (isViewAttached()) {
+        if (isViewAttached() && isViewBound()) {
             determineToolbarTitle();
             refreshContents();
         }
@@ -828,9 +828,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void determineToolbarTitle() {
-        if (!isViewAttached()) {
-            return;
-        }
+        if (!isViewAttached() || !isViewBound()) return;
 
         switch (mSourceMode) {
             case NORMAL:
@@ -1880,14 +1878,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void showCollapsingToolbar() {
-        if (isViewAttached()) {
-            AppBarLayout.LayoutParams collapsingToolbarLayoutParams = (AppBarLayout.LayoutParams) mCollapsingToolbar.getLayoutParams();
-            collapsingToolbarLayoutParams.height = Math.round(getDimension(R.dimen.sale_details_app_bar_height));
-            mCollapsingToolbar.setLayoutParams(collapsingToolbarLayoutParams);
+        if (!isViewAttached() || !isViewBound()) return;
+        AppBarLayout.LayoutParams collapsingToolbarLayoutParams = (AppBarLayout.LayoutParams) mCollapsingToolbar.getLayoutParams();
+        collapsingToolbarLayoutParams.height = Math.round(getDimension(R.dimen.sale_details_app_bar_height));
+        mCollapsingToolbar.setLayoutParams(collapsingToolbarLayoutParams);
 
-            mTabLayout.setVisibility(View.VISIBLE);
-            mSearchFilterContainer.setVisibility(View.VISIBLE);
-        }
+        mTabLayout.setVisibility(View.VISIBLE);
+        mSearchFilterContainer.setVisibility(View.VISIBLE);
     }
 
     private void determineWhereToShowAds() {
@@ -1976,43 +1973,42 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @OnClick(R.id.partial_toolbar_field_title_edittext)
     public void activateSearch() {
-        if (isViewAttached()) {
-            mSaleItemsToolbarField.setSelection(mSaleItemsToolbarField.getText().length());
-            if (mSearchFilterMvpView != null) {
-                mSearchFilterMvpView.closeFacets();
-            }
+        if (!isViewAttached() || !isViewBound()) return;
 
-            mSaleItemsToolbarField.addTextChangedListener(mTextWatcher);
-            mSaleItemsToolbarField.setOnEditorActionListener((textView, actionId, keyEvent) -> {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    hideKeyboard();
-                    mSearchQuery = textView.getText().toString();
-                    mIsSearch = true;
-                    showLoading();
-                    if (mSearchFilterMvpView != null) {
-                        mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
-                    }
-                }
-                return false;
-            });
+        mSaleItemsToolbarField.setSelection(mSaleItemsToolbarField.getText().length());
+        if (mSearchFilterMvpView != null) {
+            mSearchFilterMvpView.closeFacets();
         }
+
+        mSaleItemsToolbarField.addTextChangedListener(mTextWatcher);
+        mSaleItemsToolbarField.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                hideKeyboard();
+                mSearchQuery = textView.getText().toString();
+                mIsSearch = true;
+                showLoading();
+                if (mSearchFilterMvpView != null) {
+                    mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
+                }
+            }
+            return false;
+        });
     }
 
     /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape */
     @Override
     public void onOrientationChanged(Configuration newConfig) {
-        boolean isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
-        if (isViewAttached()) {
-            GridLayoutManager gridLayoutManager = (GridLayoutManager) mSaleItemsRecyclerView.getLayoutManager();
-            int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
-            mSaleItemsAdapter.computeItemViewDimensions();
-            mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
-            gridLayoutManager.scrollToPosition(currentScrollPosition);
+        if (!isViewAttached() || !isViewBound()) return;
 
-            gridLayoutManager.setSpanCount(mSaleItemsAdapter.getColumnCount());
+        GridLayoutManager gridLayoutManager = (GridLayoutManager) mSaleItemsRecyclerView.getLayoutManager();
+        int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
+        mSaleItemsAdapter.computeItemViewDimensions();
+        mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+        gridLayoutManager.scrollToPosition(currentScrollPosition);
 
-            determineWhereToShowAds();
-        }
+        gridLayoutManager.setSpanCount(mSaleItemsAdapter.getColumnCount());
+
+        determineWhereToShowAds();
     }
 
     @Override
