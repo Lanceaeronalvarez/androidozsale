@@ -180,7 +180,20 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         super(dataManager, schedulerProvider, compositeDisposable);
         gNotification = new GNotification(getDataManager(), getSchedulerProvider(), getCompositeDisposable());
         dataManager.resetAddToCartJourneyFlags();
-        dataManager.setWishlistChangeListener(newCount -> getMvpView().updateWishlistCounter(newCount));
+    }
+
+    @Override
+    public void onAttach(V mvpView) {
+        super.onAttach(mvpView);
+        getDataManager().setWishlistChangeListener(newCount -> getMvpView().updateWishlistCounter(newCount));
+    }
+
+    @Override
+    public void onDetach() {
+        if (getDataManager() != null) {
+            getDataManager().setWishlistChangeListener(null);
+        }
+        super.onDetach();
     }
 
     @Override
