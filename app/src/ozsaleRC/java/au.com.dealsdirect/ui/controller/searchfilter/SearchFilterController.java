@@ -791,21 +791,26 @@ public class SearchFilterController extends BaseController implements SearchFilt
     }
 
     private void setChildrenSelection(String key, boolean isSelected) {
-        List<GetCategoryTreeResponse> children = mCategoryMap.get(key).getChildren();
 
-        for (GetCategoryTreeResponse category : children) {
-            category.setSelected(isSelected);
-            if (isSelected) {
-                mCategoryKeys.add(category.getKey());
-            } else {
-                mCategoryKeys.remove(category.getKey());
+        if (mCategoryMap.get(key) != null && mCategoryMap.get(key).getChildren() != null) {
+
+            List<GetCategoryTreeResponse> children = mCategoryMap.get(key).getChildren();
+
+            for (GetCategoryTreeResponse category : children) {
+                category.setSelected(isSelected);
+                if (isSelected) {
+                    mCategoryKeys.add(category.getKey());
+                } else {
+                    mCategoryKeys.remove(category.getKey());
+                }
+                setChildrenSelection(category.getKey(), isSelected);
             }
-            setChildrenSelection(category.getKey(), isSelected);
         }
+
     }
 
     private void createCategoryMap(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
-        if (getCategoryTreeResponses != null || !getCategoryTreeResponses.isEmpty()) {
+        if (getCategoryTreeResponses != null && !getCategoryTreeResponses.isEmpty()) {
             for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
                 mCategoryMap.put(category.getKey(), category);
                 createCategoryMap(category.getChildren());

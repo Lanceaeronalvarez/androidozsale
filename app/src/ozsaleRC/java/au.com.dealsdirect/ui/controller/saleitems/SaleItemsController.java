@@ -1359,7 +1359,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         if (isViewAttached() && !hasLoggedSearch) {
             isKeyboardHidden = true;
-            if (mGenieQuery.equalsIgnoreCase(mSearchQuery) && !mGenieQuery.isEmpty()) {
+            if (mGenieQuery != null && mGenieQuery.equalsIgnoreCase(mSearchQuery) && !mGenieQuery.isEmpty()) {
                 logSearchEvent();
                 hasLoggedSearch = true;
                 isKeyboardHidden = false;

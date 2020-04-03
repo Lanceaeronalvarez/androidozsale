@@ -716,14 +716,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private void addToMap(List<GetCategoryTreeResponse> list) {
 
-        for (GetCategoryTreeResponse i : list) {
+        if (list != null) {
+            for (GetCategoryTreeResponse i : list) {
 
-            int childrenSize = i.getChildren().size();
-            if (childrenSize != 0) {
-                addToMap(i.getChildren());
+                int childrenSize = i.getChildren().size();
+                if (childrenSize != 0) {
+                    addToMap(i.getChildren());
+                }
+
+                mCategoryMap.put(i.getKey(), i.getChildren());
             }
-
-            mCategoryMap.put(i.getKey(), i.getChildren());
         }
     }
 
