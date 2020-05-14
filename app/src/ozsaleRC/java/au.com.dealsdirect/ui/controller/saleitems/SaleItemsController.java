@@ -874,9 +874,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 }
                 mSaleItemsCategoryToolbarTitle.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
                 mSaleItemsToolbarSubTitleText.setVisibility(isFromCategories() ? View.VISIBLE : View.GONE);
-                mSaleItemsRemainingTimeLayout.setVisibility(isFromCategories() || mFromShopSearch ||
-                        !mActivity.getResources()
-                                .getBoolean(R.bool.is_sale_countdown_timer_enabled) ? View.GONE : View.VISIBLE);
+                if (mSaleItemsRemainingTimeLayout != null) {
+                    mSaleItemsRemainingTimeLayout.setVisibility(isFromCategories() || mFromShopSearch ||
+                            !mActivity.getResources()
+                                    .getBoolean(R.bool.is_sale_countdown_timer_enabled) ? View.GONE : View.VISIBLE);
+                }
                 mSaleItemsToolbarTitle.setVisibility(!isFromCategories() ? View.VISIBLE : View.GONE);
 
                 if (isFromCategories()) {
@@ -2116,15 +2118,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mMainContainer.setVisibility(View.VISIBLE);
                 mToolbar.setVisibility(View.VISIBLE);
                 if (show) {
-                    mPlaceholder.setVisibility(View.VISIBLE);
+                    if (mPlaceholder != null) {
+                        mPlaceholder.setVisibility(View.VISIBLE);
+                    }
                     mSaleItemsRecyclerView.setVisibility(View.GONE);
                 } else {
-                    mPlaceholder.setVisibility(View.GONE);
+                    if (mPlaceholder != null) {
+                        mPlaceholder.setVisibility(View.GONE);
+                    }
                     mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
                 }
                 break;
             case WISHLIST:
-                mPlaceholder.setVisibility(View.GONE);
+                if (mPlaceholder != null) {
+                    mPlaceholder.setVisibility(View.GONE);
+                }
                 if (show) {
                     mMainContainer.setVisibility(View.GONE);
                     mToolbar.setVisibility(View.GONE);
@@ -2146,7 +2154,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mWishlistPlaceholder.setVisibility(View.GONE);
                 mToolbar.setVisibility(View.VISIBLE);
 
-                if (mPlaceholder.getVisibility() == View.VISIBLE && !show) {
+                if (mPlaceholder != null && mPlaceholder.getVisibility() == View.VISIBLE && !show) {
                     CommonUtils.fadeOutView(mPlaceholder, new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationCancel(Animator animation) {
@@ -2163,7 +2171,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             CommonUtils.fadeInView(mSaleItemsRecyclerView, null);
                         }
                     });
-                } else if (mPlaceholder.getVisibility() == View.GONE && show) {
+                } else if (mPlaceholder != null && mPlaceholder.getVisibility() == View.GONE && show) {
                     CommonUtils.fadeOutView(mSaleItemsRecyclerView, new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationCancel(Animator animation) {
@@ -2183,7 +2191,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 }
                 break;
             case WISHLIST:
-                mPlaceholder.setVisibility(View.GONE);
+                if (mPlaceholder != null) {
+                    mPlaceholder.setVisibility(View.GONE);
+                }
 
                 if (mWishlistPlaceholder.getVisibility() == View.VISIBLE && !show) {
                     CommonUtils.fadeOutView(mWishlistPlaceholder, new AnimatorListenerAdapter() {

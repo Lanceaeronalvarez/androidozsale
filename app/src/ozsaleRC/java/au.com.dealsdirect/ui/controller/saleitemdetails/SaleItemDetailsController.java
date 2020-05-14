@@ -1194,26 +1194,30 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void showAddToCartButton() {
-        if (!mIsSoldOutCombined || !mIsSoldout) {
-            if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
-                    (mEndDate != null && !mEndDate.isEmpty()) &&
-                    DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
-                    DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
-                setupSaleRemainingTime(mEndDate);
-                mAddToCartTimer.setVisibility(View.VISIBLE);
-                mAddToCartButtonContainer.setVisibility(View.GONE);
+        if (mAddToCartButton != null) {
+            if (!mIsSoldOutCombined || !mIsSoldout) {
+                if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
+                        (mEndDate != null && !mEndDate.isEmpty()) &&
+                        DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
+                        DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+                    setupSaleRemainingTime(mEndDate);
+                    mAddToCartTimer.setVisibility(View.VISIBLE);
+                    mAddToCartButtonContainer.setVisibility(View.GONE);
+                } else {
+                    mAddToCartTimer.setVisibility(View.GONE);
+                    mAddToCartButtonContainer.setVisibility(View.VISIBLE);
+                    mAddToCartButton.setEnabled(true);
+                    mAddToCartButton.bringToFront();
+                }
             } else {
-                mAddToCartTimer.setVisibility(View.GONE);
                 mAddToCartButtonContainer.setVisibility(View.VISIBLE);
-                mAddToCartButton.setEnabled(true);
+                mAddToCartButton.setEnabled(false);
                 mAddToCartButton.bringToFront();
             }
-        } else {
-            mAddToCartButtonContainer.setVisibility(View.VISIBLE);
-            mAddToCartButton.setEnabled(false);
-            mAddToCartButton.bringToFront();
+
+            showAddToCartButtonContent(false);
         }
-        showAddToCartButtonContent(false);
+
     }
 
     private void showAddToCartButtonContent(boolean showProgressBar) {

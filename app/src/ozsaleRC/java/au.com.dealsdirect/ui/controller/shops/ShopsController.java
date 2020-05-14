@@ -1077,7 +1077,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     public void goToCategoryLink(String categoryKey, String categoryId) {
 
-        if (categoryKey != null) {
+        if (categoryKey != null && mActivity.getCategoriesController() != null) {
 
             CategoriesController categoriesController = mActivity.getCategoriesController();
             String categoryMapKey = categoriesController.getCategoryKey(categoryId);
