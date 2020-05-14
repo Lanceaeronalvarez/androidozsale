@@ -95,8 +95,7 @@ public class PaymentMethod implements Serializable {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof PaymentMethod &&
-                ((PaymentMethod) obj).getPaymentType().equals(paymentType) &&
-                ((PaymentMethod) obj).getDescription().equals(description) &&
+                ((PaymentMethod) obj).getToken() != null &&
                 ((PaymentMethod) obj).getToken().equals(token);
     }
 
