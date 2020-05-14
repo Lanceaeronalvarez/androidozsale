@@ -46,6 +46,7 @@ import au.com.dealsdirect.data.network.model.checkout.ClearOrder;
 import au.com.dealsdirect.data.network.model.checkout.ClearVouchers;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentIntentStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethodStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
@@ -462,6 +463,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<CreatePaymentMethod.ResponseValue> callCreatePaymentMethod(CreatePaymentMethod.RequestValue requestValue) {
         return mApiHelper.callCreatePaymentMethod(requestValue);
+    }
+
+    @Override
+    public Observable<CreatePaymentMethodStripe.ResponseValue> callCreatePaymentMethodStripe(CreatePaymentMethodStripe.RequestValue requestValue) {
+        return mApiHelper.callCreatePaymentMethodStripe(requestValue);
     }
 
     @Override

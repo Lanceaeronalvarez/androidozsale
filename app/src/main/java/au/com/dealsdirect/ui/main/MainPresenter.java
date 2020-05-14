@@ -43,11 +43,13 @@ import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentIntentStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethodStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
@@ -1080,6 +1082,61 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                             DataCollector.logEvent(Events.AddPaymentInfo, parameters);
                         } else {
                             getMvpView().onError(responseValue.getMessage());
+                        }
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+                        getMvpView().onError(throwable.getMessage());
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            handleApiError(anError);
+                        }
+                    }
+                })
+        );
+    }
+
+    @Override
+    public void createPaymentMethodStripe(String type, String token) {
+        String languageId = getDataManager().getLanguageId();
+        String countryId = getDataManager().getCountryId();
+
+        CreatePaymentMethodStripe.RequestValue.Request requestValue = new CreatePaymentMethodStripe.RequestValue.Request(type, token);
+        getCompositeDisposable().add(getDataManager()
+                .callCreatePaymentMethodStripe(new CreatePaymentMethodStripe.RequestValue(requestValue, countryId, languageId))
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(new Consumer<CreatePaymentMethodStripe.ResponseValue>() {
+                    @Override
+                    public void accept(@NonNull CreatePaymentMethodStripe.ResponseValue responseValue) throws Exception {
+                        if (!isViewAttached()) {
+                            return;
+                        }
+
+                        getMvpView().hideLoading();
+
+                        if (responseValue != null) {
+
+                            if ((responseValue.getResult() && responseValue.getIsAuthenticated())) {
+                                getMvpView().showCreatePaymentMethodSuccess(responseValue.getD().getValue().getLastPaymentMethod());
+
+                                HashMap<String, Object> parameters = new HashMap<>();
+                                parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                                        responseValue.getD().getValue().getLastPaymentMethod().getPaymentType());
+                                DataCollector.logEvent(Events.AddPaymentInfo, parameters);
+                            } else {
+                                getMvpView().onError(responseValue.getMessage());
+                            }
+
                         }
 
                     }

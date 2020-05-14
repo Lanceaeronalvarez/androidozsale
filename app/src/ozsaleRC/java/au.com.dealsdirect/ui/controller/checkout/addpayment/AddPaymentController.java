@@ -71,6 +71,7 @@ import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
+import au.com.dealsdirect.ui.main.CardInfo;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.AppLogger;
@@ -288,24 +289,14 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             });
         }
 
-        if (!isFromCart) {
-            mStripeLayout.setVisibility(View.GONE);
-            mCardForm.setVisibility(View.VISIBLE);
-            mCardForm.cardRequired(true)
-                    .expirationRequired(true)
-                    .cvvRequired(true)
-                    .actionLabel("Purchase")
-                    .setup(getActivity());
-        } else {
-            mStripeLayout.setVisibility(View.VISIBLE);
+        mStripeLayout.setVisibility(View.VISIBLE);
 
-            mCardForm.cardRequired(true)
-                    .expirationRequired(false)
-                    .cvvRequired(false)
-                    .actionLabel("Purchase")
-                    .setup(getActivity());
-            mCardForm.setVisibility(View.GONE);
-        }
+        mCardForm.cardRequired(true)
+                .expirationRequired(false)
+                .cvvRequired(false)
+                .actionLabel("Purchase")
+                .setup(getActivity());
+        mCardForm.setVisibility(View.GONE);
 
         mCardForm.setOnCardFormSubmitListener(this);
         mCardForm.setOnCardTypeChangedListener(this);
@@ -485,36 +476,20 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     public void onCardFormSubmit() {
         hideKeyboard();
 
-        if (isFromCart) {
-            if (!mStripeCVV.getText().toString().equalsIgnoreCase("")
-                    && !mStripeCardNumber.getText().toString().equalsIgnoreCase("")) {
+        if (!mStripeCVV.getText().toString().equalsIgnoreCase("")
+                && !mStripeCardNumber.getText().toString().equalsIgnoreCase("")) {
 
-                mStripeExpiryDate.validate();
+            mStripeExpiryDate.validate();
 
-                if (mStripeExpiryDate.isValid()) {
-                    mActivity.setCardInfoFromAddPayment(mStripeCardNumber.getText().toString(),
-                            Integer.parseInt(mStripeExpiryDate.getMonth()),
-                            Integer.parseInt(mStripeExpiryDate.getYear()), mStripeCVV.getText().toString());
-                }
-
-            } else {
-                CustomAlertDialog.showCustomAlertDialog(
-                        mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        mActivity.getResources().getString(R.string.stripe_add_card_error));
+            if (mStripeExpiryDate.isValid()) {
+                mActivity.createStripePaymentMethod(mStripeCardNumber.getText().toString(), Integer.parseInt(mStripeExpiryDate.getMonth()),
+                        Integer.parseInt(mStripeExpiryDate.getYear()), mStripeCVV.getText().toString());
             }
+
         } else {
-            if (mCardForm.isValid() && mActivity.getBraintreeFragment() != null) {
-                showLoading();
-                mActivity.onPurchase(mCardForm);
-
-            } else if (mCardForm.isValid() && mActivity.getBraintreeFragment() == null) {
-                CustomAlertDialog.showCustomAlertDialog(
-                        mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        "Please wait for payments to finish initializing");
-
-            } else {
-                mCardForm.validate();
-            }
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    mActivity.getResources().getString(R.string.stripe_add_card_error));
         }
 
     }

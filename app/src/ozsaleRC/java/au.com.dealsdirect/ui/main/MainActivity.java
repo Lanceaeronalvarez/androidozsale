@@ -1773,13 +1773,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
 
-    public void createStripePaymentMethod() {
+    public void createStripePaymentMethod(String cardNumber, int cardMonth, int cardYear, String cardCVV) {
 
         PaymentInfo.setPaymentType(AppConstants.STRIPE);
 
         com.stripe.android.model.Card card = com.stripe.android.model.Card.create(
-                CardInfo.getCardNumber(), CardInfo.getCardMonth(), CardInfo.getCardYear(), CardInfo.getCardCVV()
-        );
+                cardNumber, cardMonth, cardYear, cardCVV);
 
         final PaymentMethodCreateParams.Card paymentMethodParamsCard =
                 card.toPaymentMethodParamsCard();
@@ -1791,9 +1790,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             @Override
             public void onSuccess(@NonNull com.stripe.android.model.PaymentMethod result) {
 
-                mPresenter.setPaymentMethodId(result.id);
-
-                callCreatePaymentTransactionStripe(AppConstants.STRIPE, result.id);
+                mPresenter.createPaymentMethodStripe(AppConstants.STRIPE, result.id);
 
             }
 
@@ -1808,33 +1805,4 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         });
     }
 
-    public void setCardInfoFromAddPayment(String cardNumber, int month, int year, String cvv) {
-        CardInfo.setCardNumber(cardNumber);
-        CardInfo.setCardMonth(month);
-        CardInfo.setCardYear(year);
-        CardInfo.setCardCVV(cvv);
-
-        com.stripe.android.model.Card card = com.stripe.android.model.Card.create(
-                cardNumber, month, year, cvv);
-
-        PaymentMethod paymentMethod = new PaymentMethod();
-        paymentMethod.setPaymentType(card.getBrand());
-        paymentMethod.setDescription("******"+card.getLast4());
-        paymentMethod.setProviderType(AppConstants.STRIPE);
-        setPaymentMethodSelected(paymentMethod);
-
-        HomeController homeController = getMainController().getHomeController();
-        Controller currentController = homeController.getCurrentControllerOnRouter(homeController.getCurrentRouter());
-
-        if (currentController instanceof CheckoutHostController || currentController instanceof AddPaymentController) {
-            Router router = currentController instanceof CheckoutHostController ? ((CheckoutHostController) currentController).getDisplayRouter() : getCurrentRouter();
-            if (router.getBackstackSize() > 2) {
-                router.popToRoot();
-            } else {
-                router.handleBack();
-            }
-        } else {
-            currentController.getRouter().handleBack();
-        }
-    }
 }

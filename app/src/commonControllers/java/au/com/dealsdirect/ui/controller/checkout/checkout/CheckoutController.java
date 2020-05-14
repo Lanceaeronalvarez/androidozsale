@@ -771,7 +771,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mPaypalCreditButton.setVisibility(View.GONE);
             }
 
-
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setText(paymentMethod.getPaymentType());
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setTypeface(((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).getTypeface(),
                     Typeface.BOLD);
@@ -883,12 +882,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 paymentList,
                 getSelectedDeliveryOption());
         mActivity.setPaymentMethodSelected(paymentMethod);
-
-        if (paymentMethod != null &&
-                paymentMethod.getProviderType() != null &&
-                paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
-            mPresenter.setStripePaymentMethodId(paymentMethod.getToken());
-        }
 
         showMyPayDetails(mValue, mOurpay);
         displayPaymentDetails();
@@ -1034,13 +1027,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         } else if (mActivity.getPaymentMethodSelected().getProviderType() != null &&
                     mActivity.getPaymentMethodSelected().getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
             if (mPresenter.isStripeEnabled() && mPresenter.getStripePublicKey() != null) {
-                if (mActivity.getPaymentMethodSelected().getToken() == null ||
-                        mActivity.getPaymentMethodSelected().getToken().isEmpty()) {
-                    mActivity.createStripePaymentMethod();
-                } else {
-                    mActivity.callCreatePaymentTransactionStripe(AppConstants.STRIPE,
-                            mActivity.getPaymentMethodSelected().getToken());
-                }
+                mActivity.callCreatePaymentTransactionStripe(AppConstants.STRIPE,
+                        mActivity.getPaymentMethodSelected().getToken());
             } else {
                 CustomAlertDialog.showCustomAlertDialog(
                         mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
