@@ -561,7 +561,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         if (mPresenter.isTablet()) {
             currentController = !isAuthorized() ? getCurrentController(getMainController().getHomeController().getPopUpHostRouter()) :
-                    getCurrentController(getMainController().getHomeController().getCheckoutRouter());
+                    homeController.getCurrentControllerOnRouter(currentRouter);
         } else {
             currentController = homeController.getCurrentControllerOnRouter(currentRouter);
         }
