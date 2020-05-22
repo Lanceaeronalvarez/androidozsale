@@ -110,7 +110,7 @@ public final class ApiEndPoint {
     }
 
     public static String getCategoryTree() {
-        return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/categorytree/", ApiUrlVersion.v4.apiVersion());
+        return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/categorytree/", ApiUrlVersion.v5.apiVersion());
     }
 
     public static String getSales() {
@@ -624,6 +624,11 @@ public final class ApiEndPoint {
 
     private ApiEndPoint() {
         // This class is not publicly instantiable
+    }
+
+
+    public static void main(String[] args){
+        System.out.println(LEGACY_API_VERSION);
     }
 
 }

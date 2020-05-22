@@ -68,11 +68,13 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
             ImageUtils.loadImage(item.getImageUrl(), holder.cardImageView);
         }
 
-        if (item.getPaymentType().equalsIgnoreCase(AppConstants.AMEX) ||
-                item.getPaymentType().equalsIgnoreCase(AppConstants.AMERICAN_EXPRESS)) {
-            holder.cardImageView.setImageResource(Card.getBrandIcon(Card.CardBrand.AMERICAN_EXPRESS));
-        } else {
-            holder.cardImageView.setImageResource(Card.getBrandIcon(Card.asCardBrand(item.getPaymentType())));
+        if (item.getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
+            if (item.getPaymentType().equalsIgnoreCase(AppConstants.AMEX) ||
+                    item.getPaymentType().equalsIgnoreCase(AppConstants.AMERICAN_EXPRESS)) {
+                holder.cardImageView.setImageResource(Card.getBrandIcon(Card.CardBrand.AMERICAN_EXPRESS));
+            } else {
+                holder.cardImageView.setImageResource(Card.getBrandIcon(Card.asCardBrand(item.getPaymentType())));
+            }
         }
 
         holder.nameTextView.setText(item.getPaymentType());

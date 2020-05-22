@@ -71,6 +71,7 @@ import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
+import au.com.dealsdirect.ui.main.CardInfo;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.AppLogger;
@@ -137,6 +138,8 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     RelativeLayout mPaypalButton;
     @BindView(R.id.partial_checkout_button_paypal_credit)
     RelativeLayout mPaypalCreditButton;
+    @BindView(R.id.button_visa_checkout)
+    Button mVcoButton;
     @BindView(R.id.partial_checkout_button_masterpass)
     RelativeLayout mMasterpassButton;
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
@@ -256,7 +259,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mLineView.setVisibility(View.GONE);
         mAfterpayPanel.setVisibility(View.GONE);
 
-        mVisaCheckoutButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
+        mVcoButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
                 View.GONE);
 
         if (mActivity.isBraintreeInitialized()) {
@@ -277,7 +280,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
         if (isFromCart) {
             if (mVcoPresenter.isVisaCheckoutEnabled()) {
-                mVcoPresenter.setupVisaCheckout();
+                mVcoPresenter.setupVisaCheckout(true);
             }
 
             mMasterpassButton.setOnClickListener(action -> {
@@ -286,24 +289,14 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             });
         }
 
-        if (!isFromCart) {
-            mStripeLayout.setVisibility(View.GONE);
-            mCardForm.setVisibility(View.VISIBLE);
-            mCardForm.cardRequired(true)
-                    .expirationRequired(true)
-                    .cvvRequired(true)
-                    .actionLabel("Purchase")
-                    .setup(getActivity());
-        } else {
-            mStripeLayout.setVisibility(View.VISIBLE);
+        mStripeLayout.setVisibility(View.VISIBLE);
 
-            mCardForm.cardRequired(true)
-                    .expirationRequired(false)
-                    .cvvRequired(false)
-                    .actionLabel("Purchase")
-                    .setup(getActivity());
-            mCardForm.setVisibility(View.GONE);
-        }
+        mCardForm.cardRequired(true)
+                .expirationRequired(false)
+                .cvvRequired(false)
+                .actionLabel("Purchase")
+                .setup(getActivity());
+        mCardForm.setVisibility(View.GONE);
 
         mCardForm.setOnCardFormSubmitListener(this);
         mCardForm.setOnCardTypeChangedListener(this);
@@ -359,10 +352,6 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             });
         }
 
-        if (mVcoPresenter.isVisaCheckoutEnabled()) {
-            mVcoPresenter.setupVisaCheckout();
-        }
-
         if (isFromCart) {
             mMasterpassButton.setOnClickListener(action -> {
                 onMasterpassButtonClick();
@@ -370,10 +359,17 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             });
 
         } else {
-            mVisaCheckoutButton.setVisibility(View.GONE);
+            mVcoButton.setVisibility(View.GONE);
             mMasterpassButton.setVisibility(View.GONE);
             mPaypalCreditButton.setVisibility(View.GONE);
         }
+
+        mVcoButton.setOnClickListener(action -> {
+            if (isProcessingVco) {
+                isProcessingVco = false;
+            }
+            onVisaCheckoutButtonClicked();
+        });
 
 
         mStripeCardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, Card.getBrandIcon(Card.CardBrand.UNKNOWN), 0);
@@ -469,9 +465,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             }
 
             if (paymentOptions.contains(PaymentOption.VISACHECKOUT) && mVcoPresenter.isVisaCheckoutEnabled()) {
-                mVisaCheckoutButton.setVisibility(View.VISIBLE);
+                mVcoButton.setVisibility(View.VISIBLE);
             } else {
-                mVisaCheckoutButton.setVisibility(View.GONE);
+                mVcoButton.setVisibility(View.GONE);
             }
         }
     }
@@ -480,36 +476,20 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     public void onCardFormSubmit() {
         hideKeyboard();
 
-        if (isFromCart) {
-            if (!mStripeCVV.getText().toString().equalsIgnoreCase("")
-                    && !mStripeCardNumber.getText().toString().equalsIgnoreCase("")) {
+        if (!mStripeCVV.getText().toString().equalsIgnoreCase("")
+                && !mStripeCardNumber.getText().toString().equalsIgnoreCase("")) {
 
-                mStripeExpiryDate.validate();
+            mStripeExpiryDate.validate();
 
-                if (mStripeExpiryDate.isValid()) {
-                    mActivity.setCardInfoFromAddPayment(mStripeCardNumber.getText().toString(),
-                            Integer.parseInt(mStripeExpiryDate.getMonth()),
-                            Integer.parseInt(mStripeExpiryDate.getYear()), mStripeCVV.getText().toString());
-                }
-
-            } else {
-                CustomAlertDialog.showCustomAlertDialog(
-                        mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        mActivity.getResources().getString(R.string.stripe_add_card_error));
+            if (mStripeExpiryDate.isValid()) {
+                mActivity.createStripePaymentMethod(mStripeCardNumber.getText().toString(), Integer.parseInt(mStripeExpiryDate.getMonth()),
+                        Integer.parseInt(mStripeExpiryDate.getYear()), mStripeCVV.getText().toString());
             }
+
         } else {
-            if (mCardForm.isValid() && mActivity.getBraintreeFragment() != null) {
-                showLoading();
-                mActivity.onPurchase(mCardForm);
-
-            } else if (mCardForm.isValid() && mActivity.getBraintreeFragment() == null) {
-                CustomAlertDialog.showCustomAlertDialog(
-                        mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        "Please wait for payments to finish initializing");
-
-            } else {
-                mCardForm.validate();
-            }
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    mActivity.getResources().getString(R.string.stripe_add_card_error));
         }
 
     }
@@ -649,15 +629,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             AppLogger.d("VC_onActivityResult", "Result got back from Visa Checkout SDK");
             String msg = "";
 
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                VisaPaymentSummary visaPaymentSummary = data.getParcelableExtra(VisaCheckoutSdk.INTENT_PAYMENT_SUMMARY);
-                if (visaPaymentSummary != null) {
-                    // Successful VCO
-                    showLoading();
-                    mActivity.callCreatePaymentTransactionVco(visaPaymentSummary);
-                    mPresenter.facebookInitiatedCheckout(PaymentInfo.getPaymentType(), mCurrentOrderValue.getItemsCount(), Double.valueOf(mCartTotalCost));
-                }
-            } else if (resultCode == Activity.RESULT_CANCELED) {
+            if (resultCode == Activity.RESULT_CANCELED) {
                 msg = "User Canceled, Result Code : " + resultCode;
             } else if (resultCode == VisaCheckoutSdk.ResultCode.RESULT_SDK_NOT_INITIALIZED) {
                 msg = "Sdk not initialized  failed, Result Code : " + resultCode;
@@ -677,6 +649,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
     @Override
     public void onVisaCheckoutButtonClicked() {
+        if (isProcessingVco) {
+            isProcessingVco = false;
+        }
         if (isFromCart && !mCartTotalCost.isEmpty()) {
             mVcoPresenter.payWithVisaCheckout(Double.valueOf(mCartTotalCost));
         } else {

@@ -19,6 +19,9 @@ public class AddToCartRequest {
     @SerializedName("skuId")
     @Expose
     private String skuId;
+    @SerializedName("userClientType")
+    @Expose
+    private String userClientType;
 
     private transient String itemName;
 
@@ -50,6 +53,14 @@ public class AddToCartRequest {
 
     public HashMap<String, String> getPersonalizationData() {
         return personalizationData;
+    }
+
+    public String getUserClientType() {
+        return userClientType;
+    }
+
+    public void setUserClientType(String userClientType) {
+        this.userClientType = userClientType;
     }
 
     public void setPersonalizationData(HashMap<String, String> personalizationData) {

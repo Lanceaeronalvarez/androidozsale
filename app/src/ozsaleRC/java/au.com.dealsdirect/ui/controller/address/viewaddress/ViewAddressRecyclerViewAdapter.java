@@ -63,7 +63,9 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
     }
 
     public void updateDeliveryAddress(AddressesItem addressesItem) {
-        mDeliveryAddress.resetDataFromAddressItem(addressesItem);
+        if (mDeliveryAddress != null) {
+            mDeliveryAddress.resetDataFromAddressItem(addressesItem);
+        }
         notifyDataSetChanged();
     }
 

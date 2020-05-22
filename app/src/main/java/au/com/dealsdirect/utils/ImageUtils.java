@@ -8,8 +8,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
 import androidx.annotation.Nullable;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -355,31 +353,9 @@ public class ImageUtils {
         return newString;
     }
 
-    public static class ImageLink implements Parcelable {
+    public static class ImageLink {
         String link;
         boolean isURL;
-
-        public ImageLink(String link, boolean isURL) {
-            this.link = link;
-            this.isURL = isURL;
-        }
-
-        protected ImageLink(Parcel in) {
-            link = in.readString();
-            isURL = in.readByte() != 0;
-        }
-
-        public static final Creator<ImageLink> CREATOR = new Creator<ImageLink>() {
-            @Override
-            public ImageLink createFromParcel(Parcel in) {
-                return new ImageLink(in);
-            }
-
-            @Override
-            public ImageLink[] newArray(int size) {
-                return new ImageLink[size];
-            }
-        };
 
         public String getLink() {
             return link;
@@ -397,15 +373,5 @@ public class ImageUtils {
             this.isURL = isURL;
         }
 
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(link);
-            dest.writeByte((byte) (isURL ? 1 : 0));
-        }
     }
 }

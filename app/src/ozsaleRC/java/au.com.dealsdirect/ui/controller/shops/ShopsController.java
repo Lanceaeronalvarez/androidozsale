@@ -145,6 +145,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
 
     private boolean mIsChangeInProgress = false;
+    private int currentBannerPosition = 0;
 
     @Override
     protected void onAttach(@NonNull View view) {
@@ -376,7 +377,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 mActivity,
                 mBannersAdapter.getNumberOfColumns(),
                 RecyclerView.VERTICAL,
-                false);
+                false) {
+            @Override
+            public boolean supportsPredictiveItemAnimations() {
+                return false;
+            }
+        };
 
         mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -395,7 +401,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         });
 
         shopsControllerBannerRecyclerView.setLayoutManager(mLayoutManager);
-        shopsControllerBannerRecyclerView.getRecycledViewPool().clear();
     }
 
     private void setupPtrHeader() {
@@ -482,10 +487,18 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         return false;
     }
 
+    private final Runnable onClickLogoRunnable = () -> {
+        shopsControllerBannerRecyclerView.stopScroll();
+        shopsControllerBannerRecyclerView.scrollToPosition(0);
+    };
+
     @OnClick(R.id.partial_toolbar_logo)
     void onClickLogo() {
         shopsControllerBannerRecyclerView.smoothScrollToPosition(0);
-        shopsControllerBannerRecyclerView.postDelayed(() -> shopsControllerBannerRecyclerView.scrollToPosition(0), 500);
+        if (shopsControllerBannerRecyclerView.getHandler() != null) {
+            shopsControllerBannerRecyclerView.getHandler().removeCallbacks(onClickLogoRunnable);
+            shopsControllerBannerRecyclerView.getHandler().postDelayed(onClickLogoRunnable, 500);
+        }
     }
 
     @SuppressWarnings({"ConstantConditions", "deprecation"})
@@ -549,8 +562,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void showSlidingBanners(GetBannerResponse getBannerResponses) {
         HorizontalScrollingBannerAdapter adapter = null;
+        List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
+
         if (getBannerResponses != null) {
-            List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
             List<GetBannerResponse.Group> groups = getBannerResponses.getGroups();
             if (groups != null) {
                 for (GetBannerResponse.Group group : groups) {
@@ -701,14 +715,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private void addToMap(List<GetCategoryTreeResponse> list) {
 
-        for (GetCategoryTreeResponse i : list) {
+        if (list != null) {
+            for (GetCategoryTreeResponse i : list) {
 
-            int childrenSize = i.getChildren().size();
-            if (childrenSize != 0) {
-                addToMap(i.getChildren());
+                int childrenSize = i.getChildren().size();
+                if (childrenSize != 0) {
+                    addToMap(i.getChildren());
+                }
+
+                mCategoryMap.put(i.getKey(), i.getChildren());
             }
-
-            mCategoryMap.put(i.getKey(), i.getChildren());
         }
     }
 
@@ -756,19 +772,23 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mPresenter.onAttach(this);
         hasLoadedAllItems = true;
 
+        //reset adapter
+        mBannersAdapter.clear();
+        
         if (shopsControllerBannerRecyclerView != null) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
+            shopsControllerBannerRecyclerView.getRecycledViewPool().clear();
+            if (!shopsControllerBannerRecyclerView.isComputingLayout() && mBannersAdapter != null) {
+                mBannersAdapter.notifyDataSetChanged();
+            }
         }
+
+        sales.clear();
 
         //reset for values for Get_sales API call
         page = 0;
         bannerOffset = 0;
         mCategoryID = categoryID;
-
-        //reset adapter
-        sales.clear();
-        mBannersAdapter.clear();
-        mLayoutManager.scrollToPosition(0);
 
         int orientation = ScreenUtils.getOrientation(mActivity);
         mBannersAdapter.setupDimensions(orientation);
@@ -890,7 +910,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void goToSaleItemsFromCategorySearch() {
 
         SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
-                .FromCategory(null, null, null);
+                .FromCategory(null, null, null, new ArrayList<>());
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
@@ -1000,6 +1020,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         this.mVerticalOffset = verticalOffset;
     }
 
+    @Override
+    public void onTabSwitch(boolean intoThisView) {
+        super.onTabSwitch(intoThisView);
+        if (!intoThisView) {
+            mBannersAdapter.stopSlidingBanner();
+        }
+    }
+
     /*
      * bug/gen-7818-landscape - update layoutmanager on orientation change
      *
@@ -1008,6 +1036,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void onOrientationChanged(Configuration newConfiguration) {
         super.onOrientationChanged(newConfiguration);
         resetBannerLayout();
+        mBannersAdapter.stopSlidingBanner();
     }
 
     private void resetBannerLayout() {
@@ -1048,7 +1077,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     public void goToCategoryLink(String categoryKey, String categoryId) {
 
-        if (categoryKey != null) {
+        if (categoryKey != null && mActivity.getCategoriesController() != null) {
 
             CategoriesController categoriesController = mActivity.getCategoriesController();
             String categoryMapKey = categoriesController.getCategoryKey(categoryId);
@@ -1080,5 +1109,4 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSlidingBanners();
         loadSponsoredBanners();
     }
-
 }

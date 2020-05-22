@@ -11,7 +11,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
-        classpath 'com.google.gms:google-services:4.2.0'
+        classpath 'com.google.gms:google-services:4.3.2'
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3'
         classpath 'io.fabric.tools:gradle:1.30.0'
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.24.0"
@@ -92,8 +92,8 @@ ext {
     flowLayoutVersion = '1.0.3'
     recyclerViewPagerVersion = 'v1.1.1'
 
-    braintreeVersion = '2.12.0'
-    facebookVersion = '4.28.0'
+    braintreeVersion = '3.8.0'
+    facebookVersion = '5.15.3'
 
     gcmVersion = '16.1.0'
     crystalRangeSeekbarVersion = '1.1.1'

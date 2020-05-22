@@ -435,8 +435,10 @@ public class ViewContactHistoryController extends BaseController implements View
 
             mImageRecyclerView.setVisibility(View.VISIBLE);
 
-            ImageUtils.ImageLink imageLink = new ImageUtils.ImageLink(String.valueOf(chosenImageUri), false);
-            mImageUriArray.add(0, imageLink);
+            ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
+            imageLinks.setIsURL(false);
+            imageLinks.setLink(String.valueOf(chosenImageUri));
+            mImageUriArray.add(0, imageLinks);
 
             ((ViewContactsAddImageAdapter) Objects.requireNonNull(mImageRecyclerView.getAdapter())).addItem();
 

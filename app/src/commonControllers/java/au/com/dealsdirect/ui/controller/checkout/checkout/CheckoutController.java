@@ -242,6 +242,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @BindView(R.id.partial_checkout_summary_shipping_with_icon)
     RelativeLayout mFreeShippingLayout;
 
+    @BindView(R.id.button_visa_checkout)
+    Button mVcoButton;
+
     private RelativeLayout mButtonOurpay;
     private OurPayToggleSwitch mCheckBoxOurpayTC;
 
@@ -292,7 +295,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             showAddAddressController();
             getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.ADD_ADDRESS);
         } else {
-            getRouter().pushController(RouterTransaction.with(new ViewAddressController(true, mDeliveryAddress, false, ""))
+            ViewAddressController.Parameters.DisplayViewAddress parameters = new ViewAddressController.Parameters
+                    .DisplayViewAddress(true, null, false, "");
+
+            ViewAddressController controller = ViewAddressController.newInstance(parameters);
+            getRouter().pushController(RouterTransaction.with(controller)
                     .pushChangeHandler(new HorizontalChangeHandler(false))
                     .popChangeHandler(new HorizontalChangeHandler()));
         }
@@ -411,18 +418,25 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (!mPresenter.isTablet() || !getBoolean(R.bool.master_detail_enabled)) {
             mRecyclerView.setVisibility(View.VISIBLE);
             mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
+            mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getHomeController().openLocationFilterHash(locationFilterHash));
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         }
 
-        if (mVcoPresenter.isVisaCheckoutEnabled()) {
-            mVcoPresenter.setupVisaCheckout();
-        }
-
-
-        if (!mActivity.isBraintreeInitialized() && mActivity.isAuthorized()) {
+        if(!mActivity.isBraintreeInitialized() && mActivity.isAuthorized()) {
             mVcoPresenter.initializeBraintree();
         }
+
+        if(mVcoPresenter.isVisaCheckoutEnabled() && mActivity.isAuthorized()) {
+            if (!mActivity.isBraintreeInitialized()) {
+                mVcoPresenter.initializeBraintree();
+            }
+            mVcoPresenter.setupVisaCheckout(true);
+        }
+
+        mVcoButton.setOnClickListener(action -> {
+            onVisaCheckoutButtonClicked();
+        });
     }
 
     @Override
@@ -458,14 +472,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     break;
                 case Activity.RESULT_OK:
                     if (data != null) {
-                        VisaPaymentSummary visaPaymentSummary = data.getParcelableExtra(VisaCheckoutSdk.INTENT_PAYMENT_SUMMARY);
-                        if (visaPaymentSummary != null) {
-                            // Successful VCO
-                            showLoading();
-                            mActivity.callCreatePaymentTransactionVco(visaPaymentSummary);
-                            mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
-                                    mValue.getSummary().getTotal(), AppConstants.VCO);
-                        }
+                        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+                                mValue.getSummary().getTotal(), AppConstants.VCO);
                         break;
                     }
                 default:
@@ -753,7 +761,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) {
                 mMasterpassButton.setVisibility(View.GONE);
-                mVisaCheckoutButton.setVisibility(View.GONE);
+                mVcoButton.setVisibility(View.GONE);
                 mPayButton.setVisibility(View.GONE);
                 mPaypalButton.setVisibility(View.VISIBLE);
                 mPaypalCreditButton.setVisibility(View.GONE);
@@ -762,7 +770,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mPaypalButton.setVisibility(View.GONE);
                 mPaypalCreditButton.setVisibility(View.GONE);
             }
-
 
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setText(paymentMethod.getPaymentType());
             ((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).setTypeface(((TextView) mPaymentLayout.findViewById(R.id.partial_checkout_payment_name)).getTypeface(),
@@ -782,13 +789,15 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             }
 
             //set brand icon for stripe
-            ImageView cardBrandImageView = mPaymentLayout.findViewById(R.id.partial_checkout_payment_image);
+            if (paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
+                ImageView cardBrandImageView = mPaymentLayout.findViewById(R.id.partial_checkout_payment_image);
 
-            if (paymentMethod.getPaymentType().equalsIgnoreCase(AppConstants.AMEX) ||
-                    paymentMethod.getPaymentType().equalsIgnoreCase(AppConstants.AMERICAN_EXPRESS)) {
-                cardBrandImageView.setImageResource(Card.getBrandIcon(Card.CardBrand.AMERICAN_EXPRESS));
-            } else {
-                cardBrandImageView.setImageResource(Card.getBrandIcon(Card.asCardBrand(paymentMethod.getPaymentType())));
+                if (paymentMethod.getPaymentType().equalsIgnoreCase(AppConstants.AMEX) ||
+                        paymentMethod.getPaymentType().equalsIgnoreCase(AppConstants.AMERICAN_EXPRESS)) {
+                    cardBrandImageView.setImageResource(Card.getBrandIcon(Card.CardBrand.AMERICAN_EXPRESS));
+                } else {
+                    cardBrandImageView.setImageResource(Card.getBrandIcon(Card.asCardBrand(paymentMethod.getPaymentType())));
+                }
             }
 
             mAddNewPaymentLayout.setVisibility(View.GONE);
@@ -873,12 +882,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 paymentList,
                 getSelectedDeliveryOption());
         mActivity.setPaymentMethodSelected(paymentMethod);
-
-        if (paymentMethod != null &&
-                paymentMethod.getProviderType() != null &&
-                paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
-            mPresenter.setStripePaymentMethodId(paymentMethod.getToken());
-        }
 
         showMyPayDetails(mValue, mOurpay);
         displayPaymentDetails();
@@ -997,6 +1000,15 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         return getRouter();
     }
 
+    @Override
+    public void initializeVisaCheckout() {
+        if (mVcoPresenter != null && isViewAttached()) {
+            if (mVcoPresenter.isVisaCheckoutEnabled()) {
+                mVcoPresenter.setupVisaCheckout(true);
+            }
+        }
+    }
+
     private void onPayButtonClick() {
         mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.REGULAR);
@@ -1015,13 +1027,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         } else if (mActivity.getPaymentMethodSelected().getProviderType() != null &&
                     mActivity.getPaymentMethodSelected().getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
             if (mPresenter.isStripeEnabled() && mPresenter.getStripePublicKey() != null) {
-                if (mActivity.getPaymentMethodSelected().getToken() == null ||
-                        mActivity.getPaymentMethodSelected().getToken().isEmpty()) {
-                    mActivity.createStripePaymentMethod();
-                } else {
-                    mActivity.callCreatePaymentTransactionStripe(AppConstants.STRIPE,
-                            mActivity.getPaymentMethodSelected().getToken());
-                }
+                mActivity.callCreatePaymentTransactionStripe(AppConstants.STRIPE,
+                        mActivity.getPaymentMethodSelected().getToken());
             } else {
                 CustomAlertDialog.showCustomAlertDialog(
                         mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
@@ -1282,7 +1289,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             add(mPaypalButton);
             add(mPaypalCreditButton);
             add(mMasterpassButton);
-            add(mVisaCheckoutButton);
+            add(mVcoButton);
         }};
     }
 
@@ -1301,7 +1308,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             //no selected payment Method
             buttons.add(mPayButton);
             if (mPresenter.isPaypalEnabled()) buttons.add(mPaypalButton);
-            if (mPresenter.isVcoEnabled()) buttons.add(mVisaCheckoutButton);
+            if (mPresenter.isVcoEnabled()) buttons.add(mVcoButton);
             if (!isOurPaySelectDeliveryMethod() && mPresenter.isMasterPassEnabled()) {
                 buttons.add(mMasterpassButton);
             }
@@ -1472,11 +1479,18 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void onVisaCheckoutButtonClicked() {
+
+        if (isProcessingVco) {
+            isProcessingVco = false;
+        }
+
+        double total = mValue == null ? 0.0 : mValue.getSummary().getTotal();
+
         mPresenter.logInitiateCheckout(
                 mActivity,
                 PaymentInfo.VISA_CHECKOUT_BRAINTREE,
                 mItemList.size(),
-                mValue.getSummary().getTotal(),
+                total,
                 AppConstants.VCO);
 
         if (!isAddressValid()) {

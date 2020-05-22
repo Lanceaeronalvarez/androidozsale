@@ -902,6 +902,25 @@ public class HomeController extends BaseController implements HomeMvpView {
         }
     }
 
+    public void openLocationFilterHash(String locationFilterHash) {
+        if (mShopRouter == null) {
+            return;
+        }
+
+        SaleItemsController.Parameters.FromLocationFilterHash parameters = new SaleItemsController
+                .Parameters.FromLocationFilterHash(locationFilterHash);
+
+        mShopRouter.popToRoot();
+
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+        mShopRouter.pushController(RouterTransaction.with(controller)
+                .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                .popChangeHandler(new HorizontalChangeHandler()));
+
+        showShopController();
+
+    }
 
     public void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
 
@@ -956,7 +975,11 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     public void showMyAddress(String orderID) {
         if (!mPresenter.isTablet()) {
-            getCurrentRouter().pushController(RouterTransaction.with(new ViewAddressController(false, null, true, orderID))
+            ViewAddressController.Parameters.DisplayViewAddress parameters = new ViewAddressController.Parameters
+                    .DisplayViewAddress(false, null, true, orderID);
+
+            ViewAddressController controller = ViewAddressController.newInstance(parameters);
+            getCurrentRouter().pushController(RouterTransaction.with(controller)
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         } else {

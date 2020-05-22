@@ -30,9 +30,11 @@ import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.adapter.SaleCategoryAdapter;
 import au.com.dealsdirect.ui.controller.categories.adapter.SubCategoriesAdapter;
+import au.com.dealsdirect.ui.controller.categories.adapter.SubCategoryItemsAdapter;
 import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -66,6 +68,9 @@ public class SaleCategoryController extends BaseController
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     public Map<String, String> mCategoryKeyMap = new HashMap<>();
     private SubCategoriesAdapter mSubCategoryAdapter;
+    List<SearchChipModel> mChipFilters = new ArrayList<>();
+    SaleCategoryAdapter.SaleCategoryViewHolder saleCategoryViewHolder;
+    private boolean isLastCategoryClicked = false;
 
     public static SaleCategoryController newInstance() {
         return new SaleCategoryController(
@@ -208,11 +213,12 @@ public class SaleCategoryController extends BaseController
     }
 
     @Override
-    public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey) {
+    public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey,
+                                         List<SearchChipModel> chipFilters) {
         mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
 
         SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
-                .FromCategory(categoryKey, categoryKey, mCategories);
+                .FromCategory(categoryKey, categoryKey, mCategories, chipFilters);
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
@@ -225,21 +231,58 @@ public class SaleCategoryController extends BaseController
 
     @Override
     public void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
+        if (!isViewAttached() || mRecyclerView == null) {
+            return;
+        }
 
-//        //noinspection ConstantConditions
-        if (mCategories != null && mCategories.get(position).getChildren() != null) {
-            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, (mCategories.get(position).getChildren()), mPresenter, mSubCategoryItemClickListener, mCategoryMap);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
-            mRecyclerView.setAdapter(mSubCategoryAdapter);
-            mSubCategoryAdapter.notifyDataSetChanged();
+        //noinspection ConstantConditions
+        if (getCategoryTreeResponse != null && getCategoryTreeResponse.getChildren() != null) {
+            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, (getCategoryTreeResponse.getChildren()), mPresenter, mSubCategoryItemClickListener, this, mCategoryMap);
 
-        } else {
+            saleCategoryViewHolder = (SaleCategoryAdapter.SaleCategoryViewHolder) mRecyclerView.findViewHolderForLayoutPosition(position);
+            if (saleCategoryViewHolder != null) {
+                saleCategoryViewHolder.subCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
+                saleCategoryViewHolder.subCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+
+                int lastPosition = mCategories.size() - 1;
+                if (position == lastPosition) {
+                    isLastCategoryClicked = true;
+                    int total = mCategories.size() + mCategories.get(position).getChildren().size();
+                    mRecyclerView.smoothScrollToPosition(total);
+                } else {
+                    isLastCategoryClicked = false;
+                }
+
+                mSubCategoryAdapter.notifyDataSetChanged();
+            }
+
+            mCategoryAdapter.notifyDataSetChanged();
+        } else if (mActivity.getResources().getBoolean(R.bool.should_use_old_category_layout)){ //should only display blank screen on old layout when response is empty
             ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
-            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, emptyChildren, mPresenter, mSubCategoryItemClickListener, mCategoryMap);
+            mSubCategoryAdapter = new SubCategoriesAdapter(mActivity, emptyChildren, mPresenter, mSubCategoryItemClickListener, this, mCategoryMap);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
             mRecyclerView.setAdapter(mSubCategoryAdapter);
         }
 
-        mCategoryAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSubCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
+        List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(getCategoryTreeResponse.getKey());
+        SubCategoryItemsAdapter mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mActivity, subCategoryItems, mSubCategoryItemClickListener, true,
+                getCategoryTreeResponse.getLinkOptions());
+
+        if (saleCategoryViewHolder != null) {
+            SubCategoriesAdapter.SubCategoriesViewHolder vh = (SubCategoriesAdapter.SubCategoriesViewHolder) saleCategoryViewHolder.subCategoryRecyclerView.findViewHolderForLayoutPosition(position);
+
+            vh.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(vh.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
+            vh.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
+
+            if (isLastCategoryClicked) {
+                int total = mCategories.size() + mCategories.get(position).getChildren().size() + subCategoryItems.size();
+                mRecyclerView.smoothScrollToPosition(total);
+            }
+        }
+
     }
 }

@@ -56,6 +56,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void createPaymentMethod(String deviceData, String paymentNonce, String paymentType);
 
+    void createPaymentMethodStripe(String type, String token);
+
     void callLoginTicket(Context context, boolean isGdprCountry);
 
     void callLogout(AuthHandler handler);

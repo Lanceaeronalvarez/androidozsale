@@ -248,6 +248,7 @@ public class CheckoutDetailsMapper {
             setMinimumSpendForPromoPrice(shipment.getMinimumSpendForPromoPrice());
             setAmountToPromoPrice(shipment.getAmountToPromoPrice());
             setItems(shipment.getItems());
+            setLocationFilterHash(shipment.getLocationFilterHash());
             mapItems(source);
         }
 

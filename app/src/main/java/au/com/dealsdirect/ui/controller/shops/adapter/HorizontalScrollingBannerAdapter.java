@@ -46,6 +46,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.viewholder_banner_for_horizontal, parent, false);
 
@@ -54,6 +55,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         int virtualPosition = position % dataSource.size();
 
         GetBannerResponse.Banner item = dataSource.get(virtualPosition);
@@ -93,7 +95,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     @Override
     public int getItemCount() {
-        return dataSource.size() + getEdgeBufferSize() * 2;
+        return (dataSource != null && dataSource.size() != 0) ? dataSource.size() + getEdgeBufferSize() * 2 : 0;
     }
 
     public List<GetBannerResponse.Banner> getDataSource() {
@@ -176,16 +178,34 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         }
     }
 
+    public int getRecyclerViewPosition() {
+        return getRecyclerViewPosition(0);
+    }
+
+    public int getRecyclerViewPosition(int offset) {
+        if (recyclerView == null) {
+            return -1;
+        }
+        int x = recyclerView.computeHorizontalScrollOffset() + offset;
+        return getAdapterPositionFromX(x);
+    }
+
+    public int getAdapterPositionFromX(int x) {
+        int index = Math.round(x / getCellWidth() - getEdgeBufferSize()) % dataSource.size();
+        return index < 0 ? index + dataSource.size() : index;
+    }
+
     private int getScrollRange() {
         return getCellWidth() * getDataSource().size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.viewholder_banner_layout)
         ViewGroup layout;
 
         @BindView(R.id.viewholder_banner_image)
+        public
         ImageView image;
 
         ViewHolder(View view, int width) {
@@ -197,11 +217,6 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                 params.width = width;
                 layout.setLayoutParams(params);
             }
-        }
-
-        ViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
         }
 
         Disposable subscription;

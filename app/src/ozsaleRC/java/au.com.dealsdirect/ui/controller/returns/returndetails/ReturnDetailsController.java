@@ -249,7 +249,6 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         outState.putString(BundleKeys.KEY_RETURN_ID, mReturnID);
         outState.putBoolean(BundleKeys.KEY_IS_FROM_ORDER, isFromOrders);
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
-        outState.putParcelableArrayList(BundleKeys.KEY_IMAGE_URI, mImageUriArray);
         outState.putString(BundleKeys.KEY_USER_MESSAGE, mReturnDetailsWriteMessageEditText.getText().toString());
         outState.putBoolean(BundleKeys.KEY_SHOULD_UPLOAD_IMAGE, shouldUploadImage);
     }
@@ -266,7 +265,6 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         mReturnID = savedInstanceState.getString(BundleKeys.KEY_RETURN_ID, "");
         isFromOrders = savedInstanceState.getBoolean(BundleKeys.KEY_IS_FROM_ORDER, false);
         hasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
-        mImageUriArray = savedInstanceState.getParcelableArrayList(BundleKeys.KEY_IMAGE_URI);
         userMessage = savedInstanceState.getString(BundleKeys.KEY_USER_MESSAGE, "");
         shouldUploadImage = savedInstanceState.getBoolean(BundleKeys.KEY_SHOULD_UPLOAD_IMAGE);
     }
@@ -340,9 +338,10 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
         if (mImageUriArray.size() == 0 && attachmentSize != 0) {
             for (int i = 0; i < attachmentSize; i++) {
-                ImageUtils.ImageLink imageLink = new ImageUtils.ImageLink(getReturnDetailsResponseBody.getValue().getAttachments().get(i).getUrl(),
-                        true);
-                mImageUriArray.add(0, imageLink);
+                ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
+                imageLinks.setIsURL(true);
+                imageLinks.setLink(getReturnDetailsResponseBody.getValue().getAttachments().get(i).getUrl());
+                mImageUriArray.add(0, imageLinks);
             }
         }
 
@@ -505,8 +504,10 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
             Uri chosenImageUri = data.getData();
             Bitmap mBitmap = null;
 
-                ImageUtils.ImageLink imageLink = new ImageUtils.ImageLink(String.valueOf(chosenImageUri), false);
-                mImageUriArray.add(0, imageLink);
+                ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
+                imageLinks.setIsURL(false);
+                imageLinks.setLink(String.valueOf(chosenImageUri));
+                mImageUriArray.add(0, imageLinks);
 
                 if (hasSavedInstance) {
                     mPresenter.loadCurrentReturnDetails(mReturnID);

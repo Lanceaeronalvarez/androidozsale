@@ -1,7 +1,7 @@
 package au.com.dealsdirect.data.network.model.category;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,46 +9,46 @@ import java.util.List;
 /**
  * dp Created by Admin on 1/3/17.
  */
-public class GetCategoryTreeResponse implements Parcelable {
+public class GetCategoryTreeResponse {
 
-    String payload;
-    String nodeType;
-    String id;
-    String name;
-    String key;
-    int count;
-    boolean isSelected;
-    List<GetCategoryTreeResponse> children;
+    @SerializedName("payload")
+    @Expose
+    private String payload;
+    @SerializedName("nodeType")
+    @Expose
+    private String nodeType;
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("key")
+    @Expose
+    private String key;
+    @SerializedName("count")
+    @Expose
+    private int count;
+    @SerializedName("isSelected")
+    @Expose
+    private boolean isSelected;
+    @SerializedName("children")
+    @Expose
+    private List<GetCategoryTreeResponse> children;
+    @SerializedName("linkOptions")
+    @Expose
+    private LinkOptions linkOptions;
 
     public GetCategoryTreeResponse() {
 
     }
 
-    protected GetCategoryTreeResponse(Parcel in) {
-        payload = in.readString();
-        nodeType = in.readString();
-        id = in.readString();
-        name = in.readString();
-        key = in.readString();
-        count = in.readInt();
-        isSelected = in.readByte() != 0;
-        children = in.createTypedArrayList(GetCategoryTreeResponse.CREATOR);
-    }
-
-    public static final Creator<GetCategoryTreeResponse> CREATOR = new Creator<GetCategoryTreeResponse>() {
-        @Override
-        public GetCategoryTreeResponse createFromParcel(Parcel in) {
-            return new GetCategoryTreeResponse(in);
-        }
-
-        @Override
-        public GetCategoryTreeResponse[] newArray(int size) {
-            return new GetCategoryTreeResponse[size];
-        }
-    };
-
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -61,10 +61,6 @@ public class GetCategoryTreeResponse implements Parcelable {
 
     public String getKey() {
         return key;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setKey(String key) {
@@ -87,21 +83,12 @@ public class GetCategoryTreeResponse implements Parcelable {
         this.children = children;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public LinkOptions getLinkOptions() {
+        return linkOptions;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(payload);
-        parcel.writeString(nodeType);
-        parcel.writeString(id);
-        parcel.writeString(name);
-        parcel.writeString(key);
-        parcel.writeInt(count);
-        parcel.writeByte((byte) (isSelected ? 1 : 0));
-        parcel.writeTypedList(children);
+    public void setLinkOptions(LinkOptions linkOptions) {
+        this.linkOptions = linkOptions;
     }
 
     public String getPayload() {
@@ -120,21 +107,17 @@ public class GetCategoryTreeResponse implements Parcelable {
         this.nodeType = nodeType;
     }
 
-    public static Creator<GetCategoryTreeResponse> getCREATOR() {
-        return CREATOR;
+    public boolean isSelected() {
+        return isSelected;
     }
 
     public void setSelected(boolean isSelected) {
         this.isSelected = isSelected;
     }
 
-    public boolean isSelected() {
-        return isSelected;
-    }
-
     public void traverseTree(TreeTraversalBlock block, Object option) {
         if (block.execute(this, option)) {
-            for (GetCategoryTreeResponse child: children) {
+            for (GetCategoryTreeResponse child : children) {
                 child.traverseTree(block, block.transformOption(this, option));
             }
         }
@@ -142,7 +125,6 @@ public class GetCategoryTreeResponse implements Parcelable {
 
     public interface TreeTraversalBlock {
         /**
-         *
          * @param parent
          * @return True to continue traversal.
          */
@@ -150,4 +132,65 @@ public class GetCategoryTreeResponse implements Parcelable {
 
         Object transformOption(GetCategoryTreeResponse parent, Object option);
     }
+
+    public class LinkOptions {
+        @SerializedName("category")
+        public Category category;
+        @SerializedName("facets")
+        public Facets facets;
+
+        public Category getCategory() {
+            return category;
+        }
+
+        public void setCategory(Category category) {
+            this.category = category;
+        }
+
+        public Facets getFacets() {
+            return facets;
+        }
+
+        public void setFacets(Facets facets) {
+            this.facets = facets;
+        }
+
+        public class Category {
+            @SerializedName("id")
+            public String id;
+            @SerializedName("name")
+            public String name;
+
+            public String getId() {
+                return id;
+            }
+
+            public void setId(String id) {
+                this.id = id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+        }
+
+        public class Facets {
+            @SerializedName("newArrivals")
+            public List<String> newArrivals;
+
+            public List<String> getNewArrivals() {
+                return newArrivals;
+            }
+
+            public void setNewArrivals(List<String> newArrivals) {
+                this.newArrivals = newArrivals;
+            }
+        }
+
+    }
+
 }

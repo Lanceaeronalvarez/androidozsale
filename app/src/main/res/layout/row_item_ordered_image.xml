@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="Cancelled"
             android:padding="5dp"
-            android:background="@color/vco_color_true_red"
+            android:background="@color/red"
             android:textColor="@color/white"
             android:layout_alignParentRight="true"
             android:fontFamily="@string/font_app_bold"

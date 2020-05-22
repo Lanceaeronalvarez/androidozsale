@@ -95,6 +95,7 @@ import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
@@ -1153,26 +1154,30 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void showAddToCartButton() {
-        if (!mIsSoldOutCombined || !mIsSoldout) {
-            if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
-                    (mEndDate != null && !mEndDate.isEmpty()) &&
-                    DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
-                    DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
-                setupSaleRemainingTime(mEndDate);
-                mAddToCartTimer.setVisibility(View.VISIBLE);
-                mAddToCartButtonContainer.setVisibility(View.GONE);
+        if (mAddToCartButton != null) {
+            if (!mIsSoldOutCombined || !mIsSoldout) {
+                if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
+                        (mEndDate != null && !mEndDate.isEmpty()) &&
+                        DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
+                        DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+                    setupSaleRemainingTime(mEndDate);
+                    mAddToCartTimer.setVisibility(View.VISIBLE);
+                    mAddToCartButtonContainer.setVisibility(View.GONE);
+                } else {
+                    mAddToCartTimer.setVisibility(View.GONE);
+                    mAddToCartButtonContainer.setVisibility(View.VISIBLE);
+                    mAddToCartButton.setEnabled(true);
+                    mAddToCartButton.bringToFront();
+                }
             } else {
-                mAddToCartTimer.setVisibility(View.GONE);
                 mAddToCartButtonContainer.setVisibility(View.VISIBLE);
-                mAddToCartButton.setEnabled(true);
+                mAddToCartButton.setEnabled(false);
                 mAddToCartButton.bringToFront();
             }
-        } else {
-            mAddToCartButtonContainer.setVisibility(View.VISIBLE);
-            mAddToCartButton.setEnabled(false);
-            mAddToCartButton.bringToFront();
+
+            showAddToCartButtonContent(false);
         }
-        showAddToCartButtonContent(false);
+
     }
 
     private void showAddToCartButtonContent(boolean showProgressBar) {
@@ -1421,6 +1426,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         request.setItemName(mSaleName);
         request.setPrice(Double.valueOf(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length())));
         request.setPersonalizationData(mPersonalisationLayout.getDataForAddToCart());
+        request.setUserClientType(String.valueOf(mPresenter.isTablet() ? AppConstants.ADD_TO_CART_TABLET :
+                AppConstants.ADD_TO_CART_PHONE));
 
         boolean isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
 
@@ -1750,20 +1757,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private void onSelectTag(int index) {
         int selectedIndex = index;
 
-        // if selection is invalid, try reselecting previous index
-        if (index < 0) {
-            if (mSelectedSizeIndex >= 0) {
-                selectedIndex = mSelectedSizeIndex;
-            } else {
-                return;
-            }
+        if (selectedIndex < 0) {
+            return;
         }
 
         boolean isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
         if (isSizeSoldOut && !mAllowSelectingSoldoutSizes) {
-            // if current selection is sold out, try selecting previous index
-            onSelectTag(-1);
-            return;
+            selectedIndex = mSelectedSizeIndex;
+            if (selectedIndex < 0) {
+                return;
+            }
+            isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
         }
 
         // force selection - this prevents deselecting tags

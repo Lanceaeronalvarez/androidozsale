@@ -407,6 +407,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             getMvpView().showVoucherDetails(mappedValues.getVouchers());
 
             getMvpView().showSummaryDetails(mappedValues.getSummary());
+
+            getMvpView().initializeVisaCheckout();
         } else {
             getDataManager().setCheckoutHasWishlistItem(false);
             getMvpView().showCartDetails(new ArrayList<>());

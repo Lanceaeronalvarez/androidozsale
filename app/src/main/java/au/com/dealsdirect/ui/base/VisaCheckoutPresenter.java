@@ -35,12 +35,8 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
     }
 
     @Override
-    public void setupVisaCheckout() {
-        if (getDataManager().getVisaCheckoutProviderType() == CYBERSOURCE) {
-            setupVisaCheckoutNative();
-        } else if (getDataManager().getVisaCheckoutProviderType() == BRAINTREE) {
-            setupVisaCheckoutBraintree();
-        }
+    public void setupVisaCheckout(boolean isFromCheckout) {
+        setupVisaCheckoutBraintree(isFromCheckout);
     }
 
 
@@ -61,8 +57,9 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
 
     }
 
-    private void setupVisaCheckoutBraintree() {
-        getMvpView().onSetupVisaCheckoutBraintree(getDataManager().getPublicPaymentToken(), getDataManager().getPublicPaymentType());
+    private void setupVisaCheckoutBraintree(boolean isFromCheckout) {
+        getMvpView().onSetupVisaCheckoutBraintree(getDataManager().getPublicPaymentToken(), getDataManager().getPublicPaymentType(),
+                isFromCheckout);
     }
 
     @Override
@@ -74,8 +71,8 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
                         getDataManager().getCurrency()).build());
                 break;
             case BRAINTREE:
-                getMvpView().onStartVisaCheckoutAuthorize(new PurchaseInfo.PurchaseInfoBuilder(new BigDecimal("0.00"),
-                        getDataManager().getCurrency()));
+                getMvpView().initializeVisaCheckoutButton(new PurchaseInfo.PurchaseInfoBuilder(new BigDecimal("0.00"),
+                        getDataManager().getCurrency()), false);
                 break;
         }
     }
@@ -91,8 +88,8 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
                 break;
             case BRAINTREE:
                 PaymentInfo.setPaymentType(PaymentInfo.VISA_CHECKOUT_BRAINTREE);
-                getMvpView().onStartVisaCheckoutAuthorize(new PurchaseInfo.PurchaseInfoBuilder(new BigDecimal(cartTotal),
-                        getDataManager().getCurrency()));
+                getMvpView().initializeVisaCheckoutButton(new PurchaseInfo.PurchaseInfoBuilder(new BigDecimal(cartTotal),
+                        getDataManager().getCurrency()), true);
                 break;
         }
     }

@@ -109,6 +109,7 @@ import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.orders.orders.BottomSheetOrderDialog;
+import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.BottomSheetSizesDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
@@ -556,9 +557,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
         HomeController homeController = getMainController().getHomeController();
         Router currentRouter = homeController.getCurrentRouter();
-        Controller currentController = homeController.getCurrentControllerOnRouter(currentRouter);
+        Controller currentController;
 
-        if (currentController instanceof VisaCheckoutController && paymentMethodNonce instanceof VisaCheckoutNonce) {
+        if (mPresenter.isTablet()) {
+            currentController = !isAuthorized() ? getCurrentController(getMainController().getHomeController().getPopUpHostRouter()) :
+                    homeController.getCurrentControllerOnRouter(currentRouter);
+        } else {
+            currentController = homeController.getCurrentControllerOnRouter(currentRouter);
+        }
+
+            if (currentController instanceof PopUpHostController) {
+                currentController = getCurrentController(
+                        ((PopUpHostController) currentController).getPopUpHostChildRouter());
+            } else if (currentController instanceof CheckoutHostController) {
+                currentController = getCurrentController(
+                        ((CheckoutHostController) currentController).getCheckoutDetailRouter());
+            }
+
+
+            if (currentController instanceof VisaCheckoutController && paymentMethodNonce instanceof VisaCheckoutNonce) {
             switch (getVisaCheckoutActionType()) {
                 case VisaCheckoutController.VISA_CHECKOUT_LOGIN:
                     ((VisaCheckoutController) currentController).doAuthenticateLoginWithVisaCheckoutBraintree((VisaCheckoutNonce) paymentMethodNonce);
@@ -768,11 +785,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             if (currentController instanceof CheckoutHostController || currentController instanceof AddPaymentController) {
                 Router router = currentController instanceof CheckoutHostController ? ((CheckoutHostController) currentController).getDisplayRouter() : getCurrentRouter();
-                if (router.getBackstackSize() > 2) {
-                    router.popToRoot();
-                } else {
-                    router.handleBack();
+                switch (router.getBackstackSize()) {
+                    case 1:
+                        ((BaseController) currentController).refreshContents();
+                        break;
+                    case 2:
+                        router.handleBack();
+                        break;
+                    default:
+                        router.popToRoot();
+                        break;
                 }
+
             } else {
                 currentController.getRouter().handleBack();
             }
@@ -801,8 +825,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         PaymentInfo.setAuthorization(null);
         PaymentInfo.setPaymentType(null);
 
-        if (mBraintreeFragment != null && getBraintreeFragment().isResumed() && getFragmentManager().findFragmentByTag(BraintreeFragment.TAG) != null) {
-            getFragmentManager().beginTransaction().remove(mBraintreeFragment).commit();
+        if (mBraintreeFragment != null && getBraintreeFragment().isResumed() && getSupportFragmentManager().findFragmentByTag(mBraintreeFragment.getTag()) != null) {
+            getSupportFragmentManager().beginTransaction().remove(mBraintreeFragment).commit();
             mBraintreeFragment = null;
         }
     }
@@ -1006,7 +1030,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public Router getAccountsRouter() {
         return mAccountsRouter;
     }
-
 
     public Router getWishlistRouter() {
         return mWishlistRouter;
@@ -1750,13 +1773,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
 
-    public void createStripePaymentMethod() {
+    public void createStripePaymentMethod(String cardNumber, int cardMonth, int cardYear, String cardCVV) {
 
         PaymentInfo.setPaymentType(AppConstants.STRIPE);
 
         com.stripe.android.model.Card card = com.stripe.android.model.Card.create(
-                CardInfo.getCardNumber(), CardInfo.getCardMonth(), CardInfo.getCardYear(), CardInfo.getCardCVV()
-        );
+                cardNumber, cardMonth, cardYear, cardCVV);
 
         final PaymentMethodCreateParams.Card paymentMethodParamsCard =
                 card.toPaymentMethodParamsCard();
@@ -1768,9 +1790,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             @Override
             public void onSuccess(@NonNull com.stripe.android.model.PaymentMethod result) {
 
-                mPresenter.setPaymentMethodId(result.id);
-
-                callCreatePaymentTransactionStripe(AppConstants.STRIPE, result.id);
+                mPresenter.createPaymentMethodStripe(AppConstants.STRIPE, result.id);
 
             }
 
@@ -1785,33 +1805,4 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         });
     }
 
-    public void setCardInfoFromAddPayment(String cardNumber, int month, int year, String cvv) {
-        CardInfo.setCardNumber(cardNumber);
-        CardInfo.setCardMonth(month);
-        CardInfo.setCardYear(year);
-        CardInfo.setCardCVV(cvv);
-
-        com.stripe.android.model.Card card = com.stripe.android.model.Card.create(
-                cardNumber, month, year, cvv);
-
-        PaymentMethod paymentMethod = new PaymentMethod();
-        paymentMethod.setPaymentType(card.getBrand());
-        paymentMethod.setDescription("******"+card.getLast4());
-        paymentMethod.setProviderType(AppConstants.STRIPE);
-        setPaymentMethodSelected(paymentMethod);
-
-        HomeController homeController = getMainController().getHomeController();
-        Controller currentController = homeController.getCurrentControllerOnRouter(homeController.getCurrentRouter());
-
-        if (currentController instanceof CheckoutHostController || currentController instanceof AddPaymentController) {
-            Router router = currentController instanceof CheckoutHostController ? ((CheckoutHostController) currentController).getDisplayRouter() : getCurrentRouter();
-            if (router.getBackstackSize() > 2) {
-                router.popToRoot();
-            } else {
-                router.handleBack();
-            }
-        } else {
-            currentController.getRouter().handleBack();
-        }
-    }
 }

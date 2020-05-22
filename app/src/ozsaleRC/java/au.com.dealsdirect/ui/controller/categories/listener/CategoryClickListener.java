@@ -9,4 +9,6 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 public interface CategoryClickListener {
 
     void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse);
+
+    void onSubCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse);
 }

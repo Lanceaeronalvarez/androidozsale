@@ -74,6 +74,9 @@ public final class AppConstants {
     public static final String AMEX = "amex";
     public static final String AMERICAN_EXPRESS = "American Express";
 
+    public static final int ADD_TO_CART_PHONE = 6;
+    public static final int ADD_TO_CART_TABLET = 7;
+
 
     private AppConstants() {
         // This utility class is not publicly instantiable
