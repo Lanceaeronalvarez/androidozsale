@@ -62,6 +62,7 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
+import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
@@ -1027,6 +1028,15 @@ public class AppApiHelper implements ApiHelper {
     public Observable<String> callEventUser() {
         return Rx2AndroidNetworking.get(ApiEndPoint.getEventUser())
                 .addHeaders(mApiHeader.get())
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<String> callBannerClickEvent(BannerClickEventRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
                 .getStringObservable();
     }

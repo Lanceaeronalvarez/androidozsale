@@ -19,6 +19,7 @@ import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.events.AddToCartJourneyViewCartEvent;
 import au.com.dealsdirect.service.datacollection.events.AddToCartJourneyViewProductCategoryEvent;
 import au.com.dealsdirect.service.datacollection.events.AddedToCartEvent;
+import au.com.dealsdirect.service.datacollection.events.BannerClickEvent;
 import au.com.dealsdirect.service.datacollection.events.CCScanEvent;
 import au.com.dealsdirect.service.datacollection.events.CVAppLaunchEvent;
 import au.com.dealsdirect.service.datacollection.events.CheckOutJourneyEvent;
@@ -63,6 +64,9 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static final String PRODUCT_LIST_GRID_VIEW_PREFERENCE = "PRODUCT_LIST_GRID_VIEW_PREFERENCE";
     private static final String WISHLIST_ADDTOCART = "WISHLIST_ADDTOCART";
     private static final String WISHLIST_PAYMENTSUCCESS = "WISHLIST_PAYMENTSUCCESS";
+    private static final String BANNER_CLICK = "BANNER_CLICK";
+    private static final String SPONSORED_BANNER_CLICK = "SponsoredBanners";
+    private static final String REGULAR_BANNER_CLICK = "RegularBanners";
 
     private static FirebaseAnalyticsService instance;
 
@@ -411,6 +415,27 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                                 String.valueOf(parameters.get(EventParameters.SCREEN_NAME)));
                     }
                 }));
+
+        // register banner click
+        DataCollector.EventRegistry.register(generateEventKey(Events.BannerClickEvent, getServiceKey()),
+                Events.BannerClickEvent,
+                new LoggingService.LogBannerClickEvent(new BannerClickEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString(EventParameters.BANNER_TYPE,
+                                String.valueOf(parameters.get(EventParameters.BANNER_TYPE)));
+                        bundle.putString(EventParameters.SALE_NAME,
+                                String.valueOf(parameters.get(EventParameters.SALE_NAME)));
+                        bundle.putString(EventParameters.SCREEN_NAME,
+                                String.valueOf(parameters.get(EventParameters.SCREEN_NAME)));
+
+                        bannerClick((Context) parameters.get(EventParameters.APP_CONTEXT),
+                                String.valueOf(parameters.get(EventParameters.SCREEN_NAME)), bundle);
+                    }
+                }));
+
     }
 
     private static String generateEventKey(Events events, String service) {
@@ -588,6 +613,12 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
         firebaseAnalytics.logEvent(WISHLIST_PAYMENTSUCCESS, null);
+    }
+
+    private static void bannerClick(Context context, String screenName, Bundle bundle) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
+        firebaseAnalytics.logEvent(BANNER_CLICK, bundle);
     }
 
     @Override

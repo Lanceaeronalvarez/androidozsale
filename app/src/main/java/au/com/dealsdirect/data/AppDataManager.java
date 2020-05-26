@@ -69,6 +69,7 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
+import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
@@ -642,6 +643,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<String> callEventUser() {
         return mApiHelper.callEventUser();
+    }
+
+    @Override
+    public Observable<String> callBannerClickEvent(BannerClickEventRequest request) {
+        return mApiHelper.callBannerClickEvent(request);
     }
 
     @Override

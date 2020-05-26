@@ -38,7 +38,10 @@ public enum Events {
     ProductListGridViewPreference("ProductListGridViewPreference"),
     WishlistEvent("WishlistEvent"),
     WishlistAddToCartEvent("WishlistAddToCartEvent"),
-    WishlistPaymentSuccessEvent("WishlistPaymentSuccessEvent");
+    WishlistPaymentSuccessEvent("WishlistPaymentSuccessEvent"),
+    BannerClickEvent("BannerClickEvent"),
+    SponsoredBannerClickEvent("SponsoredBannerClickEvent"),
+    RegularBannerClickEvent("RegularBannerClickEvent");
 
     private String value;
 
