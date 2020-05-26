@@ -879,13 +879,14 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken) {
+    public void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce,
+                                         String paymentToken, String provider) {
         getMvpView().showLoading();
 
         String languageId = getDataManager().getLanguageId();
         String countryId = getDataManager().getCountryId();
         CreatePaymentTransaction.RequestValue.Request requestValue =
-                new CreatePaymentTransaction.RequestValue.Request(paymentType, paymentNonce, paymentToken, deviceData);
+                new CreatePaymentTransaction.RequestValue.Request(paymentType, paymentNonce, paymentToken, deviceData, provider);
         getCompositeDisposable().add(getDataManager()
                 .callCreatePaymentTransaction(new CreatePaymentTransaction.RequestValue(requestValue, countryId, languageId))
                 .subscribeOn(getSchedulerProvider().io())
@@ -986,11 +987,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void createPaymentTransactionStripe(String paymentType, String paymentMethodId) {
+    public void createPaymentTransactionStripe(String paymentType, String paymentMethodId, String provider) {
         String languageId = getDataManager().getLanguageId();
         String countryId = getDataManager().getCountryId();
         CreatePaymentTransactionStripe.RequestValue.Request requestValue =
-                new CreatePaymentTransactionStripe.RequestValue.Request(paymentType, paymentMethodId);
+                new CreatePaymentTransactionStripe.RequestValue.Request(paymentType, paymentMethodId, provider);
         getCompositeDisposable().add(getDataManager()
                 .callCreatePaymentTransactionStripe(new CreatePaymentTransactionStripe.RequestValue(requestValue, countryId, languageId))
                 .subscribeOn(getSchedulerProvider().io())

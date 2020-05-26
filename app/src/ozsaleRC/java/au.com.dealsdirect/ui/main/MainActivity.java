@@ -603,7 +603,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
 
         BraintreeResponseListener<String> handler = deviceData -> mPresenter.createPaymentTransaction(
-                deviceData, type, nonce, token);
+                deviceData, type, nonce, token, AppConstants.BRAINTREE);
 
         //Kount Check
         if (!mPresenter.getKountMerchantId().isEmpty()) {
@@ -629,7 +629,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void callCreatePaymentTransactionStripe(String paymentType, String paymentMethodId) {
-        mPresenter.createPaymentTransactionStripe(AppConstants.STRIPE, paymentMethodId);
+        mPresenter.createPaymentTransactionStripe(paymentType, paymentMethodId, AppConstants.STRIPE);
     }
 
     @Override

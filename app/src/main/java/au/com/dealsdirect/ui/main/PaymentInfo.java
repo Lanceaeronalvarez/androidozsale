@@ -24,6 +24,7 @@ public class PaymentInfo {
     private static boolean sThreeDSecureCalled = false;
     private static Ourpay sOurpay = null;
     private static boolean sIsTokenFetching = false;
+    private static String provider = "";
 
     public static boolean isThreeDSecureRequired() {
         return sThreeDSecureRequired;
@@ -110,5 +111,13 @@ public class PaymentInfo {
 
     public static void setIsTokenFetching(boolean sIsTokenFetching) {
         PaymentInfo.sIsTokenFetching = sIsTokenFetching;
+    }
+
+    public static String getProvider() {
+        return provider;
+    }
+
+    public static void setProvider(String provider) {
+        PaymentInfo.provider = provider;
     }
 }
