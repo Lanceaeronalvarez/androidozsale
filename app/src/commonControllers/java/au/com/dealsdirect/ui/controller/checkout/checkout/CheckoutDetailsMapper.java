@@ -275,6 +275,7 @@ public class CheckoutDetailsMapper {
         public static final PaymentOption MASTERPASSPAYMENT = new PaymentOption("MasterPassPayment");
         public static final PaymentOption VISACHECKOUT = new PaymentOption("VisaCheckout");
         public static final PaymentOption IPAY88PAYMENTS = new PaymentOption("IPay88Payments");
+        public static final PaymentOption STRIPE = new PaymentOption("Stripe");
 
         private static final HashMap<String, PaymentOption> paymentOptions =
                 new HashMap<String, PaymentOption>() {{
@@ -286,6 +287,7 @@ public class CheckoutDetailsMapper {
                     put("VisaCheckoutBrainTree".toLowerCase(), VISACHECKOUT);
                     put("VisaCheckoutCyberSource".toLowerCase(), VISACHECKOUT);
                     put("IPay88Payments".toLowerCase(), IPAY88PAYMENTS);
+                    put("Stripe".toLowerCase(), STRIPE);
                 }};
 
         private String value;

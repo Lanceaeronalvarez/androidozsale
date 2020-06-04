@@ -4,15 +4,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -23,11 +19,8 @@ import java.util.Map;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
-import au.com.dealsdirect.ui.controller.categories.listener.CategoryClickListener;
+import au.com.dealsdirect.ui.controller.categories.listener.SaleCategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
-import au.com.dealsdirect.ui.controller.main.MainController;
-import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.utils.AppLogger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -38,10 +31,8 @@ public class SaleCategoryAdapter extends RecyclerView.Adapter<SaleCategoryAdapte
 
     private List<GetCategoryTreeResponse> mData = new ArrayList<>();
     private CategoriesMvpPresenter mPresenter;
-    private CategoryClickListener mCategoryAdapterClickListener;
-    private int mLastPosition = -1;
+    private SaleCategoryClickListener mCategoryAdapterClickListener;
     private Context mContext;
-    private int mSelectedIndex;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
     private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
@@ -51,7 +42,7 @@ public class SaleCategoryAdapter extends RecyclerView.Adapter<SaleCategoryAdapte
     public SaleCategoryAdapter(Context context,
                                List<GetCategoryTreeResponse> data,
                                CategoriesMvpPresenter presenter,
-                               CategoryClickListener categoryClickListener,
+                               SaleCategoryClickListener categoryClickListener,
                                Map<String, List<GetCategoryTreeResponse>> categoryMap,
                                SubCategoryItemClickListener subCategoryItemClickListener) {
 
@@ -89,11 +80,10 @@ public class SaleCategoryAdapter extends RecyclerView.Adapter<SaleCategoryAdapte
         }
 
         holder.itemView.setOnClickListener(view -> {
-            mSelectedIndex = position;
             if (holder.subCategoryImageButton.getDrawable().getConstantState() == mContext.getResources().getDrawable(R.drawable.ic_chevron_down).getConstantState()) {
                 holder.subCategoryImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_chevron_up));
                 holder.subCategoryRecyclerView.setVisibility(View.VISIBLE);
-                mCategoryAdapterClickListener.onCategoryClicked(position, mData.get(position));
+                mCategoryAdapterClickListener.onCategoryClicked(position, holder, mData.get(position));
             } else {
                 holder.subCategoryImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_chevron_down));
                 holder.subCategoryRecyclerView.setVisibility(View.GONE);

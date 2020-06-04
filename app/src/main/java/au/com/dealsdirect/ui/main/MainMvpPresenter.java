@@ -46,11 +46,11 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void fetchBTAuthorization();
 
-    void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken);
+    void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken, String provider);
 
     void createPaymentTransactionVco(VisaPaymentSummary visaPaymentSummary);
 
-    void createPaymentTransactionStripe(String paymentType, String paymentMethodId);
+    void createPaymentTransactionStripe(String paymentType, String paymentMethodId, String provider);
 
     void createPaymentTransactionStripePaymentIntent(String paymentType, String paymentMethodId);
 

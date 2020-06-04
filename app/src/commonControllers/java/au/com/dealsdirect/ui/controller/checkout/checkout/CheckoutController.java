@@ -279,6 +279,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private PaymentMethod mLastUserPaymentMethod;
     private boolean mHasSavedInstance = false;
     private HashMap<String, Object> parameters = new HashMap<>();
+    private boolean isStripe;
 
     public static CheckoutController newInstance() {
         return new CheckoutController(
@@ -551,7 +552,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
                     mButtonOurpay = mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                     if (mButtonOurpay != null) {
-                        mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick());
+                        isStripe = paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE);
+                        mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick(isStripe));
                     }
 
 
@@ -1165,52 +1167,50 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
     }
 
-    private void onOurpayButtonClick() {
+    private void onOurpayButtonClick(boolean isStripeOption) {
         mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.OURPAY);
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
 
-        if (mActivity.isBraintreeInitialized()) {
-            setIsOurPaySelectedDeliveryOption(true);
+        setIsOurPaySelectedDeliveryOption(true);
 
-            if (!isAddressValid()) {
+        if (!isAddressValid()) {
 
-                CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
-                showAddAddressController();
+            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
+            showAddAddressController();
 
-            } else if (mActivity.getPaymentMethodSelected() == null) {
+        } else if (mActivity.getPaymentMethodSelected() == null) {
 
-                showAddPaymentMethodController();
+            showAddPaymentMethodController();
 
-            } else {
+        } else {
 
-                if (!mActivity.getPaymentMethodSelected().getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && PaymentInfo.getOurpay().isCanUse()) {
+            if (!mActivity.getPaymentMethodSelected().getPaymentType().equalsIgnoreCase(CARD_PAYPAL) && PaymentInfo.getOurpay().isCanUse()) {
 
-                    if (mCheckBoxOurpayTC != null && mCheckBoxOurpayTC.getCheckedTogglePosition() != 0) {
-                        CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, OurpayTemplateText.getText(mActivity, KEY_OURPAY_TC_VALIDATION_FAILED));
-                        return;
-                    }
+                if (mCheckBoxOurpayTC != null && mCheckBoxOurpayTC.getCheckedTogglePosition() != 0) {
+                    CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, OurpayTemplateText.getText(mActivity, KEY_OURPAY_TC_VALIDATION_FAILED));
+                    return;
+                }
 
-                    if (PaymentInfo.getOurpay().isPhoneVerificationRequired()) {
-                        Bundle bundle = new BundleBuilder(new Bundle())
-                                .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.SMS_VERIFICATION)
-                                .putString(BundleKeys.PHONE_KEY, mAddressPhoneNumber)
-                                .build();
+                if (PaymentInfo.getOurpay().isPhoneVerificationRequired()) {
+                    Bundle bundle = new BundleBuilder(new Bundle())
+                            .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.SMS_VERIFICATION)
+                            .putString(BundleKeys.PHONE_KEY, mAddressPhoneNumber)
+                            .build();
 
-                        getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.OURPAY_PHONE_VERIFIATION);
+                    getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.OURPAY_PHONE_VERIFIATION);
 
-                        if (mPresenter.isTablet() && getBoolean(R.bool.is_ozsale_app)) {
-                            GateKeeper.setRoot(mActivity.getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
-                                    pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
-                        } else {
-                            GateKeeper.push(getRouter(), GateKeeper.Destination.SMS_VERIFICATION, bundle,
-                                    new HorizontalChangeHandler(false),
-                                    new HorizontalChangeHandler());
-                        }
+                    if (mPresenter.isTablet() && getBoolean(R.bool.is_ozsale_app)) {
+                        GateKeeper.setRoot(mActivity.getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
+                                pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
                     } else {
-                        ourpayPaymentSubmit();
+                        GateKeeper.push(getRouter(), GateKeeper.Destination.SMS_VERIFICATION, bundle,
+                                new HorizontalChangeHandler(false),
+                                new HorizontalChangeHandler());
                     }
+                } else {
+                    ourpayPaymentSubmit(isStripeOption);
                 }
             }
         }
@@ -1427,12 +1427,22 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mChangeClickListeners = null;
     }
 
-    private void ourpayPaymentSubmit() {
+    private void ourpayPaymentSubmit(boolean isStripeOption) {
         PaymentInfo.setFabricPaymentType(PaymentInfo.isThreeDSecureRequired() ?
                 DataCollector.EventParameters.PaymentOption.OURPAY3DS.getValue() :
                 DataCollector.EventParameters.PaymentOption.OURPAY.getValue());
         PaymentInfo.setPaymentType(PaymentInfo.TYPE_MYPAY);
-        mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+
+        if (isStripeOption) {
+            PaymentInfo.setProvider(AppConstants.STRIPE);
+            mActivity.callCreatePaymentTransactionStripe(PaymentInfo.getPaymentType(), PaymentInfo.getPaymentMethod().getToken());
+        } else {
+            PaymentInfo.setProvider(PaymentInfo.TYPE_BRAINTREE);
+            if (mActivity.isBraintreeInitialized()) {
+                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+            }
+        }
+
     }
 
     private void showAddAddressController() {

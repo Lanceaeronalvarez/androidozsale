@@ -1621,7 +1621,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mShouldRefreshFacets = previousCategoryKey == null ||
                 !(previousCategoryKey.equals(mCategoryKey) ||
                         previousCategoryKey.equals(mCategoryKey.replaceAll("[,\"]", ""))) ||
-                !mHasCategoryTreeResponse;
+                !mHasCategoryTreeResponse ||
+                mFromShopSearch;
         if (mShouldRefreshFacets) {
             mChipFilters = new LinkedList<>();
             mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);

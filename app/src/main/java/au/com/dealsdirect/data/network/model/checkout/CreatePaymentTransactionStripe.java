@@ -22,10 +22,12 @@ public class CreatePaymentTransactionStripe {
         public static class Request {
             private String paymentType;
             private String paymentMethodId;
+            private String provider;
 
-            public Request(String paymentType, String paymentMethodId) {
+            public Request(String paymentType, String paymentMethodId, String provider) {
                 this.paymentType = paymentType;
                 this.paymentMethodId = paymentMethodId;
+                this.provider = provider;
             }
         }
 

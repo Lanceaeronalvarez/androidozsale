@@ -27,12 +27,14 @@ public class CreatePaymentTransaction {
             private String paymentNonce;
             private String paymentToken;
             private String deviceData;
+            private String provider;
 
-            public Request(String paymentType, String paymentNonce, String paymentToken, String deviceData) {
+            public Request(String paymentType, String paymentNonce, String paymentToken, String deviceData, String provider) {
                 this.paymentType = paymentType;
                 this.paymentNonce = paymentNonce;
                 this.paymentToken = paymentToken;
                 this.deviceData = deviceData;
+                this.provider = provider;
             }
         }
     }

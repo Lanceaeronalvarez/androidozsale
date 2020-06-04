@@ -597,7 +597,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
                 if (horizontalRecyclerViewHolder != null) {
-                    horizontalRecyclerViewHolder.recyclerView.setAdapter(mSlidingBannersAdapter);
+                    horizontalRecyclerViewHolder.setAdapter(mSlidingBannersAdapter);
 
                     horizontalRecyclerViewHolder.circleIndicatorRecyclerView.setVisibility(View.VISIBLE);
 
