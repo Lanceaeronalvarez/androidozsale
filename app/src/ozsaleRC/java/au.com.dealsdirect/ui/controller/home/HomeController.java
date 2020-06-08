@@ -52,6 +52,7 @@ import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.DelayedMethodExecutionManager;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -163,6 +164,9 @@ public class HomeController extends BaseController implements HomeMvpView {
         // before HomeControler is injected and ready.
         // TODO: fix HomeController method calls that accesses the presenter to be delayed until injection
         mActivity.fetchCachedResponses();
+
+        DelayedMethodExecutionManager.getInstance()
+                .executeDelayedMethodCalls(this.getClass().getName());
     }
 
     @Override
@@ -171,6 +175,8 @@ public class HomeController extends BaseController implements HomeMvpView {
         View view = inflater.inflate(R.layout.controller_home, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        DelayedMethodExecutionManager.getInstance()
+                .executeDelayedMethodCalls(this.getClass().getName());
 
         return view;
     }
@@ -714,6 +720,15 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void updateWishlistItemCount(int count) {
+        if (mPresenter == null || getBottomNavigationView() == null) {
+            DelayedMethodExecutionManager.getInstance()
+                    .queueDelayedMethodCall(
+                            this.getClass().getName(),
+                            "updateWishlistItemCount",
+                            () -> updateWishlistItemCount(count));
+            return;
+        }
+
         String text;
         if (count == 0) {
             text = mPresenter.hasWishlistBeenAccessed() ? "" : "NEW";
@@ -1190,6 +1205,14 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void callCreateOrderRefund(String invoiceNumber, String reason, HashMap<String, Integer> items) {
+        if (mPresenter == null) {
+            DelayedMethodExecutionManager.getInstance()
+                    .queueDelayedMethodCall(
+                            this.getClass().getName(),
+                            "callCreateOrderRefund",
+                            () -> callCreateOrderRefund(invoiceNumber, reason, items));
+            return;
+        }
         CreateRefundRequest createRefundRequest = new CreateRefundRequest();
         createRefundRequest.setInvoiceNo(invoiceNumber);
         createRefundRequest.setReason(reason);
