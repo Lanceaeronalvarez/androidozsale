@@ -884,6 +884,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             @Override
             public void onFinish() {
+                mAddToCartTimer.setVisibility(View.GONE);
+                mAddToCartButtonContainer.setVisibility(View.VISIBLE);
+                mAddToCartButton.setEnabled(true);
+                mAddToCartButton.bringToFront();
             }
         };
         mCountDownTimer.start();

@@ -1136,6 +1136,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             @Override
             public void onFinish() {
+                mSaleItemsRemainingTimeText.setVisibility(View.GONE);
+                mSaleEndsInText.setVisibility(View.GONE);
             }
         };
         mCountDownTimer.start();
