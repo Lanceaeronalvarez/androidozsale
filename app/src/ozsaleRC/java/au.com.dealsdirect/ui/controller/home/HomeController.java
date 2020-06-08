@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
+
 import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
@@ -55,6 +55,7 @@ import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
+import io.reactivex.annotations.NonNull;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -152,6 +153,16 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (mHasSavedStateInstance) {
             refreshAllTopControllers();
         }
+
+        // This is placed here due to a bug with calls to HomeController method in a callback
+        // firing before HomeController presenter is injected. This includes calls to updating
+        // the Wishlist badge on the bottom navigation bar. A null pointer exception will be
+        // thrown, saying that the presenter is still null.
+        // I suspect that if the initialization of the MainActivity is prolonged, this makes it
+        // possible for the API request threads to overtake the initialization and fire the callbacks
+        // before HomeControler is injected and ready.
+        // TODO: fix HomeController method calls that accesses the presenter to be delayed until injection
+        mActivity.fetchCachedResponses();
     }
 
     @Override

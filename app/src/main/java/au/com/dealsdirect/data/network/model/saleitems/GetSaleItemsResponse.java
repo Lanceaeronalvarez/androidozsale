@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.dealsdirect.data.cachedresponses.CachableResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Attributes;
 import au.com.dealsdirect.data.network.model.saleitemdetails.OriginalPrice;
@@ -15,7 +16,7 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.OriginalPrice;
  * dp Created by smartwave on 6/22/17.
  */
 
-public class GetSaleItemsResponse implements Serializable {
+public class GetSaleItemsResponse extends CachableResponse implements Serializable {
 
     public List<GetCategoryTreeResponse> categories;
     public int count;

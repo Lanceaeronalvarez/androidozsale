@@ -138,6 +138,7 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
 import static au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent;
 import static au.com.dealsdirect.ui.controller.main.MainController.BANNER_FILTER_INDEX;
 import static au.com.dealsdirect.ui.controller.main.MainController.SHOP_INDEX;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -297,11 +298,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onResume() {
         super.onResume();
         mPresenter.onAttach(this);
+        mPresenter.pruneCachedResponses();
         refreshWishlist();
     }
 
     @Override
     protected void onPause() {
+        mPresenter.storeCachedResponses();
         super.onPause();
     }
 
@@ -1803,6 +1806,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             }
         });
+    }
+
+    public void fetchCachedResponses() {
+        mPresenter.fetchCachedResponses();
+        mPresenter.pruneCachedResponses();
     }
 
 }

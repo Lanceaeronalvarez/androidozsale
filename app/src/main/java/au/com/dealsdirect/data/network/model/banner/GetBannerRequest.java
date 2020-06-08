@@ -3,11 +3,13 @@ package au.com.dealsdirect.data.network.model.banner;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import au.com.dealsdirect.data.cachedresponses.CachableRequest;
+
 /**
  * dp Created by Admin on 6/22/17.
  */
 
-public class GetBannerRequest {
+public class GetBannerRequest implements CachableRequest {
 
     @Expose
     @SerializedName("lastGroupType")
@@ -71,5 +73,29 @@ public class GetBannerRequest {
 
     public void setIncludeCampaignBanners(Boolean includeCampaignBanners) {
         this.includeCampaignBanners = includeCampaignBanners;
+    }
+
+    private String fieldToString(Object field) {
+        String string;
+        if (field instanceof String) {
+            string = (String) field;
+        } else if (field != null) {
+            string = field.toString();
+        } else {
+            return "null";
+        }
+        return string;
+    }
+
+    @Override
+    public String getCacheKey() {
+        return getClass().getSimpleName() + "," +
+                fieldToString(lastGroupType) + "," +
+                fieldToString(offset) + "," +
+                fieldToString(limit) + "," +
+                fieldToString(category) + "," +
+                fieldToString(saleCategoryId) + "," +
+                fieldToString(categoryId) + "," +
+                fieldToString(includeCampaignBanners);
     }
 }

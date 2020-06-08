@@ -20,6 +20,9 @@ import javax.inject.Singleton;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHelper;
+import au.com.dealsdirect.data.cachedresponses.CachableRequest;
+import au.com.dealsdirect.data.cachedresponses.CachableResponse;
+import au.com.dealsdirect.data.cachedresponses.CachedResponseHelper;
 import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.model.SampleRequest;
@@ -174,18 +177,21 @@ public class AppDataManager implements DataManager {
     private final ApiHelper mApiHelper;
     private final AuthHelper mAuthHelper;
     private final WishlistHelper mWishlistHelper;
+    private final CachedResponseHelper mCachedResponseHelper;
 
     @Inject
     public AppDataManager(@ApplicationContext Context context,
                           PreferencesHelper preferencesHelper,
                           ApiHelper apiHelper,
                           AuthHelper authHelper,
-                          WishlistHelper wishlistHelper) {
+                          WishlistHelper wishlistHelper,
+                          CachedResponseHelper cachedResponseHelper) {
         mContext = context;
         mPreferencesHelper = preferencesHelper;
         mApiHelper = apiHelper;
         mAuthHelper = authHelper;
         mWishlistHelper = wishlistHelper;
+        mCachedResponseHelper = cachedResponseHelper;
     }
 
     @Override
@@ -1586,5 +1592,35 @@ public class AppDataManager implements DataManager {
     @Override
     public void updateWishlistCount() {
         mWishlistHelper.updateWishlistCount();
+    }
+
+    @Override
+    public <T extends CachableRequest, V extends CachableResponse> void setCachedResponse(T request, V response) {
+        mCachedResponseHelper.setCachedResponse(request, response);
+    }
+
+    @Override
+    public <T extends CachableRequest, V extends CachableResponse> V getCachedResponse(T request, Class<V> responseClass) {
+        return mCachedResponseHelper.getCachedResponse(request, responseClass);
+    }
+
+    @Override
+    public void pruneCachedResponses() {
+        mCachedResponseHelper.pruneCachedResponses();
+    }
+
+    @Override
+    public <T extends CachableRequest> void pruneCachedResponse(T request) {
+        mCachedResponseHelper.pruneCachedResponse(request);
+    }
+
+    @Override
+    public void storeCache() {
+        mCachedResponseHelper.storeCache();
+    }
+
+    @Override
+    public void fetchCache() {
+        mCachedResponseHelper.fetchCache();
     }
 }
