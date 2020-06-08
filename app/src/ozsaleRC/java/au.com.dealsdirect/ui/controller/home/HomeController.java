@@ -198,6 +198,10 @@ public class HomeController extends BaseController implements HomeMvpView {
         mBottomNavigationView.setDefaultBackgroundColor(getResources().getColor(R.color.bottom_nav_background));
         mBottomNavigationView.setAccentColor(getResources().getColor(R.color.bottom_nav_accent));
         mBottomNavigationView.setInactiveColor(getResources().getColor(R.color.bottom_nav_inactive));
+        mBottomNavigationView.setTitleTextSize(
+                getResources().getDimension(R.dimen.text_size_caption2),
+                getResources().getDimension(R.dimen.text_size_caption2)
+        );
 
 //        ADD "NEW" Badge to categories
 
