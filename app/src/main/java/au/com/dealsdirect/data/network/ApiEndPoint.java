@@ -622,6 +622,14 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.ATTACHMENTS, "settings", ApiUrlVersion.v1.apiVersion());
     }
 
+    public static String recommendedItems() {
+        return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/recommendations/hrnn", ApiUrlVersion.v4.apiVersion());
+    }
+
+    public static String callYouMakeAlsoLike() {
+        return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/recommendations/sims/{sku_id}", ApiUrlVersion.v4.apiVersion());
+    }
+
     private ApiEndPoint() {
         // This class is not publicly instantiable
     }

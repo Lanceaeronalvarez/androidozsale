@@ -777,4 +777,6 @@
     <string name="stripe_error_occured">An Error has Occurred</string>
 
     <string name="sponsored">Sponsored</string>
+    <string name="recommended_for_you">Recommended for you</string>
+    <string name="you_may_also_like">You may also like</string>
 </resources>

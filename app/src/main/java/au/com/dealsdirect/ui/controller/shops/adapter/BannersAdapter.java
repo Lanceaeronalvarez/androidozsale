@@ -49,6 +49,7 @@ import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
+import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerViewHolder;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -102,6 +103,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private static final int THROTTLE_FIRST_WINDOW_DURATION = 1000;
 
+    private static final float SLIDING_BANNER_WIDTH_PERCENT = 0.8f;
 
     private int removeViewHolderOrientationModifier(int viewHolderType) {
         return viewHolderType & (~VIEW_HOLDER_TYPE_LANDSCAPE);
@@ -117,8 +119,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private HorizontalScrollingBannerAdapter mSlidingBannersAdapter = null;
     private HorizontalScrollingBannerAdapter mCategoryBannersAdapter = null;
     private HorizontalScrollingBannerAdapter mSponsoredBannersAdapter = null;
+    public HorizontalRecyclerViewHolder horizontalRecyclerViewHolder = null;
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public BannersAdapter(
             Activity activity,
@@ -154,294 +156,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             itemView.setBackgroundColor(itemView.getResources().getColor(R.color.white));
         }
     }
-
-    public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
-
-        private boolean isAutoScroll;
-
-        private HorizontalScrollingBannerAdapter adapter;
-
-        private Disposable autoScrollDisposable = null;
-
-        private boolean isSwipeEnabled;
-
-        private View.OnLayoutChangeListener onLayoutChangeListener = null;
-
-        @BindView(R.id.viewholder_horizontal_scrolling_banner_layout)
-        ViewGroup layout;
-
-        @BindView(R.id.viewholder_horizontal_scrolling_banner_recycler_view)
-        RecyclerView recyclerView;
-
-        @BindView(R.id.viewholder_horizontal_scrolling_banner_indicator)
-        RecyclerView circleIndicatorRecyclerView;
-
-        HorizontalRecyclerViewHolder(View view,
-                                     int height,
-                                     HorizontalScrollingBannerAdapter adapter,
-                                     boolean isAutoScroll,
-                                     boolean isSwipeEnabled) {
-            super(view);
-            ButterKnife.bind(this, view);
-
-            if (height > 0) {
-                float spacing = view.getContext().getResources().getDimension(R.dimen.horizontal_banner_spacing);
-
-                ViewGroup.LayoutParams params = layout.getLayoutParams();
-                params.height = height + (int) (spacing * 2);
-                layout.setLayoutParams(params);
-            }
-
-            LinearLayoutManager layoutManager = new LinearLayoutManager(
-                    recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
-
-            recyclerView.setLayoutManager(layoutManager);
-
-            recyclerView.setNestedScrollingEnabled(false);
-
-            setAdapter(adapter);
-
-            this.isAutoScroll = isAutoScroll;
-            this.isSwipeEnabled = isSwipeEnabled;
-
-            CustomLinearLayoutManager circleLayoutManager = new CustomLinearLayoutManager(
-                    circleIndicatorRecyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
-
-            circleLayoutManager.setScrollEnabled(false);
-            circleIndicatorRecyclerView.setLayoutManager(circleLayoutManager);
-            HorizontalCircleIndicatorAdapter horizontalCircleIndicatorAdapter = new HorizontalCircleIndicatorAdapter();
-            circleIndicatorRecyclerView.setAdapter(horizontalCircleIndicatorAdapter);
-
-            onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-                Handler mainHandler = new Handler(recyclerView.getContext().getMainLooper());
-                Runnable myRunnable = () -> {
-                    adapter.resetReyclerViewPosition();
-                    horizontalCircleIndicatorAdapter.setSelectedPosition(0);
-
-                    if (onLayoutChangeListener != null) {
-                        circleIndicatorRecyclerView.removeOnLayoutChangeListener(onLayoutChangeListener);
-                        onLayoutChangeListener = null;
-                    }
-                };
-                mainHandler.post(myRunnable);
-            };
-
-            circleIndicatorRecyclerView.addOnLayoutChangeListener(onLayoutChangeListener);
-        }
-
-        public HorizontalScrollingBannerAdapter getAdapter() {
-            return adapter;
-        }
-
-        public void setAdapter(HorizontalScrollingBannerAdapter adapter) {
-            this.adapter = adapter;
-            if (recyclerView != null) {
-                recyclerView.setAdapter(adapter);
-                if (adapter != null) {
-                    adapter.resetReyclerViewPosition();
-                }
-            }
-        }
-
-        public void onViewBound() {
-            previousX = recyclerView.computeHorizontalScrollOffset();
-            setupScrollListener();
-
-            if (isAutoScroll) {
-                startAutoscroll();
-            }
-        }
-
-        public void setCircleIndicatorItemCount(int count) {
-            if (getCircleIndicatorAdapter() != null) {
-                getCircleIndicatorAdapter().setItemCount(count);
-                getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition());
-            }
-        }
-
-        public HorizontalCircleIndicatorAdapter getCircleIndicatorAdapter() {
-            if (circleIndicatorRecyclerView != null) {
-                return (HorizontalCircleIndicatorAdapter) circleIndicatorRecyclerView.getAdapter();
-            } else {
-                return null;
-            }
-        }
-
-        private final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = () ->
-                HorizontalRecyclerViewHolder.this.onScrollChanged(recyclerView.computeHorizontalScrollOffset());
-
-
-        public void onViewRecycled() {
-            clearScrollListener();
-            stopAutoScroll();
-        }
-
-        @SuppressLint("ClickableViewAccessibility")
-        private void setupScrollListener() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                recyclerView.setOnScrollChangeListener(
-                        (v, scrollX, scrollY, oldScrollX, oldScrollY) -> onScrollChanged(recyclerView.computeHorizontalScrollOffset()));
-            } else {
-                recyclerView.getViewTreeObserver().addOnScrollChangedListener(onScrollChangedListener);
-            }
-
-            if (isSwipeEnabled) {
-                recyclerView.setOnTouchListener(new OnHorizontalSwipeTouchListener() {
-                    @Override
-                    public void onFinishDragging() {
-                        snapToCenter(true);
-                    }
-
-                    @Override
-                    public void onSwipeLeft() {
-                        scrollToNext(true);
-                    }
-
-                    @Override
-                    public void onSwipeRight() {
-                        scrollToPrevious(true);
-                    }
-
-                    @Override
-                    public void onTouchDown() {
-                        if (isAutoScroll) {
-                            stopAutoScroll();
-                        }
-                    }
-
-                    @Override
-                    public void onTouchUp() {
-                        if (isAutoScroll) {
-                            startAutoscroll();
-                        }
-                    }
-                });
-            }
-        }
-
-        @SuppressLint("ClickableViewAccessibility")
-        private void clearScrollListener() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                recyclerView.setOnScrollChangeListener(null);
-            } else {
-                recyclerView.getViewTreeObserver().removeOnScrollChangedListener(onScrollChangedListener);
-            }
-
-            recyclerView.setOnTouchListener(null);
-        }
-
-        private void startAutoscroll() {
-
-            stopAutoScroll();
-            autoScrollDisposable = Observable.interval(SCROLL_INTERVAL, TimeUnit.SECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .takeWhile(o -> compositeDisposable.size() != 0 && !compositeDisposable.isDisposed())
-                    .doOnNext(o -> {
-                        scrollToNext(true);
-                    })
-                    .subscribe();
-
-            compositeDisposable.add(autoScrollDisposable);
-        }
-
-        private void stopAutoScroll() {
-            if (autoScrollDisposable != null) {
-                autoScrollDisposable.dispose();
-                autoScrollDisposable = null;
-            }
-        }
-
-        private void scrollToNext(boolean withAnimation) {
-            if (adapter == null) {
-                return;
-            }
-
-            Handler mainHandler = new Handler(recyclerView.getContext().getMainLooper());
-
-            Runnable myRunnable = () -> {
-                recyclerView.stopScroll();
-                wrapAround(1);
-                int displacement = getXBeforeNextPosition();
-                if (withAnimation) {
-                    recyclerView.smoothScrollBy(displacement, 0);
-                } else {
-                    recyclerView.scrollBy(displacement, 0);
-                }
-
-                if (getCircleIndicatorAdapter() != null) {
-                    getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition(displacement));
-                }
-            };
-            mainHandler.post(myRunnable);
-        }
-
-        private void scrollToPrevious(boolean withAnimation) {
-            if (adapter == null) {
-                return;
-            }
-
-            Handler mainHandler = new Handler(recyclerView.getContext().getMainLooper());
-
-            Runnable myRunnable = () -> {
-                recyclerView.stopScroll();
-                wrapAround(-1);
-                int displacement = -getXAfterPreviousPosition();
-                if (displacement >= 0) {
-                    displacement = -adapter.getCellWidth();
-                }
-                if (withAnimation) {
-                    recyclerView.smoothScrollBy(displacement, 0);
-                } else {
-                    recyclerView.scrollBy(displacement, 0);
-                }
-
-                if (getCircleIndicatorAdapter() != null) {
-                    getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition(displacement));
-                }
-            };
-            mainHandler.post(myRunnable);
-        }
-
-        public void snapToCenter(boolean withAnimation) {
-            int diff = (getXBeforeNextPosition() - getXAfterPreviousPosition()) % adapter.getCellWidth();
-            if (diff < 0) {
-                scrollToNext(withAnimation);
-            } else if (diff > 0) {
-                scrollToPrevious(withAnimation);
-            }
-        }
-
-        private int getXAfterPreviousPosition() {
-            if (adapter == null) {
-                return 0;
-            }
-            return (recyclerView.computeHorizontalScrollOffset() + (recyclerView.getWidth() - adapter.getCellWidth())) % adapter.getCellWidth();
-        }
-
-        private int getXBeforeNextPosition() {
-            if (adapter == null) {
-                return 0;
-            }
-            return adapter.getCellWidth() - getXAfterPreviousPosition();
-        }
-
-        private int previousX = 0;
-
-        private void onScrollChanged(int scrollX) {
-            int speed = scrollX - previousX;
-            previousX = scrollX;
-            wrapAround(speed);
-        }
-
-        private void wrapAround(int speed) {
-            if (adapter != null) {
-                adapter.wrapScrollPosition(speed);
-            }
-
-        }
-    }
-
 
     class BannerViewHolder extends RecyclerView.ViewHolder {
 
@@ -584,7 +298,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         if (holder instanceof HorizontalRecyclerViewHolder) {
-            HorizontalRecyclerViewHolder horizontalRecyclerViewHolder = (HorizontalRecyclerViewHolder) holder;
+            horizontalRecyclerViewHolder = (HorizontalRecyclerViewHolder) holder;
             horizontalRecyclerViewHolder.onViewRecycled();
         }
     }
@@ -592,7 +306,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         BannerViewHolder bannerViewHolder = null;
-        HorizontalRecyclerViewHolder horizontalRecyclerViewHolder = null;
+        horizontalRecyclerViewHolder = null;
         if (holder instanceof BannerViewHolder) {
             bannerViewHolder = (BannerViewHolder) holder;
         } else if (holder instanceof HorizontalRecyclerViewHolder) {
@@ -1159,6 +873,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void stopSlidingBanner() {
-        compositeDisposable.clear();
+        horizontalRecyclerViewHolder.stopSlidingBanner();
     }
 }

@@ -45,6 +45,7 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.util.Pair;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -76,11 +77,14 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.service.afterpay.AfterpayPanelViewHolder;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
@@ -93,6 +97,8 @@ import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerC
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
+import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
+import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -282,6 +288,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private CountDownTimer mCountDownTimer;
 
     private boolean shouldAfterpayDetailsBeVisible = false;
+    private HorizontalScrollingBannerAdapter mSlidingBannersAdapter = null;
+    SaleItemDetailsScrollingImageAdapter mYouMayAlsoLikeAdapter;
+    GridLayoutManager mLayoutManager;
+    List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
+    List<GetYouMayAlsoLikeResponse> mYouMayAlsoLikeList = new ArrayList<>();
+    List<RecommendedItemsResponse> mRecommendedList = new ArrayList<>();
 
     @BindView(R.id.share_right)
     ImageView mLikeButton;
@@ -384,6 +396,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mProductDiscountTextView;
     @BindView(R.id.controller_product_details_button_container)
     RelativeLayout mProductDetailsButtonContainer;
+    @BindView(R.id.controller_product_details_like_recyclerview)
+    RecyclerView mYouMayAlsoLikeRecyclerview;
+    @BindView(R.id.controller_product_details_like_container)
+    View mYouMayAlsoLikeContainer;
+    @BindView(R.id.controller_product_details_recommended_recyclerview)
+    RecyclerView mRecommendedRecyclerView;
+    @BindView(R.id.controller_product_details_recommended_container)
+    View mRecommendedContainer;
     int[] mSharedImageLocation;
 
     public static final String TAG = SaleItemDetailsController.class.getSimpleName();
@@ -582,6 +602,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mOurpay != null) {
             showMyPayDetails(null, mOurpay);
         }
+        showYouMayAlsoLike();
     }
 
     @Override
@@ -967,6 +988,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (willViewDisappear) {
             return;
         }
+
+        mPresenter.loadYouMayAlsoLike(saleDetail.getAttributes().getProductId());
+
+        mPresenter.loadRecommendedItems();
 
         mProductId = saleDetail.getProductId();
         mMasterProductId = saleDetail.getAttributes().getProductId();
@@ -1438,6 +1463,88 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
+    public void showYouMayAlsoLike(List<GetYouMayAlsoLikeResponse> response) {
+
+        mYouMayAlsoLikeList = response;
+        mYouMayAlsoLikeContainer.setVisibility(View.VISIBLE);
+
+        if (mYouMayAlsoLikeAdapter != null) {
+            mYouMayAlsoLikeAdapter.clear();
+        }
+
+        showYouMayAlsoLike();
+
+    }
+
+    private void showYouMayAlsoLike() {
+        HorizontalScrollingBannerAdapter adapter = null;
+        if (!mYouMayAlsoLikeList.isEmpty()) {
+            adapter = new HorizontalScrollingBannerAdapter(mActivity);
+            adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
+        }
+
+        adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.YouMayAlsoLike);
+        mYouMayAlsoLikeAdapter = new SaleItemDetailsScrollingImageAdapter(mActivity, mPresenter,
+                this, mYouMayAlsoLikeList, mRecommendedList);
+
+        mYouMayAlsoLikeAdapter.setSlidingBannersAdapter(adapter);
+
+        GridLayoutManager mLayoutManager = new GridLayoutManager(
+                mActivity,
+                1,
+                RecyclerView.VERTICAL,
+                false);
+
+        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return 1;
+            }
+        });
+        mYouMayAlsoLikeRecyclerview.setAdapter(mYouMayAlsoLikeAdapter);
+        mYouMayAlsoLikeRecyclerview.setLayoutManager(mLayoutManager);
+        mYouMayAlsoLikeRecyclerview.getRecycledViewPool().clear();
+    }
+
+    @Override
+    public void showRecommendedItems(List<RecommendedItemsResponse> recommendedItemsResponseList) {
+
+        mRecommendedContainer.setVisibility(View.VISIBLE);
+
+        mRecommendedList = recommendedItemsResponseList;
+
+        HorizontalScrollingBannerAdapter adapter = null;
+        if (!recommendedItemsResponseList.isEmpty()) {
+            adapter = new HorizontalScrollingBannerAdapter(mActivity);
+            adapter.setRecommendedList(recommendedItemsResponseList);
+        }
+
+
+        SaleItemDetailsScrollingImageAdapter mRecommendedAdapter = new SaleItemDetailsScrollingImageAdapter(mActivity, mPresenter,
+                this, new ArrayList<>(), recommendedItemsResponseList);
+
+        mRecommendedAdapter.setSlidingBannersAdapter(adapter);
+        adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.RecommendedItems);
+
+        GridLayoutManager mLayoutManager = new GridLayoutManager(
+                mActivity,
+                1,
+                RecyclerView.VERTICAL,
+                false);
+
+        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return 1;
+            }
+        });
+
+        mRecommendedRecyclerView.setAdapter(mRecommendedAdapter);
+        mRecommendedRecyclerView.setLayoutManager(mLayoutManager);
+        mRecommendedRecyclerView.getRecycledViewPool().clear();
+    }
+
+    @Override
     public boolean handleBack() {
         willViewDisappear = true;
         if (!isAnimating) {
@@ -1843,5 +1950,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductImagesRv.setZ(0);
             mProductDetailsButtonContainer.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void reloadSaleItemDetails(GetYouMayAlsoLikeResponse response) {
+        mProductDetailScrollView.smoothScrollTo(0,0);
+        mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
+    }
+
+    @Override
+    public void reloadSaleItemDetails(RecommendedItemsResponse response) {
+        mProductDetailScrollView.smoothScrollTo(0,0);
+        mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
     }
 }

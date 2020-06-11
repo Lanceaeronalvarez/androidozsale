@@ -39,7 +39,7 @@ public class GetBannerResponse extends CachableResponse {
 
     }
 
-    public class Banner {
+    public static class Banner {
 
         private transient Group group;
         @SerializedName("id")

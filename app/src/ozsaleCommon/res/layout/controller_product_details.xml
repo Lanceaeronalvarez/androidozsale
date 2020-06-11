@@ -471,6 +471,64 @@
                                     android:textSize="@dimen/text_size_caption1" />
                             </RelativeLayout>
 
+                            <LinearLayout
+                                android:id="@+id/controller_product_details_like_container"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_small"
+                                android:layout_marginBottom="@dimen/margin_small"
+                                android:background="@color/white"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    fontPath="@string/font_app_bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:padding="@dimen/margin_small"
+                                    android:text="@string/you_may_also_like"
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_caption1" />
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/controller_product_details_like_recyclerview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:nestedScrollingEnabled="false"
+                                    android:focusableInTouchMode="true"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/white"
+                                android:layout_marginTop="@dimen/margin_tiny"
+                                android:layout_marginBottom="@dimen/margin_small"
+                                android:orientation="vertical"
+                                android:id="@+id/controller_product_details_recommended_container"
+                                android:visibility="gone">
+
+                                <TextView
+                                    fontPath="@string/font_app_bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:padding="@dimen/margin_small"
+                                    android:text="@string/recommended_for_you"
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_caption1" />
+
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/controller_product_details_recommended_recyclerview"
+                                    android:visibility="visible"/>
+
+                            </LinearLayout>
+
                         </LinearLayout>
                     </LinearLayout>
 

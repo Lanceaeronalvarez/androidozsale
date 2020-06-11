@@ -76,6 +76,9 @@ public class GetSaleItemDetailsResponse {
     @SerializedName("rrpText")
     @Expose
     private String rrpText;
+    @SerializedName("masterSkuId")
+    @Expose
+    private String masterSkuId;
 
 
     public String getPersonalisation() {
@@ -244,5 +247,13 @@ public class GetSaleItemDetailsResponse {
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    public String getMasterSkuId() {
+        return masterSkuId;
+    }
+
+    public void setMasterSkuId(String masterSkuId) {
+        this.masterSkuId = masterSkuId;
     }
 }

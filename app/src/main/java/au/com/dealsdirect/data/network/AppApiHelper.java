@@ -111,6 +111,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.Ve
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
@@ -130,6 +131,7 @@ import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrder
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -1228,6 +1230,23 @@ public class AppApiHelper implements ApiHelper {
                 .addPathParameter("product_id", productId)
                 .build()
                 .getStringObservable();
+    }
+
+    @Override
+    public Observable<List<RecommendedItemsResponse>> callRecommendedItems() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.recommendedItems())
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectListObservable(RecommendedItemsResponse.class);
+    }
+
+    @Override
+    public Observable<List<GetYouMayAlsoLikeResponse>> callYouMayAlsoLike(String skuId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callYouMakeAlsoLike())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("sku_id", skuId)
+                .build()
+                .getObjectListObservable(GetYouMayAlsoLikeResponse.class);
     }
 }
 
