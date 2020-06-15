@@ -327,4 +327,7 @@
     <dimen name="expiration_date_sheet_label_padding_bottom">8dp</dimen>
     <dimen name="expiration_date_item_selected_background_radius">2dp</dimen>
 
+    <dimen name="recently_viewed_height">225dp</dimen>
+    <dimen name="recently_viewed_width">250dp</dimen>
+
 </resources>

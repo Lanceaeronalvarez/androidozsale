@@ -54,7 +54,6 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
-import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
@@ -84,6 +83,7 @@ import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeRes
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.service.afterpay.AfterpayPanelViewHolder;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
@@ -95,18 +95,17 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.main.Settings;
+import au.com.dealsdirect.ui.controller.saleitemdetails.listener.ImageTappedListener;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
-import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
-import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
@@ -132,7 +131,8 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
  * Created by smartwave on 08/06/2017.
  */
 
-public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener, SaleDetailsImageListener {
+public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView,
+        LoadImagesListener, SaleDetailsImageListener, ImageTappedListener {
 
     private final static int ACTIVITY_INDICATOR_DELAY = 2000; // milliseconds
 
@@ -294,6 +294,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
     List<GetYouMayAlsoLikeResponse> mYouMayAlsoLikeList = new ArrayList<>();
     List<RecommendedItemsResponse> mRecommendedList = new ArrayList<>();
+    RecentlyViewedItemAdapter recentlyViewedAdapter;
 
     @BindView(R.id.share_right)
     ImageView mLikeButton;
@@ -404,6 +405,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     RecyclerView mRecommendedRecyclerView;
     @BindView(R.id.controller_product_details_recommended_container)
     View mRecommendedContainer;
+    @BindView(R.id.controller_product_details_recently_view_recyclerview)
+    RecyclerView mRecentlyViewedRecyclerView;
+    @BindView(R.id.controller_product_details_recently_viewed_container)
+    LinearLayout mRecentlyViewedContainer;
     int[] mSharedImageLocation;
 
     public static final String TAG = SaleItemDetailsController.class.getSimpleName();
@@ -417,6 +422,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mHtmlFooter = "";
 
     private LoadImagesListener mLoadImagesListener;
+    private ImageTappedListener recentlyViewedListener;
     private boolean mImagesLoaded = false;
 
     private ArrayList<Pair<String, String>> mProductSizes = new ArrayList<>();
@@ -661,10 +667,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         stretchImageView();
 
         if (mBrandName == null || mBrandName.isEmpty()) {
-            mProductBrand.setText(Html.fromHtml("<u>"+mSaleName+"</u>"));
+            mProductBrand.setText(Html.fromHtml("<u>" + mSaleName + "</u>"));
             mProductName.setText("");
         } else {
-            mProductBrand.setText(Html.fromHtml("<u>"+mBrandName+"</u>"));
+            mProductBrand.setText(Html.fromHtml("<u>" + mBrandName + "</u>"));
             mProductName.setText(mSaleName);
         }
 
@@ -702,6 +708,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mLoadImagesListener = this;
         mSaleDetailsImageListener = this;
+        recentlyViewedListener = this;
         mProductSharedImage.setTransitionName(getResources().getString(R.string.transition_sale_image_indexed, mFromPosition));
 
         if (mItemLowResImageDrawable != null) {
@@ -998,6 +1005,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mSkuId = saleDetail.getSkuId();
 
+        if (mPresenter.isAuthorized()) {
+            mPresenter.loadRecentlyItems();
+        }
+
         mSeoIdentifierId = saleDetail.getSeoIdentifier();
         mSaleName = saleDetail.getName();
         mBrandName = saleDetail.getBrandName();
@@ -1050,11 +1061,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mToolbarItemBrandTextView.setText(brandName);
             mToolbarItemNameTextView.setText(name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
             mProductName.setText(name.trim());
-            mProductBrand.setText(Html.fromHtml("<u>"+brandName.trim()+"</u>"));
+            mProductBrand.setText(Html.fromHtml("<u>" + brandName.trim() + "</u>"));
         } else {
             mToolbarItemBrandTextView.setText(name.trim());
             mToolbarItemNameTextView.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
-            mProductBrand.setText(Html.fromHtml("<u>"+name.trim()+"</u>"));
+            mProductBrand.setText(Html.fromHtml("<u>" + name.trim() + "</u>"));
         }
 
         if (personalisation != null) {
@@ -1545,6 +1556,50 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
+    public void showRecentlyViewedItems(List<RecentlyItemResponse> response) {
+        mRecentlyViewedContainer.setVisibility(View.VISIBLE);
+
+        if (recentlyViewedAdapter != null) {
+            recentlyViewedAdapter.clear();
+        }
+
+        HorizontalScrollingBannerAdapter adapter = null;
+        if (!response.isEmpty()) {
+            adapter = new HorizontalScrollingBannerAdapter(mActivity);
+            adapter.setRecentlyViewedList(response);
+        }
+
+        adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.RecentlyViewed);
+        recentlyViewedAdapter = new RecentlyViewedItemAdapter(mActivity, mPresenter,
+                recentlyViewedListener, response);
+
+        recentlyViewedAdapter.setSlidingBannersAdapter(adapter);
+
+        GridLayoutManager mLayoutManager = new GridLayoutManager(
+                mActivity,
+                1,
+                RecyclerView.VERTICAL,
+                false);
+
+        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return 1;
+            }
+        });
+        mRecentlyViewedRecyclerView.setAdapter(recentlyViewedAdapter);
+        mRecentlyViewedRecyclerView.setLayoutManager(mLayoutManager);
+        mRecentlyViewedRecyclerView.getRecycledViewPool().clear();
+
+    }
+
+    @Override
+    public void imageTapped(RecentlyItemResponse recentlyItemResponse) {
+        mProductDetailScrollView.smoothScrollTo(0, 0);
+        mPresenter.loadSaleItemDetails(recentlyItemResponse.getId(), recentlyItemResponse.getSeoIdentifier());
+    }
+
+    @Override
     public boolean handleBack() {
         willViewDisappear = true;
         if (!isAnimating) {
@@ -1954,13 +2009,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void reloadSaleItemDetails(GetYouMayAlsoLikeResponse response) {
-        mProductDetailScrollView.smoothScrollTo(0,0);
+        mProductDetailScrollView.smoothScrollTo(0, 0);
         mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
     }
 
     @Override
     public void reloadSaleItemDetails(RecommendedItemsResponse response) {
-        mProductDetailScrollView.smoothScrollTo(0,0);
+        mProductDetailScrollView.smoothScrollTo(0, 0);
         mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
     }
 }

@@ -13,13 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
+import au.com.dealsdirect.ui.controller.saleitemdetails.listener.ImageTappedListener;
 import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,18 +36,20 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     private int cellWidth;
     private int cellHeight;
 
-    private List<GetBannerResponse.Banner> dataSource;
+    private List<GetBannerResponse.Banner> dataSource = new ArrayList<>();;
 
     private RecyclerView recyclerView = null;
 
     public OnBannerTappedListener onBannerTappedListener = null;
     public OnItemTappedListener onItemTappedListener = null;
     public OnItemRecommendedListener onItemRecommendedListener = null;
+    public ImageTappedListener onRecentlyViewedListener = null;
 
     private static final int THROTTLE_FIRST_WINDOW_DURATION = 1000;
 
     List<GetYouMayAlsoLikeResponse> mYouMayAlsoLikeList;
     List<RecommendedItemsResponse> mRecommendedList;
+    List<RecentlyItemResponse> mRecentlyViewedList;
 
     private String saleId = "";
     private String seoIdentifierId = "";
@@ -53,6 +58,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     public enum BannerViewType {
         ShopBanner,
         YouMayAlsoLike,
+        RecentlyViewed,
         RecommendedItems
     }
 
@@ -70,6 +76,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         switch (getBannerViewType()) {
             case YouMayAlsoLike:
             case RecommendedItems:
+            case RecentlyViewed:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.viewholder_banner_product, parent, false);
                 return new ViewHolder(view, cellWidth);
@@ -88,6 +95,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         String imgUrl = "";
         GetBannerResponse.Banner item;
         GetYouMayAlsoLikeResponse youMayLikeItem;
+        RecentlyItemResponse recentlyItemResponse;
         RecommendedItemsResponse recommendedItemsResponse;
         int virtualPosition;
 
@@ -143,6 +151,24 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                             }
                         });
                 break;
+            case RecentlyViewed:
+                virtualPosition = position % mRecentlyViewedList.size();
+                recentlyItemResponse = mRecentlyViewedList.get(virtualPosition);
+                if (recentlyItemResponse.getImages().size() != 0) {
+                    imgUrl = recentlyItemResponse.getImages().get(0);
+                }
+                holder.itemName.setText(recentlyItemResponse.getName());
+                holder.subscription = RxView.clicks(holder.layout)
+                        .throttleFirst(
+                                THROTTLE_FIRST_WINDOW_DURATION,
+                                TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(action -> {
+                            if (onRecentlyViewedListener != null) {
+                                onRecentlyViewedListener.imageTapped(recentlyItemResponse);
+                            }
+                        });
+                break;
             default:
                 if (cellWidth > cellHeight) {
                     width = holder.itemView.getContext().getResources().getInteger(R.integer.sliding_banner_width);
@@ -176,7 +202,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                 }
         }
 
-        if (mActivity != null && !mActivity.isDestroyed()) {
+        if (mActivity != null && !mActivity.isDestroyed() ||
+                !imgUrl.isEmpty()) {
             ImageUtils.loadImage(imgUrl, holder.image);
         }
 
@@ -191,6 +218,9 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
             case RecommendedItems:
                 return (mRecommendedList != null && mRecommendedList.size() != 0) ?
                         mRecommendedList.size() + getEdgeBufferSize() * 2 : 0;
+            case RecentlyViewed:
+                return (mRecentlyViewedList != null && mRecentlyViewedList.size() != 0) ?
+                        mRecentlyViewedList.size() + getEdgeBufferSize() * 2 : 0;
             default:
                 return (dataSource != null && dataSource.size() != 0) ?
                         dataSource.size() + getEdgeBufferSize() * 2 : 0;
@@ -205,8 +235,23 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         return mYouMayAlsoLikeList;
     }
 
+    public List<RecentlyItemResponse> getRecentlyViewedList() {
+        return mRecentlyViewedList;
+    }
+
+    public void setRecentlyViewedList(List<RecentlyItemResponse> mRecentlyViewedList) {
+        this.mRecentlyViewedList = mRecentlyViewedList;
+        if (recyclerView != null && !recyclerView.isComputingLayout()) {
+            notifyDataSetChanged();
+        }
+    }
+
     public void setDataSource(List<GetBannerResponse.Banner> dataSource) {
-        this.dataSource = dataSource;
+        if (dataSource != null) {
+            this.dataSource = dataSource;
+        } else {
+            this.dataSource = new ArrayList<>();
+        }
         if (recyclerView != null && !recyclerView.isComputingLayout()) {
             notifyDataSetChanged();
         }
@@ -283,6 +328,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                     return Math.max(3, mYouMayAlsoLikeList.size());
                 case RecommendedItems:
                     return Math.max(3, mRecommendedList.size());
+                case RecentlyViewed:
+                    return Math.max(3, mRecentlyViewedList.size());
                 default:
                     return Math.max(3, dataSource.size());
             }
@@ -322,6 +369,14 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         this.onItemTappedListener = onItemTappedListener;
     }
 
+    public ImageTappedListener getOnRecentlyViewedListener() {
+        return onRecentlyViewedListener;
+    }
+
+    public void setOnRecentlyViewedListener(ImageTappedListener onRecentlyViewedListener) {
+        this.onRecentlyViewedListener = onRecentlyViewedListener;
+    }
+
     public OnItemRecommendedListener getOnItemRecommendedListener() {
         return onItemRecommendedListener;
     }
@@ -349,6 +404,9 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                 break;
             case RecommendedItems:
                 itemSize = getRecommendedList().size();
+                break;
+            case RecentlyViewed:
+                itemSize = getRecentlyViewedList().size();
                 break;
             default:
                 itemSize = getDataSource().size();
@@ -382,6 +440,9 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
             case RecommendedItems:
                 dataSize = getRecommendedList().size();
                 break;
+            case RecentlyViewed:
+                dataSize = getRecentlyViewedList().size();
+                break;
             default:
                 dataSize = getDataSource().size();
         }
@@ -395,6 +456,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                 return getCellWidth() * getYouMayAlsoLikeList().size();
             case RecommendedItems:
                 return getCellWidth() * getRecommendedList().size();
+            case RecentlyViewed:
+                return getCellWidth() * getRecentlyViewedList().size();
             default:
                 return getCellWidth() * getDataSource().size();
         }

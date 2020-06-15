@@ -141,6 +141,7 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -771,6 +772,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<List<GetYouMayAlsoLikeResponse>> callYouMayAlsoLike(String skuId) {
         return mApiHelper.callYouMayAlsoLike(skuId);
+    }
+
+    @Override
+    public Observable<List<RecentlyItemResponse>> callRecentlyItems() {
+        return mApiHelper.callRecentlyItems();
     }
 
     @Override

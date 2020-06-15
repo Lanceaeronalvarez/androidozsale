@@ -131,6 +131,7 @@ import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrder
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -1247,6 +1248,14 @@ public class AppApiHelper implements ApiHelper {
                 .addPathParameter("sku_id", skuId)
                 .build()
                 .getObjectListObservable(GetYouMayAlsoLikeResponse.class);
+    }
+
+    @Override
+    public Observable<List<RecentlyItemResponse>> callRecentlyItems() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.recentlyItems())
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectListObservable(RecentlyItemResponse.class);
     }
 }
 

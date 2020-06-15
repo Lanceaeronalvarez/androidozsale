@@ -630,6 +630,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/recommendations/sims/{sku_id}", ApiUrlVersion.v4.apiVersion());
     }
 
+    public static String recentlyItems() {
+        return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/recently", ApiUrlVersion.v5.apiVersion());
+    }
+
     private ApiEndPoint() {
         // This class is not publicly instantiable
     }

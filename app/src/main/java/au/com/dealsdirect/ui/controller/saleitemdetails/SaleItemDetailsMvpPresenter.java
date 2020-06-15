@@ -48,6 +48,8 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 
     void loadRecommendedItems();
 
+    void loadRecentlyItems();
+
     public interface WishlistDelayedCallback {
         void performDelayedAction();
     }
