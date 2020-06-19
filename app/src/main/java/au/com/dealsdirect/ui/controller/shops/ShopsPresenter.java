@@ -46,7 +46,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         getDataManager().pruneCachedResponse(request);
         GetBannerResponse response = getDataManager().getCachedResponse(request, GetBannerResponse.class);
         if (response != null) {
-            getMvpView().showShopBanners(response, request.getCategory());
+            getMvpView().showShopBanners(response, request.getCategory(), true);
         }
 
         mPreviousLoadShopsBannerRequest = doApiCallForResponse(
@@ -55,7 +55,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
                         GetBannerResponse getBannerResponse = (GetBannerResponse) response;
-                        getMvpView().showShopBanners(getBannerResponse, request.getCategory());
+                        getMvpView().showShopBanners(getBannerResponse, request.getCategory(), false);
                         getDataManager().setCachedResponse(request, getBannerResponse);
                     }
 

@@ -11,15 +11,13 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface ShopsMvpView extends MvpView {
 
-    void showShopBanners(GetBannerResponse getBannerResponses, String categoryID);
+    void showShopBanners(GetBannerResponse getBannerResponses, String categoryID, boolean isFromCache);
 
     void showSlidingBanners(GetBannerResponse getBannerResponses);
 
     void showSponsoredBanners(GetBannerResponse getBannerResponses);
 
     void storeCategories(List<GetCategoryTreeResponse> categories);
-
-    void refresh();
 
     void unBindPaginate();
 

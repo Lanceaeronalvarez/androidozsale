@@ -1,32 +1,25 @@
 package au.com.dealsdirect.ui.controller.shops.adapter;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.util.EventLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jakewharton.rxbinding2.view.RxView;
-import com.mysale.genie.views.custom.recyclerview.CustomLinearLayoutManager;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.ArrayList;
@@ -39,24 +32,18 @@ import java.util.regex.Pattern;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
-import au.com.dealsdirect.listeners.OnHorizontalSwipeTouchListener;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
-import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerViewHolder;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 import static android.graphics.Typeface.BOLD;
 
@@ -69,7 +56,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int mOrientation;
 
     private int mComputedHeight = -1;
-    private List<GetBannerResponse.Group> mGroups;
+    private List<GetBannerResponse.Group> mGroups = new ArrayList<>();
     private final List<GetBannerResponse.Banner> mSales = new ArrayList<>();
     ;
     private Activity mActivity;
@@ -128,10 +115,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             List<GetBannerResponse.Group> sales,
             int orientation) {
 
-        mGroups = sales;
-        for (GetBannerResponse.Group group : sales) {
-            mSales.addAll(group.getBanners());
-        }
+        replace(sales);
+
         mActivity = activity;
         mPresenter = presenter;
 
@@ -220,6 +205,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void replace(List<GetBannerResponse.Group> bannerResponses) {
         synchronized (mSales) {
             mSales.clear();
+            mGroups.clear();
             if (recyclerView != null && !recyclerView.isComputingLayout()) {
                 notifyDataSetChanged();
             }
@@ -229,6 +215,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void addAll(List<GetBannerResponse.Group> bannerResponses) {
         synchronized (mSales) {
+            mGroups.addAll(bannerResponses);
+
             int previousCount = mSales.size();
 
             for (GetBannerResponse.Group group : bannerResponses) {
@@ -411,7 +399,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                                         THROTTLE_FIRST_WINDOW_DURATION,
                                         TimeUnit.MILLISECONDS)
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(action -> onBannerTapped(item, holder.getAdapterPosition(), imgUrl,Events.RegularBannerClickEvent,item.getDescription()));
+                                .subscribe(action -> onBannerTapped(item, holder.getAdapterPosition(), imgUrl, Events.RegularBannerClickEvent, item.getDescription()));
                     }
                 }
                 break;
