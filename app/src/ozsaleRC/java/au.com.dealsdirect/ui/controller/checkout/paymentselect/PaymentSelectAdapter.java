@@ -88,10 +88,12 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
         holder.nameTextView.setSelected(isFromCart && isItemViewSelected);
 
         holder.mDeleteText.setOnClickListener(view -> {
+            PaymentMethod paymentMethod = mData.get(position);
+            paymentMethod.setPinned(false);
+            holder.setSwipeItemHorizontalSlideAmount(0);
+            mData.remove(position);
             notifyItemRemoved(position);
-            mPresenter.removeUserPaymentMethod(mData.get(position));
-            mData.remove(mData.get(position));
-            notifyItemChanged(position);
+            mPresenter.removeUserPaymentMethod(paymentMethod);
         });
 
         holder.setMaxLeftSwipeAmount(-0.2f);

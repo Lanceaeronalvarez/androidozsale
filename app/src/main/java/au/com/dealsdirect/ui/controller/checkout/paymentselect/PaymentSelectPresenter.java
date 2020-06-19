@@ -52,8 +52,12 @@ public class PaymentSelectPresenter<V extends PaymentSelectMvpView> extends Base
 
     @Override
     public void removeUserPaymentMethod(PaymentMethod paymentMethod) {
+        if (paymentMethod.getProviderType() == null) {
+            getMvpView().removePaymentFailed();
+            return;
+        }
         doApiCallForResponse(getDataManager().callRemoveUserPaymentMethod(new RemoveUserPaymentMethod
-                .RequestValue(paymentMethod.getToken(), paymentMethod.getPaymentType())), new AppApiCallback() {
+                .RequestValue(paymentMethod.getToken(), paymentMethod.getProviderType())), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
