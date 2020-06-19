@@ -158,7 +158,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         getDataManager().pruneCachedResponse(getSaleItemsRequest);
         GetSaleItemsResponse saleItemsResponse = getDataManager().getCachedResponse(getSaleItemsRequest, GetSaleItemsResponse.class);
         if (saleItemsResponse != null) {
-            getMvpView().showSaleItems(saleItemsResponse, !getSaleItemsRequest.hasFilters());
+            getMvpView().showSaleItems(saleItemsResponse, !getSaleItemsRequest.hasFilters(), true);
         }
 
         ParamaterizedCachableRequest loadSortingFacetsRequest = new ParamaterizedCachableRequest("loadSortingFacets");
@@ -182,7 +182,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                 clearPreviousGetSaleItemsRequest();
                 Pair pair = (Pair) response;
                 getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) pair.second);
-                getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, !getSaleItemsRequest.hasFilters());
+                getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, !getSaleItemsRequest.hasFilters(), false);
                 getDataManager().setCachedResponse(getSaleItemsRequest, (GetSaleItemsResponse) pair.first);
                 getDataManager().setCachedResponse(loadSortingFacetsRequest, new ListOfCachableResponse((List<SortingResponse>) pair.second));
             }
