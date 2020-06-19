@@ -873,6 +873,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void stopSlidingBanner() {
-        horizontalRecyclerViewHolder.stopSlidingBanner();
+        if (horizontalRecyclerViewHolder != null) {
+            horizontalRecyclerViewHolder.stopSlidingBanner();
+        }
     }
 }
