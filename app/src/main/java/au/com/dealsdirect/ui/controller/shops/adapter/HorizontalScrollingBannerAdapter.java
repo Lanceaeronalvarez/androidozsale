@@ -36,7 +36,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     private int cellWidth;
     private int cellHeight;
 
-    private List<GetBannerResponse.Banner> dataSource = new ArrayList<>();;
+    private List<GetBannerResponse.Banner> dataSource = new ArrayList<>();
+    ;
 
     private RecyclerView recyclerView = null;
 
@@ -54,6 +55,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     private String saleId = "";
     private String seoIdentifierId = "";
     public BannerViewType bannerViewType = BannerViewType.ShopBanner;
+
+    private boolean shouldRepeatCellsToFillWidth = true;
 
     public enum BannerViewType {
         ShopBanner,
@@ -227,6 +230,14 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         }
     }
 
+    public boolean isShouldRepeatCellsToFillWidth() {
+        return shouldRepeatCellsToFillWidth;
+    }
+
+    public void setShouldRepeatCellsToFillWidth(boolean shouldRepeatCellsToFillWidth) {
+        this.shouldRepeatCellsToFillWidth = shouldRepeatCellsToFillWidth;
+    }
+
     public List<GetBannerResponse.Banner> getDataSource() {
         return dataSource;
     }
@@ -238,6 +249,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     public List<RecentlyItemResponse> getRecentlyViewedList() {
         return mRecentlyViewedList;
     }
+
 
     public void setRecentlyViewedList(List<RecentlyItemResponse> mRecentlyViewedList) {
         this.mRecentlyViewedList = mRecentlyViewedList;
@@ -319,21 +331,33 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     }
 
     private int getEdgeBufferSize() {
+        int datasourceSize = 0;
+        switch (getBannerViewType()) {
+            case YouMayAlsoLike:
+                datasourceSize = mYouMayAlsoLikeList.size();
+                break;
+            case RecommendedItems:
+                datasourceSize = mRecommendedList.size();
+                break;
+            case RecentlyViewed:
+                datasourceSize = mRecentlyViewedList.size();
+                break;
+            default:
+                datasourceSize = dataSource.size();
+                break;
+        }
+
+        if (!shouldRepeatCellsToFillWidth) {
+            if (recyclerView != null && recyclerView.getWidth() > 0 && cellWidth > 0 &&
+                    Math.ceil(recyclerView.getWidth() / (float) cellWidth) > datasourceSize) {
+                return 0;
+            }
+        }
+
         if (recyclerView != null && recyclerView.getWidth() > 0 && cellWidth > 0) {
             return (int) (2 * Math.ceil(recyclerView.getWidth() / (float) cellWidth));
         } else {
-
-            switch (getBannerViewType()) {
-                case YouMayAlsoLike:
-                    return Math.max(3, mYouMayAlsoLikeList.size());
-                case RecommendedItems:
-                    return Math.max(3, mRecommendedList.size());
-                case RecentlyViewed:
-                    return Math.max(3, mRecentlyViewedList.size());
-                default:
-                    return Math.max(3, dataSource.size());
-            }
-
+            return Math.max(3, datasourceSize);
         }
     }
 

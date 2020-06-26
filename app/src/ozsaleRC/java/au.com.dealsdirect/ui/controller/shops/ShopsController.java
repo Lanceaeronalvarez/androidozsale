@@ -625,6 +625,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (!sponsoredBanners.isEmpty()) {
                 adapter = new HorizontalScrollingBannerAdapter(mActivity);
                 adapter.setDataSource(sponsoredBanners);
+                adapter.setShouldRepeatCellsToFillWidth(false);
             }
         }
         mBannersAdapter.setSponsoredBannersAdapter(adapter);

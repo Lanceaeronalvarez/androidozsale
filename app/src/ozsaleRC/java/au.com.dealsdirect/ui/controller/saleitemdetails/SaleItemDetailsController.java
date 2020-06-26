@@ -288,13 +288,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private CountDownTimer mCountDownTimer;
 
     private boolean shouldAfterpayDetailsBeVisible = false;
-    private HorizontalScrollingBannerAdapter mSlidingBannersAdapter = null;
-    SaleItemDetailsScrollingImageAdapter mYouMayAlsoLikeAdapter;
     GridLayoutManager mLayoutManager;
     List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
     List<GetYouMayAlsoLikeResponse> mYouMayAlsoLikeList = new ArrayList<>();
     List<RecommendedItemsResponse> mRecommendedList = new ArrayList<>();
-    RecentlyViewedItemAdapter recentlyViewedAdapter;
 
     @BindView(R.id.share_right)
     ImageView mLikeButton;
@@ -1475,27 +1472,23 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showYouMayAlsoLike(List<GetYouMayAlsoLikeResponse> response) {
-
         mYouMayAlsoLikeList = response;
-        mYouMayAlsoLikeContainer.setVisibility(View.VISIBLE);
-
-        if (mYouMayAlsoLikeAdapter != null) {
-            mYouMayAlsoLikeAdapter.clear();
-        }
 
         showYouMayAlsoLike();
-
     }
 
     private void showYouMayAlsoLike() {
-        HorizontalScrollingBannerAdapter adapter = null;
-        if (!mYouMayAlsoLikeList.isEmpty()) {
-            adapter = new HorizontalScrollingBannerAdapter(mActivity);
-            adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
+        if (mYouMayAlsoLikeList == null || mYouMayAlsoLikeList.isEmpty()) {
+            mYouMayAlsoLikeContainer.setVisibility(View.GONE);
+            return;
         }
+        mYouMayAlsoLikeContainer.setVisibility(View.VISIBLE);
+
+        HorizontalScrollingBannerAdapter adapter = new HorizontalScrollingBannerAdapter(mActivity);
+            adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
 
         adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.YouMayAlsoLike);
-        mYouMayAlsoLikeAdapter = new SaleItemDetailsScrollingImageAdapter(mActivity, mPresenter,
+        SaleItemDetailsScrollingImageAdapter mYouMayAlsoLikeAdapter = new SaleItemDetailsScrollingImageAdapter(mActivity, mPresenter,
                 this, mYouMayAlsoLikeList, mRecommendedList);
 
         mYouMayAlsoLikeAdapter.setSlidingBannersAdapter(adapter);
@@ -1519,7 +1512,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showRecommendedItems(List<RecommendedItemsResponse> recommendedItemsResponseList) {
-
+        if (recommendedItemsResponseList == null || recommendedItemsResponseList.isEmpty()) {
+            mRecommendedContainer.setVisibility(View.GONE);
+            mRecommendedRecyclerView.setAdapter(null);
+            return;
+        }
         mRecommendedContainer.setVisibility(View.VISIBLE);
 
         mRecommendedList = recommendedItemsResponseList;
@@ -1557,11 +1554,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showRecentlyViewedItems(List<RecentlyItemResponse> response) {
-        mRecentlyViewedContainer.setVisibility(View.VISIBLE);
-
-        if (recentlyViewedAdapter != null) {
-            recentlyViewedAdapter.clear();
+        if (response == null || response.isEmpty()) {
+            mRecentlyViewedContainer.setVisibility(View.GONE);
+            mRecentlyViewedRecyclerView.setAdapter(null);
+            return;
         }
+        mRecentlyViewedContainer.setVisibility(View.VISIBLE);
 
         HorizontalScrollingBannerAdapter adapter = null;
         if (!response.isEmpty()) {
@@ -1570,7 +1568,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.RecentlyViewed);
-        recentlyViewedAdapter = new RecentlyViewedItemAdapter(mActivity, mPresenter,
+        adapter.setShouldRepeatCellsToFillWidth(false);
+        RecentlyViewedItemAdapter recentlyViewedAdapter = new RecentlyViewedItemAdapter(mActivity, mPresenter,
                 recentlyViewedListener, response);
 
         recentlyViewedAdapter.setSlidingBannersAdapter(adapter);
