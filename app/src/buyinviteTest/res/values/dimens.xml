@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="placeholder_icon_size">100dp</dimen>
-    <dimen name="voucher_cost_text_size">34sp</dimen>
     <dimen name="viewholder_subcategory_width">25dp</dimen>
     <dimen name="viewholder_subcategory_height">44dp</dimen>
 

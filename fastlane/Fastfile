@@ -102,7 +102,7 @@ projectDir = app_path + '/app/build/outputs/apk/' + app_flavor + '/release/'
              firebase_app_distribution(
                 app: app_id,
                 testers: emails,
-                release_notes: app_notes_path,
+                release_notes_file: app_notes_path,
                 firebase_cli_path: “/usr/local/bin/firebase”,
                 apk_path: projectDir + apk_name
               )
