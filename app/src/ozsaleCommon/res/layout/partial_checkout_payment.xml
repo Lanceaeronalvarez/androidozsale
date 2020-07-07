@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_extra_small"
     android:layout_marginTop="@dimen/margin_extra_small"
+    android:layout_marginBottom="@dimen/margin_extra_small"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
@@ -13,16 +13,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/padding_default_half"
-        android:paddingEnd="@dimen/padding_default"
         android:paddingStart="@dimen/padding_default"
-        android:textSize="@dimen/text_size_caption2"
+        android:paddingEnd="@dimen/padding_default"
         android:text="@string/payment_method"
-        android:textColor="@color/text_medium" />
+        android:textColor="@color/text_medium"
+        android:textSize="@dimen/text_size_caption2" />
 
     <View
         style="@style/horizontalBorderView"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp" />
 
 
     <FrameLayout
@@ -42,11 +42,11 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="9"
                 android:text="@string/add_new_payment_method"
                 android:textColor="@color/row_checkout_text_light_color"
-                android:textSize="@dimen/text_size_body"
-                android:layout_gravity="center_vertical"/>
+                android:textSize="@dimen/text_size_body" />
 
             <ImageView
                 android:layout_width="0dp"
@@ -70,7 +70,7 @@
     <View
         style="@style/horizontalBorderView"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp" />
 
 
     <!--dummy view-->

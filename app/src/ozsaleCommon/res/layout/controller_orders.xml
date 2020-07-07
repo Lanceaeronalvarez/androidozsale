@@ -11,9 +11,9 @@
         android:id="@+id/contentFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/transparent"
         android:fillViewport="true"
         android:overScrollMode="never"
-        android:background="@color/transparent"
         android:visibility="visible">
 
         <LinearLayout
@@ -30,7 +30,8 @@
                 android:layout_marginTop="@dimen/padding_default"
                 android:layout_marginBottom="@dimen/padding_default_half"
                 android:text="@string/my_orders"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                android:textSize="@dimen/text_size_caption1" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/orders_recycler_view"

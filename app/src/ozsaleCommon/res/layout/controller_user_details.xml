@@ -19,9 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/controller_details_button"
+            android:background="@color/transparent"
             android:fillViewport="true"
-            android:overScrollMode="never"
-            android:background="@color/transparent">
+            android:overScrollMode="never">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,10 +33,10 @@
                     fontPath="@string/font_app_light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding_default_half"
                     android:layout_marginLeft="@dimen/padding_default"
-                    android:layout_marginRight="@dimen/padding_default"
                     android:layout_marginTop="@dimen/padding_default"
+                    android:layout_marginRight="@dimen/padding_default"
+                    android:layout_marginBottom="@dimen/padding_default_half"
                     android:text="@string/enter_personal_details"
                     android:textColor="@color/text_medium"
                     android:textSize="@dimen/text_size_caption2" />
@@ -353,7 +353,6 @@
                 </LinearLayout>
 
 
-
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
@@ -362,9 +361,10 @@
             android:id="@+id/controller_details_button"
             style="@style/DDButtonStyle"
             android:layout_width="match_parent"
-            android:layout_margin="@dimen/padding_default"
             android:layout_alignParentBottom="true"
-            android:text="@string/save_changes" />
+            android:layout_margin="@dimen/padding_default"
+            android:text="@string/save_changes"
+            android:textSize="@dimen/text_size_headline2" />
     </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout><!--</au.com.dealsdirect.widget.ElasticHorizontalDragDismissFrameLayout>-->

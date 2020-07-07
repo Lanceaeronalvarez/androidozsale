@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -652,6 +653,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     protected void setUp(View view) {
 
+        mShippingDescText.getSettings().setTextZoom(100);
+        mProductDescriptionText.getSettings().setTextZoom(100);
+        mProductAboutPricing.getSettings().setTextZoom(100);
+        mProductAboutText.getSettings().setTextZoom(100);
+        mReturnPolicyText.getSettings().setTextZoom(100);
+        mOldProductPricing.getSettings().setTextZoom(100);
+
         if (view instanceof ElasticDragDismissFrameLayout) {
             mRootView = ((ElasticDragDismissFrameLayout) view);
 
@@ -1162,6 +1170,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                     parent,
                                     false);
                     tv.setText(data.first);
+                    float size = tv.getContext().getResources().getDimension(R.dimen.text_size_body);
+                    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
                     if (mSkuVariants.get(position).isSoldOut()) {
                         tv.setBackground(getDrawable(R.drawable.bg_chips_soldout));
                         tv.setTextColor(getColor(R.color.bg_chips_soldout_text));

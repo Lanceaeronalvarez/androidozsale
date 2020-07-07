@@ -42,6 +42,7 @@
                 android:paddingTop="@dimen/margin_small"
                 android:text="@string/checkout_order_label"
                 android:textAllCaps="true"
+                android:textSize="@dimen/text_size_caption2"
                 android:textColor="@color/text_medium"
                 android:visibility="invisible" />
 

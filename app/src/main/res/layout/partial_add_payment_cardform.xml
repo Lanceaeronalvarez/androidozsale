@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/bt_white">
+    android:background="@color/bt_white"
+    android:orientation="vertical">
 
     <LinearLayout style="@style/bt_field_container">
 
@@ -14,7 +14,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|left"
             android:text="@string/bt_form_hint_card_number"
-            android:textColor="@color/bt_gray_active_field_text" />
+            android:textColor="@color/bt_gray_active_field_text"
+            android:textSize="@dimen/text_size_caption1" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout"
@@ -30,17 +31,19 @@
                 style="@style/bt_card_form_field"
                 android:contentDescription="@string/bt_form_hint_card_number"
                 android:hint="@string/bt_form_hint_card_number"
+                android:inputType="number"
                 android:maxLength="19"
-                android:inputType="number" />
+                android:textSize="@dimen/text_size_caption1" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 
-    <View android:background="@color/bt_black_12"
-        android:layout_height="1dp"
+    <View
         android:layout_width="match_parent"
-        android:layout_marginLeft="@dimen/bt_margin"/>
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/bt_margin"
+        android:background="@color/bt_black_12" />
 
     <LinearLayout style="@style/bt_field_container">
 
@@ -49,7 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|left"
             android:text="@string/bt_form_hint_cvv"
-            android:textColor="@color/bt_gray_active_field_text" />
+            android:textColor="@color/bt_gray_active_field_text"
+            android:textSize="@dimen/text_size_caption1" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/bt_text_input_layout"
@@ -60,18 +64,20 @@
                 android:id="@+id/stripe_card_form_cvv"
                 style="@style/bt_card_form_field"
                 android:contentDescription="@string/bt_form_hint_cvv"
+                android:hint="@string/bt_form_hint_cvv"
                 android:inputType="number"
                 android:maxLength="4"
-                android:hint="@string/bt_form_hint_cvv" />
+                android:textSize="@dimen/text_size_caption1" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 
-    <View android:background="@color/bt_black_12"
-        android:layout_height="1dp"
+    <View
         android:layout_width="match_parent"
-        android:layout_marginLeft="@dimen/bt_margin"/>
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/bt_margin"
+        android:background="@color/bt_black_12" />
 
     <LinearLayout
         style="@style/bt_field_container"
@@ -82,7 +88,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|left"
             android:text="@string/bt_form_hint_expiration"
-            android:textColor="@color/bt_gray_active_field_text" />
+            android:textColor="@color/bt_gray_active_field_text"
+            android:textSize="@dimen/text_size_caption1" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -96,14 +103,16 @@
                 style="@style/bt_card_form_field"
                 android:contentDescription="@string/bt_form_hint_expiration"
                 android:hint="mm/yyyy"
-                android:maxLength="5"/>
+                android:maxLength="5"
+                android:textSize="@dimen/text_size_caption1" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 
-    <View android:background="@color/bt_black_12"
+    <View
+        android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_width="match_parent" />
+        android:background="@color/bt_black_12" />
 
 </LinearLayout>

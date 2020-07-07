@@ -34,6 +34,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@color/row_checkout_text_light_color"
+                android:textSize="@dimen/text_size_caption1"
                 tools:text="@string/row_address_hint" />
 
         </LinearLayout>
@@ -50,13 +51,13 @@
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.8"/>
+            android:layout_weight="0.8" />
 
         <TextView
             android:id="@+id/controller_address_delete_text"
-            android:layout_weight="0.2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="0.2"
             android:gravity="center"
             android:text="@string/delete"
             android:textColor="@color/white"

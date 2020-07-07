@@ -560,7 +560,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
             if (moreGroups.isEmpty()) {
                 hasLoadedAllItems = true;
-                mPaginateManager.setHasMoreDataToLoad(false);
+                if (mPaginateManager != null) {
+                    mPaginateManager.setHasMoreDataToLoad(false);
+                }
             }
         }
 
