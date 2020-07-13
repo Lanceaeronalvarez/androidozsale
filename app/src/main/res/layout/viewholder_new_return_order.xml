@@ -121,6 +121,7 @@
                             android:layout_height="0dp"
                             android:textColor="#b7b7b7"
                             android:text="Item id:"
+                            android:textSize="@dimen/text_size_body"
                             tools:ignore="HardcodedText"/>
 
 

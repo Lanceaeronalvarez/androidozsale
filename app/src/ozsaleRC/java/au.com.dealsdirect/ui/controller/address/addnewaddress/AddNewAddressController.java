@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.address.addnewaddress;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.TypedValue;
@@ -16,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -141,7 +142,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 editTextValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(infoList.MaxLength)});
 
                 //Add asterisk to required fields
-                if (infoList.getValidate() != null && infoList.getValidate().equalsIgnoreCase("*")){
+                if (infoList.getValidate() != null && infoList.getValidate().equalsIgnoreCase("*")) {
                     textViewLabel.setText(textViewLabel.getText() + "*");
                 }
                 break;

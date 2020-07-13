@@ -71,7 +71,6 @@
                         android:layout_marginLeft="4dp"
                         android:layout_toEndOf="@+id/viewholder_returns_details_item_count_identifier"
                         android:layout_toRightOf="@+id/viewholder_returns_details_item_count_identifier"
-
                         tools:text="1"
                         android:textColor="@color/text_medium"
                         android:textSize="@dimen/text_size_headline3"
@@ -130,7 +129,6 @@
 
 
                     <TextView
-
                         android:id="@+id/viewholder_returns_order_item_total_cost_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

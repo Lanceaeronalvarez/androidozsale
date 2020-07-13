@@ -148,6 +148,7 @@
                 android:paddingTop="@dimen/margin_medium"
                 android:paddingBottom="@dimen/margin_medium"
                 android:text="@string/track_order"
+                android:textSize="@dimen/text_size_caption1"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
         </RelativeLayout>
@@ -189,6 +190,7 @@
                         android:background="@drawable/bg_orders_graph_active_state"
                         android:gravity="center"
                         android:text="1"
+                        android:textSize="@dimen/text_size_caption2"
                         android:textColor="@color/white"
                         tools:ignore="ContentDescription" />
 
@@ -249,6 +251,7 @@
                         android:background="@drawable/bg_orders_graph_empty_state"
                         android:gravity="center"
                         android:text="2"
+                        android:textSize="@dimen/text_size_caption2"
                         android:textColor="@color/white"
                         tools:ignore="ContentDescription" />
 
@@ -318,6 +321,7 @@
                         android:gravity="center"
                         android:text="3"
                         android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_caption2"
                         tools:ignore="ContentDescription" />
 
                     <View
@@ -385,6 +389,7 @@
                         android:background="@drawable/bg_orders_graph_empty_state"
                         android:gravity="center"
                         android:text="4"
+                        android:textSize="@dimen/text_size_caption2"
                         android:textColor="@color/white"
                         tools:ignore="ContentDescription" />
 

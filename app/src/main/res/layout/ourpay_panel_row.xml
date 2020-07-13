@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/discountTab"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/margin_medium"
     android:paddingLeft="@dimen/margin_small"
+    android:paddingTop="@dimen/margin_medium"
     android:paddingRight="@dimen/margin_small"
-    android:paddingTop="@dimen/margin_medium">
+    android:paddingBottom="@dimen/margin_medium">
 
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="@dimen/ourpay_date_label_width"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:gravity="start|center_vertical"
         android:textColor="@color/ourpay_panel_dark_gray"
         android:textSize="@dimen/text_size_body"
-        android:layout_alignParentLeft="true"
         tools:text="22 Sep" />
 
 
     <ImageView
         android:id="@+id/checkImage"
-        android:layout_toLeftOf="@+id/dollarValue"
         android:layout_width="@dimen/ourpay_panel_check_width"
         android:layout_height="@dimen/ourpay_panel_check_height"
         android:layout_marginEnd="@dimen/padding_default_half"
+        android:layout_toLeftOf="@+id/dollarValue"
         android:contentDescription="checkImage"
         android:maxWidth="@dimen/ourpay_panel_check_width"
         android:src="@drawable/ourpay_check" />
@@ -38,14 +37,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:textColor="@color/ourpay_panel_dark_gray"
-        android:textAlignment="gravity"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="@dimen/text_size_caption2"
         android:autoSizeMaxTextSize="@dimen/text_size_body"
+        android:autoSizeMinTextSize="@dimen/text_size_caption2"
         android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
         android:gravity="right"
         android:maxLines="1"
+        android:textAlignment="gravity"
+        android:textColor="@color/ourpay_panel_dark_gray"
+        android:textSize="@dimen/text_size_body"
         tools:ignore="MissingPrefix"
         tools:text="$1866.91" />
 
@@ -55,18 +55,18 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/ourpay_circle_state_size"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/padding_default_half"
         android:layout_marginStart="@dimen/padding_default_half"
-        android:layout_toRightOf="@+id/dateTextView"
-        android:layout_toLeftOf="@id/checkImage">
+        android:layout_marginEnd="@dimen/padding_default_half"
+        android:layout_toLeftOf="@id/checkImage"
+        android:layout_toRightOf="@+id/dateTextView">
 
         <View
             android:id="@+id/ourpay_bg_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/ourpay_panel_bar_height"
             android:layout_centerInParent="true"
-            android:layout_marginEnd="@dimen/ourpay_circle_state_size_half"
             android:layout_marginStart="@dimen/ourpay_circle_state_size_half"
+            android:layout_marginEnd="@dimen/ourpay_circle_state_size_half"
             android:background="@color/ourpay_circle_state_color_default"
             android:contentDescription="BackgroundBar"
             android:scaleType="fitXY" />
@@ -75,10 +75,10 @@
             android:id="@+id/circlesContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:animateLayoutChanges="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal">
 
         </LinearLayout>
     </RelativeLayout>

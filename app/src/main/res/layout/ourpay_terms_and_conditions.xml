@@ -12,6 +12,7 @@
         android:id="@+id/ourpay_toggle_switch_tc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_caption1"
         app:textToggleLeft="Yes"
         app:textToggleRight="No" />
 
@@ -20,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
+        android:textSize="@dimen/text_size_caption1"
         android:text="I agree to Ourpay's terms and conditions" />
 
 </LinearLayout>

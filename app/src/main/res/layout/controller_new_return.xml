@@ -37,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reason"
+            android:textSize="@dimen/text_size_caption1"
             android:textColor="@color/text_extra_dark" />
 
         <au.com.dealsdirect.ui.custom.ClearFocusEditText
@@ -48,6 +49,7 @@
             android:layout_below="@+id/controller_new_return_reason_header"
             android:layout_marginBottom="10dp"
             android:gravity="top"
+            android:textSize="@dimen/text_size_body"
             android:hint="@string/write_us_a_message"
             android:inputType="textNoSuggestions|textMultiLine" />
 

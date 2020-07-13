@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cellBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -36,11 +35,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@string/font_app_bold"
                 android:maxLines="1"
                 android:text="@string/ourpay_order"
                 android:textAlignment="textStart"
                 android:textColor="@android:color/black"
-                android:fontFamily="@string/font_app_bold"
                 android:textSize="@dimen/text_size_title"
                 android:textStyle="bold"
                 app:autoSizeTextType="uniform" />
@@ -50,12 +49,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@string/font_app_bold"
                 android:gravity="right"
                 android:maxLines="1"
-                android:text="#112039123"
                 android:paddingRight="@dimen/ourpay_cell_title_right_padding"
+                android:text="#112039123"
                 android:textColor="@android:color/black"
-                android:fontFamily="@string/font_app_bold"
                 android:textSize="@dimen/text_size_headline3"
                 android:textStyle="bold"
                 app:autoSizeTextType="none" />
@@ -78,7 +77,8 @@
             android:paddingTop="@dimen/ourpay_cell_detail_vertical_padding"
             android:paddingBottom="@dimen/ourpay_cell_detail_vertical_padding"
             android:text="Paid: $10.00"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_caption1" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -94,7 +94,8 @@
                 android:paddingTop="@dimen/ourpay_cell_detail_vertical_padding"
                 android:paddingBottom="@dimen/ourpay_cell_detail_vertical_padding"
                 android:text="Refund: $10.00"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_caption1" />
 
             <ImageView
                 android:id="@+id/myAccountOurpayPaymentPlanDownArrow"
@@ -115,6 +116,7 @@
             android:paddingBottom="@dimen/ourpay_cell_detail_vertical_padding"
             android:text="Adjusted to Schedule: $5.00"
             android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_caption1"
             android:visibility="visible" />
 
         <TextView
@@ -126,7 +128,8 @@
             android:paddingTop="@dimen/ourpay_cell_detail_vertical_padding"
             android:paddingBottom="@dimen/ourpay_cell_detail_vertical_padding"
             android:text="Refund to Card: $1.00"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_caption1" />
 
         <TextView
             android:id="@+id/myAccountOurpayPaymentPlanBalance"
@@ -136,7 +139,8 @@
             android:paddingTop="@dimen/ourpay_cell_detail_vertical_padding"
             android:paddingBottom="@dimen/ourpay_cell_detail_vertical_padding"
             android:text="Balance: $10.00"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_caption1" />
 
         <View
             android:id="@+id/myAccountOurpayPaymentPlanSeparatorAbovePaymentMethod"
@@ -164,11 +168,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:paddingLeft="@dimen/ourpay_payment_method_text_gap"
                 android:paddingTop="@dimen/ourpay_cell_detail_vertical_padding"
                 android:paddingBottom="@dimen/ourpay_cell_detail_vertical_padding"
-                android:paddingLeft="@dimen/ourpay_payment_method_text_gap"
                 android:text="586xxxxxxx768"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_caption1" />
         </LinearLayout>
 
         <View

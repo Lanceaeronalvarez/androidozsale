@@ -12,6 +12,7 @@
     <dimen name="text_size_title">24dp</dimen>
     <dimen name="voucher_cost_text_size">34dp</dimen>
     <dimen name="payment_success_order_number_text_size">35dp</dimen>
+    <dimen name="ourpay_big_date_text_size">30dp</dimen>
 
     <dimen name="viewholder_subcategory_width">25dp</dimen>
     <dimen name="viewholder_subcategory_height">44dp</dimen>

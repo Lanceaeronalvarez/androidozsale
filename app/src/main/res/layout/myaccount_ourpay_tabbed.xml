@@ -72,6 +72,8 @@
                         android:id="@+id/activePlansDetailValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autoSizeMinTextSize="1px"
+                        android:autoSizeTextType="uniform"
                         android:fontFamily="@string/font_app_bold"
                         android:gravity="center_horizontal|center_vertical"
                         android:maxLines="1"
@@ -79,8 +81,7 @@
                         android:textAlignment="center"
                         android:textColor="@color/ourpay_circle_state_color_active"
                         android:textSize="@dimen/text_size_title"
-                        android:textStyle="bold"
-                        app:autoSizeTextType="uniform" />
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -100,13 +101,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autoSizeMinTextSize="1px"
+                            android:autoSizeTextType="uniform"
                             android:fontFamily="@string/font_app_light"
                             android:maxLines="1"
                             android:text="@string/ourpay_active_plans"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/text_size_caption1"
-                            android:textStyle="bold"
-                            app:autoSizeTextType="uniform" />
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
@@ -134,6 +136,8 @@
                         android:id="@+id/balanceOwingDetailValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autoSizeMinTextSize="1px"
+                        android:autoSizeTextType="uniform"
                         android:fontFamily="@string/font_app_bold"
                         android:gravity="center_horizontal|center_vertical"
                         android:maxLines="1"
@@ -141,8 +145,7 @@
                         android:textAlignment="center"
                         android:textColor="@color/ourpay_circle_state_color_active"
                         android:textSize="@dimen/text_size_title"
-                        android:textStyle="bold"
-                        app:autoSizeTextType="uniform" />
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -162,12 +165,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autoSizeMinTextSize="1px"
+                            android:autoSizeTextType="uniform"
                             android:fontFamily="@string/font_app_light"
                             android:maxLines="1"
                             android:text="@string/ourpay_balance_owing"
                             android:textColor="@android:color/white"
-                            android:textSize="@dimen/text_size_caption1"
-                            app:autoSizeTextType="uniform" />
+                            android:textSize="@dimen/text_size_caption1" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
@@ -195,14 +199,15 @@
                         android:id="@+id/remainingCreditDetailValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autoSizeMinTextSize="1px"
+                        android:autoSizeTextType="uniform"
                         android:fontFamily="@string/font_app_bold"
                         android:gravity="center_horizontal|center_vertical"
                         android:maxLines="1"
                         android:text="$100.00"
                         android:textAlignment="center"
                         android:textColor="@color/ourpay_circle_state_color_active"
-                        android:textSize="@dimen/text_size_title"
-                        app:autoSizeTextType="uniform" />
+                        android:textSize="@dimen/text_size_title" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -222,12 +227,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autoSizeMinTextSize="1px"
+                            android:autoSizeTextType="uniform"
                             android:fontFamily="@string/font_app_light"
                             android:maxLines="1"
                             android:text="@string/ourpay_remaining_credit"
                             android:textColor="@android:color/white"
-                            android:textSize="@dimen/text_size_caption1"
-                            app:autoSizeTextType="uniform" />
+                            android:textSize="@dimen/text_size_caption1" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
@@ -238,11 +244,12 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/myAccountOurpayTabLayout"
+        style="@style/MyAccountsOurpayTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        style="@style/MyAccountsOurpayTabLayout">
+        app:tabTextAppearance="@style/MyAccountsOurpayTabTextAppearance">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"

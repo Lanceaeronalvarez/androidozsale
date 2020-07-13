@@ -42,6 +42,7 @@ import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayDataSource.Item.S
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.ViewUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -51,6 +52,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Timed;
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 public class MyAccountsOurpayController extends BaseController
         implements MyAccountsOurpayMvpView, MyAccountsOurpayDataSource, MyAccountsOurpayListener {
@@ -369,6 +371,10 @@ public class MyAccountsOurpayController extends BaseController
         mRecyclerView = mTabbedView.findViewById(R.id.myAccountOurpayRecyclerView);
         mHeaderView = mTabbedView.findViewById(R.id.myAccountOurpayTabbedHeader);
         mHeaderHeight = getExpandedHeaderHeight();
+
+        ViewUtils.changeFontInViewGroup(mTabLayout,
+                mTabLayout.getContext().getString(R.string.font_app_regular),
+                mTabLayout.getContext().getResources().getDimension(R.dimen.text_size_body));
 
         mRecyclerViewAdapter = new MyAccountsOurpayRecyclerViewPagerAdapter();
 

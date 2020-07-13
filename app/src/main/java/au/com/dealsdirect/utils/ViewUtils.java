@@ -5,16 +5,19 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
-import androidx.core.widget.NestedScrollView;
-
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ScrollView;
+import android.widget.TextView;
+
+import androidx.core.widget.NestedScrollView;
 
 import au.com.dealsdirect.R;
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 
 public final class ViewUtils {
@@ -80,11 +83,24 @@ public final class ViewUtils {
             if (background instanceof ColorDrawable) {
                 color = ((ColorDrawable) background).getColor();
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         double luminance = (0.2126 * Color.red(color)) + (0.7152 * Color.green(color)) +
                 (0.0722 * Color.blue(color));
 
         return luminance < 128;
+    }
+
+    public static void changeFontInViewGroup(ViewGroup viewGroup, String fontPath, float textSize) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View child = viewGroup.getChildAt(i);
+            if (TextView.class.isAssignableFrom(child.getClass())) {
+                CalligraphyUtils.applyFontToTextView(child.getContext(), (TextView) child, fontPath);
+                ((TextView) child).setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+            } else if (ViewGroup.class.isAssignableFrom(child.getClass())) {
+                changeFontInViewGroup((ViewGroup) viewGroup.getChildAt(i), fontPath, textSize);
+            }
+        }
     }
 }

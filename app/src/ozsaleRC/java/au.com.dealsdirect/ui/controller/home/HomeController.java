@@ -223,7 +223,7 @@ public class HomeController extends BaseController implements HomeMvpView {
 //        ADD "NEW" Badge to categories
 
         if (mPresenter.isInitialLaunch()) {
-            AHNotification notification = new AHNotification.Builder()
+                AHNotification notification = new AHNotification.Builder()
                     .setText("NEW")
                     .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge))
                     .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))

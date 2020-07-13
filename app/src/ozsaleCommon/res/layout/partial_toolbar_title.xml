@@ -6,10 +6,10 @@
     android:layout_height="?attr/actionBarSize"
     android:layout_gravity="top"
     android:background="@color/toolbar_skin"
-    android:contentInsetEnd="0dp"
-    android:contentInsetLeft="0dp"
-    android:contentInsetRight="0dp"
     android:contentInsetStart="0dp"
+    android:contentInsetLeft="0dp"
+    android:contentInsetEnd="0dp"
+    android:contentInsetRight="0dp"
     android:fitsSystemWindows="true"
     android:minHeight="?attr/actionBarSize"
     app:contentInsetEnd="0dp"
@@ -41,11 +41,11 @@
             fontPath="@string/font_app_regular"
             android:layout_width="@dimen/partial_toolbar_button_width"
             android:layout_height="@dimen/partial_toolbar_button_height"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:gravity="center"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:gravity="center"
             android:paddingRight="@dimen/margin_extra_small"
             android:src="@drawable/ic_pink_chevron"
             android:text="@string/back"
@@ -55,24 +55,26 @@
         <ImageButton
             android:layout_width="@dimen/partial_toolbar_button_width"
             android:layout_height="@dimen/partial_toolbar_button_height"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:paddingRight="@dimen/margin_extra_small"
             android:src="@drawable/ic_pink_chevron"
+            android:textSize="@dimen/text_size_caption1"
             android:visibility="gone" />
 
         <ImageButton
             android:id="@+id/partial_toolbar_field_title_right_option"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignTop="@+id/partial_toolbar_field_title_textview"
             android:layout_alignBottom="@+id/partial_toolbar_field_title_textview"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/partial_toolbar_field_title_textview"
             android:layout_centerVertical="true"
             android:background="@color/white"
             android:src="@drawable/ic_toolbar_filter"
-            android:visibility="invisible"/>
+            android:textSize="@dimen/text_size_caption1"
+            android:visibility="invisible" />
 
 
     </RelativeLayout>
