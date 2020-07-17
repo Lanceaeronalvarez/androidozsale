@@ -1012,13 +1012,14 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void onPayButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
-                mValue.getSummary().getTotal(), AppConstants.REGULAR);
+        String paymentLogType = AppConstants.REGULAR;
 
         if (!isAddressValid()) {
 
             //push add new address fragment.
             showAddAddressController();
+            mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+                    mValue.getSummary().getTotal(), paymentLogType);
             return;
         }
 
@@ -1031,6 +1032,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             if (mPresenter.isStripeEnabled() && mPresenter.getStripePublicKey() != null) {
                 mActivity.callCreatePaymentTransactionStripe(AppConstants.STRIPE,
                         mActivity.getPaymentMethodSelected().getToken());
+                paymentLogType = AppConstants.STRIPE;
             } else {
                 CustomAlertDialog.showCustomAlertDialog(
                         mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
@@ -1049,6 +1051,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 }
             }
         }
+
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+                mValue.getSummary().getTotal(), paymentLogType);
     }
 
     private void onPaypalButtonClick() {

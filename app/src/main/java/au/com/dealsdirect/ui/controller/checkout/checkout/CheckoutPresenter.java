@@ -303,10 +303,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     @Override
     public void logInitiateCheckout(Context context, String paymentType, int numItems, double price,
                                     String selectedPaymentType) {
-        if (getDataManager().hasActiveCheckoutSession()) {
-            return;
-        }
-
         StartCheckoutRequest startCheckoutRequest = new StartCheckoutRequest();
         startCheckoutRequest.setEventType(EventTypeId.EVENT_CHECKOUT);
         startCheckoutRequest.setErrorDescription("");
@@ -316,20 +312,31 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         switch (selectedPaymentType) {
             case AppConstants.VCO:
                 startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.VCO.getValue());
+                break;
             case AppConstants.AFTERPAY:
                 startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.AFTERPAY.getValue());
+                break;
             case AppConstants.REGULAR:
                 startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.REGULAR.getValue());
+                break;
+            case AppConstants.STRIPE:
+                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.STRIPE.getValue());
+                break;
             case AppConstants.OURPAY:
                 startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.OURPAY.getValue());
+                break;
             case AppConstants.MASTERPASS:
                 startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.MASTERPASS.getValue());
+                break;
             case AppConstants.PAYPALCREDIT:
                 startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPALCREDIT.getValue());
+                break;
             case AppConstants.PAYPAL:
                 startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPAL.getValue());
-            case AppConstants.UNKNOWN:
+                break;
+            default: // UNKNOWN
                 startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.UNKNOWN.getValue());
+                break;
         }
 
         HashMap<String, Object> parameters = new HashMap<>();
