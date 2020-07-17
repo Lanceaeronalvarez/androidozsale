@@ -87,6 +87,9 @@ public class AppCachedResponseHelper implements CachedResponseHelper {
             cachedResponsesManager = gson.fromJson(
                     decompress(source.getBytes(Charsets.ISO_8859_1)),
                     CachedResponsesManager.class);
+            if (cachedResponsesManager == null) {
+                cachedResponsesManager = new CachedResponsesManager();
+            }
         }
     }
 
