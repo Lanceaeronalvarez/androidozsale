@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_default"
-    xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingPrefix">
 
     <include
@@ -12,11 +12,11 @@
 
 
     <LinearLayout
+        android:id="@+id/header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_dialog"
         android:layout_below="@+id/account_header"
-        android:id="@+id/header_container">
+        android:background="@color/bg_dialog">
 
         <TextView
             fontPath="@string/font_app_light"
@@ -25,30 +25,31 @@
             android:layout_marginStart="@dimen/padding_default"
             android:layout_marginTop="@dimen/padding_default"
             android:layout_marginBottom="@dimen/padding_default_half"
+            android:text="@string/my_account"
             android:textAllCaps="true"
-            android:text="@string/my_account"/>
+            android:textSize="@dimen/text_size_caption2" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/account_recycler_view"
-        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/rl_footer"
+        android:layout_below="@+id/header_container"
+        android:background="@color/white"
         android:clickable="true"
         android:descendantFocusability="blocksDescendants"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:overScrollMode="never"
-        android:layout_below="@+id/header_container"
-        android:layout_above="@+id/rl_footer"/>
+        android:overScrollMode="never" />
 
     <RelativeLayout
         android:id="@+id/rl_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_alignParentBottom="true">
+        android:background="@color/white">
 
         <include layout="@layout/footer_ads" />
 

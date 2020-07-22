@@ -791,6 +791,21 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
+    public void storeCachedResponses() {
+        getDataManager().storeCache();
+    }
+
+    @Override
+    public void fetchCachedResponses() {
+        getDataManager().fetchCache();
+    }
+
+    @Override
+    public void pruneCachedResponses() {
+        getDataManager().pruneCachedResponses();
+    }
+
+    @Override
     public void callGCMNotificationEvent(Context context) {
         gNotification.callNotificationEvent(context);
     }

@@ -99,7 +99,6 @@ public class ImageUtils {
         RequestOptions options = new RequestOptions()
                 .placeholder(placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .skipMemoryCache(true)
                 .format(DecodeFormat.PREFER_ARGB_8888);
 
         if (callback != null) {

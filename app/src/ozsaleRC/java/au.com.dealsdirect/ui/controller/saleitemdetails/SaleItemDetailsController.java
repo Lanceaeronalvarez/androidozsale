@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -44,6 +46,7 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.util.Pair;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,11 +77,15 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.service.afterpay.AfterpayPanelViewHolder;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
@@ -89,11 +96,15 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.main.Settings;
+import au.com.dealsdirect.ui.controller.saleitemdetails.listener.ImageTappedListener;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
+import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -115,12 +126,14 @@ import butterknife.OnClick;
 import static android.graphics.Typeface.BOLD;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
+import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 
 /*
  * Created by smartwave on 08/06/2017.
  */
 
-public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView, LoadImagesListener, SaleDetailsImageListener {
+public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView,
+        LoadImagesListener, SaleDetailsImageListener, ImageTappedListener {
 
     private final static int ACTIVITY_INDICATOR_DELAY = 2000; // milliseconds
 
@@ -276,6 +289,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private CountDownTimer mCountDownTimer;
 
     private boolean shouldAfterpayDetailsBeVisible = false;
+    GridLayoutManager mLayoutManager;
+    List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
+    List<GetYouMayAlsoLikeResponse> mYouMayAlsoLikeList = new ArrayList<>();
+    List<RecommendedItemsResponse> mRecommendedList = new ArrayList<>();
 
     @BindView(R.id.share_right)
     ImageView mLikeButton;
@@ -378,6 +395,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mProductDiscountTextView;
     @BindView(R.id.controller_product_details_button_container)
     RelativeLayout mProductDetailsButtonContainer;
+    @BindView(R.id.controller_product_details_like_recyclerview)
+    RecyclerView mYouMayAlsoLikeRecyclerview;
+    @BindView(R.id.controller_product_details_like_container)
+    View mYouMayAlsoLikeContainer;
+    @BindView(R.id.controller_product_details_recommended_recyclerview)
+    RecyclerView mRecommendedRecyclerView;
+    @BindView(R.id.controller_product_details_recommended_container)
+    View mRecommendedContainer;
+    @BindView(R.id.controller_product_details_recently_view_recyclerview)
+    RecyclerView mRecentlyViewedRecyclerView;
+    @BindView(R.id.controller_product_details_recently_viewed_container)
+    LinearLayout mRecentlyViewedContainer;
     int[] mSharedImageLocation;
 
     public static final String TAG = SaleItemDetailsController.class.getSimpleName();
@@ -391,6 +420,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mHtmlFooter = "";
 
     private LoadImagesListener mLoadImagesListener;
+    private ImageTappedListener recentlyViewedListener;
     private boolean mImagesLoaded = false;
 
     private ArrayList<Pair<String, String>> mProductSizes = new ArrayList<>();
@@ -576,6 +606,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mOurpay != null) {
             showMyPayDetails(null, mOurpay);
         }
+        showYouMayAlsoLike();
     }
 
     @Override
@@ -622,6 +653,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     protected void setUp(View view) {
 
+        mShippingDescText.getSettings().setTextZoom(100);
+        mProductDescriptionText.getSettings().setTextZoom(100);
+        mProductAboutPricing.getSettings().setTextZoom(100);
+        mProductAboutText.getSettings().setTextZoom(100);
+        mReturnPolicyText.getSettings().setTextZoom(100);
+        mOldProductPricing.getSettings().setTextZoom(100);
+
         if (view instanceof ElasticDragDismissFrameLayout) {
             mRootView = ((ElasticDragDismissFrameLayout) view);
 
@@ -634,10 +672,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         stretchImageView();
 
         if (mBrandName == null || mBrandName.isEmpty()) {
-            mProductBrand.setText(mSaleName);
+            mProductBrand.setText(Html.fromHtml("<u>" + mSaleName + "</u>"));
             mProductName.setText("");
         } else {
-            mProductBrand.setText(mBrandName);
+            mProductBrand.setText(Html.fromHtml("<u>" + mBrandName + "</u>"));
             mProductName.setText(mSaleName);
         }
 
@@ -675,6 +713,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mLoadImagesListener = this;
         mSaleDetailsImageListener = this;
+        recentlyViewedListener = this;
         mProductSharedImage.setTransitionName(getResources().getString(R.string.transition_sale_image_indexed, mFromPosition));
 
         if (mItemLowResImageDrawable != null) {
@@ -831,6 +870,40 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             });
         }
 
+        mProductBrand.setOnClickListener(v -> {
+            showProductList(mProductBrand.getText().toString());
+        });
+
+    }
+
+    private void showProductList(String searchKey) {
+
+        Bundle args = new Bundle();
+        args.putBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
+
+        SaleItemsController.Parameters.FromShopSearch parameters = new SaleItemsController.Parameters
+                .FromShopSearch(null, searchKey);
+
+        SaleItemsController saleItemsController = SaleItemsController.newInstance(parameters);
+
+
+        Controller controller = getRouter().getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
+        if (controller != null) {
+            getRouter().popController(controller);
+            getRouter().replaceTopController(RouterTransaction.with(saleItemsController)
+                    .tag(getResources().getString(R.string.sale_items_controller_tag))
+                    .pushChangeHandler(new ArcZoomChangeHandler())
+                    .popChangeHandler(new ArcZoomChangeHandler()));
+        } else {
+            getRouter().popToRoot(new ArcZoomChangeHandler());
+            getRouter().pushController(RouterTransaction.with(saleItemsController)
+                    .tag(getResources().getString(R.string.sale_items_controller_tag))
+                    .pushChangeHandler(new ArcZoomChangeHandler())
+                    .popChangeHandler(new ArcZoomChangeHandler()));
+        }
+
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+
     }
 
     private void setupSaleRemainingTime(String endDate) {
@@ -844,6 +917,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             @Override
             public void onFinish() {
+                mAddToCartTimer.setVisibility(View.GONE);
+                mAddToCartButtonContainer.setVisibility(View.VISIBLE);
+                mAddToCartButton.setEnabled(true);
+                mAddToCartButton.bringToFront();
             }
         };
         mCountDownTimer.start();
@@ -924,10 +1001,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             return;
         }
 
+        // disabled for adhoc/2020.06.16
+//        mPresenter.loadYouMayAlsoLike(saleDetail.getAttributes().getProductId());
+
+        // disabled for adhoc/2020.06.16
+//        mPresenter.loadRecommendedItems();
+
         mProductId = saleDetail.getProductId();
         mMasterProductId = saleDetail.getAttributes().getProductId();
 
         mSkuId = saleDetail.getSkuId();
+
+        if (mPresenter.isAuthorized()) {
+            // disabled for adhoc/2020.06.16
+//            mPresenter.loadRecentlyItems();
+        }
 
         mSeoIdentifierId = saleDetail.getSeoIdentifier();
         mSaleName = saleDetail.getName();
@@ -981,11 +1069,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mToolbarItemBrandTextView.setText(brandName);
             mToolbarItemNameTextView.setText(name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
             mProductName.setText(name.trim());
-            mProductBrand.setText(brandName.trim());
+            mProductBrand.setText(Html.fromHtml("<u>" + brandName.trim() + "</u>"));
         } else {
             mToolbarItemBrandTextView.setText(name.trim());
             mToolbarItemNameTextView.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
-            mProductBrand.setText(name.trim());
+            mProductBrand.setText(Html.fromHtml("<u>" + name.trim() + "</u>"));
         }
 
         if (personalisation != null) {
@@ -1082,6 +1170,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                     parent,
                                     false);
                     tv.setText(data.first);
+                    float size = tv.getContext().getResources().getDimension(R.dimen.text_size_body);
+                    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
                     if (mSkuVariants.get(position).isSoldOut()) {
                         tv.setBackground(getDrawable(R.drawable.bg_chips_soldout));
                         tv.setTextColor(getColor(R.color.bg_chips_soldout_text));
@@ -1391,6 +1481,134 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void setIsAfterpayDetailsVisible(boolean visible) {
         shouldAfterpayDetailsBeVisible = visible;
         mAfterpayHolder.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showYouMayAlsoLike(List<GetYouMayAlsoLikeResponse> response) {
+        mYouMayAlsoLikeList = response;
+
+        showYouMayAlsoLike();
+    }
+
+    private void showYouMayAlsoLike() {
+        if (mYouMayAlsoLikeList == null || mYouMayAlsoLikeList.isEmpty()) {
+            mYouMayAlsoLikeContainer.setVisibility(View.GONE);
+            return;
+        }
+        mYouMayAlsoLikeContainer.setVisibility(View.VISIBLE);
+
+        HorizontalScrollingBannerAdapter adapter = new HorizontalScrollingBannerAdapter(mActivity);
+            adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
+
+        adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.YouMayAlsoLike);
+        SaleItemDetailsScrollingImageAdapter mYouMayAlsoLikeAdapter = new SaleItemDetailsScrollingImageAdapter(mActivity, mPresenter,
+                this, mYouMayAlsoLikeList, mRecommendedList);
+
+        mYouMayAlsoLikeAdapter.setSlidingBannersAdapter(adapter);
+
+        GridLayoutManager mLayoutManager = new GridLayoutManager(
+                mActivity,
+                1,
+                RecyclerView.VERTICAL,
+                false);
+
+        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return 1;
+            }
+        });
+        mYouMayAlsoLikeRecyclerview.setAdapter(mYouMayAlsoLikeAdapter);
+        mYouMayAlsoLikeRecyclerview.setLayoutManager(mLayoutManager);
+        mYouMayAlsoLikeRecyclerview.getRecycledViewPool().clear();
+    }
+
+    @Override
+    public void showRecommendedItems(List<RecommendedItemsResponse> recommendedItemsResponseList) {
+        if (recommendedItemsResponseList == null || recommendedItemsResponseList.isEmpty()) {
+            mRecommendedContainer.setVisibility(View.GONE);
+            mRecommendedRecyclerView.setAdapter(null);
+            return;
+        }
+        mRecommendedContainer.setVisibility(View.VISIBLE);
+
+        mRecommendedList = recommendedItemsResponseList;
+
+        HorizontalScrollingBannerAdapter adapter = null;
+        if (!recommendedItemsResponseList.isEmpty()) {
+            adapter = new HorizontalScrollingBannerAdapter(mActivity);
+            adapter.setRecommendedList(recommendedItemsResponseList);
+        }
+
+
+        SaleItemDetailsScrollingImageAdapter mRecommendedAdapter = new SaleItemDetailsScrollingImageAdapter(mActivity, mPresenter,
+                this, new ArrayList<>(), recommendedItemsResponseList);
+
+        mRecommendedAdapter.setSlidingBannersAdapter(adapter);
+        adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.RecommendedItems);
+
+        GridLayoutManager mLayoutManager = new GridLayoutManager(
+                mActivity,
+                1,
+                RecyclerView.VERTICAL,
+                false);
+
+        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return 1;
+            }
+        });
+
+        mRecommendedRecyclerView.setAdapter(mRecommendedAdapter);
+        mRecommendedRecyclerView.setLayoutManager(mLayoutManager);
+        mRecommendedRecyclerView.getRecycledViewPool().clear();
+    }
+
+    @Override
+    public void showRecentlyViewedItems(List<RecentlyItemResponse> response) {
+        if (response == null || response.isEmpty()) {
+            mRecentlyViewedContainer.setVisibility(View.GONE);
+            mRecentlyViewedRecyclerView.setAdapter(null);
+            return;
+        }
+        mRecentlyViewedContainer.setVisibility(View.VISIBLE);
+
+        HorizontalScrollingBannerAdapter adapter = null;
+        if (!response.isEmpty()) {
+            adapter = new HorizontalScrollingBannerAdapter(mActivity);
+            adapter.setRecentlyViewedList(response);
+        }
+
+        adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.RecentlyViewed);
+        adapter.setShouldRepeatCellsToFillWidth(false);
+        RecentlyViewedItemAdapter recentlyViewedAdapter = new RecentlyViewedItemAdapter(mActivity, mPresenter,
+                recentlyViewedListener, response);
+
+        recentlyViewedAdapter.setSlidingBannersAdapter(adapter);
+
+        GridLayoutManager mLayoutManager = new GridLayoutManager(
+                mActivity,
+                1,
+                RecyclerView.VERTICAL,
+                false);
+
+        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return 1;
+            }
+        });
+        mRecentlyViewedRecyclerView.setAdapter(recentlyViewedAdapter);
+        mRecentlyViewedRecyclerView.setLayoutManager(mLayoutManager);
+        mRecentlyViewedRecyclerView.getRecycledViewPool().clear();
+
+    }
+
+    @Override
+    public void imageTapped(RecentlyItemResponse recentlyItemResponse) {
+        mProductDetailScrollView.smoothScrollTo(0, 0);
+        mPresenter.loadSaleItemDetails(recentlyItemResponse.getId(), recentlyItemResponse.getSeoIdentifier());
     }
 
     @Override
@@ -1799,5 +2017,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductImagesRv.setZ(0);
             mProductDetailsButtonContainer.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void reloadSaleItemDetails(GetYouMayAlsoLikeResponse response) {
+        mProductDetailScrollView.smoothScrollTo(0, 0);
+        mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
+    }
+
+    @Override
+    public void reloadSaleItemDetails(RecommendedItemsResponse response) {
+        mProductDetailScrollView.smoothScrollTo(0, 0);
+        mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
     }
 }

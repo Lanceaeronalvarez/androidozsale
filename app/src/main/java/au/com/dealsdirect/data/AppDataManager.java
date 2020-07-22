@@ -20,6 +20,9 @@ import javax.inject.Singleton;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHelper;
+import au.com.dealsdirect.data.cachedresponses.CachableRequest;
+import au.com.dealsdirect.data.cachedresponses.CachableResponse;
+import au.com.dealsdirect.data.cachedresponses.CachedResponseHelper;
 import au.com.dealsdirect.data.network.ApiHeader;
 import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.model.SampleRequest;
@@ -69,6 +72,7 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
+import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
@@ -116,6 +120,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.Ve
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
@@ -135,6 +140,8 @@ import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrder
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -173,18 +180,21 @@ public class AppDataManager implements DataManager {
     private final ApiHelper mApiHelper;
     private final AuthHelper mAuthHelper;
     private final WishlistHelper mWishlistHelper;
+    private final CachedResponseHelper mCachedResponseHelper;
 
     @Inject
     public AppDataManager(@ApplicationContext Context context,
                           PreferencesHelper preferencesHelper,
                           ApiHelper apiHelper,
                           AuthHelper authHelper,
-                          WishlistHelper wishlistHelper) {
+                          WishlistHelper wishlistHelper,
+                          CachedResponseHelper cachedResponseHelper) {
         mContext = context;
         mPreferencesHelper = preferencesHelper;
         mApiHelper = apiHelper;
         mAuthHelper = authHelper;
         mWishlistHelper = wishlistHelper;
+        mCachedResponseHelper = cachedResponseHelper;
     }
 
     @Override
@@ -645,6 +655,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<String> callBannerClickEvent(BannerClickEventRequest request) {
+        return mApiHelper.callBannerClickEvent(request);
+    }
+
+    @Override
     public Observable<String> callWishlistEvent(WishlistEventRequest request) {
         return mApiHelper.callWishlistEvent(request);
     }
@@ -747,6 +762,21 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable callRemoveFromWishlist(String productId) {
         return mApiHelper.callRemoveFromWishlist(productId);
+    }
+
+    @Override
+    public Observable<List<RecommendedItemsResponse>> callRecommendedItems() {
+        return mApiHelper.callRecommendedItems();
+    }
+
+    @Override
+    public Observable<List<GetYouMayAlsoLikeResponse>> callYouMayAlsoLike(String skuId) {
+        return mApiHelper.callYouMayAlsoLike(skuId);
+    }
+
+    @Override
+    public Observable<List<RecentlyItemResponse>> callRecentlyItems() {
+        return mApiHelper.callRecentlyItems();
     }
 
     @Override
@@ -1580,5 +1610,35 @@ public class AppDataManager implements DataManager {
     @Override
     public void updateWishlistCount() {
         mWishlistHelper.updateWishlistCount();
+    }
+
+    @Override
+    public <T extends CachableRequest, V extends CachableResponse> void setCachedResponse(T request, V response) {
+        mCachedResponseHelper.setCachedResponse(request, response);
+    }
+
+    @Override
+    public <T extends CachableRequest, V extends CachableResponse> V getCachedResponse(T request, Class<V> responseClass) {
+        return mCachedResponseHelper.getCachedResponse(request, responseClass);
+    }
+
+    @Override
+    public void pruneCachedResponses() {
+        mCachedResponseHelper.pruneCachedResponses();
+    }
+
+    @Override
+    public <T extends CachableRequest> void pruneCachedResponse(T request) {
+        mCachedResponseHelper.pruneCachedResponse(request);
+    }
+
+    @Override
+    public void storeCache() {
+        mCachedResponseHelper.storeCache();
+    }
+
+    @Override
+    public void fetchCache() {
+        mCachedResponseHelper.fetchCache();
     }
 }

@@ -126,6 +126,7 @@
                 android:paddingBottom="@dimen/margin_medium"
                 android:text="@string/track_order"
                 android:textAllCaps="false"
+                android:textSize="@dimen/text_size_caption1"
                 android:textColor="@color/white" />
         </RelativeLayout>
 
@@ -169,6 +170,7 @@
                         android:gravity="center"
                         android:text="1"
                         android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_caption2"
                         tools:ignore="ContentDescription" />
 
                     <View
@@ -229,6 +231,7 @@
                         android:gravity="center"
                         android:text="2"
                         android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_caption2"
                         tools:ignore="ContentDescription" />
 
                     <View
@@ -297,6 +300,7 @@
                         android:gravity="center"
                         android:text="3"
                         android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_caption2"
                         tools:ignore="ContentDescription" />
 
                     <View
@@ -365,6 +369,7 @@
                         android:gravity="center"
                         android:text="4"
                         android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_caption2"
                         tools:ignore="ContentDescription" />
 
                     <View

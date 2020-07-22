@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -59,18 +58,20 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/ourpay_empty_view_text"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textSize="@dimen/text_size_caption1" />
 
                 <Button
                     android:id="@+id/myAccountsOurpayInfoButton"
                     android:layout_width="@dimen/ourpay_empty_view_button_width"
                     android:layout_height="@dimen/ourpay_empty_view_button_height"
-                    android:layout_marginBottom="@dimen/ourpay_empty_view_button_gap"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/ourpay_empty_view_button_gap"
                     android:background="@drawable/bg_myaccount_ourpay_info_button"
                     android:text="Information Page"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_caption1"
                     android:textStyle="bold" />
 
                 <Button
@@ -82,6 +83,7 @@
                     android:text="Terms and Conditions"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_caption1"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>

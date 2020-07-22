@@ -95,7 +95,7 @@
                         android:text="Order: $200"
                         android:textAlignment="textStart"
                         android:textColor="@android:color/black"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/text_size_subtitle"
                         android:textStyle="bold"
                         app:autoSizeTextType="uniform" />
 
@@ -146,20 +146,22 @@
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/ourpay_payment_method_text_gap"
                     android:text="586xxxxxxx768"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_size_caption1" />
 
                 <Button
                     android:id="@+id/myAccountOurpayScheduledPaymentPayButton"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:layout_marginRight="@dimen/ourpay_scheduled_payment_detail_area_divider_margin_right"
+                    android:layout_marginBottom="@dimen/ourpay_scheduled_payment_detail_area_divider_margin_left"
+                    android:layout_weight="1"
                     android:background="@drawable/bg_button_pay_ourpay_schedule"
+                    android:gravity="center"
                     android:text="Pay Now"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:layout_marginRight="@dimen/ourpay_scheduled_payment_detail_area_divider_margin_right"
-                    android:layout_marginBottom="@dimen/ourpay_scheduled_payment_detail_area_divider_margin_left"
+                    android:textSize="@dimen/text_size_caption1"
                     android:textStyle="bold" />
             </LinearLayout>
 

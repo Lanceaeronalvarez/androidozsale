@@ -15,6 +15,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
@@ -39,6 +42,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.profiler.Profiler;
+import com.mysale.genie.views.custom.recyclerview.CustomGridLayoutManager;
 import com.paginate.Paginate;
 
 import java.util.ArrayList;
@@ -361,6 +365,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private Map<String, GetCategoryTreeResponse> mCategoryMap = new HashMap<>();
     private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
+    private List<GetSaleItemsResponse.Products> mSaleItemsFromCache = null;
     private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
     private List<GetCategoryTreeResponse> mCategoryTreeResponse = new LinkedList<>();
     private List<GetCategoryTreeResponse> mInitialCategoryTree = new LinkedList<>();
@@ -376,6 +381,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private List<String> mSelectedTitle = new ArrayList<>();
     private int mColumnCount;
     private int mCurrentProductDetailPosition = -1;
+
+    private boolean isSkeletonAnimating = false;
 
     @BindView(R.id.controller_sale_items_main_container)
     ViewGroup mMainContainer;
@@ -416,6 +423,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.controller_search_filter_tabs)
     AdaptiveTabLayout mTabLayout;
 
+    @BindView(R.id.controller_sale_items_search_skeleton)
+    ViewGroup mSearchFilterSkeleton;
+
     @BindView(R.id.controller_sale_items_ptr)
     PtrClassicFrameLayout mPtrFrameLayout;
 
@@ -438,6 +448,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.partial_toolbar_field_title_right_option)
     ImageButton mColumnView;
+
+    private CustomGridLayoutManager mGridLayoutManager;
 
     private SaleItemsAdapter mSaleItemsAdapter;
     private Paginate mPaginateManager;
@@ -520,12 +532,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             }
                             mActivity.runOnUiThread(SaleItemsController.this::showLoading);
                             if (mSearchFilterMvpView != null) {
-                                mActivity.runOnUiThread(() ->
-                                        mPresenter.loadSaleItems(
-                                                createSaleItemsRequest(
-                                                        mSearchFilterMvpView.getCategoryKeys(),
-                                                        0,
-                                                        mChipFilters))
+                                mActivity.runOnUiThread(() -> {
+                                            mSaleItemsPageNumber = 0;
+                                            mPresenter.loadSaleItems(
+                                                    createSaleItemsRequest(
+                                                            mSearchFilterMvpView.getCategoryKeys(),
+                                                            0,
+                                                            mChipFilters));
+                                        }
                                 );
                             }
                         }
@@ -559,6 +573,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else if (parameters instanceof Parameters.FromShopSearch) {
             title = ((Parameters.FromShopSearch) parameters).getTitle();
             controller.mFromShopSearch = true;
+            controller.mSearchQuery = ((Parameters.FromShopSearch) parameters).getSearchKey();
         } else if (parameters instanceof Parameters.FromCategory) {
             title = ((Parameters.FromCategory) parameters).getTitle();
             controller.mCategoryKey = ((Parameters.FromCategory) parameters).getCategoryMap();
@@ -778,15 +793,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     if (mSaleId != null && !mSaleId.isEmpty()) {
                         mPresenter.loadSaleBannerDetails(mSaleId);
                     }
-                    mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, mSaleItemsPageNumber, mChipFilters));
+                    mSaleItemsPageNumber = 0;
+                    mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
                     if (mHasSavedInstance) {
                         mActivity.getMainController().getHomeController().setSavedCurrentItem();
                     } else {
                         showKeyboard();
                     }
+                    if (mInitialLoad) {
+                        animateSkeletonUI();
+                    }
                     break;
                 case WISHLIST:
                     mPresenter.loadWishlist();
+                    mSaleItemsRecyclerView.setLayoutAnimation(null);
                     break;
             }
         }
@@ -847,6 +867,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     } else {
                         mSaleItemsToolbarField.setText("");
                     }
+                } else if (mSearchQuery != null && mSearchQuery.length() > 0) {
+                    mSaleItemsToolbarField.setText(mSearchQuery);
                 } else {
                     mSaleItemsToolbarField.setHint(lookingForText);
                 }
@@ -888,6 +910,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 } else {
                     mSaleItemsToolbarTitle.setText(getString(R.string.i_am_looking_for));
                 }
+
+                if (!isFromCategories()) {
+                    String finalText = mSaleItemsToolbarTitle.getText().toString();
+                    if (finalText != null && !finalText.isEmpty() && finalText.trim().isEmpty()) {
+                        mSaleItemsToolbarTitle.setBackground(
+                                mActivity.getResources().getDrawable(R.drawable.bg_skeleton_fixed_size));
+                    } else {
+                        mSaleItemsToolbarTitle.setBackground(null);
+                    }
+                }
                 break;
             case WISHLIST:
                 mSaleItemsToolbarTitle.setVisibility(View.VISIBLE);
@@ -924,6 +956,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void setUp(View view) {
 
         mActivity.setDraggableViewPager(false);
+
         setupPtrHeader();
         if (mEndDate == null || mEndDate.isEmpty() || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
             mSaleItemsRemainingTimeText.setVisibility(View.GONE);
@@ -939,7 +972,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         setGridViewMode(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
                 GridViewMode.MORE_IMAGES : GridViewMode.LARGER_IMAGES);
         mGridViewModePreferenceHelper.resetTimeElapsed();
-        ;
+
         mGridViewModePreferenceHelper.resetTimestamp();
 
         //use initialcategory tree map if it came from categories.
@@ -979,7 +1012,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
+        CustomGridLayoutManager gridLayoutManager = new CustomGridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -994,6 +1027,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         });
 
+        mGridLayoutManager = gridLayoutManager;
         mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
         mSaleItemsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -1033,6 +1067,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         mFooterAds.setVisibility(View.GONE);
+        setColumnViewEnabled(false);
     }
 
     @OnClick(R.id.partial_toolbar_field_title_right_option)
@@ -1075,7 +1110,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mSaleId,
                 mColumnCount,
                 this::logWishlistEvent);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
+        CustomGridLayoutManager gridLayoutManager = new CustomGridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -1090,6 +1125,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         });
 
+        mGridLayoutManager = gridLayoutManager;
         mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
 
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
@@ -1104,13 +1140,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             @Override
             public void onFinish() {
+                mSaleItemsRemainingTimeText.setVisibility(View.GONE);
+                mSaleEndsInText.setVisibility(View.GONE);
             }
         };
         mCountDownTimer.start();
     }
 
     private void showKeyboard() {
-        if (mFromShopSearch) {
+        if (mFromShopSearch && (mSearchQuery == null || mSearchQuery.isEmpty())) {
             activateSearch();
             KeyboardUtils.showSoftInput(mSaleItemsToolbarField, mActivity);
             InputMethodManager inputMethodManager = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -1151,7 +1189,36 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection) {
+    public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection, boolean isFromCache) {
+        if (isSkeletonAnimating) {
+            mSaleItemsRecyclerView.setLayoutAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    Handler mainHandler = new Handler(mActivity.getMainLooper());
+                    Runnable myRunnable = () -> {
+                        isSkeletonAnimating = false;
+                        showSaleItems(getSaleItemsResponse, forFacetCorrection, isFromCache);
+                        mSaleItemsRecyclerView.setLayoutAnimationListener(null);
+                        mGridLayoutManager.setScrollEnabled(true);
+                    };
+                    mainHandler.post(myRunnable);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            return;
+        }
+        if (!mColumnView.isEnabled()) {
+            setColumnViewEnabled(true);
+        }
 
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue());
 
@@ -1201,11 +1268,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mIsLoadingProgress = false;
 
+        if (isFromCache && mSaleItemsFromCache == null) {
+            mSaleItems = new ArrayList<>(mSaleItemsAdapter.getData());
+        }
+
         if (items.size() == 0 && mSaleItemsPageNumber != 0) {
             mHasLoadedAllItems = true;
             mPaginateManager.setHasMoreDataToLoad(false);
             mPtrFrameLayout.setPullToRefresh(false);
-            mSaleItemsPageNumber = 0;
         } else {
 
             if (!mChipFilters.isEmpty() || mFromCategorySearch || mFromShopSearch || !mSearchQuery.isEmpty()) {
@@ -1224,7 +1294,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     } else {
                         mHasLoadedAllItems = true;
                         mPaginateManager.setHasMoreDataToLoad(false);
-                        mSaleItemsPageNumber = 0;
                     }
                 } else {
                     mPaginateManager = PaginateUtils.init(mActivity, mSaleItemsRecyclerView, mPaginateCallbacks);
@@ -1234,13 +1303,23 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
                 mIsSearch = false;
             } else {
-                mSaleItemsAdapter.addData(items);
+                if (mSaleItemsFromCache != null && !isFromCache) {
+                    mSaleItems.addAll(items);
+                    mSaleItemsAdapter.replaceData(mSaleItems);
+                } else {
+                    mSaleItemsAdapter.addData(items);
+                }
             }
         }
 
-        mSaleItems = mSaleItemsAdapter.getData();
+        if (isFromCache) {
+            mSaleItemsFromCache = mSaleItemsAdapter.getData();
+        } else {
+            mSaleItemsFromCache = null;
+            mSaleItems = mSaleItemsAdapter.getData();
+        }
 
-        showPlaceholder(mSaleItems == null || mSaleItems.isEmpty());
+        showPlaceholder((mSaleItems == null || mSaleItems.isEmpty()) && (mSaleItemsFromCache == null || mSaleItemsFromCache.isEmpty()));
 
         setupSearchFilters();
         setupTabs();
@@ -1272,6 +1351,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void showWishlist(List<GetSaleItemsResponse.Products> wishlist) {
+        setColumnViewEnabled(true);
+
         mHasLoadedAllItems = true;
         if (mPaginateManager != null) {
             mPaginateManager.setHasMoreDataToLoad(false);
@@ -1431,6 +1512,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 if (mSaleId != null && !mSaleId.isEmpty()) {
                     mPresenter.loadSaleBannerDetails(mSaleId);
                 }
+                mSaleItemsPageNumber = 0;
                 mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
                 if (mAppBar != null) {
                     mAppBar.setExpanded(true, true);
@@ -1553,6 +1635,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private void setupSearchFilters() {
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
         if (mSearchFilterMvpView == null) {
+            mSearchFilterSkeleton.setVisibility(View.GONE);
+
             SearchFilterController.Parameters.FromItemsList parameters = new SearchFilterController
                     .Parameters.FromItemsList(mFacets,
                     mSortingResponse,
@@ -1790,16 +1874,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         TabLayoutUtils.setupWithCustomTextView(mActivity, mTabLayout, mTabTitles);
 
-        //ANDR - Fit filters on the screen (TAB) https://apacsale.atlassian.net/browse/GEN-9022
-        //set tabs layout weight to 1 so that when rotated to landscape even still in scrollable mode, it will fill whole width
-        ViewGroup slidingTabStrip = (ViewGroup) mTabLayout.getChildAt(0);
-        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
-            View tab = slidingTabStrip.getChildAt(i);
-            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) tab.getLayoutParams();
-            lp.weight = 1;
-            tab.setLayoutParams(lp);
-        }
-
         retainSelectedTabs();
 
         //add listener
@@ -1854,6 +1928,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSearchFilterMvpView.setFacetFilterItems(mFacetFilters);
             mTabLayout.addTab(mTabLayout.newTab(), false);
         }
+
     }
 
     private void retainSelectedTabs() {
@@ -1943,6 +2018,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 if (mSaleId != null && !mSaleId.isEmpty()) {
                     mPresenter.loadSaleBannerDetails(mSaleId);
                 }
+                mSaleItemsPageNumber = 0;
                 mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
                 break;
             case WISHLIST:
@@ -1987,6 +2063,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mIsSearch = true;
                 showLoading();
                 if (mSearchFilterMvpView != null) {
+                    mSaleItemsPageNumber = 0;
                     mPresenter.loadSaleItems(createSaleItemsRequest(mSearchFilterMvpView.getCategoryKeys(), 0, mChipFilters));
                 }
             }
@@ -2072,6 +2149,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mSaleId != null && !mSaleId.isEmpty()) {
             mPresenter.loadSaleBannerDetails(mSaleId);
         }
+        mSaleItemsPageNumber = 0;
         mPresenter.loadSaleItems(createSaleItemsRequest(categoryKeys, 0, chipsList));
     }
 
@@ -2117,13 +2195,26 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 if (show) {
                     if (mPlaceholder != null) {
                         mPlaceholder.setVisibility(View.VISIBLE);
+                        CommonUtils.fadeInView(mPlaceholder, null);
                     }
-                    mSaleItemsRecyclerView.setVisibility(View.GONE);
+                    animateHideRecyclerView();
                 } else {
                     if (mPlaceholder != null) {
-                        mPlaceholder.setVisibility(View.GONE);
+                        CommonUtils.fadeOutView(mPlaceholder, new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                                super.onAnimationCancel(animation);
+                                mPlaceholder.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                mPlaceholder.setVisibility(View.GONE);
+                            }
+                        });
                     }
-                    mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+                    animateShowRecyclerView();
                 }
                 break;
             case WISHLIST:
@@ -2133,16 +2224,56 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 if (show) {
                     mMainContainer.setVisibility(View.GONE);
                     mToolbar.setVisibility(View.GONE);
-                    mSaleItemsRecyclerView.setVisibility(View.GONE);
+                    animateHideRecyclerView();
                     mWishlistPlaceholder.setVisibility(View.VISIBLE);
+                    CommonUtils.fadeInView(mWishlistPlaceholder, null);
                 } else {
-                    mWishlistPlaceholder.setVisibility(View.GONE);
                     mMainContainer.setVisibility(View.VISIBLE);
                     mToolbar.setVisibility(View.VISIBLE);
-                    mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+                    animateShowRecyclerView();
+                    CommonUtils.fadeOutView(mWishlistPlaceholder, new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                            super.onAnimationCancel(animation);
+                            mWishlistPlaceholder.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mWishlistPlaceholder.setVisibility(View.GONE);
+                        }
+                    });
                 }
                 break;
         }
+    }
+
+    private void animateShowRecyclerView() {
+        if (mSaleItemsRecyclerView == null || mSaleItemsRecyclerView.getVisibility() == View.VISIBLE) {
+            return;
+        }
+        mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+        CommonUtils.fadeInView(mSaleItemsRecyclerView, null);
+    }
+
+    private void animateHideRecyclerView() {
+        if (mSaleItemsRecyclerView == null || mSaleItemsRecyclerView.getVisibility() == View.GONE) {
+            return;
+        }
+        CommonUtils.fadeOutView(mSaleItemsRecyclerView, new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mSaleItemsRecyclerView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+                mSaleItemsRecyclerView.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void showPlaceholderWithAnimation(boolean show) {
@@ -2247,5 +2378,50 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 }
                 break;
         }
+    }
+
+    public void animateSkeletonUI() {
+        isSkeletonAnimating = true;
+        setColumnViewEnabled(false);
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(mActivity, R.anim.layout_sale_list_skeleton);
+
+        ArrayList<GetSaleItemsResponse.Products> nullList = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            nullList.add(null);
+        }
+        mSaleItemsRecyclerView.setLayoutAnimation(controller);
+        mSaleItemsAdapter.addData(nullList, false);
+        mSaleItemsRecyclerView.scheduleLayoutAnimation();
+        mGridLayoutManager.setScrollEnabled(false);
+
+        mSaleItemsRecyclerView.setLayoutAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isSkeletonAnimating = false;
+                setColumnViewEnabled(true);
+                mSaleItemsRecyclerView.setLayoutAnimationListener(null);
+                mGridLayoutManager.setScrollEnabled(true);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        mSearchFilterSkeleton.setVisibility(View.VISIBLE);
+        Animation animaton = AnimationUtils.loadAnimation(mActivity, R.anim.sale_list_skeleton);
+        mSearchFilterSkeleton.startAnimation(animaton);
+    }
+
+    private void setColumnViewEnabled(boolean enabled) {
+        mColumnView.setEnabled(enabled);
+        mColumnView.setAlpha(enabled ? 1.0f : 0.5f);
     }
 }

@@ -14,10 +14,13 @@ import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayError;
@@ -374,5 +377,89 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                                 }
                             });
                 });
+    }
+
+    @Override
+    public void loadRecommendedItems() {
+        doApiCallForResponse(getDataManager().callRecommendedItems(), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> object) {
+                super.onSuccess(object);
+
+                if (object != null && object.size() != 0) {
+                    List<RecommendedItemsResponse> responseList = (List<RecommendedItemsResponse>) object;
+                    getMvpView().showRecommendedItems(responseList);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                getMvpView().onError(throwable.getMessage());
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void loadYouMayAlsoLike(String skuId) {
+        doApiCallForResponse(getDataManager().callYouMayAlsoLike(skuId), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> response) {
+                super.onSuccess(response);
+
+                if (response != null && response.size() != 0) {
+                    getMvpView().showYouMayAlsoLike((List<GetYouMayAlsoLikeResponse>) response);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                getMvpView().hideLoading();
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void loadRecentlyItems() {
+        doApiCallForResponse(getDataManager().callRecentlyItems(), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> object) {
+                super.onSuccess(object);
+
+                List<RecentlyItemResponse> response = (List<RecentlyItemResponse>) object;
+                getMvpView().showRecentlyViewedItems(response);
+
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                getMvpView().onError(throwable.getMessage());
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
     }
 }

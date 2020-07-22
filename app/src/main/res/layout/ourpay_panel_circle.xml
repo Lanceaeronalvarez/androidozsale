@@ -6,8 +6,9 @@
     android:layout_width="@dimen/ourpay_circle_state_size"
     android:layout_height="@dimen/ourpay_circle_state_size"
     android:layout_gravity="center"
+    android:background="@drawable/ourpay_circle_state_default"
     android:gravity="center"
     android:textColor="@color/white"
-    android:background="@drawable/ourpay_circle_state_default"
+    android:textSize="@dimen/text_size_caption2"
     tools:text="1" />
 

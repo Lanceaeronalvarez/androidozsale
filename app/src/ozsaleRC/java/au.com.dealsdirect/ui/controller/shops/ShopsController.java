@@ -132,7 +132,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private GridLayoutManager mLayoutManager;
 
     private List<GetCategoryTreeResponse> mPreLoadedCategories = new LinkedList<>();
-    private List<GetBannerResponse.Group> sales = new LinkedList<>();
+    private List<GetBannerResponse.Group> mSales = new LinkedList<>();
+    private List<GetBannerResponse.Group> mSalesFromCache = null;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
 
     private boolean isRefreshShop = false;
@@ -297,7 +298,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 // Load next page of data (e.g. network or database)
                 page++;
                 bannerOffset += INITIAL_BANNER_COUNT;
-                refresh();
+                loadingInProgress = true;
+                GetBannerRequest request;
+                if (mIsDeeplink) {
+                    request = createDeepLinkBannerRequest(mCategoryID, bannerOffset, bannerLimit);
+                } else {
+                    request = createBannerRequest(mCategoryID, bannerOffset, bannerLimit);
+                }
+                mPresenter.loadShopsBanner(request);
             }
 
             @Override
@@ -333,7 +341,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             }
         });
 
-        if (sales.isEmpty() && !mHasSavedInstance) {
+        if (mSales.isEmpty() && (mSalesFromCache == null || mSalesFromCache.isEmpty()) && !mHasSavedInstance) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
         } else {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
@@ -366,7 +374,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             mBannersAdapter = new BannersAdapter(
                     mActivity,
                     mPresenter,
-                    sales,
+                    new ArrayList<>(),
                     orientation);
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         } else {
@@ -410,19 +418,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         mShopPtrLayout.getHeader().setProgressBar(ColorStateList.valueOf(getResources().getColor(R.color.progress_loader_stroke)));
 
-    }
-
-    @Override
-    public void refresh() {
-        loadingInProgress = true;
-
-        if (mIsDeeplink) {
-            mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, 0, 0));
-        } else {
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
-        }
-        loadSlidingBanners();
-        loadSponsoredBanners();
     }
 
     @Override
@@ -517,7 +512,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     @Override
-    public void showShopBanners(GetBannerResponse getBannerResponses, String categoryID) {
+    public void showShopBanners(GetBannerResponse getBannerResponses, String categoryID, boolean isFromCache) {
 
         mActivity.getMainController().getHomeController().setViewpagerScreen(MainController.SHOP_INDEX);
 
@@ -538,22 +533,49 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         loadingInProgress = false;
 
-        sales = getBannerResponses.getGroups();
+        List<GetBannerResponse.Group> moreGroups = getBannerResponses.getGroups();
+        boolean shouldRestartPaginateManager = false;
+
+        if (isFromCache && mSalesFromCache == null) {
+            mSales = new ArrayList<>(mBannersAdapter.getData());
+        }
 
         if (page == 0 || isRefreshShop) {
-            mBannersAdapter.replace(sales);
+            mBannersAdapter.replace(moreGroups);
             if (mPaginateManager != null) {
                 mPaginateManager.unbind();
             }
-            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
-            isRefreshShop = false;
-        } else {
-            mBannersAdapter.addAll(sales);
-
-            if (sales.isEmpty()) {
-                hasLoadedAllItems = true;
+            shouldRestartPaginateManager = true;
+            if (mPaginateManager != null) {
                 mPaginateManager.setHasMoreDataToLoad(false);
             }
+            isRefreshShop = false;
+        } else {
+            if (mSalesFromCache != null && !isFromCache) {
+                mSales.addAll(moreGroups);
+                mBannersAdapter.replace(mSales);
+            } else {
+                mBannersAdapter.addAll(moreGroups);
+            }
+
+            if (moreGroups.isEmpty()) {
+                hasLoadedAllItems = true;
+                if (mPaginateManager != null) {
+                    mPaginateManager.setHasMoreDataToLoad(false);
+                }
+            }
+        }
+
+        if (isFromCache) {
+            mSalesFromCache = mBannersAdapter.getData();
+        } else {
+            mSalesFromCache = null;
+            mSales = mBannersAdapter.getData();
+        }
+
+        if (shouldRestartPaginateManager) {
+            // has to moved here because loadMore() gets called too early otherwise
+            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         }
 
         onRefreshEnd();
@@ -605,6 +627,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (!sponsoredBanners.isEmpty()) {
                 adapter = new HorizontalScrollingBannerAdapter(mActivity);
                 adapter.setDataSource(sponsoredBanners);
+                adapter.setShouldRepeatCellsToFillWidth(false);
             }
         }
         mBannersAdapter.setSponsoredBannersAdapter(adapter);
@@ -614,7 +637,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void refreshContents() {
         super.refreshContents();
         if (isViewAttached() &&
-                sales.isEmpty() &&
+                mSales.isEmpty() &&
+                (mSalesFromCache == null || mSalesFromCache.isEmpty()) &&
                 !mHasSavedInstance &&
                 shopsControllerBannerRecyclerView != null) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
@@ -774,7 +798,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         //reset adapter
         mBannersAdapter.clear();
-        
+
         if (shopsControllerBannerRecyclerView != null) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
             shopsControllerBannerRecyclerView.getRecycledViewPool().clear();
@@ -783,7 +807,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             }
         }
 
-        sales.clear();
+        mSales.clear();
+        mSalesFromCache = null;
 
         //reset for values for Get_sales API call
         page = 0;

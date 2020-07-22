@@ -19,6 +19,7 @@
         android:paddingRight="@dimen/margin_medium"
         android:paddingBottom="@dimen/margin_medium"
         android:text="Shipping: $10.00\nadd extra $10.00 to get\nFREE SHIPPING"
-        android:textColor="@color/text_dark" />
+        android:textColor="@color/text_dark"
+        android:textSize="@dimen/text_size_caption1" />
 
 </RelativeLayout>

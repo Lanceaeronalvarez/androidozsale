@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background_default"
     tools:ignore="MissingPrefix">
 
@@ -14,14 +14,14 @@
         android:orientation="vertical">
 
         <TextView
-            fontPath="@string/font_app_light"
             android:id="@+id/address_office_delivery_subtitle"
+            fontPath="@string/font_app_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_default_half"
             android:layout_marginLeft="@dimen/padding_default"
-            android:layout_marginRight="@dimen/padding_default"
             android:layout_marginTop="@dimen/padding_default"
+            android:layout_marginRight="@dimen/padding_default"
+            android:layout_marginBottom="@dimen/padding_default_half"
             android:text="@string/my_returns"
             android:textAllCaps="true"
             android:textColor="@color/text_medium"
@@ -52,6 +52,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/padding_default"
         android:text="@string/add_new_returns"
+        android:textSize="@dimen/text_size_headline2"
         android:visibility="gone" />
 
 </RelativeLayout>

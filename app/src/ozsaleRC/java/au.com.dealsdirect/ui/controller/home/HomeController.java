@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
+
 import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
@@ -52,9 +52,11 @@ import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.DelayedMethodExecutionManager;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
+import io.reactivex.annotations.NonNull;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -152,6 +154,19 @@ public class HomeController extends BaseController implements HomeMvpView {
         if (mHasSavedStateInstance) {
             refreshAllTopControllers();
         }
+
+        // This is placed here due to a bug with calls to HomeController method in a callback
+        // firing before HomeController presenter is injected. This includes calls to updating
+        // the Wishlist badge on the bottom navigation bar. A null pointer exception will be
+        // thrown, saying that the presenter is still null.
+        // I suspect that if the initialization of the MainActivity is prolonged, this makes it
+        // possible for the API request threads to overtake the initialization and fire the callbacks
+        // before HomeControler is injected and ready.
+        // TODO: fix HomeController method calls that accesses the presenter to be delayed until injection
+        mActivity.fetchCachedResponses();
+
+        DelayedMethodExecutionManager.getInstance()
+                .executeDelayedMethodCalls(this.getClass().getName());
     }
 
     @Override
@@ -160,6 +175,8 @@ public class HomeController extends BaseController implements HomeMvpView {
         View view = inflater.inflate(R.layout.controller_home, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+        DelayedMethodExecutionManager.getInstance()
+                .executeDelayedMethodCalls(this.getClass().getName());
 
         return view;
     }
@@ -198,11 +215,15 @@ public class HomeController extends BaseController implements HomeMvpView {
         mBottomNavigationView.setDefaultBackgroundColor(getResources().getColor(R.color.bottom_nav_background));
         mBottomNavigationView.setAccentColor(getResources().getColor(R.color.bottom_nav_accent));
         mBottomNavigationView.setInactiveColor(getResources().getColor(R.color.bottom_nav_inactive));
+        mBottomNavigationView.setTitleTextSize(
+                getResources().getDimension(R.dimen.text_size_caption2),
+                getResources().getDimension(R.dimen.text_size_caption2)
+        );
 
 //        ADD "NEW" Badge to categories
 
         if (mPresenter.isInitialLaunch()) {
-            AHNotification notification = new AHNotification.Builder()
+                AHNotification notification = new AHNotification.Builder()
                     .setText("NEW")
                     .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bottom_nav_badge))
                     .setTextColor(ContextCompat.getColor(getActivity(), R.color.white))
@@ -699,6 +720,15 @@ public class HomeController extends BaseController implements HomeMvpView {
 
     @Override
     public void updateWishlistItemCount(int count) {
+        if (mPresenter == null || getBottomNavigationView() == null) {
+            DelayedMethodExecutionManager.getInstance()
+                    .queueDelayedMethodCall(
+                            this.getClass().getName(),
+                            "updateWishlistItemCount",
+                            () -> updateWishlistItemCount(count));
+            return;
+        }
+
         String text;
         if (count == 0) {
             text = mPresenter.hasWishlistBeenAccessed() ? "" : "NEW";
@@ -1175,6 +1205,14 @@ public class HomeController extends BaseController implements HomeMvpView {
     }
 
     public void callCreateOrderRefund(String invoiceNumber, String reason, HashMap<String, Integer> items) {
+        if (mPresenter == null) {
+            DelayedMethodExecutionManager.getInstance()
+                    .queueDelayedMethodCall(
+                            this.getClass().getName(),
+                            "callCreateOrderRefund",
+                            () -> callCreateOrderRefund(invoiceNumber, reason, items));
+            return;
+        }
         CreateRefundRequest createRefundRequest = new CreateRefundRequest();
         createRefundRequest.setInvoiceNo(invoiceNumber);
         createRefundRequest.setReason(reason);

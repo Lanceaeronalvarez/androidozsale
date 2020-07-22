@@ -12,16 +12,17 @@
         layout="@layout/partial_wishlist_empty"
         android:visibility="gone" />
 
-    <include layout="@layout/partial_toolbar_title_details"
-        android:visibility="visible"/>
+    <include
+        layout="@layout/partial_toolbar_title_details"
+        android:visibility="visible" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/controller_sale_items_main_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:visibility="visible"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        android:visibility="visible">
 
         <in.srain.cube.views.ptr.PtrClassicFrameLayout
             android:id="@+id/controller_sale_items_ptr"
@@ -44,7 +45,7 @@
                 android:focusable="true"
                 android:paddingLeft="@dimen/margin_extra_small"
                 android:paddingRight="@dimen/margin_extra_small"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
         </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 
@@ -90,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/sale_details_app_bar_height"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/controller_sale_items_appbar"
@@ -118,6 +119,57 @@
                     android:minHeight="@dimen/controller_sale_items_tab_height"
                     android:visibility="gone"
                     app:tabMaxWidth="0dp" />
+
+                <LinearLayout
+                    android:id="@+id/controller_sale_items_search_skeleton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/controller_sale_items_tab_height"
+                    android:layout_gravity="bottom"
+                    android:gravity="left"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:weightSum="4.5">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_medium"
+                        android:layout_marginRight="@dimen/margin_medium"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_skeleton_fixed_height" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_medium"
+                        android:layout_marginRight="@dimen/margin_medium"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_skeleton_fixed_height" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_medium"
+                        android:layout_marginRight="@dimen/margin_medium"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_skeleton_fixed_height" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_medium"
+                        android:layout_marginRight="@dimen/margin_medium"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_skeleton_fixed_height" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_medium"
+                        android:layout_marginRight="@dimen/margin_medium"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_skeleton_fixed_height" />
+                </LinearLayout>
 
                 <au.com.dealsdirect.ui.custom.SearchEditText
                     android:id="@+id/partial_toolbar_field_title_edittext"

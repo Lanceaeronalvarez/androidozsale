@@ -49,6 +49,7 @@ public class DataCollector {
         public static final String SALE_EVENT_REQUEST = "SALE_EVENT_REQUEST";
         public static final String WISHLIST_EVENT_REQUEST = "WISHLIST_EVENT_REQUEST";
         public static final String START_CHECKOUT_REQUEST = "START_CHECKOUT_REQUEST";
+        public static final String BANNER_CLICK_REQUEST = "BANNER_CLICK_REQUEST";
         public static final String APP_CONTEXT = "APP_CONTEXT";
         public static final String ITEM_LIST = "ITEM_LIST";
         public static final String SCREEN_NAME = "SCREEN_NAME";
@@ -102,6 +103,9 @@ public class DataCollector {
         public static final String TOGGLE_LIST_PORTRAIT = "PortraitNumberOfColumns";
         public static final String TOGGLE_LIST_LANDSCAPE = "LandscapeNumberOfColumns";
         public static final String TOGGLE_LIST_PREFERENCE = "ProductListGridViewPreference";
+        // BANNERS
+        public static final String SALE_NAME = "SaleName";
+        public static final String BANNER_TYPE = "BANNER_TYPE";
 
         public final class LoginType {
             public final static String FACEBOOK = "LoginFacebook";
@@ -208,6 +212,7 @@ public class DataCollector {
             PAYPALCREDIT(9),
             PAYPAL(9),
             AFTERPAY(6),
+            STRIPE(501),
             UNKNOWN(8);
 
             private int value;

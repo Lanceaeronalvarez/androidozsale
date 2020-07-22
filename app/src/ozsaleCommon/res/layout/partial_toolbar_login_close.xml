@@ -46,6 +46,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
             android:paddingRight="@dimen/margin_extra_small"
+            android:textSize="@dimen/text_size_caption1"
             android:src="@drawable/ic_pink_chevron"
             android:visibility="invisible" />
 

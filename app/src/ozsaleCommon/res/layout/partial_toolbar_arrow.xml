@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/toolbar_skin"
-    android:contentInsetEnd="0dp"
-    android:contentInsetLeft="0dp"
-    android:contentInsetRight="0dp"
     android:contentInsetStart="0dp"
+    android:contentInsetLeft="0dp"
+    android:contentInsetEnd="0dp"
+    android:contentInsetRight="0dp"
     app:contentInsetEnd="0dp"
     app:contentInsetLeft="0dp"
     app:contentInsetRight="0dp"
@@ -40,10 +40,10 @@
             fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:gravity="center"
             android:paddingLeft="@dimen/margin_extra_huge"
             android:paddingRight="@dimen/margin_extra_huge"
             android:singleLine="true"
@@ -60,13 +60,14 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:background="@drawable/bg_toolbar_button"
-            android:visibility="invisible"
-            android:scaleType="fitCenter"
             android:padding="@dimen/margin_small"
-            android:src="@drawable/ic_account_logout" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_account_logout"
+            android:textSize="@dimen/text_size_caption1"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 
-    <View style="@style/horizontalBorderView"/>
+    <View style="@style/horizontalBorderView" />
 
 </androidx.appcompat.widget.Toolbar>

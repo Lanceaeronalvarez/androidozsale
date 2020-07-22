@@ -396,4 +396,17 @@ public class LoggingService {
             logWishlistDataEvent.LogDataEvents(parameters);
         }
     }
+
+    public static class LogBannerClickEvent implements LoggingEventData {
+        private LogDataEvents logBannerClickEvent;
+
+        public LogBannerClickEvent (LogDataEvents logBannerClickEvent) {
+            this.logBannerClickEvent = logBannerClickEvent;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logBannerClickEvent.LogDataEvents(parameters);
+        }
+    }
 }

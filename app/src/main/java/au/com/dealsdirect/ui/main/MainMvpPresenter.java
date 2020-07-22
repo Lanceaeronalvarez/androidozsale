@@ -115,4 +115,10 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void setPaymentMethodId(String paymentMethodId);
 
     boolean isStripeEnabled();
+
+    void storeCachedResponses();
+
+    void fetchCachedResponses();
+
+    void pruneCachedResponses();
 }

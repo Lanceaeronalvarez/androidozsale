@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.FrontEndInfo;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
@@ -28,6 +29,7 @@ import au.com.dealsdirect.service.datacollection.core.DataCollectionService;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.core.LoggingService;
 import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.events.BannerClickEvent;
 import au.com.dealsdirect.service.datacollection.events.EventUser;
 import au.com.dealsdirect.service.datacollection.events.InitiateCheckOutEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemDetailsDataEvent;
@@ -142,6 +144,17 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         callStartCheckoutEvent((StartCheckoutRequest) parameters.get(DataCollector.EventParameters.START_CHECKOUT_REQUEST));
+                    }
+                }));
+
+        // register banner click event
+        DataCollector.EventRegistry.register(generateEventKey(Events.BannerClickEvent, getServiceKey()), Events.BannerClickEvent,
+                new LoggingService.LogBannerClickEvent(new BannerClickEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        if (parameters.containsKey(DataCollector.EventParameters.BANNER_CLICK_REQUEST)) {
+                            callBannerClickEvent((BannerClickEventRequest) parameters.get(DataCollector.EventParameters.BANNER_CLICK_REQUEST));
+                        }
                     }
                 }));
     }
@@ -309,6 +322,31 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
 
         getCompositeDisposable().add(getDataManager()
                 .callStartCheckoutEvent(request)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    Log.d(TAG, response);
+
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            Log.d("Error", String.valueOf(anError.getErrorBody()));
+                        }
+                    }
+                }));
+    }
+
+    private static void callBannerClickEvent(BannerClickEventRequest request) {
+        request.setFrontEndInfo(includeFrontEndInfo());
+        request.setVisitorInfo(includeVisitorInfo());
+
+        getCompositeDisposable().add(getDataManager()
+                .callBannerClickEvent(request)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(response -> {

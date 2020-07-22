@@ -23,7 +23,7 @@ public interface SaleItemsMvpView extends MvpView {
 
     void onLoadSortingFacetsFinished(List<SortingResponse> responseList);
 
-    void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection);
+    void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection, boolean isFromCache);
 
     void showWishlist(List<GetSaleItemsResponse.Products> wishlist);
 

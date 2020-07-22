@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -177,89 +178,132 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         }
     }
 
-    @SuppressLint("CheckResult")
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         if (holder.getItemViewType() == 0 && mData.size() != 0) {
             Products product = mData.get(position);
-            String url = product.getImages().isEmpty() ? "" : (product.getImages().size() < 4 ? product.getImages().get(0) : product.getImages().get(1));
-
-            String urlHigherRes = ImageUtils.removeResolutionModifierInImageUrl(url);
-
-            holder.name.setText(product.getProductName());
-
-            String saleItemPrice = null;
-            String saleItemOldPrice = null;
-
-            if (product.getPrice() != null) {
-                saleItemPrice = PriceUtils.getPriceStringValue(product.getPrice().getValue());
+            if (product == null) {
+                setupViewHolderSkeleton(holder, true);
+            } else {
+                setupViewHolderSkeleton(holder, false);
+                setupViewHolder(holder, product);
             }
-            if (product.getOriginalPrice() != null) {
-                saleItemOldPrice = PriceUtils.getRpStringValue(product.getOriginalPrice().getValue());
-            }
-
-            //Added key to check for crash report
-            if (!BuildConfig.DEBUG) {
-                Crashlytics.setString("Brand Name", product.getBrandName());
-                Crashlytics.setString("Image Url", url);
-            }
-
-            ImageUtils.loadImage(url, holder.image);
-
-            holder.image.setTransitionName(mActivity.getString(R.string.transition_sale_image_indexed, position));
-
-            holder.soldout.setVisibility(product.isSoldOut() ? View.VISIBLE : View.GONE);
-
-            holder.brand.setText(product.getBrandName());
-            holder.price.setText(saleItemPrice);
-            holder.oldPrice.setText(saleItemOldPrice);
-            holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.freeDelivery.setVisibility(product.getFreeDelivery() ? View.VISIBLE : View.GONE);
-            int discountValue = product.getSalePercentOff();
-            double salePriceValue = product.getSalePrice() != null ?
-                    product.getSalePrice().getValue() : 0;
-            holder.discount.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
-            holder.salePrice.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
-            holder.discount.setText(product.getSalePercentOffText());
-            holder.salePrice.setText(PriceUtils.getRpStringValue(salePriceValue));
-
-            holder.setLiked(mPresenter.isProductInWishlist(product.getProductId()));
-
-            RxView.clicks(holder.itemView)
-                    .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
-                    .subscribe(action -> mPresenter.loadProductDetails(
-                            holder,
-                            holder.getAdapterPosition(),
-                            product.getSeoIdentifier(),
-                            holder.image.getDrawable(),
-                            urlHigherRes,
-                            product.getSkus() == null || product.getSkus().isEmpty() ? "" :
-                                    product.getSkus().get(0).getId(),
-                            mSaleId,
-                            product.getFreeDelivery()));
-
-            holder.likeButton.setOnClickListener(v -> {
-                holder.setLiked(!holder.isLiked());
-                if (holder.isLiked()) {
-                    mPresenter.addToWishlist(
-                            product.getProductId(),
-                            product.getSeoIdentifier(),
-                            delayedCallbackForWishlist);
-                } else {
-                    mPresenter.removeFromWishlist(
-                            product.getProductId(),
-                            delayedCallbackForWishlist);
-
-                }
-            });
-
         } else {
             if (holder.adView != null && mPresenter.isGoogleAdsEnabled()) {
                 CommonUtils.showAdmob(mActivity, holder.adView,
                         mActivity.getResources().getString(R.string.admob_products_id));
             }
         }
+    }
+
+    @SuppressLint("CheckResult")
+    private void setupViewHolder(ViewHolder holder, Products product) {
+        String url = product.getImages().isEmpty() ? "" : (product.getImages().size() < 4 ? product.getImages().get(0) : product.getImages().get(1));
+
+        String urlHigherRes = ImageUtils.removeResolutionModifierInImageUrl(url);
+
+        holder.name.setText(product.getProductName());
+
+        String saleItemPrice = null;
+        String saleItemOldPrice = null;
+
+        if (product.getPrice() != null) {
+            saleItemPrice = PriceUtils.getPriceStringValue(product.getPrice().getValue());
+        }
+        if (product.getOriginalPrice() != null) {
+            saleItemOldPrice = PriceUtils.getRpStringValue(product.getOriginalPrice().getValue());
+        }
+
+        //Added key to check for crash report
+        if (!BuildConfig.DEBUG) {
+            Crashlytics.setString("Brand Name", product.getBrandName());
+            Crashlytics.setString("Image Url", url);
+        }
+
+        ImageUtils.loadImageWithPlaceholder(url,
+                holder.image,
+                holder.itemView.getContext().getResources().getDrawable(R.drawable.bg_skeleton_stretch),
+                null);
+
+        holder.image.setTransitionName(mActivity.getString(R.string.transition_sale_image_indexed, holder.getAdapterPosition()));
+
+        holder.soldout.setVisibility(product.isSoldOut() ? View.VISIBLE : View.GONE);
+
+        holder.brand.setText(product.getBrandName());
+        holder.price.setText(saleItemPrice);
+        holder.oldPrice.setText(saleItemOldPrice);
+        holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.freeDelivery.setVisibility(product.getFreeDelivery() ? View.VISIBLE : View.GONE);
+        int discountValue = product.getSalePercentOff();
+        double salePriceValue = product.getSalePrice() != null ?
+                product.getSalePrice().getValue() : 0;
+        holder.discount.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
+        holder.salePrice.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
+        holder.discount.setText(product.getSalePercentOffText());
+        holder.salePrice.setText(PriceUtils.getRpStringValue(salePriceValue));
+
+        holder.setLiked(mPresenter.isProductInWishlist(product.getProductId()));
+
+        RxView.clicks(holder.itemView)
+                .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
+                .subscribe(action -> mPresenter.loadProductDetails(
+                        holder,
+                        holder.getAdapterPosition(),
+                        product.getSeoIdentifier(),
+                        holder.image.getDrawable(),
+                        urlHigherRes,
+                        product.getSkus() == null || product.getSkus().isEmpty() ? "" :
+                                product.getSkus().get(0).getId(),
+                        mSaleId,
+                        product.getFreeDelivery()));
+
+        holder.likeButton.setOnClickListener(v -> {
+            holder.setLiked(!holder.isLiked());
+            if (holder.isLiked()) {
+                mPresenter.addToWishlist(
+                        product.getProductId(),
+                        product.getSeoIdentifier(),
+                        delayedCallbackForWishlist);
+            } else {
+                mPresenter.removeFromWishlist(
+                        product.getProductId(),
+                        delayedCallbackForWishlist);
+
+            }
+        });
+    }
+
+    @SuppressLint("CheckResult")
+    private void setupViewHolderSkeleton(ViewHolder holder, boolean showSkeleton) {
+        Drawable skeletonFixedHeightWidthPadding = showSkeleton ?
+                holder.itemView.getContext().getResources().getDrawable(R.drawable.bg_skeleton_fixed_height_with_right_padding) : null;
+        Drawable skeletonFixedHeight = showSkeleton ? holder.itemView.getContext().getResources().getDrawable(R.drawable.bg_skeleton_fixed_height) : null;
+        Drawable skeletonStretch = showSkeleton ? holder.itemView.getContext().getResources().getDrawable(R.drawable.bg_skeleton_stretch) : null;
+        holder.image.setImageDrawable(skeletonStretch);
+
+        holder.soldout.setVisibility(View.GONE);
+
+        holder.brand.setText("       ");
+        holder.brand.setBackground(skeletonFixedHeight);
+        holder.name.setText("     ");
+        holder.name.setBackground(skeletonFixedHeightWidthPadding);
+        holder.price.setText(" ");
+        holder.price.setBackground(skeletonFixedHeightWidthPadding);
+        holder.oldPrice.setText(" ");
+        holder.oldPrice.setBackground(skeletonFixedHeightWidthPadding);
+        holder.freeDelivery.setVisibility(View.GONE);
+        holder.discount.setVisibility(View.GONE);
+        holder.salePrice.setVisibility(View.GONE);
+        holder.likeButton.setVisibility(showSkeleton ? View.GONE : View.VISIBLE);
+        holder.discount.setText(null);
+        holder.salePrice.setText(null);
+
+        RxView.clicks(holder.itemView)
+                .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
+                .subscribe(action -> {
+                });
+        holder.likeButton.setOnClickListener(null);
     }
 
     @Override
@@ -271,15 +315,31 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     public void replaceData(List<Products> saleItems) {
+        int previousCount = mData.size();
         mData = saleItems;
-        notifyDataSetChanged();
+        if (previousCount > 0 || !saleItems.isEmpty()) {
+            notifyItemRangeChanged(0, Math.min(previousCount, saleItems.size()) - 1);
+        }
+        if (previousCount < saleItems.size()) {
+            notifyItemRangeInserted(previousCount - 1, saleItems.size() - 1);
+        } else if (previousCount > saleItems.size()) {
+            notifyItemRangeRemoved(saleItems.size(), previousCount - saleItems.size());
+        }
         mCurrentItemCount = getItemCount();
     }
 
     public void addData(List<Products> saleItems) {
+        addData(saleItems, true);
+    }
+
+    public void addData(List<Products> saleItems, boolean withAnimation) {
         int previousCount = mData.size();
         mData.addAll(saleItems);
-        notifyItemRangeInserted(previousCount, mData.size() - previousCount);
+        if (withAnimation) {
+            notifyItemRangeInserted(previousCount, mData.size() - previousCount);
+        } else {
+            notifyDataSetChanged();
+        }
         mCurrentItemCount = getItemCount();
     }
 

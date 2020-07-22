@@ -46,7 +46,6 @@ public class FloatingImageViewerController extends BaseController implements Flo
     @Override
     protected void onAttach(@NonNull View view) {
         mActivity.getMainController().hideBottomNav();
-        setUp(view);
         super.onAttach(view);
     }
 

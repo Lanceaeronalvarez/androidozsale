@@ -3,7 +3,9 @@ package au.com.dealsdirect.data.network.model.banner;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class GetSaleBannerDetailsResponse {
+import au.com.dealsdirect.data.cachedresponses.CachableResponse;
+
+public class GetSaleBannerDetailsResponse extends CachableResponse {
     @SerializedName("saleName")
     @Expose
     private String saleName;

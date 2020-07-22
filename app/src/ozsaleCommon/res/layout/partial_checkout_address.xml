@@ -82,6 +82,7 @@
                     android:textColor="@color/row_checkout_text_light_color"
                     android:maxLines="2"
                     android:ellipsize="end"
+                    android:textSize="@dimen/text_size_caption1"
                     tools:text="@string/row_address_hint" />
 
             </LinearLayout>

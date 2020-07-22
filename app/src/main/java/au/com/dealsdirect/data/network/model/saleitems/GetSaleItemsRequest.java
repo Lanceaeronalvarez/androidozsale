@@ -1,13 +1,19 @@
 package au.com.dealsdirect.data.network.model.saleitems;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Objects;
+
+import au.com.dealsdirect.data.cachedresponses.CachableRequest;
 
 /**
  * dp  by Admin on 6/22/17.
  */
 
-public class GetSaleItemsRequest {
+public class GetSaleItemsRequest implements CachableRequest {
     @Expose
     @SerializedName("q")
     private String query;
@@ -86,7 +92,30 @@ public class GetSaleItemsRequest {
         return hasFilters;
     }
 
-    public void setHasFilters(boolean val){
+    public void setHasFilters(boolean val) {
         this.hasFilters = val;
+    }
+
+    private String fieldToString(Object field) {
+        String string;
+        if (field instanceof String) {
+            string = (String) field;
+        } else if (field != null) {
+            string = field.toString();
+        } else {
+            return "null";
+        }
+        return string;
+    }
+
+    @Override
+    public String getCacheKey() {
+        return getClass().getSimpleName() + "," +
+                fieldToString(query) + "," +
+                fieldToString(pageNumber) + "," +
+                fieldToString(pageSize) + "," +
+                fieldToString(categoryKey) + "," +
+                fieldToString(facetFilter) + "," +
+                fieldToString(sorting);
     }
 }

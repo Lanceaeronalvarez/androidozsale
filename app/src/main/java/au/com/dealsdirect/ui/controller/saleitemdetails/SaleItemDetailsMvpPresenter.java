@@ -46,7 +46,13 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 
     void removeProductFromWishlist(String productId, WishlistDelayedCallback delayedCallback);
 
+    void loadRecommendedItems();
+
+    void loadRecentlyItems();
+
     public interface WishlistDelayedCallback {
         void performDelayedAction();
     }
+
+    void loadYouMayAlsoLike(String skuId);
 }

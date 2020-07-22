@@ -86,6 +86,7 @@ public class LegalitiesController extends BasePullToRefreshController implements
         mFilterButton.setVisibility(View.INVISIBLE);
         mPresenter.loadText(key);
 
+        mWebView.getSettings().setTextZoom(100);
     }
 
     @Override

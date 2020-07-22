@@ -6,7 +6,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class GetBannerResponse {
+import au.com.dealsdirect.data.cachedresponses.CachableResponse;
+
+public class GetBannerResponse extends CachableResponse {
+
 
     @SerializedName("groups")
     @Expose
@@ -36,9 +39,9 @@ public class GetBannerResponse {
 
     }
 
-    public class Banner {
+    public static class Banner {
 
-        private Group group;
+        private transient Group group;
         @SerializedName("id")
         @Expose
         private String id;
@@ -259,7 +262,9 @@ public class GetBannerResponse {
             return title;
         }
 
-        public Boolean getIsClickable() { return isClickable; }
+        public Boolean getIsClickable() {
+            return isClickable;
+        }
 
         public List<Banner> getBanners() {
             for (Banner banner : banners) {

@@ -43,12 +43,20 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     public void loadShopsBanner(GetBannerRequest request, boolean getOnlyFromNetwork) {
         cancelPreviousLoadShopsBannerRequest();
 
+        getDataManager().pruneCachedResponse(request);
+        GetBannerResponse response = getDataManager().getCachedResponse(request, GetBannerResponse.class);
+        if (response != null) {
+            getMvpView().showShopBanners(response, request.getCategory(), true);
+        }
+
         mPreviousLoadShopsBannerRequest = doApiCallForResponse(
                 getDataManager().callGetBanners(request, getOnlyFromNetwork), new AppApiCallback() {
                     @Override
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
-                        getMvpView().showShopBanners((GetBannerResponse) response, request.getCategory());
+                        GetBannerResponse getBannerResponse = (GetBannerResponse) response;
+                        getMvpView().showShopBanners(getBannerResponse, request.getCategory(), false);
+                        getDataManager().setCachedResponse(request, getBannerResponse);
                     }
 
                     @Override
@@ -61,12 +69,20 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
     @Override
     public void loadSlidingBanners(GetBannerRequest request) {
+        getDataManager().pruneCachedResponse(request);
+        GetBannerResponse response = getDataManager().getCachedResponse(request, GetBannerResponse.class);
+        if (response != null) {
+            getMvpView().showSlidingBanners(response);
+        }
+
         doApiCallForResponse(
                 getDataManager().callGetBanners(request, false), new AppApiCallback() {
                     @Override
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
-                        getMvpView().showSlidingBanners((GetBannerResponse) response);
+                        GetBannerResponse getBannerResponse = (GetBannerResponse) response;
+                        getMvpView().showSlidingBanners(getBannerResponse);
+                        getDataManager().setCachedResponse(request, getBannerResponse);
                     }
 
                     @Override
@@ -79,12 +95,20 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
     @Override
     public void loadSponsoredBanners(GetBannerRequest request) {
+        getDataManager().pruneCachedResponse(request);
+        GetBannerResponse response = getDataManager().getCachedResponse(request, GetBannerResponse.class);
+        if (response != null) {
+            getMvpView().showSlidingBanners(response);
+        }
+
         doApiCallForResponse(
                 getDataManager().callGetBanners(request, false), new AppApiCallback() {
                     @Override
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
-                        getMvpView().showSponsoredBanners((GetBannerResponse) response);
+                        GetBannerResponse getBannerResponse = (GetBannerResponse) response;
+                        getMvpView().showSponsoredBanners(getBannerResponse);
+                        getDataManager().setCachedResponse(request, getBannerResponse);
                     }
 
                     @Override

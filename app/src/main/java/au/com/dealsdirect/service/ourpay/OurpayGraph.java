@@ -5,8 +5,6 @@ package au.com.dealsdirect.service.ourpay;
  */
 
 import android.content.Context;
-
-import androidx.core.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
+
+import androidx.core.widget.TextViewCompat;
 
 import java.util.List;
 import java.util.Locale;
@@ -84,6 +84,7 @@ public class OurpayGraph {
     private void generateProgressCircles(ViewGroup circlesContainer, Context context, int transactionsSize) {
         for (int j = 0; j < transactionsSize; j++) {
             TextView panelCircleState = (TextView) LayoutInflater.from(context).inflate(R.layout.ourpay_panel_circle, circlesContainer, false);
+
             panelCircleState.setText(String.valueOf(j + 1));
 
             if (j <= (int) circlesContainer.getTag()) {

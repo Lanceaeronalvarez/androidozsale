@@ -120,10 +120,10 @@ import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.AppConstants;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BraintreeUtils;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.DelayedMethodExecutionManager;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
@@ -138,6 +138,7 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
 import static au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent;
 import static au.com.dealsdirect.ui.controller.main.MainController.BANNER_FILTER_INDEX;
 import static au.com.dealsdirect.ui.controller.main.MainController.SHOP_INDEX;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -297,11 +298,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onResume() {
         super.onResume();
         mPresenter.onAttach(this);
+        mPresenter.pruneCachedResponses();
         refreshWishlist();
     }
 
     @Override
     protected void onPause() {
+        mPresenter.storeCachedResponses();
         super.onPause();
     }
 
@@ -1442,10 +1445,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void onGetAppSettings() {
+        if (getAccountController() == null) {
+            DelayedMethodExecutionManager.getInstance().queueDelayedMethodCall(
+                    this.getClass().getName(),
+                    "onGetAppSettings",
+                    this::onGetAppSettings
+            );
+            return;
+        }
         getAccountController().reloadAccountItems();
         initializeStripeObject();
     }
-    
+
     private void initializeStripeObject() {
         if (mStripe == null) {
             String key = mPresenter.stripePublicKey();
@@ -1454,7 +1465,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         }
     }
-    
+
     private Stripe getStripeObject() {
         initializeStripeObject();
         //TODO: throw exception when mStripe is null
@@ -1522,6 +1533,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setAccountController(AccountController accountController) {
         mAccountController = accountController;
+        DelayedMethodExecutionManager.getInstance()
+                .executeDelayedMethodCalls(this.getClass().getName());
     }
 
     public void setSearchFilterController(SearchFilterController searchFilterController) {
@@ -1803,6 +1816,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             }
         });
+    }
+
+    public void fetchCachedResponses() {
+        mPresenter.fetchCachedResponses();
+        mPresenter.pruneCachedResponses();
     }
 
 }

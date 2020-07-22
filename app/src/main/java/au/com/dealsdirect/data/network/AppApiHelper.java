@@ -62,6 +62,7 @@ import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
+import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
@@ -110,6 +111,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.Ve
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesRequest;
 import au.com.dealsdirect.data.network.model.publicsalescategories.GetPublicSalesCategoriesResponse;
@@ -129,6 +131,8 @@ import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrder
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -1032,6 +1036,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<String> callBannerClickEvent(BannerClickEventRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
     public Observable<String> callWishlistEvent(WishlistEventRequest request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getWishlistEvent())
                 .addHeaders(mApiHeader.get())
@@ -1218,6 +1231,31 @@ public class AppApiHelper implements ApiHelper {
                 .addPathParameter("product_id", productId)
                 .build()
                 .getStringObservable();
+    }
+
+    @Override
+    public Observable<List<RecommendedItemsResponse>> callRecommendedItems() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.recommendedItems())
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectListObservable(RecommendedItemsResponse.class);
+    }
+
+    @Override
+    public Observable<List<GetYouMayAlsoLikeResponse>> callYouMayAlsoLike(String skuId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callYouMakeAlsoLike())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("sku_id", skuId)
+                .build()
+                .getObjectListObservable(GetYouMayAlsoLikeResponse.class);
+    }
+
+    @Override
+    public Observable<List<RecentlyItemResponse>> callRecentlyItems() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.recentlyItems())
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectListObservable(RecentlyItemResponse.class);
     }
 }
 

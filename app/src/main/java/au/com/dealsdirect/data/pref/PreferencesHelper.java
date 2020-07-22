@@ -3,10 +3,10 @@ package au.com.dealsdirect.data.pref;
 
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 
+import java.util.HashSet;
+
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
-
-import java.util.HashSet;
 
 public interface PreferencesHelper {
 
@@ -256,9 +256,11 @@ public interface PreferencesHelper {
     boolean shouldShowStrictConsent();
 
     void setIsOurpayDashboardEnabled(boolean enabled);
+
     boolean getIsOurpayDashboardEnabled();
 
     void setReCaptchaSiteKey(String key);
+
     String getReCaptchaSiteKey();
 
     void setIsGoogleAdsEnabled(boolean isGoogleAdsEnabled);

@@ -23,5 +23,4 @@ public interface HomeMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
     void setInitialLaunchFalse();
 
     void callCreateRefund(CreateRefundRequest createRefundRequest);
-
 }

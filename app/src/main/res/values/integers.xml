@@ -28,4 +28,6 @@
     <integer name="sponsored_banner_column_count_for_tablet">6</integer>
     <integer name="sliding_banner_width">980</integer>
     <integer name="sliding_banner_height">350</integer>
+    <integer name="you_may_also_like_width">225</integer>
+    <integer name="you_may_also_like_height">360</integer>
 </resources>
