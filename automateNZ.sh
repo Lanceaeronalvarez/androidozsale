@@ -1,12 +1,12 @@
-PROJECT_DIR='/users/admin/documents/project/AndroidDD/'
-OUTPUT_DIR='/users/admin/desktop/'
+PROJECT_DIR='/Users/nicolluisyumang/Desktop/AndroidDealsDirect/'
+OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 
 flavorName=nzsaleRC
 buildTypeAssemble=NzsaleRCRelease
 SPACE=" "
 defaultCountry="New${SPACE}Zealand"
-expectedVersionCode="231"
-expectedVersionName="4.3.0"
+expectedVersionName="4.4.0"
+expectedVersionCode="238"
 
 print_green(){
     printf "\e[1;32m$1\e[0m"

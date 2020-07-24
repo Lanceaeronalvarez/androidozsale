@@ -1,10 +1,10 @@
-PROJECT_DIR='/users/admin/documents/project/AndroidDD/'
-OUTPUT_DIR='/users/admin/desktop/'
+PROJECT_DIR='/Users/nicolluisyumang/Desktop/AndroidDealsDirect/'
+OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 
 flavorName=mysaleRC
 buildTypeAssemble=MysaleRCRelease
-expectedVersionName="4.3.0"
-expectedVersionCode="231"
+expectedVersionName="4.4.0"
+expectedVersionCode="238"
 SPACE=" "
 philippines="Philippines"
 thailand="Thailand"
