@@ -24,30 +24,17 @@
         android:background="@android:color/white"
         android:visibility="visible">
 
-        <in.srain.cube.views.ptr.PtrClassicFrameLayout
-            android:id="@+id/controller_sale_items_ptr"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/controller_sale_items_grid_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:ptr_duration_to_close="200"
-            app:ptr_duration_to_close_header="1000"
-            app:ptr_keep_header_when_refresh="true"
-            app:ptr_pull_to_fresh="false"
-            app:ptr_ratio_of_header_height_to_refresh="1.2"
-            app:ptr_resistance="1.7">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/controller_sale_items_grid_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/transparent"
-                android:clickable="true"
-                android:focusable="true"
-                android:paddingLeft="@dimen/margin_extra_small"
-                android:paddingRight="@dimen/margin_extra_small"
-                android:visibility="visible" />
-
-        </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingLeft="@dimen/margin_extra_small"
+            android:paddingRight="@dimen/margin_extra_small"
+            android:visibility="visible"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <LinearLayout
             android:id="@+id/controller_sale_items_text_placeholder"

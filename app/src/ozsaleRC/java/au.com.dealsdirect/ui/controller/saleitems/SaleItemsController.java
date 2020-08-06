@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -95,10 +94,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
 import butterknife.Optional;
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
 
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.HEADER;
@@ -112,7 +107,7 @@ import static com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROL
  * dp Created by Admin on 6/8/17.
  */
 
-public class SaleItemsController extends BaseController implements SaleItemsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener, SearchFilterMvpRepository {
+public class SaleItemsController extends BaseController implements SaleItemsMvpView, AppBarLayout.OnOffsetChangedListener, SearchFilterMvpRepository {
 
     public enum SourceMode {
         NORMAL,
@@ -426,9 +421,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.controller_sale_items_search_skeleton)
     ViewGroup mSearchFilterSkeleton;
 
-    @BindView(R.id.controller_sale_items_ptr)
-    PtrClassicFrameLayout mPtrFrameLayout;
-
     @Nullable
     @BindView(R.id.controller_sale_items_appbar)
     AppBarLayout mAppBar;
@@ -733,7 +725,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void onAttach(@NonNull View view) {
         mActivity.setDraggableViewPager(false);
         mPresenter.onAttach(this);
-        mPtrFrameLayout.setPtrHandler(this);
         if (mAppBar != null) {
             mAppBar.addOnOffsetChangedListener(this);
         }
@@ -842,8 +833,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         setUp(view);
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
-
-        mPtrFrameLayout.setEnabled(mActivity.getResources().getBoolean(R.bool.is_pull_to_refresh_enabled));
     }
 
     private void determineToolbarTitle() {
@@ -932,7 +921,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onDetach(View view) {
-        mPtrFrameLayout.setPtrHandler(null);
         if (mAppBar != null) {
             mAppBar.removeOnOffsetChangedListener(this);
         }
@@ -957,7 +945,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mActivity.setDraggableViewPager(false);
 
-        setupPtrHeader();
         if (mEndDate == null || mEndDate.isEmpty() || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
             mSaleItemsRemainingTimeText.setVisibility(View.GONE);
             mSaleEndsInText.setVisibility(View.GONE);
@@ -1168,17 +1155,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
     }
 
-    private void setupPtrHeader() {
-        mPtrFrameLayout.getHeader().setProgressIcon(getResources().getDrawable(R.drawable.ic_loader_logo));
-
-        mPtrFrameLayout.getHeader().setPullProgressbar(getResources().getDrawable(R.drawable.bg_progress_bar));
-
-        mPtrFrameLayout.getHeader().setProgressBar(ColorStateList.valueOf(getResources().getColor(R.color.progress_loader_stroke)));
-
-        mPtrFrameLayout.setPullToRefresh(false);
-
-    }
-
     @Override
     public void onLoadSortingFacetsFinished(List<SortingResponse> responseList) {
         mSortingResponse = responseList;
@@ -1276,8 +1252,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
         mShouldRefreshFacets = true;
 
-        mPtrFrameLayout.setPullToRefresh(true);
-
         List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
 
         mIsLoadingProgress = false;
@@ -1289,16 +1263,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (items.size() == 0 && mSaleItemsPageNumber != 0) {
             mHasLoadedAllItems = true;
             mPaginateManager.setHasMoreDataToLoad(false);
-            mPtrFrameLayout.setPullToRefresh(false);
         } else {
-
-            if (!mChipFilters.isEmpty() ||
-                    mFromCategorySearch ||
-                    mFromShopSearch ||
-                    (mSearchQuery != null && !mSearchQuery.isEmpty())) {
-                mPtrFrameLayout.setPullToRefresh(false);
-            }
-
 
             if (mSaleItemsPageNumber == 0 || mIsSearch) {
                 if (mPaginateManager != null) {
@@ -1374,7 +1339,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mPaginateManager != null) {
             mPaginateManager.setHasMoreDataToLoad(false);
         }
-        mPtrFrameLayout.setPullToRefresh(false);
         mSaleItemsPageNumber = 0;
 
         mSaleItemsAdapter.replaceData(wishlist);
@@ -2024,32 +1988,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-        return mIsRecyclerViewScrollIdle && mVerticalOffset == 0 && PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
-    }
-
-    @Override
-    public void onRefreshBegin(PtrFrameLayout frame) {
-        switch (mSourceMode) {
-            case NORMAL:
-                if (mSaleId != null && !mSaleId.isEmpty()) {
-                    mPresenter.loadSaleBannerDetails(mSaleId);
-                }
-                mSaleItemsPageNumber = 0;
-                mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
-                break;
-            case WISHLIST:
-                mPresenter.loadWishlist();
-                break;
-        }
-    }
-
-    @Override
     public void onRefreshEnd() {
-        if (mPtrFrameLayout != null) {
-            mPtrFrameLayout.setLastUpdateTimeRelateObject(this);
-            mPtrFrameLayout.refreshComplete();
-        }
     }
 
     @Override
