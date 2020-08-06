@@ -903,9 +903,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 if (isFromCategories()) {
                     mSaleItemsCategoryToolbarTitle.setText(title);
                     mSaleItemsToolbarSubTitleText.setText(subTitle);
-                } else if (!mCategoryForTitle.isEmpty()) {
+                } else if (mCategoryForTitle != null && !mCategoryForTitle.isEmpty()) {
                     mSaleItemsToolbarTitle.setText(mCategoryForTitle);
-                } else if (!mTitle.isEmpty()) {
+                } else if (mTitle != null && !mTitle.isEmpty()) {
                     mSaleItemsToolbarTitle.setText(mTitle);
                 } else {
                     mSaleItemsToolbarTitle.setText(getString(R.string.i_am_looking_for));
@@ -1086,8 +1086,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void setAdapterPerColumnChange(int portraitColumn, int landscapeColumn) {
 
-        int getSavedDay = mPresenter.getTimeStamp().isEmpty() ? 0 :
-                Integer.parseInt(mPresenter.getTimeStamp());
+        String timestamp = mPresenter.getTimeStamp();
+        int getSavedDay = 0;
+        try {
+            getSavedDay = timestamp == null || timestamp.isEmpty() ? 0 :
+                    Integer.parseInt(timestamp);
+        } catch (NumberFormatException ignored) {}
 
         if (DateUtils.hasDayPassed(getSavedDay)) {
 
@@ -1278,7 +1282,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mPtrFrameLayout.setPullToRefresh(false);
         } else {
 
-            if (!mChipFilters.isEmpty() || mFromCategorySearch || mFromShopSearch || !mSearchQuery.isEmpty()) {
+            if (!mChipFilters.isEmpty() ||
+                    mFromCategorySearch ||
+                    mFromShopSearch ||
+                    (mSearchQuery != null && !mSearchQuery.isEmpty())) {
                 mPtrFrameLayout.setPullToRefresh(false);
             }
 
@@ -1780,7 +1787,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         //clear SelectedTitle Array and add filter category if any
         mSelectedTitle.clear();
-        if (!categoryKey.isEmpty()) mSelectedTitle.add(CATEGORY_FILTER_TYPE);
+        if (categoryKey != null && !categoryKey.isEmpty()) mSelectedTitle.add(CATEGORY_FILTER_TYPE);
 
         if (chipsList == null) {
             getSaleItemsRequest.setHasFilters(false);
