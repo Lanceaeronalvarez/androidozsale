@@ -321,7 +321,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             notifyItemRangeChanged(0, Math.min(previousCount, saleItems.size()) - 1);
         }
         if (previousCount < saleItems.size()) {
-            notifyItemRangeInserted(previousCount - 1, saleItems.size() - 1);
+            notifyItemRangeInserted(previousCount, saleItems.size());
         } else if (previousCount > saleItems.size()) {
             notifyItemRangeRemoved(saleItems.size(), previousCount - saleItems.size());
         }
