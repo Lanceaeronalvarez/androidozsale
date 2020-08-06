@@ -1207,8 +1207,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     Runnable myRunnable = () -> {
                         isSkeletonAnimating = false;
                         showSaleItems(getSaleItemsResponse, forFacetCorrection, isFromCache);
-                        mSaleItemsRecyclerView.setLayoutAnimationListener(null);
-                        mGridLayoutManager.setScrollEnabled(true);
+                        if (mSaleItemsRecyclerView != null) {
+                            mSaleItemsRecyclerView.setLayoutAnimationListener(null);
+                        }
+                        if (mGridLayoutManager != null) {
+                            mGridLayoutManager.setScrollEnabled(true);
+                        }
                     };
                     mainHandler.post(myRunnable);
                 }
@@ -2211,13 +2215,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             @Override
                             public void onAnimationCancel(Animator animation) {
                                 super.onAnimationCancel(animation);
-                                mPlaceholder.setVisibility(View.GONE);
+                                if (mPlaceholder != null) {
+                                    mPlaceholder.setVisibility(View.GONE);
+                                }
                             }
 
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 super.onAnimationEnd(animation);
-                                mPlaceholder.setVisibility(View.GONE);
+                                if (mPlaceholder != null) {
+                                    mPlaceholder.setVisibility(View.GONE);
+                                }
                             }
                         });
                     }
@@ -2242,13 +2250,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         @Override
                         public void onAnimationCancel(Animator animation) {
                             super.onAnimationCancel(animation);
-                            mWishlistPlaceholder.setVisibility(View.GONE);
+                            if (mWishlistPlaceholder != null) {
+                                mWishlistPlaceholder.setVisibility(View.GONE);
+                            }
                         }
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            mWishlistPlaceholder.setVisibility(View.GONE);
+                            if (mWishlistPlaceholder != null) {
+                                mWishlistPlaceholder.setVisibility(View.GONE);
+                            }
                         }
                     });
                 }
@@ -2272,13 +2284,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                mSaleItemsRecyclerView.setVisibility(View.GONE);
+                if (mSaleItemsRecyclerView != null) {
+                    mSaleItemsRecyclerView.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
                 super.onAnimationCancel(animation);
-                mSaleItemsRecyclerView.setVisibility(View.GONE);
+                if (mSaleItemsRecyclerView != null) {
+                    mSaleItemsRecyclerView.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -2300,10 +2316,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            mPlaceholder.setVisibility(View.GONE);
-                            mPlaceholder.setAlpha(1f);
-                            mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
-                            CommonUtils.fadeInView(mSaleItemsRecyclerView, null);
+                            if (mPlaceholder != null) {
+                                mPlaceholder.setVisibility(View.GONE);
+                                mPlaceholder.setAlpha(1f);
+                            }
+                            if (mSaleItemsRecyclerView != null) {
+                                mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+                                CommonUtils.fadeInView(mSaleItemsRecyclerView, null);
+                            }
                         }
                     });
                 } else if (mPlaceholder != null && mPlaceholder.getVisibility() == View.GONE && show) {
@@ -2317,10 +2337,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            mSaleItemsRecyclerView.setVisibility(View.GONE);
-                            mSaleItemsRecyclerView.setAlpha(1f);
-                            mPlaceholder.setVisibility(View.VISIBLE);
-                            CommonUtils.fadeInView(mPlaceholder, null);
+                            if (mSaleItemsRecyclerView != null) {
+                                mSaleItemsRecyclerView.setVisibility(View.GONE);
+                                mSaleItemsRecyclerView.setAlpha(1f);
+                            }
+                            if (mPlaceholder != null) {
+                                mPlaceholder.setVisibility(View.VISIBLE);
+                                CommonUtils.fadeInView(mPlaceholder, null);
+                            }
                         }
                     });
                 }
@@ -2341,13 +2365,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            mWishlistPlaceholder.setVisibility(View.GONE);
-                            mWishlistPlaceholder.setAlpha(1f);
-                            mMainContainer.setVisibility(View.VISIBLE);
-                            mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
-                            CommonUtils.fadeInView(mSaleItemsRecyclerView, null);
-                            mToolbar.setVisibility(View.VISIBLE);
-                            CommonUtils.fadeInView(mToolbar, null);
+                            if (mWishlistPlaceholder != null) {
+                                mWishlistPlaceholder.setVisibility(View.GONE);
+                                mWishlistPlaceholder.setAlpha(1f);
+                            }
+                            if (mMainContainer != null) {
+                                mMainContainer.setVisibility(View.VISIBLE);
+                            }
+                            if (mSaleItemsRecyclerView != null) {
+                                mSaleItemsRecyclerView.setVisibility(View.VISIBLE);
+                                CommonUtils.fadeInView(mSaleItemsRecyclerView, null);
+                            }
+                            if (mToolbar != null) {
+                                mToolbar.setVisibility(View.VISIBLE);
+                                CommonUtils.fadeInView(mToolbar, null);
+                            }
                         }
                     });
                 } else if (mWishlistPlaceholder.getVisibility() == View.GONE && show) {
@@ -2361,8 +2393,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            mToolbar.setVisibility(View.GONE);
-                            mToolbar.setAlpha(1f);
+                            if (mToolbar != null) {
+                                mToolbar.setVisibility(View.GONE);
+                                mToolbar.setAlpha(1f);
+                            }
                         }
                     });
                     CommonUtils.fadeOutView(mSaleItemsRecyclerView, new AnimatorListenerAdapter() {
@@ -2375,11 +2409,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            mSaleItemsRecyclerView.setVisibility(View.GONE);
-                            mSaleItemsRecyclerView.setAlpha(1f);
-                            mMainContainer.setVisibility(View.GONE);
-                            mWishlistPlaceholder.setVisibility(View.VISIBLE);
-                            CommonUtils.fadeInView(mWishlistPlaceholder, null);
+                            if (mSaleItemsRecyclerView != null) {
+                                mSaleItemsRecyclerView.setVisibility(View.GONE);
+                                mSaleItemsRecyclerView.setAlpha(1f);
+                            }
+                            if (mMainContainer != null) {
+                                mMainContainer.setVisibility(View.GONE);
+                            }
+                            if (mWishlistPlaceholder != null) {
+                                mWishlistPlaceholder.setVisibility(View.VISIBLE);
+                                CommonUtils.fadeInView(mWishlistPlaceholder, null);
+                            }
                         }
                     });
                 }
@@ -2412,8 +2452,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             public void onAnimationEnd(Animation animation) {
                 isSkeletonAnimating = false;
                 setColumnViewEnabled(true);
-                mSaleItemsRecyclerView.setLayoutAnimationListener(null);
-                mGridLayoutManager.setScrollEnabled(true);
+                if (mSaleItemsRecyclerView != null) {
+                    mSaleItemsRecyclerView.setLayoutAnimationListener(null);
+                }
+                if (mGridLayoutManager != null) {
+                    mGridLayoutManager.setScrollEnabled(true);
+                }
             }
 
             @Override
