@@ -917,10 +917,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             @Override
             public void onFinish() {
-                mAddToCartTimer.setVisibility(View.GONE);
-                mAddToCartButtonContainer.setVisibility(View.VISIBLE);
-                mAddToCartButton.setEnabled(true);
-                mAddToCartButton.bringToFront();
+                if (mAddToCartTimer != null) {
+                    mAddToCartTimer.setVisibility(View.GONE);
+                }
+                if (mAddToCartButtonContainer != null) {
+                    mAddToCartButtonContainer.setVisibility(View.VISIBLE);
+                }
+                if (mAddToCartButton != null) {
+                    mAddToCartButton.setEnabled(true);
+                    mAddToCartButton.bringToFront();
+                }
             }
         };
         mCountDownTimer.start();
@@ -1816,8 +1822,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             @Override
             public void onAnimationEnd(Animation animation) {
                 isAnimating = false;
-                mImageViewToAnimate.setVisibility(View.GONE);
-                mBottomNavView.setElevation(origElevation);
+                if (mImageViewToAnimate != null) {
+                    mImageViewToAnimate.setVisibility(View.GONE);
+                }
+                if (mBottomNavView != null) {
+                    mBottomNavView.setElevation(origElevation);
+                }
             }
 
             @Override
@@ -1931,13 +1941,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                 @Override
                                 public void onAnimationCancel(Animator animation) {
                                     super.onAnimationCancel(animation);
-                                    mProductDetailsToolbar.setVisibility(View.GONE);
+                                    if (mProductDetailsToolbar != null) {
+                                        mProductDetailsToolbar.setVisibility(View.GONE);
+                                    }
                                 }
 
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
                                     super.onAnimationEnd(animation);
-                                    mProductDetailsToolbar.setVisibility(View.GONE);
+                                    if (mProductDetailsToolbar != null) {
+                                        mProductDetailsToolbar.setVisibility(View.GONE);
+                                    }
                                 }
                             });
                         }
