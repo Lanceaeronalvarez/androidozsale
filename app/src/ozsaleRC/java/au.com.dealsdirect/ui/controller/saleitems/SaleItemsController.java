@@ -465,6 +465,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean mInitialLoad = false;
     private boolean mHasSavedInstance = false;
 
+    private boolean willOpenSaleDetails = false;
+
     private String locationFilterHash = null;
 
     private String mSalesOrigin = DataCollector.EventParameters.ViewSource.SALE;
@@ -730,6 +732,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         determineToolbarTitle();
+        willOpenSaleDetails = false;
 
         super.onAttach(view);
     }
@@ -804,6 +807,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mGridViewModePreferenceHelper.resetTimeElapsed();
         mGridViewModePreferenceHelper.resetTimestamp();
+
+        willOpenSaleDetails = false;
     }
 
     @Override
@@ -1564,7 +1569,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                                    String imageUrl,
                                    String skuId,
                                    String saleId,
-                                   boolean isFreeDelivery) {
+                                   boolean isFreeDelivery,
+                                   boolean isSoldOut) {
+        if (!isViewAttached() || willOpenSaleDetails) {
+            return;
+        }
+
+        willOpenSaleDetails = true;
+
         if (mSearchFilterMvpView != null) {
             mSearchFilterMvpView.closeFacets();
         }
@@ -1586,7 +1598,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mSalesOrigin,
                 mEndDate,
                 isFreeDelivery,
-                mSaleItems.get(position).isSoldOut());
+                isSoldOut);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));

@@ -37,7 +37,8 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
                             String imageUrl,
                             String skuId,
                             String saleId,
-                            boolean isFreeDelivery);
+                            boolean isFreeDelivery,
+                            boolean isSoldOut);
 
     void loadSortingFacets();
 
