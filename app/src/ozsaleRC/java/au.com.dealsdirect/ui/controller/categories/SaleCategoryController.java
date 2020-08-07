@@ -256,6 +256,10 @@ public class SaleCategoryController extends BaseController
 
     @Override
     public void onSubCategoryClicked(int position, SubCategoriesViewHolder subCategoriesViewHolder, GetCategoryTreeResponse getCategoryTreeResponse) {
+        if (!isViewAttached() || mRecyclerView == null || mCategoryAdapter == null) {
+            return;
+        }
+
         List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(getCategoryTreeResponse.getKey());
         if (subCategoryItems == null) {
             return;
