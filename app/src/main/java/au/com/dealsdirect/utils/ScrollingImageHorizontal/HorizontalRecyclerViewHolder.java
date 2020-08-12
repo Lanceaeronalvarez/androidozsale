@@ -318,8 +318,4 @@ public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
         }
 
     }
-
-    public void stopSlidingBanner() {
-        compositeDisposable.clear();
-    }
 }

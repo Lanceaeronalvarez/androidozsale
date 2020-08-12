@@ -24,6 +24,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -106,8 +107,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private HorizontalScrollingBannerAdapter mSlidingBannersAdapter = null;
     private HorizontalScrollingBannerAdapter mCategoryBannersAdapter = null;
     private HorizontalScrollingBannerAdapter mSponsoredBannersAdapter = null;
-    public HorizontalRecyclerViewHolder horizontalRecyclerViewHolder = null;
 
+    private HashSet<HorizontalRecyclerViewHolder> horizontalRecyclerViewHolders = new HashSet<>();
 
     public BannersAdapter(
             Activity activity,
@@ -286,27 +287,28 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         if (holder instanceof HorizontalRecyclerViewHolder) {
-            horizontalRecyclerViewHolder = (HorizontalRecyclerViewHolder) holder;
+            HorizontalRecyclerViewHolder horizontalRecyclerViewHolder = (HorizontalRecyclerViewHolder) holder;
             horizontalRecyclerViewHolder.onViewRecycled();
+            horizontalRecyclerViewHolders.remove(horizontalRecyclerViewHolder);
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         BannerViewHolder bannerViewHolder = null;
-        horizontalRecyclerViewHolder = null;
+        HorizontalRecyclerViewHolder horizontalRecyclerViewHolder = null;
         if (holder instanceof BannerViewHolder) {
             bannerViewHolder = (BannerViewHolder) holder;
         } else if (holder instanceof HorizontalRecyclerViewHolder) {
             horizontalRecyclerViewHolder = (HorizontalRecyclerViewHolder) holder;
             horizontalRecyclerViewHolder.onViewBound();
+            horizontalRecyclerViewHolders.add(horizontalRecyclerViewHolder);
         }
         switch (removeViewHolderOrientationModifier(holder.getItemViewType())) {
             case VIEW_HOLDER_TYPE_SPACER:
                 break;
             case VIEW_HOLDER_TYPE_SLIDING_BANNER:
                 setupSlidingBannersDimensions();
-
 
                 if (horizontalRecyclerViewHolder != null) {
                     horizontalRecyclerViewHolder.setAdapter(mSlidingBannersAdapter);
@@ -318,6 +320,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         horizontalRecyclerViewHolder.setCircleIndicatorItemCount(mSlidingBannersAdapter.getDataSource().size());
                     } else {
                         horizontalRecyclerViewHolder.setCircleIndicatorItemCount(0);
+                    }
+
+                    if (horizontalRecyclerViewHolder.getCircleIndicatorAdapter() != null) {
+                        horizontalRecyclerViewHolder.getCircleIndicatorAdapter().setSelectedPosition(0);
                     }
                 }
 
@@ -522,6 +528,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             viewHolder.onViewRecycled();
             viewHolder.recyclerView.setAdapter(null);
             viewHolder.circleIndicatorRecyclerView.setAdapter(null);
+            horizontalRecyclerViewHolders.remove(viewHolder);
         }
         super.onViewRecycled(holder);
     }
@@ -860,9 +867,15 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.recyclerView = null;
     }
 
-    public void stopSlidingBanner() {
-        if (horizontalRecyclerViewHolder != null) {
-            horizontalRecyclerViewHolder.stopSlidingBanner();
+    public void restartHorizontalViewHolders() {
+        for (HorizontalRecyclerViewHolder viewHolder : horizontalRecyclerViewHolders) {
+            viewHolder.onViewBound();
+        }
+    }
+
+    public void stopHorizontalViewHolders() {
+        for (HorizontalRecyclerViewHolder viewHolder : horizontalRecyclerViewHolders) {
+            viewHolder.onViewRecycled();
         }
     }
 }
