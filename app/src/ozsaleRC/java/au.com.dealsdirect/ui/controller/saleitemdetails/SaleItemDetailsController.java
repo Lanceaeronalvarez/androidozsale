@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -1421,6 +1420,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         viewHolder.setInfoButtonOnClickListener(v -> {
             Bundle bundle = new BundleBuilder(new Bundle())
                     .putString(FloatingImageViewerController.KEY_SOURCE_URL, mPresenter.getAfterpayLightboxImgUrl())
+                    .putInt(FloatingImageViewerController.KEY_SOURCE_DRAWABLE_ID, R.drawable.afterpay_lightbox)
                     .build();
 
             FloatingImageViewerController controller = new FloatingImageViewerController(bundle);
@@ -1504,7 +1504,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mYouMayAlsoLikeContainer.setVisibility(View.VISIBLE);
 
         HorizontalScrollingBannerAdapter adapter = new HorizontalScrollingBannerAdapter(mActivity);
-            adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
+        adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
 
         adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.YouMayAlsoLike);
         SaleItemDetailsScrollingImageAdapter mYouMayAlsoLikeAdapter = new SaleItemDetailsScrollingImageAdapter(mActivity, mPresenter,

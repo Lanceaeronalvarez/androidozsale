@@ -8,12 +8,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.Nullable;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.integration.webp.decoder.WebpDrawable;
 import com.bumptech.glide.integration.webp.decoder.WebpDrawableTransformation;
 import com.bumptech.glide.load.DataSource;
@@ -24,13 +26,12 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.load.resource.bitmap.CenterInside;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +45,10 @@ public class ImageUtils {
 
     public static abstract class ImageLoadedCallback {
 
+        public void onLoadFailed(Exception e) {
+
+        }
+
         public void onImageResourceReady(Bitmap resource) {
 
         }
@@ -51,7 +56,7 @@ public class ImageUtils {
 
     static class Headers {
 
-        static GlideUrl applyHeadersForWebPContent(String url){
+        static GlideUrl applyHeadersForWebPContent(String url) {
             return new GlideUrl(url, new LazyHeaders.Builder()
                     .addHeader("Accept", "image/webp")
                     .addHeader("Accept-Encoding", "gzip")
@@ -71,6 +76,59 @@ public class ImageUtils {
                 .apply(options)
                 .load(url)
                 .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                .into(imageView);
+    }
+
+    public static void loadImage(String url,
+                                 ImageView imageView,
+                                 boolean isWebP,
+                                 RequestListener<Bitmap> requestListener) {
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .format(DecodeFormat.PREFER_ARGB_8888);
+
+        if (isWebP) {
+            options = options.signature(new ObjectKey(url + "notWebP"));
+        }
+
+        RequestBuilder<Bitmap> requestBuilder = Glide.with(imageView)
+                .asBitmap()
+                .apply(options)
+                .load(url);
+
+        if (requestListener != null) {
+            requestBuilder = requestBuilder.listener(requestListener);
+        }
+
+        if (isWebP) {
+            requestBuilder = requestBuilder.transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside));
+        }
+
+        requestBuilder.into(imageView);
+    }
+
+    public static void loadImageWithBackupDrawable(String url, ImageView imageView, Drawable backupDrawable) {
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .format(DecodeFormat.PREFER_ARGB_8888);
+
+        RequestOptions optionsNotWebP = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .signature(new ObjectKey(url + "_notWebP"))
+                .format(DecodeFormat.PREFER_ARGB_8888);
+
+        RequestBuilder<Bitmap> requestBuilderNoWebP = Glide.with(imageView)
+                .asBitmap()
+                .apply(optionsNotWebP)
+                .error(backupDrawable)
+                .load(url);
+
+        Glide.with(imageView)
+                .asBitmap()
+                .apply(options)
+                .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                .error(requestBuilderNoWebP)
+                .load(url)
                 .into(imageView);
     }
 
@@ -146,6 +204,7 @@ public class ImageUtils {
                     .listener(new RequestListener<Bitmap>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                            callback.onLoadFailed(e);
                             return false;
                         }
 

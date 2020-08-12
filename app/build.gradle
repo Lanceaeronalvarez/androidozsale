@@ -891,7 +891,7 @@ dependencies {
     implementation 'me.relex:circleindicator:1.2.2@aar'
 
     // glide
-    def GLIDE_VERSION = "4.10.0"
+    def GLIDE_VERSION = "4.11.0"
     implementation "com.zlc.glide:webpdecoder:1.6.${GLIDE_VERSION}"
     implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"

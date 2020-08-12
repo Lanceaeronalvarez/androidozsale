@@ -2,11 +2,12 @@ package au.com.dealsdirect.ui.controller.floatingimageviewer;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
 
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.ScalableImageView;
@@ -75,15 +76,7 @@ public class FloatingImageViewerController extends BaseController implements Flo
         }
 
         if (sourceUrl != null && !sourceUrl.isEmpty()) {
-            if (drawable == null) {
-                ImageUtils.loadImage(sourceUrl, mImageView);
-            } else {
-                ImageUtils.loadImageWithPlaceholder(
-                        sourceUrl,
-                        mImageView,
-                        drawable,
-                        null);
-            }
+            ImageUtils.loadImageWithBackupDrawable(sourceUrl, mImageView, drawable);
         } else if (sourceDrawableId >= 0) {
             mImageView.setImageDrawable(drawable);
         }
