@@ -151,6 +151,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
                 option.equals(context.getString(R.string.account_payments)) ||
                 option.equals(context.getString(R.string.account_ourpay)) ||
                 option.equals(context.getString(R.string.account_select)) ||
+                option.equals(context.getString(R.string.account_contact_us)) ||
                 option.equals(context.getString(R.string.account_invite_friend));
     }
 
