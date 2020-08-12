@@ -18,6 +18,7 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -135,20 +136,16 @@ public class SaleCategoryController extends BaseController
     @Override
     public void showCategories(List<GetCategoryTreeResponse> categories) {
         mCategories = categories;
-        //remove SHOP from categories
-        GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
+
+        List<GetCategoryTreeResponse> toBeRemoved = new LinkedList<>();
         for (GetCategoryTreeResponse response : categories) {
-            String key = response.getKey();
-            if (key == null || key.isEmpty()) {
-                shopCategory = response;
-                break;
+            if (response.getChildren() == null || response.getChildren().isEmpty()) {
+                toBeRemoved.add(response);
             }
         }
-        if (mCategories.contains(shopCategory)) {
-            mCategories.remove(shopCategory);
-        }
+        mCategories.removeAll(toBeRemoved);
 
-        addToMap(categories);
+        addToMap(mCategories);
         setupCategories();
     }
 
