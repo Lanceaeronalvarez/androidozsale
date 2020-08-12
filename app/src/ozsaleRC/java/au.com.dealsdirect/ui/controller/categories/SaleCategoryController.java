@@ -235,12 +235,12 @@ public class SaleCategoryController extends BaseController
 
         //noinspection ConstantConditions
         if (getCategoryTreeResponse != null && getCategoryTreeResponse.getChildren() != null) {
-            SubSaleCategoryAdapter mSubCategoryAdapter = new SubSaleCategoryAdapter(mActivity, (getCategoryTreeResponse.getChildren()), mSubCategoryItemClickListener, this, mCategoryMap);
-            mSubCategoryAdapter.setParentPosition(position);
+            SubSaleCategoryAdapter subCategoryAdapter = new SubSaleCategoryAdapter(mActivity, (getCategoryTreeResponse.getChildren()), mSubCategoryItemClickListener, this, mCategoryMap);
+            subCategoryAdapter.setParentPosition(position);
 
             if (saleCategoryViewHolder != null) {
                 saleCategoryViewHolder.subCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
-                saleCategoryViewHolder.subCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+                saleCategoryViewHolder.subCategoryRecyclerView.setAdapter(subCategoryAdapter);
             }
 
             mRecyclerView.smoothScrollToPosition(position);
@@ -269,8 +269,6 @@ public class SaleCategoryController extends BaseController
 
         subCategoriesViewHolder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(subCategoriesViewHolder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
         subCategoriesViewHolder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
-
-        mCategoryAdapter.notifyItemChanged(subCategoriesViewHolder.getParentPosition());
 
         mRecyclerView.smoothScrollToPosition(subCategoriesViewHolder.getParentPosition());
     }

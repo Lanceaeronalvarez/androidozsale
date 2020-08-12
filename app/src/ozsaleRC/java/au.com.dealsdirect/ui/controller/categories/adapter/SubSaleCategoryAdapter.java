@@ -12,13 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.listener.SaleCategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.main.MainController;
@@ -36,7 +34,6 @@ public class SubSaleCategoryAdapter extends RecyclerView.Adapter<SubSaleCategory
     private List<GetCategoryTreeResponse> mData;
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
     private SaleCategoryClickListener mCategoryAdapterClickListener;
-    private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap;
     private boolean mAnimateInsert = true;
     private Context mContext;
@@ -137,11 +134,11 @@ public class SubSaleCategoryAdapter extends RecyclerView.Adapter<SubSaleCategory
 
                     if (!isItemViewActivated) {
                         if (mContext.getResources().getBoolean(R.bool.should_use_old_category_layout)) {
-                            mSubCategoryItemsAdapter = new SubCategoryItemsAdapter(mContext, subCategoryItems, mSubCategoryItemClickListener, mAnimateInsert,
+                            SubCategoryItemsAdapter subCategoryItemsAdapter = new SubCategoryItemsAdapter(mContext, subCategoryItems, mSubCategoryItemClickListener, mAnimateInsert,
                                     mData.get(position).getLinkOptions());
                             holder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
                             holder.subCategoryItemsRecyclerView.setMotionEventSplittingEnabled(false);
-                            holder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
+                            holder.subCategoryItemsRecyclerView.setAdapter(subCategoryItemsAdapter);
                         } else {
                             mCategoryAdapterClickListener.onSubCategoryClicked(position, holder, mData.get(position));
                         }
@@ -186,7 +183,7 @@ public class SubSaleCategoryAdapter extends RecyclerView.Adapter<SubSaleCategory
         @BindView(R.id.viewholder_subcategory_check)
         ImageView subCategoryCheckImageView;
 
-       private int parentPosition = -1;
+        private int parentPosition = -1;
 
         SubCategoriesViewHolder(View itemView) {
             super(itemView);

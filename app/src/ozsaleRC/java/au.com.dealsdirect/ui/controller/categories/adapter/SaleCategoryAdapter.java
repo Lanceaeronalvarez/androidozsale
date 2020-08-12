@@ -38,6 +38,7 @@ public class SaleCategoryAdapter extends RecyclerView.Adapter<SaleCategoryAdapte
     private SubCategoryItemsAdapter mSubCategoryItemsAdapter;
     private SubCategoriesAdapter mSubCategoryAdapter;
     private boolean mAnimateInsert = true;
+    private HashMap<String, Boolean> activeStates = new HashMap<>();
 
     public SaleCategoryAdapter(Context context,
                                List<GetCategoryTreeResponse> data,
@@ -68,7 +69,9 @@ public class SaleCategoryAdapter extends RecyclerView.Adapter<SaleCategoryAdapte
         String subCategoryTitle = "";
         StringBuilder builder = new StringBuilder();
 
-        if (mData.get(position).getChildren() != null) {
+        GetCategoryTreeResponse item = mData.get(position);
+
+        if (item.getChildren() != null) {
             for (int i = 0; i < mData.get(position).getChildren().size(); i++) {
                 String string = mData.get(position).getChildren().get(i).getName();
                 String prefix = i == 0 ? "" : ", ";
@@ -79,14 +82,18 @@ public class SaleCategoryAdapter extends RecyclerView.Adapter<SaleCategoryAdapte
             holder.saleCategorySubTitle.setText(subCategoryTitle);
         }
 
+        holder.setup(activeStates.get(item.getId()));
+
         holder.itemView.setOnClickListener(view -> {
-            if (holder.subCategoryImageButton.getDrawable().getConstantState() == mContext.getResources().getDrawable(R.drawable.ic_chevron_down).getConstantState()) {
-                holder.subCategoryImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_chevron_up));
-                holder.subCategoryRecyclerView.setVisibility(View.VISIBLE);
+            String id = mData.get(holder.getAdapterPosition()).getId();
+            Boolean isActive = activeStates.get(id);
+            if (isActive == null || !isActive) {
+                activeStates.put(id, true);
+                holder.setup(true);
                 mCategoryAdapterClickListener.onCategoryClicked(position, holder, mData.get(position));
             } else {
-                holder.subCategoryImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_chevron_down));
-                holder.subCategoryRecyclerView.setVisibility(View.GONE);
+                activeStates.put(id, false);
+                holder.setup(false);
             }
         });
     }
@@ -145,6 +152,16 @@ public class SaleCategoryAdapter extends RecyclerView.Adapter<SaleCategoryAdapte
             mPresenter = presenter;
             ButterKnife.bind(this, itemView);
 
+        }
+
+        public void setup(Boolean isActive) {
+            if (isActive != null && isActive) {
+                subCategoryImageButton.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ic_chevron_up));
+                subCategoryRecyclerView.setVisibility(View.VISIBLE);
+            } else {
+                subCategoryImageButton.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ic_chevron_down));
+                subCategoryRecyclerView.setVisibility(View.GONE);
+            }
         }
     }
 
