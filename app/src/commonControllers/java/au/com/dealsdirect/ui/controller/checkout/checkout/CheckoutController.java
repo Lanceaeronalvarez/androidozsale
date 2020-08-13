@@ -1124,6 +1124,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private void onAfterpayInfoButtonClick() {
         Bundle bundle = new BundleBuilder(new Bundle())
                 .putString(FloatingImageViewerController.KEY_SOURCE_URL, mPresenter.getAfterpayLightboxImgUrl())
+                .putInt(FloatingImageViewerController.KEY_SOURCE_DRAWABLE_ID, R.drawable.afterpay_lightbox)
                 .build();
 
         FloatingImageViewerController controller = new FloatingImageViewerController(bundle);
