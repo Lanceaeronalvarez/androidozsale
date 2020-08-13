@@ -1164,6 +1164,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void onLoadSortingFacetsFinished(List<SortingResponse> responseList) {
         mSortingResponse = responseList;
         mSortingListJsonString = new Gson().toJson(responseList);
+
+        if (mSearchFilterMvpView != null) {
+            mSearchFilterMvpView.updateSortingFacet(mSortingResponse);
+        }
     }
 
     private void initializeCategoryTreeResponse(List<GetCategoryTreeResponse> source) {

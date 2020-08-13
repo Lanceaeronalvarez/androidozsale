@@ -8,6 +8,7 @@ import java.util.Set;
 
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 
@@ -48,4 +49,6 @@ public interface SearchFilterMvpView extends MvpView {
     boolean getIsFacetsVisible();
 
     void onReceiveCategoryMap(Map<String, GetCategoryTreeResponse> categoryMap);
+
+    void updateSortingFacet(List<SortingResponse> sortingList);
 }
