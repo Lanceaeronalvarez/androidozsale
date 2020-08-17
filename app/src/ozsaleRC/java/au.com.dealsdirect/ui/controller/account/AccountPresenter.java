@@ -69,6 +69,8 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             getMvpView().showMyAccountsOurpay();
         } else if (option.equals(context.getString(R.string.account_select))) {
             getMvpView().showMyAccountsSelect();
+        } else if (option.equals(context.getString(R.string.account_contact_us))) {
+            getMvpView().showContactUs();
         } else if (option.equals(context.getString(R.string.account_invite_friend))) {
             getMvpView().showInviteAFriend();
         }
@@ -83,8 +85,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
             getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_PRIVACY, option);
         } else if (option.equals(context.getString(R.string.account_tnc))) {
             getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_TNC, option);
-        } else if (option.equals(context.getString(R.string.account_contact_us))) {
-            getMvpView().showContactUs();
         } else if (option.equals(context.getString(R.string.account_country))) {
             getMvpView().showCountry();
         } else if (option.equals(context.getString(R.string.account_notification))) {
