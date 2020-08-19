@@ -42,7 +42,8 @@ public interface SaleItemsMvpView extends MvpView {
                             String imageUrl,
                             String skuId,
                             String saleId,
-                            boolean isFreeDelivery);
+                            boolean isFreeDelivery,
+                            boolean isSoldOut);
 
     GetSaleItemsRequest createSaleItemsRequest(String categoryKey, int pageNumber, List<SearchChipModel> chipsList);
 

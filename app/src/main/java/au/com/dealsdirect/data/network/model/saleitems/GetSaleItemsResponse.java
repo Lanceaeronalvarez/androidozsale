@@ -55,10 +55,10 @@ public class GetSaleItemsResponse extends CachableResponse implements Serializab
 
         @SerializedName("salePercentOff")
         @Expose
-        private Integer salePercentOff;
+        private int salePercentOff;
         @SerializedName("isFreeDelivery")
         @Expose
-        private Boolean isFreeDelivery;
+        private boolean isFreeDelivery;
         @SerializedName("salePrice")
         @Expose
         private SalePrice salePrice;
@@ -74,11 +74,11 @@ public class GetSaleItemsResponse extends CachableResponse implements Serializab
             return salePrice;
         }
 
-        public Integer getSalePercentOff() {
+        public int getSalePercentOff() {
             return salePercentOff;
         }
 
-        public Boolean getFreeDelivery() {
+        public boolean getFreeDelivery() {
             return isFreeDelivery;
         }
 
@@ -219,7 +219,7 @@ public class GetSaleItemsResponse extends CachableResponse implements Serializab
         private OriginalPrice originalPrice;
         @SerializedName("quantity")
         @Expose
-        private Integer quantity;
+        private int quantity;
         @SerializedName("images")
         @Expose
         private List<String> images = null;
@@ -301,11 +301,11 @@ public class GetSaleItemsResponse extends CachableResponse implements Serializab
             this.originalPrice = originalPrice;
         }
 
-        public Integer getQuantity() {
+        public int getQuantity() {
             return quantity;
         }
 
-        public void setQuantity(Integer quantity) {
+        public void setQuantity(int quantity) {
             this.quantity = quantity;
         }
 

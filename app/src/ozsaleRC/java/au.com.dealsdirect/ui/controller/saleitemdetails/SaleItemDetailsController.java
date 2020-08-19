@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -917,10 +916,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             @Override
             public void onFinish() {
-                mAddToCartTimer.setVisibility(View.GONE);
-                mAddToCartButtonContainer.setVisibility(View.VISIBLE);
-                mAddToCartButton.setEnabled(true);
-                mAddToCartButton.bringToFront();
+                if (mAddToCartTimer != null) {
+                    mAddToCartTimer.setVisibility(View.GONE);
+                }
+                if (mAddToCartButtonContainer != null) {
+                    mAddToCartButtonContainer.setVisibility(View.VISIBLE);
+                }
+                if (mAddToCartButton != null) {
+                    mAddToCartButton.setEnabled(true);
+                    mAddToCartButton.bringToFront();
+                }
             }
         };
         mCountDownTimer.start();
@@ -1415,6 +1420,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         viewHolder.setInfoButtonOnClickListener(v -> {
             Bundle bundle = new BundleBuilder(new Bundle())
                     .putString(FloatingImageViewerController.KEY_SOURCE_URL, mPresenter.getAfterpayLightboxImgUrl())
+                    .putInt(FloatingImageViewerController.KEY_SOURCE_DRAWABLE_ID, R.drawable.afterpay_lightbox)
                     .build();
 
             FloatingImageViewerController controller = new FloatingImageViewerController(bundle);
@@ -1498,7 +1504,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mYouMayAlsoLikeContainer.setVisibility(View.VISIBLE);
 
         HorizontalScrollingBannerAdapter adapter = new HorizontalScrollingBannerAdapter(mActivity);
-            adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
+        adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
 
         adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.YouMayAlsoLike);
         SaleItemDetailsScrollingImageAdapter mYouMayAlsoLikeAdapter = new SaleItemDetailsScrollingImageAdapter(mActivity, mPresenter,
@@ -1816,8 +1822,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             @Override
             public void onAnimationEnd(Animation animation) {
                 isAnimating = false;
-                mImageViewToAnimate.setVisibility(View.GONE);
-                mBottomNavView.setElevation(origElevation);
+                if (mImageViewToAnimate != null) {
+                    mImageViewToAnimate.setVisibility(View.GONE);
+                }
+                if (mBottomNavView != null) {
+                    mBottomNavView.setElevation(origElevation);
+                }
             }
 
             @Override
@@ -1931,13 +1941,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                 @Override
                                 public void onAnimationCancel(Animator animation) {
                                     super.onAnimationCancel(animation);
-                                    mProductDetailsToolbar.setVisibility(View.GONE);
+                                    if (mProductDetailsToolbar != null) {
+                                        mProductDetailsToolbar.setVisibility(View.GONE);
+                                    }
                                 }
 
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
                                     super.onAnimationEnd(animation);
-                                    mProductDetailsToolbar.setVisibility(View.GONE);
+                                    if (mProductDetailsToolbar != null) {
+                                        mProductDetailsToolbar.setVisibility(View.GONE);
+                                    }
                                 }
                             });
                         }

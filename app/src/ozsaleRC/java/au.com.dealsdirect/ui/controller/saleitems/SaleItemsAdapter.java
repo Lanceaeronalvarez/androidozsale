@@ -256,7 +256,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                         product.getSkus() == null || product.getSkus().isEmpty() ? "" :
                                 product.getSkus().get(0).getId(),
                         mSaleId,
-                        product.getFreeDelivery()));
+                        product.getFreeDelivery(),
+                        product.isSoldOut()));
 
         holder.likeButton.setOnClickListener(v -> {
             holder.setLiked(!holder.isLiked());
@@ -318,10 +319,10 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         int previousCount = mData.size();
         mData = saleItems;
         if (previousCount > 0 || !saleItems.isEmpty()) {
-            notifyItemRangeChanged(0, Math.min(previousCount, saleItems.size()) - 1);
+            notifyItemRangeChanged(0, Math.min(previousCount, saleItems.size()));
         }
         if (previousCount < saleItems.size()) {
-            notifyItemRangeInserted(previousCount - 1, saleItems.size() - 1);
+            notifyItemRangeInserted(previousCount, saleItems.size() - previousCount);
         } else if (previousCount > saleItems.size()) {
             notifyItemRangeRemoved(saleItems.size(), previousCount - saleItems.size());
         }

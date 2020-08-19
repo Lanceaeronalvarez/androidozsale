@@ -18,6 +18,7 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -135,20 +136,16 @@ public class SaleCategoryController extends BaseController
     @Override
     public void showCategories(List<GetCategoryTreeResponse> categories) {
         mCategories = categories;
-        //remove SHOP from categories
-        GetCategoryTreeResponse shopCategory = new GetCategoryTreeResponse();
+
+        List<GetCategoryTreeResponse> toBeRemoved = new LinkedList<>();
         for (GetCategoryTreeResponse response : categories) {
-            String key = response.getKey();
-            if (key == null || key.isEmpty()) {
-                shopCategory = response;
-                break;
+            if (response.getChildren() == null || response.getChildren().isEmpty()) {
+                toBeRemoved.add(response);
             }
         }
-        if (mCategories.contains(shopCategory)) {
-            mCategories.remove(shopCategory);
-        }
+        mCategories.removeAll(toBeRemoved);
 
-        addToMap(categories);
+        addToMap(mCategories);
         setupCategories();
     }
 
@@ -235,12 +232,12 @@ public class SaleCategoryController extends BaseController
 
         //noinspection ConstantConditions
         if (getCategoryTreeResponse != null && getCategoryTreeResponse.getChildren() != null) {
-            SubSaleCategoryAdapter mSubCategoryAdapter = new SubSaleCategoryAdapter(mActivity, (getCategoryTreeResponse.getChildren()), mSubCategoryItemClickListener, this, mCategoryMap);
-            mSubCategoryAdapter.setParentPosition(position);
+            SubSaleCategoryAdapter subCategoryAdapter = new SubSaleCategoryAdapter(mActivity, (getCategoryTreeResponse.getChildren()), mSubCategoryItemClickListener, this, mCategoryMap);
+            subCategoryAdapter.setParentPosition(position);
 
             if (saleCategoryViewHolder != null) {
                 saleCategoryViewHolder.subCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
-                saleCategoryViewHolder.subCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+                saleCategoryViewHolder.subCategoryRecyclerView.setAdapter(subCategoryAdapter);
             }
 
             mRecyclerView.smoothScrollToPosition(position);
@@ -256,6 +253,10 @@ public class SaleCategoryController extends BaseController
 
     @Override
     public void onSubCategoryClicked(int position, SubCategoriesViewHolder subCategoriesViewHolder, GetCategoryTreeResponse getCategoryTreeResponse) {
+        if (!isViewAttached() || mRecyclerView == null || mCategoryAdapter == null) {
+            return;
+        }
+
         List<GetCategoryTreeResponse> subCategoryItems = mCategoryMap.get(getCategoryTreeResponse.getKey());
         if (subCategoryItems == null) {
             return;
@@ -265,8 +266,6 @@ public class SaleCategoryController extends BaseController
 
         subCategoriesViewHolder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(subCategoriesViewHolder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
         subCategoriesViewHolder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
-
-        mCategoryAdapter.notifyItemChanged(subCategoriesViewHolder.getParentPosition());
 
         mRecyclerView.smoothScrollToPosition(subCategoriesViewHolder.getParentPosition());
     }

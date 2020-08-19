@@ -209,7 +209,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                                    String imageUrl,
                                    String skuId,
                                    String saleId,
-                                   boolean isFreeDelivery) {
+                                   boolean isFreeDelivery,
+                                   boolean isSoldOut) {
         getMvpView().hideKeyboard();
         getMvpView().showProductDetails(
                 viewHolder,
@@ -219,7 +220,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                 imageUrl,
                 skuId,
                 saleId,
-                isFreeDelivery);
+                isFreeDelivery,
+                isSoldOut);
     }
 
     protected <T> Observable<T> wrapObservable(Observable<T> observable) {

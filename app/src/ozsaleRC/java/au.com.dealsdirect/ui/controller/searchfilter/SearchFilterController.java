@@ -900,4 +900,13 @@ public class SearchFilterController extends BaseController implements SearchFilt
             mPresenter.setRepository(repository);
         }
     }
+
+    @Override
+    public void updateSortingFacet(List<SortingResponse> sortingList) {
+        mSortingFacets = sortingList;
+        if (mSortingFacets != null) {
+            mSortingList.clear();
+            parseSortingFacets(mSortingFacets);
+        }
+    }
 }

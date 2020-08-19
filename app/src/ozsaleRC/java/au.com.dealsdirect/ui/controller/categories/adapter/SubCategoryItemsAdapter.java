@@ -1,8 +1,7 @@
 package au.com.dealsdirect.ui.controller.categories.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,6 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.main.MainActivity;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -129,17 +129,20 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                 }
 
                 if (mLastSelectedViewHolder != null) {
-                    mLastSelectedViewHolder.subCategoryCheck.setVisibility(View.INVISIBLE);
+                    mLastSelectedViewHolder.subCategoryCheck.setVisibility(View.GONE);
+                    mLastSelectedViewHolder.subCategoryTitle.setTypeface(null, Typeface.NORMAL);
                 }
 
                 View previousItemView = activity.getMainController().getSelectedSubCategoryItem();
-                if(previousItemView != null) {
+                if (previousItemView != null) {
                     SubCategoryItemViewHolder subCategoryItemViewHolder = new SubCategoryItemViewHolder(previousItemView);
                     subCategoryItemViewHolder.subCategoryCheck.setVisibility(View.GONE);
+                    subCategoryItemViewHolder.subCategoryTitle.setTypeface(null, Typeface.NORMAL);
                 }
 
                 activity.getMainController().setSelectedSubCategoryItem(holder.itemView);
                 holder.subCategoryCheck.setVisibility(View.VISIBLE);
+                holder.subCategoryTitle.setTypeface(null, Typeface.BOLD);
                 mLastSelectedViewHolder = holder;
 
                 mCategoryAdapterClickListener.onSubCategoryItemClicked(
@@ -149,7 +152,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
 
                 View lastItemView = activity.getMainController().getPreviousSubcategoryItem();
-                if(lastItemView != null) {
+                if (lastItemView != null) {
                     SubCategoriesAdapter.SubCategoriesViewHolder subCategoryItemViewHolder = new SubCategoriesAdapter.SubCategoriesViewHolder(lastItemView);
                     subCategoryItemViewHolder.subCategoryCheckImageView.setVisibility(View.INVISIBLE);
                     activity.getMainController().setPreviousSubcategoryItem(null);

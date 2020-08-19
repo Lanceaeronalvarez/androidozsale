@@ -238,6 +238,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         if (mPresenter != null) {
             mPresenter.cancelRequest();
         }
+
+        if (mBannersAdapter != null) {
+            mBannersAdapter.restartHorizontalViewHolders();
+        }
     }
 
     @Override
@@ -249,6 +253,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         mIsChangeInProgress = true;
         mPresenter.cancelRequest();
+
+        mBannersAdapter.stopHorizontalViewHolders();
     }
 
     @Override
@@ -1048,8 +1054,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void onTabSwitch(boolean intoThisView) {
         super.onTabSwitch(intoThisView);
-        if (!intoThisView) {
-            mBannersAdapter.stopSlidingBanner();
+        if (intoThisView) {
+            mBannersAdapter.restartHorizontalViewHolders();
+        } else {
+            mBannersAdapter.stopHorizontalViewHolders();
         }
     }
 
@@ -1060,8 +1068,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void onOrientationChanged(Configuration newConfiguration) {
         super.onOrientationChanged(newConfiguration);
+        mBannersAdapter.stopHorizontalViewHolders();
         resetBannerLayout();
-        mBannersAdapter.stopSlidingBanner();
+        mBannersAdapter.restartHorizontalViewHolders();
     }
 
     private void resetBannerLayout() {
