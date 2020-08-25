@@ -10,7 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.cachedresponses.ListOfCachableResponse;
+import au.com.dealsdirect.data.cachedresponses.ListOfSortingResponses;
 import au.com.dealsdirect.data.cachedresponses.ParamaterizedCachableRequest;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
@@ -163,9 +163,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
         ParamaterizedCachableRequest loadSortingFacetsRequest = new ParamaterizedCachableRequest("loadSortingFacets");
         getDataManager().pruneCachedResponse(loadSortingFacetsRequest);
-        ListOfCachableResponse listOfCachableResponse = getDataManager().getCachedResponse(loadSortingFacetsRequest, ListOfCachableResponse.class);
-        if (listOfCachableResponse != null) {
-            getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) listOfCachableResponse.getResponses());
+        ListOfSortingResponses listOfSortingResponses = getDataManager().getCachedResponse(loadSortingFacetsRequest, ListOfSortingResponses.class);
+        if (listOfSortingResponses != null) {
+            getMvpView().onLoadSortingFacetsFinished(listOfSortingResponses.getResponses());
         }
 
         // Cancels any previous loadSaleItems request
@@ -184,7 +184,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                 getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) pair.second);
                 getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, !getSaleItemsRequest.hasFilters(), false);
                 getDataManager().setCachedResponse(getSaleItemsRequest, (GetSaleItemsResponse) pair.first);
-                getDataManager().setCachedResponse(loadSortingFacetsRequest, new ListOfCachableResponse((List<SortingResponse>) pair.second));
+                getDataManager().setCachedResponse(loadSortingFacetsRequest, new ListOfSortingResponses((List<SortingResponse>) pair.second));
             }
 
             @Override
@@ -232,9 +232,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     public void loadSortingFacets() {
         ParamaterizedCachableRequest request = new ParamaterizedCachableRequest("loadSortingFacets");
         getDataManager().pruneCachedResponse(request);
-        ListOfCachableResponse listOfCachableResponse = getDataManager().getCachedResponse(request, ListOfCachableResponse.class);
-        if (listOfCachableResponse != null) {
-            getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) listOfCachableResponse.getResponses());
+        ListOfSortingResponses listOfSortingResponses = getDataManager().getCachedResponse(request, ListOfSortingResponses.class);
+        if (listOfSortingResponses != null) {
+            getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) listOfSortingResponses.getResponses());
         }
 
         doApiCallForResponse(getDataManager().callSortingFacets(), new AppApiCallback() {
@@ -242,7 +242,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);
                 getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) response);
-                getDataManager().setCachedResponse(request, new ListOfCachableResponse(response));
+                getDataManager().setCachedResponse(request, new ListOfSortingResponses((List<SortingResponse>) response));
             }
         });
     }
