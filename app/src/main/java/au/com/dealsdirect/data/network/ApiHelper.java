@@ -61,6 +61,7 @@ import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
@@ -376,6 +377,8 @@ public interface ApiHelper {
     Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request);
 
     Observable<String> callStartCheckoutEvent(StartCheckoutRequest request);
+
+    Observable<String> callFeatureUsageEvent(FeatureUsageEventRequest request);
 
     // OURPAY
     Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String languageId);

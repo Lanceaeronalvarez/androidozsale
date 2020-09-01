@@ -41,7 +41,8 @@ public enum Events {
     WishlistPaymentSuccessEvent("WishlistPaymentSuccessEvent"),
     BannerClickEvent("BannerClickEvent"),
     SponsoredBannerClickEvent("SponsoredBannerClickEvent"),
-    RegularBannerClickEvent("RegularBannerClickEvent");
+    RegularBannerClickEvent("RegularBannerClickEvent"),
+    FeatureUsageEvent("FeatureUsageEvent");
 
     private String value;
 

@@ -169,6 +169,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.EVENTING, "events", ApiUrlVersion.v1.apiVersion());
     }
 
+    public static String getFeatureUsageEvent() {
+        return getFormattedUrl(ApiService.EVENTING, "events", ApiUrlVersion.v1.apiVersion());
+    }
+
     /* Deep Link Data */
     public static String deepLink() {
         return getFormattedUrl(ApiService.SETTING, "deeplinkdata", ApiUrlVersion.v1.apiVersion());
