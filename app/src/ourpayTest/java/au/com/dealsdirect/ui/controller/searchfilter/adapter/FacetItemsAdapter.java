@@ -146,7 +146,7 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void removeChip(int position) {
         SearchChipModel chipToRemove = null;
-        String chipTitle = getData().get(position);
+        String chipTitle = getTitles().get(position);
         for (SearchChipModel chip : mSearchItemsList) {
             if (getFilterType() == BundleKeys.SORT_FACETFILTER_NAME && chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)
                     || chip.getChipTitle().equals(chipTitle)) {

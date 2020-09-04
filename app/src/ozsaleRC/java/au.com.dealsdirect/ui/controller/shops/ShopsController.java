@@ -28,6 +28,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -941,7 +942,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void goToSaleItemsFromCategorySearch() {
 
         SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
-                .FromCategory(null, null, null, new ArrayList<>());
+                .FromCategory(null, null, null, new HashSet<>());
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 

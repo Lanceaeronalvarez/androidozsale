@@ -9,8 +9,10 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.service.datacollection.enums.SearchOperationType;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
+import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -47,14 +49,14 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public void onFacetItemClicked(List<SearchChipModel> selectedChips) {
+    public void onFacetItemClicked(Set<SearchChipModel> selectedChips, SearchChipModel newChip, boolean isAdded) {
         if (isViewAttached()) {
-            getMvpView().updateFacetItemToFilters(selectedChips);
+            getMvpView().updateFacetItemToFilters(selectedChips, newChip, isAdded);
         }
     }
 
     @Override
-    public int getSearchMaxPrice(){
+    public int getSearchMaxPrice() {
         return getDataManager().getSearchMaxPrice();
     }
 
@@ -66,11 +68,23 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
     }
 
     @Override
-    public void requestUpdate(Set<String> categoryKeys, List<SearchChipModel> chipsList,
-                              ArrayList<String> brandList, int minPrice, int maxPrice,
-                              ArrayList<String> sizeList) {
+    public void requestUpdate(Set<String> categoryKeys, Set<SearchChipModel> chipsList,
+            String facetName, String facetValue, String categoryKey,
+                              int brandCount, int minPrice, int maxPrice,
+                              ArrayList<String> sizeList,
+                              SearchOperationType searchOperationType) {
         if (mRepository != null) {
-            mRepository.requestUpdate(categoryKeys, chipsList, brandList, minPrice, maxPrice, sizeList);
+            mRepository.requestUpdate(
+                    categoryKeys,
+                    chipsList,
+                    facetName,
+                    facetValue,
+                    categoryKey,
+                    brandCount,
+                    minPrice,
+                    maxPrice,
+                    sizeList,
+                    searchOperationType);
         }
     }
 

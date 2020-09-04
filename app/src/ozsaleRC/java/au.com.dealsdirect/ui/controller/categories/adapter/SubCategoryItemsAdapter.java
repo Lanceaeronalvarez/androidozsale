@@ -93,7 +93,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                     if (mData.get(position).getLinkOptions().getFacets() != null) {
                         for (int i = 0; i < mData.get(position).getLinkOptions().getFacets().getNewArrivals().size(); i++) {
                             SearchChipModel searchChipModel = new SearchChipModel(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME,
-                                    mData.get(position).getLinkOptions().getFacets().getNewArrivals().get(i), i);
+                                    mData.get(position).getLinkOptions().getFacets().getNewArrivals().get(i), null, i);
                             mChipFilter.add(searchChipModel);
                         }
                     }
@@ -107,7 +107,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                         if (mMainLinkOption.getFacets() != null) {
                             for (int i = 0; i < mMainLinkOption.getFacets().getNewArrivals().size(); i++) {
                                 SearchChipModel searchChipModel = new SearchChipModel(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME,
-                                        mMainLinkOption.getFacets().getNewArrivals().get(i), i);
+                                        mMainLinkOption.getFacets().getNewArrivals().get(i), null, i);
                                 mChipFilter.add(searchChipModel);
                             }
                         }
@@ -116,7 +116,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
                         for (int i = 0; i < mMainLinkOption.getFacets().getNewArrivals().size(); i++) {
                             SearchChipModel searchChipModel = new SearchChipModel(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME,
-                                    mMainLinkOption.getFacets().getNewArrivals().get(i), i);
+                                    mMainLinkOption.getFacets().getNewArrivals().get(i), null, i);
                             mChipFilter.add(searchChipModel);
                         }
 

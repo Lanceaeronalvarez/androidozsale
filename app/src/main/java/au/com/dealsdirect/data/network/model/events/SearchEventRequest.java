@@ -91,6 +91,9 @@ public class SearchEventRequest {
         @SerializedName("sort")
         @Expose
         private String sort;
+        @SerializedName("selectedFacet")
+        @Expose
+        private String selectedFacet;
 
         public Integer getResultsCount() {
             return resultsCount;
@@ -178,6 +181,14 @@ public class SearchEventRequest {
 
         public void setSort(String sort) {
             this.sort = sort;
+        }
+
+        public String getSelectedFacet() {
+            return selectedFacet;
+        }
+
+        public void setSelectedFacet(String selectedFacet) {
+            this.selectedFacet = selectedFacet;
         }
     }
 
