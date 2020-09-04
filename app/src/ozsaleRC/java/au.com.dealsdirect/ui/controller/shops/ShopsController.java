@@ -773,6 +773,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     public void goToSalesFromCategories(String id, String key) {
+        if (id == null) {
+            key = null;
+        }
         resetShopsBanners(id);
         mCategoryKey = key;
         mCategoryName = key;

@@ -133,6 +133,9 @@ public class BannerFiltersController extends BaseController implements BannerFil
 
     @OnClick(R.id.no_network_layout)
     public void refreshBannerFilters() {
+        if (mPresenter == null) {
+            return;
+        }
         mPresenter.callGetCategoryTree();
     }
 
