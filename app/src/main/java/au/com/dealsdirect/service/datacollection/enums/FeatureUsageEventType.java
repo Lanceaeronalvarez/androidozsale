@@ -66,6 +66,11 @@ public class FeatureUsageEventType {
         public static final int CLICK_ON_A_BRAND_FROM_TOP_MENU = 1072;
     }
 
+    public static class Search {
+        public static final int TOGGLE_GRID_SIZE_TO_LARGE = 1118;
+        public static final int TOGGLE_GRID_SIZE_TO_SMALL = 1119;
+    }
+
     public static class FacetSearch {
         public static final int SEARCH_FOR_A_BRAND = 1050;
         public static final int SEARCH_FOR_A_SIZE = 1069;

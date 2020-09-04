@@ -62,6 +62,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
@@ -71,6 +72,7 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.enums.FeatureUsageEventType;
 import au.com.dealsdirect.service.datacollection.enums.SearchOperationType;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
@@ -133,13 +135,30 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private SourceMode mSourceMode = SourceMode.NORMAL;
 
     private void toggleGridViewMode() {
+        int featureUsageEventType = -1;
+
         switch (mGridViewMode) {
             case MORE_IMAGES:
                 setGridViewMode(GridViewMode.LARGER_IMAGES);
+                featureUsageEventType = FeatureUsageEventType.Search.TOGGLE_GRID_SIZE_TO_LARGE;
                 break;
             case LARGER_IMAGES:
                 setGridViewMode(GridViewMode.MORE_IMAGES);
+                featureUsageEventType = FeatureUsageEventType.Search.TOGGLE_GRID_SIZE_TO_SMALL;
                 break;
+        }
+
+        if (featureUsageEventType >= 0) {
+            FeatureUsageEventRequest featureUsageEventRequest = new FeatureUsageEventRequest();
+            featureUsageEventRequest.setEventType(EventTypeId.EVENT_FEATURE_USAGE);
+            featureUsageEventRequest.setFeatureInfo(new FeatureUsageEventRequest.FeatureInfo(featureUsageEventType));
+
+            HashMap<String, Object> eventParameters = new HashMap<>();
+            eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+            eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
+            eventParameters.put(DataCollector.EventParameters.FEATURE_EVENT_REQUEST, featureUsageEventRequest);
+
+            DataCollector.logEvent(Events.FeatureUsageEvent, eventParameters);
         }
     }
 
