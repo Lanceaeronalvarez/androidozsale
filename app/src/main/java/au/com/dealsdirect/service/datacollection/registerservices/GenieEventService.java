@@ -26,6 +26,7 @@ import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.VisitorInfo;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollectionService;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.core.LoggingService;
@@ -39,6 +40,7 @@ import au.com.dealsdirect.service.datacollection.events.ItemListDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SaleBannersDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SearchDataEvent;
 import au.com.dealsdirect.service.datacollection.events.WishlistDataEvent;
+import au.com.dealsdirect.service.datacollection.events.YouMayAlsoLikeClickEvent;
 import au.com.dealsdirect.service.event.FrontEndType;
 import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.service.event.RegionType;
@@ -146,6 +148,15 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         callStartCheckoutEvent((StartCheckoutRequest) parameters.get(DataCollector.EventParameters.START_CHECKOUT_REQUEST));
+                    }
+                }));
+
+        //register you may also like event
+        DataCollector.EventRegistry.register(generateEventKey(Events.YouMayAlsoLikeEvent, getServiceKey()), Events.YouMayAlsoLikeEvent,
+                new LoggingService.LogYouMayAlsoLikeEvent(new YouMayAlsoLikeClickEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        callYouMayAlsoLikeEvent((YouMayAlsoLikeEventRequest) parameters.get(DataCollector.EventParameters.YOU_MAY_ALSO_LIKE_REQUEST));
                     }
                 }));
 
@@ -333,6 +344,31 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
 
         getCompositeDisposable().add(getDataManager()
                 .callStartCheckoutEvent(request)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    Log.d(TAG, response);
+
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            Log.d("Error", String.valueOf(anError.getErrorBody()));
+                        }
+                    }
+                }));
+    }
+
+    private static void callYouMayAlsoLikeEvent(YouMayAlsoLikeEventRequest request) {
+        request.setFrontEndInfo(includeFrontEndInfo());
+        request.setVisitorInfo(includeVisitorInfo());
+
+        getCompositeDisposable().add(getDataManager()
+                .callYouMayAlsoLikeEvent(request)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(response -> {

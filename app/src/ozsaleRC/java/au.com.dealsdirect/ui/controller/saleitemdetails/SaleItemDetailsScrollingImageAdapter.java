@@ -1,36 +1,29 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
+import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerViewHolder;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -230,6 +223,31 @@ public class SaleItemDetailsScrollingImageAdapter extends RecyclerView.Adapter<R
 
 
     private void onBannerTapped(GetYouMayAlsoLikeResponse responseLike) {
+
+        YouMayAlsoLikeEventRequest YouMayAlsoLikeEventRequest = new YouMayAlsoLikeEventRequest();
+        YouMayAlsoLikeEventRequest.setEventType(EventTypeId.EVENT_YOU_MAY_ALSO_LIKE);
+
+        YouMayAlsoLikeEventRequest.RecommendationsViewInfo recommendationsViewInfo = new YouMayAlsoLikeEventRequest.RecommendationsViewInfo();
+        recommendationsViewInfo.setType(EventTypeId.EVENT_SIMS);
+        recommendationsViewInfo.setProductId(responseLike.getMasterProductId());
+        recommendationsViewInfo.setProductsQty(mData.size());
+
+        int position = 0;
+        for (int i = 0; i < mData.size(); i++) {
+            if (responseLike.getMasterProductId().equals(mData.get(i).getMasterProductId())) {
+                position = i;
+            }
+        }
+
+        recommendationsViewInfo.setPosition(String.valueOf(position));
+        YouMayAlsoLikeEventRequest.setRecommendationsViewInfo(recommendationsViewInfo);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.SALE_NAME, responseLike.getName());
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, "Product Details");
+        parameters.put(DataCollector.EventParameters.YOU_MAY_ALSO_LIKE_REQUEST, YouMayAlsoLikeEventRequest);
+        DataCollector.logEvent(Events.YouMayAlsoLikeEvent, parameters);
+
         mListener.reloadSaleItemDetails(responseLike);
     }
 

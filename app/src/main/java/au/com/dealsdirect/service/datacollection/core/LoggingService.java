@@ -397,6 +397,19 @@ public class LoggingService {
         }
     }
 
+    public static class LogYouMayAlsoLikeEvent implements LoggingEventData {
+        private LogDataEvents logYouMayAlsoLikeEvent;
+
+        public LogYouMayAlsoLikeEvent(LogDataEvents logYouMayAlsoLikeEvent) {
+            this.logYouMayAlsoLikeEvent = logYouMayAlsoLikeEvent;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logYouMayAlsoLikeEvent.LogDataEvents(parameters);
+        }
+    }
+
     public static class LogBannerClickEvent implements LoggingEventData {
         private LogDataEvents logBannerClickEvent;
 

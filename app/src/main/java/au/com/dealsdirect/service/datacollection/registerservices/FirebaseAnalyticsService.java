@@ -37,6 +37,7 @@ import au.com.dealsdirect.service.datacollection.events.ShareDataEvent;
 import au.com.dealsdirect.service.datacollection.events.ToggleColumnEvent;
 import au.com.dealsdirect.service.datacollection.events.TrackOrderDataEvent;
 import au.com.dealsdirect.service.datacollection.events.WishlistDataEvent;
+import au.com.dealsdirect.service.datacollection.events.YouMayAlsoLikeClickEvent;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -64,6 +65,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static final String PRODUCT_LIST_GRID_VIEW_PREFERENCE = "PRODUCT_LIST_GRID_VIEW_PREFERENCE";
     private static final String WISHLIST_ADDTOCART = "WISHLIST_ADDTOCART";
     private static final String WISHLIST_PAYMENTSUCCESS = "WISHLIST_PAYMENTSUCCESS";
+    private static final String YOU_MAY_ALSO_LIKE_BANNER_CLICK = "YouMayAlsoLikeBanners";
     private static final String BANNER_CLICK = "BANNER_CLICK";
     private static final String SPONSORED_BANNER_CLICK = "SponsoredBanners";
     private static final String REGULAR_BANNER_CLICK = "RegularBanners";
@@ -416,6 +418,24 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     }
                 }));
 
+        // register you may also like event
+        DataCollector.EventRegistry.register(generateEventKey(Events.YouMayAlsoLikeEvent, getServiceKey()),
+                Events.YouMayAlsoLikeEvent,
+                new LoggingService.LogYouMayAlsoLikeEvent(new YouMayAlsoLikeClickEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString(EventParameters.SALE_NAME,
+                                String.valueOf(parameters.get(EventParameters.SALE_NAME)));
+                        bundle.putString(EventParameters.SCREEN_NAME,
+                                String.valueOf(parameters.get(EventParameters.SCREEN_NAME)));
+
+                        youMayAlsoLikeClick((Context) parameters.get(EventParameters.APP_CONTEXT),
+                                String.valueOf(parameters.get(EventParameters.SCREEN_NAME)), bundle);
+                    }
+                }));
+
         // register banner click
         DataCollector.EventRegistry.register(generateEventKey(Events.BannerClickEvent, getServiceKey()),
                 Events.BannerClickEvent,
@@ -613,6 +633,12 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
         firebaseAnalytics.logEvent(WISHLIST_PAYMENTSUCCESS, null);
+    }
+
+    private static void youMayAlsoLikeClick(Context context, String screenName, Bundle bundle) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
+        firebaseAnalytics.logEvent(YOU_MAY_ALSO_LIKE_BANNER_CLICK, bundle);
     }
 
     private static void bannerClick(Context context, String screenName, Bundle bundle) {
