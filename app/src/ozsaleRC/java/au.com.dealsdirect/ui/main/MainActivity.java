@@ -103,6 +103,7 @@ import au.com.dealsdirect.ui.controller.orders.orders.BottomSheetOrderDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.BottomSheetSizesDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
+import au.com.dealsdirect.ui.controller.shops.BottomSheetFreeShippingDialog;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
@@ -1172,6 +1173,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mPresenter.getStoredTemplateTexts(detailKey);
     }
 
+    public String getShippingTemplateText() {
+        return mPresenter.getStoredShippingTemplateText();
+    }
+
+    public String getShippingTitle() {
+        return mPresenter.getShippingTitle();
+    }
+
     public void setCategoriesController(CategoriesController categoriesController) {
         mCategoriesController = categoriesController;
     }
@@ -1646,6 +1655,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         bottomSheetFragment.setOnDoneListener(onDoneListener);
 
         bottomSheetFragment.setArguments(null);
+        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
+    }
+
+    public void showFreeShippingDialog(String deliveryThreshold, String deliveryType, String title) {
+        BottomSheetFreeShippingDialog bottomSheetFragment = new BottomSheetFreeShippingDialog();
+
+        bottomSheetFragment.setDeliveryThreshold(deliveryThreshold);
+        bottomSheetFragment.setDeliveryType(deliveryType);
+        bottomSheetFragment.setTitle(title);
+
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
     }
 

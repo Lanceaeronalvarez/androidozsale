@@ -140,6 +140,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                             PromoInfoResponse response = (PromoInfoResponse) o;
                             getMvpView().setDynamicDiscount(response.getPercentOffText());
                             getMvpView().setIsAfterpayDetailsVisible(response.getAfterpayEnabled());
+                            getMvpView().showFreeShipping(response.getDeliveryType(), response.getDeliveryThreshold());
                         }
                     }
 

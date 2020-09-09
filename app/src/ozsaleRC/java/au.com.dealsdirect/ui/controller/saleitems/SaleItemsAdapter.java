@@ -49,6 +49,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     private int mMinColumn;
     private boolean mIsFooterEnabled = true;
     private int mCurrentItemCount = -1;
+    private OnClickFreeDeliveryListener mListener;
 
     private Pair<Integer, Integer> mComputedPair;
 
@@ -126,7 +127,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             List<Products> saleItems,
             SaleItemsMvpPresenter presenter,
             String saleId, int minColumn,
-            SaleItemsMvpPresenter.WishlistDelayedCallback delayedCallbackForWishlist) {
+            SaleItemsMvpPresenter.WishlistDelayedCallback delayedCallbackForWishlist,
+            OnClickFreeDeliveryListener listener) {
 
         this.mActivity = activity;
         this.mData = saleItems;
@@ -134,6 +136,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         this.mSaleId = saleId;
         this.mMinColumn = minColumn;
         this.delayedCallbackForWishlist = delayedCallbackForWishlist;
+        this.mListener = listener;
 
         computeItemViewDimensions();
     }
@@ -273,6 +276,12 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
             }
         });
+
+        holder.freeDelivery.setOnClickListener(v -> {
+            mListener.onClickFreeDelivery(String.valueOf(product.getDeliveryThreshold()),
+                    product.getDeliveryType());
+        });
+
     }
 
     @SuppressLint("CheckResult")

@@ -36,6 +36,7 @@ import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.ui.controller.saleitems.OnClickFreeDeliveryListener;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -111,6 +112,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private HorizontalScrollingBannerAdapter mSlidingBannersAdapter = null;
     private HorizontalScrollingBannerAdapter mCategoryBannersAdapter = null;
     private HorizontalScrollingBannerAdapter mSponsoredBannersAdapter = null;
+    private OnClickFreeDeliveryListener mListener;
 
     private HashSet<HorizontalRecyclerViewHolder> horizontalRecyclerViewHolders = new HashSet<>();
 
@@ -118,7 +120,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Activity activity,
             ShopsMvpPresenter presenter,
             List<GetBannerResponse.Group> sales,
-            int orientation) {
+            int orientation,
+            OnClickFreeDeliveryListener listener) {
 
         replace(sales);
 
@@ -131,6 +134,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mHeightForPromoBanner = mActivity.getResources().getInteger(R.integer.banner_mobile_height);
 
         mOrientation = orientation;
+
+        mListener = listener;
 
         setupDimensions(orientation);
     }
@@ -417,6 +422,13 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
                     bannerViewHolder.deliveryImage.setVisibility(item.getFreeDelivery() ? View.VISIBLE : View.GONE);
+
+                    if (item.getDeliveryType() != null) {
+                        bannerViewHolder.deliveryImage.setOnClickListener(v -> {
+                            mListener.onClickFreeDelivery(String.valueOf(item.getDeliveryThreshold()), item.getDeliveryType());
+                        });
+                    }
+
                     String imgUrl;
 
                     imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), width, height);

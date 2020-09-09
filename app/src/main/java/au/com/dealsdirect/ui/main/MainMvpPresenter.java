@@ -66,6 +66,10 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     String getStoredTemplateTexts(String detailKey);
 
+    String getStoredShippingTemplateText();
+
+    String getShippingTitle();
+
     boolean getIsMyPayEnabled();
 
     void initializeNotifications(Context context);

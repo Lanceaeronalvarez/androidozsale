@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomSheetLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet"
+    android:orientation="vertical"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/bottom_sheet_free_shipping_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_free_shipping_text"
+            android:textSize="@dimen/text_size_caption1"
+            android:textAllCaps="true"
+            android:drawableLeft="@drawable/ic_free_shipping"
+            android:drawablePadding="@dimen/margin_small"
+            android:fontFamily="@string/font_app_semibold"/>
+
+        <TextView
+            android:id="@+id/bottom_sheet_free_shipping_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:lineSpacingExtra="@dimen/margin_tiny"
+            android:textColor="@color/text_medium"
+            android:fontFamily="@string/font_app_semibold"
+            android:textSize="@dimen/text_size_body"
+            android:layout_marginBottom="@dimen/margin_medium"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

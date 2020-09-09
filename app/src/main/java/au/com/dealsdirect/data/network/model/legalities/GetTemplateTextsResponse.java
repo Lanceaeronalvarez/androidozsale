@@ -140,6 +140,12 @@ public class GetTemplateTextsResponse {
         @SerializedName("_VoucherPending")
         @Expose
         private String voucherPending;
+        @SerializedName("_Shipping_Rules_hover")
+        @Expose
+        private String shippingRulesHover;
+        @SerializedName("_Shipping_Rules_hover_title")
+        @Expose
+        private String shippingRulesHoverTitle;
 
 
         public String getCheckoutMyPayPayExceedLimit() {
@@ -316,6 +322,14 @@ public class GetTemplateTextsResponse {
 
         public String getVoucherPending() {
             return voucherPending;
+        }
+
+        public String getShippingRulesHover() {
+            return shippingRulesHover;
+        }
+
+        public String getShippingRulesHoverTitle() {
+            return shippingRulesHoverTitle;
         }
     }
 }

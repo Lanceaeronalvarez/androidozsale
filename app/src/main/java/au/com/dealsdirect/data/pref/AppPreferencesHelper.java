@@ -175,6 +175,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String STRIPE_ENABLED = "STRIPE_ENABLED";
     private static final String STRIPE_PAYMENT_METHOD_ID = "STRIPE_PAYMENT_METHOD_ID";
 
+    private static final String SHIPPING_HOVER = "SHIPPING_HOVER";
+    private static final String SHIPPING_TITLE = "SHIPPING_TITLE";
+
     private Context mContext;
 
     @Inject
@@ -959,6 +962,22 @@ public class AppPreferencesHelper implements PreferencesHelper {
                 return Prefs.getString(VOUCHER_PENDING, "");
         }
         return "";
+    }
+
+    @Override
+    public String getShippingHover() {
+        return Prefs.getString(SHIPPING_HOVER, "");
+    }
+
+    @Override
+    public void setShippingHover(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        Prefs.putString(SHIPPING_HOVER, value.getShippingRulesHover());
+        Prefs.putString(SHIPPING_TITLE, value.getShippingRulesHoverTitle());
+    }
+
+    @Override
+    public String getShippingTitle() {
+        return Prefs.getString(SHIPPING_TITLE, "");
     }
 
     @Override

@@ -1546,6 +1546,21 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public String getShippingHover() {
+        return mPreferencesHelper.getShippingHover();
+    }
+
+    @Override
+    public void setShippingHover(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        mPreferencesHelper.setShippingHover(value);
+    }
+
+    @Override
+    public String getShippingTitle() {
+        return mPreferencesHelper.getShippingTitle();
+    }
+
+    @Override
     public void setEventUserId(String userId) {
         mPreferencesHelper.setEventUserId(userId);
     }

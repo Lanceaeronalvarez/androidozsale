@@ -83,6 +83,7 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.AdaptiveTabLayout;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -111,7 +112,7 @@ import static com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROL
  * dp Created by Admin on 6/8/17.
  */
 
-public class SaleItemsController extends BaseController implements SaleItemsMvpView, AppBarLayout.OnOffsetChangedListener, SearchFilterMvpRepository {
+public class SaleItemsController extends BaseController implements SaleItemsMvpView, AppBarLayout.OnOffsetChangedListener, SearchFilterMvpRepository, OnClickFreeDeliveryListener {
 
     public enum SourceMode {
         NORMAL,
@@ -1003,7 +1004,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mPresenter,
                 mSaleId,
                 mColumnCount,
-                this::logWishlistEvent);
+                this::logWishlistEvent, this);
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -1129,7 +1130,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mPresenter,
                 mSaleId,
                 mColumnCount,
-                this::logWishlistEvent);
+                this::logWishlistEvent, this);
         CustomGridLayoutManager gridLayoutManager = new CustomGridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -2477,5 +2478,16 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private void setColumnViewEnabled(boolean enabled) {
         mColumnView.setEnabled(enabled);
         mColumnView.setAlpha(enabled ? 1.0f : 0.5f);
+    }
+
+    @Override
+    public void onClickFreeDelivery(String deliveryThreshold, String deliveryType) {
+        if (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) ||
+            deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
+
+            mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
+                    mActivity.getShippingTitle());
+
+        }
     }
 }
