@@ -41,6 +41,7 @@ public enum Events {
     WishlistPaymentSuccessEvent("WishlistPaymentSuccessEvent"),
     YouMayAlsoLikeEvent("YouMayAlsoLikeEvent"),
     RecentlyViewed("RecentlyViewedClickEvent"),
+    RecommendationClickEvent("RecommendationClickEvent"),
     BannerClickEvent("BannerClickEvent"),
     SponsoredBannerClickEvent("SponsoredBannerClickEvent"),
     RegularBannerClickEvent("RegularBannerClickEvent"),

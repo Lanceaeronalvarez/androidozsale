@@ -22,6 +22,7 @@ import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.FrontEndInfo;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
+import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
@@ -39,6 +40,7 @@ import au.com.dealsdirect.service.datacollection.events.InitiateCheckOutEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemDetailsDataEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemListDataEvent;
 import au.com.dealsdirect.service.datacollection.events.RecentlyViewedDataEvent;
+import au.com.dealsdirect.service.datacollection.events.RecommendationDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SaleBannersDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SearchDataEvent;
 import au.com.dealsdirect.service.datacollection.events.WishlistDataEvent;
@@ -169,6 +171,15 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                         if (parameters.containsKey(DataCollector.EventParameters.BANNER_CLICK_REQUEST)) {
                             callBannerClickEvent((BannerClickEventRequest) parameters.get(DataCollector.EventParameters.BANNER_CLICK_REQUEST));
                         }
+                    }
+                }));
+
+        //register recommendation click event
+        DataCollector.EventRegistry.register(generateEventKey(Events.RecommendationClickEvent, getServiceKey()), Events.RecommendationClickEvent,
+                new LoggingService.LogRecommendationClickEvent(new RecommendationDataEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        callRecommendationEvent((RecommendationEventRequest) parameters.get(DataCollector.EventParameters.RECOMMENDATION_EVENT_REQUEST));
                     }
                 }));
 
@@ -404,6 +415,31 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
 
         getCompositeDisposable().add(getDataManager()
                 .callBannerClickEvent(request)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    Log.d(TAG, response);
+
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            Log.d("Error", String.valueOf(anError.getErrorBody()));
+                        }
+                    }
+                }));
+    }
+
+    private static void callRecommendationEvent(RecommendationEventRequest request) {
+        request.setFrontEndInfo(includeFrontEndInfo());
+        request.setVisitorInfo(includeVisitorInfo());
+
+        getCompositeDisposable().add(getDataManager()
+                .callRecommendationClickEvent(request)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(response -> {

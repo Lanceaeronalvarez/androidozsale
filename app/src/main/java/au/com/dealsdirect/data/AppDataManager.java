@@ -77,6 +77,7 @@ import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
+import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
@@ -670,6 +671,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<String> callWishlistEvent(WishlistEventRequest request) {
         return mApiHelper.callWishlistEvent(request);
+    }
+
+    @Override
+    public Observable<String> callRecommendationClickEvent(RecommendationEventRequest request) {
+        return mApiHelper.callRecommendationClickEvent(request);
     }
 
     @Override

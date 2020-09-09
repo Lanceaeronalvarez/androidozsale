@@ -423,6 +423,18 @@ public class LoggingService {
         }
     }
 
+    public static class LogRecommendationClickEvent implements LoggingEventData {
+        private LogDataEvents logRecommendationEvent;
+
+        public LogRecommendationClickEvent(LogDataEvents logRecommendationEvent) {
+            this.logRecommendationEvent = logRecommendationEvent;
+        }
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logRecommendationEvent.LogDataEvents(parameters);
+        }
+    }
+
     public static class LogRecentlyViewedEvent implements LoggingEventData {
 
         private LogDataEvents logRecentlyViewedEvent;

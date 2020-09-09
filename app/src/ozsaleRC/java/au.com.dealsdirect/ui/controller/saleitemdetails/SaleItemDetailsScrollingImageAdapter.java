@@ -13,10 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventRecommendedField;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
@@ -252,6 +254,23 @@ public class SaleItemDetailsScrollingImageAdapter extends RecyclerView.Adapter<R
     }
 
     private void onBannerTapped(RecommendedItemsResponse response) {
+        RecommendationEventRequest recommendationEventRequest = new RecommendationEventRequest();
+        recommendationEventRequest.setEventType(EventTypeId.EVENT_RECOMMENDATION_VIEW);
+
+        RecommendationEventRequest.RecommendationViewInfo recommendationViewInfo = new RecommendationEventRequest.RecommendationViewInfo();
+        recommendationViewInfo.setProductId(response.getId());
+        recommendationViewInfo.setProductsQty(mData.size());
+        recommendationViewInfo.setType(EventRecommendedField.HRNN);
+        recommendationViewInfo.setPosition(EventRecommendedField.HRNN_PRODUCT_POSITION);
+
+        recommendationEventRequest.setRecommendationViewInfo(recommendationViewInfo);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.RECOMMENDATION_EVENT_REQUEST, recommendationEventRequest);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, "Product Details");
+
+        DataCollector.logEvent(Events.RecommendationClickEvent, parameters);
+
         mListener.reloadSaleItemDetails(response);
     }
 
