@@ -423,6 +423,20 @@ public class LoggingService {
         }
     }
 
+    public static class LogRecentlyViewedEvent implements LoggingEventData {
+
+        private LogDataEvents logRecentlyViewedEvent;
+
+        public LogRecentlyViewedEvent(LogDataEvents logRecentlyViewedEvent) {
+            this.logRecentlyViewedEvent = logRecentlyViewedEvent;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logRecentlyViewedEvent.LogDataEvents(parameters);
+        }
+    }
+
     public static class LogFeatureUsageEvent implements LoggingEventData {
         private LogDataEvents logFeatureUsageEvent;
 

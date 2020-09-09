@@ -13,10 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
+import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.ImageTappedListener;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.utils.AppLogger;
@@ -213,6 +218,22 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
 
 
     private void onBannerTapped(RecentlyItemResponse responseLike) {
+        RecentlyViewedEventRequest recentlyViewedEventRequest = new RecentlyViewedEventRequest();
+        recentlyViewedEventRequest.setEventType(EventTypeId.EVENT_RECENTLY_VIEWED);
+
+        RecentlyViewedEventRequest.RecentlyViewedInfo recentlyViewedInfo = new RecentlyViewedEventRequest.RecentlyViewedInfo();
+        recentlyViewedInfo.setProductId(responseLike.getId());
+        recentlyViewedInfo.setProductsQty(mData.size());
+        recentlyViewedEventRequest.setRecentlyViewInfo(recentlyViewedInfo);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.RECENTLY_VIEWED_REQUEST, recentlyViewedEventRequest);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, "Product Details");
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mContext);
+        parameters.put(DataCollector.EventParameters.SALE_NAME, responseLike.getName());
+
+        DataCollector.logEvent(Events.RecentlyViewed, parameters);
+
         mListener.imageTapped(responseLike);
     }
 

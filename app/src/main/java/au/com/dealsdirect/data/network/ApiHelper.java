@@ -63,6 +63,7 @@ import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
@@ -368,6 +369,8 @@ public interface ApiHelper {
     Observable<String> callCategoryEvent(CategoryRequest request);
 
     Observable<String> callSaleEvent(SaleEventRequest request);
+
+    Observable<String> callRecentlyViewedEvent(RecentlyViewedEventRequest request);
 
     Observable<String> callEventUser();
 
