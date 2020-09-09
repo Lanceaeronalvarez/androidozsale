@@ -404,6 +404,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             public int getSpanSize(int position) {
                 switch (mBannersAdapter.getItemViewType(position) & (~BannersAdapter.VIEW_HOLDER_TYPE_LANDSCAPE)) {
                     case BannersAdapter.VIEW_HOLDER_TYPE_SPACER:
+                    case BannersAdapter.VIEW_HOLDER_TYPE_PROMO_BANNER:
                     case BannersAdapter.VIEW_HOLDER_TYPE_SLIDING_BANNER:
                     case BannersAdapter.VIEW_HOLDER_TYPE_CATEGORY_BANNER:
                     case BannersAdapter.VIEW_HOLDER_TYPE_SPONSORED_BANNER:
