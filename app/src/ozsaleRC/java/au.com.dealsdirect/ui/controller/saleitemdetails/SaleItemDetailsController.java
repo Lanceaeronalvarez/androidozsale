@@ -1009,10 +1009,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             return;
         }
 
-        // disabled for adhoc/2020.06.16
-//        mPresenter.loadYouMayAlsoLike(saleDetail.getAttributes().getProductId());
+        mPresenter.loadYouMayAlsoLike(saleDetail.getAttributes().getProductId());
 
-        // disabled for adhoc/2020.06.16
+        // Disabled recommended items
 //        mPresenter.loadRecommendedItems();
 
         mProductId = saleDetail.getProductId();
@@ -1021,8 +1020,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSkuId = saleDetail.getSkuId();
 
         if (mPresenter.isAuthorized()) {
-            // disabled for adhoc/2020.06.16
-//            mPresenter.loadRecentlyItems();
+            mPresenter.loadRecentlyItems();
         }
 
         mSeoIdentifierId = saleDetail.getSeoIdentifier();
