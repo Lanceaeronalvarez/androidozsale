@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by MTC on 2019-12-27.
  */
-public class RecentlyItemResponse {
+public class RecentlyViewedItemResponse {
     @Expose
     @SerializedName("id")
     public String id;

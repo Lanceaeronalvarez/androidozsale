@@ -131,7 +131,8 @@ import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrder
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -436,5 +437,7 @@ public interface ApiHelper {
 
     Observable<List<GetYouMayAlsoLikeResponse>> callYouMayAlsoLike(String skuId);
 
-    Observable<List<RecentlyItemResponse>> callRecentlyItems();
+    Observable<String> callAddToRecentlyViewedItems(RecentlyViewedItemRequest request);
+
+    Observable<List<RecentlyViewedItemResponse>> callRecentlyViewedItems();
 }

@@ -19,7 +19,8 @@ import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.ourpay.Ourpay;
@@ -438,15 +439,39 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
-    public void loadRecentlyItems() {
-        doApiCallForResponse(getDataManager().callRecentlyItems(), new AppApiCallback() {
+    public void loadRecentlyViewedItems() {
+        doApiCallForResponse(getDataManager().callRecentlyViewedItems(), new AppApiCallback() {
             @Override
             public void onSuccess(List<?> object) {
                 super.onSuccess(object);
 
-                List<RecentlyItemResponse> response = (List<RecentlyItemResponse>) object;
+                List<RecentlyViewedItemResponse> response = (List<RecentlyViewedItemResponse>) object;
                 getMvpView().showRecentlyViewedItems(response);
 
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                getMvpView().onError(throwable.getMessage());
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void addToRecentlyViewedItems(String productId, String masterSkuId) {
+        doApiCallForResponse(getDataManager().callAddToRecentlyViewedItems(
+                new RecentlyViewedItemRequest(productId, masterSkuId)), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> object) {
+                super.onSuccess(object);
             }
 
             @Override

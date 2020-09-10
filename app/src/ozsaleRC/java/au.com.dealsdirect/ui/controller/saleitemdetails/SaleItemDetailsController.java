@@ -83,7 +83,7 @@ import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeRes
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.service.afterpay.AfterpayPanelViewHolder;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
@@ -1017,7 +1017,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSkuId = saleDetail.getSkuId();
 
         if (mPresenter.isAuthorized()) {
-            mPresenter.loadRecentlyItems();
+            mPresenter.loadRecentlyViewedItems();
         }
 
         mSeoIdentifierId = saleDetail.getSeoIdentifier();
@@ -1223,6 +1223,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mLikeButton.setVisibility(View.VISIBLE);
         mLikeFloatingButton.setVisibility(View.VISIBLE);
         updateLikeButtonImage(mPresenter.isProductInWishlist(mProductId));
+
+        mPresenter.addToRecentlyViewedItems(saleDetail.getProductId(), saleDetail.getSeoIdentifier());
 
         hasLoadedDetails = true;
         if (isAddToBasketInputBuffered) {
@@ -1582,7 +1584,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void showRecentlyViewedItems(List<RecentlyItemResponse> response) {
+    public void showRecentlyViewedItems(List<RecentlyViewedItemResponse> response) {
         if (response == null || response.isEmpty()) {
             mRecentlyViewedContainer.setVisibility(View.GONE);
             mRecentlyViewedRecyclerView.setAdapter(null);
@@ -1622,7 +1624,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void imageTapped(RecentlyItemResponse recentlyItemResponse) {
+    public void imageTapped(RecentlyViewedItemResponse recentlyItemResponse) {
         mProductDetailScrollView.smoothScrollTo(0, 0);
         mPresenter.loadSaleItemDetails(recentlyItemResponse.getId(), recentlyItemResponse.getSeoIdentifier());
     }

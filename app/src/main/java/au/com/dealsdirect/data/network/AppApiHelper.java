@@ -135,8 +135,8 @@ import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrder
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemRequest;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -1292,11 +1292,20 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<List<RecentlyItemResponse>> callRecentlyItems() {
-        return Rx2AndroidNetworking.post(ApiEndPoint.recentlyItems())
+    public Observable<String> callAddToRecentlyViewedItems(RecentlyViewedItemRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.addToRecentlyViewedItems())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<List<RecentlyViewedItemResponse>> callRecentlyViewedItems() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.recentlyViewedItems())
                 .addHeaders(mApiHeader.get())
                 .build()
-                .getObjectListObservable(RecentlyItemResponse.class);
+                .getObjectListObservable(RecentlyViewedItemResponse.class);
     }
 }
 

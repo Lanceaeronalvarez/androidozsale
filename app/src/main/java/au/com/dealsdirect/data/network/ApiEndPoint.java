@@ -30,7 +30,8 @@ public final class ApiEndPoint {
         WISHLIST,
         SETTING,
         EVENTING,
-        ATTACHMENTS
+        ATTACHMENTS,
+        RECENTLY
     }
 
     enum ApiUrlVersion {
@@ -73,6 +74,9 @@ public final class ApiEndPoint {
                 break;
             case EVENTING:
                 microServiceUrl = "api/shop/EVENTING/" + version + "/";
+                break;
+            case RECENTLY:
+                microServiceUrl = "api/shop/shop/" + version + "/recently/";
                 break;
             case ATTACHMENTS:
                 microServiceUrl = "api/shop/files/" + version + "/files/";
@@ -634,7 +638,11 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/recommendations/sims/{sku_id}", ApiUrlVersion.v4.apiVersion());
     }
 
-    public static String recentlyItems() {
+    public static String addToRecentlyViewedItems() {
+        return getFormattedUrl(ApiService.RECENTLY, "", ApiUrlVersion.v4.apiVersion());
+    }
+
+    public static String recentlyViewedItems() {
         return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/recently", ApiUrlVersion.v5.apiVersion());
     }
 

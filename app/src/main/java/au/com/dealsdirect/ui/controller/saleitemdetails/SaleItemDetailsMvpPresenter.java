@@ -48,11 +48,13 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 
     void loadRecommendedItems();
 
-    void loadRecentlyItems();
+    void loadRecentlyViewedItems();
 
     public interface WishlistDelayedCallback {
         void performDelayedAction();
     }
 
     void loadYouMayAlsoLike(String skuId);
+
+    void addToRecentlyViewedItems(String productId, String masterSkuId);
 }
