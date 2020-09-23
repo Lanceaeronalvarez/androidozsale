@@ -33,6 +33,8 @@ public interface CheckoutMvpView extends MvpView {
 
     void showCartDetailsOnHost(List<MappedShipment> items);
 
+    void showCartDetailsFooter(boolean show);
+
     void showAddressDetails(DeliveryAddress deliveryAddress, List<DecorationInfoList> decorationInfoList);
 
     void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail);

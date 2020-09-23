@@ -134,6 +134,11 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 //Set input type
                 if (infoList.getDataType() != null && (infoList.getDataType().equalsIgnoreCase("phone") || infoList.getType().equalsIgnoreCase("numeric"))) {
                     editTextValue.setInputType(InputType.TYPE_CLASS_PHONE);
+
+                    if (infoList.getName().equalsIgnoreCase("postcode")) {
+                        editTextValue.setHint(mActivity.getResources().getString(R.string.postcode_hint_text));
+                        editTextValue.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+                    }
                 } else {
                     editTextValue.setInputType(InputType.TYPE_CLASS_TEXT);
                 }
@@ -160,7 +165,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
                 //Add asterisk to required fields
                 if (infoList.getValidate().equalsIgnoreCase("*")) {
-                    spinnerLabel.setText(spinnerLabel.getText() + "*");
+                    spinnerLabel.setText(spinnerLabel.getText());
                 }
                 break;
 

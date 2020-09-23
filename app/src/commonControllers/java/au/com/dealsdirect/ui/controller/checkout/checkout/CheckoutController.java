@@ -38,7 +38,6 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.utility.RxBus;
 import com.stripe.android.model.Card;
 import com.visa.checkout.VisaCheckoutSdk;
-import com.visa.checkout.VisaPaymentSummary;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,7 +80,6 @@ import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
-import au.com.dealsdirect.ui.main.CardInfo;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
@@ -424,11 +422,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         }
 
-        if(!mActivity.isBraintreeInitialized() && mActivity.isAuthorized()) {
+        if (!mActivity.isBraintreeInitialized() && mActivity.isAuthorized()) {
             mVcoPresenter.initializeBraintree();
         }
 
-        if(mVcoPresenter.isVisaCheckoutEnabled() && mActivity.isAuthorized()) {
+        if (mVcoPresenter.isVisaCheckoutEnabled() && mActivity.isAuthorized()) {
             if (!mActivity.isBraintreeInitialized()) {
                 mVcoPresenter.initializeBraintree();
             }
@@ -596,18 +594,22 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         mItemList = items;
 
+        refreshItemList(mDeliveryAddress != null);
+
         if (items.isEmpty()) {
             //no items
             showNoCartItemsLayout();
             CommonUtils.clearSaleItem(mActivity);
         } else {
-
-            if (mAdapter != null) {
-                mAdapter.replaceData(items);
-            }
-
             showCartItems();
         }
+    }
+
+    private void refreshItemList(boolean showFooter) {
+        if (mAdapter == null) {
+            return;
+        }
+        mAdapter.replaceData(mItemList, showFooter);
     }
 
     @Override
@@ -641,8 +643,17 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
+    public void showCartDetailsFooter(boolean show) {
+        if (mCheckoutHostView != null) {
+            mCheckoutHostView.showCartDetailsFooter(show);
+        }
+        refreshItemList(show);
+    }
+
+    @Override
     public void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail) {
-        if (getBoolean(R.bool.is_ozsale_app) && (deliveryOptions != null && !deliveryOptions.isEmpty())) {
+        if (getBoolean(R.bool.is_ozsale_app) && mDeliveryAddress != null &&
+                (deliveryOptions != null && !deliveryOptions.isEmpty())) {
             mDeliveryOptions = deliveryOptions;
             mDeliveryServicePackageDetail = deliveryServicePackageDetail;
 
@@ -832,9 +843,15 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             if (summary.getDelivery() == 0) {
                 mSummaryShippingFeeTextView.setVisibility(View.GONE);
                 mFreeShippingLayout.setVisibility(View.VISIBLE);
+            } else if (mDeliveryAddress == null) {
+                mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
+                mFreeShippingLayout.setVisibility(View.GONE);
+                mSummaryShippingFeeTextView.setText(mActivity.getResources().getString(R.string.enter_address_above));
+                mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.enter_address_text_color));
             } else {
                 mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
                 mSummaryShippingFeeTextView.setText(PriceUtils.getPriceStringValue(summary.getDelivery()));
+                mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.text_dark));
                 mFreeShippingLayout.setVisibility(View.GONE);
             }
 
@@ -859,7 +876,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mVoucherValueContainer.setVisibility(View.GONE);
             }
 
-            mSummaryTotalTextView.setText(PriceUtils.getPriceStringValue(summary.getTotal()));
+            if (mDeliveryAddress == null) {
+                mSummaryTotalTextView.setVisibility(View.GONE);
+            } else {
+                mSummaryTotalTextView.setVisibility(View.VISIBLE);
+                mSummaryTotalTextView.setText(PriceUtils.getPriceStringValue(summary.getTotal()));
+            }
 
             // show ourpay select related summary, should been purchased yet if visible.
             if (isOurPaySelectDeliveryMethod() && !mDeliveryServicePackageDetail.getPurchased()) {
@@ -1028,7 +1050,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (mActivity.getPaymentMethodSelected() == null) {
             showAddPaymentMethodController();
         } else if (mActivity.getPaymentMethodSelected().getProviderType() != null &&
-                    mActivity.getPaymentMethodSelected().getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
+                mActivity.getPaymentMethodSelected().getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
             if (mPresenter.isStripeEnabled() && mPresenter.getStripePublicKey() != null) {
                 mActivity.callCreatePaymentTransactionStripe(AppConstants.STRIPE,
                         mActivity.getPaymentMethodSelected().getToken());

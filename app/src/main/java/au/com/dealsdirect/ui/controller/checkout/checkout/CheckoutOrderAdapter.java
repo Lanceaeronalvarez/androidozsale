@@ -9,7 +9,6 @@ import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -207,12 +205,16 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void replaceData(List<MappedShipment> items) {
+        replaceData(items, true);
+    }
+
+    public void replaceData(List<MappedShipment> items, boolean showFooter) {
         mSourceData = new ArrayList<>(items);
-        flattenData();
+        flattenData(showFooter);
         notifyDataSetChanged();
     }
 
-    private void flattenData() {
+    private void flattenData(boolean showFooter) {
         mFlattenedData = new ArrayList<>();
         for (MappedShipment shipment : mSourceData) {
             mFlattenedData.add(new ItemData(ItemData.Type.EMPTY_SPACE));
@@ -220,7 +222,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             for (Item item : shipment.getMappedItems()) {
                 mFlattenedData.add(new ItemData(item));
             }
-            if (shipment.getDeliveryPrice() != null) {
+            if (showFooter && shipment.getDeliveryPrice() != null) {
                 mFlattenedData.add(new ItemData(
                         createTitleFromShippingFee(
                                 shipment.getDeliveryPrice(),
@@ -230,7 +232,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
             mFlattenedData.add(new ItemData(ItemData.Type.LINE));
         }
-        if (!shouldAddSpacerOnTop) {
+        if (!shouldAddSpacerOnTop && !mFlattenedData.isEmpty()) {
             mFlattenedData.remove(0);
         }
     }

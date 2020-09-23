@@ -40,6 +40,7 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
         boolean isValid = true;
         JsonObject jsonAddress = new JsonObject();
         Iterator it = viewMap.entrySet().iterator();
+        String postcode = "postcode";
         while (it.hasNext()) {
             try {
                 Map.Entry pair = (Map.Entry) it.next();
@@ -51,7 +52,8 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
                     String editTextValue = et.getText().toString();
                     String label = info.getName();
                     jsonAddress.addProperty(label, editTextValue);
-                    if (!(editTextValue.length() >= info.getMinLength() && editTextValue.length() <= info.getMaxLength())) {
+                    if (!(editTextValue.length() >= info.getMinLength() && editTextValue.length() <= info.getMaxLength()) &&
+                            !label.equalsIgnoreCase(postcode)) {
                         if (info.getMinLength() == info.getMaxLength()) {
                             getMvpView().onError(String.format(
                                     et.getContext().getString(R.string.address_error_format_equal),
@@ -74,7 +76,7 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
 
                 //Validate
                 if (info.getType().equalsIgnoreCase("numeric") || info.getType().equalsIgnoreCase("text")) {
-                    if (info.getValidate() != null) {
+                    if (info.getValidate() != null && !info.getName().equalsIgnoreCase(postcode)) {
                         EditText et = (EditText) pair.getValue();
                         String str = et.getText().toString();
                         if (str.isEmpty()) {

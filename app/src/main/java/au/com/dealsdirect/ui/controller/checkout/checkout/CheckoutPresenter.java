@@ -407,6 +407,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
             getMvpView().showAddressDetails(mappedValues.getDeliveryAddress(), mappedValues.getDecorationInfoList());
 
+            getMvpView().showCartDetailsFooter(mappedValues.getDeliveryAddress() != null);
+
             getMvpView().showDeliveryOptions(mappedValues.getDeliveryOptions(), mappedValues.getDeliveryServicePackageDetail());
 
             getMvpView().storeCartDetails(mappedValues);

@@ -82,6 +82,8 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     private CheckoutMvpView mCheckoutDetailView;
     private CheckoutOrderAdapter mAdapter;
     private List<MappedShipment> mItemList = new ArrayList<>();
+
+    private boolean hasDeliveryAddress = false;
     private boolean mIsCheckoutHostUpdated;
     private boolean mHasSavedInstance = false;
 
@@ -143,7 +145,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     public void refreshContents() {
         super.refreshContents();
         if (mCheckoutDetailView != null) {
-           loadCart();
+            loadCart();
         }
     }
 
@@ -205,7 +207,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         if (items == null) return;
         mItemList = items;
 
-        mAdapter.replaceData(items);
+        refreshItemList(hasDeliveryAddress);
         mNoCartItemsLayout.setVisibility(View.GONE);
         mCheckoutContainer.setVisibility(View.VISIBLE);
     }
@@ -213,7 +215,22 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     public void showAddressDetails(DeliveryAddress deliveryAddress, List<DecorationInfoList> decorationInfoList) {
         mCheckoutDetailView.showAddressDetails(deliveryAddress, decorationInfoList);
+        mCheckoutDetailView.showCartDetailsFooter(deliveryAddress != null);
     }
+
+    @Override
+    public void showCartDetailsFooter(boolean show) {
+        hasDeliveryAddress = show;
+        refreshItemList(hasDeliveryAddress);
+    }
+
+    private void refreshItemList(boolean showFooter) {
+        if (mAdapter == null) {
+            return;
+        }
+        mAdapter.replaceData(mItemList, showFooter);
+    }
+
 
     @Override
     public void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail) {
