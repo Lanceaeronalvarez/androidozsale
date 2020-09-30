@@ -52,7 +52,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Timed;
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 public class MyAccountsOurpayController extends BaseController
         implements MyAccountsOurpayMvpView, MyAccountsOurpayDataSource, MyAccountsOurpayListener {

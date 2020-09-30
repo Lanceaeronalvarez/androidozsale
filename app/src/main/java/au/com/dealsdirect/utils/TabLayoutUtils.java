@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
+import io.github.inflationx.calligraphy3.CalligraphyUtils;
 
 /*
  * Created by Ayi on 31/05/2017.
