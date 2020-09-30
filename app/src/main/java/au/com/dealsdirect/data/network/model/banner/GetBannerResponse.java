@@ -93,6 +93,13 @@ public class GetBannerResponse extends CachableResponse {
         @SerializedName("link")
         @Expose
         private String link;
+        @SerializedName("deliveryThreshold")
+        @Expose
+        private int deliveryThreshold;
+        @SerializedName("deliveryType")
+        @Expose
+        private String deliveryType;
+
 
         public String getLink() {
             return link;
@@ -236,6 +243,22 @@ public class GetBannerResponse extends CachableResponse {
 
         public void setGroup(Group group) {
             this.group = group;
+        }
+
+        public int getDeliveryThreshold() {
+            return deliveryThreshold;
+        }
+
+        public void setDeliveryThreshold(int deliveryThreshold) {
+            this.deliveryThreshold = deliveryThreshold;
+        }
+
+        public String getDeliveryType() {
+            return deliveryType;
+        }
+
+        public void setDeliveryType(String deliveryType) {
+            this.deliveryType = deliveryType;
         }
     }
 

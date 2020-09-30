@@ -22,13 +22,13 @@ public interface SearchFilterMvpView extends MvpView {
 
     void showFacetItem(int position);
 
-    void updateFacetItemToFilters(List<SearchChipModel> selectedChips);
+    void updateFacetItemToFilters(Set<SearchChipModel> selectedChips, SearchChipModel chipChanged, boolean isAdded);
 
     void onResetPriceRange();
 
     void replaceCategoryTree(List<GetCategoryTreeResponse> categoryTree);
 
-    void replaceSearchChipModels(List<SearchChipModel> chipModels);
+    void replaceSearchChipModels(Set<SearchChipModel> chipModels);
 
     void onCategoryClicked(GetCategoryTreeResponse category);
 

@@ -298,4 +298,10 @@ public interface PreferencesHelper {
     String getStripePaymentMethodId();
 
     void setStripePaymentMethodId(String paymentMethodId);
+
+    String getShippingHover();
+
+    void setShippingHover(GetTemplateTextsResponse.GetTemplateTextsValue value);
+
+    String getShippingTitle();
 }

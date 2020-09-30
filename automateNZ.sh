@@ -5,8 +5,8 @@ flavorName=nzsaleRC
 buildTypeAssemble=NzsaleRCRelease
 SPACE=" "
 defaultCountry="New${SPACE}Zealand"
-expectedVersionName="4.4.1"
-expectedVersionCode="245"
+expectedVersionName="4.5.0"
+expectedVersionCode="254"
 
 print_green(){
     printf "\e[1;32m$1\e[0m"

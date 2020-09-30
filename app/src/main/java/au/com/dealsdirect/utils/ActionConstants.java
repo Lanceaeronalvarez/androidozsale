@@ -34,4 +34,6 @@ public class ActionConstants {
     public static final String ORDER_ITEM_RETURN = "oi_return";
     public static final String ORDER_ITEM_VIEW_RETURN = "oi_view_return";
     public static final String ORDER_ITEM_CANCELLED = "oi_cancelled";
+
+    public static final String DELIVERY_THRESHOLD = "deliveryThreshold";
 }

@@ -4,27 +4,24 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
+import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.ImageTappedListener;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerViewHolder;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by MTC on 2020-01-02.
@@ -32,7 +29,7 @@ import butterknife.ButterKnife;
 public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private List<RecentlyItemResponse> mData;
+    private List<RecentlyViewedItemResponse> mData;
     private HorizontalScrollingBannerAdapter mSlidingBannersAdapter = null;
     private static final float SLIDING_BANNER_WIDTH_PERCENT = 0.7f;
     public static final int VIEW_HOLDER_TYPE_LANDSCAPE = 1;
@@ -49,7 +46,7 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
 
     public RecentlyViewedItemAdapter(Context context, SaleItemDetailsMvpPresenter presenter,
                                      ImageTappedListener listener,
-                                     List<RecentlyItemResponse> data) {
+                                     List<RecentlyViewedItemResponse> data) {
 
         mContext = context;
         mPresenter = presenter;
@@ -122,7 +119,7 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
         return 1;
     }
 
-    public void addAll(List<RecentlyItemResponse> bannerResponses) {
+    public void addAll(List<RecentlyViewedItemResponse> bannerResponses) {
         int previousCount = mData.size();
 
         mData.addAll(bannerResponses);
@@ -212,7 +209,23 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
 
-    private void onBannerTapped(RecentlyItemResponse responseLike) {
+    private void onBannerTapped(RecentlyViewedItemResponse responseLike) {
+        RecentlyViewedEventRequest recentlyViewedEventRequest = new RecentlyViewedEventRequest();
+        recentlyViewedEventRequest.setEventType(EventTypeId.EVENT_RECENTLY_VIEWED);
+
+        RecentlyViewedEventRequest.RecentlyViewedInfo recentlyViewedInfo = new RecentlyViewedEventRequest.RecentlyViewedInfo();
+        recentlyViewedInfo.setProductId(responseLike.getId());
+        recentlyViewedInfo.setProductsQty(mData.size());
+        recentlyViewedEventRequest.setRecentlyViewInfo(recentlyViewedInfo);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.RECENTLY_VIEWED_REQUEST, recentlyViewedEventRequest);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, "Product Details");
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mContext);
+        parameters.put(DataCollector.EventParameters.SALE_NAME, responseLike.getName());
+
+        DataCollector.logEvent(Events.RecentlyViewed, parameters);
+
         mListener.imageTapped(responseLike);
     }
 

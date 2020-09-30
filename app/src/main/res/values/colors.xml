@@ -274,4 +274,5 @@
 
 <!--    Category Selector-->
     <color name="sale_category_selector">#EBEBEB</color>
+    <color name="enter_address_text_color">#46A1D8</color>
 </resources>

@@ -78,6 +78,10 @@ public final class AppConstants {
     public static final int ADD_TO_CART_PHONE = 6;
     public static final int ADD_TO_CART_TABLET = 7;
 
+    public static final String THRESHOLD_RESTRICT = "ThresholdRestriction";
+    public static final String ORDER_PRICE_RESTRICT = "OrderPriceRestriction";
+    public static final String KEY_SHIPPING_HOVER = "_Shipping_Rules_hover";
+
 
     private AppConstants() {
         // This utility class is not publicly instantiable

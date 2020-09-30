@@ -28,6 +28,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -44,10 +45,12 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.saleitems.OnClickFreeDeliveryListener;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
+import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
@@ -68,7 +71,7 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
  * dp Created by Admin on 6/6/17.
  */
 
-public class ShopsController extends BaseController implements ShopsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
+public class ShopsController extends BaseController implements ShopsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener, OnClickFreeDeliveryListener {
 
     public static final String TAG = "ShopsController";
     private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
@@ -381,7 +384,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                     mActivity,
                     mPresenter,
                     new ArrayList<>(),
-                    orientation);
+                    orientation,
+                    this);
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
         } else {
             mBannersAdapter.setupDimensions(orientation);
@@ -403,6 +407,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             public int getSpanSize(int position) {
                 switch (mBannersAdapter.getItemViewType(position) & (~BannersAdapter.VIEW_HOLDER_TYPE_LANDSCAPE)) {
                     case BannersAdapter.VIEW_HOLDER_TYPE_SPACER:
+                    case BannersAdapter.VIEW_HOLDER_TYPE_PROMO_BANNER:
                     case BannersAdapter.VIEW_HOLDER_TYPE_SLIDING_BANNER:
                     case BannersAdapter.VIEW_HOLDER_TYPE_CATEGORY_BANNER:
                     case BannersAdapter.VIEW_HOLDER_TYPE_SPONSORED_BANNER:
@@ -772,6 +777,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     public void goToSalesFromCategories(String id, String key) {
+        if (id == null) {
+            key = null;
+        }
         resetShopsBanners(id);
         mCategoryKey = key;
         mCategoryName = key;
@@ -941,7 +949,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void goToSaleItemsFromCategorySearch() {
 
         SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
-                .FromCategory(null, null, null, new ArrayList<>());
+                .FromCategory(null, null, null, new HashSet<>());
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
@@ -1142,5 +1150,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mPresenter.loadShopsBanner(createBannerRequest("", 0, bannerLimit), true);
         loadSlidingBanners();
         loadSponsoredBanners();
+    }
+
+    @Override
+    public void onClickFreeDelivery(String deliveryThreshold, String deliveryType) {
+        if (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) ||
+                deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
+
+            mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
+                    mActivity.getShippingTitle());
+
+        }
     }
 }

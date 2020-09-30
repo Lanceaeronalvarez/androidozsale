@@ -61,11 +61,15 @@ import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
+import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
@@ -127,7 +131,8 @@ import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrder
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -367,15 +372,23 @@ public interface ApiHelper {
 
     Observable<String> callSaleEvent(SaleEventRequest request);
 
+    Observable<String> callRecentlyViewedEvent(RecentlyViewedEventRequest request);
+
     Observable<String> callEventUser();
 
     Observable<String> callBannerClickEvent(BannerClickEventRequest request);
 
     Observable<String> callWishlistEvent(WishlistEventRequest request);
 
+    Observable<String> callRecommendationClickEvent(RecommendationEventRequest request);
+
     Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request);
 
     Observable<String> callStartCheckoutEvent(StartCheckoutRequest request);
+
+    Observable<String> callYouMayAlsoLikeEvent(YouMayAlsoLikeEventRequest request);
+
+    Observable<String> callFeatureUsageEvent(FeatureUsageEventRequest request);
 
     // OURPAY
     Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String languageId);
@@ -424,5 +437,7 @@ public interface ApiHelper {
 
     Observable<List<GetYouMayAlsoLikeResponse>> callYouMayAlsoLike(String skuId);
 
-    Observable<List<RecentlyItemResponse>> callRecentlyItems();
+    Observable<String> callAddToRecentlyViewedItems(RecentlyViewedItemRequest request);
+
+    Observable<List<RecentlyViewedItemResponse>> callRecentlyViewedItems();
 }

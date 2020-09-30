@@ -15,6 +15,8 @@ public class PromoInfoResponse extends ArrayList<PromoInfoResponse.PromoInfo> {
     static String KEY_PRICE = "Price";
     static String KEY_PRICE_DISCOUNTED = "DiscountedPrice";
     static String KEY_AFTERPAYENABLED = "AfterPayEnabled";
+    static String KEY_DELIVERY_TYPE = "DeliveryType";
+    static String KEY_DELIVERY_THRESHOLD = "DeliveryThreshold";
 
     private HashMap<String, String> rearrangedDataStructure = null;
 
@@ -68,6 +70,16 @@ public class PromoInfoResponse extends ArrayList<PromoInfoResponse.PromoInfo> {
         String afterpayEnabled = rearrangedDataStructure.get(KEY_AFTERPAYENABLED);
         return afterpayEnabled != null && Boolean.parseBoolean(afterpayEnabled);
 
+    }
+
+    public String getDeliveryType() {
+        rearrangeDataStructure();
+        return rearrangedDataStructure.get(KEY_DELIVERY_TYPE);
+    }
+
+    public String getDeliveryThreshold() {
+        rearrangeDataStructure();
+        return rearrangedDataStructure.get(KEY_DELIVERY_THRESHOLD);
     }
 
     public class PromoInfo {

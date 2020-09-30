@@ -61,7 +61,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 
     @Override
     public void onDetach() {
-        mCompositeDisposable.dispose();
+        mCompositeDisposable.clear();
         mMvpView = null;
     }
 

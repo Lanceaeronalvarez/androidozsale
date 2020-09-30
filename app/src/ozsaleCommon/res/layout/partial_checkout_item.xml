@@ -5,9 +5,10 @@
     android:layout_height="wrap_content"
     android:background="@color/row_background_color"
     android:orientation="horizontal"
-    android:paddingTop="@dimen/padding_default"
     android:paddingLeft="@dimen/padding_default"
+    android:paddingTop="@dimen/padding_default"
     android:paddingRight="@dimen/padding_default"
+    android:paddingBottom="@dimen/padding_default_half"
     tools:ignore="MissingPrefix">
 
     <ImageView
@@ -21,9 +22,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/item_checkout_image"
+        android:layout_marginStart="@dimen/margin_small"
         android:layout_marginLeft="@dimen/margin_extra_small"
         android:layout_marginRight="@dimen/margin_extra_small"
-        android:layout_marginStart="@dimen/margin_small"
         android:layout_toEndOf="@id/item_checkout_image"
         android:orientation="vertical">
 
@@ -49,8 +50,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/color"
-                android:textSize="@dimen/text_size_caption1"
-                android:textColor="@color/text_medium" />
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption1" />
 
             <TextView
                 android:id="@+id/item_checkout_color"
@@ -71,8 +72,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/size"
-                android:textSize="@dimen/text_size_caption1"
-                android:textColor="@color/text_medium" />
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption1" />
 
             <TextView
                 android:id="@+id/item_checkout_size_value"
@@ -99,16 +100,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/price_colon"
-                android:textSize="@dimen/text_size_caption1"
-                android:textColor="@color/text_medium" />
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption1" />
 
             <TextView
                 android:id="@+id/item_checkout_price"
                 fontPath="@string/font_app_semibold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_caption1"
                 android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_caption1"
                 tools:text="$19.00" />
         </LinearLayout>
 
@@ -121,17 +122,17 @@
                 android:id="@+id/item_checkout_subtotal_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_caption1"
                 android:text="@string/subtotal_colon"
-                android:textColor="@color/text_medium" />
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption1" />
 
             <TextView
                 android:id="@+id/item_subtotal_price"
                 fontPath="@string/font_app_semibold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_caption1"
                 android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_caption1"
                 tools:text="$19.00" />
 
         </LinearLayout>

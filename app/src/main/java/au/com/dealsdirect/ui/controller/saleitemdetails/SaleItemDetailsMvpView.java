@@ -4,8 +4,8 @@ import java.util.List;
 
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
@@ -40,5 +40,7 @@ public interface SaleItemDetailsMvpView extends MvpView {
 
     void showYouMayAlsoLike(List<GetYouMayAlsoLikeResponse> response);
 
-    void showRecentlyViewedItems(List<RecentlyItemResponse> response);
+    void showRecentlyViewedItems(List<RecentlyViewedItemResponse> response);
+
+    void showFreeShipping(String deliveryType, String deliveryThreshold);
 }

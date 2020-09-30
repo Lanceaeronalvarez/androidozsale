@@ -83,7 +83,7 @@ import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeRes
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.service.afterpay.AfterpayPanelViewHolder;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
@@ -1006,10 +1006,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             return;
         }
 
-        // disabled for adhoc/2020.06.16
-//        mPresenter.loadYouMayAlsoLike(saleDetail.getAttributes().getProductId());
+        mPresenter.loadYouMayAlsoLike(saleDetail.getAttributes().getProductId());
 
-        // disabled for adhoc/2020.06.16
+        // Disabled recommended items
 //        mPresenter.loadRecommendedItems();
 
         mProductId = saleDetail.getProductId();
@@ -1018,8 +1017,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSkuId = saleDetail.getSkuId();
 
         if (mPresenter.isAuthorized()) {
-            // disabled for adhoc/2020.06.16
-//            mPresenter.loadRecentlyItems();
+            mPresenter.loadRecentlyViewedItems();
         }
 
         mSeoIdentifierId = saleDetail.getSeoIdentifier();
@@ -1225,6 +1223,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mLikeButton.setVisibility(View.VISIBLE);
         mLikeFloatingButton.setVisibility(View.VISIBLE);
         updateLikeButtonImage(mPresenter.isProductInWishlist(mProductId));
+
+        mPresenter.addToRecentlyViewedItems(saleDetail.getProductId(), saleDetail.getSeoIdentifier());
 
         hasLoadedDetails = true;
         if (isAddToBasketInputBuffered) {
@@ -1480,13 +1480,25 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mProductDiscountTextView.setVisibility(View.VISIBLE);
         mProductDiscountTextView.setText(string);
-
     }
 
     @Override
     public void setIsAfterpayDetailsVisible(boolean visible) {
         shouldAfterpayDetailsBeVisible = visible;
         mAfterpayHolder.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showFreeShipping(String deliveryType, String deliveryThreshold) {
+        if (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) ||
+                deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
+
+            mFreeDeliveryImageView.setOnClickListener(v -> {
+                mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
+                        mActivity.getShippingTitle());
+            });
+
+        }
     }
 
     @Override
@@ -1572,7 +1584,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void showRecentlyViewedItems(List<RecentlyItemResponse> response) {
+    public void showRecentlyViewedItems(List<RecentlyViewedItemResponse> response) {
         if (response == null || response.isEmpty()) {
             mRecentlyViewedContainer.setVisibility(View.GONE);
             mRecentlyViewedRecyclerView.setAdapter(null);
@@ -1612,7 +1624,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void imageTapped(RecentlyItemResponse recentlyItemResponse) {
+    public void imageTapped(RecentlyViewedItemResponse recentlyItemResponse) {
         mProductDetailScrollView.smoothScrollTo(0, 0);
         mPresenter.loadSaleItemDetails(recentlyItemResponse.getId(), recentlyItemResponse.getSeoIdentifier());
     }

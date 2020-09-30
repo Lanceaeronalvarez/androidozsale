@@ -65,6 +65,13 @@ public class GetSaleItemsResponse extends CachableResponse implements Serializab
         @SerializedName("salePercentOffText")
         @Expose
         private String salePercentOffText;
+        @SerializedName("deliveryThreshold")
+        @Expose
+        private int deliveryThreshold;
+        @SerializedName("deliveryType")
+        @Expose
+        private String deliveryType;
+
 
         public String getSalePercentOffText() {
             return salePercentOffText;
@@ -146,6 +153,21 @@ public class GetSaleItemsResponse extends CachableResponse implements Serializab
             return labelText;
         }
 
+        public int getDeliveryThreshold() {
+            return deliveryThreshold;
+        }
+
+        public void setDeliveryThreshold(int deliveryThreshold) {
+            this.deliveryThreshold = deliveryThreshold;
+        }
+
+        public String getDeliveryType() {
+            return deliveryType;
+        }
+
+        public void setDeliveryType(String deliveryType) {
+            this.deliveryType = deliveryType;
+        }
     }
 
     public class Facets {

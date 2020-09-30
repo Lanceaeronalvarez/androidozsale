@@ -18,25 +18,33 @@ import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.FrontEndInfo;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
+import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.VisitorInfo;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollectionService;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.core.LoggingService;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.events.BannerClickEvent;
 import au.com.dealsdirect.service.datacollection.events.EventUser;
+import au.com.dealsdirect.service.datacollection.events.FeatureUsageEvent;
 import au.com.dealsdirect.service.datacollection.events.InitiateCheckOutEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemDetailsDataEvent;
 import au.com.dealsdirect.service.datacollection.events.ItemListDataEvent;
+import au.com.dealsdirect.service.datacollection.events.RecentlyViewedDataEvent;
+import au.com.dealsdirect.service.datacollection.events.RecommendationDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SaleBannersDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SearchDataEvent;
 import au.com.dealsdirect.service.datacollection.events.WishlistDataEvent;
+import au.com.dealsdirect.service.datacollection.events.YouMayAlsoLikeClickEvent;
 import au.com.dealsdirect.service.event.FrontEndType;
 import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.service.event.RegionType;
@@ -75,7 +83,6 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
         mSchedulerProvider = schedulerProvider;
         mCompositeDisposable = compositeDisposable;
     }
-
 
 
     private GenieEventService() {
@@ -147,6 +154,15 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                     }
                 }));
 
+        //register you may also like event
+        DataCollector.EventRegistry.register(generateEventKey(Events.YouMayAlsoLikeEvent, getServiceKey()), Events.YouMayAlsoLikeEvent,
+                new LoggingService.LogYouMayAlsoLikeEvent(new YouMayAlsoLikeClickEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        callYouMayAlsoLikeEvent((YouMayAlsoLikeEventRequest) parameters.get(DataCollector.EventParameters.YOU_MAY_ALSO_LIKE_REQUEST));
+                    }
+                }));
+
         // register banner click event
         DataCollector.EventRegistry.register(generateEventKey(Events.BannerClickEvent, getServiceKey()), Events.BannerClickEvent,
                 new LoggingService.LogBannerClickEvent(new BannerClickEvent() {
@@ -155,6 +171,33 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                         if (parameters.containsKey(DataCollector.EventParameters.BANNER_CLICK_REQUEST)) {
                             callBannerClickEvent((BannerClickEventRequest) parameters.get(DataCollector.EventParameters.BANNER_CLICK_REQUEST));
                         }
+                    }
+                }));
+
+        //register recommendation click event
+        DataCollector.EventRegistry.register(generateEventKey(Events.RecommendationClickEvent, getServiceKey()), Events.RecommendationClickEvent,
+                new LoggingService.LogRecommendationClickEvent(new RecommendationDataEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        callRecommendationEvent((RecommendationEventRequest) parameters.get(DataCollector.EventParameters.RECOMMENDATION_EVENT_REQUEST));
+                    }
+                }));
+
+        //register recently viewed event
+        DataCollector.EventRegistry.register(generateEventKey(Events.RecentlyViewed, getServiceKey()), Events.RecentlyViewed,
+                new LoggingService.LogRecentlyViewedEvent(new RecentlyViewedDataEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        callRecentlyViewedEvent((RecentlyViewedEventRequest) parameters.get(DataCollector.EventParameters.RECENTLY_VIEWED_REQUEST));
+                    }
+                }));
+
+        //register feature usage event
+        DataCollector.EventRegistry.register(generateEventKey(Events.FeatureUsageEvent, getServiceKey()), Events.FeatureUsageEvent,
+                new LoggingService.LogFeatureUsageEvent(new FeatureUsageEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        callFeatureUsageEvent((FeatureUsageEventRequest) parameters.get(DataCollector.EventParameters.FEATURE_EVENT_REQUEST));
                     }
                 }));
     }
@@ -341,12 +384,112 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
     }
 
+    private static void callYouMayAlsoLikeEvent(YouMayAlsoLikeEventRequest request) {
+        request.setFrontEndInfo(includeFrontEndInfo());
+        request.setVisitorInfo(includeVisitorInfo());
+
+        getCompositeDisposable().add(getDataManager()
+                .callYouMayAlsoLikeEvent(request)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    Log.d(TAG, response);
+
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            Log.d("Error", String.valueOf(anError.getErrorBody()));
+                        }
+                    }
+                }));
+    }
+
     private static void callBannerClickEvent(BannerClickEventRequest request) {
         request.setFrontEndInfo(includeFrontEndInfo());
         request.setVisitorInfo(includeVisitorInfo());
 
         getCompositeDisposable().add(getDataManager()
                 .callBannerClickEvent(request)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    Log.d(TAG, response);
+
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            Log.d("Error", String.valueOf(anError.getErrorBody()));
+                        }
+                    }
+                }));
+    }
+
+    private static void callRecommendationEvent(RecommendationEventRequest request) {
+        request.setFrontEndInfo(includeFrontEndInfo());
+        request.setVisitorInfo(includeVisitorInfo());
+
+        getCompositeDisposable().add(getDataManager()
+                .callRecommendationClickEvent(request)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    Log.d(TAG, response);
+
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            Log.d("Error", String.valueOf(anError.getErrorBody()));
+                        }
+                    }
+                }));
+    }
+
+    private static void callRecentlyViewedEvent(RecentlyViewedEventRequest request) {
+        request.setFrontEndInfo(includeFrontEndInfo());
+        request.setVisitorInfo(includeVisitorInfo());
+
+        getCompositeDisposable().add(getDataManager()
+                .callRecentlyViewedEvent(request)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    Log.d(TAG, response);
+
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            Log.d("Error", String.valueOf(anError.getErrorBody()));
+                        }
+                    }
+                }));
+    }
+
+    private static void callFeatureUsageEvent(FeatureUsageEventRequest request) {
+        request.setFrontEndInfo(includeFrontEndInfo());
+        request.setVisitorInfo(includeVisitorInfo());
+
+        getCompositeDisposable().add(getDataManager()
+                .callFeatureUsageEvent(request)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(response -> {

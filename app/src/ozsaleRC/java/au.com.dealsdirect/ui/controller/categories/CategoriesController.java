@@ -19,6 +19,7 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -239,7 +240,7 @@ public class CategoriesController extends BaseController
         mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
 
         SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
-                .FromCategory(categoryKey, categoryKey, mCategories, chipFilters);
+                .FromCategory(categoryKey, categoryKey, mCategories, new HashSet<>(chipFilters));
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 

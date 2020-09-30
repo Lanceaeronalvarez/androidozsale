@@ -45,9 +45,9 @@ public interface SaleItemsMvpView extends MvpView {
                             boolean isFreeDelivery,
                             boolean isSoldOut);
 
-    GetSaleItemsRequest createSaleItemsRequest(String categoryKey, int pageNumber, List<SearchChipModel> chipsList);
+    GetSaleItemsRequest createSaleItemsRequest(String categoryKey, int pageNumber, Set<SearchChipModel> chipsList);
 
-    GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, List<SearchChipModel> chipsList);
+    GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, Set<SearchChipModel> chipsList);
 
     void enableSaleItemsScroll(boolean val);
 

@@ -130,6 +130,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_VOUCHER_STATUS_EXPIRED = "_VoucherExpired";
     public static final String KEY_VOUCHER_STATUS_PENDING = "_VoucherPending";
 
+    public static final String KEY_SHIPPING_RULES_HOVER = "_Shipping_Rules_hover";
+    public static final String KEY_SHIPPING_RULES_HOVER_TITLE = "_Shipping_Rules_hover_title";
+
     static final String KEY_DEEP_LINK_SALES = "DEEPLINK_SALES";
     static final String KEY_DEEP_LINK_SALE_ITEMS = "DEEPLINK_SALE_ITEMS";
     static final String KEY_DEEP_LINK_SALE_CATEGORY = "DEEPLINK_SALE_CATEGORY";
@@ -170,7 +173,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_VOUCHER_STATUS_ALREADY_SPENT,
             KEY_VOUCHER_STATUS_EXPIRED,
             KEY_VOUCHER_STATUS_EXPIRING_SOON,
-            KEY_VOUCHER_STATUS_PENDING
+            KEY_VOUCHER_STATUS_PENDING,
+            KEY_SHIPPING_RULES_HOVER,
+            KEY_SHIPPING_RULES_HOVER_TITLE
     };
 
 
@@ -1301,6 +1306,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     getDataManager().setPersonalisationTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setConsentTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setVoucherStatusTemplateText(getTemplateTextsResponse.getResponse().getValue());
+                    getDataManager().setShippingHover(getTemplateTextsResponse.getResponse().getValue());
                     getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
 
                 }, throwable -> {
@@ -1311,6 +1317,16 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public String getStoredTemplateTexts(String detailKey) {
         return getDataManager().getMyPayTemplateTexts(detailKey);
+    }
+
+    @Override
+    public String getStoredShippingTemplateText() {
+        return getDataManager().getShippingHover();
+    }
+
+    @Override
+    public String getShippingTitle() {
+        return getDataManager().getShippingTitle();
     }
 
     @Override

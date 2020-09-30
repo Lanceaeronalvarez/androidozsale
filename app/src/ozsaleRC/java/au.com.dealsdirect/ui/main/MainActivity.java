@@ -50,20 +50,11 @@ import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 import com.stripe.android.ApiResultCallback;
-import com.stripe.android.PaymentAuthConfig;
 import com.stripe.android.PaymentIntentResult;
 import com.stripe.android.Stripe;
-import com.stripe.android.exception.APIConnectionException;
-import com.stripe.android.exception.APIException;
-import com.stripe.android.exception.InvalidRequestException;
-import com.stripe.android.model.ConfirmPaymentIntentParams;
 import com.stripe.android.model.PaymentIntent;
 import com.stripe.android.model.PaymentMethodCreateParams;
-import com.stripe.android.model.StripeIntent;
-import com.stripe.android.model.Token;
 import com.visa.checkout.VisaPaymentSummary;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -109,10 +100,10 @@ import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.orders.orders.BottomSheetOrderDialog;
-import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.BottomSheetSizesDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
+import au.com.dealsdirect.ui.controller.shops.BottomSheetFreeShippingDialog;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsMvpView;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
@@ -128,7 +119,6 @@ import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
-import au.com.dealsdirect.utils.StripeUtils;
 import au.com.dealsdirect.utils.legacycookie.LegacyCookie;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -138,7 +128,6 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
 import static au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent;
 import static au.com.dealsdirect.ui.controller.main.MainController.BANNER_FILTER_INDEX;
 import static au.com.dealsdirect.ui.controller.main.MainController.SHOP_INDEX;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -569,16 +558,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             currentController = homeController.getCurrentControllerOnRouter(currentRouter);
         }
 
-            if (currentController instanceof PopUpHostController) {
-                currentController = getCurrentController(
-                        ((PopUpHostController) currentController).getPopUpHostChildRouter());
-            } else if (currentController instanceof CheckoutHostController) {
-                currentController = getCurrentController(
-                        ((CheckoutHostController) currentController).getCheckoutDetailRouter());
-            }
+        if (currentController instanceof PopUpHostController) {
+            currentController = getCurrentController(
+                    ((PopUpHostController) currentController).getPopUpHostChildRouter());
+        } else if (currentController instanceof CheckoutHostController) {
+            currentController = getCurrentController(
+                    ((CheckoutHostController) currentController).getCheckoutDetailRouter());
+        }
 
 
-            if (currentController instanceof VisaCheckoutController && paymentMethodNonce instanceof VisaCheckoutNonce) {
+        if (currentController instanceof VisaCheckoutController && paymentMethodNonce instanceof VisaCheckoutNonce) {
             switch (getVisaCheckoutActionType()) {
                 case VisaCheckoutController.VISA_CHECKOUT_LOGIN:
                     ((VisaCheckoutController) currentController).doAuthenticateLoginWithVisaCheckoutBraintree((VisaCheckoutNonce) paymentMethodNonce);
@@ -1184,6 +1173,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mPresenter.getStoredTemplateTexts(detailKey);
     }
 
+    public String getShippingTemplateText() {
+        return mPresenter.getStoredShippingTemplateText();
+    }
+
+    public String getShippingTitle() {
+        return mPresenter.getShippingTitle();
+    }
+
     public void setCategoriesController(CategoriesController categoriesController) {
         mCategoriesController = categoriesController;
     }
@@ -1658,6 +1655,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         bottomSheetFragment.setOnDoneListener(onDoneListener);
 
         bottomSheetFragment.setArguments(null);
+        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
+    }
+
+    public void showFreeShippingDialog(String deliveryThreshold, String deliveryType, String title) {
+        BottomSheetFreeShippingDialog bottomSheetFragment = new BottomSheetFreeShippingDialog();
+
+        bottomSheetFragment.setDeliveryThreshold(deliveryThreshold);
+        bottomSheetFragment.setDeliveryType(deliveryType);
+        bottomSheetFragment.setTitle(title);
+
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
     }
 

@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.ImageTappedListener;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -50,7 +50,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     List<GetYouMayAlsoLikeResponse> mYouMayAlsoLikeList;
     List<RecommendedItemsResponse> mRecommendedList;
-    List<RecentlyItemResponse> mRecentlyViewedList;
+    List<RecentlyViewedItemResponse> mRecentlyViewedList;
 
     private String saleId = "";
     private String seoIdentifierId = "";
@@ -98,7 +98,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         String imgUrl = "";
         GetBannerResponse.Banner item;
         GetYouMayAlsoLikeResponse youMayLikeItem;
-        RecentlyItemResponse recentlyItemResponse;
+        RecentlyViewedItemResponse recentlyItemResponse;
         RecommendedItemsResponse recommendedItemsResponse;
         int virtualPosition;
 
@@ -246,12 +246,11 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         return mYouMayAlsoLikeList;
     }
 
-    public List<RecentlyItemResponse> getRecentlyViewedList() {
+    public List<RecentlyViewedItemResponse> getRecentlyViewedList() {
         return mRecentlyViewedList;
     }
 
-
-    public void setRecentlyViewedList(List<RecentlyItemResponse> mRecentlyViewedList) {
+    public void setRecentlyViewedList(List<RecentlyViewedItemResponse> mRecentlyViewedList) {
         this.mRecentlyViewedList = mRecentlyViewedList;
         if (recyclerView != null && !recyclerView.isComputingLayout()) {
             notifyDataSetChanged();

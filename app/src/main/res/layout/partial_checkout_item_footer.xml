@@ -2,7 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/row_background_color">
+    android:background="@color/row_background_color"
+    android:paddingLeft="@dimen/padding_default"
+    android:paddingTop="@dimen/padding_default_half"
+    android:paddingRight="@dimen/padding_default"
+    android:paddingBottom="@dimen/padding_default">
 
     <TextView
         android:id="@+id/partial_checkout_item_footer_title"
@@ -10,7 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_margin="@dimen/margin_medium"
         android:background="@drawable/bg_rectangle_background"
         android:fontFamily="@string/font_app_regular"
         android:gravity="center"

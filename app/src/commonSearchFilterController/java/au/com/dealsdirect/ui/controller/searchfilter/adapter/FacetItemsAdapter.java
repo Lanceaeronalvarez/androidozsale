@@ -139,7 +139,7 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void removeChip(int position) {
         SearchChipModel chipToRemove = null;
-        String chipTitle = getData().get(position);
+        String chipTitle = getTitles().get(position);
         for (SearchChipModel chip : mSearchTagsAdapter.getData()) {
 
 //            special logic for sort chips

@@ -74,11 +74,15 @@ import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
+import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
@@ -140,8 +144,9 @@ import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrder
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -650,6 +655,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<String> callRecentlyViewedEvent(RecentlyViewedEventRequest request) {
+        return mApiHelper.callRecentlyViewedEvent(request);
+    }
+
+    @Override
     public Observable<String> callEventUser() {
         return mApiHelper.callEventUser();
     }
@@ -665,6 +675,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<String> callRecommendationClickEvent(RecommendationEventRequest request) {
+        return mApiHelper.callRecommendationClickEvent(request);
+    }
+
+    @Override
     public Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request) {
         return mApiHelper.callGetPaymentMethodNonce(request);
     }
@@ -672,6 +687,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<String> callStartCheckoutEvent(StartCheckoutRequest request) {
         return mApiHelper.callStartCheckoutEvent(request);
+    }
+
+    @Override
+    public Observable<String> callYouMayAlsoLikeEvent(YouMayAlsoLikeEventRequest request) {
+        return mApiHelper.callYouMayAlsoLikeEvent(request);
+    }
+
+    @Override
+    public Observable<String> callFeatureUsageEvent(FeatureUsageEventRequest request) {
+        return mApiHelper.callFeatureUsageEvent(request);
     }
 
     @Override
@@ -775,8 +800,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<List<RecentlyItemResponse>> callRecentlyItems() {
-        return mApiHelper.callRecentlyItems();
+    public Observable<String> callAddToRecentlyViewedItems(RecentlyViewedItemRequest request) {
+        return mApiHelper.callAddToRecentlyViewedItems(request);
+    }
+
+    @Override
+    public Observable<List<RecentlyViewedItemResponse>> callRecentlyViewedItems() {
+        return mApiHelper.callRecentlyViewedItems();
     }
 
     @Override
@@ -1519,6 +1549,21 @@ public class AppDataManager implements DataManager {
     @Override
     public void setStripePaymentMethodId(String paymentMethodId) {
         mPreferencesHelper.setStripePaymentMethodId(paymentMethodId);
+    }
+
+    @Override
+    public String getShippingHover() {
+        return mPreferencesHelper.getShippingHover();
+    }
+
+    @Override
+    public void setShippingHover(GetTemplateTextsResponse.GetTemplateTextsValue value) {
+        mPreferencesHelper.setShippingHover(value);
+    }
+
+    @Override
+    public String getShippingTitle() {
+        return mPreferencesHelper.getShippingTitle();
     }
 
     @Override

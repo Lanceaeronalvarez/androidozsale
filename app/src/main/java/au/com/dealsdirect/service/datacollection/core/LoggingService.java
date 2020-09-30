@@ -397,6 +397,19 @@ public class LoggingService {
         }
     }
 
+    public static class LogYouMayAlsoLikeEvent implements LoggingEventData {
+        private LogDataEvents logYouMayAlsoLikeEvent;
+
+        public LogYouMayAlsoLikeEvent(LogDataEvents logYouMayAlsoLikeEvent) {
+            this.logYouMayAlsoLikeEvent = logYouMayAlsoLikeEvent;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logYouMayAlsoLikeEvent.LogDataEvents(parameters);
+        }
+    }
+
     public static class LogBannerClickEvent implements LoggingEventData {
         private LogDataEvents logBannerClickEvent;
 
@@ -407,6 +420,45 @@ public class LoggingService {
         @Override
         public void logEventData(HashMap<String, Object> parameters) {
             logBannerClickEvent.LogDataEvents(parameters);
+        }
+    }
+
+    public static class LogRecommendationClickEvent implements LoggingEventData {
+        private LogDataEvents logRecommendationEvent;
+
+        public LogRecommendationClickEvent(LogDataEvents logRecommendationEvent) {
+            this.logRecommendationEvent = logRecommendationEvent;
+        }
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logRecommendationEvent.LogDataEvents(parameters);
+        }
+    }
+
+    public static class LogRecentlyViewedEvent implements LoggingEventData {
+
+        private LogDataEvents logRecentlyViewedEvent;
+
+        public LogRecentlyViewedEvent(LogDataEvents logRecentlyViewedEvent) {
+            this.logRecentlyViewedEvent = logRecentlyViewedEvent;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logRecentlyViewedEvent.LogDataEvents(parameters);
+        }
+    }
+
+    public static class LogFeatureUsageEvent implements LoggingEventData {
+        private LogDataEvents logFeatureUsageEvent;
+
+        public LogFeatureUsageEvent(LogDataEvents logFeatureUsageEvent) {
+            this.logFeatureUsageEvent = logFeatureUsageEvent;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logFeatureUsageEvent.LogDataEvents(parameters);
         }
     }
 }

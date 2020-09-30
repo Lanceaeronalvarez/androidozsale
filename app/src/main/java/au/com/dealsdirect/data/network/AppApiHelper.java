@@ -64,11 +64,15 @@ import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
+import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
+import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
 import au.com.dealsdirect.data.network.model.fcm.RegisterDevice;
 import au.com.dealsdirect.data.network.model.forgotpassword.ForgotPasswordRequest;
@@ -131,7 +135,8 @@ import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrder
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
@@ -1028,6 +1033,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<String> callRecentlyViewedEvent(RecentlyViewedEventRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
     public Observable<String> callEventUser() {
         return Rx2AndroidNetworking.get(ApiEndPoint.getEventUser())
                 .addHeaders(mApiHeader.get())
@@ -1054,6 +1068,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<String> callRecommendationClickEvent(RecommendationEventRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
     public Observable<JSONObject> callGetPaymentMethodNonce(GetPaymentMethodNonceRequest request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getPaymentMethodNonce())
                 .addHeaders(mApiHeader.get())
@@ -1065,6 +1088,24 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public Observable<String> callStartCheckoutEvent(StartCheckoutRequest request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<String> callYouMayAlsoLikeEvent(YouMayAlsoLikeEventRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getSearchEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<String> callFeatureUsageEvent(FeatureUsageEventRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getFeatureUsageEvent())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
@@ -1251,11 +1292,20 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<List<RecentlyItemResponse>> callRecentlyItems() {
-        return Rx2AndroidNetworking.post(ApiEndPoint.recentlyItems())
+    public Observable<String> callAddToRecentlyViewedItems(RecentlyViewedItemRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.addToRecentlyViewedItems())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
+    public Observable<List<RecentlyViewedItemResponse>> callRecentlyViewedItems() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.recentlyViewedItems())
                 .addHeaders(mApiHeader.get())
                 .build()
-                .getObjectListObservable(RecentlyItemResponse.class);
+                .getObjectListObservable(RecentlyViewedItemResponse.class);
     }
 }
 

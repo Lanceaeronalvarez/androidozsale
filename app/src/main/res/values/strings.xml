@@ -775,9 +775,12 @@
     <string name="expiration_invalid">Expiration date is invalid</string>
     <string name="stripe_add_card_error">Please verify your card details then try again.</string>
     <string name="stripe_error_occured">An Error has Occurred</string>
+    <string name="postcode_hint_text">Enter postcode to calculate delivery</string>
 
     <string name="sponsored">Sponsored</string>
     <string name="recommended_for_you">Recommended for you</string>
     <string name="you_may_also_like">You may also like</string>
     <string name="recently_viewed">Recently Viewed</string>
+    
+    <string name="enter_address_above">Enter address above</string>
 </resources>
