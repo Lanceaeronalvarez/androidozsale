@@ -24,6 +24,12 @@ public class Shipment {
     @SerializedName("LocationFilterHash")
     @Expose
     private String locationFilterHash;
+    @SerializedName("EstimateShipmentPostcode")
+    @Expose
+    private String estimateShipmentPostcode;
+    @SerializedName("ShippingAvailability")
+    @Expose
+    private boolean shippingAvailability;
 
     public String getName() {
         return name;
@@ -71,5 +77,21 @@ public class Shipment {
 
     public String getLocationFilterHash() {
         return locationFilterHash;
+    }
+
+    public String getEstimateShipmentPostcode() {
+        return estimateShipmentPostcode;
+    }
+
+    public void setEstimateShipmentPostcode(String estimateShipmentPostcode) {
+        this.estimateShipmentPostcode = estimateShipmentPostcode;
+    }
+
+    public boolean getShippingAvailability() {
+        return shippingAvailability;
+    }
+
+    public void setShippingAvailability(boolean shippingAvailability) {
+        this.shippingAvailability = shippingAvailability;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
+import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
@@ -14,13 +15,11 @@ import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 
 public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
-    void callCartContent();
-
-    void fetchCartDetails();
+    void callCartContent(String postcode);
 
     void fetchUserPaymentMethods();
 
-    void fetchAdjustItemQuantity(String url, String itemID, ProductQuantityLayout view);
+    void fetchAdjustItemQuantity(String url, String itemID, String postcode, ProductQuantityLayout view);
 
     boolean isCartAlreadyLoadedOnce();
 
@@ -36,11 +35,9 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
                              double price,
                              String selectedPaymentType);
 
-    void updateCart(GetCurrentOrder.ResponseValue responseValue);
-
     void updateCartValues(CheckoutDetailsMapper mappedValues);
 
-    void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters);
+    void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters, String postcode);
 
     String getAfterpayLightboxImgUrl();
 
@@ -54,6 +51,8 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
 
     boolean isVcoEnabled();
 
+    boolean isShippingByPostcodeEnabled();
+
     String stripePaymentMethodId();
 
     void setStripePaymentMethodId(String paymentMethodId);
@@ -61,4 +60,6 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     boolean isStripeEnabled();
 
     String getStripePublicKey();
+
+    TemplateTextsHelper.TemplateTextsRepository getTemplateTextsRepository();
 }

@@ -216,12 +216,22 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     public void showAddressDetails(DeliveryAddress deliveryAddress, List<DecorationInfoList> decorationInfoList) {
         mCheckoutDetailView.showAddressDetails(deliveryAddress, decorationInfoList);
         mCheckoutDetailView.showCartDetailsFooter(deliveryAddress != null);
+        mCheckoutDetailView.showCartDetailsPostcode(deliveryAddress != null ? deliveryAddress.getPostcode() : null);
     }
 
     @Override
     public void showCartDetailsFooter(boolean show) {
         hasDeliveryAddress = show;
         refreshItemList(hasDeliveryAddress);
+    }
+
+    @Override
+    public void showCartDetailsPostcode(String postcode) {
+        if (mAdapter == null) {
+            return;
+        }
+        mAdapter.setPostcodeOverride(postcode);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void refreshItemList(boolean showFooter) {
@@ -245,6 +255,11 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     public void showVoucherDetails(List<Voucher> vouchers) {
         mCheckoutDetailView.showVoucherDetails(vouchers);
+    }
+
+    @Override
+    public void setIsShipmentAvailable(boolean isShipmentAvailable) {
+        mCheckoutDetailView.setIsShipmentAvailable(isShipmentAvailable);
     }
 
     @Override

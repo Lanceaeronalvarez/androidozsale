@@ -259,6 +259,10 @@ public interface PreferencesHelper {
 
     boolean getIsOurpayDashboardEnabled();
 
+    void setShippingByPostcodeEnabled(boolean enabled);
+
+    boolean getShippingByPostcodeEnabled();
+
     void setReCaptchaSiteKey(String key);
 
     String getReCaptchaSiteKey();

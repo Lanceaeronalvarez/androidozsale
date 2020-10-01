@@ -3,8 +3,6 @@ package au.com.dealsdirect.data.network.model.vouchers;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 /**
  * Created by smartwave on 19/01/2017.
  */
@@ -19,9 +17,12 @@ public class AddAndApplyVoucherByKeyRequest {
 
     private int imageSize;
 
-    public AddAndApplyVoucherByKeyRequest(String key, int imageSize, String languageId) {
+    private String postcode;
+
+    public AddAndApplyVoucherByKeyRequest(String key, String postcode, int imageSize, String languageId) {
         this.key = key;
         this.imageSize = imageSize;
         this.languageId = languageId;
+        this.postcode = postcode;
     }
 }

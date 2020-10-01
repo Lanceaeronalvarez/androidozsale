@@ -9,19 +9,13 @@ public class AdjustOrderItem {
 
         String languageID;
         String itemID;
+        String postcode;
         String imageSize = "100";
-//        String urlEndPoint;
 
-        public RequestValue(String url, String itemID, String languageID) {
+        public RequestValue(String itemID, String postcode, String languageID) {
             this.itemID = itemID;
-//            this.urlEndPoint = url;
             this.languageID = languageID;
-        }
-
-        public RequestValue(String itemID, String languageID) {
-            this.itemID = itemID;
-//            this.urlEndPoint = url;
-            this.languageID = languageID;
+            this.postcode = postcode;
         }
     }
 

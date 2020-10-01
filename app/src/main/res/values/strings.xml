@@ -767,7 +767,6 @@
     <string name="done">Done</string>
     <string name="free_shipping_text">Free Shipping</string>
     <string name="shipping_text">Shipping</string>
-    <string name="shipping_with_colon">Shipping:\u0020</string>
     <string name="promo_shipping_text">Add extra xxx of eligible products or choose Select\nto get</string>
     <string name="promo_shipping_text_placeholder">xxx</string>
     <string name="promo_shipping_eligible_products">eligible products</string>

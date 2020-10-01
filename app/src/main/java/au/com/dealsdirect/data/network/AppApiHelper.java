@@ -548,7 +548,7 @@ public class AppApiHelper implements ApiHelper {
     public Observable<GetCurrentOrder.ResponseValue> callGetCurrentOrder(GetCurrentOrder.RequestValue requestValues) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getCurrentOrder())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues, true))
                 .build()
                 .getObjectObservable(GetCurrentOrder.ResponseValue.class);
     }
@@ -578,7 +578,7 @@ public class AppApiHelper implements ApiHelper {
         }
         return Rx2AndroidNetworking.post(endPoint)
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues, true))
                 .build()
                 .getObjectObservable(GetCurrentOrder.ResponseValue.class);
     }
@@ -683,7 +683,7 @@ public class AppApiHelper implements ApiHelper {
     public Observable<GetCurrentOrder.ResponseValue> callSetDeliveryOption(SetDeliveryOption setDeliveryOption) {
         return Rx2AndroidNetworking.post(ApiEndPoint.setDeliveryOption())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(setDeliveryOption))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(setDeliveryOption, true))
                 .build()
                 .getObjectObservable(GetCurrentOrder.ResponseValue.class);
     }
@@ -877,7 +877,7 @@ public class AppApiHelper implements ApiHelper {
     public Observable<ClearVouchersResponse> callGetClearVouchers(ClearVouchersRequest clearVouchersRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.clearVouchers())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(clearVouchersRequest))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(clearVouchersRequest, true))
                 .build()
                 .getObjectObservable(ClearVouchersResponse.class);
     }
@@ -886,7 +886,7 @@ public class AppApiHelper implements ApiHelper {
     public Observable<ApplyVouchersResponse> callGetApplyVouchers(ApplyVouchersRequest applyVouchersRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.applyVouchers())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(applyVouchersRequest))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(applyVouchersRequest, true))
                 .build()
                 .getObjectObservable(ApplyVouchersResponse.class);
     }
@@ -895,7 +895,7 @@ public class AppApiHelper implements ApiHelper {
     public Observable<AddVoucherByKeyResponse> callGetAddVoucherByKey(AddVoucherByKeyRequest addVoucherByKeyRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.addVoucherByKey())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(addVoucherByKeyRequest))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(addVoucherByKeyRequest, true))
                 .build()
                 .getObjectObservable(AddVoucherByKeyResponse.class);
     }
@@ -904,7 +904,7 @@ public class AppApiHelper implements ApiHelper {
     public Observable<AddAndApplyVoucherByKeyResponse> callGetAddAndApplyVoucherByKey(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.addAndApplyVoucher())
                 .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(addAndApplyVoucherByKeyRequest))
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(addAndApplyVoucherByKeyRequest, true))
                 .build()
                 .getObjectObservable(AddAndApplyVoucherByKeyResponse.class);
     }

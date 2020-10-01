@@ -15,11 +15,12 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
+
 /**
  * Created by Paul on 6/27/17.
  */
 
-public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePresenter<V> implements AddVouchersMvpPresenter<V> {
+public class AddVouchersPresenter<V extends AddVouchersMvpView> extends BasePresenter<V> implements AddVouchersMvpPresenter<V> {
 
     @Inject
     public AddVouchersPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
@@ -27,10 +28,10 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
     }
 
     @Override
-    public void applyVouchers(int imageSize, List<String> voucherIds) {
+    public void applyVouchers(String postcode, int imageSize, List<String> voucherIds) {
         getMvpView().showLoading();
-        ApplyVouchersRequest request = new ApplyVouchersRequest(voucherIds, imageSize, getDataManager().getLanguageId());
-        doApiCallForResponse(getDataManager().callGetApplyVouchers(request), new AppApiCallback(){
+        ApplyVouchersRequest request = new ApplyVouchersRequest(voucherIds, postcode, imageSize, getDataManager().getLanguageId());
+        doApiCallForResponse(getDataManager().callGetApplyVouchers(request), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
@@ -46,10 +47,10 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
     }
 
     @Override
-    public void clearVouchers(int imageSize) {
+    public void clearVouchers(String postcode, int imageSize) {
         getMvpView().showLoading();
-        ClearVouchersRequest request = new ClearVouchersRequest(imageSize, getDataManager().getLanguageId());
-        doApiCallForResponse(getDataManager().callGetClearVouchers(request), new AppApiCallback(){
+        ClearVouchersRequest request = new ClearVouchersRequest(postcode, imageSize, getDataManager().getLanguageId());
+        doApiCallForResponse(getDataManager().callGetClearVouchers(request), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
@@ -59,10 +60,10 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView>  extends BasePre
     }
 
     @Override
-    public void addAndApplyVoucherByKey(int imageSize, String key) {
+    public void addAndApplyVoucherByKey(String postcode, int imageSize, String key) {
         getMvpView().showLoading();
-        AddAndApplyVoucherByKeyRequest request = new AddAndApplyVoucherByKeyRequest(key, imageSize, getDataManager().getLanguageId());
-        doApiCallForResponse(getDataManager().callGetAddAndApplyVoucherByKey(request), new AppApiCallback(){
+        AddAndApplyVoucherByKeyRequest request = new AddAndApplyVoucherByKeyRequest(key, postcode, imageSize, getDataManager().getLanguageId());
+        doApiCallForResponse(getDataManager().callGetAddAndApplyVoucherByKey(request), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);

@@ -23,7 +23,7 @@
             android:id="@+id/bottom_sheet_free_shipping_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/color_free_shipping_text"
+            android:textColor="@color/checkout_item_footer_other_text_color"
             android:textSize="@dimen/text_size_caption1"
             android:textAllCaps="true"
             android:drawableLeft="@drawable/ic_free_shipping"
