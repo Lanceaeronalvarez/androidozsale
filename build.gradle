@@ -65,7 +65,7 @@ ext {
     rx2FastAndroidNetworking = '1.0.0'
     cookieJarVersion = 'v1.0.1'
 
-    dagger2Version = '2.11'
+    dagger2Version = '2.29'
     rxjava2Version = '2.0.6'
     rxandroidVersion = '2.0.1'
     butterKnifeVersion = '8.8.1'

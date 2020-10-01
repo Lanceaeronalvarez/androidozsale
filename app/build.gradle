@@ -943,10 +943,10 @@ dependencies {
     // NR
     implementation 'com.newrelic.agent.android:android-agent:5.24.0'
 
-    // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
-    implementation 'com.google.firebase:firebase-messaging:17.4.0'
+    // Firebasez
+    implementation 'com.google.firebase:firebase-core:17.5.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
 
     implementation 'com.loopj.android:android-async-http:1.4.9'
 
