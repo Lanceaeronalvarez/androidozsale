@@ -37,13 +37,10 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
 
 # You can list more emails here
   dev_emails = '"
-  ChindeeTubasis@mysale.com,
-  jc@apacsale.com,
-  TrishCorpuz@mysale.com,
-  lindz@smartwave.ph,
   chindee@smartwave.ph,
-  denis@mysale.com,
-  michael@smartwave.ph
+  ruz@smartwave.ph,
+  cle@smartwave.ph,
+  earl@smartwave.ph
 "'
 
 default_platform :android

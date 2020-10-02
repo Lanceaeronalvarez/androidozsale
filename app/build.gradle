@@ -60,7 +60,7 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "au.com.buyinvite.bi"
 
@@ -85,7 +85,7 @@ android {
         }
 
         buyinviteTest {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "au.com.buyinvite.bi.test"
 
@@ -191,7 +191,7 @@ android {
         }
 
         dealsDirect2RC {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "au.com.dealsdirect"
 
@@ -217,7 +217,7 @@ android {
         }
 
         dealsDirect2Test {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "au.com.dealsdirect.test"
 
@@ -238,7 +238,7 @@ android {
         }
 
         ooRC {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "au.com.oo"
 
@@ -263,7 +263,7 @@ android {
         }
 
         ooTest {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "au.com.oo.test"
 
@@ -305,7 +305,7 @@ android {
         }
 
         topbuy2RC {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "au.com.topbuy"
 
@@ -351,7 +351,7 @@ android {
         }
 
         topbuy2Test {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "au.com.topbuy.test"
 
@@ -395,7 +395,7 @@ android {
         }
 
         ozsaleRC {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "au.com.ozsale"
 
@@ -421,7 +421,7 @@ android {
         }
 
         ozsaleTest {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "au.com.ozsale.test"
 
@@ -446,7 +446,7 @@ android {
         }
 
         singsaleRC {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "sg.com.singsale"
 
@@ -472,7 +472,7 @@ android {
         }
 
         singsaleTest {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "sg.com.singsaletest"
 
@@ -493,7 +493,7 @@ android {
         }
 
         nzsaleRC {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "nz.co.nzsale"
 
@@ -519,7 +519,7 @@ android {
         }
 
         nzsaleTest {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "nz.co.nzsaleTest"
 
@@ -541,7 +541,7 @@ android {
         }
 
         mysaleRC {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "my.mysale.mysale"
 
@@ -566,7 +566,7 @@ android {
         }
 
         mysaleTest {
-            versionCode 254
+            versionCode 256
             versionName "4.5.0"
             applicationId "my.mysale.mysaleTest"
 
