@@ -225,7 +225,8 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             for (Item item : shipment.getMappedItems()) {
                 mFlattenedData.add(new ItemData(item));
             }
-            if (showFooter && shipment.getDeliveryPrice() != null) {
+            if (showFooter &&
+                    shipment.getDeliveryPrice() != null && shipment.getDeliveryPrice() > 0) {
                 mFlattenedData.add(new ItemData(
                         createTitleFromShippingFee(
                                 shipment.getDeliveryPrice(),
