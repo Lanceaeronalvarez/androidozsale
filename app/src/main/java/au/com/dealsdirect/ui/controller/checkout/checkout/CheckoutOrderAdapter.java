@@ -225,8 +225,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             for (Item item : shipment.getMappedItems()) {
                 mFlattenedData.add(new ItemData(item));
             }
-            if (showFooter &&
-                    shipment.getDeliveryPrice() != null && shipment.getDeliveryPrice() > 0) {
+            if (showFooter && shipment.getDeliveryPrice() != null) {
                 mFlattenedData.add(new ItemData(
                         createTitleFromShippingFee(
                                 shipment.getDeliveryPrice(),
@@ -253,95 +252,120 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         int redColor = mContext.getResources().getColor(R.color.checkout_item_footer_red_text_color);
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(" ");
 
-        spannableStringBuilder.append(mContext.getResources().getString(R.string.shipping_text));
+        if (fee > 0.0 || !shippingAvailability) {
 
-        if (mPresenter.isShippingByPostcodeEnabled() &&
-                estimateShipmentPostcode != null && fee > 0) {
-            spannableStringBuilder.append(" (");
-            start = spannableStringBuilder.length();
-            spannableStringBuilder.append(
-                    estimateShipmentPostcode,
-                    new StyleSpan(BOLD),
-                    SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableStringBuilder.setSpan(
-                    new ForegroundColorSpan(color),
-                    start,
-                    spannableStringBuilder.length(),
-                    SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableStringBuilder.append(") ");
-        }
+            spannableStringBuilder.append(mContext.getResources().getString(R.string.shipping_text));
 
-        spannableStringBuilder.append(": ");
-
-        if (mPresenter.isShippingByPostcodeEnabled() && !shippingAvailability) {
-            spannableStringBuilder.append(" \n ");
-            spannableStringBuilder.append(
-                    mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation(),
-                    new ForegroundColorSpan(redColor),
-                    SPAN_EXCLUSIVE_INCLUSIVE);
-        } else {
-            spannableStringBuilder.append(
-                    PriceUtils.getPriceStringValue(fee),
-                    new StyleSpan(BOLD),
-                    SPAN_EXCLUSIVE_INCLUSIVE);
-
-            spannableStringBuilder.append(" ");
-
-            if (targetPriceForFreeShipping > 0) {
-                start = spannableStringBuilder.length() + 1;
-
-                spannableStringBuilder.append("\n");
-
-                String targetPriceString = mContext.getResources().getString(R.string.promo_shipping_text);
-                String replacementString = PriceUtils.getPriceStringValue(targetPriceForFreeShipping);
-                targetPriceString = targetPriceString.replace(
-                        mContext.getResources().getString(R.string.promo_shipping_text_placeholder),
-                        replacementString);
+            if (mPresenter.isShippingByPostcodeEnabled() &&
+                    estimateShipmentPostcode != null) {
+                spannableStringBuilder.append(" (");
+                start = spannableStringBuilder.length();
                 spannableStringBuilder.append(
-                        targetPriceString);
-
-                ClickableSpan clickableSpan = new ClickableSpan() {
-                    @Override
-                    public void onClick(@NonNull View widget) {
-                        onEligibleProductsTapped(locationFilterHash);
-                    }
-                };
-
-                String eligibleProductsString = mContext.getResources().getString(R.string.promo_shipping_eligible_products);
-                int eligibleProductsStart = targetPriceString.indexOf(eligibleProductsString) + start;
-
-                spannableStringBuilder.setSpan(
-                        clickableSpan,
-                        eligibleProductsStart,
-                        eligibleProductsStart + eligibleProductsString.length(),
-                        SPAN_EXCLUSIVE_INCLUSIVE);
-
-                int imagePosition = spannableStringBuilder.length();
-                String freeShippingString = "   " +
-                        mContext.getResources().getString(R.string.free_shipping_text).toUpperCase();
-                spannableStringBuilder.append(
-                        freeShippingString,
+                        estimateShipmentPostcode,
                         new StyleSpan(BOLD),
-                        SPAN_EXCLUSIVE_INCLUSIVE);
-
+                        SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannableStringBuilder.setSpan(
                         new ForegroundColorSpan(color),
                         start,
                         spannableStringBuilder.length(),
+                        SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.append(")");
+            }
+
+            spannableStringBuilder.append(": ");
+
+            if (mPresenter.isShippingByPostcodeEnabled() && !shippingAvailability) {
+                spannableStringBuilder.append(" \n ");
+                spannableStringBuilder.append(
+                        mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation(),
+                        new ForegroundColorSpan(redColor),
                         SPAN_EXCLUSIVE_INCLUSIVE);
-
-                Drawable d = ContextCompat.getDrawable(mContext, R.drawable.ic_free_shipping);
-                if (d != null) {
-                    d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-                    ImageSpan imageSpan = new ImageSpan(d, DynamicDrawableSpan.ALIGN_BASELINE);
-                    spannableStringBuilder.setSpan(imageSpan, imagePosition + 1, imagePosition + 2, SPAN_INCLUSIVE_EXCLUSIVE);
-                }
-
-                StringUtils.applySpanToSubstringsMatching(
-                        spannableStringBuilder,
+            } else {
+                spannableStringBuilder.append(
+                        PriceUtils.getPriceStringValue(fee),
                         new StyleSpan(BOLD),
-                        mContext.getResources().getString(R.string.regex_currency),
                         SPAN_EXCLUSIVE_INCLUSIVE);
+
+                spannableStringBuilder.append(" ");
+
+                if (targetPriceForFreeShipping > 0) {
+                    start = spannableStringBuilder.length() + 1;
+
+                    spannableStringBuilder.append("\n");
+
+                    String targetPriceString = mContext.getResources().getString(R.string.promo_shipping_text);
+                    String replacementString = PriceUtils.getPriceStringValue(targetPriceForFreeShipping);
+                    targetPriceString = targetPriceString.replace(
+                            mContext.getResources().getString(R.string.promo_shipping_text_placeholder),
+                            replacementString);
+                    spannableStringBuilder.append(
+                            targetPriceString);
+
+                    ClickableSpan clickableSpan = new ClickableSpan() {
+                        @Override
+                        public void onClick(@NonNull View widget) {
+                            onEligibleProductsTapped(locationFilterHash);
+                        }
+                    };
+
+                    String eligibleProductsString = mContext.getResources().getString(R.string.promo_shipping_eligible_products);
+                    int eligibleProductsStart = targetPriceString.indexOf(eligibleProductsString) + start;
+
+                    spannableStringBuilder.setSpan(
+                            clickableSpan,
+                            eligibleProductsStart,
+                            eligibleProductsStart + eligibleProductsString.length(),
+                            SPAN_EXCLUSIVE_INCLUSIVE);
+
+                    int imagePosition = spannableStringBuilder.length();
+                    String freeShippingString = "   " +
+                            mContext.getResources().getString(R.string.free_shipping_text).toUpperCase();
+                    spannableStringBuilder.append(
+                            freeShippingString,
+                            new StyleSpan(BOLD),
+                            SPAN_EXCLUSIVE_INCLUSIVE);
+
+                    spannableStringBuilder.setSpan(
+                            new ForegroundColorSpan(color),
+                            start,
+                            spannableStringBuilder.length(),
+                            SPAN_EXCLUSIVE_INCLUSIVE);
+
+                    Drawable d = ContextCompat.getDrawable(mContext, R.drawable.ic_free_shipping);
+                    if (d != null) {
+                        d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+                        ImageSpan imageSpan = new ImageSpan(d, DynamicDrawableSpan.ALIGN_BASELINE);
+                        spannableStringBuilder.setSpan(imageSpan, imagePosition + 1, imagePosition + 2, SPAN_INCLUSIVE_EXCLUSIVE);
+                    }
+
+                    StringUtils.applySpanToSubstringsMatching(
+                            spannableStringBuilder,
+                            new StyleSpan(BOLD),
+                            mContext.getResources().getString(R.string.regex_currency),
+                            SPAN_EXCLUSIVE_INCLUSIVE);
+                }
+            }
+
+        } else {
+            int imagePosition = spannableStringBuilder.length();
+            String freeShippingString = "   " +
+                    mContext.getResources().getString(R.string.free_shipping_text).toUpperCase();
+            spannableStringBuilder.append(
+                    freeShippingString,
+                    new StyleSpan(BOLD),
+                    SPAN_EXCLUSIVE_INCLUSIVE);
+
+            spannableStringBuilder.setSpan(
+                    new ForegroundColorSpan(color),
+                    start,
+                    spannableStringBuilder.length(),
+                    SPAN_EXCLUSIVE_INCLUSIVE);
+
+            Drawable d = ContextCompat.getDrawable(mContext, R.drawable.ic_free_shipping);
+            if (d != null) {
+                d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+                ImageSpan imageSpan = new ImageSpan(d, DynamicDrawableSpan.ALIGN_BASELINE);
+                spannableStringBuilder.setSpan(imageSpan, imagePosition + 1, imagePosition + 2, SPAN_INCLUSIVE_EXCLUSIVE);
             }
         }
 
