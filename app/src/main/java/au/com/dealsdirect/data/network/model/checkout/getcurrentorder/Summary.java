@@ -11,7 +11,7 @@ public class Summary {
     }
 
     public Double getDelivery() {
-        return delivery != null ? delivery : 0;
+        return delivery;
     }
 
     public Double getDiscount() {

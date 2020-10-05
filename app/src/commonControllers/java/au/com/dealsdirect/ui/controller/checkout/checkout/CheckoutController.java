@@ -862,73 +862,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Override
     public void showSummaryDetails(Summary summary) {
         if (summary != null) {
-            mSummarySubtotalTextView.setText(PriceUtils.getPriceStringValue(summary.getSubtotal()));
-//            String postcode = summary.getEstimateShipmentPostcode();
-            String postcode = mDeliveryAddress != null ? mDeliveryAddress.getPostcode() : null;
-
-            if (!mPresenter.isShippingByPostcodeEnabled() || postcode == null ||
-                    summary.getDelivery() == null || summary.getDelivery() == 0) {
-                mSummaryShippingLabelTextView.setText(mActivity.getResources().getString(R.string.shipping_text));
-            } else {
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(
-                        mActivity.getResources().getString(R.string.shipping_text)
-                );
-                spannableStringBuilder.append(" (");
-                int start = spannableStringBuilder.length();
-                int color = mActivity.getResources().getColor(R.color.checkout_item_footer_other_text_color);
-                spannableStringBuilder.append(
-                        postcode,
-                        new StyleSpan(BOLD),
-                        SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableStringBuilder.setSpan(
-                        new ForegroundColorSpan(color),
-                        start,
-                        spannableStringBuilder.length(),
-                        SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableStringBuilder.append(")");
-                mSummaryShippingLabelTextView.setText(spannableStringBuilder);
-            }
-
-            if (mPresenter.isShippingByPostcodeEnabled() && !isShipmentAvailable) {
-                mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
-                mSummaryShippingFeeTextView.setText(mPresenter.getTemplateTextsRepository().getUnavailable());
-                mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.checkout_item_footer_red_text_color));
-                mFreeShippingLayout.setVisibility(View.GONE);
-            } else if (summary.getDelivery() == null || summary.getDelivery() == 0) {
-                mSummaryShippingFeeTextView.setVisibility(View.GONE);
-                mFreeShippingLayout.setVisibility(View.VISIBLE);
-            } else if (!isAddressValid()) {
-                mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
-                mFreeShippingLayout.setVisibility(View.GONE);
-                mSummaryShippingFeeTextView.setText(mActivity.getResources().getString(R.string.enter_address_above));
-                mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.enter_address_text_color));
-            } else {
-                mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
-                mSummaryShippingFeeTextView.setText(PriceUtils.getPriceStringValue(summary.getDelivery()));
-                mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.text_dark));
-                mFreeShippingLayout.setVisibility(View.GONE);
-            }
-
-            mSummaryVoucherTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()));
-            mDiscountValue = summary.getDiscount();
-
-            if (summary.getTax() > 0) {
-                mSummaryTaxTextView.setText(PriceUtils.getPriceStringValue(summary.getTax()));
-                mSummaryTaxContainer.setVisibility(View.VISIBLE);
-            } else {
-                mSummaryTaxContainer.setVisibility(View.GONE);
-            }
-
-            if (summary.getDiscount() > 0) {
-                mIsVoucherAdded = true;
-                mVoucherValueContainer.setVisibility(View.VISIBLE);
-                mVoucherValueTextView.setVisibility(View.VISIBLE);
-                mVoucherValueTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()) + " " + getString(R.string.voucher));
-            } else {
-                mIsVoucherAdded = false;
-                mVoucherValueTextView.setVisibility(View.GONE);
-                mVoucherValueContainer.setVisibility(View.GONE);
-            }
+            setupSummaryShipping(summary);
+            setupSummaryVouchers(summary);
 
             if (mDeliveryAddress == null) {
                 mSummaryTotalTextView.setVisibility(View.GONE);
@@ -940,7 +875,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             // show ourpay select related summary, should been purchased yet if visible.
             if (isOurPaySelectDeliveryMethod() && !mDeliveryServicePackageDetail.getPurchased()) {
                 mSummaryOurpaySelectContainer.setVisibility(View.VISIBLE);
-                mSummaryShippingFeeContainer.setVisibility(View.GONE);
                 mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(summary.getSelect()));
                 mSummaryTotalTextView.setText(PriceUtils.getPriceStringValue(summary.getTotalWithSelect()));
             } else {
@@ -948,6 +882,85 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             }
         }
 
+    }
+
+    private void setupSummaryShipping(Summary summary) {
+        if (summary.getDelivery() == null ||
+                (isOurPaySelectDeliveryMethod() && !mDeliveryServicePackageDetail.getPurchased())) {
+            mSummaryShippingFeeContainer.setVisibility(View.GONE);
+            return;
+        } else {
+            mSummaryShippingFeeContainer.setVisibility(View.VISIBLE);
+        }
+
+        mSummarySubtotalTextView.setText(PriceUtils.getPriceStringValue(summary.getSubtotal()));
+        String postcode = mDeliveryAddress != null ? mDeliveryAddress.getPostcode() : null;
+
+        if (!mPresenter.isShippingByPostcodeEnabled() || postcode == null ||
+                summary.getDelivery() == null || summary.getDelivery() == 0) {
+            mSummaryShippingLabelTextView.setText(mActivity.getResources().getString(R.string.shipping_text));
+        } else {
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(
+                    mActivity.getResources().getString(R.string.shipping_text)
+            );
+            spannableStringBuilder.append(" (");
+            int start = spannableStringBuilder.length();
+            int color = mActivity.getResources().getColor(R.color.checkout_item_footer_other_text_color);
+            spannableStringBuilder.append(
+                    postcode,
+                    new StyleSpan(BOLD),
+                    SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableStringBuilder.setSpan(
+                    new ForegroundColorSpan(color),
+                    start,
+                    spannableStringBuilder.length(),
+                    SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableStringBuilder.append(")");
+            mSummaryShippingLabelTextView.setText(spannableStringBuilder);
+        }
+
+        if (mPresenter.isShippingByPostcodeEnabled() && !isShipmentAvailable) {
+            mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
+            mSummaryShippingFeeTextView.setText(mPresenter.getTemplateTextsRepository().getUnavailable());
+            mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.checkout_item_footer_red_text_color));
+            mFreeShippingLayout.setVisibility(View.GONE);
+        } else if (summary.getDelivery() == 0) {
+            mSummaryShippingFeeTextView.setVisibility(View.GONE);
+            mFreeShippingLayout.setVisibility(View.VISIBLE);
+        } else if (!isAddressValid()) {
+            mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
+            mFreeShippingLayout.setVisibility(View.GONE);
+            mSummaryShippingFeeTextView.setText(mActivity.getResources().getString(R.string.enter_address_above));
+            mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.enter_address_text_color));
+        } else {
+            mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
+            mSummaryShippingFeeTextView.setText(PriceUtils.getPriceStringValue(summary.getDelivery()));
+            mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.text_dark));
+            mFreeShippingLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private void setupSummaryVouchers(Summary summary) {
+        mSummaryVoucherTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()));
+        mDiscountValue = summary.getDiscount();
+
+        if (summary.getTax() > 0) {
+            mSummaryTaxTextView.setText(PriceUtils.getPriceStringValue(summary.getTax()));
+            mSummaryTaxContainer.setVisibility(View.VISIBLE);
+        } else {
+            mSummaryTaxContainer.setVisibility(View.GONE);
+        }
+
+        if (summary.getDiscount() > 0) {
+            mIsVoucherAdded = true;
+            mVoucherValueContainer.setVisibility(View.VISIBLE);
+            mVoucherValueTextView.setVisibility(View.VISIBLE);
+            mVoucherValueTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()) + " " + getString(R.string.voucher));
+        } else {
+            mIsVoucherAdded = false;
+            mVoucherValueTextView.setVisibility(View.GONE);
+            mVoucherValueContainer.setVisibility(View.GONE);
+        }
     }
 
     @Override
