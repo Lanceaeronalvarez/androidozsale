@@ -1,14 +1,16 @@
 package au.com.dealsdirect.ui.controller.checkout.deliveryoptions;
 
 import android.content.Context;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
@@ -87,7 +89,7 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DeliveryOption deliveryOption = mDeliveryOptions.get(position);
         boolean isSelected = deliveryOption.getSelected();
 
@@ -100,8 +102,10 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         if (holder instanceof DeliveryOptionsRegularViewHolder) {
             ((DeliveryOptionsRegularViewHolder) holder).deliveryOptionExpressDescTextView.setVisibility(View.GONE);
 
-            String deliveryOptionTitle = mDeliveryOptions.get(position).getDeliveryOptions().get(0);
+            List<String> deliveryOptionTitles = deliveryOption.getDeliveryOptions();
+            String deliveryOptionTitle = deliveryOptionTitles.isEmpty() ? "" : deliveryOptionTitles.get(0);
             String deliveryOptionName = "";
+            Double deliveryPrice = deliveryOption.getPrice();
 
             if (OurpayTemplateText.DeliveryOptions.STANDARD.equalsName(deliveryOptionTitle)) {  // get the name from template texts;
                 deliveryOptionName = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_DELIVERYOPTION_STANDARD_TITLE);
@@ -113,7 +117,8 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             ((DeliveryOptionsRegularViewHolder) holder).deliveryOptionCheckBox.setChecked(isSelected);
             ((DeliveryOptionsRegularViewHolder) holder).deliveryOptionTypeTextView.setText(deliveryOptionName);
-            ((DeliveryOptionsRegularViewHolder) holder).deliveryOptionPriceTextView.setText(PriceUtils.getPriceStringValue(mDeliveryOptions.get(position).getPrice()));
+            ((DeliveryOptionsRegularViewHolder) holder).deliveryOptionPriceTextView
+                    .setText(deliveryPrice != null ? PriceUtils.getPriceStringValue(deliveryPrice) : null);
 
         } else if (holder instanceof DeliveryOptionsOurPaySelectViewHolder) {
 
@@ -155,7 +160,7 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mPresenter.setDeliveryOption(createSetDeliveryOptionRequest("", false));
         } else {
             if (mDeliveryServicePackageDetail != null && mDeliveryServicePackageDetail.getPurchased()) {
-                mPresenter.setDeliveryOption(createSetDeliveryOptionRequest(mDeliveryServicePackageDetailId,true));
+                mPresenter.setDeliveryOption(createSetDeliveryOptionRequest(mDeliveryServicePackageDetailId, true));
             }
         }
     }
@@ -188,8 +193,9 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemViewType(int position) {
-        if (OurpayTemplateText.DeliveryOptions.OURPAYSELECT.
-                equalsName(mDeliveryOptions.get(position).getDeliveryOptions().get(0))) {
+        if (!mDeliveryOptions.get(position).getDeliveryOptions().isEmpty() &&
+                OurpayTemplateText.DeliveryOptions.OURPAYSELECT.
+                        equalsName(mDeliveryOptions.get(position).getDeliveryOptions().get(0))) {
             return 1;
         }
         return 0;

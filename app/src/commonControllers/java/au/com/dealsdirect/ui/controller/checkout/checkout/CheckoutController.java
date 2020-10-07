@@ -670,7 +670,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail) {
-        if (getBoolean(R.bool.is_ozsale_app) && mDeliveryAddress != null &&
+        if (getBoolean(R.bool.is_ozsale_app) &&
                 (deliveryOptions != null && !deliveryOptions.isEmpty())) {
             mDeliveryOptions = deliveryOptions;
             mDeliveryServicePackageDetail = deliveryServicePackageDetail;
@@ -715,13 +715,14 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         String ourpaySelectBeforePurchaseDesc = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY);
         String freeText = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_DELIVERYOPTION_OPS_FREE);
 
+        String priceText = isAddressValid() && deliveryOptionPrice != null ? PriceUtils.getPriceStringValue(deliveryOptionPrice) : null;
         if (deliveryOptionName.equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.STANDARD.toString()) ||
                 deliveryOptionName.equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.EXPRESS.toString())) {
             mDeliveryOptionTypeText.setVisibility(View.VISIBLE);
             mDeliveryOptionTypeOurPay.setVisibility(View.GONE);
 
             mDeliveryOptionTypeText.setText(deliveryOptionName);
-            mDeliveryOptionPriceTextView.setText(PriceUtils.getPriceStringValue(deliveryOptionPrice));
+            mDeliveryOptionPriceTextView.setText(priceText);
             mDeliveryOptionTypeText.setTypeface(mDeliveryOptionTypeText.getTypeface(), Typeface.BOLD);
         } else if (deliveryOptionName.equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.OURPAYSELECT.toString())) {
 
@@ -733,10 +734,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mDeliveryOptionTypeOurPay.setVisibility(View.VISIBLE);
 
                 if (mDeliveryServicePackageDetail.getPurchased()) {
-                    mDeliveryOptionPriceTextView.setText(freeText);
+                    mDeliveryOptionPriceTextView.setText(priceText != null ? freeText : null);
                     mDeliveryOptionOurpaySelectDescriptionTextView.setText(ourpaySelectBeforePurchaseDesc);
                 } else {
-                    mDeliveryOptionPriceTextView.setText(PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount()));
+                    mDeliveryOptionPriceTextView.setText(priceText);
                     mDeliveryOptionOurpaySelectDescriptionTextView.setText(ourpaySelectDescription);
                 }
             }
