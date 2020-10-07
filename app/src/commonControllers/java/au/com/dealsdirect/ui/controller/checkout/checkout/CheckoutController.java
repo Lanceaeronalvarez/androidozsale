@@ -895,8 +895,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mSummarySubtotalTextView.setText(PriceUtils.getPriceStringValue(summary.getSubtotal()));
         String postcode = mDeliveryAddress != null ? mDeliveryAddress.getPostcode() : null;
 
-        if (!mPresenter.isShippingByPostcodeEnabled() || postcode == null ||
-                summary.getDelivery() == null || summary.getDelivery() == 0) {
+        if (!mPresenter.isShippingByPostcodeEnabled() ||
+                postcode == null || summary.getDelivery() == null) {
             mSummaryShippingLabelTextView.setText(mActivity.getResources().getString(R.string.shipping_text));
         } else {
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(
