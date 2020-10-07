@@ -885,10 +885,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void setupSummaryShipping(Summary summary) {
-        if (summary.getDelivery() == null ||
-                (isOurPaySelectDeliveryMethod() && !mDeliveryServicePackageDetail.getPurchased())) {
+        if (isOurPaySelectDeliveryMethod() && !mDeliveryServicePackageDetail.getPurchased()) {
             mSummaryShippingFeeContainer.setVisibility(View.GONE);
-            return;
         } else {
             mSummaryShippingFeeContainer.setVisibility(View.VISIBLE);
         }
@@ -924,14 +922,17 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mSummaryShippingFeeTextView.setText(mPresenter.getTemplateTextsRepository().getUnavailable());
             mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.checkout_item_footer_red_text_color));
             mFreeShippingLayout.setVisibility(View.GONE);
-        } else if (summary.getDelivery() == 0) {
-            mSummaryShippingFeeTextView.setVisibility(View.GONE);
-            mFreeShippingLayout.setVisibility(View.VISIBLE);
         } else if (!isAddressValid()) {
             mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
             mFreeShippingLayout.setVisibility(View.GONE);
             mSummaryShippingFeeTextView.setText(mActivity.getResources().getString(R.string.enter_address_above));
             mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.enter_address_text_color));
+        } else if (summary.getDelivery() == null) {
+            mSummaryShippingFeeTextView.setVisibility(View.GONE);
+            mFreeShippingLayout.setVisibility(View.GONE);
+        } else if (summary.getDelivery() == 0) {
+            mSummaryShippingFeeTextView.setVisibility(View.GONE);
+            mFreeShippingLayout.setVisibility(View.VISIBLE);
         } else {
             mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
             mSummaryShippingFeeTextView.setText(PriceUtils.getPriceStringValue(summary.getDelivery()));
