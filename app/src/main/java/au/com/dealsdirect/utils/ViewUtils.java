@@ -17,8 +17,7 @@ import android.widget.TextView;
 import androidx.core.widget.NestedScrollView;
 
 import au.com.dealsdirect.R;
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
-
+import io.github.inflationx.calligraphy3.CalligraphyUtils;
 
 public final class ViewUtils {
 

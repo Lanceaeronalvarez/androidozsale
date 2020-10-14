@@ -22,12 +22,13 @@ import au.com.dealsdirect.di.module.ApplicationModule;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
-import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.NetworkUtils;
 import au.com.dealsdirect.utils.legacycookie.LegacyCookie;
+import io.github.inflationx.calligraphy3.CalligraphyConfig;
+import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
+import io.github.inflationx.viewpump.ViewPump;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class DDApplication extends Application {
 
@@ -89,11 +90,14 @@ public class DDApplication extends Application {
     }
 
     private void initFonts() {
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath(getString(R.string.font_app_regular))
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
+        ViewPump.init(ViewPump.builder()
+                .addInterceptor(new CalligraphyInterceptor(
+                        new CalligraphyConfig.Builder()
+                                .setDefaultFontPath(getString(R.string.font_app_regular))
+                                .setFontAttrId(R.attr.fontPath)
+                                .build()
+                ))
+                .build());
     }
 
     private void removeLegacyData() {

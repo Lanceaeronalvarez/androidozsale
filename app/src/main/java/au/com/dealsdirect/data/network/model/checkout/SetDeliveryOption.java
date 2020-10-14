@@ -21,6 +21,9 @@ public class SetDeliveryOption {
     @SerializedName("languageID")
     @Expose
     private String languageId;
+    @SerializedName("postcode")
+    @Expose
+    private String postcode;
 
     public OptionParameters getOptionParameters() {
         return optionParameters;
@@ -44,6 +47,14 @@ public class SetDeliveryOption {
 
     public void setLanguageId(String languageId) {
         this.languageId = languageId;
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
     }
 
     public static class OptionParameters {

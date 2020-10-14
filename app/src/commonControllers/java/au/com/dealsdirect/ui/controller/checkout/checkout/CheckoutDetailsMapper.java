@@ -249,6 +249,8 @@ public class CheckoutDetailsMapper {
             setAmountToPromoPrice(shipment.getAmountToPromoPrice());
             setItems(shipment.getItems());
             setLocationFilterHash(shipment.getLocationFilterHash());
+            setEstimateShipmentPostcode(shipment.getEstimateShipmentPostcode());
+            setShippingAvailability(shipment.getShippingAvailability());
             mapItems(source);
         }
 

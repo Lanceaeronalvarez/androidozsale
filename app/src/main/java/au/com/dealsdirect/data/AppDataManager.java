@@ -145,8 +145,8 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -168,6 +168,7 @@ import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
+import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.data.wishlist.WishlistChangeListener;
 import au.com.dealsdirect.data.wishlist.WishlistHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
@@ -186,6 +187,7 @@ public class AppDataManager implements DataManager {
     private final AuthHelper mAuthHelper;
     private final WishlistHelper mWishlistHelper;
     private final CachedResponseHelper mCachedResponseHelper;
+    private final TemplateTextsHelper mTemplateTextsHelper;
 
     @Inject
     public AppDataManager(@ApplicationContext Context context,
@@ -193,13 +195,15 @@ public class AppDataManager implements DataManager {
                           ApiHelper apiHelper,
                           AuthHelper authHelper,
                           WishlistHelper wishlistHelper,
-                          CachedResponseHelper cachedResponseHelper) {
+                          CachedResponseHelper cachedResponseHelper,
+                          TemplateTextsHelper templateTextsHelper) {
         mContext = context;
         mPreferencesHelper = preferencesHelper;
         mApiHelper = apiHelper;
         mAuthHelper = authHelper;
         mWishlistHelper = wishlistHelper;
         mCachedResponseHelper = cachedResponseHelper;
+        mTemplateTextsHelper = templateTextsHelper;
     }
 
     @Override
@@ -1453,6 +1457,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setShippingByPostcodeEnabled(boolean enabled) {
+        mPreferencesHelper.setShippingByPostcodeEnabled(enabled);
+    }
+
+    @Override
+    public boolean getShippingByPostcodeEnabled() {
+        return mPreferencesHelper.getShippingByPostcodeEnabled();
+    }
+
+    @Override
     public void setReCaptchaSiteKey(String key) {
         mPreferencesHelper.setReCaptchaSiteKey(key);
     }
@@ -1685,5 +1699,15 @@ public class AppDataManager implements DataManager {
     @Override
     public void fetchCache() {
         mCachedResponseHelper.fetchCache();
+    }
+
+    @Override
+    public TemplateTextsRepository getTemplateTextsRepository() {
+        return mTemplateTextsHelper.getTemplateTextsRepository();
+    }
+
+    @Override
+    public void setTemplateTextsSource(GetTemplateTextsResponse.GetTemplateTextsValue source) {
+        mTemplateTextsHelper.setTemplateTextsSource(source);
     }
 }

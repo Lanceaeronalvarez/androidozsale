@@ -178,6 +178,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String SHIPPING_HOVER = "SHIPPING_HOVER";
     private static final String SHIPPING_TITLE = "SHIPPING_TITLE";
 
+    private static final String SHIPPING_BY_POSTCODE_ENABLED = "SHIPPING_BY_POSTCODE_ENABLED";
+
     private Context mContext;
 
     @Inject
@@ -897,6 +899,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean getIsOurpayDashboardEnabled() {
         return Prefs.getBoolean(IS_OURPAY_DASHBOARD_ENABLED, false);
+    }
+
+    @Override
+    public void setShippingByPostcodeEnabled(boolean enabled) {
+        Prefs.putBoolean(SHIPPING_BY_POSTCODE_ENABLED, enabled);
+    }
+
+    @Override
+    public boolean getShippingByPostcodeEnabled() {
+        return Prefs.getBoolean(SHIPPING_BY_POSTCODE_ENABLED, false);
     }
 
     @Override

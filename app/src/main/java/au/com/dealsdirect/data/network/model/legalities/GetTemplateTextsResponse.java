@@ -146,6 +146,18 @@ public class GetTemplateTextsResponse {
         @SerializedName("_Shipping_Rules_hover_title")
         @Expose
         private String shippingRulesHoverTitle;
+        @SerializedName("_ImpossibleToDeliverAtLocation")
+        @Expose
+        private String impossibleToDeliverAtLocation;
+        @SerializedName("_Unavailable")
+        @Expose
+        private String unavailable;
+        @SerializedName("_Calculate")
+        @Expose
+        private String calculate;
+        @SerializedName("_ImpossibleToDeliverAtLocation_Message")
+        @Expose
+        private String impossibleToDeliverAtLocationMessage;
 
 
         public String getCheckoutMyPayPayExceedLimit() {
@@ -330,6 +342,22 @@ public class GetTemplateTextsResponse {
 
         public String getShippingRulesHoverTitle() {
             return shippingRulesHoverTitle;
+        }
+
+        public String getImpossibleToDeliverAtLocation() {
+            return impossibleToDeliverAtLocation;
+        }
+
+        public String getUnavailable() {
+            return unavailable;
+        }
+
+        public String getCalculate() {
+            return calculate;
+        }
+
+        public String getImpossibleToDeliverAtLocationMessage() {
+            return impossibleToDeliverAtLocationMessage;
         }
     }
 }

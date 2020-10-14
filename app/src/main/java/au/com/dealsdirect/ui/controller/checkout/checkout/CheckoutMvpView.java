@@ -11,6 +11,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliverySe
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
@@ -34,6 +35,8 @@ public interface CheckoutMvpView extends MvpView {
     void showCartDetailsOnHost(List<MappedShipment> items);
 
     void showCartDetailsFooter(boolean show);
+
+    void showCartDetailsPostcode(String postcode);
 
     void showAddressDetails(DeliveryAddress deliveryAddress, List<DecorationInfoList> decorationInfoList);
 
@@ -72,4 +75,6 @@ public interface CheckoutMvpView extends MvpView {
     Router getDisplayRouter();
 
     void initializeVisaCheckout();
+
+    void setIsShipmentAvailable(boolean isShipmentAvailable);
 }

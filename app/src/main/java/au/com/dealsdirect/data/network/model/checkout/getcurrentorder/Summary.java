@@ -11,7 +11,7 @@ public class Summary {
     }
 
     public Double getDelivery() {
-        return delivery != null ? delivery : 0;
+        return delivery;
     }
 
     public Double getDiscount() {
@@ -38,6 +38,10 @@ public class Summary {
         return amountToFreeDelivery == null ? 0 : amountToFreeDelivery;
     }
 
+    public String getEstimateShipmentPostcode() {
+        return estimateShipmentPostcode;
+    }
+
     @SerializedName(value = "Subtotal", alternate = {"subtotal"})
     private Double subtotal;
     @SerializedName(value = "Delivery", alternate = {"delivery"})
@@ -54,5 +58,7 @@ public class Summary {
     private Double totalWithSelect;
     @SerializedName("AmountToFreeDelivery")
     private Double amountToFreeDelivery;
+    @SerializedName("EstimateShipmentPostcode")
+    private String estimateShipmentPostcode;
 
 }

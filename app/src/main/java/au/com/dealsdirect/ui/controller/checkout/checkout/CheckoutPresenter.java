@@ -19,8 +19,10 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
+import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
@@ -57,18 +59,16 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void callCartContent() {
+    public void callCartContent(String postcode) {
         if (!isCartAlreadyLoadedOnce() && isViewAttached()) {
             getMvpView().showLoading();
         }
-        fetchCartDetails();
+        fetchCartDetails(postcode);
     }
 
-    @Override
-    public void fetchCartDetails() {
-
+    private void fetchCartDetails(String postcode) {
         getCompositeDisposable().add(getDataManager()
-                .callGetCurrentOrder(new GetCurrentOrder.RequestValue(getDataManager().getLanguageId()))
+                .callGetCurrentOrder(new GetCurrentOrder.RequestValue(postcode, getDataManager().getLanguageId()))
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetCurrentOrder.ResponseValue>() {
@@ -170,9 +170,9 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void fetchAdjustItemQuantity(String url, String itemID, ProductQuantityLayout view) {
+    public void fetchAdjustItemQuantity(String url, String itemID, String postcode, ProductQuantityLayout view) {
         getCompositeDisposable().add(getDataManager()
-                .callAdjustQuantityOrderItem(url, new AdjustOrderItem.RequestValue(itemID, getDataManager().getLanguageId()))
+                .callAdjustQuantityOrderItem(url, new AdjustOrderItem.RequestValue(itemID, postcode, getDataManager().getLanguageId()))
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetCurrentOrder.ResponseValue>() {
@@ -373,7 +373,11 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void updateCart(GetCurrentOrder.ResponseValue response) {
+    public boolean isShippingByPostcodeEnabled() {
+        return getDataManager().getShippingByPostcodeEnabled();
+    }
+
+    private void updateCart(GetCurrentOrder.ResponseValue response) {
         CheckoutDetailsMapper mappedValues = new CheckoutDetailsMapper(response);
         if (!response.getD().isAuthenticated()) {
             getMvpView().triggerLoginTicket();
@@ -401,13 +405,16 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         getMvpView().updateCheckoutBadge();
 
         if (mappedValues != null && !mappedValues.isEmpty()) {
-            getDataManager().setCheckoutHasWishlistItem(doesItemsContainAWishlistItem(mappedValues.getItems()));
+            getMvpView().setIsShipmentAvailable(isShipmentAvailable(mappedValues.getShipments()));
 
-            getMvpView().showCartDetails(mappedValues.getMappedShipments());
+            getDataManager().setCheckoutHasWishlistItem(doesItemsContainAWishlistItem(mappedValues.getItems()));
 
             getMvpView().showAddressDetails(mappedValues.getDeliveryAddress(), mappedValues.getDecorationInfoList());
 
             getMvpView().showCartDetailsFooter(mappedValues.getDeliveryAddress() != null);
+
+            getMvpView().showCartDetailsPostcode(mappedValues.getDeliveryAddress() != null ?
+                    mappedValues.getDeliveryAddress().getPostcode() : null);
 
             getMvpView().showDeliveryOptions(mappedValues.getDeliveryOptions(), mappedValues.getDeliveryServicePackageDetail());
 
@@ -418,6 +425,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             getMvpView().showSummaryDetails(mappedValues.getSummary());
 
             getMvpView().initializeVisaCheckout();
+
+            getMvpView().showCartDetails(mappedValues.getMappedShipments());
         } else {
             getDataManager().setCheckoutHasWishlistItem(false);
             getMvpView().showCartDetails(new ArrayList<>());
@@ -432,6 +441,15 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         } else {
             getMvpView().hideAfterpayPanel();
         }
+    }
+
+    private boolean isShipmentAvailable(List<Shipment> shipments) {
+        for (Shipment shipment : shipments) {
+            if (!shipment.getShippingAvailability()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean doesItemsContainAWishlistItem(List<Item> items) {
@@ -458,13 +476,15 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters) {
+    public void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters, String postcode) {
         SetDeliveryOption setDeliveryOption = new SetDeliveryOption();
         setDeliveryOption.setCountryId(getDataManager().getCountryId());
         setDeliveryOption.setLanguageId(getDataManager().getLanguageId());
         setDeliveryOption.setOptionParameters(setDeliveryOptionParameters);
         setDeliveryOption.setImageSize(0);
+        setDeliveryOption.setPostcode(null);
 
+        // postcode will be null as input but will be used as override
         doApiCallForResponse(getDataManager().callSetDeliveryOption(setDeliveryOption), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
@@ -523,5 +543,10 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             getDataManager().setCartHashCode(newHashCode);
             getDataManager().setHasActiveCheckoutSession(false);
         }
+    }
+
+    @Override
+    public TemplateTextsHelper.TemplateTextsRepository getTemplateTextsRepository() {
+        return getDataManager().getTemplateTextsRepository();
     }
 }

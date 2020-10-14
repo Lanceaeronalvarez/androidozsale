@@ -13,10 +13,12 @@ import au.com.dealsdirect.utils.AppConstants;
 public class GetCurrentOrder {
 
     public static class RequestValue {
+        private String postcode;
         private String languageID;
         private int imageSize = AppConstants.IMAGE_SIZE;
 
-        public RequestValue(String languageID) {
+        public RequestValue(String postcode, String languageID) {
+            this.postcode = postcode;
             this.languageID = languageID;
         }
     }

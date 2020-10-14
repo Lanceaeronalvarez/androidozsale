@@ -55,6 +55,7 @@ public class DeliveryOptionsPresenter<V extends DeliveryOptionsMvpView> extends 
         setDeliveryOption.setLanguageId(getDataManager().getLanguageId());
         setDeliveryOption.setOptionParameters(setDeliveryOptionParameters);
         setDeliveryOption.setImageSize(AppConstants.IMAGE_SIZE);
+        setDeliveryOption.setPostcode(null);
 
         getMvpView().showLoading();
         doApiCallForResponse(getDataManager().callSetDeliveryOption(setDeliveryOption), new AppApiCallback() {

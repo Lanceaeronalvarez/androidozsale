@@ -633,7 +633,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mCategoryKey = getArgs().getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
 
         if (args.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
-            mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+            mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<HashSet<SearchChipModel>>() {
             }.getType());
         }
 
@@ -712,7 +712,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mFromCategorySearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH);
             mFromCategoryDeeplink = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK);
             if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
-                mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+                mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<HashSet<SearchChipModel>>() {
                 }.getType());
             }
 
@@ -730,7 +730,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mFromCategorySearch = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_SEARCH);
             mFromCategoryDeeplink = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK);
             if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER)) {
-                mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, ""), new TypeToken<ArrayList<SearchChipModel>>() {
+                mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, ""), new TypeToken<HashSet<SearchChipModel>>() {
                 }.getType());
             }
 

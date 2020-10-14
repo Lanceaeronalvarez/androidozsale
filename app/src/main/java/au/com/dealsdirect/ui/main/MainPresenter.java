@@ -49,7 +49,6 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionSt
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
-import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
@@ -59,8 +58,6 @@ import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.returns.FileSettingsResponse;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
-import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
-import au.com.dealsdirect.data.wishlist.WishlistChangeListener;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
@@ -138,6 +135,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     static final String KEY_DEEP_LINK_SALE_CATEGORY = "DEEPLINK_SALE_CATEGORY";
     static final String KEY_DEEP_LINK_SALES_CATEGORY = "DEEPLINK_SALES_CATEGORY";
 
+    // Estimate Delivery price by warehouse and delivery locations
+
+    static final String KEY_IMPOSSIBLE_TO_DELIVER_AT_LOCATION = "_ImpossibleToDeliverAtLocation";
+    static final String KEY_UNAVAILABLE = "_Unavailable";
+    static final String KEY_CALCULATE = "_Calculate";
+    static final String KEY_IMPOSSIBLE_TO_DELIVER_AT_LOCATION_MESSAGE = "_ImpossibleToDeliverAtLocation_Message";
+
     private static String[] templateTextsKeys = {
             KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT, //0
             KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD, //1
@@ -175,7 +179,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_VOUCHER_STATUS_EXPIRING_SOON,
             KEY_VOUCHER_STATUS_PENDING,
             KEY_SHIPPING_RULES_HOVER,
-            KEY_SHIPPING_RULES_HOVER_TITLE
+            KEY_SHIPPING_RULES_HOVER_TITLE,
+            KEY_IMPOSSIBLE_TO_DELIVER_AT_LOCATION,
+            KEY_UNAVAILABLE,
+            KEY_CALCULATE,
+            KEY_IMPOSSIBLE_TO_DELIVER_AT_LOCATION_MESSAGE
     };
 
 
@@ -318,6 +326,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setIsMyPayEnabled(value.getPayments().getMyPay().getEnabled());
                 getDataManager().setIsPaypalCreditEnabled(value.getPayments().getBrainTree().isPaypalCreditEnabled());
                 getDataManager().setIsOurpayDashboardEnabled(value.getMyAccount().isShowOurpaySchedulerInMyAccount());
+                getDataManager().setShippingByPostcodeEnabled(value.getCheckout().getShippingByPostcodeEnabled());
 
                 if (value.getPayments().getVisaCheckout() != null) {
                     getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());
@@ -1307,6 +1316,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     getDataManager().setConsentTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setVoucherStatusTemplateText(getTemplateTextsResponse.getResponse().getValue());
                     getDataManager().setShippingHover(getTemplateTextsResponse.getResponse().getValue());
+                    getDataManager().setTemplateTextsSource(getTemplateTextsResponse.getResponse().getValue());
                     getMvpView().storeTemplateTexts(getTemplateTextsResponse.getResponse().getValue());
 
                 }, throwable -> {

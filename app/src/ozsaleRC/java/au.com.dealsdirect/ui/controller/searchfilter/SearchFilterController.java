@@ -266,7 +266,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         String previousChipsString = args.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, "");
         mPreviousSearchChips = previousChipsString.isEmpty() ? new HashSet<>() :
-                JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {
+                JsonUtils.convertStringToObject(previousChipsString, new TypeToken<HashSet<SearchChipModel>>() {
                 }.getType());
 
     }
@@ -319,7 +319,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
             String previousChipsString = savedInstanceState.getString(SALEITEMS_CHIPS_FILTER, "");
             mPreviousSearchChips = previousChipsString.isEmpty() ? new HashSet<>() :
-                    JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {
+                    JsonUtils.convertStringToObject(previousChipsString, new TypeToken<HashSet<SearchChipModel>>() {
                     }.getType());
 
             isFromCategory = savedInstanceState.getBoolean(KEY_FROM_CATEGORIES);
@@ -340,7 +340,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
             String previousChipsString = savedInstanceState.getString(SHOP_SALEITEMS_CHIPS_FILTER, "");
             mPreviousSearchChips = previousChipsString.isEmpty() ? new HashSet<>() :
-                    JsonUtils.convertStringToObject(previousChipsString, new TypeToken<ArrayList<SearchChipModel>>() {
+                    JsonUtils.convertStringToObject(previousChipsString, new TypeToken<HashSet<SearchChipModel>>() {
                     }.getType());
 
             isFromCategory = savedInstanceState.getBoolean(SHOP_KEY_FROM_CATEGORIES);

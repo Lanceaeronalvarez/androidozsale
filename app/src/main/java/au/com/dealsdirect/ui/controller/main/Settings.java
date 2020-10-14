@@ -240,8 +240,8 @@ public class Settings {
                                     "$",
                                     "ozsale.com.au",
                                     "EN",
-                                    "https://gui-as-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.oz.mysaledev.com/",
+                                    "https://www.oz.mysaledev.com/",
                                     "AUD")} );
         } else if (BuildConfig.FLAVOR.equals("singsaleRC")){
             populatePackageWithCountries(

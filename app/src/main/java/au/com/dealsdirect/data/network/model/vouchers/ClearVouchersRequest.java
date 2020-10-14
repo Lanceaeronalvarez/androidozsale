@@ -5,11 +5,14 @@ package au.com.dealsdirect.data.network.model.vouchers;
  */
 public class ClearVouchersRequest {
 
-    public int imageSize;
+    private String postcode;
 
-    public String languageID;
+    private int imageSize;
 
-    public ClearVouchersRequest(int imageSize, String languageID) {
+    private String languageID;
+
+    public ClearVouchersRequest(String postcode, int imageSize, String languageID) {
+        this.postcode = postcode;
         this.imageSize = imageSize;
         this.languageID = languageID;
     }

@@ -241,7 +241,7 @@ public class SaleCategoryController extends BaseController
                 saleCategoryViewHolder.subCategoryRecyclerView.setAdapter(subCategoryAdapter);
             }
 
-            mRecyclerView.smoothScrollToPosition(position);
+            smoothScrollIntoFullViewAfterLayoutChange(saleCategoryViewHolder.itemView);
         } else if (mActivity.getResources().getBoolean(R.bool.should_use_old_category_layout)) { //should only display blank screen on old layout when response is empty
             ArrayList<GetCategoryTreeResponse> emptyChildren = new ArrayList<>();
             SubSaleCategoryAdapter mSubCategoryAdapter = new SubSaleCategoryAdapter(mActivity, emptyChildren, mSubCategoryItemClickListener, this, mCategoryMap);
@@ -268,6 +268,47 @@ public class SaleCategoryController extends BaseController
         subCategoriesViewHolder.subCategoryItemsRecyclerView.setLayoutManager(new LinearLayoutManager(subCategoriesViewHolder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
         subCategoriesViewHolder.subCategoryItemsRecyclerView.setAdapter(mSubCategoryItemsAdapter);
 
-        mRecyclerView.smoothScrollToPosition(subCategoriesViewHolder.getParentPosition());
+        smoothScrollIntoFullViewAfterLayoutChange(subCategoriesViewHolder.itemView);
+    }
+
+    private void smoothScrollIntoFullViewAfterLayoutChange(View view) {
+        final View.OnLayoutChangeListener layoutChangeListener = new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                smoothScrollIntoFullView(v);
+                v.removeOnLayoutChangeListener(this);
+            }
+        };
+        view.addOnLayoutChangeListener(layoutChangeListener);
+    }
+
+    private void smoothScrollIntoFullView(View view) {
+        if (view == null || !view.isAttachedToWindow() ||
+                mRecyclerView == null || !mRecyclerView.isAttachedToWindow()) {
+            return;
+        }
+
+        int[] pos1 = new int[2];
+        view.getLocationOnScreen(pos1);
+        int[] pos2 = new int[2];
+        mRecyclerView.getLocationOnScreen(pos2);
+
+        int top1 = pos1[1];
+        int top2 = pos2[1];
+
+        int height1 = view.getMeasuredHeight();
+        int height2 = mRecyclerView.getMeasuredHeight();
+
+        // try to scroll if bottom part will be clipped
+        if (height1 + top1 > height2 + top2) {
+            // check if scrolling to reveal the bottom edge will clip the top part
+            if (top1 - ((height1 + top1) - (height2 + top2)) < top2) {
+                // snap top edge to top of scrollview
+                mRecyclerView.smoothScrollBy(0, top1 - top2);
+            } else {
+                // snap bottom edge to bottom of scrollview
+                mRecyclerView.smoothScrollBy(0, (height1 + top1) - (height2 + top2));
+            }
+        }
     }
 }

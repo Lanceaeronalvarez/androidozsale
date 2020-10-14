@@ -8,15 +8,18 @@ import java.util.List;
 
 public class ApplyVouchersRequest {
 
-    public List<String> vouchers;
+    private List<String> vouchers;
 
-    public int imageSize;
+    private int imageSize;
 
-    public String languageID;
+    private String languageID;
 
-    public ApplyVouchersRequest(List<String> vouchers, int imageSize, String languageID) {
+    private String postcode;
+
+    public ApplyVouchersRequest(List<String> vouchers, String postcode, int imageSize, String languageID) {
         this.vouchers = vouchers;
         this.imageSize = imageSize;
         this.languageID = languageID;
+        this.postcode = postcode;
     }
 }

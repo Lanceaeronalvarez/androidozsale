@@ -13,10 +13,10 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface AddVouchersMvpPresenter<V extends AddVouchersMvpView> extends MvpPresenter<V> {
 
-    void applyVouchers(int imageSize, List<String> voucherIds);
+    void applyVouchers(String postcode, int imageSize, List<String> voucherIds);
 
-    void clearVouchers(int imageSize);
+    void clearVouchers(String postcode, int imageSize);
 
-    void addAndApplyVoucherByKey(int imageSize, String key);
+    void addAndApplyVoucherByKey(String postcode, int imageSize, String key);
 
 }

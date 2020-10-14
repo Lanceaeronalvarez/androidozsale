@@ -120,7 +120,7 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     @Override
     public boolean isGdprDisabled() {
         //consent mode 0, gdpr disabled. -1 default return value from preferences if no response is saved in preferences.
-        return ApiEndPoint.LEGACY_API_VERSION < 3.24;
+        return Double.parseDouble(ApiEndPoint.LEGACY_API_VERSION) < 3.24;
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -100,6 +101,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 import static android.graphics.Typeface.BOLD;
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
 
@@ -142,6 +144,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     TextView mSummarySubtotalTextView;
     @BindView(R.id.partial_checkout_summary_voucher)
     TextView mSummaryVoucherTextView;
+    @BindView(R.id.partial_checkout_summary_shipping_label)
+    TextView mSummaryShippingLabelTextView;
     @BindView(R.id.partial_checkout_summary_shipping_fee)
     TextView mSummaryShippingFeeTextView;
     @BindView(R.id.partial_checkout_summary_shipping_fee_container)
@@ -278,6 +282,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private boolean mHasSavedInstance = false;
     private HashMap<String, Object> parameters = new HashMap<>();
     private boolean isStripe;
+
+    private boolean isShipmentAvailable = true;
 
     public static CheckoutController newInstance() {
         return new CheckoutController(
@@ -501,7 +507,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             if (!isCartLoading()) {
                 setCartIsLoading(true);
-                mPresenter.callCartContent();
+                mPresenter.callCartContent(null);
             }
 
         } else {
@@ -651,8 +657,20 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
+    public void showCartDetailsPostcode(String postcode) {
+        if (mCheckoutHostView != null) {
+            mCheckoutHostView.showCartDetailsPostcode(postcode);
+        }
+        if (mAdapter == null) {
+            return;
+        }
+        mAdapter.setPostcodeOverride(postcode);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail) {
-        if (getBoolean(R.bool.is_ozsale_app) && mDeliveryAddress != null &&
+        if (getBoolean(R.bool.is_ozsale_app) &&
                 (deliveryOptions != null && !deliveryOptions.isEmpty())) {
             mDeliveryOptions = deliveryOptions;
             mDeliveryServicePackageDetail = deliveryServicePackageDetail;
@@ -697,13 +715,14 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         String ourpaySelectBeforePurchaseDesc = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY);
         String freeText = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_DELIVERYOPTION_OPS_FREE);
 
+        String priceText = isAddressValid() && deliveryOptionPrice != null ? PriceUtils.getPriceStringValue(deliveryOptionPrice) : null;
         if (deliveryOptionName.equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.STANDARD.toString()) ||
                 deliveryOptionName.equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.EXPRESS.toString())) {
             mDeliveryOptionTypeText.setVisibility(View.VISIBLE);
             mDeliveryOptionTypeOurPay.setVisibility(View.GONE);
 
             mDeliveryOptionTypeText.setText(deliveryOptionName);
-            mDeliveryOptionPriceTextView.setText(PriceUtils.getPriceStringValue(deliveryOptionPrice));
+            mDeliveryOptionPriceTextView.setText(priceText);
             mDeliveryOptionTypeText.setTypeface(mDeliveryOptionTypeText.getTypeface(), Typeface.BOLD);
         } else if (deliveryOptionName.equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.OURPAYSELECT.toString())) {
 
@@ -715,10 +734,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mDeliveryOptionTypeOurPay.setVisibility(View.VISIBLE);
 
                 if (mDeliveryServicePackageDetail.getPurchased()) {
-                    mDeliveryOptionPriceTextView.setText(freeText);
+                    mDeliveryOptionPriceTextView.setText(priceText != null ? freeText : null);
                     mDeliveryOptionOurpaySelectDescriptionTextView.setText(ourpaySelectBeforePurchaseDesc);
                 } else {
-                    mDeliveryOptionPriceTextView.setText(PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount()));
+                    mDeliveryOptionPriceTextView.setText(priceText);
                     mDeliveryOptionOurpaySelectDescriptionTextView.setText(ourpaySelectDescription);
                 }
             }
@@ -731,7 +750,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (paymentMethod != null) {
             if (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS)) {
                 selectStandardDeliveryOption();
-                mPresenter.setDeliveryOption(createStandardDeliveryOptionRequest());
+                String postcode = mDeliveryAddress != null ? mDeliveryAddress.getPostcode() : null;
+                mPresenter.setDeliveryOption(createStandardDeliveryOptionRequest(), postcode);
                 return true;
             }
         }
@@ -836,45 +856,15 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
+    public void setIsShipmentAvailable(boolean isShipmentAvailable) {
+        this.isShipmentAvailable = isShipmentAvailable;
+    }
+
+    @Override
     public void showSummaryDetails(Summary summary) {
         if (summary != null) {
-            mSummarySubtotalTextView.setText(PriceUtils.getPriceStringValue(summary.getSubtotal()));
-
-            if (summary.getDelivery() == 0) {
-                mSummaryShippingFeeTextView.setVisibility(View.GONE);
-                mFreeShippingLayout.setVisibility(View.VISIBLE);
-            } else if (mDeliveryAddress == null) {
-                mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
-                mFreeShippingLayout.setVisibility(View.GONE);
-                mSummaryShippingFeeTextView.setText(mActivity.getResources().getString(R.string.enter_address_above));
-                mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.enter_address_text_color));
-            } else {
-                mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
-                mSummaryShippingFeeTextView.setText(PriceUtils.getPriceStringValue(summary.getDelivery()));
-                mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.text_dark));
-                mFreeShippingLayout.setVisibility(View.GONE);
-            }
-
-            mSummaryVoucherTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()));
-            mDiscountValue = summary.getDiscount();
-
-            if (summary.getTax() > 0) {
-                mSummaryTaxTextView.setText(PriceUtils.getPriceStringValue(summary.getTax()));
-                mSummaryTaxContainer.setVisibility(View.VISIBLE);
-            } else {
-                mSummaryTaxContainer.setVisibility(View.GONE);
-            }
-
-            if (summary.getDiscount() > 0) {
-                mIsVoucherAdded = true;
-                mVoucherValueContainer.setVisibility(View.VISIBLE);
-                mVoucherValueTextView.setVisibility(View.VISIBLE);
-                mVoucherValueTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()) + " " + getString(R.string.voucher));
-            } else {
-                mIsVoucherAdded = false;
-                mVoucherValueTextView.setVisibility(View.GONE);
-                mVoucherValueContainer.setVisibility(View.GONE);
-            }
+            setupSummaryShipping(summary);
+            setupSummaryVouchers(summary);
 
             if (mDeliveryAddress == null) {
                 mSummaryTotalTextView.setVisibility(View.GONE);
@@ -886,7 +876,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             // show ourpay select related summary, should been purchased yet if visible.
             if (isOurPaySelectDeliveryMethod() && !mDeliveryServicePackageDetail.getPurchased()) {
                 mSummaryOurpaySelectContainer.setVisibility(View.VISIBLE);
-                mSummaryShippingFeeContainer.setVisibility(View.GONE);
                 mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(summary.getSelect()));
                 mSummaryTotalTextView.setText(PriceUtils.getPriceStringValue(summary.getTotalWithSelect()));
             } else {
@@ -894,6 +883,86 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             }
         }
 
+    }
+
+    private void setupSummaryShipping(Summary summary) {
+        if (isOurPaySelectDeliveryMethod() && !mDeliveryServicePackageDetail.getPurchased()) {
+            mSummaryShippingFeeContainer.setVisibility(View.GONE);
+        } else {
+            mSummaryShippingFeeContainer.setVisibility(View.VISIBLE);
+        }
+
+        mSummarySubtotalTextView.setText(PriceUtils.getPriceStringValue(summary.getSubtotal()));
+        String postcode = mDeliveryAddress != null ? mDeliveryAddress.getPostcode() : null;
+
+        if (!mPresenter.isShippingByPostcodeEnabled() ||
+                postcode == null || summary.getDelivery() == null) {
+            mSummaryShippingLabelTextView.setText(mActivity.getResources().getString(R.string.shipping_text));
+        } else {
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(
+                    mActivity.getResources().getString(R.string.shipping_text)
+            );
+            spannableStringBuilder.append(" (");
+            int start = spannableStringBuilder.length();
+            int color = mActivity.getResources().getColor(R.color.checkout_item_footer_other_text_color);
+            spannableStringBuilder.append(
+                    postcode,
+                    new StyleSpan(BOLD),
+                    SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableStringBuilder.setSpan(
+                    new ForegroundColorSpan(color),
+                    start,
+                    spannableStringBuilder.length(),
+                    SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableStringBuilder.append(")");
+            mSummaryShippingLabelTextView.setText(spannableStringBuilder);
+        }
+
+        if (mPresenter.isShippingByPostcodeEnabled() && !isShipmentAvailable) {
+            mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
+            mSummaryShippingFeeTextView.setText(mPresenter.getTemplateTextsRepository().getUnavailable());
+            mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.checkout_item_footer_red_text_color));
+            mFreeShippingLayout.setVisibility(View.GONE);
+        } else if (!isAddressValid()) {
+            mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
+            mFreeShippingLayout.setVisibility(View.GONE);
+            mSummaryShippingFeeTextView.setText(mActivity.getResources().getString(R.string.enter_address_above));
+            mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.enter_address_text_color));
+        } else if (summary.getDelivery() == null) {
+            mSummaryShippingFeeTextView.setVisibility(View.GONE);
+            mFreeShippingLayout.setVisibility(View.GONE);
+        } else if (summary.getDelivery() == 0) {
+            mSummaryShippingFeeTextView.setVisibility(View.GONE);
+            mFreeShippingLayout.setVisibility(View.VISIBLE);
+        } else {
+            mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
+            mSummaryShippingFeeTextView.setText(PriceUtils.getPriceStringValue(summary.getDelivery()));
+            mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.text_dark));
+            mFreeShippingLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private void setupSummaryVouchers(Summary summary) {
+        mSummaryVoucherTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()));
+        mDiscountValue = summary.getDiscount();
+
+        if (summary.getTax() > 0) {
+            mSummaryTaxTextView.setText(PriceUtils.getPriceStringValue(summary.getTax()));
+            mSummaryTaxContainer.setVisibility(View.VISIBLE);
+        } else {
+            mSummaryTaxContainer.setVisibility(View.GONE);
+        }
+
+        if (summary.getDiscount() > 0) {
+            mIsVoucherAdded = true;
+            mVoucherValueContainer.setVisibility(View.VISIBLE);
+            mVoucherValueTextView.setVisibility(View.VISIBLE);
+            mVoucherValueTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()) + " " + getString(R.string.voucher));
+        } else {
+            mIsVoucherAdded = false;
+            mVoucherValueTextView.setVisibility(View.GONE);
+            mVoucherValueContainer.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -1033,13 +1102,25 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
     }
 
+    private void showShippingUnavailableMessage() {
+        mActivity.showErrorMessage(mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocationMessage());
+    }
+
+    private boolean commonPaymentAbilityDetermination() {
+        if (!isAddressValid()) {
+            showAddAddressController();
+            return false;
+        } else if (mPresenter.isShippingByPostcodeEnabled() && !isShipmentAvailable) {
+            showShippingUnavailableMessage();
+            return false;
+        }
+        return true;
+    }
+
     private void onPayButtonClick() {
         String paymentLogType = AppConstants.REGULAR;
 
-        if (!isAddressValid()) {
-
-            //push add new address fragment.
-            showAddAddressController();
+        if (!commonPaymentAbilityDetermination()) {
             mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                     mValue.getSummary().getTotal(), paymentLogType);
             return;
@@ -1082,11 +1163,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.PAYPAL);
 
-        if (!isAddressValid()) {
-            //push add new address fragment
-            showAddAddressController();
+        if (!commonPaymentAbilityDetermination()) {
             return;
         }
+
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.PAYPAL);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
@@ -1106,10 +1186,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.PAYPALCREDIT);
 
-        if (!isAddressValid()) {
-            showAddAddressController();
+        if (!commonPaymentAbilityDetermination()) {
             return;
         }
+
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.PAYPAL);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.PAYPAL.getValue());
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
@@ -1129,12 +1209,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.MASTERPASS);
 
-        if (!isAddressValid()) {
-
-            //push add new address fragment.
-            showAddAddressController();
+        if (!commonPaymentAbilityDetermination()) {
             return;
         }
+
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.MASTERPASS);
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.MASTERPASS.getValue());
@@ -1172,10 +1250,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_AFTERPAY, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.AFTERPAY);
 
-        if (!isAddressValid()) {
-
-            //push add new address fragment.
-            showAddAddressController();
+        if (commonPaymentAbilityDetermination()) {
             return;
         }
 
@@ -1203,12 +1278,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         setIsOurPaySelectedDeliveryOption(true);
 
-        if (!isAddressValid()) {
+        if (!commonPaymentAbilityDetermination()) {
+            return;
+        }
 
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, mActivity.getString(R.string.add_address_before_payment));
-            showAddAddressController();
-
-        } else if (mActivity.getPaymentMethodSelected() == null) {
+        if (mActivity.getPaymentMethodSelected() == null) {
 
             showAddPaymentMethodController();
 

@@ -53,6 +53,7 @@
             android:paddingTop="@dimen/margin_extra_small">
 
             <TextView
+                android:id="@+id/partial_checkout_summary_shipping_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -84,7 +85,7 @@
                     android:drawablePadding="@dimen/margin_tiny"
                     android:text="@string/free_shipping_text"
                     android:textAllCaps="true"
-                    android:textColor="@color/color_free_shipping_text"
+                    android:textColor="@color/checkout_item_footer_other_text_color"
                     android:textSize="@dimen/text_size_caption2"
                     android:textStyle="bold" />
             </RelativeLayout>

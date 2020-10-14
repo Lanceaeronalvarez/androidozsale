@@ -3,10 +3,6 @@ package au.com.dealsdirect.ui.controller.vouchers.Add;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +11,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -216,7 +216,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
         mButtonApply.setOnClickListener(view2 -> {
             if (voucherIds.size() != 0 && tempVoucherIds.size() != 0) {
-                mPresenter.applyVouchers(100, voucherIds);
+                mPresenter.applyVouchers(null, 100, voucherIds);
 
             } else {
                 CustomAlertDialog.showCustomAlertDialog(
@@ -238,8 +238,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
         mAddVoucherButton.setOnClickListener(action -> {
             if (!mPromoCodeText.getText().toString().isEmpty()) {
-
-                mPresenter.addAndApplyVoucherByKey(100, mPromoCodeText.getText().toString());
+                mPresenter.addAndApplyVoucherByKey(null, 100, mPromoCodeText.getText().toString());
                 mTempVoucherPromoKey = mPromoCodeText.getText().toString();
                 mPromoCodeText.clearFocus();
                 hideKeyboard();
@@ -360,7 +359,7 @@ public class AddVouchersController extends BaseController implements AddVouchers
                     mActivity.getString(R.string.promo_code_applied)
             );
 
-            mCheckoutMvpView.showPromoCodeApplied(mTempVoucherPromoKey,true);
+            mCheckoutMvpView.showPromoCodeApplied(mTempVoucherPromoKey, true);
             voucherIds.add(mTempVoucherPromoKey);
             tempVoucherIds.add(mTempVoucherPromoKey);
 
@@ -415,7 +414,6 @@ public class AddVouchersController extends BaseController implements AddVouchers
     }
 
     private void clearAppliedVouchers() {
-        mPresenter.clearVouchers(100);
-
+        mPresenter.clearVouchers(null, 100);
     }
 }

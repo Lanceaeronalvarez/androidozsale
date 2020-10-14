@@ -254,7 +254,8 @@
     <color name="ourpay_installment_circle_success">#50d050</color>
 
     <color name="bg_fcm_notif">#F00065</color>
-    <color name="color_free_shipping_text">#00B5E9</color>
+    <color name="checkout_item_footer_other_text_color">#46A1D8</color>
+    <color name="checkout_item_footer_red_text_color">@color/ourpay_red</color>
 
     <color name="text_link_color">#007CF7</color>
     <color name="checkout_selected_text_color">#000000</color>
