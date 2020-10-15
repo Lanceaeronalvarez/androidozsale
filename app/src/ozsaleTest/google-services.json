@@ -25,17 +25,16 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "211462705866-5cuv31d0aamdhhbg4hgr46vtthanb8ob.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-4114338578467810~8730982743"
     },
     {
       "client_info": {
@@ -56,15 +55,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "211462705866-5cuv31d0aamdhhbg4hgr46vtthanb8ob.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

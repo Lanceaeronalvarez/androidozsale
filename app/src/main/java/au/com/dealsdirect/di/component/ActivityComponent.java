@@ -5,7 +5,6 @@ package au.com.dealsdirect.di.component;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.di.module.ActivityModule;
-import au.com.dealsdirect.service.event.ActionTrackerInterface;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
 import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -25,8 +24,6 @@ public interface ActivityComponent {
     CompositeDisposable getCompositeDisposable();
 
     SchedulerProvider getSchedulerProvider();
-
-    ActionTrackerInterface getActionTracker();
 
     GenieEventServiceInterface getGenieEventService();
 

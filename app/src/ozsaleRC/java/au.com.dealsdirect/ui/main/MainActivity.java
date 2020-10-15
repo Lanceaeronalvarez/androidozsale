@@ -74,7 +74,6 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrent
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.service.datacollection.enums.Events;
-import au.com.dealsdirect.service.event.ActionTrackerInterface;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
 import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.service.ourpay.Ourpay;
@@ -133,8 +132,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private static final String TAG = "MainActivity";
     private Router mRouter;
-
-    protected ActionTrackerInterface mActionTracker;
 
     protected GenieEventServiceInterface mGenieEventService;
 
@@ -217,7 +214,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         // Init All analytics sdk
         mPresenter.initializeAnalytics(this, this.getApplication());
-        mActionTracker = getActivityComponent().getActionTracker();
         mGenieEventService = getActivityComponent().getGenieEventService();
         mFirebaseEventService = getActivityComponent().getFirebaseEventService();
         mRouter = Conductor.attachRouter(this, mContainer, savedInstanceState);
@@ -1552,10 +1548,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public AccountController getAccountController() {
         return mAccountController;
-    }
-
-    public ActionTrackerInterface getActionTracker() {
-        return mActionTracker;
     }
 
     public GenieEventServiceInterface getGenieEventService() {

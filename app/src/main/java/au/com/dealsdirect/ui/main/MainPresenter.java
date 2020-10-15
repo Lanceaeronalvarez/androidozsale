@@ -8,10 +8,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.androidnetworking.error.ANError;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.facebook.FacebookSdk;
 import com.facebook.LoggingBehavior;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
@@ -71,7 +71,6 @@ import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.DeepLinkUrlType;
 import au.com.dealsdirect.utils.GdprUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
-import io.fabric.sdk.android.Fabric;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -866,11 +865,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             NewRelic.withApplicationToken(activityContext.getResources().getString(R.string.new_relic_app_token)).start(applicationContext);
         }
 
-        // Fabric
-        if (!BuildConfig.DEBUG) {
-            Fabric.with(activityContext, new Crashlytics());
-        }
-        Fabric.with(activityContext, new Answers());
+        boolean shouldFirebaseBeEnabled = !BuildConfig.DEBUG || BuildConfig.IS_TEST;
+        FirebaseAnalytics.getInstance(applicationContext).setAnalyticsCollectionEnabled(shouldFirebaseBeEnabled);
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(shouldFirebaseBeEnabled);
+
         // Facebook Events
         initFacebookAnalytics();
 

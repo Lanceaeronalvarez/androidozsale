@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 apply plugin: 'newrelic'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 def buildType
 
@@ -12,7 +13,7 @@ android {
         disable 'MissingTranslation'
     }
 
-        defaultConfig {
+    defaultConfig {
         applicationId "au.com.dealsdirect.rc"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -43,7 +44,6 @@ android {
             resValue "bool", "debug_mode", ext.debugMode
             aaptOptions.cruncherEnabled = true
             ext.alwaysUpdateBulidId = true
-
         }
 
         // Always use debug variant during development
@@ -52,7 +52,6 @@ android {
             resValue "bool", "debug_mode", ext.debugMode
             aaptOptions.cruncherEnabled = false
             ext.alwaysUpdateBulidId = false
-
         }
     }
 
@@ -60,8 +59,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -85,8 +84,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -191,8 +190,8 @@ android {
         }
 
         dealsDirect2RC {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -217,8 +216,8 @@ android {
         }
 
         dealsDirect2Test {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -238,8 +237,8 @@ android {
         }
 
         ooRC {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -263,8 +262,8 @@ android {
         }
 
         ooTest {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -305,8 +304,8 @@ android {
         }
 
         topbuy2RC {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -351,8 +350,8 @@ android {
         }
 
         topbuy2Test {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -395,8 +394,8 @@ android {
         }
 
         ozsaleRC {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -421,8 +420,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "au.com.ozsale.test"
 
             ext.appName = "Ozsale Test"
@@ -446,8 +445,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -472,9 +471,9 @@ android {
         }
 
         singsaleTest {
-            versionCode 258
-            versionName "4.6.0"
-            applicationId "sg.com.singsaletest"
+            versionCode 260
+            versionName "4.6.1"
+            applicationId "sg.com.singsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
             buildConfigField "boolean", "IS_TEST", "true"
@@ -493,8 +492,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -519,8 +518,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "nz.co.nzsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -541,8 +540,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -566,8 +565,8 @@ android {
         }
 
         mysaleTest {
-            versionCode 258
-            versionName "4.6.0"
+            versionCode 260
+            versionName "4.6.1"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -635,14 +634,14 @@ android {
         }
 
         dealsDirect2RC {
-            res.srcDirs = ['src/dealsDirect2RC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/dealsDirect2RC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         dealsDirect2Test {
-            res.srcDirs = ['src/dealsDirect2RC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/dealsDirect2RC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
@@ -665,8 +664,8 @@ android {
         buyinviteRC {
             res.srcDirs = ['src/buyinviteTest/res/', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-            'src/commonControllers/java/',
-            'src/main/java/']
+                            'src/commonControllers/java/',
+                            'src/main/java/']
         }
 
         buyinviteTest {
@@ -699,84 +698,84 @@ android {
         }
 
         topbuy2Test {
-            res.srcDirs = ['src/topbuy2RC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/topbuy2RC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         topbuy2RC {
-            res.srcDirs = ['src/topbuy2RC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/topbuy2RC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         ozsaleRC {
-            res.srcDirs = ['src/ozsaleRC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/ozsaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         ozsaleTest {
-            res.srcDirs = ['src/ozsaleRC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/ozsaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         singsaleRC {
-            res.srcDirs = ['src/singsaleRC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/singsaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         singsaleTest {
-            res.srcDirs = ['src/singsaleRC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/singsaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         cocosaRC {
-            res.srcDirs = ['src/cocosaRC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/cocosaRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         cocosaTest {
-            res.srcDirs = ['src/cocosaRC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/cocosaRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         nzsaleRC {
-            res.srcDirs = ['src/nzsaleRC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/nzsaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         nzsaleTest {
-            res.srcDirs = ['src/nzsaleRC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/nzsaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         mysaleRC {
-            res.srcDirs = ['src/mysaleRC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/mysaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
         }
 
         mysaleTest {
-            res.srcDirs = ['src/mysaleRC/res','src/ozsaleCommon/res']
+            res.srcDirs = ['src/mysaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
@@ -814,8 +813,8 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.databinding:databinding-runtime:1.0.0'
-    implementation 'androidx.databinding:databinding-adapters:1.0.0'
+    implementation 'androidx.databinding:databinding-runtime:4.0.1'
+    implementation 'androidx.databinding:databinding-adapters:4.0.1'
 
     // android support libraries
     implementation 'androidx.appcompat:appcompat:1.0.0'
@@ -857,9 +856,10 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
 
     // code generator for view
+    //noinspection AnnotationProcessorOnCompilePath
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
-    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
 
     // swipe view
     implementation "com.mindorks:placeholderview:$rootProject.placeholderviewVersion"
@@ -881,7 +881,7 @@ dependencies {
     // recycler view pager
     implementation "com.github.lsjwzh.RecyclerViewPager:lib:$rootProject.recyclerViewPagerVersion"
     // advanced recyclerview
-    implementation ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar')
+    implementation('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar')
     // flow layout
     implementation "com.zhy:flowlayout-lib:$rootProject.flowLayoutVersion"
     // photo view
@@ -935,18 +935,14 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 
-    // Answers
-    implementation('com.crashlytics.sdk.android:answers:1.4.2@aar') {
-        transitive = true
-    }
-
     // NR
     implementation 'com.newrelic.agent.android:android-agent:5.24.0'
 
-    // Firebasez
-    implementation 'com.google.firebase:firebase-core:17.5.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    // Firebase
+    implementation 'com.google.firebase:firebase-core:17.5.1'
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
+    implementation 'com.google.firebase:firebase-analytics:17.6.0'
+    implementation 'com.google.firebase:firebase-messaging:20.3.0'
 
     implementation 'com.loopj.android:android-async-http:1.4.9'
 
@@ -954,15 +950,15 @@ dependencies {
     implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
     implementation(group: 'com.visa.checkout', name: 'visacheckout-android-sdk', version: '6.6.1', ext: 'aar')
 
-    implementation 'com.squareup.okio:okio:1.13.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.squareup.okio:okio:1.15.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
 
-    implementation 'com.google.android.gms:play-services-ads:17.2.1'
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'com.google.android.gms:play-services-ads:19.4.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     // reCAPTCHA
-    implementation 'com.google.android.gms:play-services-safetynet:16.0.0'
+    implementation 'com.google.android.gms:play-services-safetynet:17.0.0'
 
     implementation 'com.stripe:stripe-android:11.1.4'
 
@@ -1003,7 +999,7 @@ configurations.all {
 }
 
 //Below tasks is for automation checklist
-task printVersionName{
+task printVersionName {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1014,7 +1010,7 @@ task printVersionName{
     }
 }
 
-task printVersionCode{
+task printVersionCode {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1025,7 +1021,7 @@ task printVersionCode{
     }
 }
 
-task printApplicationId{
+task printApplicationId {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1036,7 +1032,7 @@ task printApplicationId{
     }
 }
 
-task printCompileSdkVersion{
+task printCompileSdkVersion {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1048,7 +1044,7 @@ task printCompileSdkVersion{
     }
 }
 
-task printMinSdkVersion{
+task printMinSdkVersion {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1059,7 +1055,7 @@ task printMinSdkVersion{
     }
 }
 
-task printTargetSdkVersion{
+task printTargetSdkVersion {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1070,7 +1066,7 @@ task printTargetSdkVersion{
     }
 }
 
-task printBuildToolsVersion{
+task printBuildToolsVersion {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1081,7 +1077,7 @@ task printBuildToolsVersion{
     }
 }
 
-task printSupportLibrary{
+task printSupportLibrary {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1092,7 +1088,7 @@ task printSupportLibrary{
     }
 }
 
-task printAppName{
+task printAppName {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1103,7 +1099,7 @@ task printAppName{
     }
 }
 
-task printFacebookAppId{
+task printFacebookAppId {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1114,7 +1110,7 @@ task printFacebookAppId{
     }
 }
 
-task printFacebookAppSecret{
+task printFacebookAppSecret {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1125,7 +1121,7 @@ task printFacebookAppSecret{
     }
 }
 
-task printNewRelicAppToken{
+task printNewRelicAppToken {
     doLast {
         android.productFlavors.all {
             flavor ->
@@ -1135,7 +1131,6 @@ task printNewRelicAppToken{
         }
     }
 }
-
 
 
 task printDebugMode {
@@ -1166,7 +1161,7 @@ task parseAdmobAppId {
         android.productFlavors.all {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
-                    def xmlFile = "app/src/"+flavorName+"/res/values/strings.xml"
+                    def xmlFile = "app/src/" + flavorName + "/res/values/strings.xml"
                     def parseXml = new XmlParser().parse(xmlFile)
 
                     def getAdmobAppId = parseXml.children().get(0)
@@ -1185,7 +1180,7 @@ task parseAdmobBanners {
         android.productFlavors.all {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
-                    def xmlFile = "app/src/"+flavorName+"/res/values/strings.xml"
+                    def xmlFile = "app/src/" + flavorName + "/res/values/strings.xml"
                     def parseXml = new XmlParser().parse(xmlFile)
 
                     def getAdmobBanners = parseXml.children().get(1)
@@ -1203,7 +1198,7 @@ task parseAdmobProducts {
         android.productFlavors.all {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
-                    def xmlFile = "app/src/"+flavorName+"/res/values/strings.xml"
+                    def xmlFile = "app/src/" + flavorName + "/res/values/strings.xml"
                     def parseXml = new XmlParser().parse(xmlFile)
 
                     def getAdmobProducts = parseXml.children().get(2)
@@ -1221,7 +1216,7 @@ task parseAdmobAccount {
         android.productFlavors.all {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
-                    def xmlFile = "app/src/"+flavorName+"/res/values/strings.xml"
+                    def xmlFile = "app/src/" + flavorName + "/res/values/strings.xml"
                     def parseXml = new XmlParser().parse(xmlFile)
 
                     def getAdmobAccount = parseXml.children().get(3)
@@ -1243,9 +1238,9 @@ task getLegacyVersion {
                 android.productFlavors.all {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
-                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            def buildVariant = flavorName + variant.buildType.name.capitalize()
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
                                 main = "au.com.dealsdirect.data.network.ApiEndPoint"
                             }
                         }
@@ -1265,9 +1260,9 @@ task printCountryId {
                 android.productFlavors.all {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
-                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            def buildVariant = flavorName + variant.buildType.name.capitalize()
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
                                 main = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_COUNTRY_ID"
                             }
@@ -1287,9 +1282,9 @@ task printAccountId {
                 android.productFlavors.all {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
-                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            def buildVariant = flavorName + variant.buildType.name.capitalize()
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
                                 main = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_ACCOUNT_ID"
                             }
@@ -1309,9 +1304,9 @@ task printGenieApi {
                 android.productFlavors.all {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
-                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            def buildVariant = flavorName + variant.buildType.name.capitalize()
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
                                 main = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_GENIE_API"
                             }
@@ -1331,9 +1326,9 @@ task printCurrencyCode {
                 android.productFlavors.all {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
-                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            def buildVariant = flavorName + variant.buildType.name.capitalize()
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
                                 main = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_CURRENCY_CODE"
                             }
@@ -1353,9 +1348,9 @@ task printRecaptcha {
                 android.productFlavors.all {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
-                            def buildVariant = flavorName+variant.buildType.name.capitalize()
+                            def buildVariant = flavorName + variant.buildType.name.capitalize()
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/"+buildVariant+"/classes/")
+                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
                                 main = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args "", flavorName, "PRINT_RECAPTCHA"
                             }

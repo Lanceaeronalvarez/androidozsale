@@ -5,7 +5,6 @@ import android.app.Activity;
 
 import com.bluelinelabs.conductor.Controller;
 
-import au.com.dealsdirect.service.event.ActionTrackerInterface;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
 import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.ui.base.BaseActivity;
@@ -390,16 +389,6 @@ public class ControllerModule {
     MainActivity provideActivity() {
         return ((MainActivity) mController.getActivity());
     }
-
-    @Provides
-    ActionTrackerInterface provideActionTracker() {
-        return ((MainActivity) mController.getActivity()).getActionTracker();
-    }
-
-//    @Provides
-//    ActionTracker provideActionTracker() {
-//        return ((MainActivity) mController.getActivity()).getActionTracker();
-//    }
 
     @Provides
     GenieEventServiceInterface provideGenieEventService() {
