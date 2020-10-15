@@ -6,15 +6,16 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
@@ -24,7 +25,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.di.component.ControllerComponent;
 import au.com.dealsdirect.di.component.DaggerControllerComponent;
 import au.com.dealsdirect.di.module.ControllerModule;
-import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
 import au.com.dealsdirect.service.datacollection.registerservices.FirebaseAnalyticsService;
 import au.com.dealsdirect.service.datacollection.registerservices.GenieEventService;
 import au.com.dealsdirect.ui.main.MainActivity;
@@ -36,9 +36,6 @@ public abstract class BaseController
 
     @Inject
     protected MainActivity mActivity;
-
-    @Inject
-    protected ActionTracker mActionTracker;
 
     @Inject
     protected GenieEventService mGenieEventService;

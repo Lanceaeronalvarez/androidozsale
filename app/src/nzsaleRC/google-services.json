@@ -22,23 +22,19 @@
       "api_key": [
         {
           "current_key": "AIzaSyBV0RSwqlLQMbJwZ5Gz-526ECsmL63UggQ"
-        },
-        {
-          "current_key": "AIzaSyDndUEV_NCVmMuUTlkFKyAYY12TICYmRoU"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "118822854515-v64657qan6d3jk7q1mtiog6n0rihbvbc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-4114338578467810~5978596822"
     },
     {
       "client_info": {
@@ -56,21 +52,16 @@
       "api_key": [
         {
           "current_key": "AIzaSyBV0RSwqlLQMbJwZ5Gz-526ECsmL63UggQ"
-        },
-        {
-          "current_key": "AIzaSyDndUEV_NCVmMuUTlkFKyAYY12TICYmRoU"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "118822854515-v64657qan6d3jk7q1mtiog6n0rihbvbc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

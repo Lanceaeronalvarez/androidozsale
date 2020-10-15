@@ -157,12 +157,6 @@
         </activity>
         <!-- [END facebook] -->
 
-        <!-- [START CLS] -->
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="156e897ec909d04276fe681aef03572370ac089e" />
-        <!-- [END CLS] -->
-
         <!--[START ADMOB APP ID]-->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

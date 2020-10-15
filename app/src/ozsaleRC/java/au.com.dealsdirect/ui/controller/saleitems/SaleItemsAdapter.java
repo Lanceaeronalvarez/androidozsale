@@ -17,7 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.List;
@@ -220,8 +220,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
         //Added key to check for crash report
         if (!BuildConfig.DEBUG) {
-            Crashlytics.setString("Brand Name", product.getBrandName());
-            Crashlytics.setString("Image Url", url);
+            FirebaseCrashlytics.getInstance().setCustomKey("Brand Name", product.getBrandName());
+            FirebaseCrashlytics.getInstance().setCustomKey("Image Url", url);
         }
 
         ImageUtils.loadImageWithPlaceholder(url,

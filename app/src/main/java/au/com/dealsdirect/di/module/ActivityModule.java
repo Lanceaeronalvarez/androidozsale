@@ -16,8 +16,6 @@ import au.com.dealsdirect.di.ActivityContext;
 import au.com.dealsdirect.di.PerActivity;
 import au.com.dealsdirect.service.datacollection.registerservices.FirebaseAnalyticsService;
 import au.com.dealsdirect.service.datacollection.registerservices.GenieEventService;
-import au.com.dealsdirect.service.datacollection.registerservices.ActionTracker;
-import au.com.dealsdirect.service.event.ActionTrackerInterface;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
 import au.com.dealsdirect.service.event.GenieEventServiceInterface;
 import au.com.dealsdirect.ui.main.MainMvpPresenter;
@@ -67,12 +65,6 @@ public class ActivityModule {
 
     @Provides
     @PerActivity
-    ActionTrackerInterface provideActionTracker(ActionTracker actionTracker){
-        return actionTracker;
-    }
-
-    @Provides
-    @PerActivity
     GenieEventServiceInterface provideGenieEventService(GenieEventService genieEventService) {
         return genieEventService;
     }
@@ -85,13 +77,13 @@ public class ActivityModule {
 
     @Provides
     @PerActivity
-    ProfilerInterface provideProfiler(){
+    ProfilerInterface provideProfiler() {
         return new Profiler();
     }
 
     @Provides
     @Singleton
-    BraintreeFragment provideBrainTreeFragment(AppCompatActivity activity, String authorization){
+    BraintreeFragment provideBrainTreeFragment(AppCompatActivity activity, String authorization) {
         try {
             return BraintreeFragment.newInstance(activity, authorization);
         } catch (InvalidArgumentException e) {
