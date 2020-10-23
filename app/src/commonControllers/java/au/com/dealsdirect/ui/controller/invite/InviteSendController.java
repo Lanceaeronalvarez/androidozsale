@@ -194,8 +194,6 @@ public class InviteSendController extends BasePullToRefreshController implements
         assert mActivity != null;
         mActivity.getMainController().showBottomNav();
 
-        mActivity.getMainController().setViewpagerDraggable(false);
-
         if(mPresenter.isTablet()){
             mLeftView.setVisibility(View.INVISIBLE);
         }

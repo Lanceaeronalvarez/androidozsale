@@ -1,9 +1,6 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +9,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -28,7 +29,6 @@ import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -37,7 +37,7 @@ import butterknife.OnClick;
  * Created by smartwave on 22/06/2017.
  */
 
-public class OrdersController extends BasePullToRefreshController implements OrdersMvpView, OrderItemClickListener{
+public class OrdersController extends BasePullToRefreshController implements OrdersMvpView, OrderItemClickListener {
     @Inject
     OrdersMvpPresenter<OrdersMvpView> mPresenter;
 
@@ -122,11 +122,9 @@ public class OrdersController extends BasePullToRefreshController implements Ord
         mPresenter.loadOrders();
 
         mShopNowButton.setOnClickListener(view1 -> {
-            mActivity.getHomeController().getCurrentRouter().popToRoot();
-            mActivity.getHomeController().showShopController();
+            mActivity.getMainController().getCurrentRouter().popToRoot();
+            mActivity.getMainController().showShopController();
         });
-
-        mActivity.getMainController().setViewpagerDraggable(false);
     }
 
     @Override
@@ -145,7 +143,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
                 mOrders.clear();
             }
             mOrders.addAll(orders);
-            mAdapter = new OrdersRecyclerViewAdapter(mActivity,this, orders);
+            mAdapter = new OrdersRecyclerViewAdapter(mActivity, this, orders);
             mRecyclerView.setAdapter(mAdapter);
         }
 
@@ -198,7 +196,7 @@ public class OrdersController extends BasePullToRefreshController implements Ord
     }
 
     @Override
-    public void onOrderItemShowOptions(View view, ArrayList<String> arrayList, HashMap<String,String> hashMap) {
+    public void onOrderItemShowOptions(View view, ArrayList<String> arrayList, HashMap<String, String> hashMap) {
 
         if (mPresenter.isTablet()) {
             mActivity.showPopupMenu(view, arrayList, hashMap);

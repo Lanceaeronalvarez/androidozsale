@@ -9,7 +9,9 @@
     <com.github.chrisbanes.photoview.ScalableImageView
         android:id="@+id/controller_floating_image_viewer_imageview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <Button
         android:id="@+id/controller_floating_image_viewer_closebutton"

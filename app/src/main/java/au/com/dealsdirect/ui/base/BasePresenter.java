@@ -135,6 +135,8 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 
     @Override
     public Disposable doApiCallForResponse(Observable observable, ApiCallback callback) {
+        final StackTraceElement[] trace = (new Exception()).getStackTrace();
+
         Disposable disposable = observable
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
@@ -151,6 +153,8 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+
+                        StackTraceElement[] traceElements = trace;
 
                         if (mMvpView != null && mMvpView.isViewAttached()) {
                             handleApiCallFailure(throwable, callback);

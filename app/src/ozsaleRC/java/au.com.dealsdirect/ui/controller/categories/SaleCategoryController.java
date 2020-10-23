@@ -110,8 +110,6 @@ public class SaleCategoryController extends BaseController
         super.onViewBound(view);
 
         assert (mActivity) != null;
-        mActivity.setDraggableViewPager(false);
-        mActivity.setCategoriesRouter(getRouter());
         mActivity.setSaleCategoryController(this);
         hideKeyboard();
 
@@ -130,7 +128,7 @@ public class SaleCategoryController extends BaseController
         super.onViewDidAppear(previousController);
         if (previousController == null) {
             mPresenter.callGetCategoryTree();
-            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+            mActivity.getMainController().setSavedCurrentItem();
         }
     }
 

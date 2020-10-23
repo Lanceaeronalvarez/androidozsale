@@ -80,8 +80,6 @@ public class LegalitiesController extends BasePullToRefreshController implements
 
     @Override
     protected void setUp(View view) {
-        mActivity.setDraggableViewPager(false);
-
         mTitleText.setText(title);
         mFilterButton.setVisibility(View.INVISIBLE);
         mPresenter.loadText(key);

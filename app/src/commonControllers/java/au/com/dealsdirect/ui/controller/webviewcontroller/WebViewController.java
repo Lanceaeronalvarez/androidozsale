@@ -83,8 +83,6 @@ public class WebViewController extends BasePullToRefreshController implements We
 
     @Override
     protected void setUp(View view) {
-        mActivity.setDraggableViewPager(false);
-
         mTitleText.setText(title);
         mFilterButton.setVisibility(View.INVISIBLE);
         mPresenter.loadFromUrl(url);

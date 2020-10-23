@@ -21,8 +21,6 @@ public interface ViewContactsMvpView extends MvpView {
 
     Router getDisplayRouter();
 
-    void getViewContactsView(ViewContactsMvpView this);
-
     void sendOrderMessage(boolean isCalledFromOrders, int invoiceNumber, String description);
 
 }

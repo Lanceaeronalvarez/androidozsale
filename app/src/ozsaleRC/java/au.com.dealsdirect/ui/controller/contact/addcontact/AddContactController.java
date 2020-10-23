@@ -178,7 +178,7 @@ public class AddContactController extends BaseController implements AddContactMv
         if (mHasSavedInstance) {
             mViewContactsMvpView = mActivity.getContactsController();
         } else {
-            mViewContactsMvpView = ((ViewContactsMvpView) mActivity.getHomeController().getCurrentRouter().getControllerWithTag(ViewContactsMvpView.TAG));
+            mViewContactsMvpView = ((ViewContactsMvpView) mActivity.getCurrentRouter().getControllerWithTag(ViewContactsMvpView.TAG));
         }
         return view;
     }
@@ -195,7 +195,6 @@ public class AddContactController extends BaseController implements AddContactMv
 
         mAddContactToolbarRightOption.setVisibility(View.INVISIBLE);
         mAddContactToolbarTitle.setText(R.string.new_message);
-        mActivity.setDraggableViewPager(false);
 
         if (ContactPreferenceHelper.getChosenInvoice(mActivity).isEmpty() &&
                 !isCalledFromOrders) {

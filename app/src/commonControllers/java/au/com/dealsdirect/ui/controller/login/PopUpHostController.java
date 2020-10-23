@@ -98,7 +98,6 @@ public class PopUpHostController extends BaseController implements PopUpHostMvpV
         getRouter().popController(this);
         int routerStackSize = mActivity.getCurrentRouter().getBackstackSize();
         Controller previousController = mActivity.getCurrentRouter().getBackstack().get(routerStackSize - 1).controller();
-        mActivity.setDraggableViewPager(mDestination == GateKeeper.Destination.LOGIN && !(previousController instanceof SaleItemDetailsController));
     }
 
     @Override

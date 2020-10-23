@@ -121,8 +121,6 @@ public class CategoriesController extends BaseController
         super.onViewBound(view);
 
         assert (mActivity) != null;
-        mActivity.setDraggableViewPager(false);
-        mActivity.setCategoriesRouter(getRouter());
         mActivity.setCategoriesController(this);
         hideKeyboard();
 
@@ -142,7 +140,7 @@ public class CategoriesController extends BaseController
         if (mHasSavedInstance) {
             if (previousController == null || mCategories == null) {
                 mPresenter.callGetCategoryTree();
-                mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                mActivity.getMainController().setSavedCurrentItem();
             }
         }
     }
@@ -300,7 +298,7 @@ public class CategoriesController extends BaseController
     @Override
     public boolean handleBack() {
         if (getRouter().getBackstackSize() == 1) {
-            mActivity.getHomeController().goBackToHomePage();
+            mActivity.getMainController().showShopController();
             return true;
         }
 

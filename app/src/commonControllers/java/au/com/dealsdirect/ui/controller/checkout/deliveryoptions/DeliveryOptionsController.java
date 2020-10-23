@@ -25,6 +25,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOp
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -74,7 +75,7 @@ public class DeliveryOptionsController extends BaseController implements Deliver
         View view = inflater.inflate(R.layout.controller_delivery_options, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(getString(R.string.checkout_controller));
+        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(CheckoutController.class.getName());
         return view;
     }
 

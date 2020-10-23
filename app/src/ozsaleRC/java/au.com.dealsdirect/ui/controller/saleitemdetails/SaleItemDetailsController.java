@@ -579,7 +579,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
-        mActivity.setDraggableViewPager(false);
     }
 
     @Override
@@ -620,7 +619,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mLikeFloatingButton.setVisibility(View.INVISIBLE);
         mPresenter.loadSaleItemDetails(mSaleId, mSeoIdentifierId);
         if (mHasSavedInstance) {
-            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+            mActivity.getMainController().setSavedCurrentItem();
         }
     }
 
@@ -933,7 +932,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private void stretchImageView() {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mProductDetailsImageLayout.getLayoutParams();
-        int bottomNavHeight = mActivity.getMainController().getHomeController().getBottomNavigationView().getHeight();
+        int bottomNavHeight = mActivity.getMainController().getBottomNav().getHeight();
 
         int screenAllowanceSize = mPresenter.isTablet() ? bottomNavHeight * 3 : bottomNavHeight * 2 + (int) getDimension(R.dimen.margin_extra_small);
         mDefaultHeight = ScreenUtils.getScreenHeight(mActivity) - screenAllowanceSize;
@@ -1317,7 +1316,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mSharedImageLocation == null) {
             mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
         }
-        animateAddToCart();
+        animateAddToCart(() -> {
+            CustomAlertDialog.showCustomAlertDialog(
+                    getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                    mActivity.getString(R.string.add_to_cart_success));
+        });
 
         RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
         HashMap<String, Object> parameters = new HashMap<>();
@@ -1347,13 +1350,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mAttempts = 0;
         //notify bottom navigation view(checkout) with success.
         CartUtil.addValueToCart(1);
-        mActivity.getMainController().getHomeController().updateBasketItemCount();
+        mActivity.getMainController().updateBasketItemsQuantity();
 
-        CustomAlertDialog.showCustomAlertDialog(
-                mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                mActivity.getString(R.string.add_to_cart_success));
-
-        mActivity.getHomeController().sendSaleItemToCheckout(cartDetailsResponse);
+        mActivity.getMainController().sendSaleItemToCheckout(cartDetailsResponse);
     }
 
     @Override
@@ -1435,8 +1434,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     .popChangeHandler(new FadeChangeHandler())
                     .pushChangeHandler(new FadeChangeHandler());
 
-            if (mActivity.getHomeController().getPopUpHostRouter() != null) {
-                mActivity.getHomeController().getPopUpHostRouter().setRoot(routerTransaction);
+            if (mActivity.getMainController().getPopUpHostRouter() != null) {
+                mActivity.getMainController().getPopUpHostRouter().setRoot(routerTransaction);
             } else {
                 getRouter().pushController(routerTransaction);
             }
@@ -1762,7 +1761,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mActivity.showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
-                    mActivity.getMainController().getHomeController().resetRouters();
+                    mActivity.getMainController().resetCheckoutRouter();
                     mActivity.callGCMRegisterSubscriber();
                     mPresenter.addToCart(request);
                 }
@@ -1777,7 +1776,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
     }
 
-    private void animateAddToCart() {
+    private void animateAddToCart(Runnable onAnimationEnd) {
         mProductDetailScrollView.scrollTo(0, 0);
 
         mImageViewToAnimate.setVisibility(View.VISIBLE);
@@ -1801,8 +1800,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mImageViewToAnimate.getLayoutParams().height = productHeight;
         mImageViewToAnimate.getLayoutParams().width = productWidth;
 
-        mBottomNavView = mActivity.getMainController().getHomeController().getBottomNavigationView();
-        ArrayList<View> potentialViews = new ArrayList<View>();
+        mBottomNavView = mActivity.getMainController().getBottomNav();
+        ArrayList<View> potentialViews = new ArrayList<>();
         mBottomNavView.findViewsWithText(potentialViews, "checkout", View.FIND_VIEWS_WITH_TEXT);
         mCheckoutView = mBottomNavView.getViewAtPosition(4);
         mCheckoutView.getLocationOnScreen(mCheckoutLocation);
@@ -1839,6 +1838,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 }
                 if (mBottomNavView != null) {
                     mBottomNavView.setElevation(origElevation);
+                }
+
+                if (onAnimationEnd != null) {
+                    onAnimationEnd.run();
                 }
             }
 

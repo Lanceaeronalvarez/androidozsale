@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,9 +40,8 @@ import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
-import au.com.dealsdirect.ui.controller.main.MainController;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.saleitems.OnClickFreeDeliveryListener;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.custom.SearchEditText;
@@ -74,12 +70,9 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 public class ShopsController extends BaseController implements ShopsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener, OnClickFreeDeliveryListener {
 
     public static final String TAG = "ShopsController";
-    private static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
-    private static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
-    private static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
-    private static final String KEY_IS_FROM_CATEGORIES = "ShopController.KEY_IS_FROM_CATEGORIES";
-    private static final String KEY_BANNERS_LAYOUT_MANAGER_STATE = "KEY_BANNERS_LAYOUT_MANAGER_STATE";
-    private static final String KEY_BANNERS_OFFSET = "KEY_BANNERS_OFFSET";
+    public static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
+    public static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
+    public static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
     private static final String TEXT_ALL = "• All";
     private static final int INITIAL_BANNER_COUNT = 200;
 
@@ -127,8 +120,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private String mCategoryName;
     private String mCategoryKey;
 
-    private boolean mIsFromCategories = false;
-
     private boolean mIsDeeplink = false;
     private boolean mHasSavedInstance = false;
 
@@ -144,22 +135,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private int mVerticalOffset;
     private boolean mIsRecyclerViewScrollIdle;
 
-    private static final int MAX_BANNERS = 5;
-    private static final int MOBILE_BANNER = 1;
-
-
     private boolean mIsChangeInProgress = false;
-    private int currentBannerPosition = 0;
 
     @Override
     protected void onAttach(@NonNull View view) {
         mPresenter.onAttach(this);
         assert (mActivity) != null;
 
-        /* bug/gen-8065_ozsale-reskin_bugfixing - allow draggable viewpager */
-        mActivity.setDraggableViewPager(true);
-
-        mActivity.setShopController(this);
         mShopPtrLayout.setPtrHandler(this);
         mShopAppBarLayout.addOnOffsetChangedListener(this);
 
@@ -170,6 +152,15 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         return new ShopsController(
                 new BundleBuilder(new Bundle())
                         .build());
+    }
+
+    public static ShopsController fromCategories(String id, String key) {
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .putString(ShopsController.KEY_CATEGORY_ID, id)
+                .putString(ShopsController.KEY_CATEGORY_MAP, key)
+                .putString(ShopsController.KEY_CATEGORY_NAME, key)
+                .build();
+        return new ShopsController(bundle);
     }
 
     public ShopsController(Bundle args) {
@@ -263,12 +254,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void onViewDidAppear(Controller previousController) {
         super.onViewDidAppear(previousController);
-        if (!(previousController instanceof SaleItemsController)
-                && !(mActivity.getMainController().getCurrentViewPagerController() instanceof ShopsController)) {
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
-            loadSlidingBanners();
-            loadSponsoredBanners();
-            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+        if (!(previousController instanceof SaleItemsController)) {
+            mActivity.getMainController().setSavedCurrentItem();
         }
 
         mIsChangeInProgress = false;
@@ -288,12 +275,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         bannerLimit = INITIAL_BANNER_COUNT;
 
-        mActivity.setShopController(this);
-
-        mActivity.setDraggableViewPager(true);
         hideKeyboard();
 
         displayBanners();
+
+        mShopAppBarLayout.setExpanded(true, false);
 
         mSearchBarEditText.setFocusable(false);
         mSearchBarEditText.setOnClickListener(view1 -> {
@@ -368,13 +354,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
 
         if (mHasSavedInstance) {
-            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+            mActivity.getMainController().setSavedCurrentItem();
             mHasSavedInstance = false;
-
-            if (mIsFromCategories && mCategoryID != null && mCategoryKey != null) {
-                goToSalesFromCategories(mCategoryID, mCategoryKey);
-            }
         }
+
+        goToSalesFromCategories(mCategoryID, mCategoryKey);
     }
 
     private void displayBanners() {
@@ -483,8 +467,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @OnClick(R.id.partial_toolbar_hamburger)
     void onClickHamburger() {
         mPresenter.cancelRequest();
-        assert (mActivity) != null;
-        mActivity.setRootViewpagerItem(0);
+        getRouter().popCurrentController();
     }
 
     @Override
@@ -524,8 +507,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @Override
     public void showShopBanners(GetBannerResponse getBannerResponses, String categoryID, boolean isFromCache) {
-
-        mActivity.getMainController().getHomeController().setViewpagerScreen(MainController.SHOP_INDEX);
 
         if (mCategoryID != null && categoryID != null && !mCategoryID.equals(categoryID)) {
             return;
@@ -675,7 +656,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         outState.putString(KEY_CATEGORY_ID, mCategoryID);
         outState.putString(KEY_CATEGORY_NAME, mCategoryName);
         outState.putString(KEY_CATEGORY_MAP, mCategoryKey);
-        outState.putBoolean(KEY_IS_FROM_CATEGORIES, mIsFromCategories);
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
     }
 
@@ -685,35 +665,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mCategoryID = savedInstanceState.getString(KEY_CATEGORY_ID);
         mCategoryName = savedInstanceState.getString(KEY_CATEGORY_NAME);
         mCategoryKey = savedInstanceState.getString(KEY_CATEGORY_MAP);
-        mIsFromCategories = savedInstanceState.getBoolean(KEY_IS_FROM_CATEGORIES, false);
         mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
-
-
-    private Animation inFromRightAnimation() {
-
-        Animation inFromRight = new TranslateAnimation(
-                Animation.RELATIVE_TO_PARENT, +1.0f,
-                Animation.RELATIVE_TO_PARENT, 0.0f,
-                Animation.RELATIVE_TO_PARENT, 0.0f,
-                Animation.RELATIVE_TO_PARENT, 0.0f);
-        inFromRight.setDuration(200);
-        inFromRight.setInterpolator(new AccelerateInterpolator());
-        return inFromRight;
-    }
-
-
-    private Animation outToRightAnimation() {
-        Animation outtoRight = new TranslateAnimation(
-                Animation.RELATIVE_TO_PARENT, 0.0f,
-                Animation.RELATIVE_TO_PARENT, +1.0f,
-                Animation.RELATIVE_TO_PARENT, 0.0f,
-                Animation.RELATIVE_TO_PARENT, 0.0f);
-        outtoRight.setDuration(200);
-        outtoRight.setInterpolator(new AccelerateInterpolator());
-        return outtoRight;
-    }
-
 
     @Override
     public void onError(String message) {
@@ -793,12 +746,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
             mShopsControllerToolbarTextView.setText(getCategoryParentKey(key));
             shopsControllerSearchView.setVisibility(View.INVISIBLE);
-            mActivity.setIsFromCategories(true);
-            mIsFromCategories = true;
         } else {
             assert (mActivity) != null;
-            mActivity.setIsFromCategories(false);
-            mIsFromCategories = false;
             showLogoHeader();
             mPresenter.loadShopsBanner(createBannerRequest(id, bannerOffset, bannerLimit), false);
         }
@@ -832,68 +781,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         int orientation = ScreenUtils.getOrientation(mActivity);
         mBannersAdapter.setupDimensions(orientation);
     }
-//
-//    @SuppressWarnings({"deprecation", "ConstantConditions"})
-//    public void showSearchToolbar() {
-//        if (shopsControllerSearchView != null)
-//            shopsControllerSearchView.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
-//
-//        mShopsControllerHamburgerView.animate().rotation(-90).setDuration(200).start();
-//
-//        //noinspection ConstantConditions
-//        item = (RelativeLayout) getToolbar();
-//
-//        //noinspection ConstantConditions
-//        child = mActivity.getLayoutInflater().inflate(R.layout.partial_toolbar_search, null);
-//        item.addView(child);
-//
-//        child.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
-//        rightOption = (ImageView) child.findViewById(R.id.partial_toolbar_search_right_option);
-//        rightOption.setBackgroundColor(getResources().getColor(R.color.toolbar_active_skin));
-//
-//        EditText searchField = (EditText) child.findViewById(R.id.partial_toolbar_search_field);
-//        searchField.setActivated(true);
-//        searchField.setFocusable(true);
-//
-////        if (searchField.requestFocus()) {
-////            KeyboardUtils.showSoftInput(searchField, mActivity);
-////        }
-//
-//        //noinspection deprecation
-//        rightOption.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
-//        rightOption.animate().rotation(360).setDuration(200).start();
-//
-//        searchField.setOnEditorActionListener((v, actionId, event) -> {
-//            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-//                performSearch(searchField.getText().toString());
-//                return true;
-//            }
-//            return false;
-//        });
-
-//        mShopsControllerToolbarLogo.setVisibility(View.GONE);
-//    }
-
-//    public void hideSearchToolbar() {
-//        child.startAnimation(outToRightAnimation());
-//        item.removeView(child);
-//
-//        //noinspection deprecation,ConstantConditions
-//        shopsControllerSearchView.setImageDrawable(
-//                getResources().getDrawable(R.drawable.ic_search));
-//        rightOption.animate().rotation(-360).setDuration(200).start();
-//        mShopsControllerHamburgerView.animate().rotation(0).setDuration(200).start();
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//            //noinspection ConstantConditions
-//            mActivity.dismissKeyboardShortcutsHelper();
-//        }
-//
-//        Handler handler = new Handler();
-//        handler.postDelayed(() -> {
-//                    mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
-//                }, 300);
-//    }
 
     public String getCategoryParentKey(String saleCategoryKey) {
         return getBoolean(R.bool.is_category_all_enabled) ? saleCategoryKey + TEXT_ALL : saleCategoryKey;
@@ -1161,5 +1048,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                     mActivity.getShippingTitle());
 
         }
+    }
+
+    public boolean isFromCategories() {
+        return mCategoryID != null || mCategoryKey != null;
     }
 }

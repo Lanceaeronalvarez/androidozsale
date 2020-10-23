@@ -114,8 +114,6 @@ public class ViewContactsController extends BaseController implements ViewContac
 
         mActivity.getMainController().showBottomNav();
 
-        mActivity.getMainController().setViewpagerDraggable(false);
-
         setUp(view);
         mPresenter.loadContacts();
 
@@ -173,8 +171,6 @@ public class ViewContactsController extends BaseController implements ViewContac
 
     @Override
     public void showContactItems(GetContactsResponse.Response myContacts) {
-
-        mActivity.setDraggableViewPager(false);
 
         List<GetContactsResponse.ContactList> items = myContacts.getList();
         if (items != null && items.size() != 0) {
@@ -280,11 +276,6 @@ public class ViewContactsController extends BaseController implements ViewContac
     @Override
     public Router getDisplayRouter() {
         return getRouter();
-    }
-
-    @Override
-    public void getViewContactsView() {
-        mActivity.getMainController().getHomeController().setContactsController(this);
     }
 
     @Override

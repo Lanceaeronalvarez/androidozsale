@@ -3,7 +3,6 @@ package au.com.dealsdirect.ui.controller.main;
 import android.view.View;
 
 import au.com.dealsdirect.ui.base.MvpView;
-import au.com.dealsdirect.ui.controller.home.HomeController;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -23,7 +22,25 @@ public interface MainMvpView extends MvpView {
 
     String getChosenCategoryItemKey();
 
-    HomeController getHomeController();
-
     MainCustomViewPager getHomeViewPager();
+
+    void showShopController();
+
+    void showCategoryController();
+
+    void showAccountController();
+
+    void showContactUsController();
+
+    void showCheckoutController();
+
+    void showWishlistController();
+
+    void showBasketItemCount();
+
+    void showWishlistItemCount(int count);
+
+    boolean isPopUpControllerVisible();
+
+    void backClick();
 }

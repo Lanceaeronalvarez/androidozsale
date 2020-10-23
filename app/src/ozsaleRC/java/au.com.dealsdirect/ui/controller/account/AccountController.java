@@ -170,7 +170,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         if (mHasSavedInstance) {
             createAccountItems();
             mPresenter.loadAccountItems(mAccountItems);
-            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+            mActivity.getMainController().setSavedCurrentItem();
         }
 
         mIsChangeInProgress = false;
@@ -304,6 +304,14 @@ public class AccountController extends BaseController implements AccountMvpView,
 
 
     @Override
+    public void onTabSwitch(boolean intoThisView) {
+        super.onTabSwitch(intoThisView);
+        if (intoThisView) {
+
+        }
+    }
+
+    @Override
     public void showAccountItems(List<AccountItem> accountItems) {
         mRecyclerViewExpandableItemManager = new RecyclerViewExpandableItemManager(null);
         mLayoutManager = new LinearLayoutManager(mActivity);
@@ -404,7 +412,7 @@ public class AccountController extends BaseController implements AccountMvpView,
             //needed to tag this transaction
             //for future improvement, allow setting tag in gatekeeper.
             getRouter().pushController(RouterTransaction.with(CurrentReturnsController.newInstance())
-                    .tag(getString(R.string.current_returns_controller))
+                    .tag(CurrentReturnsController.class.getName())
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         } else {
@@ -527,9 +535,9 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_out));
                 }
 
-                mActivity.getHomeController().resetRouters();
+                mActivity.getMainController().resetCheckoutRouter();
                 if (mPresenter.isTablet()) {
-                    mActivity.getMainController().getHomeController().resetAccountRouter();
+                    mActivity.getMainController().resetAccountRouter();
                 }
             }
 
@@ -553,14 +561,14 @@ public class AccountController extends BaseController implements AccountMvpView,
             public void success() {
                 mPresenter.loadAccountItems(mAccountItems);
                 CartUtil.setValueToCart(0);
-                mActivity.getMainController().getHomeController().removeBasketItemCount();
+                mActivity.getMainController().removeBasketItemCount();
                 mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_in));
                 mPresenter.setActiveCheckoutSessionFalse();
 
                 //reset routers with unique user info
-                mActivity.getMainController().getHomeController().resetRouters();
-                mActivity.getHomeRouter().popToRoot();
-                mActivity.setShopsAsVisibleContainer();
+                mActivity.getMainController().resetCheckoutRouter();
+                mActivity.getMainController().getRouter().popToRoot();
+                mActivity.getMainController().showShopController();
                 mActivity.callPublicSettings();
                 mActivity.refreshBannersFromLogout();
                 mActivity.refreshWishlist();
@@ -600,8 +608,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mRightToolbarButton.setVisibility(View.VISIBLE);
-
-        mActivity.getMainController().setViewpagerDraggable(false);
     }
 
     @Override
@@ -617,7 +623,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public boolean handleBack() {
         if (mAccountDetailRouter != null && mAccountDetailRouter.getBackstackSize() == 1) {
-            mActivity.getHomeController().goBackToHomePage();
+            mActivity.getMainController().showShopController();
             return true;
         }
 
@@ -636,7 +642,11 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mPresenter.onAttach(AccountController.this);
                     mActivity.callGCMRegisterSubscriber();
                     mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_out));
-                    mActivity.getMainController().getHomeController().initControllers(true);
+                    mActivity.getMainController().resetShopRouter();
+                    mActivity.getMainController().resetCategoriesRouter();
+                    mActivity.getMainController().resetAccountRouter();
+                    mActivity.getMainController().resetWishlistRouter();
+                    mActivity.getMainController().resetCheckoutRouter();
                 }
 
                 @Override

@@ -1,16 +1,19 @@
 package au.com.dealsdirect.ui.controller.bannerfilter;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -74,13 +76,12 @@ public class BannerFiltersController extends BaseController implements BannerFil
 
         if (mHasSavedInstance) {
             mPresenter.callGetCategoryTree();
-            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+            mActivity.getMainController().setSavedCurrentItem();
         }
     }
 
     @Override
     protected void setUp(View view) {
-        mActivity.getMainController().setBannerFiltersController(this);
         bannerFiltersAdapter = new BannerFiltersAdapter(mActivity, this, new ArrayList<>());
         mBannerFiltersRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mBannerFiltersRecyclerView.setAdapter(bannerFiltersAdapter);
@@ -142,7 +143,6 @@ public class BannerFiltersController extends BaseController implements BannerFil
     @Override
     public void refreshContents() {
         super.refreshContents();
-        mActivity.getMainController().getHomeController().setViewpagerScreen(MainController.BANNER_FILTER_INDEX);
         mPresenter.callGetCategoryTree();
     }
 
@@ -154,11 +154,14 @@ public class BannerFiltersController extends BaseController implements BannerFil
 
     @Override
     public void onBannerClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
-        if (mActivity.getHomeRouter().getControllerWithTag(ShopsController.TAG) != null) {
-            mActivity.getHomeRouter().popToTag(ShopsController.TAG);
-        }
-
-        mActivity.goToSalesFromCategory(getCategoryTreeResponse);
+        ShopsController shopsController = ShopsController.fromCategories(
+                getCategoryTreeResponse.getId(),
+                getCategoryTreeResponse.getKey()
+        );
+        getRouter().pushController(
+                RouterTransaction.with(shopsController)
+                        .popChangeHandler(new HorizontalChangeHandler())
+                        .pushChangeHandler(new HorizontalChangeHandler()));
     }
 
     @Override

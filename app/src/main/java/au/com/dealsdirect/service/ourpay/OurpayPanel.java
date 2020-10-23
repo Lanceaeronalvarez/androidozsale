@@ -237,7 +237,6 @@ public class OurpayPanel {
 
         textViewTC.setText(Html.fromHtml(OurpayTemplateText.getText(mBaseActivity, ourpay.getTermsAndConditionsText())));
         textViewTC.setOnClickListener(view1 -> {
-            ((MainActivity) mBaseActivity).setDraggableViewPager(false);
             GateKeeper.push(mRouter, GateKeeper.Destination.LEGALITIES,
                     new BundleBuilder(new Bundle())
                             .putString(BundleKeys.TEMPLATE_KEY, OurpayTemplateText.KEY_OPS_TNC_FULL_TEXT)

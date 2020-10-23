@@ -1,11 +1,13 @@
 package au.com.dealsdirect.widget;
 
 import android.content.Context;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
+
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,8 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
          * @param rawOffsetPixels     The raw distance the user has dragged
          */
         public void onDrag(float elasticOffset, float elasticOffsetPixels,
-                float rawOffset, float rawOffsetPixels) { }
+                           float rawOffset, float rawOffsetPixels) {
+        }
 
         /**
          * Called when dragging is released and has exceeded the threshold dismiss distance.
@@ -95,7 +98,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
     }
 
     public ElasticDragDismissFrameLayout(Context context, AttributeSet attrs,
-            int defStyleAttr) {
+                                         int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         dragDismissDistance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, getResources().getDisplayMetrics());
@@ -194,10 +197,30 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
         timeElapsedForDirectionUpdate += deltaTime;
     }
 
+    private float getXTransformed() {
+        float x = this.getX();
+        if (this.getParent() instanceof ViewPager) {
+            ViewPager viewPager = (ViewPager) this.getParent();
+            // assuming this view is the currentItem
+            x -= viewPager.getCurrentItem() * viewPager.getMeasuredWidth();
+        }
+        return x;
+    }
+
+    private float transformX(float transformedX) {
+        float x = transformedX;
+        if (this.getParent() instanceof ViewPager) {
+            ViewPager viewPager = (ViewPager) this.getParent();
+            // assuming this view is the currentItem
+            x += viewPager.getCurrentItem() * viewPager.getMeasuredWidth();
+        }
+        return x;
+    }
+
     private void setupTouchPivotPoint(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                dX = this.getX() - event.getRawX();
+                dX = getXTransformed() - event.getRawX();
                 dY = this.getY() - event.getRawY();
                 break;
         }
@@ -269,7 +292,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
 
     private float getScaleWithDistance(float distance) {
         float t = Math.min(distance / dragDismissDistance, 1f);
-        return  1f * (1 - t) + dragDismissScale * t;
+        return 1f * (1 - t) + dragDismissScale * t;
     }
 
     private boolean processFlingGesture(MotionEvent event) {
@@ -292,7 +315,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
                 float centerY = (-dY / this.getHeight());
                 float newPosX = event.getRawX() + dX + this.getWidth() / 2 * (-1 + scale + centerX * 2 * (1 - scale));
                 float newPosY = event.getRawY() + dY + this.getHeight() / 2 * (-1 + scale + centerY * 2 * (1 - scale));
-                setX(lerp(getX(),newPosX, dragSmoothness));
+                setX(transformX(lerp(getXTransformed(), newPosX, dragSmoothness)));
                 setY(lerp(getY(), newPosY, dragSmoothness));
                 setScaleX(scale);
                 setScaleY(scale);
@@ -407,11 +430,11 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
     }
 
     private void dispatchDragCallback(float elasticOffset, float elasticOffsetPixels,
-            float rawOffset, float rawOffsetPixels) {
+                                      float rawOffset, float rawOffsetPixels) {
         if (callbacks != null && !callbacks.isEmpty()) {
             for (ElasticDragDismissCallback callback : callbacks) {
                 callback.onDrag(elasticOffset, elasticOffsetPixels,
-                                rawOffset, rawOffsetPixels);
+                        rawOffset, rawOffsetPixels);
             }
         }
     }
