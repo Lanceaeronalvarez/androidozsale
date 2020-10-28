@@ -34,6 +34,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventParameters;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.controller.saleitems.OnClickFreeDeliveryListener;
@@ -89,6 +90,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int[] BANNER_ORDER = {
             VIEW_HOLDER_TYPE_PROMO_BANNER,
             VIEW_HOLDER_TYPE_SLIDING_BANNER,
+            VIEW_HOLDER_TYPE_CATEGORY_BANNER,
             VIEW_HOLDER_TYPE_SPONSORED_BANNER,
             VIEW_HOLDER_TYPE_SPACER,
             VIEW_HOLDER_TYPE_NORMAL_BANNER
@@ -453,9 +455,43 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    private BannerClickEventRequest createBannerClickEventRequest(EventParameters.SpecialBannerType type, GetBannerResponse.Banner banner, int position) {
+        BannerClickEventRequest bannerClickEventRequest = new BannerClickEventRequest();
+        bannerClickEventRequest.setEventType(EventTypeId.EVENT_SLIDER_BANNER);
+
+        BannerClickEventRequest.BannerInfo bannerInfo = new BannerClickEventRequest.BannerInfo();
+        bannerInfo.setBannerType(type.getValue());
+        bannerInfo.setSaleId(banner.getId());
+        bannerInfo.setLink(banner.getLink());
+        bannerInfo.setPos(position);
+        bannerInfo.setCategory("");
+
+        bannerClickEventRequest.setBannerInfo(bannerInfo);
+
+        return bannerClickEventRequest;
+    }
+
+    private void specialBannerEvent(BannerClickEventRequest bannerClickEventRequest, String saleName) {
+        HashMap<String, Object> eventParameters = new HashMap<>();
+        eventParameters.put(DataCollector.EventParameters.BANNER_TYPE, "SliderBanners");
+        eventParameters.put(DataCollector.EventParameters.SALE_NAME, saleName);
+        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, "SaleBanners");
+        eventParameters.put(DataCollector.EventParameters.BANNER_CLICK_REQUEST, bannerClickEventRequest);
+        DataCollector.logEvent(Events.BannerClickEvent, eventParameters);
+    }
+
     private void onBannerTapped(GetBannerResponse.Banner banner, int position, String imgUrl, Events bannerType,
                                 String saleName) {
-        if (banner.getLink() != null && !banner.getLink().isEmpty()) {
+        if (banner.getBannerType() != null && banner.getBannerType().equals("categoryShop")) {
+            Uri uri = Uri.parse(banner.getLink());
+            String id = uri.getLastPathSegment();
+
+            specialBannerEvent(createBannerClickEventRequest(
+                    EventParameters.SpecialBannerType.SHOP_BY_CATEGORY, banner, position), saleName);
+
+            mPresenter.selectCategoryBanner(id);
+        } else if (banner.getLink() != null && !banner.getLink().isEmpty()) {
             String link = banner.getLink();
             Pattern pattern = Pattern.compile("(?<=/s/)([^?\\n\\r])+");
             Matcher matcher = pattern.matcher(link);
@@ -464,25 +500,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 title = banner.getDescription();
             }
 
-            BannerClickEventRequest bannerClickEventRequest = new BannerClickEventRequest();
-            bannerClickEventRequest.setEventType(EventTypeId.EVENT_SLIDER_BANNER);
-
-            BannerClickEventRequest.BannerInfo bannerInfo = new BannerClickEventRequest.BannerInfo();
-            bannerInfo.setBannerType("3");
-            bannerInfo.setSaleId(banner.getId());
-            bannerInfo.setLink(banner.getLink());
-            bannerInfo.setPos(position);
-            bannerInfo.setCategory("");
-
-            bannerClickEventRequest.setBannerInfo(bannerInfo);
-
-            HashMap<String, Object> eventParameters = new HashMap<>();
-            eventParameters.put(DataCollector.EventParameters.BANNER_TYPE, "SliderBanners");
-            eventParameters.put(DataCollector.EventParameters.SALE_NAME, saleName);
-            eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-            eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, "SaleBanners");
-            eventParameters.put(DataCollector.EventParameters.BANNER_CLICK_REQUEST, bannerClickEventRequest);
-            DataCollector.logEvent(Events.BannerClickEvent, eventParameters);
+            specialBannerEvent(createBannerClickEventRequest(
+                    EventParameters.SpecialBannerType.SALE_CAMPAIGN, banner, position), saleName);
 
             if (matcher.find()) {
                 String id = matcher.group();
@@ -501,15 +520,17 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         } else {
 
-            String eventType = bannerType.equals(Events.RegularBannerClickEvent) ?
-                    "RegularBanners" : "SponsoredBanners";
-
-            HashMap<String, Object> eventParameters = new HashMap<>();
-            eventParameters.put(DataCollector.EventParameters.BANNER_TYPE, eventType);
-            eventParameters.put(DataCollector.EventParameters.SALE_NAME, saleName);
-            eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-            eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, "SaleBanners");
-            DataCollector.logEvent(Events.BannerClickEvent, eventParameters);
+            if (bannerType.equals(Events.RegularBannerClickEvent)) {
+                HashMap<String, Object> eventParameters = new HashMap<>();
+                eventParameters.put(DataCollector.EventParameters.BANNER_TYPE, "RegularBanners");
+                eventParameters.put(DataCollector.EventParameters.SALE_NAME, saleName);
+                eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+                eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, "SaleBanners");
+                DataCollector.logEvent(Events.BannerClickEvent, eventParameters);
+            } else if (bannerType.equals(Events.SponsoredBannerClickEvent)) {
+                specialBannerEvent(createBannerClickEventRequest(
+                        EventParameters.SpecialBannerType.SPONSORED, banner, position), saleName);
+            }
 
             mPresenter.selectBanner(
                     banner.getDestinationId(),
@@ -526,7 +547,9 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private String titleForHeader(int position) {
         synchronized (mSales) {
             if (position == getPositionOfSponsoredBanners()) {
-                return mActivity.getResources().getString(R.string.sponsored);
+                return mSponsoredBannersAdapter != null ? mSponsoredBannersAdapter.getTitle() : null;
+            } else if (position == getPositionOfCategoryBanners()) {
+                return mCategoryBannersAdapter != null ? mCategoryBannersAdapter.getTitle() : null;
             } else if (position >= getPositionOfNormalBanners()) {
                 return position < getItemCount() - 1 ? mSales.get(position - getPositionOfNormalBanners()).getGroup().getTitle() : "";
             }
@@ -719,12 +742,15 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private ImageUtils.Grid computeCategoryBannersGrid() {
+        int numberOfColumns = mPresenter.isTablet() ?
+                mActivity.getResources().getInteger(R.integer.sponsored_banner_column_count_for_tablet) :
+                mActivity.getResources().getInteger(R.integer.sponsored_banner_column_count);
         int width = mActivity.getResources().getInteger(R.integer.sponsored_banner_width);
         int height = mActivity.getResources().getInteger(R.integer.sponsored_banner_height);
         ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
                 width, height,
                 ScreenUtils.getScreenWidth(mActivity),
-                1, 1);
+                numberOfColumns, numberOfColumns);
         return new ImageUtils.Grid(
                 1,
                 grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(),
@@ -842,8 +868,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mSlidingBannersAdapter = slidingBannersAdapter;
             if (mSlidingBannersAdapter != null) {
                 mSlidingBannersAdapter
-                        .setOnBannerTappedListener(banner -> BannersAdapter.this
-                                .onBannerTapped(banner, -1, "",
+                        .setOnBannerTappedListener((banner, position) -> BannersAdapter.this
+                                .onBannerTapped(banner, position, "",
                                         Events.BannerClickEvent, banner.getBannerType()));
             }
             if (recyclerView != null) {
@@ -862,6 +888,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         boolean willDelete = mCategoryBannersAdapter != null && categoryBannersAdapter == null;
         if (willDelete) {
             int index = getPositionOfCategoryBanners();
+            mCategoryBannersAdapter.setOnBannerTappedListener(null);
             mCategoryBannersAdapter = null;
             if (recyclerView != null) {
                 recyclerView.getRecycledViewPool().clear();
@@ -869,6 +896,12 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             notifyDataSetChanged();
         } else {
             mCategoryBannersAdapter = categoryBannersAdapter;
+            if (mCategoryBannersAdapter != null) {
+                mCategoryBannersAdapter
+                        .setOnBannerTappedListener((banner, position) -> BannersAdapter.this
+                                .onBannerTapped(banner, position, "",
+                                        Events.BannerClickEvent, banner.getBannerType()));
+            }
             if (recyclerView != null) {
                 recyclerView.getRecycledViewPool().clear();
             }
@@ -894,8 +927,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else {
             mSponsoredBannersAdapter = sponsoredBannersAdapter;
             if (mSponsoredBannersAdapter != null) {
-                mSponsoredBannersAdapter.setOnBannerTappedListener(banner -> BannersAdapter.this
-                        .onBannerTapped(banner, -1, "",
+                mSponsoredBannersAdapter.setOnBannerTappedListener((banner, position) -> BannersAdapter.this
+                        .onBannerTapped(banner, position, "",
                                 Events.SponsoredBannerClickEvent, banner.getBannerText()));
             }
             if (recyclerView != null) {

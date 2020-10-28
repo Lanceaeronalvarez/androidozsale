@@ -17,6 +17,8 @@ public interface ShopsMvpView extends MvpView {
 
     void showSponsoredBanners(GetBannerResponse getBannerResponses);
 
+    void showCategoryBanners(GetBannerResponse getBannerResponses);
+
     void storeCategories(List<GetCategoryTreeResponse> categories);
 
     void unBindPaginate();
@@ -28,6 +30,8 @@ public interface ShopsMvpView extends MvpView {
                          String imageUrl,
                          String endDate,
                          boolean isAvailable);
+
+    void onBannerClicked(String categoryId);
 
     boolean isChangeInProgress();
 }

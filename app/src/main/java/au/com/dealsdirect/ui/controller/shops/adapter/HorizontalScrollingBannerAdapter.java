@@ -67,6 +67,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     private Activity mActivity;
 
+    private String title;
+
     public HorizontalScrollingBannerAdapter(Activity activity) {
         mActivity = activity;
     }
@@ -199,7 +201,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(action -> {
                                 if (onBannerTappedListener != null) {
-                                    onBannerTappedListener.onBannerTapped(item);
+                                    onBannerTappedListener.onBannerTapped(item, position);
                                 }
                             });
                 }
@@ -284,6 +286,14 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         if (recyclerView != null && !recyclerView.isComputingLayout()) {
             notifyDataSetChanged();
         }
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setupDimensions(int width, int height) {
@@ -514,7 +524,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     }
 
     public interface OnBannerTappedListener {
-        void onBannerTapped(GetBannerResponse.Banner banner);
+        void onBannerTapped(GetBannerResponse.Banner banner, int position);
     }
 
     public interface OnItemTappedListener {

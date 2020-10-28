@@ -2,9 +2,6 @@ package au.com.dealsdirect.ui.controller.categories;
 
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,15 +10,22 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -38,6 +42,7 @@ import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClick
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailItemDecorator;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
+import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
@@ -234,19 +239,7 @@ public class CategoriesController extends BaseController
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey,
                                          List<SearchChipModel> chipFilters) {
-
-        mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
-
-        SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
-                .FromCategory(categoryKey, categoryKey, mCategories, new HashSet<>(chipFilters));
-
-        SaleItemsController controller = SaleItemsController.newInstance(parameters);
-
-        mActivity.getCategoriesRouter().pushController(RouterTransaction.with(controller)
-                .tag(getResources().getString(R.string.sale_items_controller_tag))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+        showSaleItems(categoryKey, new HashSet<>(chipFilters));
     }
 
 
@@ -349,4 +342,33 @@ public class CategoriesController extends BaseController
         return mCategoryKeyMap.get(categoryId);
     }
 
+    public void showSaleItems(String categoryId) {
+        showSaleItems(mCategoryKeyMap.get(categoryId), new HashSet<>());
+    }
+
+    private void showSaleItems(String categoryKey, Set<SearchChipModel> chipFilters) {
+        mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
+
+        SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
+                .FromCategory(categoryKey, categoryKey, mCategories, chipFilters);
+
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .tag(getResources().getString(R.string.sale_items_controller_tag))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler());
+
+        Router router = mActivity.getCategoriesRouter();
+        List<RouterTransaction> backstack = router.getBackstack();
+        if (backstack.size() == 1) {
+            router.pushController(routerTransaction);
+        } else {
+            List<RouterTransaction> newBackstack = new LinkedList<>();
+            newBackstack.add(backstack.get(0));
+            newBackstack.add(routerTransaction);
+            router.setBackstack(newBackstack, new SimpleChangeHandler());
+        }
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+    }
 }

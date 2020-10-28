@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
@@ -22,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -39,6 +41,7 @@ import au.com.dealsdirect.ui.controller.categories.listener.SaleCategoryClickLis
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
+import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -209,18 +212,7 @@ public class SaleCategoryController extends BaseController
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey,
                                          List<SearchChipModel> chipFilters) {
-        mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
-
-        SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
-                .FromCategory(categoryKey, categoryKey, mCategories, new HashSet<>(chipFilters));
-
-        SaleItemsController controller = SaleItemsController.newInstance(parameters);
-
-        mActivity.getCategoriesRouter().pushController(RouterTransaction.with(controller)
-                .tag(getResources().getString(R.string.sale_items_controller_tag))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+        showSaleItems(categoryKey, new HashSet<>(chipFilters));
     }
 
     @Override
@@ -308,5 +300,35 @@ public class SaleCategoryController extends BaseController
                 mRecyclerView.smoothScrollBy(0, (height1 + top1) - (height2 + top2));
             }
         }
+    }
+
+    public void showSaleItems(String categoryId) {
+        showSaleItems(mCategoryKeyMap.get(categoryId), new HashSet<>());
+    }
+
+    private void showSaleItems(String categoryKey, Set<SearchChipModel> chipFilters) {
+        mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
+
+        SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
+                .FromCategory(categoryKey, categoryKey, mCategories, chipFilters);
+
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .tag(getResources().getString(R.string.sale_items_controller_tag))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler());
+
+        Router router = mActivity.getCategoriesRouter();
+        List<RouterTransaction> backstack = router.getBackstack();
+        if (backstack.size() == 1) {
+            router.pushController(routerTransaction);
+        } else {
+            List<RouterTransaction> newBackstack = new LinkedList<>();
+            newBackstack.add(backstack.get(0));
+            newBackstack.add(routerTransaction);
+            router.setBackstack(newBackstack, new SimpleChangeHandler());
+        }
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
     }
 }

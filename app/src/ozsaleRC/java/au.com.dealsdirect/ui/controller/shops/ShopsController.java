@@ -254,7 +254,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void onViewDidAppear(Controller previousController) {
         super.onViewDidAppear(previousController);
-        if (!(previousController instanceof SaleItemsController)) {
+        if (!(previousController instanceof SaleItemsController)
+                && !(mActivity.getMainController().getCurrentViewPagerController() instanceof ShopsController)) {
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
+            loadSlidingBanners();
+            loadSponsoredBanners();
+            loadCategoryBanners();
             mActivity.getMainController().setSavedCurrentItem();
         }
 
@@ -343,6 +348,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
             loadSlidingBanners();
             loadSponsoredBanners();
+            loadCategoryBanners();
             mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, mPaginateCallbacks);
         }
 
@@ -457,6 +463,19 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
             }
         }
+    }
+
+    @Override
+    public void onBannerClicked(String categoryId) {
+        CategoriesMvpView categoriesMvpView = mActivity.getCategoriesController();
+        if (categoriesMvpView == null) {
+            categoriesMvpView = mActivity.getSaleCategoryController();
+        }
+        if (categoriesMvpView == null) {
+            return;
+        }
+        categoriesMvpView.showSaleItems(categoryId);
+        mActivity.getHomeController().showCategoryController();
     }
 
     @Override
@@ -619,10 +638,42 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (!sponsoredBanners.isEmpty()) {
                 adapter = new HorizontalScrollingBannerAdapter(mActivity);
                 adapter.setDataSource(sponsoredBanners);
+                adapter.setTitle(getResources().getString(R.string.sponsored));
                 adapter.setShouldRepeatCellsToFillWidth(false);
             }
         }
         mBannersAdapter.setSponsoredBannersAdapter(adapter);
+    }
+
+    @Override
+    public void showCategoryBanners(GetBannerResponse getBannerResponses) {
+        HorizontalScrollingBannerAdapter adapter = null;
+        String title = null;
+        if (getBannerResponses != null) {
+            List<GetBannerResponse.Banner> categoryBanners = new ArrayList<>();
+            List<GetBannerResponse.Group> groups = getBannerResponses.getGroups();
+            if (groups != null) {
+                for (GetBannerResponse.Group group : groups) {
+                    if (group.getType().equals("categoryShop")) {
+                        title = group.getTitle();
+                        List<GetBannerResponse.Banner> banners = group.getBanners();
+                        if (banners != null) {
+                            for (GetBannerResponse.Banner banner : banners) {
+                                if (banner.getBannerType().equals("categoryShop")) {
+                                    categoryBanners.add(banner);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (!categoryBanners.isEmpty()) {
+                adapter = new HorizontalScrollingBannerAdapter(mActivity);
+                adapter.setDataSource(categoryBanners);
+                adapter.setTitle(title);
+            }
+        }
+        mBannersAdapter.setCategoryBannersAdapter(adapter);
     }
 
     @Override
@@ -637,6 +688,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, INITIAL_BANNER_COUNT));
             loadSlidingBanners();
             loadSponsoredBanners();
+            loadCategoryBanners();
         }
         resetBannerLayout();
         if (mShopAppBarLayout != null) {
@@ -753,6 +805,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         }
         loadSlidingBanners();
         loadSponsoredBanners();
+        loadCategoryBanners();
     }
 
     private void resetShopsBanners(String categoryID) {
@@ -793,6 +846,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mPresenter.loadShopsBanner(createBannerRequest("", 0, 0));
         loadSlidingBanners();
         loadSponsoredBanners();
+        loadCategoryBanners();
     }
 
     public void clearHorizontalBanners() {
@@ -825,6 +879,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mPresenter.loadSponsoredBanners(request);
     }
 
+    public void loadCategoryBanners() {
+        GetBannerRequest request = new GetBannerRequest();
+        request.setOffset(null);
+        request.setLimit("50");
+        request.setBannergroups("7");
+
+        mPresenter.loadCategoryBanners(request);
+    }
 
     private void showLogoHeader() {
         mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
@@ -861,6 +923,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         }
         loadSlidingBanners();
         loadSponsoredBanners();
+        loadCategoryBanners();
     }
 
     private GetBannerRequest createBannerRequest(String categoryId, int bannerOffset, int bannerLimit) {
@@ -930,6 +993,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         }
         loadSlidingBanners();
         loadSponsoredBanners();
+        loadCategoryBanners();
     }
 
     @Override
@@ -988,6 +1052,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 mPresenter.loadShopsBanner(createDeepLinkBannerRequest(categoryId, 0, 0));
                 loadSlidingBanners();
                 loadSponsoredBanners();
+                loadCategoryBanners();
             }
 
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
@@ -1037,6 +1102,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mPresenter.loadShopsBanner(createBannerRequest("", 0, bannerLimit), true);
         loadSlidingBanners();
         loadSponsoredBanners();
+        loadCategoryBanners();
     }
 
     @Override

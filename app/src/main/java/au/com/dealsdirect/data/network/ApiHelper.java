@@ -166,6 +166,8 @@ public interface ApiHelper {
 
     Observable<GetBannerResponse> callGetBanners(GetBannerRequest getPublicSalesBannerRequest, boolean getOnlyFromNetwork);
 
+    Observable<GetBannerResponse> callGetBanners2(GetBannerRequest getPublicSalesBannerRequest, boolean getOnlyFromNetwork);
+
     Observable<GetSaleBannerDetailsResponse> callGetSaleBannerDetails(String saleId);
 
     Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request);

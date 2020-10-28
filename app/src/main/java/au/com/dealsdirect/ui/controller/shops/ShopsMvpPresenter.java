@@ -17,6 +17,8 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     void loadSponsoredBanners(GetBannerRequest request);
 
+    void loadCategoryBanners(GetBannerRequest request);
+
     void loadCategoryTree();
 
     boolean isAccessAnonymousEnabled();
@@ -32,6 +34,8 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
                       String imageUrl,
                       String endDate,
                       boolean isAvailable);
+
+    void selectCategoryBanner(String categoryId);
 
     boolean isGoogleAdsEnabled();
 

@@ -178,4 +178,23 @@ public class EventParameters {
             return value;
         }
     }
+
+    public enum SpecialBannerType {
+        TOP("1"),
+        SEARCH_FILTER("2"),
+        SALE_CAMPAIGN("3"),
+        PROMO_CAMPAIGN("4"),
+        SHOP_BY_CATEGORY("5"),
+        SPONSORED("6");
+
+        private String value;
+
+        SpecialBannerType(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
 }

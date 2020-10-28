@@ -1646,8 +1646,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void setupSearchFilters() {
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
+        mSearchFilterSkeleton.setVisibility(View.GONE);
         if (mSearchFilterMvpView == null) {
-            mSearchFilterSkeleton.setVisibility(View.GONE);
 
             SearchFilterController.Parameters.FromItemsList parameters = new SearchFilterController
                     .Parameters.FromItemsList(

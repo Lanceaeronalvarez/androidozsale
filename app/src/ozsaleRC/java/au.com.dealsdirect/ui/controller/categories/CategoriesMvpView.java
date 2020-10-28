@@ -16,4 +16,6 @@ public interface CategoriesMvpView extends MvpView {
     void showNoNetworkLayout();
 
     void hideNoNetworklayout();
+
+    void showSaleItems(String categoryId);
 }
