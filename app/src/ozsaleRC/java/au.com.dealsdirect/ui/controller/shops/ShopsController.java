@@ -671,6 +671,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 adapter = new HorizontalScrollingBannerAdapter(mActivity);
                 adapter.setDataSource(categoryBanners);
                 adapter.setTitle(title);
+                adapter.setShouldShowTitle(true);
             }
         }
         mBannersAdapter.setCategoryBannersAdapter(adapter);

@@ -36,8 +36,11 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     private int cellWidth;
     private int cellHeight;
 
+    private int imageWidth;
+    private int imageHeight;
+
     private List<GetBannerResponse.Banner> dataSource = new ArrayList<>();
-    ;
+    private boolean shouldShowTitle = false;
 
     private RecyclerView recyclerView = null;
 
@@ -83,7 +86,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
             case RecommendedItems:
             case RecentlyViewed:
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.viewholder_banner_product, parent, false);
+                        .inflate(R.layout.viewholder_product_details_cell, parent, false);
                 return new ViewHolder(view, cellWidth);
             default:
                 view = LayoutInflater.from(parent.getContext())
@@ -94,9 +97,6 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int width;
-        int height;
-
         String imgUrl = "";
         GetBannerResponse.Banner item;
         GetYouMayAlsoLikeResponse youMayLikeItem;
@@ -106,16 +106,13 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
         switch (getBannerViewType()) {
             case YouMayAlsoLike:
-                width = holder.itemView.getContext().getResources().getInteger(R.integer.you_may_also_like_width);
-                height = holder.itemView.getContext().getResources().getInteger(R.integer.you_may_also_like_height);
-
                 virtualPosition = position % mYouMayAlsoLikeList.size();
 
                 youMayLikeItem = mYouMayAlsoLikeList.get(virtualPosition);
 
                 imgUrl = youMayLikeItem.getImageList().get(0);
 
-                holder.itemName.setText(youMayLikeItem.getName());
+                holder.title.setText(youMayLikeItem.getName());
 
                 if (holder.subscription != null) {
                     holder.subscription.dispose();
@@ -139,7 +136,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
                 imgUrl = recommendedItemsResponse.getImages().get(0);
 
-                holder.itemName.setText(recommendedItemsResponse.getName());
+                holder.title.setText(recommendedItemsResponse.getName());
 
                 if (holder.subscription != null) {
                     holder.subscription.dispose();
@@ -162,7 +159,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                 if (recentlyItemResponse.getImages().size() != 0) {
                     imgUrl = recentlyItemResponse.getImages().get(0);
                 }
-                holder.itemName.setText(recentlyItemResponse.getName());
+                holder.title.setText(recentlyItemResponse.getName());
                 holder.subscription = RxView.clicks(holder.layout)
                         .throttleFirst(
                                 THROTTLE_FIRST_WINDOW_DURATION,
@@ -175,19 +172,11 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                         });
                 break;
             default:
-                if (cellWidth > cellHeight) {
-                    width = holder.itemView.getContext().getResources().getInteger(R.integer.sliding_banner_width);
-                    height = holder.itemView.getContext().getResources().getInteger(R.integer.sliding_banner_height);
-                } else {
-                    width = holder.itemView.getContext().getResources().getInteger(R.integer.sponsored_banner_width);
-                    height = holder.itemView.getContext().getResources().getInteger(R.integer.sponsored_banner_height);
-                }
-
                 virtualPosition = position % dataSource.size();
 
                 item = dataSource.get(virtualPosition);
 
-                imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), width, height);
+                imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), imageWidth, imageHeight);
 
                 if (holder.subscription != null) {
                     holder.subscription.dispose();
@@ -204,6 +193,14 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                                     onBannerTappedListener.onBannerTapped(item, position);
                                 }
                             });
+                }
+
+                String title = item.getBannerText();
+                if (shouldShowTitle && title != null) {
+                    holder.title.setText(title);
+                    holder.title.setVisibility(View.VISIBLE);
+                } else {
+                    holder.title.setVisibility(View.GONE);
                 }
         }
 
@@ -313,6 +310,22 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     public int getCellHeight() {
         return cellHeight;
+    }
+
+    public int getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(int imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    public int getImageHeight() {
+        return imageHeight;
+    }
+
+    public void setImageHeight(int imageHeight) {
+        this.imageHeight = imageHeight;
     }
 
     public BannerViewType getBannerViewType() {
@@ -506,8 +519,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         ImageView image;
 
         @Nullable
-        @BindView(R.id.viewholder_sale_details_text)
-        TextView itemName;
+        @BindView(R.id.viewholder_horizontal_scrolling_cell_title)
+        TextView title;
 
         ViewHolder(View view, int width) {
             super(view);
@@ -533,5 +546,13 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     public interface OnItemRecommendedListener {
         void onItemRecommendedTapped(RecommendedItemsResponse response);
+    }
+
+    public boolean isShouldShowTitle() {
+        return shouldShowTitle;
+    }
+
+    public void setShouldShowTitle(boolean shouldShowTitle) {
+        this.shouldShowTitle = shouldShowTitle;
     }
 }

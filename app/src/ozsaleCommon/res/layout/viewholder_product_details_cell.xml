@@ -16,12 +16,12 @@
         android:id="@+id/viewholder_banner_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/viewholder_sale_details_text"
+        android:layout_above="@+id/viewholder_horizontal_scrolling_cell_title"
         android:scaleType="centerCrop"
         android:transitionName="image" />
 
     <TextView
-        android:id="@+id/viewholder_sale_details_text"
+        android:id="@+id/viewholder_horizontal_scrolling_cell_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
