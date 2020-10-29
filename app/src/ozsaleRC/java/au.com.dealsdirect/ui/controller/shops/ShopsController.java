@@ -40,6 +40,7 @@ import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.OnClickFreeDeliveryListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
@@ -475,7 +476,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             return;
         }
         categoriesMvpView.showSaleItems(categoryId);
-        mActivity.getHomeController().showCategoryController();
+        mActivity.getMainController().showCategoryController();
     }
 
     @Override
