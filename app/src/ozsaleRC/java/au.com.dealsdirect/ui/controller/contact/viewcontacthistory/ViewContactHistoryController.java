@@ -6,15 +6,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,31 +18,30 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
-import au.com.dealsdirect.data.network.model.contacthistory.List;
-import au.com.dealsdirect.data.network.model.contactreply.ReplyContact;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
-import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
-import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
+import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryAdapter;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsListener;
-import au.com.dealsdirect.ui.controller.returns.returndetails.adapter.ReturnDetailsAddImageAdapter;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.AsyncResponse;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -103,7 +96,7 @@ public class ViewContactHistoryController extends BaseController implements View
     private ViewContactsAddImageAdapter mImageAdapter;
     private ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
     private HashMap<Integer, File> mImageFileHashMap = new HashMap<>();
-    private ArrayList<SetAttachmentRequest.Items> itemsList = new ArrayList<>();
+    private ArrayList<SetAttachmentForContactRequest.Item> itemsList = new ArrayList<>();
     private String mAttachmentId = "";
     private String mMessageId = "";
     ImageUploadUtil.UploadFileToServer uploadFileToServer;
@@ -215,10 +208,10 @@ public class ViewContactHistoryController extends BaseController implements View
     }
 
     @Override
-    public void showContactHistory(java.util.List<List> myContactItems) {
+    public void showContactHistory(GetContactHistoryResponse response) {
 
         if (mImageUriArray.size() != 0) {
-            mMessageId = myContactItems.get(0).getId();
+            mMessageId = response.getMessages().get(0).getId();
 
             for (int i = 0; i < mImageUriArray.size(); i++) {
                 try {
@@ -235,14 +228,14 @@ public class ViewContactHistoryController extends BaseController implements View
                 }
             }
 
-            SetAttachmentRequest setAttachmentRequest = new SetAttachmentRequest();
-            setAttachmentRequest.setId(mMessageId);
-            setAttachmentRequest.setType("contact");
-            setAttachmentRequest.setListItems(new ArrayList<>());
+            SetAttachmentForContactRequest setAttachmentRequest = new SetAttachmentForContactRequest();
+            setAttachmentRequest.setMessageId(mMessageId);
+            setAttachmentRequest.setNumber(mContactNumber);
+            setAttachmentRequest.setItems(new ArrayList<>());
             mPresenter.setAttachment(setAttachmentRequest, false);
         } else {
-            Log.d("contacts", myContactItems.size() + " ");
-            ContactHistoryAdapter adapter = new ContactHistoryAdapter(myContactItems, mActivity);
+            Log.d("contacts", response.getMessages().size() + " ");
+            ContactHistoryAdapter adapter = new ContactHistoryAdapter(response.getMessages(), mActivity);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
 
@@ -268,10 +261,10 @@ public class ViewContactHistoryController extends BaseController implements View
         int contactId = mContactNumber;
 
         ReplyContactRequest replyContactRequest = new ReplyContactRequest();
-        replyContactRequest.comments = replyMessage;
-        replyContactRequest.contactNo = contactId;
+        replyContactRequest.setText(replyMessage);
+        replyContactRequest.setNumber(contactId);
 
-        if (replyContactRequest.comments.isEmpty()) {
+        if (replyContactRequest.getText().isEmpty()) {
 
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
@@ -293,8 +286,8 @@ public class ViewContactHistoryController extends BaseController implements View
     }
 
     @Override
-    public void repliedContactSwitchView(ReplyContact replyContact) {
-        if (replyContact.getResult()) {
+    public void repliedContactSwitchView(String replyContact) {
+        if (replyContact.equals("true")) {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     mActivity.getString(R.string.message_submitted));
@@ -320,30 +313,28 @@ public class ViewContactHistoryController extends BaseController implements View
     }
 
     @Override
-    public void getAttachmentId(SetAttachmentResponse setAttachmentResponse) {
-        mAttachmentId = setAttachmentResponse.getD().getValue();
+    public void setAttachmentId(String attachmentId) {
+        mAttachmentId = attachmentId;
 
         if (mImageFileHashMap != null) {
             callUploadImage(0);
         }
     }
 
-    private GetContactHistoryRequest createContactHistoryRequest(int contactNo) {
+    private GetContactHistoryRequest createContactHistoryRequest(int number) {
         GetContactHistoryRequest getContactHistoryRequest = new GetContactHistoryRequest();
-        getContactHistoryRequest.contactNo = contactNo;
+        getContactHistoryRequest.setNumber(number);
         return getContactHistoryRequest;
     }
 
     @Override
     public void getImageFromDirectory(boolean uploadImage) {
-        if(ActivityCompat.checkSelfPermission(mActivity,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
+        if (ActivityCompat.checkSelfPermission(mActivity,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     AppConstants.REQUEST_CODE_PERMISSION);
-        }
-        else {
+        } else {
 
             Intent cameraIntent = new Intent(Intent.ACTION_PICK);
             cameraIntent.setType("image/*");
@@ -407,30 +398,28 @@ public class ViewContactHistoryController extends BaseController implements View
         uploadFileToServer.delegate = this;
         uploadFileToServer.execute(mAttachmentId,
                 mImageFileHashMap.get(imageCount), mPresenter.getUserAgent(), imageCount,
-                GNotification.getDeviceID(mActivity)+System.currentTimeMillis()+".jpg");
+                GNotification.getDeviceID(mActivity) + System.currentTimeMillis() + ".jpg");
     }
 
     private void getImageUrl(String imageUrl) {
-        SetAttachmentRequest.Items items = new SetAttachmentRequest.Items();
+        SetAttachmentForContactRequest.Item items = new SetAttachmentForContactRequest.Item();
         items.setType("image/png");
         items.setUrl(imageUrl);
         itemsList.add(items);
 
         if (mImageFileHashMap.size() == itemsList.size()) {
-            SetAttachmentRequest setAttachmentRequest = new SetAttachmentRequest();
-            setAttachmentRequest.setId(mMessageId);
-            setAttachmentRequest.setType("contact");
-            setAttachmentRequest.setListItems(itemsList);
+            SetAttachmentForContactRequest setAttachmentRequest = new SetAttachmentForContactRequest();
+            setAttachmentRequest.setMessageId(mMessageId);
+            setAttachmentRequest.setNumber(mContactNumber);
+            setAttachmentRequest.setItems(itemsList);
             mPresenter.setAttachment(setAttachmentRequest, true);
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK || resultCode == AppConstants.REQUEST_CODE_FOR_SUCCESS)
-        {
+        if (resultCode == RESULT_OK || resultCode == AppConstants.REQUEST_CODE_FOR_SUCCESS) {
             Uri chosenImageUri = data.getData();
 
             mImageRecyclerView.setVisibility(View.VISIBLE);

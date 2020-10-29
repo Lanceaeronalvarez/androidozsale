@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.listeners.OnHorizontalSwipeTouchListener;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventParameters;
@@ -137,8 +138,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mHeightForPromoBanner = mActivity.getResources().getInteger(R.integer.banner_mobile_height);
 
         mOrientation = orientation;
-
-        mListener = listener;
 
         setupDimensions(orientation);
     }

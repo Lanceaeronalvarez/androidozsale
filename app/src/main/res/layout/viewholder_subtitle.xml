@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/viewholder_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_default"
+        android:layout_marginTop="@dimen/padding_default"
+        android:layout_marginBottom="@dimen/padding_default_half"
+        android:text="Subtitle"
+        android:textAllCaps="true" />
+
+</RelativeLayout>

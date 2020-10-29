@@ -1,9 +1,10 @@
 package au.com.dealsdirect.ui.controller.contact.selectorder.viewholder;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import au.com.dealsdirect.R;
 
@@ -13,13 +14,15 @@ import au.com.dealsdirect.R;
 
 public class ContactOrderViewHolder extends RecyclerView.ViewHolder {
 
-    public RelativeLayout contactOrderRowLayout;
+    public LinearLayout contactOrderRowLayout;
     public TextView contactOrderTitleRowTextView;
+    public RecyclerView contactOrderRecyclerview;
 
     public ContactOrderViewHolder(View itemView) {
         super(itemView);
 
-        contactOrderRowLayout = (RelativeLayout) itemView.findViewById(R.id.contact_select_order_row_layout);
-        contactOrderTitleRowTextView = (TextView) itemView.findViewById(R.id.contact_order_row_item_text);
+        contactOrderRowLayout = itemView.findViewById(R.id.contact_select_order_row_layout);
+        contactOrderTitleRowTextView = itemView.findViewById(R.id.contact_order_row_item_text);
+        contactOrderRecyclerview = itemView.findViewById(R.id.viewholder_contact_order_recyclerview);
     }
 }

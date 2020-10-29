@@ -1,9 +1,10 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.ui.base.MvpView;
 
 /**
@@ -12,10 +13,15 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface OrdersMvpView extends MvpView {
 
-    void showOrders(ArrayList<GetPaymentsList.ResponseValue.PaymentItem> orders);
+    void showOrders(GetOrdersResponse orders);
 
-    void showOrderDetails(String referenceNumber, HashMap<String, String> status, String link,
-                          HashMap<String, HashMap<String, String>> deliveryRoutes, int position);
+    void showOrders(List<GetOrdersResponse.Order> orders);
+
+    void showOrder(GetOrdersResponse.Order order);
 
     void showOrderDetails(int position);
+
+    void addressChanged(String newAddress);
+
+    void orderSatisfactionReceived(OrderReceivedRequest request, boolean hasSetSatisfactionAlready);
 }

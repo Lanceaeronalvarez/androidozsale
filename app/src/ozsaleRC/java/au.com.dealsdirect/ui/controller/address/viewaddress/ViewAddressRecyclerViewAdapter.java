@@ -1,12 +1,13 @@
 package au.com.dealsdirect.ui.controller.address.viewaddress;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants;
@@ -20,7 +21,6 @@ import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.AddressesItem;
-import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,27 +38,21 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
     private Boolean isCalledFromCart;
     private DeliveryAddress mDeliveryAddress;
     private ViewAddressMvpPresenter mPresenter;
-    private int position;
     private boolean isItemViewSelected;
-    private String mOrderID;
-    private boolean mCalledFromOrder;
+    private ViewAddressController.OnAddressSelected onAddressSelected = null;
 
     public ViewAddressRecyclerViewAdapter(
             Boolean calledFromCart,
             List<AddressesItem> addressList,
             Context context,
             DeliveryAddress deliveryAddress,
-            ViewAddressMvpPresenter presenter,
-            String orderID,
-            Boolean calledFromOrder) {
+            ViewAddressMvpPresenter presenter) {
 
         this.isCalledFromCart = calledFromCart;
         this.addressList = addressList;
         this.mContext = context;
         this.mDeliveryAddress = deliveryAddress;
         this.mPresenter = presenter;
-        this.mOrderID = orderID;
-        this.mCalledFromOrder = calledFromOrder;
         setHasStableIds(true);
     }
 
@@ -78,8 +72,6 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
 
     @Override
     public void onBindViewHolder(MyAddressModuleViewHolder holder, int position) {
-        this.position = position;
-
         isItemViewSelected = mDeliveryAddress != null && mDeliveryAddress.equalsAddressItem(addressList.get(position));
 
         holder.addressNumberTextView.setText(addressList.get(position).getAddressName());
@@ -97,16 +89,13 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
 
         holder.setMaxLeftSwipeAmount(-0.2f);
         holder.setMaxRightSwipeAmount(0);
-        holder.setSwipeItemHorizontalSlideAmount(addressList.get(position).isPinned() ? -0.2f: 0);
+        holder.setSwipeItemHorizontalSlideAmount(addressList.get(position).isPinned() ? -0.2f : 0);
 
-        if (mCalledFromOrder) {
-            holder.itemView.setOnClickListener(v -> {
-                ChangeDeliveryAddressRequest changeDeliveryAddressRequest = new ChangeDeliveryAddressRequest();
-                changeDeliveryAddressRequest.setAddressID(addressList.get(position).getAddressId());
-                changeDeliveryAddressRequest.setOrderID(mOrderID);
-                mPresenter.changeDeliveryAddress(changeDeliveryAddressRequest);
-            });
-        }
+        holder.itemView.setOnClickListener(v -> {
+            if (onAddressSelected != null) {
+                onAddressSelected.onAddressSelected(addressList.get(position));
+            }
+        });
 
     }
 
@@ -246,5 +235,9 @@ public class ViewAddressRecyclerViewAdapter extends RecyclerView.Adapter<ViewAdd
             // clear the references
             mAdapter = null;
         }
+    }
+
+    public void setOnAddressSelected(ViewAddressController.OnAddressSelected onAddressSelected) {
+        this.onAddressSelected = onAddressSelected;
     }
 }

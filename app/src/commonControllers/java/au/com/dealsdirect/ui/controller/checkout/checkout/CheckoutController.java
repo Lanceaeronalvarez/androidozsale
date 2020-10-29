@@ -300,7 +300,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.ADD_ADDRESS);
         } else {
             ViewAddressController.Parameters.DisplayViewAddress parameters = new ViewAddressController.Parameters
-                    .DisplayViewAddress(true, null, false, "");
+                    .DisplayViewAddress(true, mDeliveryAddress, false, "");
 
             ViewAddressController controller = ViewAddressController.newInstance(parameters);
             getRouter().pushController(RouterTransaction.with(controller)

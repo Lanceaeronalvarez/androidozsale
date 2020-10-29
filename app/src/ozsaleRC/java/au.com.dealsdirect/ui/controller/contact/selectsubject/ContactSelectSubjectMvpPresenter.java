@@ -9,6 +9,4 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 public interface ContactSelectSubjectMvpPresenter<V extends ContactSelectSubjectMvpView> extends MvpPresenter<V> {
 
     void loadContactUsSubjects();
-
-    void selectContactSubject(String subject);
 }

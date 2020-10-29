@@ -7,13 +7,10 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.core.util.Pair;
 
 import com.bluelinelabs.conductor.Conductor;
@@ -56,8 +53,6 @@ import com.stripe.android.model.PaymentIntent;
 import com.stripe.android.model.PaymentMethodCreateParams;
 import com.visa.checkout.VisaPaymentSummary;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -72,6 +67,7 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
 import au.com.dealsdirect.service.event.GenieEventServiceInterface;
@@ -96,7 +92,8 @@ import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
-import au.com.dealsdirect.ui.controller.orders.orders.BottomSheetOrderDialog;
+import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderSatisfactionDialog;
+import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderTrackerDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.BottomSheetSizesDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
@@ -155,7 +152,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private AccountController mAccountController;
     private SearchFilterController mSearchFilterController;
     private SearchFilterController mShopSearchFilterController;
-    private MainActivity mMainActivity;
     private SaleCategoryController mSaleCategoryController;
 
     private AuthHandler mAuthHandler;
@@ -429,7 +425,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             } else {
                 GateKeeper.push(router, GateKeeper.Destination.LOGIN);
             }
-        } else if (!getMainController().isPopUpControllerVisible()){
+        } else if (!getMainController().isPopUpControllerVisible()) {
             Bundle bundle = new BundleBuilder(new Bundle())
                     .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.LOGIN)
                     .build();
@@ -1479,71 +1475,24 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
-    public void showOrderBottomDialog(ArrayList<String> actionArrays, HashMap<String, String> hashMap) {
-        String orderID = hashMap.get(ActionConstants.ORDER_ORDER_ID);
-        String invoiceNumber = hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER);
-        String itemDescription = hashMap.get(ActionConstants.ORDER_ITEM_DESCRIPTION);
-        String itemReturnID = hashMap.get(ActionConstants.ORDER_ITEM_RETURN_ID);
-        String productID = hashMap.get(ActionConstants.ORDER_PRODUCT_ID);
-        String itemId = hashMap.get(ActionConstants.ORDER_ITEM_ID);
-        String imageUrl = hashMap.get(ActionConstants.ORDER_ITEM_IMAGE_URL);
-        String reason = hashMap.get(ActionConstants.ORDER_REASON);
-        String quantity = hashMap.get(ActionConstants.ORDER_QUANTITY);
-        String totalItems = hashMap.get(ActionConstants.ORDER_SUBTOTAL_ITEM);
-        boolean isItemCancel = actionArrays.contains(ActionConstants.ORDER_ITEM_ACTION_REFUND);
+    public void showOrderTrackingStepBottomDialog(GetOrdersResponse.Order.Invoice.Delivery.Step upperStep,
+                                                  GetOrdersResponse.Order.Invoice.Delivery.Step lowerStep) {
+        BottomSheetOrderTrackerDialog bottomSheetFragment = new BottomSheetOrderTrackerDialog();
 
-        BottomSheetOrderDialog bottomSheetFragment = new BottomSheetOrderDialog(
-                new BottomSheetOrderDialog.BottomSheetButtonListener() {
-                    @Override
-                    public void onContactUsPressed() {
-                        if (invoiceNumber != null) {
-                            showContactUs(true, Integer.parseInt(invoiceNumber), itemDescription);
-                        }
-                    }
+        bottomSheetFragment.setUpperStep(upperStep);
+        bottomSheetFragment.setLowerStep(lowerStep);
 
-                    @Override
-                    public void onOrderPressed() {
-                        showWhereIsOrder();
-                    }
+        bottomSheetFragment.setArguments(null);
+        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_TRACKING_STEP_BOTTOM_DIALOG_TAG);
+    }
 
-                    @Override
-                    public void onChangeAddressPressed() {
-                        showChangeAddress(orderID);
-                    }
+    public void showOrderSatisfactionDialog(BottomSheetOrderSatisfactionDialog.OnResponseSelectedListener listener) {
+        BottomSheetOrderSatisfactionDialog bottomSheetFragment = new BottomSheetOrderSatisfactionDialog();
 
-                    @Override
-                    public void onReturnItemPressed() {
-                        if (invoiceNumber != null) {
-                            showReturnItems(Integer.parseInt(invoiceNumber), true, productID);
-                        }
-                    }
+        bottomSheetFragment.setListener(listener);
 
-                    @Override
-                    public void onCancelOrderPressed() {
-                        if (!isItemCancel) {
-                            showCancelDialog(invoiceNumber, reason);
-                        } else if (quantity != null && totalItems != null) {
-                            showCancelItemDialog(
-                                    imageUrl,
-                                    itemDescription,
-                                    productID,
-                                    invoiceNumber,
-                                    reason,
-                                    Integer.parseInt(quantity), Integer.parseInt(totalItems));
-                        }
-                    }
-
-                    @Override
-                    public void onViewReturnItemPressed() {
-                        showViewReturnDetails(itemReturnID, itemDescription, true);
-                    }
-                });
-        Bundle bundle = new Bundle();
-
-        bundle.putStringArrayList(ActionConstants.ORDER_ARRAYS, actionArrays);
-
-        bottomSheetFragment.setArguments(bundle);
-        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
+        bottomSheetFragment.setArguments(null);
+        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_SATISFACTION_BOTTOM_DIALOG_TAG);
     }
 
     public void showProductDetailsSizesBottomDialog(ArrayList<Pair<String, String>> productSizes,
@@ -1570,131 +1519,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
     }
-
-    public void showContactUs(boolean isCalledFromOrders, int invoiceNumber, String description) {
-        getMainController().showSendContactMessage(isCalledFromOrders, invoiceNumber, description);
-    }
-
-    public void showWhereIsOrder() {
-
-    }
-
-    public void showChangeAddress(String orderID) {
-        getMainController().showMyAddress(orderID);
-    }
-
-    public void showReturnItems(int invoiceNumber, boolean calledFromOrder, String productId) {
-        getMainController().showMyReturns(invoiceNumber, calledFromOrder, productId);
-    }
-
-    public void showViewReturnDetails(String returnID, String productName, boolean isFromOrders) {
-        getMainController().showViewReturnsDetails(returnID, productName, isFromOrders);
-    }
-
-    public void showCancelDialog(String orderNumber, String reason) {
-        getMainController().showCancelOrderDialog(orderNumber, reason);
-    }
-
-    public void showCancelItemDialog(String imageUrl, String itemName, String itemId, String invoiceNumber,
-                                     String reason, int quantity, int totalItems) {
-        getMainController().showCancelItemDialog(imageUrl, itemName, itemId, invoiceNumber,
-                reason, quantity, totalItems);
-    }
-
-    public void callRefundOrder(String invoiceNumber, String reason, HashMap<String, Integer> items) {
-        getMainController().callCreateOrderRefund(invoiceNumber, reason, items);
-    }
-
-    public void showPopupMenu(View v, ArrayList<String> actionArrays, HashMap<String, String> hashMap) {
-
-        boolean showChangeAddress = actionArrays.contains(ActionConstants.ORDER_ACTION_CHANGE_ADDRESS);
-        boolean showRequestReturn = actionArrays.contains(ActionConstants.ORDER_ITEM_RETURN);
-        boolean showContactUs = actionArrays.contains(ActionConstants.ORDER_ACTION_CHECK_STATUS);
-        boolean showViewReturns = actionArrays.contains(ActionConstants.ORDER_ITEM_VIEW_RETURN);
-        boolean showCancel = (actionArrays.contains(ActionConstants.ORDER_ITEM_ACTION_REFUND) ||
-                actionArrays.contains(ActionConstants.ORDER_ACTION_REFUND));
-        boolean isItemCancel = actionArrays.contains(ActionConstants.ORDER_ITEM_ACTION_REFUND);
-
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.getMenuInflater().inflate(R.menu.order_actions_pop_up, popup.getMenu());
-
-        try {
-            Field[] fields = popup.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                if ("mPopup".equals(field.getName())) {
-                    field.setAccessible(true);
-                    Object menuPopupHelper = field.get(popup);
-                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
-                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
-                    setForceIcons.invoke(menuPopupHelper, true);
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Menu menu = popup.getMenu();
-        MenuItem changeAddress = menu.findItem(R.id.change_address);
-        changeAddress.setIcon(getResources().getDrawable(R.drawable.ic_change_address));
-        changeAddress.setVisible(showChangeAddress);
-
-        MenuItem requestReturn = menu.findItem(R.id.return_item);
-        requestReturn.setIcon(getResources().getDrawable(R.drawable.ic_return_item));
-        requestReturn.setVisible(showRequestReturn);
-
-        MenuItem contactUs = menu.findItem(R.id.contact_us);
-        contactUs.setIcon(getResources().getDrawable(R.drawable.ic_contact_us));
-        contactUs.setVisible(showContactUs);
-
-        MenuItem viewReturns = menu.findItem(R.id.view_return_details);
-        viewReturns.setIcon(getResources().getDrawable(R.drawable.ic_return_item));
-        viewReturns.setVisible(showViewReturns);
-
-        MenuItem cancel = menu.findItem(R.id.cancel_order);
-        cancel.setIcon(getResources().getDrawable(R.drawable.ic_cancel_order));
-        cancel.setVisible(showCancel);
-
-        popup.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.contact_us:
-                    showContactUs(true, Integer.parseInt(hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER)),
-                            hashMap.get(ActionConstants.ORDER_ITEM_DESCRIPTION));
-                    return true;
-                case R.id.change_address:
-                    showChangeAddress(hashMap.get(ActionConstants.ORDER_ORDER_ID));
-                    return true;
-                case R.id.return_item:
-                    showReturnItems(Integer.parseInt(hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER)),
-                            true, hashMap.get(ActionConstants.ORDER_PRODUCT_ID));
-                    return true;
-                case R.id.view_return_details:
-                    showViewReturnDetails(hashMap.get(ActionConstants.ORDER_ITEM_RETURN_ID),
-                            hashMap.get(ActionConstants.ORDER_ITEM_DESCRIPTION), true);
-                    return true;
-                case R.id.cancel_order:
-                    if (!isItemCancel) {
-                        showCancelDialog(hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER),
-                                hashMap.get(ActionConstants.ORDER_REASON));
-                    } else {
-                        showCancelItemDialog(
-                                hashMap.get(ActionConstants.ORDER_ITEM_IMAGE_URL),
-                                hashMap.get(ActionConstants.ORDER_ITEM_DESCRIPTION),
-                                hashMap.get(ActionConstants.ORDER_PRODUCT_ID),
-                                hashMap.get(ActionConstants.ORDER_INVOICE_NUMBER),
-                                hashMap.get(ActionConstants.ORDER_REASON),
-                                Integer.parseInt(hashMap.get(ActionConstants.ORDER_QUANTITY)),
-                                Integer.parseInt(hashMap.get(ActionConstants.ORDER_SUBTOTAL_ITEM)));
-                    }
-                    return true;
-                default:
-                    return false;
-            }
-        });
-
-        popup.show();
-    }
-
 
     public void createStripePaymentMethod(String cardNumber, int cardMonth, int cardYear, String cardCVV) {
 

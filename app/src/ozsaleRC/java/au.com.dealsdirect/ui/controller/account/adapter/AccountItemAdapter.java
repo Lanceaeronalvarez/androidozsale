@@ -5,6 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemAdapter;
 
 import java.util.List;
@@ -21,11 +24,12 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
 
     private List<AccountItem> mAccountItems;
     private AccountMvpPresenter mPresenter;
-    private int mPreviousPos = 0;
+    private Integer mSelectedPosition = 0;
     private Context mContext;
     private boolean mSelectFirstItem = false;
     private boolean mIsTablet = false;
 
+    private RecyclerView mRecyclerView = null;
 
     public AccountItemAdapter(Context context, List<AccountItem> accountItems, AccountMvpPresenter presenter) {
         mContext = context;
@@ -86,30 +90,18 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
             holder.mAccountArrowRight.setVisibility(View.VISIBLE);
         }
 
-        if (mIsTablet) {
-            if (mPreviousPos == groupPosition) {
-                holder.itemView.setSelected(true);
-            } else {
-                holder.itemView.setSelected(false);
-            }
-        }
+        holder.itemView.setSelected(groupPosition == mSelectedPosition);
 
         if (mSelectFirstItem && groupPosition == 0) {
-            mPreviousPos = groupPosition;
-            holder.itemView.setSelected(true);
-            mPresenter.onAccountItemClick(mContext,title);
+            setSelectedPosition(groupPosition);
+            mPresenter.onAccountItemClick(mContext, title);
             mSelectFirstItem = false; //reset
         }
 
         holder.mAccountItemName.setText(title);
         holder.itemView.setOnClickListener(view -> {
             if (mIsTablet && mPresenter.willScreenChange(mContext, title)) {
-                if (mPreviousPos != groupPosition) {
-                    notifyItemChanged(mPreviousPos);
-                }
-                holder.itemView.setSelected(true);
-                notifyItemChanged(groupPosition);
-                mPreviousPos = groupPosition;
+                setSelectedPosition(groupPosition);
             }
             mPresenter.onAccountItemClick(mContext, title);
         });
@@ -134,5 +126,32 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
     @Override
     public boolean onCheckCanExpandOrCollapseGroup(AccountItemViewHolder holder, int groupPosition, int x, int y, boolean expand) {
         return true;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        if (mRecyclerView == recyclerView) {
+            mRecyclerView = null;
+        }
+    }
+
+    public void setSelectedPosition(Integer position) {
+        Integer previous = mSelectedPosition;
+        mSelectedPosition = position;
+        if (mRecyclerView != null && !mRecyclerView.isComputingLayout()) {
+            if (previous != null) {
+                notifyItemChanged(previous);
+            }
+            if (mSelectedPosition != null) {
+                notifyItemChanged(mSelectedPosition);
+            }
+        }
     }
 }

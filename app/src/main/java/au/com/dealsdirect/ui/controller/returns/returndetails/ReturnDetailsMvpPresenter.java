@@ -4,11 +4,9 @@ package au.com.dealsdirect.ui.controller.returns.returndetails;
  */
 
 
-import java.io.File;
-
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequestOld;
 import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
@@ -26,7 +24,7 @@ public interface ReturnDetailsMvpPresenter<V extends ReturnDetailsMvpView> exten
 
     String getEventUserId();
 
-    void sendMessage(CreateContactRequest createContactRequest);
+    void sendMessage(CreateContactRequestOld createContactRequest);
 
     void replyMessage(ReplyContactRequest replyContactRequest);
 

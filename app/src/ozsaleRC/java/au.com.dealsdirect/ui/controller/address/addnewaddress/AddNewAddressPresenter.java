@@ -19,6 +19,7 @@ import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
@@ -50,8 +51,14 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
                 if (pair.getValue() instanceof EditText) {
                     EditText et = (EditText) pair.getValue();
                     String editTextValue = et.getText().toString();
-                    String label = info.getName();
-                    jsonAddress.addProperty(label, editTextValue);
+                    String label = info.getName().toLowerCase();
+
+                    if (label.equalsIgnoreCase("addresslines")) {
+                        jsonAddress.addProperty("address_lines", editTextValue);
+                    } else {
+                        jsonAddress.addProperty(label, editTextValue);
+                    }
+
                     if (!(editTextValue.length() >= info.getMinLength() && editTextValue.length() <= info.getMaxLength()) &&
                             !label.equalsIgnoreCase(postcode)) {
                         if (info.getMinLength() == info.getMaxLength()) {
@@ -101,11 +108,10 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
 
         getMvpView().showLoading();
         doApiCallForResponse(getDataManager()
-                .callSetUserDeliveryAddress(new AddAddress.RequestValues(jsonAddress)), new AppApiCallback() {
+                .callSetUserDeliveryAddress(jsonAddress), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                AddAddress.ResponseValue responseValue = (AddAddress.ResponseValue) response;
 
                 if (!isViewAttached()) {
                     return;
@@ -113,16 +119,7 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
 
                 getMvpView().hideLoading();
 
-                if (!responseValue.d.isAuthenticated()) {
-//                            RxBus.instance().post(Auth.EVENT_NOT_AUTHENTICATED);
-                    return;
-                }
-
-                if (!responseValue.d.getResult()) {
-                    getMvpView().onError(responseValue.d.getMessage());
-                } else {
-                    getMvpView().addNewAddressSuccessful();
-                }
+                getMvpView().addNewAddressSuccessful();
             }
 
             @Override

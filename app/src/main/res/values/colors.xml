@@ -94,6 +94,10 @@
     <color name="filter_text_inactive">@color/text_extra_light</color>
     <color name="language_selected">@color/bluegreen</color>
 
+    <color name="order_tracking_active">#09B5B8</color>
+    <color name="order_tracking_inactive">#959595</color>
+    <color name="order_tracking_done">#323232</color>
+
 
     <!--Search Edit Text-->
     <color name="search_edit_text_hint">#CCFFFFFF</color>

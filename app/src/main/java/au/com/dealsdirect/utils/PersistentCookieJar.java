@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import au.com.dealsdirect.BuildConfig;
 import okhttp3.Cookie;
 import okhttp3.HttpUrl;
 
@@ -67,7 +68,7 @@ public class PersistentCookieJar implements ClearableCookieJar {
                 cookiesToRemove.add(currentCookie);
                 it.remove();
 
-            } else if (currentCookie.matches(url)) {
+            } else if (currentCookie.matches(url) || BuildConfig.IS_TEST) {
                 validCookies.add(currentCookie);
             }
         }

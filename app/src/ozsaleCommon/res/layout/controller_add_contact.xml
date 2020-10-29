@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
@@ -22,8 +22,8 @@
             android:id="@+id/controller_add_contact_subject_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:clickable="true"
+            android:orientation="horizontal"
             android:padding="@dimen/padding_default">
 
             <TextView
@@ -31,33 +31,34 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="3"
                 android:layout_marginEnd="@dimen/padding_default"
+                android:layout_weight="3"
                 android:text="@string/subject"
                 android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_body" />
 
             <TextView
-                fontPath="@string/font_app_bold"
                 android:id="@+id/controller_add_contact_subject_text"
+                fontPath="@string/font_app_bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
+                android:drawableRight="@drawable/ic_gray_chevron"
+                android:text="@string/select_a_subject"
                 android:textColor="@color/text_dark"
-                android:textSize="@dimen/text_size_body"
-                android:drawableRight="@drawable/ic_gray_chevron"/>
+                android:textSize="@dimen/text_size_body" />
 
         </LinearLayout>
 
-        <View style="@style/horizontalBorderView"/>
+        <View style="@style/horizontalBorderView" />
 
         <LinearLayout
             android:id="@+id/controller_add_contact_order_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:clickable="true"
             android:background="@drawable/bg_account_item"
+            android:clickable="true"
+            android:orientation="horizontal"
             android:padding="@dimen/padding_default">
 
             <TextView
@@ -65,22 +66,22 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="3"
                 android:layout_marginEnd="@dimen/padding_default"
-                android:text="@string/sale"
+                android:layout_weight="3"
+                android:text="@string/invoice"
                 android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_body" />
 
             <TextView
-                fontPath="@string/font_app_bold"
                 android:id="@+id/controller_add_contact_order_text"
+                fontPath="@string/font_app_bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
+                android:drawableRight="@drawable/ic_gray_chevron"
+                android:text="@string/select_invoice"
                 android:textColor="@color/text_dark"
-                android:textSize="@dimen/text_size_body"
-                android:text="@string/select_a_sale"
-                android:drawableRight="@drawable/ic_gray_chevron"/>
+                android:textSize="@dimen/text_size_body" />
 
         </LinearLayout>
 
@@ -88,8 +89,7 @@
 
     </LinearLayout>
 
-    <include
-        layout="@layout/partial_bottom_bar_write_message"/>
+    <include layout="@layout/partial_bottom_bar_write_message" />
 
     <View
         android:layout_width="match_parent"
@@ -97,8 +97,8 @@
         android:layout_above="@id/controller_add_contact_message_container"
         android:background="@color/border_regular" />
 
-    <FrameLayout
-        android:id="@+id/controller_add_contact_selector_container"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contact_suggestions_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/controller_add_contact_message_container"

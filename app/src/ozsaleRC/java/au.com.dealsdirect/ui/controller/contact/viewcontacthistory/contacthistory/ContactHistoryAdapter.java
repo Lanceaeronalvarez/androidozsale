@@ -1,10 +1,6 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory;
 
 import android.content.Context;
-
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +8,16 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ImageDisplayAdapter;
 import au.com.dealsdirect.utils.DateUtils;
-import au.com.dealsdirect.utils.ImageUtils;
 
 /**
  * dp Created by Admin on 6/22/17.
@@ -26,12 +25,12 @@ import au.com.dealsdirect.utils.ImageUtils;
 
 public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryViewHolder> {
 
-    private List<au.com.dealsdirect.data.network.model.contacthistory.List> mCurrentContactsHistoryList = Collections.emptyList();
+    private List<GetContactHistoryResponse.Message> mCurrentContactsHistoryList = Collections.emptyList();
     private Context mContext;
 
-    public ContactHistoryAdapter(List<au.com.dealsdirect.data.network.model.contacthistory.List> contactitemsList, Context context) {
-        Collections.reverse(contactitemsList);
-        this.mCurrentContactsHistoryList = contactitemsList;
+    public ContactHistoryAdapter(List<GetContactHistoryResponse.Message> messages, Context context) {
+        Collections.reverse(messages);
+        this.mCurrentContactsHistoryList = messages;
         this.mContext = context;
     }
 
@@ -48,9 +47,9 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
 
 //        Object userName = mCurrentContactsHistoryList.get(position).getUserName();
 
-        String contactDate = mCurrentContactsHistoryList.get(position).getDate();
+        String contactDate = mCurrentContactsHistoryList.get(position).getMessageDate();
         String contactMessage = mCurrentContactsHistoryList.get(position).getText();
-        boolean isStaff = mCurrentContactsHistoryList.get(position).getIsStaff();
+        boolean isStaff = mCurrentContactsHistoryList.get(position).isStaff();
 //        String contactSubject = mCurrentContactsHistoryList.get(position).getSubject();
 
         String dateHeaderFormatOfItem = DateUtils.getTrimmedServerDateString(contactDate.toString());

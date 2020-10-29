@@ -170,7 +170,7 @@ public class CustomAlertDialog {
 
     public static AlertDialog showCustomCancelOrderDialog(
             Activity activity,
-            String orderNumber,
+            int invoiceNumber,
             CustomDialogButtonListener listener) {
 
 
@@ -196,7 +196,8 @@ public class CustomAlertDialog {
             newAlertDialog.getWindow().setDimAmount(WINDOW_DIM_AMOUNT);
         }
 
-        mTextOrderNumber.setText(orderNumber);
+        String description = Integer.toString(invoiceNumber);
+        mTextOrderNumber.setText(description);
 
         newAlertDialog.show();
 
@@ -231,7 +232,6 @@ public class CustomAlertDialog {
             String imageUrl,
             String itemName,
             int quantity,
-            int totalItems,
             CustomDialogButtonListener listener) {
 
 
@@ -262,15 +262,16 @@ public class CustomAlertDialog {
 
         ImageUtils.loadImage(imageUrl, mItemImage);
 
-        mQuantity.setQuantity(quantity);
+        mQuantity.setQuantity(1);
         mQuantity.setAutoUpdateQuantity(false);
-        mQuantity.setMax(totalItems);
+        mQuantity.setMin(1);
+        mQuantity.setMax(quantity);
         mQuantity.setEditTextToNonEditable();
 
         mQuantity.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
             @Override
             public void onQuantityIncrease(ProductQuantityLayout view, int value) {
-                if (value < totalItems) {
+                if (value < quantity) {
                     value++;
                 }
                 mQuantity.setQuantity(value);
@@ -278,7 +279,7 @@ public class CustomAlertDialog {
 
             @Override
             public void onQuantityDecrease(ProductQuantityLayout view, int value) {
-                if (value != 1) {
+                if (value > 1) {
                     value--;
                 }
                 mQuantity.setQuantity(value);

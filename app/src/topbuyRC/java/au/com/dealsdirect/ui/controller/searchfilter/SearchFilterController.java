@@ -250,7 +250,7 @@ public class SearchFilterController extends BaseController
             public void onTabReselected(TabLayout.Tab tab) {
 
                 Log.d("tabtab", "reselected is " + tab.getPosition());
-//                if (isKeyboardOpen && tab.getPosition() != 0) {
+//                if (isKeyboardOpen && tab.getIndex() != 0) {
 //                    imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
 //                }
 

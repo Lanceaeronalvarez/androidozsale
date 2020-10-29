@@ -124,8 +124,8 @@
         android:layout_above="@id/controller_add_contact_message_container"
         android:background="@color/border_regular" />
 
-    <FrameLayout
-        android:id="@+id/controller_add_contact_selector_container"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contact_suggestions_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/controller_add_contact_message_container"

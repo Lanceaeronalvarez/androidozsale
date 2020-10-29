@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
@@ -26,17 +28,17 @@ public class ViewContactsPresenter<V extends ViewContactsMvpView> extends BasePr
     public void loadContacts() {
         doApiCallForResponse(getDataManager().callGetContacts(getDataManager().getLanguageId()), new AppApiCallback() {
             @Override
-            public void onSuccess(Object response) {
+            public void onSuccess(List<?> response) {
                 super.onSuccess(response);
-                getMvpView().showContactItems(((GetContactsResponse) response).getD());
+                getMvpView().showContactItems((List<GetContactsResponse>) response);
             }
         });
     }
 
     @Override
-    public void selectContact(GetContactsResponse.ContactList contactList) {
+    public void selectContact(GetContactsResponse contact) {
         if (isViewAttached()) {
-            getMvpView().onContactClicked(contactList);
+            getMvpView().onContactClicked(contact);
         }
     }
 }

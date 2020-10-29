@@ -3,56 +3,92 @@ package au.com.dealsdirect.data.network.model.contactorder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * dp Created by Admin on 7/5/17.
  */
 public class ContactOrderResponse {
 
-
-    @SerializedName("IsAuthenticated")
+    @SerializedName("number")
     @Expose
-    private Boolean isAuthenticated;
-    @SerializedName("List")
+    private Integer number;
+
+    @SerializedName("order_number")
     @Expose
-    private java.util
-            .List<ContactOrderList> list = null;
-    @SerializedName("Result")
+    private Integer orderNumber;
+
+    @SerializedName("status")
     @Expose
-    private Boolean result;
-    @SerializedName("Message")
+    private String status;
+
+    @SerializedName("actions")
     @Expose
-    private String message;
+    private List<String> actions;
 
-    public Boolean getIsAuthenticated() {
-        return isAuthenticated;
+    @SerializedName("items")
+    @Expose
+    private List<Item> items;
+
+    public Integer getNumber() {
+        return number;
     }
 
-    public void setIsAuthenticated(Boolean isAuthenticated) {
-        this.isAuthenticated = isAuthenticated;
+    public Integer getOrderNumber() {
+        return orderNumber;
     }
 
-    public java.util.List<ContactOrderList> getList() {
-        return list;
+    public String getStatus() {
+        return status;
     }
 
-    public void setList(java.util.List<ContactOrderList> list) {
-        this.list = list;
+    public List<String> getActions() {
+        return actions;
     }
 
-    public Boolean getResult() {
-        return result;
+    public List<Item> getItems() {
+        return items;
     }
 
-    public void setResult(Boolean result) {
-        this.result = result;
-    }
+    public static class Item {
+        @SerializedName("id")
+        @Expose
+        private String id;
 
-    public String getMessage() {
-        return message;
-    }
+        @SerializedName("orderItemId")
+        @Expose
+        private String orderItemId;
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+        @SerializedName("name")
+        @Expose
+        private String name;
 
+        @SerializedName("image_url")
+        @Expose
+        private String imageUrl;
+
+        @SerializedName("size")
+        @Expose
+        private String size;
+
+        public String getId() {
+            return id;
+        }
+
+        public String getOrderItemId() {
+            return orderItemId;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public String getSize() {
+            return size;
+        }
+    }
 }

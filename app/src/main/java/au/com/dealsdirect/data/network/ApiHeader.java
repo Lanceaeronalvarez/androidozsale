@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
 
 
+
 @Singleton
 public class ApiHeader {
 
@@ -26,5 +27,4 @@ public class ApiHeader {
 
         return map;
     }
-
 }

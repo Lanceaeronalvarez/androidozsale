@@ -33,6 +33,7 @@ public final class ApiEndPoint {
         SETTING,
         EVENTING,
         ATTACHMENTS,
+        MYACCOUNT,
         RECENTLY
     }
 
@@ -89,10 +90,25 @@ public final class ApiEndPoint {
             case GENIE:
                 microServiceUrl = HANDLER_PREFIX;
                 break;
+            case MYACCOUNT:
+                microServiceUrl = "api/shop/myaccount/" + version + "/accounts/";
+                break;
+
         }
 
         Settings.Country selectedCountry = Settings.getSelectedCountry();
-        String root = service == ApiService.LEGACY ? selectedCountry.legacyRoot : selectedCountry.genieRoot;
+        String root = "";
+        switch(service) {
+            case LEGACY:
+                root = selectedCountry.legacyRoot;
+                break;
+            case MYACCOUNT:
+                root = selectedCountry.myAccount;
+                break;
+            default:
+                root = selectedCountry.genieRoot;
+        }
+
         return root + microServiceUrl + processUrlString(url);
     }
 
@@ -335,27 +351,39 @@ public final class ApiEndPoint {
 
     /* Contact Controller */
     public static String answerContact() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "AnswerContact", ApiUrlVersion.emptyVersion.apiVersion());
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/number={number}/messages", ApiUrlVersion.v1.apiVersion());
     }
 
-    public static String createContact() {
+    public static String createContactOld() {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateContact", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
+    public static String createContact() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String createContactPublic() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/public", ApiUrlVersion.v1.apiVersion());
+    }
+
     public static String getContactInvoices() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetContactInvoices", ApiUrlVersion.emptyVersion.apiVersion());
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/invoices", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String getContact() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetContact", ApiUrlVersion.emptyVersion.apiVersion());
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/number={number}/messages", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String getContacts() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetContacts", ApiUrlVersion.emptyVersion.apiVersion());
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String getContactSubjects() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetContactSubjects", ApiUrlVersion.emptyVersion.apiVersion());
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/subjects?public={public}", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String getContactSubjectsTemplates() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/subjects/{id}/templates", ApiUrlVersion.v1.apiVersion());
     }
 
     /* Return Controller */
@@ -381,15 +409,15 @@ public final class ApiEndPoint {
 
     /* Address Controller */
     public static String deleteUserDeliveryAddress() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "DeleteUserDeliveryAddress", ApiUrlVersion.emptyVersion.apiVersion());
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/addresses/{addressId}", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String getUserAddresses() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetUserAddresses", ApiUrlVersion.emptyVersion.apiVersion());
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/addresses", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String setUserDeliveryAddress() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "SetUserDeliveryAddress", ApiUrlVersion.emptyVersion.apiVersion());
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/addresses", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String applyDeliveryAddress() {
@@ -397,12 +425,44 @@ public final class ApiEndPoint {
     }
 
     /* Orders Controller*/
-    public static String getPaymentsList() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetPaymentsList", ApiUrlVersion.emptyVersion.apiVersion());
+    public static String getOrders() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders", ApiUrlVersion.v1.apiVersion());
     }
 
-    public static String getOrderPaymentDetails() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetOrderPaymentDetails", ApiUrlVersion.emptyVersion.apiVersion());
+    public static String getOrdersHistory() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders?from={from_date}&months={months}", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String getOrderDetails() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders/number={order_number}", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String getOrderTracking() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders/number={order_id}/invoices/number={invoice_number}/tracking", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String changeDeliveryAddress() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders/{order_id}/invoices/number={invoice_number}/addresses/{address_id}", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String cancelInvoice() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders/{order_id}/invoices/number={invoice_number}", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String cancelInvoiceItem() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders/{order_id}/invoices/number={invoice_number}/ordered/{order_item_id}?qty={quantity}", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String callSetOrderReceived() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders/{order_id}/invoices/number={invoice_number}:received", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String callSetOrderNotReceived() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders/{order_id}/invoices/number={invoice_number}:not_received", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String callGetOrderReceivedSatisfaction() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders/{order_id}/invoices/number={invoice_number}:received_satisfaction", ApiUrlVersion.v1.apiVersion());
     }
 
     /* Checkout Endpoints*/
@@ -598,18 +658,6 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "LoginVisa", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
-    public static String changeDeliveryAddress() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "ChangeDeliveryAddress", ApiUrlVersion.emptyVersion.apiVersion());
-    }
-
-    public static String createRefund() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateRefund", ApiUrlVersion.emptyVersion.apiVersion());
-    }
-
-    public static String callOrderReceived() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "SetOrderReceived", ApiUrlVersion.emptyVersion.apiVersion());
-    }
-
     public static String getWishlistIdsOnly() {
         return getFormattedUrl(ApiService.WISHLIST, "ids", ApiUrlVersion.v4.apiVersion());
     }
@@ -628,6 +676,10 @@ public final class ApiEndPoint {
 
     public static String setAttachment() {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "SetAttachment", ApiUrlVersion.emptyVersion.apiVersion());
+    }
+
+    public static String setAttachmentForContact() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/number={number}/messages/{id}/attachments", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String uploadImage() {

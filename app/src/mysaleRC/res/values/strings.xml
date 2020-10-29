@@ -180,8 +180,8 @@
     <!--CONTACTS-->
     <string name="welcome_to_contact_us">Welcome to My Contacts!</string>
     <string name="you_do_not_currently_have_any_messages">You do not currently have any messages</string>
-    <string name="my_subjects">MY SUBJECTS</string>
-    <string name="my_sales">MY SALES</string>
+    <string name="my_sales">SELECT INVOICE</string>
+    <string name="my_subjects">SUBJECTS</string>
     <string name="subject">Subject</string>
     <string name="sale">Sale</string>
     <string name="select_invoice">Select Invoice</string>

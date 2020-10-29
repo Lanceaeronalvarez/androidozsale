@@ -5,6 +5,7 @@ package au.com.dealsdirect.ui.controller.returns.returndetails;
 
 
 import com.androidnetworking.error.ANError;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
@@ -12,9 +13,8 @@ import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
-import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequestOld;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponseOld;
 import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
 import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
@@ -66,13 +66,13 @@ public class ReturnDetailsPresenter<V extends ReturnDetailsMvpView> extends Base
 
     @Override
     public void loadReturnContacts(GetContactHistoryRequest request) {
-        doApiCallForResponse(getDataManager().callGetContactHistory(request), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callGetContactHistory(request), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
-                GetContactHistoryResponse.ResponseValue responseValue = (GetContactHistoryResponse.ResponseValue) response;
-                if (responseValue.getList() != null && !responseValue.getList().isEmpty()) {
+                GetContactHistoryResponse responseValue = (GetContactHistoryResponse) response;
+                if (responseValue != null && responseValue.getMessages() != null && !responseValue.getMessages().isEmpty()) {
                     getMvpView().showContactMessageReturn(responseValue);
                 }
             }
@@ -114,13 +114,13 @@ public class ReturnDetailsPresenter<V extends ReturnDetailsMvpView> extends Base
     }
 
     @Override
-    public void sendMessage(CreateContactRequest createContactRequest) {
+    public void sendMessage(CreateContactRequestOld createContactRequest) {
 
-        doApiCallForResponse(getDataManager().callCreateContact(createContactRequest), new AppApiCallback() {
+        doApiCallForResponse(getDataManager().callCreateContactOld(createContactRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                CreateContactResponse myContactSubject = (CreateContactResponse) response;
+                CreateContactResponseOld myContactSubject = (CreateContactResponseOld) response;
                 getMvpView().finishedSendMessage(myContactSubject.getCreateContact().getMessage());
             }
         });
@@ -129,12 +129,12 @@ public class ReturnDetailsPresenter<V extends ReturnDetailsMvpView> extends Base
     @Override
     public void replyMessage(ReplyContactRequest replyContactRequest) {
 
-        doApiCallForResponse(getDataManager().callReplyContact(replyContactRequest), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callReplyContact(replyContactRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                ReplyContactResponse replyReponse = (ReplyContactResponse) response;
-                getMvpView().finishedSendMessage(replyReponse.getReplyContact().getMessage());
+                String replyReponse = (String) response;
+                getMvpView().finishedSendMessage(replyReponse);
             }
         });
 

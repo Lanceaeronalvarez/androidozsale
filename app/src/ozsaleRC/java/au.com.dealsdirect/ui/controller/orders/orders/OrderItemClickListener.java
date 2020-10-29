@@ -1,17 +1,9 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
-import android.view.View;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 public interface OrderItemClickListener {
-    void onOrderItemClick(String referenceNumber, HashMap<String, String> status, String link,
-                          HashMap<String, HashMap<String, String>> deliveryRoutes, int position);
+    void onOrderItemClick(int index);
 
-    void onOrderItemTrackingButtonClick(String url, String errorMessage);
-
-    void onOrderItemShowOptions(View v, ArrayList<String> arrayList, HashMap<String, String> hashMap);
-
-    void callOrderReceived(String orderID);
+    void onOrderItemShowOptions(String invoiceId, int invoiceNumber, List<String> actions);
 }

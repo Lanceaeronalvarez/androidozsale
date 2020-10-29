@@ -7,45 +7,15 @@
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/contentFrame"
+    <include layout="@layout/partial_toolbar_arrow" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/orders_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent"
-        android:fillViewport="true"
-        android:overScrollMode="never"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <TextView
-                fontPath="@string/font_app_light"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/padding_default"
-                android:layout_marginTop="@dimen/padding_default"
-                android:layout_marginBottom="@dimen/padding_default_half"
-                android:text="@string/my_orders"
-                android:textAllCaps="true"
-                android:textSize="@dimen/text_size_caption1" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/orders_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/padding_default_half"
-                android:background="@color/background_default"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false"
-                android:overScrollMode="never" />
-        </LinearLayout>
-
-
-    </androidx.core.widget.NestedScrollView>
+        android:clipToPadding="false"
+        android:nestedScrollingEnabled="false"
+        android:overScrollMode="never" />
 
     <FrameLayout
         android:layout_width="match_parent"

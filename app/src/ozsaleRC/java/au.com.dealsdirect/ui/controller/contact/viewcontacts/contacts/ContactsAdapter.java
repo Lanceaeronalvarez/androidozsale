@@ -26,17 +26,17 @@ import butterknife.ButterKnife;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewContactsItemViewHolder> {
 
-    List<GetContactsResponse.ContactList> mCurrentContactsList = Collections.emptyList();
+    List<GetContactsResponse> mCurrentContactsList = Collections.emptyList();
     private ViewContactsMvpPresenter mPresenter;
     private ContactClickListener mContactClickListener;
 
-    public void replace(List<GetContactsResponse.ContactList> items) {
+    public void replace(List<GetContactsResponse> items) {
         mCurrentContactsList = items;
         notifyDataSetChanged();
     }
 
     public ContactsAdapter(
-            List<GetContactsResponse.ContactList> contactLists,
+            List<GetContactsResponse> contactLists,
             ViewContactsMvpPresenter mvpPresenter,
             ContactClickListener contactClickListener) {
 
@@ -56,9 +56,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewCo
     public void onBindViewHolder(ViewContactsItemViewHolder holder, int position) {
 
         String itemSubject = mCurrentContactsList.get(position).getSubject();
-        String itemLastAnswer = mCurrentContactsList.get(position).getLastAnswer();
-        String itemLastComment = mCurrentContactsList.get(position).getLastComment();
-        String dateOfContactItem = mCurrentContactsList.get(position).getLastComment();
+        String itemLastAnswer = mCurrentContactsList.get(position).getLastMessageDate();
+        String itemLastComment = mCurrentContactsList.get(position).getLastMessage();
+        String dateOfContactItem = mCurrentContactsList.get(position).getLastMessage();
         String dateHeaderFormatOfItem = DateUtils.getDayOfWeekFromDateString(itemLastAnswer.toString());
 
         holder.contactUsTitleTextView.setText(StringUtils.toTitleCase(itemSubject));

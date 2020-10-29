@@ -10,13 +10,13 @@ public class ContactItemByDate {
 
     private String dateHeaderFormat;
 
-    private List<GetContactsResponse.ContactList> contactItemList;
+    private List<GetContactsResponse> contactItemList;
 
-    public List<GetContactsResponse.ContactList> getContactItemList() {
+    public List<GetContactsResponse> getContactItemList() {
         return contactItemList;
     }
 
-    public void setContactItemList(List<GetContactsResponse.ContactList> contactItemList) {
+    public void setContactItemList(List<GetContactsResponse> contactItemList) {
         this.contactItemList = contactItemList;
     }
 

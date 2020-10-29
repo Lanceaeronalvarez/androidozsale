@@ -2,6 +2,8 @@ package au.com.dealsdirect.ui.controller.contact.viewcontacts;
 
 import com.bluelinelabs.conductor.Router;
 
+import java.util.List;
+
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -13,14 +15,11 @@ public interface ViewContactsMvpView extends MvpView {
 
     String TAG = "ContactController";
 
-    void showContactItems(GetContactsResponse.Response myContacts);
+    void showContactItems(List<GetContactsResponse> contacts);
 
-    void onContactClicked(GetContactsResponse.ContactList contactList);
+    void onContactClicked(GetContactsResponse contact);
 
     ViewContactsMvpPresenter getPresenter();
 
     Router getDisplayRouter();
-
-    void sendOrderMessage(boolean isCalledFromOrders, int invoiceNumber, String description);
-
 }

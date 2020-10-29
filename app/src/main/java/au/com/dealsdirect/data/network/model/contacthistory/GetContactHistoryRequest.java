@@ -5,6 +5,13 @@ package au.com.dealsdirect.data.network.model.contacthistory;
  */
 public class GetContactHistoryRequest {
 
-    public int contactNo;
+    private Integer number;
 
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
 }

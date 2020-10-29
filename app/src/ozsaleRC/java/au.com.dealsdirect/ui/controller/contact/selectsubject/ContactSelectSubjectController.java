@@ -2,25 +2,27 @@ package au.com.dealsdirect.ui.controller.contact.selectsubject;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.selectsubject.adapter.ContactSubjectAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -39,10 +41,13 @@ public class ContactSelectSubjectController extends BaseController
     private static final String KEY_TEXT = "ContactSelectSubjectController.KEY_TEXT";
     private static final String KEY_SUBJECTS = "ContactSelectSubjectController.KEY_SUBJECTS";
 
-    private List<String> myContactSubjects;
     private ContactSubjectAdapter mAdapter;
     private boolean mHasSavedInstance = false;
 
+    private String mSubjecId = "";
+    private String mSubject = "";
+    private boolean mIsInvoiceRequired = false;
+    private List<String> mActions = new ArrayList<>();
 
     @Inject
     ContactSelectSubjectMvpPresenter<ContactSelectSubjectMvpView> mPresenter;
@@ -94,7 +99,7 @@ public class ContactSelectSubjectController extends BaseController
         mViewContactsToolarTitle.setText(getResource().getString(R.string.select_a_subject));
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);
 
-        mAdapter = new ContactSubjectAdapter(myContactSubjects, mPresenter);
+        mAdapter = new ContactSubjectAdapter(new ArrayList<>(), this::onContactSubjectItemSelected);
 
         mContactSelectSubjectControllerRecyclerView.setAdapter(mAdapter);
         mContactSelectSubjectControllerRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -113,7 +118,7 @@ public class ContactSelectSubjectController extends BaseController
     }
 
     @Override
-    public void onDestroyView(View view) {
+    public void onDestroyView(@NonNull View view) {
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
@@ -123,22 +128,37 @@ public class ContactSelectSubjectController extends BaseController
         super.onActivityResumed(activity);
     }
 
-    @Override
-    public void onContactSubjectItemSelected(String contactSubject) {
-        ContactPreferenceHelper.setChosenSubjectString(mActivity, contactSubject);
-        if (getRouter().getControllerWithTag(AddContactController.TAG) == null) {
-            RouterTransaction routerTransaction = RouterTransaction.with(AddContactController.newInstance())
+    public void onContactSubjectItemSelected(ContactSubjectResponse response) {
+        mSubjecId = response.getId();
+        mSubject = response.getName();
+        mIsInvoiceRequired = response.getRequiresInvoice();
+        mActions = response.getActions();
+
+        AddContactController controller = (AddContactController) getRouter().getControllerWithTag(AddContactController.TAG);
+        if (controller == null) {
+            controller = AddContactController.newInstance();
+            setupAddContactController(controller);
+            RouterTransaction routerTransaction = RouterTransaction.with(controller)
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler())
                     .tag(AddContactController.TAG);
             getRouter().replaceTopController(routerTransaction);
         } else {
+            setupAddContactController(controller);
             getRouter().popCurrentController();
         }
     }
 
+    private void setupAddContactController(AddContactController controller) {
+        controller.setSubjectId(mSubjecId);
+        controller.setSubject(mSubject);
+        controller.setIsInvoiceRequired(mIsInvoiceRequired);
+        controller.setInvoiceNumber(0);
+        controller.setActions(mActions);
+    }
+
     @Override
-    public void showContactSubjects(List<String> contactSubjectList) {
+    public void showContactSubjects(List<ContactSubjectResponse> contactSubjectList) {
         mAdapter.replaceData(contactSubjectList);
     }
 

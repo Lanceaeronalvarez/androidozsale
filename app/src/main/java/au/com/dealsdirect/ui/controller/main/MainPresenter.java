@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
-import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
@@ -52,36 +51,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                     }
                 })
         );
-    }
-
-    @Override
-    public void callCreateRefund(CreateRefundRequest refundRequest) {
-
-        doApiCallForResponse(getDataManager().callCreateRefund(refundRequest),
-                new AppApiCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        super.onSuccess(response);
-
-                        if (isViewAttached()) {
-                            getMvpView().backClick();
-                        }
-                    }
-
-                    @Override
-                    public void onSuccess() {
-                        AppLogger.d("refund success");
-
-                        if (isViewAttached()) {
-                            getMvpView().backClick();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        super.onFailure(t);
-                    }
-                });
     }
 
     @Override

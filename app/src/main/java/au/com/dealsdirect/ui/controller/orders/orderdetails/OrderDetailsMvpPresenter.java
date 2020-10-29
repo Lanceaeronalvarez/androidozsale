@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
-import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
+import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
+import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
@@ -11,9 +12,17 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface OrderDetailsMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
-    void loadOrderDetails(GetOrderPaymentDetails.RequestValues requestValues);
+    void loadOrderDetails(int orderNumber);
 
     void showTrackingWeb(String link);
 
-    void callOrderReceived(OrderReceivedRequest receivedRequest);
+    void callSetOrderReceived(OrderReceivedRequest receivedRequest);
+
+    void callSetOrderNotReceived(OrderReceivedRequest receivedRequest);
+
+    void callGetOrderReceivedSatisfaction(OrderReceivedRequest receivedRequest);
+
+    void cancelInvoiceItem(CancelInvoiceItemRequest request);
+
+    void changeDeliveryAddress(ChangeDeliveryAddressRequest changeDeliveryAddressRequest);
 }

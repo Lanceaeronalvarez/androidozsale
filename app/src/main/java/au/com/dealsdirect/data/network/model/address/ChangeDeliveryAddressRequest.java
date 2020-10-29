@@ -7,26 +7,31 @@ import com.google.gson.annotations.SerializedName;
  * Created by MTC on 2019-06-26.
  */
 public class ChangeDeliveryAddressRequest {
-    @SerializedName("orderID")
-    @Expose
-    private String orderID;
-    @SerializedName("deliveryAddressID")
-    @Expose
-    private String addressID;
+    private String invoiceId;
+    private int invoiceNumber;
+    private String addressId;
 
-    public String getOrderID() {
-        return orderID;
+    public String getInvoiceId() {
+        return invoiceId;
     }
 
-    public void setOrderID(String orderID) {
-        this.orderID = orderID;
+    public void setInvoiceId(String invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
-    public String getAddressID() {
-        return addressID;
+    public int getInvoiceNumber() {
+        return invoiceNumber;
     }
 
-    public void setAddressID(String addressID) {
-        this.addressID = addressID;
+    public void setInvoiceNumber(int invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+
+    public String getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(String addressId) {
+        this.addressId = addressId;
     }
 }

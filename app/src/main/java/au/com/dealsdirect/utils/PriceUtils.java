@@ -19,7 +19,14 @@ public class PriceUtils {
         return "";
     }
 
+    public static String getPriceStringValue(Float value) {
+        return getPriceStringValue(value == null ? 0 : value.doubleValue());
+    }
+
     public static String getPriceStringValue(Double value) {
+        if (value == null) {
+            value = 0d;
+        }
         String decimal = value % 1 == 0 ? "%.0f" : "%.2f";
         return Settings.getSelectedCountry().currencySign + String.format(Locale.ENGLISH, decimal, value);
     }

@@ -8,6 +8,6 @@ import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 
 public interface ContactsClickListener {
 
-    void onContactClicked(GetContactsResponse.ContactList contactOrder);
+    void onContactClicked(GetContactsResponse contactOrder);
 
 }

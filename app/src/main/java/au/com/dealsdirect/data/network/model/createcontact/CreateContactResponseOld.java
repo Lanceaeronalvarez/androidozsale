@@ -3,7 +3,7 @@ package au.com.dealsdirect.data.network.model.createcontact;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CreateContactResponse {
+public class CreateContactResponseOld {
 
     @SerializedName("d")
     @Expose

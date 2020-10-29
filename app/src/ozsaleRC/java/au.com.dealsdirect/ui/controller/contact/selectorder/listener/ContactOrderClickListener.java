@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.contact.selectorder.listener;
 
-import au.com.dealsdirect.data.network.model.contactorder.ContactOrderList;
+import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 
 /**
  * dp Created by Admin on 7/5/17.
@@ -8,6 +8,6 @@ import au.com.dealsdirect.data.network.model.contactorder.ContactOrderList;
 
 public interface ContactOrderClickListener {
 
-    void onContactOrderItemClicked(ContactOrderList contactOrder);
+    void onContactOrderItemClicked(ContactOrderResponse contactOrder);
 
 }

@@ -101,12 +101,12 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
 
             View dynamicView = null;
             for (DecorationInfoList info : mDecorationInfoList) {
-                if (info.Type.equalsIgnoreCase("text") || info.Type.equalsIgnoreCase("numeric")) {
+                if (info.getType().equalsIgnoreCase("text") || info.getType().equalsIgnoreCase("numeric")) {
                     dynamicView = inflater.inflate(R.layout.add_new_address_edit_text, container, false);
                     setDynamicViewsProperties(dynamicView, info);
                     deliveryInfoPlaceholder.addView(dynamicView);
                     mViewMap.put(info, dynamicView.findViewById(R.id.row_add_address_value));
-                } else if (info.Type.equalsIgnoreCase("select")) {
+                } else if (info.getType().equalsIgnoreCase("select")) {
                     dynamicView = inflater.inflate(R.layout.add_new_address_spinner, container, false);
                     setDynamicViewsProperties(dynamicView, info);
                     deliveryInfoPlaceholder.addView(dynamicView);
@@ -122,7 +122,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     @SuppressLint("SetTextI18n")
     private void setDynamicViewsProperties(View dynamicView, DecorationInfoList infoList) {
         float size = dynamicView.getContext().getResources().getDimension(R.dimen.text_size_caption1);
-        switch (infoList.Type.toLowerCase()) {
+        switch (infoList.getType().toLowerCase()) {
             case "text":
             case "numeric":
                 EditText editTextValue = (EditText) dynamicView.findViewById(R.id.row_add_address_value);
@@ -132,19 +132,24 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 textViewLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
 
                 //Set input type
-                if (infoList.getDataType() != null && (infoList.getDataType().equalsIgnoreCase("phone") || infoList.getType().equalsIgnoreCase("numeric"))) {
-                    editTextValue.setInputType(InputType.TYPE_CLASS_PHONE);
-
-                    if (infoList.getName().equalsIgnoreCase("postcode")) {
+                String name = infoList.getName() == null ? "" : infoList.getName().toLowerCase();
+                switch (name) {
+                    case "phone":
+                        editTextValue.setInputType(InputType.TYPE_CLASS_PHONE);
+                        break;
+                    case "postcode":
                         editTextValue.setHint(mActivity.getResources().getString(R.string.postcode_hint_text));
-                        editTextValue.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                    }
-                } else {
-                    editTextValue.setInputType(InputType.TYPE_CLASS_TEXT);
+                        editTextValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                        editTextValue.setInputType(InputType.TYPE_CLASS_TEXT);
+                        break;
+                    default:
+                        editTextValue.setInputType(InputType.TYPE_CLASS_TEXT);
+                        break;
                 }
+
                 //Set label
-                textViewLabel.setText(StringUtils.toTitleCase(infoList.Label));
-                editTextValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(infoList.MaxLength)});
+                textViewLabel.setText(StringUtils.toTitleCase(infoList.getLabel()));
+                editTextValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(infoList.getMaxLength())});
 
                 //Add asterisk to required fields
                 if (infoList.getValidate() != null && infoList.getValidate().equalsIgnoreCase("*")) {
@@ -152,15 +157,15 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 }
                 break;
             case "select":
-                TextView spinnerLabel = (TextView) dynamicView.findViewById(R.id.row_add_address_label);
-                spinnerLabel.setText(StringUtils.toTitleCase(infoList.Label));
+                TextView spinnerLabel = dynamicView.findViewById(R.id.row_add_address_label);
+                spinnerLabel.setText(StringUtils.toTitleCase(infoList.getLabel()));
 
                 spinnerLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
 
                 ArrayAdapter<String> signatureOnDeliveryAdapter = new ArrayAdapter<>(mActivity,
-                        R.layout.add_new_address_spinner_text, infoList.Options);
+                        R.layout.add_new_address_spinner_text, infoList.getOptions());
 
-                Spinner signatureOnDeliverySpinner = (Spinner) dynamicView.findViewById(R.id.row_add_address_spinner);
+                Spinner signatureOnDeliverySpinner = dynamicView.findViewById(R.id.row_add_address_spinner);
                 signatureOnDeliverySpinner.setAdapter(signatureOnDeliveryAdapter);
 
                 //Add asterisk to required fields

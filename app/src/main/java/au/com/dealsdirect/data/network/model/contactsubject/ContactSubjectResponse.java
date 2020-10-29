@@ -8,38 +8,35 @@ import java.util.List;
 
 public class ContactSubjectResponse {
 
-    @SerializedName("List")
+    @SerializedName("id")
     @Expose
-    private List<String> list = null;
-    @SerializedName("Result")
+    private String id;
+
+    @SerializedName("name")
     @Expose
-    private Boolean result;
-    @SerializedName("Message")
+    private String name;
+
+    @SerializedName("require_invoice")
     @Expose
-    private String message;
+    private Boolean requiresInvoice;
 
-    public List<String> getList() {
-        return list;
+    @SerializedName("actions")
+    @Expose
+    private List<String> actions;
+
+    public String getId() {
+        return id;
     }
 
-    public void setList(List<String> list) {
-        this.list = list;
+    public String getName() {
+        return name;
     }
 
-    public Boolean getResult() {
-        return result;
+    public Boolean getRequiresInvoice() {
+        return requiresInvoice;
     }
 
-    public void setResult(Boolean result) {
-        this.result = result;
+    public List<String> getActions() {
+        return actions;
     }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
 }

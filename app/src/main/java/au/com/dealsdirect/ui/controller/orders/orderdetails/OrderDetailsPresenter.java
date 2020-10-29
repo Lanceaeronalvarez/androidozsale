@@ -4,11 +4,12 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
-import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
+import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
+import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
+import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
-import au.com.dealsdirect.data.network.model.orders.OrderReceivedResponse;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedSatisfactionResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -21,22 +22,20 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
     @Inject
     public OrderDetailsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
-        
+
     }
 
     @Override
-    public void loadOrderDetails(GetOrderPaymentDetails.RequestValues requestValues) {
+    public void loadOrderDetails(int orderNumber) {
         getMvpView().showLoading();
 
 
-        doApiCallForResponse(getDataManager().callGetOrderPaymentDetails(requestValues), new AppApiCallback() {
+        doApiCallForResponse(getDataManager().callGetOrderDetails(orderNumber), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
-                GetOrderPaymentDetails.ResponseValue responseValue = (GetOrderPaymentDetails.ResponseValue) response;
+                GetOrdersResponse.Order responseValue = (GetOrdersResponse.Order) response;
 
-                if (responseValue.getD().isAuthenticated() && responseValue.getD().getResult()) {
-                    getMvpView().showOrderDetails(responseValue);
-                }
+                getMvpView().showOrderDetails(responseValue);
             }
         });
     }
@@ -47,11 +46,57 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
     }
 
     @Override
-    public void callOrderReceived(OrderReceivedRequest receivedRequest) {
-        doApiCallForResponse(getDataManager().callOrderReceived(receivedRequest), new AppApiCallback() {
+    public void callSetOrderReceived(OrderReceivedRequest receivedRequest) {
+        doApiCallForResponse(getDataManager().callSetOrderReceived(receivedRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().onReceivedSet(receivedRequest.getInvoiceNumber());
+            }
+        });
+    }
 
+    @Override
+    public void callSetOrderNotReceived(OrderReceivedRequest receivedRequest) {
+        doApiCallForResponse(getDataManager().callSetOrderNotReceived(receivedRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().onReceivedSet(receivedRequest.getInvoiceNumber());
+            }
+        });
+    }
+
+    @Override
+    public void callGetOrderReceivedSatisfaction(OrderReceivedRequest receivedRequest) {
+        doApiCallForResponse(getDataManager().callGetOrderReceivedSatisfaction(receivedRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().orderSatisfactionReceived(receivedRequest.getInvoiceNumber(), response instanceof OrderReceivedSatisfactionResponse && ((OrderReceivedSatisfactionResponse) response).getHasRating());
+
+            }
+        });
+    }
+
+    @Override
+    public void cancelInvoiceItem(CancelInvoiceItemRequest request) {
+        doApiCallForResponse(getDataManager().callCancelInvoiceItem(request), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().showOrderDetails((GetOrdersResponse.Order) response);
+            }
+        });
+    }
+
+    @Override
+    public void changeDeliveryAddress(ChangeDeliveryAddressRequest changeDeliveryAddressRequest) {
+        doApiCallForResponse(getDataManager().callChangeDeliveryAddress(changeDeliveryAddressRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().addressChanged();
             }
         });
     }

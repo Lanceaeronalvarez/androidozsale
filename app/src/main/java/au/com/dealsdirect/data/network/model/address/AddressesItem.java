@@ -6,16 +6,16 @@ package au.com.dealsdirect.data.network.model.address;
 
 public class AddressesItem {
     public int addressNumericId;
-    public String ID;
+    public String id;
     public String CustomerID;
     public String Nickname;
-    public String Name;
-    public String Phone;
-    public String State;
+    public String name;
+    public String phone;
+    public String state;
     public String City;
-    public String Suburb;
-    public String Postcode;
-    public String AddressLines;
+    public String suburb;
+    public String postcode;
+    public String address_lines;
     public boolean PayPalAddress;
     public String ListOrder;
     public String CreatedDate;
@@ -34,26 +34,26 @@ public class AddressesItem {
     private boolean isPinned;
 
     public String getFullAddress(){
-        String addressDesc = AddressLines + ", ";
-        if (Suburb != null) {
-            addressDesc = addressDesc + Suburb + ", ";
+        String addressDesc = address_lines + ", ";
+        if (suburb != null) {
+            addressDesc = addressDesc + suburb + ", ";
         }
         if (City != null) {
             addressDesc = addressDesc + City + ", ";
         }
-        if (State != null) {
-            addressDesc = addressDesc + State + ", ";
+        if (state != null) {
+            addressDesc = addressDesc + state + ", ";
         }
-        addressDesc = addressDesc + Postcode + ", " + Phone ;
+        addressDesc = addressDesc + postcode + ", " + phone ;
 
         return addressDesc;
     }
 
     public String getAddressName(){
-        return Name;
+        return name;
     }
 
-    public String getAddressId(){ return ID; }
+    public String getAddressId(){ return id; }
 
     @Override
     public boolean equals(Object o) {
@@ -70,19 +70,19 @@ public class AddressesItem {
         if (ReadOnly != that.ReadOnly) return false;
         if (Status != that.Status) return false;
         if (IsChanged != that.IsChanged) return false;
-        if (ID != null ? !ID.equals(that.ID) : that.ID != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (CustomerID != null ? !CustomerID.equals(that.CustomerID) : that.CustomerID != null)
             return false;
         if (Nickname != null ? !Nickname.equals(that.Nickname) : that.Nickname != null)
             return false;
-        if (Name != null ? !Name.equals(that.Name) : that.Name != null) return false;
-        if (Phone != null ? !Phone.equals(that.Phone) : that.Phone != null) return false;
-        if (State != null ? !State.equals(that.State) : that.State != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
+        if (state != null ? !state.equals(that.state) : that.state != null) return false;
         if (City != null ? !City.equals(that.City) : that.City != null) return false;
-        if (Suburb != null ? !Suburb.equals(that.Suburb) : that.Suburb != null) return false;
-        if (Postcode != null ? !Postcode.equals(that.Postcode) : that.Postcode != null)
+        if (suburb != null ? !suburb.equals(that.suburb) : that.suburb != null) return false;
+        if (postcode != null ? !postcode.equals(that.postcode) : that.postcode != null)
             return false;
-        if (AddressLines != null ? !AddressLines.equals(that.AddressLines) : that.AddressLines != null)
+        if (address_lines != null ? !address_lines.equals(that.address_lines) : that.address_lines != null)
             return false;
         if (ListOrder != null ? !ListOrder.equals(that.ListOrder) : that.ListOrder != null)
             return false;

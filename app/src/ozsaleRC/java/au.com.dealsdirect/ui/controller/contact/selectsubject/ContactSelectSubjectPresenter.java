@@ -4,18 +4,13 @@ package au.com.dealsdirect.ui.controller.contact.selectsubject;
  */
 
 
-import android.util.Log;
-
-import com.androidnetworking.error.ANError;
-
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
-import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
-import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -27,25 +22,16 @@ public class ContactSelectSubjectPresenter<V extends ContactSelectSubjectMvpView
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
-
     @Override
     public void loadContactUsSubjects() {
         getMvpView().showLoading();
 
-        ContactSubjectsRequest contactSubjectsRequest = new ContactSubjectsRequest(getDataManager().getCountryId(),getDataManager().getLanguageId());
-
-        doApiCallForResponse(getDataManager().callGetContactSubjects(contactSubjectsRequest), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callGetContactSubjects(!getDataManager().isAuthorized()), new AppApiCallback() {
             @Override
-            public void onSuccess(Object response) {
+            public void onSuccess(List<?> response) {
                 super.onSuccess(response);
-                ContactSubjects subjects = (ContactSubjects) response;
-                getMvpView().showContactSubjects(subjects.getContactSubjectResponse().getList());
+                getMvpView().showContactSubjects((List<ContactSubjectResponse>) response);
             }
         });
-    }
-
-    @Override
-    public void selectContactSubject(String subject) {
-        getMvpView().onContactSubjectItemSelected(subject);
     }
 }

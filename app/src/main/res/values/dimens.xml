@@ -155,8 +155,11 @@
     <dimen name="margin_top_ourpay_panel_image">7dp</dimen>
 
     <!-- Orders -->
-    <dimen name="order_image_width">90dp</dimen>
-    <dimen name="order_image_height">135dp</dimen>
+    <dimen name="order_image_width">65dp</dimen>
+    <dimen name="order_image_height">80dp</dimen>
+    <dimen name="invoice_image_width">100dp</dimen>
+    <dimen name="invoice_image_height">120dp</dimen>
+    <dimen name="order_tracking_node_size">24dp</dimen>
 
     <!-- Product Details -->
     <dimen name="product_details_image_layout_height">420dp</dimen>

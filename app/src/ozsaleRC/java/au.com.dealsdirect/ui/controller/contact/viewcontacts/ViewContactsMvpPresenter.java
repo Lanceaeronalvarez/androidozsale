@@ -12,5 +12,5 @@ public interface ViewContactsMvpPresenter<V extends MvpView> extends MvpPresente
 
     void loadContacts();
 
-    void selectContact(GetContactsResponse.ContactList contactList);
+    void selectContact(GetContactsResponse contact);
 }

@@ -309,4 +309,8 @@ public class StringUtils {
         }
         return stringBuilder;
     }
+
+    public static boolean isNumeric(String string) {
+        return string.matches("-?\\d+(\\.\\d+)?");
+    }
 }
