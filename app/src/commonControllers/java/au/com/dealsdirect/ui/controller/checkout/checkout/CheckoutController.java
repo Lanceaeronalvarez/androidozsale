@@ -1250,7 +1250,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_AFTERPAY, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.AFTERPAY);
 
-        if (commonPaymentAbilityDetermination()) {
+        if (!commonPaymentAbilityDetermination()) {
             return;
         }
 
