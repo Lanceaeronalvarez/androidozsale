@@ -17,7 +17,6 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ImageDisplayAdapter;
-import au.com.dealsdirect.utils.DateUtils;
 
 /**
  * dp Created by Admin on 6/22/17.
@@ -42,55 +41,34 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
 
     @Override
     public void onBindViewHolder(ContactHistoryViewHolder holder, int position) {
-//  Commented unused data as of the moment 07/11/2018 JPA
-//  Dont remove comments
-
-//        Object userName = mCurrentContactsHistoryList.get(position).getUserName();
-
-        String contactDate = mCurrentContactsHistoryList.get(position).getMessageDate();
-        String contactMessage = mCurrentContactsHistoryList.get(position).getText();
-        boolean isStaff = mCurrentContactsHistoryList.get(position).isStaff();
-//        String contactSubject = mCurrentContactsHistoryList.get(position).getSubject();
-
-        String dateHeaderFormatOfItem = DateUtils.getTrimmedServerDateString(contactDate.toString());
+        final GetContactHistoryResponse.Message message = mCurrentContactsHistoryList.get(position);
+        final String contactMessage = message.getText();
+        final boolean isStaff = message.isStaff();
+        final List<GetContactHistoryResponse.Message.Attachment> attachments = message.getAttachments();
 
 //        Change background/textcolor, text gravities if isStaff
         holder.itemView.setSelected(isStaff);
         holder.contactHistoryMessageTextView.setSelected(isStaff);
 
-        if (isStaff) {
-            FrameLayout.LayoutParams contactHistoryItemParams = (FrameLayout.LayoutParams) holder.contactHistoryItemContainer.getLayoutParams();
-            contactHistoryItemParams.gravity = Gravity.START;
+        FrameLayout.LayoutParams contactHistoryItemParams = (FrameLayout.LayoutParams) holder.contactHistoryItemContainer.getLayoutParams();
+        contactHistoryItemParams.gravity = isStaff ? Gravity.START : Gravity.END;
 
-//            LinearLayout.LayoutParams dateTimeStampTextViewParams = (LinearLayout.LayoutParams) holder.contactHistoryDateTimeContainer.getLayoutParams();
-//            dateTimeStampTextViewParams.gravity = Gravity.START;
-
-            LinearLayout.LayoutParams messageTextViewParams = (LinearLayout.LayoutParams) holder.contactHistoryMessageTextView.getLayoutParams();
-            messageTextViewParams.gravity = Gravity.START;
-
-        }
+        LinearLayout.LayoutParams messageTextViewParams = (LinearLayout.LayoutParams) holder.contactHistoryMessageTextView.getLayoutParams();
+        messageTextViewParams.gravity = isStaff ? Gravity.START : Gravity.END;
 
         holder.contactHistoryMessageTextView.setText(contactMessage);
 
-        holder.contactHistoryMessageRecyclerView.setVisibility(mCurrentContactsHistoryList.get(position).getAttachments().size() != 0 ?
-                View.VISIBLE : View.GONE);
-
-        if (mCurrentContactsHistoryList.get(position).getAttachments().size() != 0) {
-            ImageDisplayAdapter mAdapter = new ImageDisplayAdapter(mContext,
-                    mCurrentContactsHistoryList.get(position).getAttachments());
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false);
+        if (attachments.isEmpty()) {
+            holder.contactHistoryMessageRecyclerView.setVisibility(View.GONE);
+        } else {
+            holder.contactHistoryMessageRecyclerView.setVisibility(View.VISIBLE);
+            final ImageDisplayAdapter mAdapter = new ImageDisplayAdapter(mContext,
+                    message.getAttachments());
+            final LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false);
             holder.contactHistoryMessageRecyclerView.setAdapter(mAdapter);
             holder.contactHistoryMessageRecyclerView.setLayoutManager(layoutManager);
         }
 
-//        if (!contactDate.isEmpty()) {
-//            String itemLastAnswerTimeFormat = DateUtils.getTimeFromDateString(contactDate.toString());
-//
-//            holder.contactHistoryItemDateStampTextView.setText(dateHeaderFormatOfItem);
-//            holder.contactHistoryItemTimeStampTextView.setText(itemLastAnswerTimeFormat);
-//        } else {
-//            holder.contactHistoryItemDateStampTextView.setText("");
-//        }
     }
 
     @Override

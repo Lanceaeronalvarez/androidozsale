@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacthistory;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -64,7 +65,6 @@ public class ViewContactHistoryController extends BaseController implements View
     private static final String KEY_CONTACT_NO = "ContactHistoryNo";
     private static final String KEY_CONTACT_INVOICE_NO = "ContactHistoryInvoiceNo";
     private static final String KEY_CONTACT_TIMESTAMP = "ContactHistoryTimeStamp";
-    private static final String KEY_CONTACT_NAME = "ContactHistoryName";
     private static final String KEY_CONTACT_SUBJECT = "ContactSubject";
     private static final String KEY_IS_FROM_RETURN_DETAILS = "KEY_IS_FROM_RETURN_DETAILS";
 
@@ -86,7 +86,6 @@ public class ViewContactHistoryController extends BaseController implements View
     @BindView(R.id.view_contact_history_image_recyclerview)
     RecyclerView mImageRecyclerView;
 
-    private String mSaleNameObject;
     private String mTimeStamp;
     private int mInvoiceNumber;
     private int mContactNumber;
@@ -107,7 +106,6 @@ public class ViewContactHistoryController extends BaseController implements View
 
     public static ViewContactHistoryController newInstance(
             String contactSubject,
-            String saleName,
             int invoiceNo,
             String lastAnswer,
             int contactNo,
@@ -116,7 +114,6 @@ public class ViewContactHistoryController extends BaseController implements View
         return new ViewContactHistoryController(
                 new BundleBuilder(new Bundle())
                         .putInt(KEY_CONTACT_NO, contactNo)
-                        .putString(KEY_CONTACT_NAME, saleName)
                         .putInt(KEY_CONTACT_INVOICE_NO, invoiceNo)
                         .putString(KEY_CONTACT_TIMESTAMP, lastAnswer)
                         .putString(KEY_CONTACT_SUBJECT, contactSubject)
@@ -126,7 +123,6 @@ public class ViewContactHistoryController extends BaseController implements View
 
     public ViewContactHistoryController(Bundle args) {
         super(args);
-        mSaleNameObject = getArgs().getString(KEY_CONTACT_NAME);
         mInvoiceNumber = getArgs().getInt(KEY_CONTACT_INVOICE_NO);
         mTimeStamp = getArgs().getString(KEY_CONTACT_TIMESTAMP);
         mContactNumber = getArgs().getInt(KEY_CONTACT_NO);
@@ -137,7 +133,6 @@ public class ViewContactHistoryController extends BaseController implements View
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_CONTACT_NAME, mSaleNameObject);
         outState.putInt(KEY_CONTACT_INVOICE_NO, mInvoiceNumber);
         outState.putString(KEY_CONTACT_TIMESTAMP, mTimeStamp);
         outState.putInt(KEY_CONTACT_NO, mContactNumber);
@@ -148,7 +143,6 @@ public class ViewContactHistoryController extends BaseController implements View
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mSaleNameObject = savedInstanceState.getString(KEY_CONTACT_NAME);
         mInvoiceNumber = savedInstanceState.getInt(KEY_CONTACT_INVOICE_NO);
         mTimeStamp = savedInstanceState.getString(KEY_CONTACT_TIMESTAMP);
         mContactNumber = savedInstanceState.getInt(KEY_CONTACT_NO);
@@ -174,6 +168,7 @@ public class ViewContactHistoryController extends BaseController implements View
         mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO)));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void setUp(View view) {
 
@@ -182,10 +177,11 @@ public class ViewContactHistoryController extends BaseController implements View
         mContactHistoryRightOption.setVisibility(View.INVISIBLE);
         mContactHistoryTitle.setText(mContactSubject);
 
-        if (!mSaleNameObject.isEmpty()) {
-            mContactHistorySaleSubTitle.setText(mInvoiceNumber + ": " + mSaleNameObject);
+        if (mInvoiceNumber > 0) {
+            mContactHistorySaleSubTitle.setText(Integer.toString(mInvoiceNumber));
+            mContactHistorySaleSubTitle.setVisibility(View.VISIBLE);
         } else {
-            mContactHistorySaleSubTitle.setText(R.string.no_order_number);
+            mContactHistorySaleSubTitle.setVisibility(View.GONE);
         }
 
         mImageAdapter = new ViewContactsAddImageAdapter(mActivity, this,

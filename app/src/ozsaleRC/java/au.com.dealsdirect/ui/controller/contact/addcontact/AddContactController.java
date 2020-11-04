@@ -486,11 +486,8 @@ public class AddContactController extends BaseController
         mImageAdapter.notifyDataSetChanged();
         mImageRecyclerView.setVisibility(View.GONE);
 
-        String saleName = getString(R.string.invoice_text) + " " + mInvoiceNumber;
-
         ViewContactHistoryController controller = ViewContactHistoryController.newInstance(
                 mSubject,
-                saleName,
                 mInvoiceNumber,
                 mAddContactMessageField.getText().toString(),
                 mContactNumber,

@@ -214,7 +214,6 @@ public class ViewContactsController extends BaseController implements ViewContac
 
         RouterTransaction routerTransaction = RouterTransaction.with(ViewContactHistoryController.newInstance(
                 contactSubject,
-                saleName,
                 invoiceNo,
                 timeStampString,
                 contact.getNumber(),

@@ -364,7 +364,6 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         mReturnDetailsContactContainer.setOnClickListener(v -> {
             getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
                     responseValue.getSubject(),
-                    "",
                     responseValue.getInvoiceNumber(),
                     DateUtils.getDateForContactMessages(lastItemPosition.getMessageDate()),
                     Integer.parseInt(contactNumber),
@@ -509,29 +508,29 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
             Uri chosenImageUri = data.getData();
             Bitmap mBitmap = null;
 
-                ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
-                imageLinks.setIsURL(false);
-                imageLinks.setLink(String.valueOf(chosenImageUri));
-                mImageUriArray.add(0, imageLinks);
+            ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
+            imageLinks.setIsURL(false);
+            imageLinks.setLink(String.valueOf(chosenImageUri));
+            mImageUriArray.add(0, imageLinks);
 
-                if (hasSavedInstance) {
-                    mPresenter.loadCurrentReturnDetails(mReturnID);
+            if (hasSavedInstance) {
+                mPresenter.loadCurrentReturnDetails(mReturnID);
+            } else {
+
+                if (mReturnDetailsImageList.getAdapter() != null) {
+                    ((ReturnDetailsAddImageAdapter) mReturnDetailsImageList.getAdapter()).addItem();
                 } else {
-
-                    if (mReturnDetailsImageList.getAdapter() != null) {
-                        ((ReturnDetailsAddImageAdapter) mReturnDetailsImageList.getAdapter()).addItem();
-                    } else {
-                        ReturnDetailsAddImageAdapter imageAdapter = new ReturnDetailsAddImageAdapter(mActivity, this,
-                                mImageUriArray);
-                        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
-                        mReturnDetailsImageList.setAdapter(imageAdapter);
-                        mReturnDetailsImageList.setLayoutManager(layoutManager);
-                    }
+                    ReturnDetailsAddImageAdapter imageAdapter = new ReturnDetailsAddImageAdapter(mActivity, this,
+                            mImageUriArray);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+                    mReturnDetailsImageList.setAdapter(imageAdapter);
+                    mReturnDetailsImageList.setLayoutManager(layoutManager);
                 }
+            }
 
-                if (attachmentId == null) {
-                    mPresenter.setAttachment(ImageUploadUtil.getAttachmentIdRequest(mReturnID));
-                }
+            if (attachmentId == null) {
+                mPresenter.setAttachment(ImageUploadUtil.getAttachmentIdRequest(mReturnID));
+            }
 
         }
     }
