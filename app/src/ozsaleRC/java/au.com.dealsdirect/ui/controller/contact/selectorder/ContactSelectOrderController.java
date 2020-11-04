@@ -61,8 +61,6 @@ public class ContactSelectOrderController extends BaseController implements Cont
     EditText mInvoiceInputField;
 
     private ContactOrderAdapter mAdapter;
-    private int screenWidth;
-    private int screenHeight;
 
     private int mOrderNumber;
     private int mInvoiceNumber;
@@ -128,7 +126,7 @@ public class ContactSelectOrderController extends BaseController implements Cont
 
     @Override
     public void onContactOrderSelected(ContactOrderResponse contactOrderResponse) {
-        submitInvoiceNumber(contactOrderResponse.getNumber(), contactOrderResponse.getOrderNumber());
+        submitInvoiceNumber(contactOrderResponse.getOrderNumber(), contactOrderResponse.getNumber());
     }
 
     @Override

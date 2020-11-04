@@ -92,7 +92,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 Item item = items.get(i);
                 if (item.getType() == Item.Type.INVOICE &&
                         item.getInvoice().getNumber().equals(invoice.getNumber())) {
-                    Item replacementItem = new Item(item.getIndex(), invoice, item.getLocationFilter());
+                    Item replacementItem = new Item(item.getIndex(), item.getOrderNumber(), invoice, item.getLocationFilter());
                     items.remove(i);
                     items.add(i, replacementItem);
                     indices.add(i);
@@ -107,7 +107,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         SparseArray<String> locationFilterHashes = new SparseArray<>();
         for (int i = 0; i < orders.size(); i++) {
             GetOrdersResponse.Order order = orders.get(i);
-            Item headerItem = new Item(i, order.getNumber().toString());
+            Item headerItem = new Item(i, order.getNumber());
             items.add(headerItem);
             for (GetOrdersResponse.Order.Shipment shipment : order.getShipments()) {
                 if (shipment.getInvoiceNumbers() != null) {
@@ -118,7 +118,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             }
             for (GetOrdersResponse.Order.Invoice invoice : order.getInvoices()) {
-                Item invoiceItem = new Item(i, invoice, locationFilterHashes.get(invoice.getNumber()));
+                Item invoiceItem = new Item(i, order.getNumber(), invoice, locationFilterHashes.get(invoice.getNumber()));
                 items.add(invoiceItem);
             }
             // separator
@@ -197,7 +197,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     }
 
                     ((OrderItemsViewholder) viewHolder).orderOptionsLayout.setOnClickListener(v ->
-                            mClickListener.onOrderItemShowOptions(invoice.getId(), invoice.getNumber(), invoice.getActions()));
+                            mClickListener.onOrderItemShowOptions(item.getOrderNumber(), invoice.getId(), invoice.getNumber(), invoice.getActions()));
                 }
 
                 viewHolder.itemView.setOnClickListener(view -> mClickListener.onOrderItemClick(index));
@@ -293,18 +293,19 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         private String title = null;
         private GetOrdersResponse.Order.Invoice invoice = null;
         private String locationFilter = null;
-        private String orderNumber = null;
+        private int orderNumber = 0;
 
         private int index = -1;
 
-        Item(int index, GetOrdersResponse.Order.Invoice invoice, String locationFilter) {
+        Item(int index, int orderNumber, GetOrdersResponse.Order.Invoice invoice, String locationFilter) {
             this.index = index;
             type = Type.INVOICE;
+            this.orderNumber = orderNumber;
             this.invoice = invoice;
             this.locationFilter = locationFilter;
         }
 
-        Item(int index, String orderNumber) {
+        Item(int index, int orderNumber) {
             this.index = index;
             type = Type.HEADER;
             this.orderNumber = orderNumber;
@@ -327,7 +328,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             return invoice;
         }
 
-        public String getOrderNumber() {
+        public int getOrderNumber() {
             return orderNumber;
         }
 

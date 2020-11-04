@@ -200,10 +200,11 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
         switch (item.getType()) {
             case HEADER:
-                ((OrderSaleName) holder).setup(item.getInvoice(), mClickListener);
+                ((OrderSaleName) holder).setup(mOrderDetails.getNumber(), item.getInvoice(), mClickListener);
                 break;
             case PRODUCT:
                 ((OrderDetailsItemViewHolder) holder).setup(
+                        mOrderDetails.getNumber(),
                         item.getProduct(),
                         item.getInvoiceId(),
                         item.getInvoiceNumber(),
@@ -257,14 +258,14 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             ButterKnife.bind(this, itemView);
         }
 
-        void setup(Order.Invoice invoice, OrderDetailsClickListener listener) {
+        void setup(int orderNumber, Order.Invoice invoice, OrderDetailsClickListener listener) {
             String description = "Invoice No: " + invoice.getNumber();
             saleName.setText(description);
             address.setText(invoice.getDelivery().getAddress());
 
             if (invoice.getActions() != null && !invoice.getActions().isEmpty()) {
                 moreOptions.setOnClickListener(v ->
-                        listener.showOrderDialog(invoice.getId(), invoice.getNumber(), invoice.getActions()));
+                        listener.showOrderDialog(orderNumber, invoice.getId(), invoice.getNumber(), invoice.getActions()));
                 moreOptions.setVisibility(View.VISIBLE);
             } else {
                 moreOptions.setOnClickListener(null);
@@ -339,7 +340,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         }
 
         @SuppressLint("SetTextI18n")
-        void setup(Order.Invoice.Product product, String invoiceId, int invoiceNumber, OrderDetailsClickListener listener) {
+        void setup(int orderNumber, Order.Invoice.Product product, String invoiceId, int invoiceNumber, OrderDetailsClickListener listener) {
             orderDetailsItemLayout.setVisibility(View.VISIBLE);
 
             productPriceTextView.setText(PriceUtils.getPriceStringValue(product.getPrice()));
@@ -367,7 +368,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                     (product.getActions().contains(ActionConstants.ORDER_ITEM_VIEW_RETURN) ||
                             product.getActions().contains(ActionConstants.ORDER_ITEM_RETURN) ||
                             product.getActions().contains(ActionConstants.ORDER_ITEM_ACTION_REFUND))) {
-                moreOptionsImageButton.setOnClickListener(v -> listener.showOrderDialog(invoiceId, invoiceNumber, product));
+                moreOptionsImageButton.setOnClickListener(v -> listener.showOrderDialog(orderNumber, invoiceId, invoiceNumber, product));
                 moreOptionsImageButton.setVisibility(View.VISIBLE);
             } else {
                 moreOptionsImageButton.setOnClickListener(null);

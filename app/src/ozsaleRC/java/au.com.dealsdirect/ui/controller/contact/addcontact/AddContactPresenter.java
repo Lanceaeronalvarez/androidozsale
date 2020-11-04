@@ -33,22 +33,24 @@ public class AddContactPresenter<V extends AddContactMvpView> extends BasePresen
     public void createNewContact(CreateContactRequest createContactRequest) {
         getMvpView().showLoading();
 
+        final AppApiCallback callback = new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().contactCreatedSwitchView((String) response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                getMvpView().contactCreatedSwitchView(null);
+            }
+        };
+
         if (getDataManager().isAuthorized()) {
-            doApiCallForResponse(getDataManager().callCreateContact(createContactRequest), new AppApiCallback() {
-                @Override
-                public void onSuccess(Object response) {
-                    super.onSuccess(response);
-                    getMvpView().contactCreatedSwitchView((String) response);
-                }
-            });
+            doApiCallForResponse(getDataManager().callCreateContact(createContactRequest), callback);
         } else {
-            doApiCallForResponse(getDataManager().callCreateContactPublic(createContactRequest), new AppApiCallback() {
-                @Override
-                public void onSuccess(Object response) {
-                    super.onSuccess(response);
-                    getMvpView().contactCreatedSwitchView((String) response);
-                }
-            });
+            doApiCallForResponse(getDataManager().callCreateContactPublic(createContactRequest), callback);
         }
     }
 

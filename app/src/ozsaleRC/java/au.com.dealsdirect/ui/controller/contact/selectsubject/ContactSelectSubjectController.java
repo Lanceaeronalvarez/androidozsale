@@ -38,8 +38,8 @@ public class ContactSelectSubjectController extends BaseController
         implements ContactSelectSubjectMvpView {
 
     public static final String TAG = "ContactSelectSubjectController";
-    private static final String KEY_TEXT = "ContactSelectSubjectController.KEY_TEXT";
-    private static final String KEY_SUBJECTS = "ContactSelectSubjectController.KEY_SUBJECTS";
+    public static final String KEY_INVOICE_NUMBER = "ContactSelectSubjectController.InvoiceNumber";
+    public static final String KEY_ORDER_NUMBER = "ContactSelectSubjectController.OrderNumber";
 
     private ContactSubjectAdapter mAdapter;
     private boolean mHasSavedInstance = false;
@@ -48,6 +48,9 @@ public class ContactSelectSubjectController extends BaseController
     private String mSubject = "";
     private boolean mIsInvoiceRequired = false;
     private List<String> mActions = new ArrayList<>();
+
+    private int mOrderNumber = 0;
+    private int mInvoiceNumber = 0;
 
     @Inject
     ContactSelectSubjectMvpPresenter<ContactSelectSubjectMvpView> mPresenter;
@@ -70,8 +73,18 @@ public class ContactSelectSubjectController extends BaseController
                         .build());
     }
 
+    public static ContactSelectSubjectController newInstance(int orderNumber, int invoiceNumber) {
+        return new ContactSelectSubjectController(
+                new BundleBuilder(new Bundle())
+                        .putInt(KEY_INVOICE_NUMBER, invoiceNumber)
+                        .putInt(KEY_ORDER_NUMBER, orderNumber)
+                        .build());
+    }
+
     public ContactSelectSubjectController(Bundle args) {
         super(args);
+        mInvoiceNumber = args.getInt(KEY_INVOICE_NUMBER, 0);
+        mOrderNumber = args.getInt(KEY_ORDER_NUMBER, 0);
     }
 
     @NonNull
@@ -153,7 +166,8 @@ public class ContactSelectSubjectController extends BaseController
         controller.setSubjectId(mSubjecId);
         controller.setSubject(mSubject);
         controller.setIsInvoiceRequired(mIsInvoiceRequired);
-        controller.setInvoiceNumber(0);
+        controller.setInvoiceNumber(mInvoiceNumber);
+        controller.setOrderNumber(mOrderNumber);
         controller.setActions(mActions);
     }
 
@@ -165,5 +179,21 @@ public class ContactSelectSubjectController extends BaseController
     @OnClick(R.id.partial_toolbar_left_view)
     void onBackClick() {
         mActivity.onBackPressed();
+    }
+
+    public int getOrderNumber() {
+        return mOrderNumber;
+    }
+
+    public void setOrderNumber(int orderNumber) {
+        this.mOrderNumber = orderNumber;
+    }
+
+    public int getInvoiceNumber() {
+        return mInvoiceNumber;
+    }
+
+    public void setInvoiceNumber(int invoiceNumber) {
+        this.mInvoiceNumber = invoiceNumber;
     }
 }

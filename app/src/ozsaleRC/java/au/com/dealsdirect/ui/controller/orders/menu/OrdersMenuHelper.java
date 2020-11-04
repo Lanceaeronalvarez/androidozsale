@@ -21,7 +21,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
-import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
+import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.orders.orders.BottomDialogCancelOrders;
 import au.com.dealsdirect.ui.controller.orders.orders.BottomSheetOrderDialog;
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
@@ -35,6 +35,7 @@ public class OrdersMenuHelper {
     }
 
     public static void showOrderBottomDialog(Controller controller,
+                                             int orderNumber,
                                              String invoiceId,
                                              int invoiceNumber,
                                              GetOrdersResponse.Order.Invoice.Product product,
@@ -53,7 +54,7 @@ public class OrdersMenuHelper {
                 new BottomSheetOrderDialog.BottomSheetButtonListener() {
                     @Override
                     public void onContactUsPressed() {
-                        showContactUs(controller, invoiceNumber);
+                        showContactUs(controller, orderNumber, invoiceNumber);
                     }
 
                     @Override
@@ -108,7 +109,9 @@ public class OrdersMenuHelper {
         bottomSheetFragment.show(activity.getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
     }
 
-    public static void showPopupMenu(Controller controller, String invoiceId, int invoiceNumber,
+    public static void showPopupMenu(Controller controller,
+                                     int orderNumber,
+                                     String invoiceId, int invoiceNumber,
                                      GetOrdersResponse.Order.Invoice.Product product,
                                      List<String> actions,
                                      ViewAddressController.OnAddressSelected onAddressSelected,
@@ -170,7 +173,7 @@ public class OrdersMenuHelper {
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.contact_us:
-                    showContactUs(controller, invoiceNumber);
+                    showContactUs(controller, orderNumber, invoiceNumber);
                     return true;
                 case R.id.change_address:
                     showChangeAddress(controller, onAddressSelected);
@@ -212,9 +215,10 @@ public class OrdersMenuHelper {
         popup.show();
     }
 
-    private static void showContactUs(Controller controller, int invoiceNumber) {
-        RouterTransaction routerTransaction = RouterTransaction.with(AddContactController.newInstance(invoiceNumber, ""))
-                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
+    private static void showContactUs(Controller controller, int orderNumber, int invoiceNumber) {
+        RouterTransaction routerTransaction = RouterTransaction.with(ContactSelectSubjectController.newInstance(orderNumber, invoiceNumber))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler());
         controller.getRouter().pushController(routerTransaction);
     }
 

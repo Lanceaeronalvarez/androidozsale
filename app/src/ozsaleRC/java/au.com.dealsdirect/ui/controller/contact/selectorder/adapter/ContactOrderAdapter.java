@@ -46,7 +46,7 @@ public class ContactOrderAdapter extends RecyclerView.Adapter<ContactOrderViewHo
 
     @Override
     public void onBindViewHolder(final ContactOrderViewHolder holder, final int position) {
-        String text = holder.itemView.getContext().getResources().getString(R.string.invoice_text) + " " + mCurrentContactOrderList.get(position).getOrderNumber();
+        String text = holder.itemView.getContext().getResources().getString(R.string.invoice_text) + " " + mCurrentContactOrderList.get(position).getNumber();
         holder.contactOrderTitleRowTextView.setTypeface(Typeface.DEFAULT_BOLD);
         holder.contactOrderTitleRowTextView.setText(text);
         holder.contactOrderRowLayout.setOnClickListener(v -> mPresenter.selectContactOrder(mCurrentContactOrderList.get(position)));

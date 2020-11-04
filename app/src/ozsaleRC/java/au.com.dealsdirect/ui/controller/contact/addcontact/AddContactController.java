@@ -184,7 +184,7 @@ public class AddContactController extends BaseController
                         ChangeDeliveryAddressRequest request = new ChangeDeliveryAddressRequest();
                         request.setAddressId(addressesItem.getAddressId());
                         request.setInvoiceId(null);
-                        request.setInvoiceNumber(mOrderNumber);
+                        request.setInvoiceNumber(mInvoiceNumber);
                         mPresenter.changeDeliveryAddress(request, mInvoiceNumber);
                         viewAddressController.setOnAddressSelected(null);
                     });
@@ -634,7 +634,7 @@ public class AddContactController extends BaseController
                         switch (suggestion.getMobile().getSubtype().toLowerCase()) {
                             case "ordertracking":
                                 if (mOrderNumber > 0 && mInvoiceNumber > 0) {
-                                    mPresenter.getOrderTrackingDetails(mInvoiceNumber, mOrderNumber);
+                                    mPresenter.getOrderTrackingDetails(mOrderNumber, mInvoiceNumber);
                                 } else if (contactSuggestionsAdapter != null) {
                                     contactSuggestionsAdapter.setOrderTracker(null);
                                 }
