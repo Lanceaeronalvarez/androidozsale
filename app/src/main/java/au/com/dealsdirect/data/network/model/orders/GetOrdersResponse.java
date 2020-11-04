@@ -416,6 +416,10 @@ public class GetOrdersResponse {
                         return iconUrl;
                     }
 
+                    public void setIconUrl(String iconUrl) {
+                        this.iconUrl = iconUrl;
+                    }
+
                     public float getProgress() {
                         return progress == null ? 0 : progress;
                     }

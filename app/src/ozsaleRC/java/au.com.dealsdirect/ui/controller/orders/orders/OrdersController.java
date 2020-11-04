@@ -102,7 +102,7 @@ public class OrdersController extends BaseController implements OrdersMvpView, O
 
     private OrdersRecyclerViewAdapter mAdapter = null;
 
-    HashMap<Integer, Boolean> hasSetSatisfaction = new HashMap<>();
+    private final HashMap<Integer, Boolean> hasSetSatisfaction = new HashMap<>();
 
     public static OrdersController newInstance() {
 

@@ -14,12 +14,15 @@ import au.com.dealsdirect.data.network.model.orders.OrderReceivedSatisfactionRes
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by smartwave on 22/06/2017.
  */
 
 public class OrdersPresenter<V extends OrdersMvpView> extends BasePresenter<V> implements OrdersMvpPresenter<V> {
+
+    private Disposable setOrderReceivedRequestDisposable = null;
 
     @Inject
     public OrdersPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
@@ -52,22 +55,33 @@ public class OrdersPresenter<V extends OrdersMvpView> extends BasePresenter<V> i
 
     @Override
     public void callSetOrderReceived(OrderReceivedRequest receivedRequest) {
-        doApiCallForResponse(getDataManager().callSetOrderReceived(receivedRequest), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-            }
-        });
+        cancelPreviousSetOrderReceivedRequest();
+        setOrderReceivedRequestDisposable = doApiCallForResponse(
+                getDataManager().callSetOrderReceived(receivedRequest), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                    }
+                });
     }
 
     @Override
     public void callSetOrderNotReceived(OrderReceivedRequest receivedRequest) {
-        doApiCallForResponse(getDataManager().callSetOrderNotReceived(receivedRequest), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-            }
-        });
+        cancelPreviousSetOrderReceivedRequest();
+        setOrderReceivedRequestDisposable = doApiCallForResponse(
+                getDataManager().callSetOrderNotReceived(receivedRequest), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                    }
+                });
+    }
+
+    private void cancelPreviousSetOrderReceivedRequest() {
+        if (setOrderReceivedRequestDisposable != null) {
+            getCompositeDisposable().delete(setOrderReceivedRequestDisposable);
+            setOrderReceivedRequestDisposable = null;
+        }
     }
 
     @Override

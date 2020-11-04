@@ -12,12 +12,15 @@ import au.com.dealsdirect.data.network.model.orders.OrderReceivedSatisfactionRes
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by smartwave on 22/06/2017.
  */
 
 public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePresenter<V> implements OrderDetailsMvpPresenter<V> {
+
+    private Disposable setOrderReceivedRequestDisposable = null;
 
     @Inject
     public OrderDetailsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
@@ -47,24 +50,35 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
 
     @Override
     public void callSetOrderReceived(OrderReceivedRequest receivedRequest) {
-        doApiCallForResponse(getDataManager().callSetOrderReceived(receivedRequest), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                getMvpView().onReceivedSet(receivedRequest.getInvoiceNumber());
-            }
-        });
+        cancelPreviousSetOrderReceivedRequest();
+        setOrderReceivedRequestDisposable = doApiCallForResponse(
+                getDataManager().callSetOrderReceived(receivedRequest), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        getMvpView().onReceivedSet(receivedRequest.getInvoiceNumber());
+                    }
+                });
     }
 
     @Override
     public void callSetOrderNotReceived(OrderReceivedRequest receivedRequest) {
-        doApiCallForResponse(getDataManager().callSetOrderNotReceived(receivedRequest), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                getMvpView().onReceivedSet(receivedRequest.getInvoiceNumber());
-            }
-        });
+        cancelPreviousSetOrderReceivedRequest();
+        setOrderReceivedRequestDisposable = doApiCallForResponse(
+                getDataManager().callSetOrderNotReceived(receivedRequest), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        getMvpView().onReceivedSet(receivedRequest.getInvoiceNumber());
+                    }
+                });
+    }
+
+    private void cancelPreviousSetOrderReceivedRequest() {
+        if (setOrderReceivedRequestDisposable != null) {
+            getCompositeDisposable().delete(setOrderReceivedRequestDisposable);
+            setOrderReceivedRequestDisposable = null;
+        }
     }
 
     @Override
