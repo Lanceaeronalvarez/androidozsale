@@ -20,6 +20,8 @@ import io.reactivex.disposables.Disposable;
 
 public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePresenter<V> implements OrderDetailsMvpPresenter<V> {
 
+    private static final int SHOW_LOADING_DELAY = 2000;
+
     private Disposable setOrderReceivedRequestDisposable = null;
 
     @Inject
@@ -95,10 +97,12 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
 
     @Override
     public void cancelInvoiceItem(CancelInvoiceItemRequest request) {
+        getMvpView().showLoadingDelayed(SHOW_LOADING_DELAY);
         doApiCallForResponse(getDataManager().callCancelInvoiceItem(request), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
+                getMvpView().hideLoading();
                 getMvpView().showOrderDetails((GetOrdersResponse.Order) response);
             }
         });

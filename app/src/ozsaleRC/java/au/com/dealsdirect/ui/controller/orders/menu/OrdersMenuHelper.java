@@ -1,10 +1,14 @@
 package au.com.dealsdirect.ui.controller.orders.menu;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import androidx.appcompat.widget.MenuPopupWindow;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.FragmentActivity;
 
@@ -110,6 +114,7 @@ public class OrdersMenuHelper {
     }
 
     public static void showPopupMenu(Controller controller,
+                                     View anchor,
                                      int orderNumber,
                                      String invoiceId, int invoiceNumber,
                                      GetOrdersResponse.Order.Invoice.Product product,
@@ -128,7 +133,7 @@ public class OrdersMenuHelper {
                 actions.contains(ActionConstants.ORDER_ACTION_REFUND));
         boolean isItemCancel = actions.contains(ActionConstants.ORDER_ITEM_ACTION_REFUND);
 
-        PopupMenu popup = new PopupMenu(controller.getActivity(), controller.getView());
+        PopupMenu popup = new PopupMenu(controller.getActivity(), anchor);
         popup.getMenuInflater().inflate(R.menu.order_actions_pop_up, popup.getMenu());
 
         try {

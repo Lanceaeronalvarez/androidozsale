@@ -143,6 +143,13 @@ public abstract class BaseController
     }
 
     @Override
+    public void showLoadingDelayed(int delay) {
+        if (mActivity != null) {
+            mActivity.showLoadingDelayed(delay);
+        }
+    }
+
+    @Override
     public void showLoadingDialog(String message, boolean cancelable) {
         if (mActivity != null) {
             mActivity.showLoadingDialog(message, cancelable);

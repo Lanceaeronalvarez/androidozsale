@@ -293,10 +293,11 @@ public class OrdersController extends BaseController implements OrdersMvpView, O
     }
 
     @Override
-    public void onOrderItemShowOptions(int orderNumber, String invoiceId, int invoiceNumber, List<String> actions) {
+    public void onOrderItemShowOptions(View anchor, int orderNumber, String invoiceId, int invoiceNumber, List<String> actions) {
         if (mPresenter.isTablet()) {
             OrdersMenuHelper.showPopupMenu(
                     this,
+                    anchor,
                     orderNumber,
                     invoiceId,
                     invoiceNumber,

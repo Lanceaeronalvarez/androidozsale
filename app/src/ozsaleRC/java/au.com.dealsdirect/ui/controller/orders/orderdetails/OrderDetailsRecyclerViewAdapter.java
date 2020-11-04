@@ -265,7 +265,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
             if (invoice.getActions() != null && !invoice.getActions().isEmpty()) {
                 moreOptions.setOnClickListener(v ->
-                        listener.showOrderDialog(orderNumber, invoice.getId(), invoice.getNumber(), invoice.getActions()));
+                        listener.showOrderDialog(moreOptions, orderNumber, invoice.getId(), invoice.getNumber(), invoice.getActions()));
                 moreOptions.setVisibility(View.VISIBLE);
             } else {
                 moreOptions.setOnClickListener(null);
@@ -368,7 +368,7 @@ public class OrderDetailsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                     (product.getActions().contains(ActionConstants.ORDER_ITEM_VIEW_RETURN) ||
                             product.getActions().contains(ActionConstants.ORDER_ITEM_RETURN) ||
                             product.getActions().contains(ActionConstants.ORDER_ITEM_ACTION_REFUND))) {
-                moreOptionsImageButton.setOnClickListener(v -> listener.showOrderDialog(orderNumber, invoiceId, invoiceNumber, product));
+                moreOptionsImageButton.setOnClickListener(v -> listener.showOrderDialog(moreOptionsImageButton, orderNumber, invoiceId, invoiceNumber, product));
                 moreOptionsImageButton.setVisibility(View.VISIBLE);
             } else {
                 moreOptionsImageButton.setOnClickListener(null);

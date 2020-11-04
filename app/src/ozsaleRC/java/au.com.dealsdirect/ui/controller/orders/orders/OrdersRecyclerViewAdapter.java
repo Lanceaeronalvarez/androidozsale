@@ -197,7 +197,10 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                     }
 
                     ((OrderItemsViewholder) viewHolder).orderOptionsLayout.setOnClickListener(v ->
-                            mClickListener.onOrderItemShowOptions(item.getOrderNumber(), invoice.getId(), invoice.getNumber(), invoice.getActions()));
+                            mClickListener.onOrderItemShowOptions(
+                                    ((OrderItemsViewholder) viewHolder).orderOptionsLayout,
+                                    item.getOrderNumber(),
+                                    invoice.getId(), invoice.getNumber(), invoice.getActions()));
                 }
 
                 viewHolder.itemView.setOnClickListener(view -> mClickListener.onOrderItemClick(index));

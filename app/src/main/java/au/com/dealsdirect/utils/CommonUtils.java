@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 
 import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.ui.custom.DelayedProgressDialog;
 
 public final class CommonUtils {
 
@@ -44,7 +45,6 @@ public final class CommonUtils {
     private static final String KEY_ID = "_id";
 
     protected static final String PREFS_NAME = "Sale_Items_" + BuildConfig.FLAVOR;
-
 
     private CommonUtils() {
         // This utility class is not publicly instantiable
@@ -92,7 +92,6 @@ public final class CommonUtils {
         return progressDialog;
     }
 
-
     public static Dialog showLoadingDialog(Context context, String message, boolean cancelable) {
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -103,6 +102,20 @@ public final class CommonUtils {
         dialog.setCanceledOnTouchOutside(cancelable);
 
         return dialog;
+    }
+
+    public static ProgressDialog showLoadingDialogDelayed(Context context, int delay) {
+        DelayedProgressDialog progressDialog = new DelayedProgressDialog(context);
+        progressDialog.show(delay);
+        if (progressDialog.getWindow() != null) {
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            progressDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
+        progressDialog.setContentView(R.layout.delayed_loading_indicator_layout);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+        return progressDialog;
     }
 
     @SuppressLint("all")
@@ -206,7 +219,7 @@ public final class CommonUtils {
     public static void shakeView(View view) {
         view.startAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.shake));
     }
-    
+
     public static void fadeInView(View view, AnimatorListenerAdapter listener) {
         view.setAlpha(0f);
         view.animate()

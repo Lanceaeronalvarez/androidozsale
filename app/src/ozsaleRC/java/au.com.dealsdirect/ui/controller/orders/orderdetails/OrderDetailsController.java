@@ -227,10 +227,11 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     }
 
     @Override
-    public void showOrderDialog(int orderNumber, String invoiceId, int invoiceNumber, List<String> invoiceActions) {
+    public void showOrderDialog(View anchor, int orderNumber, String invoiceId, int invoiceNumber, List<String> invoiceActions) {
         if (mPresenter.isTablet()) {
             OrdersMenuHelper.showPopupMenu(
-                    mActivity.getMainController(),
+                    this,
+                    anchor,
                     orderNumber,
                     invoiceId,
                     invoiceNumber,
@@ -266,10 +267,11 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     }
 
     @Override
-    public void showOrderDialog(int orderNumber, String invoiceId, int invoiceNumber, GetOrdersResponse.Order.Invoice.Product product) {
+    public void showOrderDialog(View anchor, int orderNumber, String invoiceId, int invoiceNumber, GetOrdersResponse.Order.Invoice.Product product) {
         if (mPresenter.isTablet()) {
             OrdersMenuHelper.showPopupMenu(
                     this,
+                    anchor,
                     orderNumber,
                     invoiceId,
                     invoiceNumber,

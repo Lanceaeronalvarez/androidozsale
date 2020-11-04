@@ -8,11 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -20,7 +15,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.bluelinelabs.conductor.Router;
+import com.google.android.material.snackbar.Snackbar;
 
 import au.com.dealsdirect.DDApplication;
 import au.com.dealsdirect.R;
@@ -125,6 +126,13 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         }
     }
 
+    @Override
+    public void showLoadingDelayed(int delay) {
+        hideLoading();
+        if (!isFinishing() || !isDestroyed()) {
+            mProgressDialog = CommonUtils.showLoadingDialogDelayed(this, delay);
+        }
+    }
 
 
     @Override
@@ -138,7 +146,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     public void showLoadingDialog(String message, boolean cancelable) {
         hideLoadingDialog();
         if (!isFinishing() || !isDestroyed()) {
-            mLoadingDialog = CommonUtils.showLoadingDialog(this, message ,cancelable);
+            mLoadingDialog = CommonUtils.showLoadingDialog(this, message, cancelable);
         }
     }
 
@@ -154,8 +162,8 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     public void onError(String message) {
         Handler handler = new Handler();
         Log.i("SnackbarError", message + "");
-        if(message != null && !message.isEmpty()){
-            if(message.contains("UnknownHostException")){
+        if (message != null && !message.isEmpty()) {
+            if (message.contains("UnknownHostException")) {
 //                if (canShowTimeoutDialog) {
 //                    canShowTimeoutDialog = false;
 //                    CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.no_network_connection));
@@ -168,16 +176,15 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
                     message.contains("SSLHandshakeException")) {
                 // Do not notify for these errors
                 return;
-            } else if (message.contains("Null")){
+            } else if (message.contains("Null")) {
                 return;
             } else if (message.contains("Exception") || message.contains("virtual method")) {
 //                CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.error));
                 showSnackBar(getString(R.string.error), false);
-            }  else if (message.contains("error")) {
+            } else if (message.contains("error")) {
                 CustomAlertDialog.showCustomAlertDialog(this,
                         CustomAlertDialog.CustomDialogIconState.NEGATIVE, getString(R.string.an_error_has_occurred));
-            }
-            else {
+            } else {
                 /*
                     4/6/18 - feature/andr-3308-registersubscriber
                     Disallow showing of No internet Connection on Socket Timeout Exception
@@ -189,9 +196,9 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         }
     }
 
-    private boolean isCurrentControllerNotSplash(){
-        if(mRouter != null && mRouter.hasRootController()){
-            if(mRouter.getBackstack().get(0).controller() instanceof SplashScreenController){
+    private boolean isCurrentControllerNotSplash() {
+        if (mRouter != null && mRouter.hasRootController()) {
+            if (mRouter.getBackstack().get(0).controller() instanceof SplashScreenController) {
                 return false;
             }
         }
@@ -217,13 +224,13 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
             textView.setGravity(Gravity.CENTER_HORIZONTAL);
         }
         textView.setTextColor(ContextCompat.getColor(this, R.color.white));
-        if(isCurrentControllerNotSplash()) {
+        if (isCurrentControllerNotSplash()) {
             mSnackbar.show();
         }
     }
 
-    protected void dismissSnackBar(){
-        if(mSnackbar != null) {
+    protected void dismissSnackBar() {
+        if (mSnackbar != null) {
             mSnackbar.dismiss();
         }
     }
@@ -241,9 +248,9 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     public void hideKeyboard() {
 //        View view = this.getCurrentFocus();
 //        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)
-                    getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+        InputMethodManager imm = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
 //        }
     }
 
