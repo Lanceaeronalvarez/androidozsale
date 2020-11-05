@@ -102,7 +102,12 @@ public class AddContactPresenter<V extends AddContactMvpView> extends BasePresen
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
-                GetContactHistoryResponse responseValue = (GetContactHistoryResponse) response;
+                GetContactHistoryResponse responseValue = null;
+                if (response instanceof GetContactHistoryResponse) {
+                    responseValue = (GetContactHistoryResponse) response;
+                } else if (response instanceof String && !((String) response).isEmpty()) {
+                    responseValue = JsonUtils.convertStringToObject((String) response, GetContactHistoryResponse.class);
+                }
                 if (responseValue != null && responseValue.getMessages() != null && !responseValue.getMessages().isEmpty()) {
                     getMvpView().showContactSuccess(responseValue);
                 }

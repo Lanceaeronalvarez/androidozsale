@@ -1,12 +1,14 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts;
 
-import androidx.recyclerview.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +17,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.controller.contact.listener.ContactClickListener;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpPresenter;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
@@ -55,11 +58,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewCo
     @Override
     public void onBindViewHolder(ViewContactsItemViewHolder holder, int position) {
 
-        String itemSubject = mCurrentContactsList.get(position).getSubject();
-        String itemLastAnswer = mCurrentContactsList.get(position).getLastMessageDate();
-        String itemLastComment = mCurrentContactsList.get(position).getLastMessage();
-        String dateOfContactItem = mCurrentContactsList.get(position).getLastMessage();
-        String dateHeaderFormatOfItem = DateUtils.getDayOfWeekFromDateString(itemLastAnswer.toString());
+        final String itemSubject = mCurrentContactsList.get(position).getSubject();
+        final String itemLastAnswer = mCurrentContactsList.get(position).getLastMessageDate();
+        final String lastMessage = mCurrentContactsList.get(position).getLastMessage();
+        final CharSequence itemLastComment = CommonUtils.checkIfStringHasHtmlElements(lastMessage) ?
+                Html.fromHtml(mCurrentContactsList.get(position).getLastMessage()) : lastMessage;
 
         holder.contactUsTitleTextView.setText(StringUtils.toTitleCase(itemSubject));
         holder.contactUsDescriptionTextView.setText(itemLastComment);

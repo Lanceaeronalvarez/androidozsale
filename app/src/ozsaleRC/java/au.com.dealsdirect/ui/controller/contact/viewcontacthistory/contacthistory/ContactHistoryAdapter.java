@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthisto
 
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ImageDisplayAdapter;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.CommonUtils;
 
 /**
  * dp Created by Admin on 6/22/17.
@@ -55,7 +57,8 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
         if (holder.getItemViewType() == VIEW_TYPE_CELL) {
 
             final GetContactHistoryResponse.Message message = mCurrentContactsHistoryList.get(position - 1);
-            final String contactMessage = message.getText();
+            final CharSequence contactMessage = CommonUtils.checkIfStringHasHtmlElements(message.getText()) ?
+                    Html.fromHtml(message.getText()) : message.getText();
             final boolean isStaff = message.isStaff();
             final List<GetContactHistoryResponse.Message.Attachment> attachments = message.getAttachments();
 

@@ -8,10 +8,10 @@ import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryReq
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
-import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
 import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
 import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -36,7 +36,12 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
-                GetContactHistoryResponse responseValue = (GetContactHistoryResponse) response;
+                GetContactHistoryResponse responseValue = null;
+                if (response instanceof GetContactHistoryResponse) {
+                    responseValue = (GetContactHistoryResponse) response;
+                } else if (response instanceof String && !((String) response).isEmpty()) {
+                    responseValue = JsonUtils.convertStringToObject((String) response, GetContactHistoryResponse.class);
+                }
                 if (responseValue != null && responseValue.getMessages() != null && !responseValue.getMessages().isEmpty()) {
                     getMvpView().showContactHistory(responseValue);
                 }
@@ -121,7 +126,7 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
     @Override
     public void closeTicketSatisfaction(int global, String contactNumber) {
 
-        doApiCallForResponse(getDataManager().callCloseTicketSatisfaction(global,contactNumber), new AppApiCallback() {
+        doApiCallForResponse(getDataManager().callCloseTicketSatisfaction(global, contactNumber), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
