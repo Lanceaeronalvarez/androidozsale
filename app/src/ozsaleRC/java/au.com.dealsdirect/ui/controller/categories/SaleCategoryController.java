@@ -152,11 +152,10 @@ public class SaleCategoryController extends BaseController
     }
 
     private void addToMap(List<GetCategoryTreeResponse> categories) {
-        List<GetCategoryTreeResponse> newList;
 
         for (GetCategoryTreeResponse category : categories) {
-            for (GetCategoryTreeResponse subcategory : updateCategoryChildren(category)) {
-                newList = updateCategoryChildren(subcategory);
+            for (GetCategoryTreeResponse subcategory : includeAllInChildren(category)) {
+                final List<GetCategoryTreeResponse> newList = includeAllInChildren(subcategory);
                 //add to map if there are children other than "All" subcategory
                 if (newList.size() > 1) {
                     addToMap(newList);
@@ -167,28 +166,34 @@ public class SaleCategoryController extends BaseController
         }
     }
 
-    private List<GetCategoryTreeResponse> updateCategoryChildren(GetCategoryTreeResponse categoryTree) {
+    private GetCategoryTreeResponse createAllFromCategory(GetCategoryTreeResponse categoryTree) {
         GetCategoryTreeResponse getCategoryTreeResponse = new GetCategoryTreeResponse();
-        getCategoryTreeResponse.setName("All");
+        getCategoryTreeResponse.setName(mActivity.getString(R.string.category_all));
         getCategoryTreeResponse.setKey(categoryTree.getKey());
         getCategoryTreeResponse.setChildren(new ArrayList<>());
         getCategoryTreeResponse.setNodeType("usual");
         getCategoryTreeResponse.setId(categoryTree.getId());
+        return getCategoryTreeResponse;
+    }
 
-        List<GetCategoryTreeResponse> newList = new ArrayList<>();
+    private List<GetCategoryTreeResponse> includeAllInChildren(GetCategoryTreeResponse parent) {
+        if (parent == null || parent.getChildren() == null) {
+            return new LinkedList<>();
+        }
 
-        if (categoryTree.getChildren() != null) {
-            for (int i = 0; i < categoryTree.getChildren().size() + 1; i++) {
-
-                if (i == 0) {
-                    newList.add(getCategoryTreeResponse);
-
-                } else {
-                    newList.add(categoryTree.getChildren().get(i - 1));
-                }
+        final LinkedList<GetCategoryTreeResponse> children = new LinkedList<>(parent.getChildren());
+        final String nameAll = mActivity.getString(R.string.category_all);
+        boolean shouldAdd = true;
+        for (GetCategoryTreeResponse child : children) {
+            if (child.getName().equalsIgnoreCase(nameAll)) {
+                shouldAdd = false;
+                break;
             }
         }
-        return newList;
+        if (shouldAdd) {
+            children.add(0, createAllFromCategory(parent));
+        }
+        return children;
     }
 
     @Override
@@ -223,7 +228,7 @@ public class SaleCategoryController extends BaseController
 
         //noinspection ConstantConditions
         if (getCategoryTreeResponse != null && getCategoryTreeResponse.getChildren() != null) {
-            SubSaleCategoryAdapter subCategoryAdapter = new SubSaleCategoryAdapter(mActivity, (getCategoryTreeResponse.getChildren()), mSubCategoryItemClickListener, this, mCategoryMap);
+            SubSaleCategoryAdapter subCategoryAdapter = new SubSaleCategoryAdapter(mActivity, includeAllInChildren(getCategoryTreeResponse), mSubCategoryItemClickListener, this, mCategoryMap);
             subCategoryAdapter.setParentPosition(position);
 
             if (saleCategoryViewHolder != null) {

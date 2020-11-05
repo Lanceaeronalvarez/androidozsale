@@ -786,4 +786,6 @@
 
     <string name="address_change_success">Address successfully changed</string>
     <string name="address_change_fail">Failed to change address</string>
+
+    <string name="category_all">All</string>
 </resources>
