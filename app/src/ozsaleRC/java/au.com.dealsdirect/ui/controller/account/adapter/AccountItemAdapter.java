@@ -24,10 +24,8 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
 
     private List<AccountItem> mAccountItems;
     private AccountMvpPresenter mPresenter;
-    private Integer mSelectedPosition = 0;
+    private Integer mSelectedPosition = null;
     private Context mContext;
-    private boolean mSelectFirstItem = false;
-    private boolean mIsTablet = false;
 
     private RecyclerView mRecyclerView = null;
 
@@ -36,12 +34,6 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
         mAccountItems = accountItems;
         mPresenter = presenter;
         setHasStableIds(true);
-    }
-
-    public AccountItemAdapter(Context context, List<AccountItem> accountItems, AccountMvpPresenter presenter, boolean isSelectFirstItem) {
-        this(context, accountItems, presenter);
-        mSelectFirstItem = isSelectFirstItem;
-        mIsTablet = isSelectFirstItem;
     }
 
     public List<AccountItem> getData() {
@@ -90,17 +82,11 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
             holder.mAccountArrowRight.setVisibility(View.VISIBLE);
         }
 
-        holder.itemView.setSelected(groupPosition == mSelectedPosition);
-
-        if (mSelectFirstItem && groupPosition == 0) {
-            setSelectedPosition(groupPosition);
-            mPresenter.onAccountItemClick(mContext, title);
-            mSelectFirstItem = false; //reset
-        }
+        holder.itemView.setSelected(mSelectedPosition != null && groupPosition == mSelectedPosition);
 
         holder.mAccountItemName.setText(title);
         holder.itemView.setOnClickListener(view -> {
-            if (mIsTablet && mPresenter.willScreenChange(mContext, title)) {
+            if (mPresenter.isTablet() && mPresenter.willScreenChange(mContext, title)) {
                 setSelectedPosition(groupPosition);
             }
             mPresenter.onAccountItemClick(mContext, title);
@@ -142,6 +128,10 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
         }
     }
 
+    public Integer getSelectedPosition() {
+        return mSelectedPosition;
+    }
+
     public void setSelectedPosition(Integer position) {
         Integer previous = mSelectedPosition;
         mSelectedPosition = position;
@@ -152,6 +142,15 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
             if (mSelectedPosition != null) {
                 notifyItemChanged(mSelectedPosition);
             }
+        }
+    }
+
+    public String getTitle(int position) {
+        AccountItem item = mAccountItems.get(position);
+        if (item != null) {
+            return item.getTitle();
+        } else {
+            return "";
         }
     }
 }

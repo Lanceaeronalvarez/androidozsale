@@ -310,7 +310,11 @@ public class AccountController extends BaseController implements AccountMvpView,
     public void onTabSwitch(boolean intoThisView) {
         super.onTabSwitch(intoThisView);
         if (intoThisView) {
-
+            if (!mActivity.isAuthorized() && mPresenter.isTablet() && mAccountItemAdapter != null) {
+                int selectedPosition = mAccountItemAdapter.getSelectedPosition() == null ? 0 : mAccountItemAdapter.getSelectedPosition();
+                mAccountItemAdapter.setSelectedPosition(selectedPosition);
+                mPresenter.onAccountItemClick(mActivity, mAccountItemAdapter.getTitle(selectedPosition));
+            }
         }
     }
 
@@ -322,11 +326,8 @@ public class AccountController extends BaseController implements AccountMvpView,
 //        final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
 //        animator.setSupportsChangeAnimations(false);
 
-        if (!getBoolean(R.bool.is_tablet)) {
-            mAccountItemAdapter = new AccountItemAdapter(mActivity, accountItems, mPresenter);
-        } else {
-            mAccountItemAdapter = new AccountItemAdapter(mActivity, accountItems, mPresenter, true);
-        }
+        mAccountItemAdapter = new AccountItemAdapter(mActivity, accountItems, mPresenter);
+
         mAccountRecyclerView.setAdapter(mRecyclerViewExpandableItemManager.createWrappedAdapter(mAccountItemAdapter));
         mAccountRecyclerView.setLayoutManager(mLayoutManager);
         // NOTE: need to disable change animations to ripple effect work properly
