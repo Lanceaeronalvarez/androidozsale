@@ -1,14 +1,11 @@
 package au.com.dealsdirect.ui.controller.orders.menu;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.appcompat.widget.MenuPopupWindow;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.FragmentActivity;
 
@@ -132,6 +129,15 @@ public class OrdersMenuHelper {
         boolean showCancel = (actions.contains(ActionConstants.ORDER_ITEM_ACTION_REFUND) ||
                 actions.contains(ActionConstants.ORDER_ACTION_REFUND));
         boolean isItemCancel = actions.contains(ActionConstants.ORDER_ITEM_ACTION_REFUND);
+
+        if (!(showChangeAddress ||
+                showRequestReturn ||
+                showContactUs ||
+                showViewReturns ||
+                showCancel ||
+                isItemCancel)) {
+            showContactUs = true;
+        }
 
         PopupMenu popup = new PopupMenu(controller.getActivity(), anchor);
         popup.getMenuInflater().inflate(R.menu.order_actions_pop_up, popup.getMenu());

@@ -1,20 +1,20 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import java.util.ArrayList;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ActionConstants;
 
 /**
@@ -32,7 +32,7 @@ public class BottomSheetOrderDialog extends BottomSheetDialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_FRAME,R.style.BottomSheetDialogTheme);
+        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.BottomSheetDialogTheme);
     }
 
     @Override
@@ -102,10 +102,18 @@ public class BottomSheetOrderDialog extends BottomSheetDialogFragment {
             }
 
             if (arrayList.contains(ActionConstants.ORDER_ITEM_ACTION_REFUND) ||
-                arrayList.contains(ActionConstants.ORDER_ACTION_REFUND)) {
+                    arrayList.contains(ActionConstants.ORDER_ACTION_REFUND)) {
 
                 mCancelOrder.setVisibility(View.VISIBLE);
 
+            }
+
+            if (mChangeAddress.getVisibility() != View.VISIBLE &&
+                    mReturnItem.getVisibility() != View.VISIBLE &&
+                    mContactUsText.getVisibility() != View.VISIBLE &&
+                    mViewReturnItem.getVisibility() != View.VISIBLE &&
+                    mCancelOrder.getVisibility() != View.VISIBLE) {
+                mContactUsText.setVisibility(View.VISIBLE);
             }
 
         }
