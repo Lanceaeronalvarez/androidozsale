@@ -1195,12 +1195,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mInitialCategoryTree.isEmpty() || source.isEmpty()) {
             mCategoryTreeResponse = source;
         } else {
-            for (GetCategoryTreeResponse initial : mInitialCategoryTree) {
-                if (initial.getKey().equals(source.get(0).getKey())) {
-                    mCategoryTreeResponse = Lists.newArrayList(initial);
-                    return;
-                }
-            }
+            mCategoryTreeResponse = new ArrayList<>(mInitialCategoryTree);
         }
     }
 
