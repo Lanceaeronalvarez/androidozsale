@@ -16,6 +16,7 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -315,7 +316,7 @@ public class SaleCategoryController extends BaseController
         mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
 
         SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
-                .FromCategory(categoryKey, categoryKey, mCategories, chipFilters);
+                .FromCategory(categoryKey, categoryKey, findMainCategoryWithKey(categoryKey), chipFilters);
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
@@ -335,5 +336,18 @@ public class SaleCategoryController extends BaseController
             router.setBackstack(newBackstack, new SimpleChangeHandler());
         }
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+    }
+
+    private List<GetCategoryTreeResponse> findMainCategoryWithKey(String key) {
+        String[] split = key.split(">>>");
+        if (split.length > 0) {
+            String mainKey = split[0];
+            for (GetCategoryTreeResponse category : mCategories) {
+                if (category.getKey().equals(mainKey)) {
+                    return Lists.newArrayList(category);
+                }
+            }
+        }
+        return new ArrayList<>();
     }
 }
