@@ -706,6 +706,14 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/recently", ApiUrlVersion.v5.apiVersion());
     }
 
+    public static String getTicketSatisfaction() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/number={number}:ticket_satisfaction", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String closeTicketSatisfaction() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/number={number}:close", ApiUrlVersion.v1.apiVersion());
+    }
+
     private ApiEndPoint() {
         // This class is not publicly instantiable
     }

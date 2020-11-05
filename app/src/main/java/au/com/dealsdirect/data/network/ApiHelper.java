@@ -49,6 +49,8 @@ import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
@@ -460,4 +462,8 @@ public interface ApiHelper {
     Observable<String> callAddToRecentlyViewedItems(RecentlyViewedItemRequest request);
 
     Observable<List<RecentlyViewedItemResponse>> callRecentlyViewedItems();
+
+    Observable<TicketSatisfactionResponse> callGetTicketSatisfaction(String number);
+
+    Observable<String> callCloseTicketSatisfaction(int global, String contactNumber);
 }

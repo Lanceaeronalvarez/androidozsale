@@ -52,6 +52,8 @@ import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
@@ -1420,6 +1422,26 @@ public class AppApiHelper implements ApiHelper {
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getObjectListObservable(RecentlyViewedItemResponse.class);
+    }
+
+    @Override
+    public Observable<TicketSatisfactionResponse> callGetTicketSatisfaction(String number) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getTicketSatisfaction())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("number", number)
+                .build()
+                .getObjectObservable(TicketSatisfactionResponse.class);
+    }
+
+    @Override
+    public Observable<String> callCloseTicketSatisfaction(int global, String contactNumber) {
+        return Rx2AndroidNetworking.put(ApiEndPoint.closeTicketSatisfaction())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("number", contactNumber)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(
+                        new TicketSatisfactionRequest(global)))
+                .build()
+                .getStringObservable();
     }
 }
 

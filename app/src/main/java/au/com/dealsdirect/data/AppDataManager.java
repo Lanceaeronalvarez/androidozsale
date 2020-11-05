@@ -62,6 +62,7 @@ import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
@@ -862,6 +863,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<List<RecentlyViewedItemResponse>> callRecentlyViewedItems() {
         return mApiHelper.callRecentlyViewedItems();
+    }
+
+    @Override
+    public Observable<TicketSatisfactionResponse> callGetTicketSatisfaction(String number) {
+        return mApiHelper.callGetTicketSatisfaction(number);
+    }
+
+    @Override
+    public Observable<String> callCloseTicketSatisfaction(int global, String contactNumber) {
+        return mApiHelper.callCloseTicketSatisfaction(global,contactNumber);
     }
 
     @Override

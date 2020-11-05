@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -40,6 +40,7 @@ import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachme
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryAdapter;
+import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryListener;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsListener;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
@@ -59,7 +60,7 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class ViewContactHistoryController extends BaseController implements ViewContactHistoryMvpView,
-        ReturnDetailsListener, AsyncResponse {
+        ReturnDetailsListener, AsyncResponse, ContactHistoryListener {
 
     public static final String TAG = "ViewContactHistoryController";
     private static final String KEY_CONTACT_NO = "ContactHistoryNo";
@@ -100,6 +101,8 @@ public class ViewContactHistoryController extends BaseController implements View
     private String mMessageId = "";
     ImageUploadUtil.UploadFileToServer uploadFileToServer;
     private LinearLayoutManager mLayoutManager;
+    private List<GetContactHistoryResponse.Message> messages = null;
+    private ContactHistoryListener mContactListener;
 
     @Inject
     ViewContactHistoryPresenter<ViewContactHistoryMvpView> mPresenter;
@@ -174,6 +177,8 @@ public class ViewContactHistoryController extends BaseController implements View
 
         KeyboardUtils.setKeyboardAdjustResize(mActivity);
 
+        mContactListener = this;
+
         mContactHistoryRightOption.setVisibility(View.INVISIBLE);
         mContactHistoryTitle.setText(mContactSubject);
 
@@ -205,6 +210,7 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @Override
     public void showContactHistory(GetContactHistoryResponse response) {
+        messages = response.getMessages();
 
         if (mImageUriArray.size() != 0) {
             mMessageId = response.getMessages().get(0).getId();
@@ -230,14 +236,7 @@ public class ViewContactHistoryController extends BaseController implements View
             setAttachmentRequest.setItems(new ArrayList<>());
             mPresenter.setAttachment(setAttachmentRequest, false);
         } else {
-            Log.d("contacts", response.getMessages().size() + " ");
-            ContactHistoryAdapter adapter = new ContactHistoryAdapter(response.getMessages(), mActivity);
-
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
-
-            mContactHistoryRecyclerView.setAdapter(adapter);
-            mContactHistoryRecyclerView.setLayoutManager(layoutManager);
-            mContactHistoryRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
+            mPresenter.getTicketSatisfaction(String.valueOf(mContactNumber));
         }
 
 
@@ -315,6 +314,19 @@ public class ViewContactHistoryController extends BaseController implements View
         if (mImageFileHashMap != null) {
             callUploadImage(0);
         }
+    }
+
+    @Override
+    public void showTicketSatisfaction(boolean hasTicketSatisfaction) {
+        ContactHistoryAdapter adapter = new ContactHistoryAdapter(mActivity, messages, hasTicketSatisfaction, mContactListener);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+
+        mContactHistoryRecyclerView.setAdapter(adapter);
+        mContactHistoryRecyclerView.setLayoutManager(layoutManager);
+        mContactHistoryRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     private GetContactHistoryRequest createContactHistoryRequest(int number) {
@@ -446,5 +458,10 @@ public class ViewContactHistoryController extends BaseController implements View
         if (imagePosition + 1 < AppConstants.MAX_IMAGE_COUNT) {
             callUploadImage(imagePosition + 1);
         }
+    }
+
+    @Override
+    public void generateCloseTicket(int selectedRate) {
+        mPresenter.closeTicketSatisfaction(selectedRate, String.valueOf(mContactNumber));
     }
 }

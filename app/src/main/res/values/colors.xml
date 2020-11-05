@@ -280,4 +280,6 @@
 <!--    Category Selector-->
     <color name="sale_category_selector">#EBEBEB</color>
     <color name="enter_address_text_color">#46A1D8</color>
+
+    <color name="user_feedback_bg">#CAEDC7</color>
 </resources>

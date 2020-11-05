@@ -16,4 +16,7 @@ public interface ViewContactHistoryMvpView extends MvpView {
     void refreshViewContactMessage();
 
     void setAttachmentId(String attachmentId);
+
+    void showTicketSatisfaction(boolean hasTicketSatisfaction);
+
 }

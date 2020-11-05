@@ -6,6 +6,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
 import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
@@ -95,5 +96,45 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
                 super.onFailure(t);
             }
         });
+    }
+
+    @Override
+    public void getTicketSatisfaction(String number) {
+        doApiCallForResponse(getDataManager().callGetTicketSatisfaction(number), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+
+                TicketSatisfactionResponse ticketSatisfactionResponse = (TicketSatisfactionResponse) response;
+
+                getMvpView().showTicketSatisfaction(ticketSatisfactionResponse.isHasRating());
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+            }
+        });
+    }
+
+    @Override
+    public void closeTicketSatisfaction(int global, String contactNumber) {
+
+        doApiCallForResponse(getDataManager().callCloseTicketSatisfaction(global,contactNumber), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+
+                getMvpView().showTicketSatisfaction(true);
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+            }
+        });
+
     }
 }

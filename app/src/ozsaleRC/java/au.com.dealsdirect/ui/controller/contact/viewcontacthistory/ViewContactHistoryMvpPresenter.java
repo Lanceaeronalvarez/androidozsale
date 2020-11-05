@@ -20,4 +20,8 @@ public interface ViewContactHistoryMvpPresenter<V extends ViewContactHistoryMvpV
     String getUserAgent();
 
     void setAttachment(SetAttachmentForContactRequest setAttachmentRequest, boolean hasUploadedImage);
+
+    void getTicketSatisfaction(String number);
+
+    void closeTicketSatisfaction(int global, String contactNumber);
 }
