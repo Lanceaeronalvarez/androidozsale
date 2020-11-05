@@ -219,7 +219,7 @@ public interface ApiHelper {
 
     Observable<List<GetContactsResponse>> callGetContacts(String languageId);
 
-    Observable<GetContactHistoryResponse> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest);
+    Observable<String> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest);
 
     Observable<AccountData> callGetAccountData();
     // LOGIN API CALLS

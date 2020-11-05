@@ -951,13 +951,12 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetContactHistoryResponse> callGetContactHistory(GetContactHistoryRequest request) {
+    public Observable<String> callGetContactHistory(GetContactHistoryRequest request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getContact())
                 .addHeaders(mApiHeader.get())
-//                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .addPathParameter("number", request.getNumber().toString())
                 .build()
-                .getObjectObservable(GetContactHistoryResponse.class);
+                .getStringObservable();
     }
 
     @Override

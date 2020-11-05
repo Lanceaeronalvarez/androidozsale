@@ -352,7 +352,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetContactHistoryResponse> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest) {
+    public Observable<String> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest) {
         return mApiHelper.callGetContactHistory(getContactHistoryRequest);
     }
 
