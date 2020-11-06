@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
-import au.com.dealsdirect.listeners.OnHorizontalSwipeTouchListener;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventParameters;
@@ -74,8 +73,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int mNumberOfColumns;
     private int mOffset;
     private String mLastGroupType = "";
-    private String selectedSale = "";
-    private Events selectedBannerClick;
     private static final int SPANNABLE_STRING_START_INDEX = 6;
     private static final float DISCOUNT_VALUE_SCALE_FACTOR = 1.8f;
 
@@ -100,8 +97,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private static final int THROTTLE_FIRST_WINDOW_DURATION = 1000;
 
-    private static final float SLIDING_BANNER_WIDTH_PERCENT = 0.8f;
-
     private int removeViewHolderOrientationModifier(int viewHolderType) {
         return viewHolderType & (~VIEW_HOLDER_TYPE_LANDSCAPE);
     }
@@ -109,9 +104,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int isViewHolderTypeLandscape(int viewHolderType) {
         return viewHolderType & VIEW_HOLDER_TYPE_LANDSCAPE;
     }
-
-    private static final int SCROLL_INTERVAL = 3;
-    private static final TimeUnit SCROLL_INTERVAL_TIME_UNIT = TimeUnit.SECONDS;
 
     private HorizontalScrollingBannerAdapter mSlidingBannersAdapter = null;
     private HorizontalScrollingBannerAdapter mCategoryBannersAdapter = null;
@@ -138,6 +130,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mHeightForPromoBanner = mActivity.getResources().getInteger(R.integer.banner_mobile_height);
 
         mOrientation = orientation;
+
+        mListener = listener;
 
         setupDimensions(orientation);
     }
@@ -734,10 +728,14 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final int numberOfColumns = 1;
         final int width = slidingBannersImageSize().first;
         final int height = slidingBannersImageSize().second;
-        return ImageUtils.getRangedGridDefinition(
+        ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
                 width, height,
                 ScreenUtils.getScreenWidth(mActivity),
                 numberOfColumns, numberOfColumns);
+        return new ImageUtils.Grid(
+                1,
+                grid.getItemWidth(),
+                grid.getItemHeight() + mActivity.getResources().getDimension(R.dimen.horizontal_banner_circle_indicator_height));
     }
 
     private void setupSlidingBannersDimensions() {
@@ -769,8 +767,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 mActivity.getResources().getInteger(R.integer.category_banner_column_count_for_tablet) :
                 mActivity.getResources().getInteger(R.integer.category_banner_column_count);
         final int width = categoryBannersImageSize().first;
-        final int height = categoryBannersImageSize().second +
-                (int) mActivity.getResources().getDimension(R.dimen.horizontal_banner_title_height);
+        final int height = categoryBannersImageSize().second;
         ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
                 width, height,
                 ScreenUtils.getScreenWidth(mActivity),
@@ -778,7 +775,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return new ImageUtils.Grid(
                 1,
                 grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(),
-                grid.getItemHeight() + getBottomPaddingForHorizontalBanners()
+                grid.getItemHeight() + mActivity.getResources().getDimension(R.dimen.horizontal_banner_title_height) + getBottomPaddingForHorizontalBanners()
         );
     }
 

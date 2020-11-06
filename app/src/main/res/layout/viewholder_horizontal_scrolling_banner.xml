@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/viewholder_horizontal_scrolling_banner_layout"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/banner_mobile_height">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/viewholder_horizontal_scrolling_banner_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/border_light"
-        android:layout_alignParentBottom="true">
+        android:layout_weight="0"
+        android:background="@color/border_light">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/viewholder_horizontal_scrolling_banner_indicator"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_height="@dimen/horizontal_banner_circle_indicator_height"
+            android:layout_centerInParent="true"
             android:isScrollContainer="true"
-            android:overScrollMode="never"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"
-            android:visibility="gone"/>
+            android:overScrollMode="never" />
 
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
