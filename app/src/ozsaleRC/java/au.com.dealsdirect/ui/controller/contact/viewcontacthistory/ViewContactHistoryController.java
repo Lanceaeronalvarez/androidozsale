@@ -326,7 +326,7 @@ public class ViewContactHistoryController extends BaseController implements View
 
         mContactHistoryRecyclerView.setAdapter(adapter);
         mContactHistoryRecyclerView.setLayoutManager(layoutManager);
-        mContactHistoryRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
+        mContactHistoryRecyclerView.scrollToPosition(0);
     }
 
     private GetContactHistoryRequest createContactHistoryRequest(int number) {
