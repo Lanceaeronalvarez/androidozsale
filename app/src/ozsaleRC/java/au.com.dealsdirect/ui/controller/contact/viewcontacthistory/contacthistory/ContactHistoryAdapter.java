@@ -1,117 +1,86 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory;
 
-import android.content.Context;
-import android.os.CountDownTimer;
-import android.text.Html;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
-import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ImageDisplayAdapter;
-import au.com.dealsdirect.utils.AppConstants;
-import au.com.dealsdirect.utils.CommonUtils;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse.Message;
 
 /**
  * dp Created by Admin on 6/22/17.
  */
 
-public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryViewHolder> {
+public class ContactHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<GetContactHistoryResponse.Message> mCurrentContactsHistoryList;
-    private Context mContext;
-    private final int VIEW_TYPE_FOOTER = 1;
-    private final int VIEW_TYPE_CELL = 0;
+    private List<Message> mCurrentContactsHistoryList;
+    private final int VIEW_TYPE_RATING_FOOTER = 1;
+    private final int VIEW_TYPE_MESSAGE = 0;
     private boolean mHasRating;
-    private ContactHistoryListener mListener;
+    private ContactHistoryOnClickRatingListener mListener;
 
-    public ContactHistoryAdapter(Context context, List<GetContactHistoryResponse.Message> messages, boolean hasRating, ContactHistoryListener listener) {
-        this.mCurrentContactsHistoryList = messages;
-        this.mContext = context;
+    public ContactHistoryAdapter(List<Message> messages, boolean hasRating, ContactHistoryOnClickRatingListener listener) {
+        this.mCurrentContactsHistoryList = new ArrayList<>(messages);
         this.mHasRating = hasRating;
         this.mListener = listener;
     }
 
     @Override
-    public ContactHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_CELL) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_contact_history, parent, false);
-            return new ContactHistoryViewHolder(v);
-        } else {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_user_satisfaction, parent, false);
-            return new ContactHistoryViewHolder(v);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case VIEW_TYPE_RATING_FOOTER:
+                return new ContactHistoryRatingViewHolder(
+                        LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.footer_user_satisfaction, parent, false));
+            default:
+                return new ContactHistoryMessageViewHolder(
+                        LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.viewholder_contact_history, parent, false));
         }
     }
 
     @Override
-    public void onBindViewHolder(ContactHistoryViewHolder holder, int position) {
-        if (holder.getItemViewType() == VIEW_TYPE_CELL) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (holder.getItemViewType()) {
+            case VIEW_TYPE_RATING_FOOTER:
+                final ContactHistoryRatingViewHolder ratingViewHolder = (ContactHistoryRatingViewHolder) holder;
 
-            final GetContactHistoryResponse.Message message = mCurrentContactsHistoryList.get(position - 1);
-            final CharSequence contactMessage = CommonUtils.checkIfStringHasHtmlElements(message.getText()) ?
-                    Html.fromHtml(message.getText()) : message.getText();
-            final boolean isStaff = message.isStaff();
-            final List<GetContactHistoryResponse.Message.Attachment> attachments = message.getAttachments();
+                ratingViewHolder.setup(shouldShowRatingFooter(),
+                        new ContactHistoryOnClickRatingListener() {
+                            @Override
+                            public void onClickSmile() {
+                                mHasRating = true;
+                                if (mListener != null) {
+                                    mListener.onClickSmile();
+                                }
+                            }
 
-//        Change background/textcolor, text gravities if isStaff
-            holder.itemView.setSelected(isStaff);
-            holder.contactHistoryMessageTextView.setSelected(isStaff);
+                            @Override
+                            public void onClickNeutral() {
+                                mHasRating = true;
+                                if (mListener != null) {
+                                    mListener.onClickNeutral();
+                                }
+                            }
 
-            FrameLayout.LayoutParams contactHistoryItemParams = (FrameLayout.LayoutParams) holder.contactHistoryItemContainer.getLayoutParams();
-            contactHistoryItemParams.gravity = isStaff ? Gravity.START : Gravity.END;
-
-            LinearLayout.LayoutParams messageTextViewParams = (LinearLayout.LayoutParams) holder.contactHistoryMessageTextView.getLayoutParams();
-            messageTextViewParams.gravity = isStaff ? Gravity.START : Gravity.END;
-
-            holder.contactHistoryMessageTextView.setText(contactMessage);
-
-            if (attachments.isEmpty()) {
-                holder.contactHistoryMessageRecyclerView.setVisibility(View.GONE);
-            } else {
-                holder.contactHistoryMessageRecyclerView.setVisibility(View.VISIBLE);
-                final ImageDisplayAdapter mAdapter = new ImageDisplayAdapter(mContext,
-                        message.getAttachments());
-                final LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false);
-                holder.contactHistoryMessageRecyclerView.setAdapter(mAdapter);
-                holder.contactHistoryMessageRecyclerView.setLayoutManager(layoutManager);
-            }
-        } else {
-            final boolean lastmessageIsFromStaff = mCurrentContactsHistoryList.get(0).isStaff();
-            if (lastmessageIsFromStaff && !mHasRating) {
-                holder.contactHistoryUserSatisfactionContainer.setSelected(lastmessageIsFromStaff);
-                holder.contactHistoryUserSatisfactionContainer.setVisibility(View.VISIBLE);
-            } else {
-                holder.contactHistoryUserSatisfactionContainer.setVisibility(View.GONE);
-            }
-
-            holder.contactHistorySmileButton.setOnClickListener(v -> {
-                holder.contactHistoryUserSatisfactionContainer.setVisibility(View.GONE);
-                countdown(holder);
-                mListener.generateCloseTicket(AppConstants.SMILE_ICON);
-            });
-
-            holder.contactHistoryNeutralBUtton.setOnClickListener(v -> {
-                holder.contactHistoryUserSatisfactionContainer.setVisibility(View.GONE);
-                countdown(holder);
-                mListener.generateCloseTicket(AppConstants.NEUTRAL_ICON);
-            });
-
-            holder.contactHistorySadButton.setOnClickListener(v -> {
-                holder.contactHistoryUserSatisfactionContainer.setVisibility(View.GONE);
-                countdown(holder);
-                mListener.generateCloseTicket(AppConstants.SAD_ICON);
-            });
+                            @Override
+                            public void onClickSad() {
+                                mHasRating = true;
+                                if (mListener != null) {
+                                    mListener.onClickSad();
+                                }
+                            }
+                        });
+                break;
+            default:
+                ((ContactHistoryMessageViewHolder) holder).setup(getMessageAtPosition(position));
+                break;
         }
-
     }
 
     @Override
@@ -121,19 +90,42 @@ public class ContactHistoryAdapter extends RecyclerView.Adapter<ContactHistoryVi
 
     @Override
     public int getItemViewType(int position) {
-        return (position == 0) ? VIEW_TYPE_FOOTER : VIEW_TYPE_CELL;
+        return position == 0 ? VIEW_TYPE_RATING_FOOTER : VIEW_TYPE_MESSAGE;
     }
 
-    private void countdown(ContactHistoryViewHolder holder) {
-        new CountDownTimer(30000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                holder.contactHistoryThankYouContainer.setVisibility(View.VISIBLE);
-            }
-
-            public void onFinish() {
-                holder.contactHistoryThankYouContainer.setVisibility(View.GONE);
-            }
-        }.start();
+    public Message getMessageAtPosition(int position) {
+        return mCurrentContactsHistoryList.get(position - 1);
     }
 
+    public boolean shouldShowRatingFooter() {
+        if (!mCurrentContactsHistoryList.isEmpty()) {
+            final boolean lastMessageIsFromStaff = mCurrentContactsHistoryList.get(0).isStaff();
+            return !mHasRating && lastMessageIsFromStaff;
+        }
+        return false;
+    }
+
+    public List<Message> getMessages() {
+        return new ArrayList<>(mCurrentContactsHistoryList);
+    }
+
+    public void setMessages(List<Message> messages) {
+        mCurrentContactsHistoryList = new ArrayList<>(messages);
+    }
+
+    public boolean hasRating() {
+        return mHasRating;
+    }
+
+    public void setHasRating(boolean hasRating) {
+        mHasRating = hasRating;
+    }
+
+    public int getStartIndexOfMessages() {
+        return 1;
+    }
+
+    public int getFooterIndex() {
+        return 0;
+    }
 }

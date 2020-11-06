@@ -35,12 +35,13 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse.Message;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.service.fcm.GNotification;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryAdapter;
-import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryListener;
+import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.contacthistory.ContactHistoryOnClickRatingListener;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsListener;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
@@ -60,7 +61,7 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class ViewContactHistoryController extends BaseController implements ViewContactHistoryMvpView,
-        ReturnDetailsListener, AsyncResponse, ContactHistoryListener {
+        ReturnDetailsListener, AsyncResponse {
 
     public static final String TAG = "ViewContactHistoryController";
     private static final String KEY_CONTACT_NO = "ContactHistoryNo";
@@ -101,8 +102,22 @@ public class ViewContactHistoryController extends BaseController implements View
     private String mMessageId = "";
     ImageUploadUtil.UploadFileToServer uploadFileToServer;
     private LinearLayoutManager mLayoutManager;
-    private List<GetContactHistoryResponse.Message> messages = null;
-    private ContactHistoryListener mContactListener;
+    private final ContactHistoryOnClickRatingListener contactHistoryOnClickRatingListener = new ContactHistoryOnClickRatingListener() {
+        @Override
+        public void onClickSmile() {
+            mPresenter.closeTicketSatisfaction(AppConstants.SMILE_ICON, Integer.toString(mContactNumber));
+        }
+
+        @Override
+        public void onClickNeutral() {
+            mPresenter.closeTicketSatisfaction(AppConstants.NEUTRAL_ICON, Integer.toString(mContactNumber));
+        }
+
+        @Override
+        public void onClickSad() {
+            mPresenter.closeTicketSatisfaction(AppConstants.SAD_ICON, Integer.toString(mContactNumber));
+        }
+    };
 
     @Inject
     ViewContactHistoryPresenter<ViewContactHistoryMvpView> mPresenter;
@@ -177,8 +192,6 @@ public class ViewContactHistoryController extends BaseController implements View
 
         KeyboardUtils.setKeyboardAdjustResize(mActivity);
 
-        mContactListener = this;
-
         mContactHistoryRightOption.setVisibility(View.INVISIBLE);
         mContactHistoryTitle.setText(mContactSubject);
 
@@ -194,6 +207,11 @@ public class ViewContactHistoryController extends BaseController implements View
         mLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
         mImageRecyclerView.setAdapter(mImageAdapter);
         mImageRecyclerView.setLayoutManager(mLayoutManager);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+        mContactHistoryRecyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -210,7 +228,7 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @Override
     public void showContactHistory(GetContactHistoryResponse response) {
-        messages = response.getMessages();
+        setupMessagesAdapter(response.getMessages());
 
         if (mImageUriArray.size() != 0) {
             mMessageId = response.getMessages().get(0).getId();
@@ -318,15 +336,58 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @Override
     public void showTicketSatisfaction(boolean hasTicketSatisfaction) {
-        ContactHistoryAdapter adapter = new ContactHistoryAdapter(mActivity, messages, hasTicketSatisfaction, mContactListener);
+        setupMessagesAdapter(hasTicketSatisfaction);
+    }
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
-        layoutManager.setStackFromEnd(true);
-        layoutManager.setReverseLayout(true);
+    private void setupMessagesAdapter(List<Message> messages) {
+        setupMessagesAdapter(messages, null);
+    }
 
-        mContactHistoryRecyclerView.setAdapter(adapter);
-        mContactHistoryRecyclerView.setLayoutManager(layoutManager);
-        mContactHistoryRecyclerView.scrollToPosition(0);
+    private void setupMessagesAdapter(boolean hasSatisfactionRating) {
+        setupMessagesAdapter(null, hasSatisfactionRating);
+    }
+
+    private void setupMessagesAdapter(List<Message> messages, Boolean hasSatisfactionRating) {
+        ContactHistoryAdapter adapter;
+        if (mContactHistoryRecyclerView.getAdapter() instanceof ContactHistoryAdapter) {
+            adapter = (ContactHistoryAdapter) mContactHistoryRecyclerView.getAdapter();
+
+            final List<Message> oldMessages = adapter.getMessages();
+            final boolean oldHasSatisfactionRating = adapter.hasRating();
+
+            if (hasSatisfactionRating != null) {
+                adapter.setHasRating(hasSatisfactionRating);
+                if (oldHasSatisfactionRating != hasSatisfactionRating) {
+                    adapter.notifyItemChanged(adapter.getFooterIndex());
+                }
+            }
+
+            if (messages != null) {
+                if (messages.size() > oldMessages.size()) {
+                    int index = 0;
+                    while (!messages.get(index).getId().equals(oldMessages.get(0).getId())) {
+                        index += 1;
+                    }
+
+                    adapter.setMessages(messages);
+                    if (index > 0) {
+                        adapter.notifyItemRangeInserted(adapter.getStartIndexOfMessages(), index);
+                    }
+                } else {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            mContactHistoryRecyclerView.smoothScrollToPosition(0);
+        } else {
+            adapter = new ContactHistoryAdapter(
+                    messages != null ? messages : new ArrayList<>(),
+                    hasSatisfactionRating != null ? hasSatisfactionRating : true,
+                    contactHistoryOnClickRatingListener);
+
+            mContactHistoryRecyclerView.setAdapter(adapter);
+            mContactHistoryRecyclerView.scrollToPosition(0);
+        }
     }
 
     private GetContactHistoryRequest createContactHistoryRequest(int number) {
@@ -356,7 +417,9 @@ public class ViewContactHistoryController extends BaseController implements View
     public void removeImage(Bitmap image, int position, boolean uploadImage, boolean isAddImageAdapter) {
         ViewContactsAddImageAdapter adapter = ((ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter());
         mImageUriArray.remove(position);
-        adapter.removeItem(position);
+        if (adapter != null) {
+            adapter.removeItem(position);
+        }
 
         if (mImageUriArray.size() == 0) {
             mImageRecyclerView.setVisibility(View.GONE);
@@ -458,10 +521,5 @@ public class ViewContactHistoryController extends BaseController implements View
         if (imagePosition + 1 < AppConstants.MAX_IMAGE_COUNT) {
             callUploadImage(imagePosition + 1);
         }
-    }
-
-    @Override
-    public void generateCloseTicket(int selectedRate) {
-        mPresenter.closeTicketSatisfaction(selectedRate, String.valueOf(mContactNumber));
     }
 }

@@ -23,7 +23,7 @@
         android:layout_marginTop="@dimen/margin_large"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginBottom="@dimen/margin_large"
-        android:background="@drawable/bg_contact_history_item"
+        android:background="@drawable/bg_contact_history_rating_footer"
         android:orientation="vertical"
         android:padding="@dimen/margin_medium"
         android:visibility="visible">
@@ -90,38 +90,5 @@
             android:visibility="visible"/>
 
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/message_container_frame"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:id="@+id/contact_history_item_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="@dimen/margin_extra_small"
-            android:background="@drawable/bg_contact_history_item"
-            android:orientation="vertical"
-            android:padding="@dimen/margin_medium">
-
-            <TextView
-                android:id="@+id/contact_history_message_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxEms="15"
-                android:textColor="@color/contact_history_text_selector"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/contact_history_recyclerview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_tiny" />
-
-        </LinearLayout>
-
-    </FrameLayout>
 
 </LinearLayout>
