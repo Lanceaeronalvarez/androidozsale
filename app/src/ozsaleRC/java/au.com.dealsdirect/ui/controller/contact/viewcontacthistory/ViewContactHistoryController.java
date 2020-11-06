@@ -355,14 +355,18 @@ public class ViewContactHistoryController extends BaseController implements View
             final List<Message> oldMessages = adapter.getMessages();
             final boolean oldHasSatisfactionRating = adapter.hasRating();
 
+            boolean willRefreshFooter = false;
+
             if (hasSatisfactionRating != null) {
                 adapter.setHasRating(hasSatisfactionRating);
                 if (oldHasSatisfactionRating != hasSatisfactionRating) {
-                    adapter.notifyItemChanged(adapter.getFooterIndex());
+                    willRefreshFooter = true;
                 }
             }
 
             if (messages != null) {
+                final boolean isLastMessageFromStaff = messages.get(0).isStaff();
+                final boolean isLastOldMessageFromStaff = oldMessages.isEmpty() ? false : oldMessages.get(0).isStaff();
                 if (messages.size() > oldMessages.size()) {
                     int index = 0;
                     while (!messages.get(index).getId().equals(oldMessages.get(0).getId())) {
@@ -373,9 +377,18 @@ public class ViewContactHistoryController extends BaseController implements View
                     if (index > 0) {
                         adapter.notifyItemRangeInserted(adapter.getStartIndexOfMessages(), index);
                     }
+
+                    if (isLastMessageFromStaff != isLastOldMessageFromStaff) {
+                        willRefreshFooter = true;
+                    }
                 } else {
+                    willRefreshFooter = false;
                     adapter.notifyDataSetChanged();
                 }
+            }
+
+            if (willRefreshFooter) {
+                adapter.notifyItemChanged(adapter.getFooterIndex());
             }
 
             mContactHistoryRecyclerView.smoothScrollToPosition(0);
