@@ -162,12 +162,25 @@ public class OrderTrackingView extends LinearLayout {
             final ProgressBar rightProgressBar = progressBars.get(new Pair<>(i, i + 1));
             final ProgressBar leftProgressBar = progressBars.get(new Pair<>(i, i + 1));
             final LabelSetupObject labelSetupObject = new LabelSetupObject();
+
+            final int upperStepIndex = Math.max(0, i - 1);
+            final int lowerStepIndex = upperStepIndex + 1;
+
+            final View.OnClickListener clickListener = v -> {
+                if (onClickListener != null) {
+                    onClickListener.onNodeTapped(
+                            steps.get(upperStepIndex),
+                            steps.get(lowerStepIndex));
+                }
+            };
+
             if (step.getStatus().equalsIgnoreCase(STEP_STATUS_ACTIVE)) {
                 node.setBackgroundResource(R.drawable.bg_order_tracking_node_hollow);
                 labelSetupObject.getTitle().setColorId(R.color.order_tracking_active);
                 if (node.getAnimation() == null) {
                     node.startAnimation(blink);
                 }
+                node.setOnClickListener(clickListener);
             } else if (step.getStatus().equalsIgnoreCase(STEP_STATUS_SUCCESS)) {
                 node.setBackgroundResource(R.drawable.bg_order_tracking_node_full);
                 labelSetupObject.getTitle().setColorId(R.color.order_tracking_done);
@@ -175,14 +188,17 @@ public class OrderTrackingView extends LinearLayout {
                     leftProgressBar.setProgress(100);
                 }
                 node.clearAnimation();
+                node.setOnClickListener(clickListener);
             } else if (step.getStatus().equalsIgnoreCase(STEP_STATUS_CANCELLED)) {
                 node.setBackgroundResource(R.drawable.bg_order_tracking_node_cancelled);
                 labelSetupObject.getTitle().setColorId(R.color.order_tracking_done);
                 node.clearAnimation();
+                node.setOnClickListener(null);
             } else {
                 node.setBackgroundResource(R.drawable.bg_order_tracking_node_inactive);
                 labelSetupObject.getTitle().setColorId(R.color.order_tracking_inactive);
                 node.clearAnimation();
+                node.setOnClickListener(null);
             }
 
             labelSetupObject.getTitle().setText(step.getTitle() == null ? "" : step.getTitle().replace(' ', '\n'));
@@ -196,19 +212,6 @@ public class OrderTrackingView extends LinearLayout {
                 rightProgressBar.setProgress((int) step.getProgress());
             }
             ImageUtils.loadImage(step.getIconUrl(), node);
-
-            final int upperStepIndex = i;
-            final int lowerStepIndex = upperStepIndex + 1;
-
-            final View.OnClickListener clickListener = v -> {
-                if (onClickListener != null) {
-                    onClickListener.onNodeTapped(
-                            steps.get(upperStepIndex),
-                            steps.get(lowerStepIndex));
-                }
-            };
-
-            node.setOnClickListener(clickListener);
         }
 
         setupOrderReceivedNode(invoiceId, invoiceNumber, delivery, onClickListener);
