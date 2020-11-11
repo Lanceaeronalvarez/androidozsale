@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Color;
@@ -336,5 +337,21 @@ public final class CommonUtils {
 
     public static boolean checkIfStringHasHtmlElements(String source) {
         return htmlRegexPattern.matcher(source).find();
+    }
+
+    public static Activity getActivityFromView(View view) {
+        Context context = view.getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
+    }
+
+    public static boolean isActivityOfViewDestroyed(View view) {
+        final Activity activity = getActivityFromView(view);
+        return activity == null || activity.isDestroyed();
     }
 }

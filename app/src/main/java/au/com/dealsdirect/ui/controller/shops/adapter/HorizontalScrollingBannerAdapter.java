@@ -1,6 +1,5 @@
 package au.com.dealsdirect.ui.controller.shops.adapter;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeRes
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.ImageTappedListener;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,12 +68,9 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
         RecommendedItems
     }
 
-    private Activity mActivity;
-
     private String title;
 
-    public HorizontalScrollingBannerAdapter(Activity activity) {
-        mActivity = activity;
+    public HorizontalScrollingBannerAdapter() {
     }
 
     @NonNull
@@ -204,8 +201,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                 }
         }
 
-        if (mActivity != null && !mActivity.isDestroyed() ||
-                !imgUrl.isEmpty()) {
+        if (!imgUrl.isEmpty() && !CommonUtils.isActivityOfViewDestroyed(holder.image)) {
             ImageUtils.loadImage(imgUrl, holder.image);
         }
 

@@ -18,6 +18,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.listeners.OnHorizontalSwipeTouchListener;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalCircleIndicatorAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
+import au.com.dealsdirect.utils.CommonUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -217,6 +218,9 @@ public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
                 .takeWhile(o -> compositeDisposable.size() != 0 && !compositeDisposable.isDisposed())
                 .doOnNext(o -> {
                     scrollToNext(true);
+                    if (CommonUtils.isActivityOfViewDestroyed(itemView)) {
+                        stopAutoScroll();
+                    }
                 })
                 .subscribe();
 

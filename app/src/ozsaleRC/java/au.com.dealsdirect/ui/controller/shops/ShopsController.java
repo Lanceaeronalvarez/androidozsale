@@ -608,7 +608,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 }
             }
             if (!slidingBanners.isEmpty()) {
-                adapter = new HorizontalScrollingBannerAdapter(mActivity);
+                adapter = new HorizontalScrollingBannerAdapter();
                 adapter.setDataSource(slidingBanners);
             }
         }
@@ -637,7 +637,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 }
             }
             if (!sponsoredBanners.isEmpty()) {
-                adapter = new HorizontalScrollingBannerAdapter(mActivity);
+                adapter = new HorizontalScrollingBannerAdapter();
                 adapter.setDataSource(sponsoredBanners);
                 adapter.setTitle(null);
                 adapter.setShouldRepeatCellsToFillWidth(false);
@@ -667,7 +667,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 }
             }
             if (!categoryBanners.isEmpty()) {
-                adapter = new HorizontalScrollingBannerAdapter(mActivity);
+                adapter = new HorizontalScrollingBannerAdapter();
                 adapter.setDataSource(categoryBanners);
                 adapter.setTitle(null);
                 adapter.setShouldShowTitle(true);

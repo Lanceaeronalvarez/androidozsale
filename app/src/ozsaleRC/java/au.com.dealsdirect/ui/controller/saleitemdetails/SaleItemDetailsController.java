@@ -1514,7 +1514,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
         mYouMayAlsoLikeContainer.setVisibility(View.VISIBLE);
 
-        HorizontalScrollingBannerAdapter adapter = new HorizontalScrollingBannerAdapter(mActivity);
+        HorizontalScrollingBannerAdapter adapter = new HorizontalScrollingBannerAdapter();
         adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
 
         adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.YouMayAlsoLike);
@@ -1553,7 +1553,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         HorizontalScrollingBannerAdapter adapter = null;
         if (!recommendedItemsResponseList.isEmpty()) {
-            adapter = new HorizontalScrollingBannerAdapter(mActivity);
+            adapter = new HorizontalScrollingBannerAdapter();
             adapter.setRecommendedList(recommendedItemsResponseList);
         }
 
@@ -1593,7 +1593,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         HorizontalScrollingBannerAdapter adapter = null;
         if (!response.isEmpty()) {
-            adapter = new HorizontalScrollingBannerAdapter(mActivity);
+            adapter = new HorizontalScrollingBannerAdapter();
             adapter.setRecentlyViewedList(response);
         }
 
