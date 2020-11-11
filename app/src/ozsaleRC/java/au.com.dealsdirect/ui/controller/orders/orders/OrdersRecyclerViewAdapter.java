@@ -104,26 +104,40 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     private void flattenData(List<GetOrdersResponse.Order> orders) {
-        SparseArray<String> locationFilterHashes = new SparseArray<>();
+        final int lastIndex = getLastIndexOfFlattenedData();
+
+        final SparseArray<String> locationFilterHashes = new SparseArray<>();
+
         for (int i = 0; i < orders.size(); i++) {
-            GetOrdersResponse.Order order = orders.get(i);
-            Item headerItem = new Item(i, order.getNumber());
+            final int currentIndex = lastIndex + 1 + i;
+            final GetOrdersResponse.Order order = orders.get(i);
+            final Item headerItem = new Item(currentIndex, order.getNumber());
             items.add(headerItem);
             for (GetOrdersResponse.Order.Shipment shipment : order.getShipments()) {
                 if (shipment.getInvoiceNumbers() != null) {
-                    Integer invoiceNumber = shipment.getInvoiceNumbers().get(0);
+                    final Integer invoiceNumber = shipment.getInvoiceNumbers().get(0);
                     if (invoiceNumber != null) {
                         locationFilterHashes.put(invoiceNumber, shipment.getLocationFilter());
                     }
                 }
             }
             for (GetOrdersResponse.Order.Invoice invoice : order.getInvoices()) {
-                Item invoiceItem = new Item(i, order.getNumber(), invoice, locationFilterHashes.get(invoice.getNumber()));
+                final Item invoiceItem = new Item(currentIndex, order.getNumber(), invoice, locationFilterHashes.get(invoice.getNumber()));
                 items.add(invoiceItem);
             }
             // separator
             items.add(new Item());
         }
+    }
+
+    private int getLastIndexOfFlattenedData() {
+        for (int i = items.size() - 1; i >= 0; i--) {
+            Item item = items.get(i);
+            if (item.hasIndex()) {
+                return item.getIndex();
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -345,6 +359,10 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         public int getIndex() {
             return index;
+        }
+
+        public boolean hasIndex() {
+            return index >= 0;
         }
     }
 
