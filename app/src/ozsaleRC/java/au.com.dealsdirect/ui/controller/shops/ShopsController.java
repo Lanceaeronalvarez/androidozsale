@@ -639,7 +639,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (!sponsoredBanners.isEmpty()) {
                 adapter = new HorizontalScrollingBannerAdapter(mActivity);
                 adapter.setDataSource(sponsoredBanners);
-                adapter.setTitle(getResources().getString(R.string.sponsored));
+                adapter.setTitle(null);
                 adapter.setShouldRepeatCellsToFillWidth(false);
             }
         }
@@ -649,14 +649,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void showCategoryBanners(GetBannerResponse getBannerResponses) {
         HorizontalScrollingBannerAdapter adapter = null;
-        String title = null;
         if (getBannerResponses != null) {
             List<GetBannerResponse.Banner> categoryBanners = new ArrayList<>();
             List<GetBannerResponse.Group> groups = getBannerResponses.getGroups();
             if (groups != null) {
                 for (GetBannerResponse.Group group : groups) {
                     if (group.getType().equals("categoryShop")) {
-                        title = group.getTitle();
                         List<GetBannerResponse.Banner> banners = group.getBanners();
                         if (banners != null) {
                             for (GetBannerResponse.Banner banner : banners) {
@@ -671,7 +669,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (!categoryBanners.isEmpty()) {
                 adapter = new HorizontalScrollingBannerAdapter(mActivity);
                 adapter.setDataSource(categoryBanners);
-                adapter.setTitle(title);
+                adapter.setTitle(null);
                 adapter.setShouldShowTitle(true);
             }
         }
