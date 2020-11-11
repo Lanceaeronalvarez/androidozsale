@@ -272,7 +272,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     private OurpayPanel ourpayPanel;
 
-    private CheckoutHostMvpView mCheckoutHostView;
+    private CheckoutHostMvpView mCheckoutHostView = null;
 
     private CompositeDisposable mClickListeners;
     private CompositeDisposable mChangeClickListeners;
@@ -366,18 +366,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.onAttach(this);
         mVcoPresenter.onAttach(this);
 
-        if (getBoolean(R.bool.is_tablet) && getBoolean(R.bool.master_detail_enabled)) {
-            CheckoutHostController existingController = mActivity.getMainController().getCheckoutHostController();
-            if (!mHasSavedInstance || existingController == null) {
-                mCheckoutHostView = (CheckoutHostMvpView) mActivity.getCheckoutRouter()
-                        .getControllerWithTag(CheckoutHostController.class.getName());
-            } else {
-                mCheckoutHostView = existingController;
-            }
-        }
         return view;
     }
-
 
     @Override
     protected void onViewBound(@NonNull View view) {
@@ -621,8 +611,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showCartDetailsOnHost(List<MappedShipment> items) {
-        if (mCheckoutHostView != null) {
-            mCheckoutHostView.showCartDetails(items);
+        if (getCheckoutHostView() != null) {
+            getCheckoutHostView().showCartDetails(items);
         }
     }
 
@@ -651,16 +641,16 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showCartDetailsFooter(boolean show) {
-        if (mCheckoutHostView != null) {
-            mCheckoutHostView.showCartDetailsFooter(show);
+        if (getCheckoutHostView() != null) {
+            getCheckoutHostView().showCartDetailsFooter(show);
         }
         refreshItemList(show);
     }
 
     @Override
     public void showCartDetailsPostcode(String postcode) {
-        if (mCheckoutHostView != null) {
-            mCheckoutHostView.showCartDetailsPostcode(postcode);
+        if (getCheckoutHostView() != null) {
+            getCheckoutHostView().showCartDetailsPostcode(postcode);
         }
         if (mAdapter == null) {
             return;
@@ -707,6 +697,24 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             }
             displayPaymentDetails();
         }
+    }
+
+    private CheckoutHostMvpView getCheckoutHostView() {
+        if (mCheckoutHostView == null) {
+            if (getBoolean(R.bool.is_tablet) && getBoolean(R.bool.master_detail_enabled)) {
+                CheckoutHostController existingController = mActivity.getMainController().getCheckoutHostController();
+                if (!mHasSavedInstance || existingController == null) {
+                    if (mActivity.getCheckoutRouter() != null) {
+                        mCheckoutHostView = (CheckoutHostMvpView) mActivity.getCheckoutRouter()
+                                .getControllerWithTag(CheckoutHostController.class.getName());
+                    }
+                } else {
+                    mCheckoutHostView = existingController;
+                }
+            }
+        }
+
+        return mCheckoutHostView;
     }
 
     private void displayDeliveryOptionsUI(String deliveryOptionName, Double deliveryOptionPrice) {
