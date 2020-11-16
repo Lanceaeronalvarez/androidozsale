@@ -80,7 +80,7 @@
                     }
 
                     ul {
-                        list-style-position: inside;
+                        list-style-index: inside;
                         padding-left:0;
                     }
 
@@ -291,6 +291,9 @@
     <string name="no_order_number">No Order Number</string>
     <string name="create_contact">Create Contact</string>
     <string name="create_contact_fill_up">Please fill up all fields</string>
+    <string name="create_contact_empty_subject_error">Please select a subject</string>
+    <string name="create_contact_empty_invoice_error">Please select an invoice</string>
+    <string name="create_contact_empty_message_error">Please enter a message</string>
     <string name="apply_vouchers">Apply Vouchers</string>
     <string name="add_voucher">Add Voucher</string>
 
@@ -328,17 +331,12 @@
     <string name="subject">Subject:</string>
     <string name="sale">Sale:</string>
     <string name="write_a_message">Write a message...</string>
-    <string name="select_a_sale">Select a Sale</string>
+    <string name="select_a_sale">Select Invoice</string>
     <string name="no_orders">no orders</string>
-    <string name="select_a_subject">Select a Subject</string>
+    <string name="select_a_subject">Select Subject</string>
     <string name="message_submitted">Message submitted</string>
     <string name="error_creating_message">Error creating message</string>
     <string name="error_creating_return">Error creating return</string>
-    <string name="invite_friends_tag">InviteFriendsController</string>
-    <string name="checkout_controller">CheckoutController</string>
-    <string name="checkout_host_controller">CheckoutHostController</string>
-    <string name="current_returns_controller">CurrentReturnsController</string>
-    <string name="view_contacts_controller">ViewContactsController</string>
 
     <string-array name="genders">
         <item>Male</item>
@@ -674,8 +672,9 @@
     <string name="back">Back</string>
     <string name="enter_address_details">ENTER ADDRESS DETAILS</string>
     <string name="enter_promo_code_caps">ENTER CODE</string>
-    <string name="my_sales">MY SALES</string>
-    <string name="my_subjects">MY SUBJECTS</string>
+    <string name="my_sales">SELECT INVOICE</string>
+    <string name="my_subjects">SUBJECTS</string>
+    <string name="enter_invoice_number">ENTER INVOICE NUMBER</string>
     <string name="dummy_text">dummy text</string>
     <string name="an_error_has_occurred">An error has occurred</string>
     <string name="track_order">Track Order</string>
@@ -758,6 +757,7 @@
     <string name="invoice_number_text">Invoice Number</string>
     <string name="invoice_text">Invoice</string>
     <string name="select_invoice">Select Invoice</string>
+    <string name="invoice">Invoice</string>
     <string name="new_return_instruction">Please provide as much detail as possible regarding any item you would
     like to return. If the item is faulty, please give a full description of the fault. Please Note any item
     returned without a RAN number will not be accepted.</string>
@@ -775,11 +775,18 @@
     <string name="stripe_add_card_error">Please verify your card details then try again.</string>
     <string name="stripe_error_occured">An Error has Occurred</string>
     <string name="postcode_hint_text">Enter postcode to calculate delivery</string>
+    <string name="removed_address">Removed address</string>
 
-    <string name="sponsored">Sponsored</string>
     <string name="recommended_for_you">Recommended for you</string>
     <string name="you_may_also_like">You may also like</string>
     <string name="recently_viewed">Recently Viewed</string>
     
     <string name="enter_address_above">Enter address above</string>
+
+    <string name="address_change_success">Address successfully changed</string>
+    <string name="address_change_fail">Failed to change address</string>
+
+    <string name="category_all">All</string>
+    <string name="how_was_experience">How was your experience with our customer service?</string>
+    <string name="thank_you_for_feedback">Thank you for your feedback, this will help us improve our service.</string>
 </resources>

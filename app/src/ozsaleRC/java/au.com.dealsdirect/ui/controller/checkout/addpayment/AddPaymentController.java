@@ -65,6 +65,7 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
@@ -234,7 +235,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mPresenter.onAttach(this);
         mVcoPresenter.onAttach(this);
 
-        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(getString(R.string.checkout_controller));
+        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(CheckoutController.class.getName());
         return view;
     }
 
@@ -409,7 +410,6 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
-        mActivity.setDraggableViewPager(false);
         mPresenter.onAttach(this);
     }
 

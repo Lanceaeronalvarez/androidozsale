@@ -1,6 +1,7 @@
 package au.com.dealsdirect.data.network;
 
 
+import com.google.gson.JsonObject;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -15,7 +16,6 @@ import java.util.List;
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
 import au.com.dealsdirect.data.network.model.accountdata.AccountData;
-import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
@@ -49,14 +49,16 @@ import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionRequest;
+import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
-import au.com.dealsdirect.data.network.model.contactorder.ContactOrders;
+import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
-import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
-import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
-import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
+import au.com.dealsdirect.data.network.model.contactsubjecttemplates.ContactSubjectTemplatesResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequestOld;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponseOld;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
@@ -93,11 +95,10 @@ import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
-import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
-import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
-import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
+import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
-import au.com.dealsdirect.data.network.model.orders.OrderReceivedResponse;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
@@ -138,6 +139,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
@@ -165,6 +167,8 @@ public interface ApiHelper {
     Observable<SampleResponse> doSampleApiCall(SampleRequest request);
 
     Observable<GetBannerResponse> callGetBanners(GetBannerRequest getPublicSalesBannerRequest, boolean getOnlyFromNetwork);
+
+    Observable<GetBannerResponse> callGetBanners2(GetBannerRequest getPublicSalesBannerRequest, boolean getOnlyFromNetwork);
 
     Observable<GetSaleBannerDetailsResponse> callGetSaleBannerDetails(String saleId);
 
@@ -215,9 +219,9 @@ public interface ApiHelper {
 
     Observable<GetAppSettingsConsent.ResponseValue> callGetPublicAppSettingsConsent(String countryId);
 
-    Observable<GetContactsResponse> callGetContacts(String languageId);
+    Observable<List<GetContactsResponse>> callGetContacts(String languageId);
 
-    Observable<GetContactHistoryResponse.ResponseValue> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest);
+    Observable<String> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest);
 
     Observable<AccountData> callGetAccountData();
     // LOGIN API CALLS
@@ -244,11 +248,11 @@ public interface ApiHelper {
 
     Observable<GetAddresses.ResponseValue> callGetUserAddresses(GetAddresses.RequestValues requestValues);
 
-    Observable<AddAddress.ResponseValue> callSetUserDeliveryAddress(AddAddress.RequestValues requestValues);
+    Observable<String> callSetUserDeliveryAddress(JsonObject requestValues);
 
     Observable<ApplyAddressResponse> callApplyDeliveryAddress(ApplyAddressRequest requestValues);
 
-    Observable<DeleteUserAddress.ResponseValue> callDeleteUserDeliveryAddress(DeleteUserAddress.RequestValues requestValues);
+    Observable<String> callDeleteUserDeliveryAddress(DeleteUserAddress.RequestValues requestValues, String addressID);
 
     Observable<SetUserDetailsResponse> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
 
@@ -256,9 +260,25 @@ public interface ApiHelper {
 
     // MY ORDERS API CALLS
 
-    Observable<GetPaymentsList.ResponseValue> callGetPaymentsList(GetPaymentsList.RequestValues requestValues);
+    Observable<List<GetOrdersResponse.Order>> callGetOrders();
 
-    Observable<GetOrderPaymentDetails.ResponseValue> callGetOrderPaymentDetails(GetOrderPaymentDetails.RequestValues requestValues);
+    Observable<GetOrdersResponse> callGetOrdersHistory(String dateTime, int months);
+
+    Observable<GetOrdersResponse.Order> callGetOrderDetails(int orderNumber);
+
+    Observable<GetOrdersResponse.Order.Invoice.Delivery> callGetOrderTracking(int orderNumber, int invoiceNumber);
+
+    Observable<String> callChangeDeliveryAddress(ChangeDeliveryAddressRequest request);
+
+    Observable<GetOrdersResponse.Order> callCancelInvoice(CancelInvoiceItemRequest request);
+
+    Observable<GetOrdersResponse.Order> callCancelInvoiceItem(CancelInvoiceItemRequest request);
+
+    Observable<String> callSetOrderReceived(OrderReceivedRequest receivedRequest);
+
+    Observable<String> callSetOrderNotReceived(OrderReceivedRequest receivedRequest);
+
+    Observable<OrderReceivedSatisfactionResponse> callGetOrderReceivedSatisfaction(OrderReceivedRequest receivedRequest);
 
     // VOUCHERS API CALLS
 
@@ -315,13 +335,19 @@ public interface ApiHelper {
     Observable<SetInviteResponse> callSetInvite(SetInviteRequest request);
 
     // Contact Us Api Call
-    Observable<ContactOrders> callGetContactOrders();
+    Observable<List<ContactOrderResponse>> callGetContactOrders();
 
-    Observable<ContactSubjects> callGetContactSubjects(ContactSubjectsRequest contactSubjectsRequest);
+    Observable<List<ContactSubjectResponse>> callGetContactSubjects(boolean isPublic);
 
-    Observable<CreateContactResponse> callCreateContact(CreateContactRequest createContactRequest);
+    Observable<CreateContactResponseOld> callCreateContactOld(CreateContactRequestOld createContactRequest);
 
-    Observable<ReplyContactResponse> callReplyContact(ReplyContactRequest createContactRequest);
+    Observable<String> callGetContactSubjectsTemplates(String id);
+
+    Observable<String> callCreateContact(CreateContactRequest createContactRequest);
+
+    Observable<String> callCreateContactPublic(CreateContactRequest createContactRequest);
+
+    Observable<String> callReplyContact(ReplyContactRequest createContactRequest);
 
     // LEGALITIES API CALLS
     Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest);
@@ -412,14 +438,10 @@ public interface ApiHelper {
     // DEEPLINK
     Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request);
 
-    Observable<String> callChangeDeliveryAddress(ChangeDeliveryAddressRequest request);
-
-    Observable<String> callCreateRefund(CreateRefundRequest request);
-
-    Observable<OrderReceivedResponse> callOrderReceived(OrderReceivedRequest receivedRequest);
-
     // ATTACHMENTS
     Observable<SetAttachmentResponse> setAttachment(SetAttachmentRequest setAttachmentRequest);
+
+    Observable<String> setAttachmentForContact(SetAttachmentForContactRequest setAttachmentRequest);
 
     // FILE SETTINGS
     Observable<FileSettingsResponse> callGetFileSettings();
@@ -440,4 +462,8 @@ public interface ApiHelper {
     Observable<String> callAddToRecentlyViewedItems(RecentlyViewedItemRequest request);
 
     Observable<List<RecentlyViewedItemResponse>> callRecentlyViewedItems();
+
+    Observable<TicketSatisfactionResponse> callGetTicketSatisfaction(String number);
+
+    Observable<String> callCloseTicketSatisfaction(int global, String contactNumber);
 }

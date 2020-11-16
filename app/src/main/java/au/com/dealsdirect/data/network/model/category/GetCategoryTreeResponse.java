@@ -3,7 +3,6 @@ package au.com.dealsdirect.data.network.model.category;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -79,7 +78,7 @@ public class GetCategoryTreeResponse {
         return children;
     }
 
-    public void setChildren(ArrayList<GetCategoryTreeResponse> children) {
+    public void setChildren(List<GetCategoryTreeResponse> children) {
         this.children = children;
     }
 

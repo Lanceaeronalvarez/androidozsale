@@ -1,60 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row_item_order_details_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:paddingTop="@dimen/margin_tiny"
-    tools:ignore="MissingPrefix"
-    android:id="@+id/row_item_order_details_layout"
-    android:visibility="visible">
-
-
+    android:paddingTop="@dimen/margin_small"
+    android:visibility="visible"
+    tools:ignore="MissingPrefix">
 
     <RelativeLayout
+        android:id="@+id/controller_order_details_image_container"
         android:layout_width="@dimen/order_image_width"
         android:layout_height="@dimen/order_image_height"
-        android:id="@+id/controller_order_details_image_container"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/margin_small">
 
         <ImageView
             android:id="@+id/controller_order_details_item_imageview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/controller_order_details_cancelled_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancelled"
-            android:padding="5dp"
+            android:layout_alignParentRight="true"
             android:background="@color/red"
-            android:textColor="@color/white"
-            android:layout_alignParentRight="true"
             android:fontFamily="@string/font_app_bold"
+            android:padding="5dp"
+            android:text="Cancelled"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_caption3"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="@dimen/margin_huge"
-        android:layout_height="@dimen/margin_huge"
-        android:layout_alignParentRight="true"
-        android:id="@+id/img_button_layout">
-
-        <ImageButton
-            android:id="@+id/order_item_details_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_small"
-            android:background="@drawable/ic_orders_ellipsis" />
-
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/order_item_details_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:paddingLeft="@dimen/margin_huge"
+        android:paddingTop="@dimen/margin_small"
+        android:paddingRight="@dimen/padding_default"
+        android:paddingBottom="@dimen/margin_large"
+        android:src="@drawable/ic_orders_ellipsis"
+        tools:ignore="ContentDescription" />
 
 
     <LinearLayout
@@ -70,14 +62,18 @@
         <TextView
             android:id="@+id/controller_order_details_item_product_name_textview"
             fontPath="@string/font_app_bold"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_extra_large"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="@color/text_dark"
             android:textSize="@dimen/text_size_body"
             tools:ignore="HardcodedText"
-            tools:text="Item Name" />
+            tools:text="Item Name Item Name Item Name Item Name Item Name Item Name Item Name" />
 
         <LinearLayout
+            android:id="@+id/product_size_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -219,10 +215,10 @@
     <View
         android:layout_width="wrap_content"
         android:layout_height="@dimen/border_regular"
+        android:layout_alignParentBottom="true"
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
-        android:background="@color/border_regular"
-        android:layout_alignParentBottom="true"/>
+        android:background="@color/border_regular" />
 
 </RelativeLayout>
 

@@ -1,16 +1,15 @@
 package au.com.dealsdirect.ui.controller.contact.selectsubject.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Collections;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectMvpPresenter;
-import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectMvpView;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.ui.controller.contact.selectsubject.viewholder.ContactSubjectViewHolder;
 
 /**
@@ -19,16 +18,15 @@ import au.com.dealsdirect.ui.controller.contact.selectsubject.viewholder.Contact
 
 public class ContactSubjectAdapter extends RecyclerView.Adapter<ContactSubjectViewHolder> {
 
-    private List<String> mCurrentContactSubjectList = Collections.emptyList();
-    private ContactSelectSubjectMvpPresenter<ContactSelectSubjectMvpView> mPresenter;
+    private List<ContactSubjectResponse> mCurrentContactSubjectList;
+    private ContactSubjectItemSelectedListener mListener;
 
     public ContactSubjectAdapter(
-            List<String> contactSubjects,
-            ContactSelectSubjectMvpPresenter mvpPresenter) {
+            List<ContactSubjectResponse> contactSubjects,
+            ContactSubjectItemSelectedListener listener) {
 
         mCurrentContactSubjectList = contactSubjects;
-        mPresenter = mvpPresenter;
-
+        mListener = listener;
     }
 
     @Override
@@ -41,8 +39,8 @@ public class ContactSubjectAdapter extends RecyclerView.Adapter<ContactSubjectVi
     @Override
     public void onBindViewHolder(ContactSubjectViewHolder holder, int position) {
 
-        holder.contactSubjectRowLayout.setOnClickListener(v -> mPresenter.selectContactSubject(mCurrentContactSubjectList.get(position)));
-        holder.contactSubjectTitleRowTextView.setText(mCurrentContactSubjectList.get(position));
+        holder.contactSubjectRowLayout.setOnClickListener(v -> mListener.itemSelected(mCurrentContactSubjectList.get(position)));
+        holder.contactSubjectTitleRowTextView.setText(mCurrentContactSubjectList.get(position).getName());
     }
 
     @Override
@@ -50,8 +48,12 @@ public class ContactSubjectAdapter extends RecyclerView.Adapter<ContactSubjectVi
         return mCurrentContactSubjectList == null ? 0 : mCurrentContactSubjectList.size();
     }
 
-    public void replaceData(List<String> subjects){
+    public void replaceData(List<ContactSubjectResponse> subjects) {
         mCurrentContactSubjectList = subjects;
         notifyDataSetChanged();
+    }
+
+    public interface ContactSubjectItemSelectedListener {
+        void itemSelected(ContactSubjectResponse response);
     }
 }

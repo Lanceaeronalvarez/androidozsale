@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Color;
@@ -35,6 +36,7 @@ import java.util.regex.Pattern;
 
 import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.ui.custom.DelayedProgressDialog;
 
 public final class CommonUtils {
 
@@ -44,7 +46,6 @@ public final class CommonUtils {
     private static final String KEY_ID = "_id";
 
     protected static final String PREFS_NAME = "Sale_Items_" + BuildConfig.FLAVOR;
-
 
     private CommonUtils() {
         // This utility class is not publicly instantiable
@@ -92,7 +93,6 @@ public final class CommonUtils {
         return progressDialog;
     }
 
-
     public static Dialog showLoadingDialog(Context context, String message, boolean cancelable) {
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -103,6 +103,20 @@ public final class CommonUtils {
         dialog.setCanceledOnTouchOutside(cancelable);
 
         return dialog;
+    }
+
+    public static ProgressDialog showLoadingDialogDelayed(Context context, int delay) {
+        DelayedProgressDialog progressDialog = new DelayedProgressDialog(context);
+        progressDialog.show(delay);
+        if (progressDialog.getWindow() != null) {
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            progressDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
+        progressDialog.setContentView(R.layout.delayed_loading_indicator_layout);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+        return progressDialog;
     }
 
     @SuppressLint("all")
@@ -206,7 +220,7 @@ public final class CommonUtils {
     public static void shakeView(View view) {
         view.startAnimation(AnimationUtils.loadAnimation(view.getContext(), R.anim.shake));
     }
-    
+
     public static void fadeInView(View view, AnimatorListenerAdapter listener) {
         view.setAlpha(0f);
         view.animate()
@@ -317,5 +331,27 @@ public final class CommonUtils {
                         }
                     }
                 });
+    }
+
+    private final static Pattern htmlRegexPattern = Pattern.compile("<(br|basefont|hr|input|source|frame|param|area|meta|!--|col|link|option|base|img|wbr|!DOCTYPE).*?>|<(a|abbr|acronym|address|applet|article|aside|audio|b|bdi|bdo|big|blockquote|body|button|canvas|caption|center|cite|code|colgroup|command|datalist|dd|del|details|dfn|dialog|dir|div|dl|dt|em|embed|fieldset|figcaption|figure|font|footer|form|frameset|head|header|hgroup|h1|h2|h3|h4|h5|h6|html|i|iframe|ins|kbd|keygen|label|legend|li|map|mark|menu|meter|nav|noframes|noscript|object|ol|optgroup|output|p|pre|progress|q|rp|rt|ruby|s|samp|script|section|select|small|span|strike|strong|style|sub|summary|sup|table|tbody|td|textarea|tfoot|th|thead|time|title|tr|track|tt|u|ul|var|video).*?<\\/\\2>");
+
+    public static boolean checkIfStringHasHtmlElements(String source) {
+        return htmlRegexPattern.matcher(source).find();
+    }
+
+    public static Activity getActivityFromView(View view) {
+        Context context = view.getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
+    }
+
+    public static boolean isActivityOfViewDestroyed(View view) {
+        final Activity activity = getActivityFromView(view);
+        return activity == null || activity.isDestroyed();
     }
 }

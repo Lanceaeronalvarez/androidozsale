@@ -103,6 +103,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         View view = inflater.inflate(R.layout.controller_checkout_host, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+
         return view;
     }
 
@@ -114,9 +115,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     protected void setUp(View view) {
-        mActivity.getMainController().setCheckoutHostController(this);
-
-//disable toolbar left and right buttons
+        //disable toolbar left and right buttons
         mToolbarLeftButton.setVisibility(View.INVISIBLE);
         mToolbarRightButton.setVisibility(View.INVISIBLE);
         mTitleTextView.setText(getString(R.string.account_orders));
@@ -126,7 +125,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
         if (!mHasSavedInstance || mActivity.getCheckoutController() == null) {
             mCheckoutController = CheckoutController.newInstance();
-            mCheckoutDetailRouter.setRoot(RouterTransaction.with(mCheckoutController).tag(getString(R.string.checkout_controller)));
+            mCheckoutDetailRouter.setRoot(RouterTransaction.with(mCheckoutController).tag(CheckoutController.class.getName()));
         } else {
             mCheckoutController = mActivity.getCheckoutController();
         }
@@ -135,7 +134,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
         mAdapter.setShouldAddSpacerOnTop(mPresenter.isTablet());
-        mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getHomeController().openLocationFilterHash(locationFilterHash));
+        mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
 
@@ -152,7 +151,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     public boolean handleBack() {
         if (mCheckoutDetailRouter.getBackstackSize() == 1) {
-            mActivity.getHomeController().goBackToHomePage();
+            mActivity.getMainController().showShopController();
             return true;
         }
 
@@ -345,11 +344,11 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Optional
     @OnClick(R.id.partial_checkout_empty_button)
     void shopNow() {
-        mActivity.setShopsAsVisibleContainer();
+        mActivity.getMainController().showShopController();
     }
 
     @Override
-    public void showItemDetail(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
+    public void showItemDetail(View sourceView, int position, String seoIdentifierId, String imageUrl,
                                String skuId, String saleId, boolean isFreeDelivery,
                                String itemName, String brandName, String price, String oldPrice,
                                String productID) {
@@ -378,11 +377,11 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
                 .with(SaleItemDetailsController.newInstance(parameters));
 
         int[] originalPos = new int[2];
-        viewHolder.itemView.getLocationOnScreen(originalPos);
+        sourceView.getLocationOnScreen(originalPos);
         int left = originalPos[0];
         int top = originalPos[1];
-        int width = viewHolder.itemView.getWidth();
-        int height = viewHolder.itemView.getHeight();
+        int width = sourceView.getWidth();
+        int height = sourceView.getHeight();
         routerTransaction = routerTransaction
                 .pushChangeHandler(new ArcZoomChangeHandler(left, top, width, height))
                 .popChangeHandler(new ArcZoomChangeHandler(left, top, width, height));

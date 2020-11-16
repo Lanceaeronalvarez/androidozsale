@@ -6,11 +6,10 @@ package au.com.dealsdirect.ui.controller.contact.selectsubject;
 
 import java.util.List;
 
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface ContactSelectSubjectMvpView extends MvpView {
 
-    void showContactSubjects(List<String> contactSubjectList);
-
-    void onContactSubjectItemSelected(String selectedSubject);
+    void showContactSubjects(List<ContactSubjectResponse> contactSubjectList);
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
@@ -83,8 +84,6 @@ public class WebViewController extends BasePullToRefreshController implements We
 
     @Override
     protected void setUp(View view) {
-        mActivity.setDraggableViewPager(false);
-
         mTitleText.setText(title);
         mFilterButton.setVisibility(View.INVISIBLE);
         mPresenter.loadFromUrl(url);

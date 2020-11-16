@@ -1,20 +1,17 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacthistory;
 
-import android.util.Log;
-
-import com.androidnetworking.error.ANError;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
-import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
-import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
 import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
+import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -34,14 +31,19 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
     public void loadContactHistory(GetContactHistoryRequest contactHistoryRequest) {
         getMvpView().showLoading();
 
-        doApiCallForResponse(getDataManager().callGetContactHistory(contactHistoryRequest), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callGetContactHistory(contactHistoryRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
-                GetContactHistoryResponse.ResponseValue responseValue = (GetContactHistoryResponse.ResponseValue) response;
-                if (responseValue.getList() != null && !responseValue.getList().isEmpty()) {
-                    getMvpView().showContactHistory(responseValue.getList());
+                GetContactHistoryResponse responseValue = null;
+                if (response instanceof GetContactHistoryResponse) {
+                    responseValue = (GetContactHistoryResponse) response;
+                } else if (response instanceof String && !((String) response).isEmpty()) {
+                    responseValue = JsonUtils.convertStringToObject((String) response, GetContactHistoryResponse.class);
+                }
+                if (responseValue != null && responseValue.getMessages() != null && !responseValue.getMessages().isEmpty()) {
+                    getMvpView().showContactHistory(responseValue);
                 }
             }
         });
@@ -51,12 +53,12 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
     public void replyContact(ReplyContactRequest replyContactRequest) {
         getMvpView().showLoading();
 
-        doApiCallForResponse(getDataManager().callReplyContact(replyContactRequest), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callReplyContact(replyContactRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                ReplyContactResponse replyReponse = (ReplyContactResponse) response;
-                getMvpView().repliedContactSwitchView(replyReponse.getReplyContact());
+                String replyReponse = (String) response;
+                getMvpView().repliedContactSwitchView(replyReponse);
             }
         });
 
@@ -73,16 +75,21 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
     }
 
     @Override
-    public void setAttachment(SetAttachmentRequest setAttachmentRequest, boolean hasUploadedImage) {
-        doApiCallForResponse(getDataManager().setAttachment(setAttachmentRequest), new AppApiCallback() {
+    public void setAttachment(SetAttachmentForContactRequest setAttachmentRequest, boolean hasUploadedImage) {
+        doApiCallForResponse(getDataManager().setAttachmentForContact(setAttachmentRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
-                SetAttachmentResponse setAttachmentResponse = (SetAttachmentResponse) response;
-
                 if (!hasUploadedImage) {
-                    getMvpView().getAttachmentId(setAttachmentResponse);
+                    String attachmentId = "";
+                    if (response instanceof SetAttachmentResponse) {
+                        SetAttachmentResponse setAttachmentResponse = (SetAttachmentResponse) response;
+                        attachmentId = setAttachmentResponse.getD().getValue();
+                    } else if (response instanceof String) {
+                        attachmentId = ((String) response).replace("\"", "");
+                    }
+                    getMvpView().setAttachmentId(attachmentId);
                 } else {
                     getMvpView().refreshViewContactMessage();
                 }
@@ -94,5 +101,45 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
                 super.onFailure(t);
             }
         });
+    }
+
+    @Override
+    public void getTicketSatisfaction(String number) {
+        doApiCallForResponse(getDataManager().callGetTicketSatisfaction(number), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+
+                TicketSatisfactionResponse ticketSatisfactionResponse = (TicketSatisfactionResponse) response;
+
+                getMvpView().showTicketSatisfaction(ticketSatisfactionResponse.isHasRating());
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+            }
+        });
+    }
+
+    @Override
+    public void closeTicketSatisfaction(int global, String contactNumber) {
+
+        doApiCallForResponse(getDataManager().callCloseTicketSatisfaction(global, contactNumber), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+
+                getMvpView().showTicketSatisfaction(true);
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+            }
+        });
+
     }
 }

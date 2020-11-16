@@ -1,5 +1,7 @@
 package au.com.dealsdirect.data.network.model.address;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.mysale.genie.utility.LegacyBaseResponseValue;
 
 import java.util.ArrayList;
@@ -26,32 +28,20 @@ public class GetAddresses {
 
     public static final class ResponseValue {
 
-        public Response getD() {
-            return d;
-        }
+        @Expose
+        @SerializedName("addresses")
+        private List<AddressesItem> AddressesList;
+        @Expose
+        @SerializedName("address_decorations")
+        private List<DecorationInfoList> DecorationInfoList;
 
-        private Response d;
-
-        public static class Response extends LegacyBaseResponseValue {
-            private Value Value;
-
-            public ResponseValue.Value getValue() {
-                return Value;
-            }
-        }
-
-        public static class Value {
-            public List<AddressesItem> getAddressesList() {
+        public List<AddressesItem> getAddressesList() {
                 return AddressesList;
             }
-
-            public List<DecorationInfoList> getDecorationInfoList() {
+        public List<DecorationInfoList> getDecorationInfoList() {
                 return DecorationInfoList;
             }
 
-            private List<AddressesItem> AddressesList;
-            private List<DecorationInfoList> DecorationInfoList;
-        }
     }
 
 }

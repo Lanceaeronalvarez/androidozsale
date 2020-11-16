@@ -8,10 +8,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.LinkedTreeMap;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 public class JsonUtils {
 
@@ -30,6 +32,24 @@ public class JsonUtils {
         } catch (JSONException e) {
             e.printStackTrace();
             return new JSONObject();
+        }
+    }
+
+    public static JSONArray convertToJsonArray(List array) {
+        return convertToJsonArray(array, false);
+    }
+
+    public static JSONArray convertToJsonArray(List array, boolean willSerializeNulls) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        if (willSerializeNulls) {
+            gsonBuilder = gsonBuilder.serializeNulls();
+        }
+        Gson gson = gsonBuilder.create();
+        try {
+            return new JSONArray(gson.toJson(array));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return new JSONArray();
         }
     }
 

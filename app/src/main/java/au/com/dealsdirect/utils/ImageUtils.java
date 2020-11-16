@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
@@ -67,161 +68,185 @@ public class ImageUtils {
     static Transformation<Bitmap> centerInside = new CenterInside();
 
     public static void loadImage(String url, ImageView imageView) {
-        RequestOptions options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .format(DecodeFormat.PREFER_ARGB_8888);
+        try {
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .format(DecodeFormat.PREFER_ARGB_8888);
 
-        Glide.with(imageView)
-                .asBitmap()
-                .apply(options)
-                .load(url)
-                .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
-                .into(imageView);
+            Glide.with(imageView)
+                    .asBitmap()
+                    .apply(options)
+                    .load(url)
+                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                    .into(imageView);
+        } catch (Exception e) {
+            Log.e("ImageUtils", e.getMessage(), e);
+        }
     }
 
     public static void loadImage(String url,
                                  ImageView imageView,
                                  boolean isWebP,
                                  RequestListener<Bitmap> requestListener) {
-        RequestOptions options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .format(DecodeFormat.PREFER_ARGB_8888);
+        try {
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .format(DecodeFormat.PREFER_ARGB_8888);
 
-        if (isWebP) {
-            options = options.signature(new ObjectKey(url + "notWebP"));
+            if (isWebP) {
+                options = options.signature(new ObjectKey(url + "notWebP"));
+            }
+
+            RequestBuilder<Bitmap> requestBuilder = Glide.with(imageView)
+                    .asBitmap()
+                    .apply(options)
+                    .load(url);
+
+            if (requestListener != null) {
+                requestBuilder = requestBuilder.listener(requestListener);
+            }
+
+            if (isWebP) {
+                requestBuilder = requestBuilder.transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside));
+            }
+
+            requestBuilder.into(imageView);
+        } catch (Exception e) {
+            Log.e("ImageUtils", e.getMessage(), e);
         }
-
-        RequestBuilder<Bitmap> requestBuilder = Glide.with(imageView)
-                .asBitmap()
-                .apply(options)
-                .load(url);
-
-        if (requestListener != null) {
-            requestBuilder = requestBuilder.listener(requestListener);
-        }
-
-        if (isWebP) {
-            requestBuilder = requestBuilder.transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside));
-        }
-
-        requestBuilder.into(imageView);
     }
 
     public static void loadImageWithBackupDrawable(String url, ImageView imageView, Drawable backupDrawable) {
-        RequestOptions options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .format(DecodeFormat.PREFER_ARGB_8888);
+        try {
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .format(DecodeFormat.PREFER_ARGB_8888);
 
-        RequestOptions optionsNotWebP = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .signature(new ObjectKey(url + "_notWebP"))
-                .format(DecodeFormat.PREFER_ARGB_8888);
+            RequestOptions optionsNotWebP = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .signature(new ObjectKey(url + "_notWebP"))
+                    .format(DecodeFormat.PREFER_ARGB_8888);
 
-        RequestBuilder<Bitmap> requestBuilderNoWebP = Glide.with(imageView)
-                .asBitmap()
-                .apply(optionsNotWebP)
-                .error(backupDrawable)
-                .load(url);
+            RequestBuilder<Bitmap> requestBuilderNoWebP = Glide.with(imageView)
+                    .asBitmap()
+                    .apply(optionsNotWebP)
+                    .error(backupDrawable)
+                    .load(url);
 
-        Glide.with(imageView)
-                .asBitmap()
-                .apply(options)
-                .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
-                .error(requestBuilderNoWebP)
-                .load(url)
-                .into(imageView);
+            Glide.with(imageView)
+                    .asBitmap()
+                    .apply(options)
+                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                    .error(requestBuilderNoWebP)
+                    .load(url)
+                    .into(imageView);
+        } catch (Exception e) {
+            Log.e("ImageUtils", e.getMessage(), e);
+        }
     }
 
     public static void loadImageDontAnimate(String url, ImageView imageView) {
-        RequestOptions options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .skipMemoryCache(true)
-                .format(DecodeFormat.PREFER_ARGB_8888)
-                .dontAnimate();
+        try {
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .skipMemoryCache(true)
+                    .format(DecodeFormat.PREFER_ARGB_8888)
+                    .dontAnimate();
 
-        Glide.with(imageView)
-                .asBitmap()
-                .load(url)
-                .apply(options)
-                .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
-                .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        imageView.setImageBitmap(resource);
-                    }
-                });
+            Glide.with(imageView)
+                    .asBitmap()
+                    .load(url)
+                    .apply(options)
+                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                    .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            imageView.setImageBitmap(resource);
+                        }
+                    });
+        } catch (Exception e) {
+            Log.e("ImageUtils", e.getMessage(), e);
+        }
     }
 
     public static void loadImageWithPlaceholder(String url, ImageView imageView, Drawable placeholder,
                                                 ImageLoadedCallback callback) {
-        RequestOptions options = new RequestOptions()
-                .placeholder(placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .format(DecodeFormat.PREFER_ARGB_8888);
+        try {
+            RequestOptions options = new RequestOptions()
+                    .placeholder(placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .format(DecodeFormat.PREFER_ARGB_8888);
 
-        if (callback != null) {
-            Glide.with(imageView)
-                    .asBitmap()
-                    .apply(options)
-                    .load(url)
-                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
-                    .listener(new RequestListener<Bitmap>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                            return false;
-                        }
+            if (callback != null) {
+                Glide.with(imageView)
+                        .asBitmap()
+                        .apply(options)
+                        .load(url)
+                        .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                        .listener(new RequestListener<Bitmap>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                            callback.onImageResourceReady(resource);
-                            return false;
-                        }
-                    })
-                    .into(imageView);
-        } else {
-            Glide.with(imageView)
-                    .asBitmap()
-                    .apply(options)
-                    .load(url)
-                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
-                    .into(imageView);
+                            @Override
+                            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                                callback.onImageResourceReady(resource);
+                                return false;
+                            }
+                        })
+                        .into(imageView);
+            } else {
+                Glide.with(imageView)
+                        .asBitmap()
+                        .apply(options)
+                        .load(url)
+                        .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                        .into(imageView);
+            }
+        } catch (Exception e) {
+            Log.e("ImageUtils", e.getMessage(), e);
         }
     }
 
     public static void loadImageImmediate(String url, ImageView imageView, ImageLoadedCallback callback) {
-        RequestOptions options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .skipMemoryCache(true)
-                .format(DecodeFormat.PREFER_ARGB_8888)
-                .priority(Priority.IMMEDIATE);
+        try {
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .skipMemoryCache(true)
+                    .format(DecodeFormat.PREFER_ARGB_8888)
+                    .priority(Priority.IMMEDIATE);
 
-        if (callback != null) {
-            Glide.with(imageView)
-                    .asBitmap()
-                    .apply(options)
-                    .load(url)
-                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
-                    .listener(new RequestListener<Bitmap>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                            callback.onLoadFailed(e);
-                            return false;
-                        }
+            if (callback != null) {
+                Glide.with(imageView)
+                        .asBitmap()
+                        .apply(options)
+                        .load(url)
+                        .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                        .listener(new RequestListener<Bitmap>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                callback.onLoadFailed(e);
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                            callback.onImageResourceReady(resource);
-                            return false;
-                        }
-                    })
-                    .into(imageView);
-        } else if (imageView != null) {
-            Glide.with(imageView)
-                    .asBitmap()
-                    .apply(options)
-                    .load(url)
-                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
-                    .into(imageView);
+                            @Override
+                            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                                callback.onImageResourceReady(resource);
+                                return false;
+                            }
+                        })
+                        .into(imageView);
+            } else if (imageView != null) {
+                Glide.with(imageView)
+                        .asBitmap()
+                        .apply(options)
+                        .load(url)
+                        .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                        .into(imageView);
+            }
+        } catch (Exception e) {
+            Log.e("ImageUtils", e.getMessage(), e);
         }
     }
 
@@ -264,7 +289,11 @@ public class ImageUtils {
     }
 
     public static void clearImage(ImageView imageView) {
-        Glide.with(imageView).clear(imageView);
+        try {
+            Glide.with(imageView).clear(imageView);
+        } catch (Exception e) {
+            Log.e("ImageUtils", e.getMessage(), e);
+        }
     }
 
     public static String appendBannerSizeUrl(String url, int width, int height) {

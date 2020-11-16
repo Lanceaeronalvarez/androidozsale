@@ -20,42 +20,35 @@
             fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_small"
             android:text="@string/order_sharp_colon"
             android:textColor="@color/text_extra_dark"
             android:textSize="@dimen/text_size_caption1"
-            android:paddingTop="@dimen/margin_small"
             tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/order_details_address_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/sale_item_text_value"
+            android:paddingTop="@dimen/margin_tiny"
+            android:paddingBottom="@dimen/margin_small"
             android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_caption2"
-            android:layout_below="@+id/sale_item_text_value"
-            android:paddingBottom="@dimen/margin_small"
-            android:paddingTop="@dimen/margin_tiny"
             tools:ignore="HardcodedText"
             tools:text="204400890" />
 
-
-    <RelativeLayout
-        android:layout_width="@dimen/margin_medium"
-        android:layout_height="@dimen/margin_extra_huge"
-        android:layout_alignParentRight="true"
-        android:id="@+id/img_button_layout">
-
-        <ImageButton
+        <ImageView
             android:id="@+id/orders_options"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_orders_ellipsis"
-            android:padding="@dimen/margin_tiny" />
-
-    </RelativeLayout>
+            android:paddingLeft="@dimen/margin_huge"
+            android:paddingTop="@dimen/margin_large"
+            android:paddingBottom="@dimen/margin_large"
+            android:src="@drawable/ic_orders_ellipsis"
+            tools:ignore="ContentDescription" />
 
     </RelativeLayout>
 

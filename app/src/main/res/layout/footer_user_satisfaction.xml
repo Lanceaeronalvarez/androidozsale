@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/contact_history_ticket_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ticket has been closed"
+        android:layout_below="@+id/message_container_frame"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/contact_history_user_satisfaction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:background="@drawable/bg_contact_history_rating_footer"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_medium"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/how_was_experience"
+            android:layout_gravity="center_horizontal"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/contact_history_smile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_happy"
+                android:layout_marginEnd="@dimen/margin_extra_large"/>
+
+            <ImageButton
+                android:id="@+id/contact_history_neutral"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_neutral"
+                android:layout_marginEnd="@dimen/margin_extra_large"/>
+
+            <ImageButton
+                android:id="@+id/contact_history_sad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_sad"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contact_history_thank_you_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:background="@color/user_feedback_bg"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_medium"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/thank_you_for_feedback"
+            android:layout_gravity="center_horizontal"
+            android:drawableLeft="@drawable/ic_feedback"
+            android:drawablePadding="@dimen/margin_tiny"
+            android:gravity="center"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+
+</LinearLayout>

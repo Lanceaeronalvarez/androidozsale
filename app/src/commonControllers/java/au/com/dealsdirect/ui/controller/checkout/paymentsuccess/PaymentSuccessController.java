@@ -205,8 +205,8 @@ public class PaymentSuccessController extends BaseController implements PaymentS
     public boolean handleBack() {
         PaymentInfo.resetPaymentInfo();
 
-        mActivity.setShopsAsVisibleContainer();
-        mActivity.getHomeController().resetCheckoutRouter();
+        mActivity.getMainController().showShopController();
+        mActivity.getMainController().resetCheckoutRouter();
 
         return true;
     }

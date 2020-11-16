@@ -119,6 +119,23 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                 });
     }
 
+    @Override
+    public void loadCategoryBanners(GetBannerRequest request) {
+        doApiCallForResponse(
+                getDataManager().callGetBanners2(request, false), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        getMvpView().showCategoryBanners((GetBannerResponse) response);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                        getMvpView().showCategoryBanners(null);
+                    }
+                });
+    }
 
     private void cancelPreviousLoadShopsBannerRequest() {
         if (mPreviousLoadShopsBannerRequest != null) {
@@ -190,6 +207,14 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
             return;
         }
         getMvpView().onBannerClicked(saleId, bannerTitle, bannerId, position, imageUrl, endDate, isAvailable);
+    }
+
+    @Override
+    public void selectCategoryBanner(String categoryId) {
+        if (!isViewAttached() || getMvpView().isChangeInProgress()) {
+            return;
+        }
+        getMvpView().onBannerClicked(categoryId);
     }
 
     @Override

@@ -94,6 +94,8 @@
     <dimen name="horizontal_banner_spacing">1dp</dimen>
     <dimen name="horizontal_banner_bottom_padding">1dp</dimen>
     <dimen name="horizontal_banner_spacer_size">14dp</dimen>
+    <dimen name="horizontal_banner_spacer_size_for_tablet">50dp</dimen>
+    <dimen name="horizontal_banner_circle_indicator_height">28dp</dimen>
 
     <!-- Checkout -->
     <dimen name="row_checkout_image_width">100dp</dimen>
@@ -154,8 +156,11 @@
     <dimen name="margin_top_ourpay_panel_image">7dp</dimen>
 
     <!-- Orders -->
-    <dimen name="order_image_width">90dp</dimen>
-    <dimen name="order_image_height">135dp</dimen>
+    <dimen name="order_image_width">65dp</dimen>
+    <dimen name="order_image_height">80dp</dimen>
+    <dimen name="invoice_image_width">100dp</dimen>
+    <dimen name="invoice_image_height">120dp</dimen>
+    <dimen name="order_tracking_node_size">24dp</dimen>
 
     <!-- Product Details -->
     <dimen name="product_details_image_layout_height">420dp</dimen>
@@ -329,5 +334,7 @@
 
     <dimen name="recently_viewed_height">225dp</dimen>
     <dimen name="recently_viewed_width">250dp</dimen>
+
+    <dimen name="horizontal_banner_title_height">18dp</dimen>
 
 </resources>

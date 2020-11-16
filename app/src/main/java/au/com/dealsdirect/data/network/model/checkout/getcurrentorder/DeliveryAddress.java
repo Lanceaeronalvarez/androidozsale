@@ -121,22 +121,22 @@ public class DeliveryAddress {
     }
 
     public boolean equalsAddressItem(AddressesItem item) {
-        return getName().equalsIgnoreCase(item.Name != null ? item.Name : "") &&
-                getAddressLines().equalsIgnoreCase(item.AddressLines != null ? item.AddressLines : "") &&
-                getSuburb().equalsIgnoreCase(item.Suburb != null ? item.Suburb : "") &&
-                getCity().equalsIgnoreCase(item.City != null ? item.City : "") &&
-                getState().equalsIgnoreCase(item.State != null ? item.State : "") &&
-                getPostcode().equalsIgnoreCase(item.Postcode != null ? item.Postcode : "") &&
-                getPhone().equalsIgnoreCase(item.Phone != null ? item.Phone : "");
+        return name.equalsIgnoreCase(item.name != null ? item.name : "") &&
+                addressLines.equalsIgnoreCase(item.address_lines != null ? item.address_lines : "") &&
+                suburb.equalsIgnoreCase(item.suburb != null ? item.suburb : "") &&
+                city.equalsIgnoreCase(item.City != null ? item.City : "") &&
+                state.equalsIgnoreCase(item.state != null ? item.state : "") &&
+                postcode.equalsIgnoreCase(item.postcode != null ? item.postcode : "") &&
+                phone.equalsIgnoreCase(item.phone != null ? item.phone : "");
     }
 
-    public void resetDataFromAddressItem(AddressesItem addressesItem){
-        setName(addressesItem.Name != null ? addressesItem.Name : "");
-        setAddressLines(addressesItem.AddressLines != null ? addressesItem.AddressLines : "");
-        setSuburb(addressesItem.Suburb != null ? addressesItem.Suburb : "");
-        setCity(addressesItem.City != null ? addressesItem.City : "");
-        setState(addressesItem.State != null ? addressesItem.State : "");
-        setPostcode(addressesItem.Postcode != null ? addressesItem.Postcode : "");
-        setPhone(addressesItem.Phone != null ? addressesItem.Phone : "");
+    public void resetDataFromAddressItem(AddressesItem addressesItem) {
+        this.name = addressesItem.name != null ? addressesItem.name : "";
+        this.addressLines = addressesItem.address_lines != null ? addressesItem.address_lines : "";
+        this.suburb = addressesItem.suburb != null ? addressesItem.suburb : "";
+        this.city = addressesItem.City != null ? addressesItem.City : "";
+        this.state = addressesItem.state != null ? addressesItem.state : "";
+        this.postcode = addressesItem.postcode != null ? addressesItem.postcode : "";
+        this.phone = addressesItem.phone != null ? addressesItem.phone : "";
     }
 }

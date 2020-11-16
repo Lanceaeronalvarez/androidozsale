@@ -15,22 +15,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
-import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
+import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedSatisfactionValue;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderSatisfactionDialog;
+import au.com.dealsdirect.ui.controller.orders.menu.OrdersMenuHelper;
+import au.com.dealsdirect.ui.controller.orders.tracking.OrderTrackingClickListener;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
-import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -39,10 +42,10 @@ import butterknife.OnClick;
  * Created by smartwave on 22/06/2017.
  */
 
-public class OrderDetailsController extends BaseController implements OrderDetailsMvpView, OrderDetailsClickListener {
+public class OrderDetailsController extends BaseController implements OrderDetailsMvpView, OrderDetailsClickListener, OrderTrackingClickListener {
 
     private static final String PAYMENT_ITEM = "PAYMENT_ITEM";
-    private static final String PAYMENT_REF_NO = "PAYMENT_REF_NO";
+    private static final String ORDER_NUMBER = "ORDER_NUMBER";
     private static final String SELECTED_ITEM = "SELECTED_ITEM";
     private static final String STATUS = "STATUS";
     private static final String LINK = "LINK";
@@ -50,53 +53,6 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     private static final String ESTIMATED_DELIVERY = "ESTIMATED_DELIVERY";
     private static final String SHIP_TO = "SHIP_TO";
     private static final String ORDER_DETAILS = "ORDER_DETAILS";
-
-    public abstract static class Parameters {
-        private Parameters() {
-        }
-
-        public static final class FromOrdersList extends Parameters {
-            String mPaymentRefNo;
-            HashMap<String, String> mStatus;
-            String mLink;
-            HashMap<String, HashMap<String, String>> mDeliveryRoutes;
-            GetPaymentsList.ResponseValue.PaymentItem mOrders;
-
-            public FromOrdersList(String paymentRefNo,
-                                  HashMap<String, String> status,
-                                  String link,
-                                  HashMap<String, HashMap<String, String>> deliveryRoutes,
-                                  GetPaymentsList.ResponseValue.PaymentItem orderDetails) {
-
-                mPaymentRefNo = paymentRefNo;
-                mStatus = status;
-                mLink = link;
-                mDeliveryRoutes = deliveryRoutes;
-                mOrders = orderDetails;
-
-            }
-
-            public String getPaymentRefNo() {
-                return mPaymentRefNo;
-            }
-
-            public HashMap<String, String> getStatus() {
-                return mStatus;
-            }
-
-            public String getLink() {
-                return mLink;
-            }
-
-            public HashMap<String, HashMap<String, String>> getDeliveryRoutes() {
-                return mDeliveryRoutes;
-            }
-
-            public GetPaymentsList.ResponseValue.PaymentItem getOrderDetails() {
-                return mOrders;
-            }
-        }
-    }
 
     @Inject
     OrderDetailsMvpPresenter<OrderDetailsMvpView> mPresenter;
@@ -122,28 +78,29 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     @BindView(R.id.total_text_view)
     TextView mTotalTextView;
 
-    @BindView(R.id.delivery_address_text_view)
-    TextView mDeilveryAddressTextView;
+    private int mOrderNumber = 0;
+    private GetOrdersResponse.Order mOrderDetails = null;
 
-    @BindView(R.id.approved_date_text_view)
-    TextView mApprovedDateTextView;
+    private OrderDetailsRecyclerViewAdapter mAdapter = null;
 
-    String mPaymentReferenceNo;
-    HashMap<String, String> mStatus;
-    String mLink;
-    HashMap<String, HashMap<String, String>> mDeliveryRoutes;
-    GetOrderPaymentDetails.ResponseValue.Value mOrderDetails;
-    GetPaymentsList.ResponseValue.PaymentItem mOrders;
+    HashMap<Integer, Boolean> hasSetSatisfaction = new HashMap<>();
 
-    public static OrderDetailsController newInstance(Parameters parameters) {
+    public static OrderDetailsController newInstance(int orderNumber) {
         OrderDetailsController controller = new OrderDetailsController(
                 new BundleBuilder(new Bundle()).build());
 
-        controller.mPaymentReferenceNo = ((Parameters.FromOrdersList) parameters).getPaymentRefNo();
-        controller.mStatus = ((Parameters.FromOrdersList) parameters).getStatus();
-        controller.mLink = ((Parameters.FromOrdersList) parameters).getLink();
-        controller.mDeliveryRoutes = ((Parameters.FromOrdersList) parameters).getDeliveryRoutes();
-        controller.mOrders = ((Parameters.FromOrdersList) parameters).getOrderDetails();
+        controller.mOrderNumber = orderNumber;
+        controller.mOrderDetails = null;
+
+        return controller;
+    }
+
+    public static OrderDetailsController newInstance(GetOrdersResponse.Order preloadedOrderDetails) {
+        OrderDetailsController controller = new OrderDetailsController(
+                new BundleBuilder(new Bundle()).build());
+
+        controller.mOrderNumber = preloadedOrderDetails.getNumber();
+        controller.mOrderDetails = preloadedOrderDetails;
 
         return controller;
     }
@@ -171,20 +128,19 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(PAYMENT_REF_NO, mPaymentReferenceNo);
+        outState.putInt(ORDER_NUMBER, mOrderNumber);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mPaymentReferenceNo = savedInstanceState.getString(PAYMENT_REF_NO, "");
+        mOrderNumber = savedInstanceState.getInt(ORDER_NUMBER, 0);
     }
 
     @Override
     protected void setUp(View view) {
-
-        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity, null, this, mStatus, mLink,
-                mDeliveryRoutes, mOrders));
+        mAdapter = new OrderDetailsRecyclerViewAdapter(mOrderDetails, this, this);
+        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -193,45 +149,23 @@ public class OrderDetailsController extends BaseController implements OrderDetai
                 getItemDecorationRecyclerView(parent, view, outRect);
             }
         });
+
+        mOrderDetailsToolbarTitle.setText(String.format(getString(R.string.order_sharp), Integer.toString(mOrderNumber)));
+        mOrderDetailsRightOption.setImageDrawable(null);
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
-    }
-
-    @Override
-    public void onViewWillAppear(Controller previousController) {
-
-        if (mOrderDetailsToolbarTitle != null) {
-            mOrderDetailsToolbarTitle.setText(getString(R.string.account_orders));
-            mOrderDetailsRightOption.setImageDrawable(null);
-        }
-
     }
 
     @Override
     public void onViewDidAppear(Controller previousController) {
-
-        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity, null, this, mStatus, mLink,
-                mDeliveryRoutes, mOrders));
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-
-                getItemDecorationRecyclerView(parent, view, outRect);
-            }
-        });
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
-
-        GetOrderPaymentDetails.RequestValues requestValues = new GetOrderPaymentDetails.RequestValues(mPaymentReferenceNo);
-        mPresenter.loadOrderDetails(requestValues);
+        mPresenter.loadOrderDetails(mOrderNumber);
     }
 
     @Override
     public void onRefreshStart() {
         super.onRefreshStart();
-        GetOrderPaymentDetails.RequestValues requestValues = new GetOrderPaymentDetails.RequestValues(mPaymentReferenceNo);
-        mPresenter.loadOrderDetails(requestValues);
+        mPresenter.loadOrderDetails(mOrderNumber);
     }
 
 
@@ -255,36 +189,25 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     }
 
     @Override
-    public void showOrderDetails(GetOrderPaymentDetails.ResponseValue response) {
-        GetOrderPaymentDetails.ResponseValue.Value orderDetails = response.getD().getValue();
+    public void showOrderDetails(GetOrdersResponse.Order orderDetails) {
+        mOrderDetails = orderDetails;
 
-        mOrderDetailsToolbarTitle.setText(String.format(getString(R.string.order_sharp), String.valueOf(orderDetails.getPaymentReferenceNo())));
+        for (GetOrdersResponse.Order.Invoice invoice : mOrderDetails.getInvoices()) {
+            OrderReceivedRequest request = new OrderReceivedRequest();
+            request.setInvoiceId(invoice.getId());
+            request.setInvoiceNumber(invoice.getNumber());
+            mPresenter.callGetOrderReceivedSatisfaction(request);
+        }
 
         //price breakdown
-        mDeliveryPriceTextValue.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getDeliveryAmount()));
-        mVoucherPaymentTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getDiscountAmount()));
-        mCreditCardPaymentTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getCreditCardAmount()));
-        mTotalTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getTotal().getTotalAmount()));
+        mDeliveryPriceTextValue.setText(PriceUtils.getPriceStringValue(orderDetails.getPayment().getDeliveryAmount()));
+        mVoucherPaymentTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getPayment().getDiscountAmount()));
+        mCreditCardPaymentTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getPayment().getPaymentAmount()));
+        mTotalTextView.setText(PriceUtils.getPriceStringValue(orderDetails.getPayment().getTotalAmount()));
 
-        //delivery details
-        //take the first address of the first item since all of the items have the same address
-        String date = DateUtils.getDateFromStringInFormat(orderDetails.getApprovedDate(), AppConstants.MP_DATE_TIME_FORMAT);
-        mDeilveryAddressTextView.setText(orderDetails.getOrders().get(0).getDeliveryAddress());
-        mApprovedDateTextView.setText(date);
-
-        //set adapter
-        mRecyclerView.setAdapter(new OrderDetailsRecyclerViewAdapter(mActivity, orderDetails, this, mStatus, mLink,
-                mDeliveryRoutes, null));
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-
-                getItemDecorationRecyclerView(parent, view, outRect);
-            }
-        });
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
+        mAdapter.replaceData(mOrderDetails);
+        mAdapter.notifyDataSetChanged();
+        ;
     }
 
     @Override
@@ -304,21 +227,149 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     }
 
     @Override
-    public void showOrderDialog(View view, ArrayList<String> arrayList, HashMap<String, String> hashMap) {
-
+    public void showOrderDialog(View anchor, int orderNumber, String invoiceId, int invoiceNumber, List<String> invoiceActions) {
         if (mPresenter.isTablet()) {
-            mActivity.showPopupMenu(view, arrayList, hashMap);
+            OrdersMenuHelper.showPopupMenu(
+                    this,
+                    anchor,
+                    orderNumber,
+                    invoiceId,
+                    invoiceNumber,
+                    null,
+                    invoiceActions,
+                    addressesItem -> {
+                        getRouter().popCurrentController();
+                        ChangeDeliveryAddressRequest request = new ChangeDeliveryAddressRequest();
+                        request.setAddressId(addressesItem.getAddressId());
+                        request.setInvoiceId(invoiceId);
+                        request.setInvoiceNumber(invoiceNumber);
+                        mPresenter.changeDeliveryAddress(request);
+                    },
+                    request -> mPresenter.cancelInvoiceItem(request));
         } else {
-            mActivity.showOrderBottomDialog(arrayList, hashMap);
+            OrdersMenuHelper.showOrderBottomDialog(
+                    this,
+                    orderNumber,
+                    invoiceId,
+                    invoiceNumber,
+                    null,
+                    invoiceActions,
+                    addressesItem -> {
+                        getRouter().popCurrentController();
+                        ChangeDeliveryAddressRequest request = new ChangeDeliveryAddressRequest();
+                        request.setAddressId(addressesItem.getAddressId());
+                        request.setInvoiceId(invoiceId);
+                        request.setInvoiceNumber(invoiceNumber);
+                        mPresenter.changeDeliveryAddress(request);
+                    },
+                    request -> mPresenter.cancelInvoiceItem(request));
         }
     }
 
     @Override
-    public void callOrderReceived(String orderID) {
+    public void showOrderDialog(View anchor, int orderNumber, String invoiceId, int invoiceNumber, GetOrdersResponse.Order.Invoice.Product product) {
+        if (mPresenter.isTablet()) {
+            OrdersMenuHelper.showPopupMenu(
+                    this,
+                    anchor,
+                    orderNumber,
+                    invoiceId,
+                    invoiceNumber,
+                    product,
+                    product.getActions(),
+                    addressesItem -> {
+                        getRouter().popCurrentController();
+                        ChangeDeliveryAddressRequest request = new ChangeDeliveryAddressRequest();
+                        request.setAddressId(addressesItem.getAddressId());
+                        request.setInvoiceId(invoiceId);
+                        request.setInvoiceNumber(invoiceNumber);
+                        mPresenter.changeDeliveryAddress(request);
+                    },
+                    request -> mPresenter.cancelInvoiceItem(request));
+        } else {
+            OrdersMenuHelper.showOrderBottomDialog(
+                    this,
+                    orderNumber,
+                    invoiceId,
+                    invoiceNumber,
+                    product,
+                    product.getActions(),
+                    addressesItem -> {
+                        getRouter().popCurrentController();
+                        ChangeDeliveryAddressRequest request = new ChangeDeliveryAddressRequest();
+                        request.setAddressId(addressesItem.getAddressId());
+                        request.setInvoiceId(invoiceId);
+                        request.setInvoiceNumber(invoiceNumber);
+                        mPresenter.changeDeliveryAddress(request);
+                    },
+                    request -> mPresenter.cancelInvoiceItem(request));
+        }
+    }
 
+    @Override
+    public void orderSatisfactionReceived(int invoiceNumber, boolean hasSetSatisfaction) {
+        this.hasSetSatisfaction.put(invoiceNumber, hasSetSatisfaction);
+    }
+
+    @Override
+    public void onOrderItemTrackingButtonClick(String url, String errorMessage) {
+        ActivityLaunchUtil.launchActivity(mActivity, url, errorMessage);
+    }
+
+    @Override
+    public void onNodeTapped(GetOrdersResponse.Order.Invoice.Delivery.Step upperStep, GetOrdersResponse.Order.Invoice.Delivery.Step lowerStep) {
+        mActivity.showOrderTrackingStepBottomDialog(upperStep, lowerStep);
+    }
+
+    @Override
+    public void onOrderReceivedToggle(String invoiceId, int invoiceNumber, boolean isReceived) {
         OrderReceivedRequest orderReceivedRequest = new OrderReceivedRequest();
-        orderReceivedRequest.setOrderId(orderID);
-        orderReceivedRequest.setSatisfaction("");
-        mPresenter.callOrderReceived(orderReceivedRequest);
+        orderReceivedRequest.setInvoiceId(invoiceId);
+        orderReceivedRequest.setInvoiceNumber(invoiceNumber);
+        Boolean hasSetSatisfaction = this.hasSetSatisfaction.get(invoiceNumber);
+        if (hasSetSatisfaction == null) {
+            return;
+        }
+        if (isReceived) {
+            if (hasSetSatisfaction) {
+                orderReceivedRequest.setSatisfaction(null);
+                mPresenter.callSetOrderReceived(orderReceivedRequest);
+            } else {
+                mActivity.showOrderSatisfactionDialog(response -> {
+                    OrderDetailsController.this.hasSetSatisfaction.put(invoiceNumber, true);
+                    switch (response) {
+                        case BottomSheetOrderSatisfactionDialog.POSITIVE_RESPONSE:
+                            orderReceivedRequest.setSatisfaction(OrderReceivedSatisfactionValue.GOOD.getValue());
+                            break;
+                        case BottomSheetOrderSatisfactionDialog.NEGATIVE_RESPONSE:
+                            orderReceivedRequest.setSatisfaction(OrderReceivedSatisfactionValue.BAD.getValue());
+                            break;
+                        default:
+                            orderReceivedRequest.setSatisfaction(OrderReceivedSatisfactionValue.NEUTRAL.getValue());
+                            break;
+                    }
+                    mPresenter.callSetOrderReceived(orderReceivedRequest);
+                });
+            }
+        } else {
+            mPresenter.callSetOrderNotReceived(orderReceivedRequest);
+        }
+    }
+
+    @Override
+    public void onReceivedSet(int invoiceNumber) {
+        mPresenter.loadOrderDetails(mOrderNumber);
+    }
+
+    @Override
+    public void addressChanged() {
+        CustomAlertDialog.showCustomAlertDialog(
+                getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                mActivity.getString(R.string.address_change_success));
+        mPresenter.loadOrderDetails(mOrderNumber);
+    }
+
+    public GetOrdersResponse.Order getOrderDetails() {
+        return mOrderDetails;
     }
 }

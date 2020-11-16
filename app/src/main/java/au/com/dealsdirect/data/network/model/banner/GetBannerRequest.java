@@ -39,6 +39,10 @@ public class GetBannerRequest implements CachableRequest {
     @SerializedName("includeCampaignBanners")
     private Boolean includeCampaignBanners;
 
+    @Expose
+    @SerializedName("bannergroups")
+    private String bannergroups;
+
     public void setOffset(String offset) {
         this.offset = offset;
     }
@@ -73,6 +77,10 @@ public class GetBannerRequest implements CachableRequest {
 
     public void setIncludeCampaignBanners(Boolean includeCampaignBanners) {
         this.includeCampaignBanners = includeCampaignBanners;
+    }
+
+    public void setBannergroups(String bannergroups) {
+        this.bannergroups = bannergroups;
     }
 
     private String fieldToString(Object field) {

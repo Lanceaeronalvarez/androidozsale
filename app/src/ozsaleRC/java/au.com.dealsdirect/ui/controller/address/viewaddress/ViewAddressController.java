@@ -31,6 +31,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
+import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,10 +46,6 @@ public class ViewAddressController extends BaseController implements ViewAddress
     private static final String CALLED_FROM_CART = "CalledFromCart";
 
     private static final String DELIVERY_ADDRESS = "ViewAddressController.DELIVERY_ADDRESS";
-
-    private static final String CALLED_FROM_ORDER = "ViewAddressController.CALLED_FROM_ORDER";
-
-    private static final String ORDER_ID = "ViewAddressController.ORDER_ID";
 
     @BindView(R.id.no_addresses_layout)
     RelativeLayout mAddressPlaceHolder;
@@ -71,13 +68,10 @@ public class ViewAddressController extends BaseController implements ViewAddress
     private DeliveryAddress mDeliveryAddress;
     boolean mCalledFromOrder = false;
     private String mOrderID = "";
+    private OnAddressSelected mOnAddressSelected = null;
 
     @Inject
     ViewAddressMvpPresenter<ViewAddressMvpView> mPresenter;
-
-    public ViewAddressController() {
-
-    }
 
     public ViewAddressController(Bundle args) {
         super(args);
@@ -152,12 +146,13 @@ public class ViewAddressController extends BaseController implements ViewAddress
         mPresenter.loadAddresses();
 
 
-        mToolbarLeftView.setVisibility(mPresenter.isTablet() && !mCalledFromCart ? View.INVISIBLE : View.VISIBLE);
+//        mToolbarLeftView.setVisibility(mPresenter.isTablet() && !mCalledFromCart ? View.INVISIBLE : View.VISIBLE);
+        mToolbarLeftView.setVisibility(getRouter().getBackstackSize() > 1 ? View.VISIBLE : View.INVISIBLE);
         mViewAddressToolarTitle.setText(getString(R.string.my_addresses_toolbar_title));
         mAddressList = new ArrayList<>();
         RecyclerViewSwipeManager swipeManager = new RecyclerViewSwipeManager();
-        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, mAddressList, mActivity, mDeliveryAddress, mPresenter,
-                                                    mOrderID, mCalledFromOrder);
+        mRecyclerViewAdapter = new ViewAddressRecyclerViewAdapter(mCalledFromCart, mAddressList, mActivity, mDeliveryAddress, mPresenter);
+        mRecyclerViewAdapter.setOnAddressSelected(mOnAddressSelected);
         RecyclerView.Adapter wrappedAdapter = swipeManager.createWrappedAdapter(mRecyclerViewAdapter);
 
         mRecyclerView.setAdapter(wrappedAdapter);
@@ -172,7 +167,7 @@ public class ViewAddressController extends BaseController implements ViewAddress
                 if (mAddressesLoaded) {
                     AddressesItem item = mAddressList.get(position);
 
-                    mPresenter.applyDeliveryAddress(item.ID);
+                    mPresenter.applyDeliveryAddress(item.id);
 
                     mRecyclerViewAdapter.updateDeliveryAddress(item);
                 }
@@ -206,21 +201,21 @@ public class ViewAddressController extends BaseController implements ViewAddress
     @Override
     public void showAddresses(GetAddresses.ResponseValue responseValue) {
         Timber.d("ViewAddressController", "addresses response");
-        if (responseValue.getD().getValue() != null) {
+        if (responseValue != null) {
 
             //If status 0, not valid Address
             if (mAddressList != null) {
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mAddressPlaceHolder.setVisibility(View.GONE);
-                for (int i = 0; i < responseValue.getD().getValue().getAddressesList().size(); i++) {
-                    AddressesItem addressesItem = responseValue.getD().getValue().getAddressesList().get(i);
-                    if (addressesItem.Status != 0 && !mAddressList.contains(addressesItem)) {
+                for (int i = 0; i < responseValue.getAddressesList().size(); i++) {
+                    AddressesItem addressesItem = responseValue.getAddressesList().get(i);
+                    if (addressesItem.name != null && !mAddressList.contains(addressesItem)) {
                         mAddressList.add(addressesItem);
                         addressesItem.setAddressNumericId(i);
                     }
                 }
 
-                mDecorationInfoList = responseValue.getD().getValue().getDecorationInfoList();
+                mDecorationInfoList = responseValue.getDecorationInfoList();
                 mRecyclerViewAdapter.replaceData(mAddressList);
                 mAddressesLoaded = true;
 
@@ -244,18 +239,13 @@ public class ViewAddressController extends BaseController implements ViewAddress
     }
 
     @Override
-    public void onUserDeliveryAddressDeleted(DeleteUserAddress.ResponseValue responseValue, AddressesItem deliveryId) {
-        if (responseValue.d.getResult()) {
-            CustomAlertDialog.showCustomAlertDialog(mActivity,
-                    CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    "Removed address");
-            mAddressList.remove(deliveryId);
+    public void onUserDeliveryAddressDeleted(AddressesItem deliveryId) {
+        CustomAlertDialog.showCustomAlertDialog(mActivity,
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                mActivity.getResources().getString(R.string.removed_address));
+        mAddressList.remove(deliveryId);
 
-            toggleLayoutVisibility();
-        } else {
-            CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.d.getMessage());
-            deleteAddressFailed();
-        }
+        toggleLayoutVisibility();
     }
 
     @Override
@@ -268,13 +258,6 @@ public class ViewAddressController extends BaseController implements ViewAddress
     @Override
     public void deleteAddressFailed() {
         mRecyclerViewAdapter.replaceData(mAddressList);
-    }
-
-    @Override
-    public void backToOrders() {
-        if (mCalledFromOrder) {
-            getRouter().handleBack();
-        }
     }
 
     @Override
@@ -301,5 +284,17 @@ public class ViewAddressController extends BaseController implements ViewAddress
     @OnClick(R.id.controller_address_button)
     public void clickAddNewAddress() {
         showAddNewAddress();
+    }
+
+    public void setOnAddressSelected(OnAddressSelected onAddressSelected) {
+        mOnAddressSelected = onAddressSelected;
+        if (mRecyclerViewAdapter != null) {
+            mRecyclerViewAdapter.setOnAddressSelected(onAddressSelected);
+            mRecyclerViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public interface OnAddressSelected {
+        void onAddressSelected(AddressesItem addressId);
     }
 }

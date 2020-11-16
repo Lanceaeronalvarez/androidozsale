@@ -3,6 +3,7 @@ package au.com.dealsdirect.data;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
@@ -28,7 +29,6 @@ import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.model.SampleRequest;
 import au.com.dealsdirect.data.network.model.SampleResponse;
 import au.com.dealsdirect.data.network.model.accountdata.AccountData;
-import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressRequest;
 import au.com.dealsdirect.data.network.model.address.ApplyAddressResponse;
 import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
@@ -62,14 +62,15 @@ import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
-import au.com.dealsdirect.data.network.model.contactorder.ContactOrders;
+import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
-import au.com.dealsdirect.data.network.model.contactreply.ReplyContactResponse;
-import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
-import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
+import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
+import au.com.dealsdirect.data.network.model.contactsubjecttemplates.ContactSubjectTemplatesResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponse;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequestOld;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponseOld;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
@@ -106,11 +107,10 @@ import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
-import au.com.dealsdirect.data.network.model.orders.CreateRefundRequest;
-import au.com.dealsdirect.data.network.model.orders.GetOrderPaymentDetails;
-import au.com.dealsdirect.data.network.model.orders.GetPaymentsList;
+import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
+import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
-import au.com.dealsdirect.data.network.model.orders.OrderReceivedResponse;
+import au.com.dealsdirect.data.network.model.orders.OrderReceivedSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.deliveryservice.GetDeliveryServiceResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.pastpayments.GetPastPaymentsResponse;
 import au.com.dealsdirect.data.network.model.ourpaydashboard.paymentplans.GetPaymentPlansResponse;
@@ -151,6 +151,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
@@ -219,6 +220,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetBannerResponse> callGetBanners(GetBannerRequest getBannerRequest, boolean getOnlyFromNetwork) {
         return mApiHelper.callGetBanners(getBannerRequest, getOnlyFromNetwork);
+    }
+
+    @Override
+    public Observable<GetBannerResponse> callGetBanners2(GetBannerRequest getBannerRequest, boolean getOnlyFromNetwork) {
+        return mApiHelper.callGetBanners2(getBannerRequest, getOnlyFromNetwork);
     }
 
     @Override
@@ -342,12 +348,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetContactsResponse> callGetContacts(String languageId) {
+    public Observable<List<GetContactsResponse>> callGetContacts(String languageId) {
         return mApiHelper.callGetContacts(languageId);
     }
 
     @Override
-    public Observable<GetContactHistoryResponse.ResponseValue> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest) {
+    public Observable<String> callGetContactHistory(GetContactHistoryRequest getContactHistoryRequest) {
         return mApiHelper.callGetContactHistory(getContactHistoryRequest);
     }
 
@@ -399,7 +405,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<AddAddress.ResponseValue> callSetUserDeliveryAddress(AddAddress.RequestValues requestValues) {
+    public Observable<String> callSetUserDeliveryAddress(JsonObject requestValues) {
         return mApiHelper.callSetUserDeliveryAddress(requestValues);
     }
 
@@ -409,8 +415,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<DeleteUserAddress.ResponseValue> callDeleteUserDeliveryAddress(DeleteUserAddress.RequestValues requestValues) {
-        return mApiHelper.callDeleteUserDeliveryAddress(requestValues);
+    public Observable<String> callDeleteUserDeliveryAddress(DeleteUserAddress.RequestValues requestValues, String addressID) {
+        return mApiHelper.callDeleteUserDeliveryAddress(requestValues, addressID);
     }
 
     @Override
@@ -424,8 +430,53 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetPaymentsList.ResponseValue> callGetPaymentsList(GetPaymentsList.RequestValues requestValues) {
-        return mApiHelper.callGetPaymentsList(requestValues);
+    public Observable<List<GetOrdersResponse.Order>> callGetOrders() {
+        return mApiHelper.callGetOrders();
+    }
+
+    @Override
+    public Observable<GetOrdersResponse> callGetOrdersHistory(String dateTime, int months) {
+        return mApiHelper.callGetOrdersHistory(dateTime, months);
+    }
+
+    @Override
+    public Observable<GetOrdersResponse.Order> callGetOrderDetails(int orderNumber) {
+        return mApiHelper.callGetOrderDetails(orderNumber);
+    }
+
+    @Override
+    public Observable<GetOrdersResponse.Order.Invoice.Delivery> callGetOrderTracking(int orderNumber, int invoiceNumber) {
+        return mApiHelper.callGetOrderTracking(orderNumber, invoiceNumber);
+    }
+
+    @Override
+    public Observable<String> callChangeDeliveryAddress(ChangeDeliveryAddressRequest request) {
+        return mApiHelper.callChangeDeliveryAddress(request);
+    }
+
+    @Override
+    public Observable<GetOrdersResponse.Order> callCancelInvoice(CancelInvoiceItemRequest request) {
+        return mApiHelper.callCancelInvoice(request);
+    }
+
+    @Override
+    public Observable<GetOrdersResponse.Order> callCancelInvoiceItem(CancelInvoiceItemRequest request) {
+        return mApiHelper.callCancelInvoiceItem(request);
+    }
+
+    @Override
+    public Observable<String> callSetOrderReceived(OrderReceivedRequest receivedRequest) {
+        return mApiHelper.callSetOrderReceived(receivedRequest);
+    }
+
+    @Override
+    public Observable<String> callSetOrderNotReceived(OrderReceivedRequest receivedRequest) {
+        return mApiHelper.callSetOrderNotReceived(receivedRequest);
+    }
+
+    @Override
+    public Observable<OrderReceivedSatisfactionResponse> callGetOrderReceivedSatisfaction(OrderReceivedRequest receivedRequest) {
+        return mApiHelper.callGetOrderReceivedSatisfaction(receivedRequest);
     }
 
     @Override
@@ -456,12 +507,6 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<AddAndApplyVoucherByKeyResponse> callGetAddAndApplyVoucherByKey(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest) {
         return mApiHelper.callGetAddAndApplyVoucherByKey(addAndApplyVoucherByKeyRequest);
-    }
-
-
-    @Override
-    public Observable<GetOrderPaymentDetails.ResponseValue> callGetOrderPaymentDetails(GetOrderPaymentDetails.RequestValues requestValues) {
-        return mApiHelper.callGetOrderPaymentDetails(requestValues);
     }
 
     @Override
@@ -561,24 +606,41 @@ public class AppDataManager implements DataManager {
 
 
     @Override
-    public Observable<ContactOrders> callGetContactOrders() {
+    public Observable<List<ContactOrderResponse>> callGetContactOrders() {
         return mApiHelper.callGetContactOrders();
     }
 
     @Override
-    public Observable<ContactSubjects> callGetContactSubjects(ContactSubjectsRequest contactSubjectsRequest) {
-        return mApiHelper.callGetContactSubjects(contactSubjectsRequest);
-
+    public Observable<List<ContactSubjectResponse>> callGetContactSubjects(boolean isPublic) {
+        return mApiHelper.callGetContactSubjects(isPublic);
     }
 
     @Override
-    public Observable<CreateContactResponse> callCreateContact(CreateContactRequest createContactRequest) {
+    public Observable<String> callGetContactSubjectsTemplates(String id) {
+        return mApiHelper.callGetContactSubjectsTemplates(id);
+    }
+
+    @Override
+    public Observable<CreateContactResponseOld> callCreateContactOld(CreateContactRequestOld createContactRequest) {
+        return mApiHelper.callCreateContactOld(createContactRequest);
+    }
+
+    @Override
+    public Observable<String> callCreateContact(CreateContactRequest createContactRequest) {
         return mApiHelper.callCreateContact(createContactRequest);
 
     }
 
+
     @Override
-    public Observable<ReplyContactResponse> callReplyContact(ReplyContactRequest createContactRequest) {
+    public Observable<String> callCreateContactPublic(CreateContactRequest createContactRequest) {
+        return mApiHelper.callCreateContactPublic(createContactRequest);
+
+    }
+
+
+    @Override
+    public Observable<String> callReplyContact(ReplyContactRequest createContactRequest) {
         return mApiHelper.callReplyContact(createContactRequest);
 
     }
@@ -749,23 +811,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<String> callChangeDeliveryAddress(ChangeDeliveryAddressRequest request) {
-        return mApiHelper.callChangeDeliveryAddress(request);
-    }
-
-    @Override
-    public Observable<String> callCreateRefund(CreateRefundRequest request) {
-        return mApiHelper.callCreateRefund(request);
-    }
-
-    @Override
-    public Observable<OrderReceivedResponse> callOrderReceived(OrderReceivedRequest receivedRequest) {
-        return mApiHelper.callOrderReceived(receivedRequest);
-    }
-
-    @Override
     public Observable<SetAttachmentResponse> setAttachment(SetAttachmentRequest setAttachmentRequest) {
         return mApiHelper.setAttachment(setAttachmentRequest);
+    }
+
+    @Override
+    public Observable<String> setAttachmentForContact(SetAttachmentForContactRequest setAttachmentRequest) {
+        return mApiHelper.setAttachmentForContact(setAttachmentRequest);
     }
 
     @Override
@@ -811,6 +863,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<List<RecentlyViewedItemResponse>> callRecentlyViewedItems() {
         return mApiHelper.callRecentlyViewedItems();
+    }
+
+    @Override
+    public Observable<TicketSatisfactionResponse> callGetTicketSatisfaction(String number) {
+        return mApiHelper.callGetTicketSatisfaction(number);
+    }
+
+    @Override
+    public Observable<String> callCloseTicketSatisfaction(int global, String contactNumber) {
+        return mApiHelper.callCloseTicketSatisfaction(global,contactNumber);
     }
 
     @Override

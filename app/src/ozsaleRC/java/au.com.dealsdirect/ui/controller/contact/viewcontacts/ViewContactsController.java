@@ -1,10 +1,6 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,24 +9,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.contactitem.ContactItemByDate;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.contact.ContactPreferenceHelper;
-import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactController;
 import au.com.dealsdirect.ui.controller.contact.listener.ContactClickListener;
-import au.com.dealsdirect.ui.controller.contact.selectsubject.ContactSelectSubjectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts.ContactsAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -114,8 +109,6 @@ public class ViewContactsController extends BaseController implements ViewContac
 
         mActivity.getMainController().showBottomNav();
 
-        mActivity.getMainController().setViewpagerDraggable(false);
-
         setUp(view);
         mPresenter.loadContacts();
 
@@ -172,13 +165,10 @@ public class ViewContactsController extends BaseController implements ViewContac
     }
 
     @Override
-    public void showContactItems(GetContactsResponse.Response myContacts) {
+    public void showContactItems(List<GetContactsResponse> contacts) {
 
-        mActivity.setDraggableViewPager(false);
-
-        List<GetContactsResponse.ContactList> items = myContacts.getList();
-        if (items != null && items.size() != 0) {
-            mContactAdapter.replace(myContacts.getList());
+        if (contacts != null && contacts.size() != 0) {
+            mContactAdapter.replace(contacts);
             mViewContactsRecyclerViewContainer.setVisibility(View.VISIBLE);
             mPlaceholderLayout.setVisibility(View.GONE);
             mViewContactsAddNewMessage.setVisibility(View.VISIBLE);
@@ -197,9 +187,6 @@ public class ViewContactsController extends BaseController implements ViewContac
 
     @OnClick(R.id.partial_toolbar_right_view)
     void addContact() {
-        ContactPreferenceHelper.clear(mActivity);
-        RouterTransaction routerTransaction = RouterTransaction.with(ContactSelectSubjectController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
         GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.CONTACT_SELECT_SUBJECT, new HorizontalChangeHandler(), new HorizontalChangeHandler());
     }
 
@@ -208,51 +195,17 @@ public class ViewContactsController extends BaseController implements ViewContac
         addContact();
     }
 
-    public ArrayList<ContactItemByDate> getDifferentDates(List<GetContactsResponse.ContactList> lists) {
-
-        List<String> dateSet = new LinkedList<>();
-        String dateHeaderFormat;
-
-        for (int i = 0; i < lists.size(); i++) {
-            dateHeaderFormat = DateUtils.getTrimmedServerDateString(lists.get(i).getLastAnswer());
-
-            if (!dateSet.contains(dateHeaderFormat))
-                dateSet.add(dateHeaderFormat);
-        }
-
-        ArrayList<ContactItemByDate> tempList = new ArrayList<>();
-        for (int x = 0; x < dateSet.size(); x++) {
-
-            ContactItemByDate contactItemByDate = new ContactItemByDate();
-            List<GetContactsResponse.ContactList> tempLists = new LinkedList<>();
-
-            for (int y = 0; y < lists.size(); y++) {
-                String listDateHeaderFormat = DateUtils.getTrimmedServerDateString(lists.get(y).getLastAnswer());
-
-                if (dateSet.get(x).equals(listDateHeaderFormat)) {
-                    tempLists.add(lists.get(y));
-                }
-            }
-            contactItemByDate.setContactItemList(tempLists);
-            contactItemByDate.setDateHeaderFormat(dateSet.get(x));
-            tempList.add(contactItemByDate);
-            //   contactItemByDateList.add(tempList);
-        }
-
-        return tempList;
-    }
-
     @Override
-    public void onContactClicked(GetContactsResponse.ContactList contactList) {
+    public void onContactClicked(GetContactsResponse contact) {
 
-        Object saleNameObject = contactList.getSaleName();
-        Object invoiceNumber = contactList.getInvoiceNo();
-        String timeStamp = contactList.getLastAnswer();
+        Object saleNameObject = contact.getSubject();
+        Object invoiceNumber = contact.getInvoiceNumber();
+        String timeStamp = contact.getLastMessageDate();
 
         String saleName;
         int invoiceNo;
         String timeStampString;
-        String contactSubject = contactList.getSubject();
+        String contactSubject = contact.getSubject();
 
 
         saleName = saleNameObject != null ? saleNameObject.toString() : "";
@@ -261,10 +214,9 @@ public class ViewContactsController extends BaseController implements ViewContac
 
         RouterTransaction routerTransaction = RouterTransaction.with(ViewContactHistoryController.newInstance(
                 contactSubject,
-                saleName,
                 invoiceNo,
                 timeStampString,
-                contactList.getContactNo(),
+                contact.getNumber(),
                 false))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler());
@@ -280,18 +232,6 @@ public class ViewContactsController extends BaseController implements ViewContac
     @Override
     public Router getDisplayRouter() {
         return getRouter();
-    }
-
-    @Override
-    public void getViewContactsView() {
-        mActivity.getMainController().getHomeController().setContactsController(this);
-    }
-
-    @Override
-    public void sendOrderMessage(boolean isCalledFromOrders, int invoiceNumber, String description) {
-        RouterTransaction routerTransaction = RouterTransaction.with(AddContactController.newInstance(invoiceNumber, isCalledFromOrders, description))
-                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
-        getDisplayRouter().pushController(routerTransaction);
     }
 
     @OnClick(R.id.partial_toolbar_left_view)

@@ -13,11 +13,11 @@ public interface ReturnDetailsMvpView extends MvpView {
 
     void showCurrentReturnDetails(GetReturnDetailsResponseBody getReturnDetailsResponseBody);
 
-    void showContactMessageReturn(GetContactHistoryResponse.ResponseValue responseValue);
+    void showContactMessageReturn(GetContactHistoryResponse responseValue);
 
     void refreshReturnDetails(SetAttachmentResponse setAttachmentResponse);
 
     void getImageUrl(String imageUrl);
 
-    void finishedSendMessage(String message);
+    void finishedSendMessage(String response);
 }

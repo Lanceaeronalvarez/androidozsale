@@ -189,8 +189,6 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
         mConsentSwitchesRootLayout.setVisibility(mPresenter.isGdprDisabled() ? View.GONE : View.VISIBLE);
 
-        mActivity.setDraggableViewPager(false);
-
         if (mTermsLink != null) {
             mTermsLink.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
         }
@@ -280,7 +278,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @Override
     public boolean handleBack() {
         if (hasClearedBackstack) {
-            mActivity.getHomeController().goToPreviousContainerFromLogin(mActivity.isAuthorized());
+            mActivity.getMainController().goToPreviousContainerFromLogin(mActivity.isAuthorized());
         }
 
         return super.handleBack();

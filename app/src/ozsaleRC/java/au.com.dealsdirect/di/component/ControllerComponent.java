@@ -27,7 +27,6 @@ import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
-import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
@@ -75,8 +74,6 @@ public interface ControllerComponent {
     void inject(ShopsController controller);
 
     void inject(MainController controller);
-
-    void inject(HomeController controller);
 
     void inject(AccountController controller);
 

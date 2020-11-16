@@ -86,9 +86,6 @@ import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerP
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordMvpPresenter;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordMvpView;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordPresenter;
-import au.com.dealsdirect.ui.controller.home.HomeMvpPresenter;
-import au.com.dealsdirect.ui.controller.home.HomeMvpView;
-import au.com.dealsdirect.ui.controller.home.HomePresenter;
 import au.com.dealsdirect.ui.controller.invite.InviteMvpPresenter;
 import au.com.dealsdirect.ui.controller.invite.InviteMvpView;
 import au.com.dealsdirect.ui.controller.invite.InvitePresenter;
@@ -362,11 +359,6 @@ public class ControllerModule {
 
     @Provides
     NewReturnMvpPresenter<NewReturnMvpView> provideNewReturnPresenter(NewReturnPresenter<NewReturnMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
-    HomeMvpPresenter<HomeMvpView> provideHomePresenter(HomePresenter<HomeMvpView> presenter) {
         return presenter;
     }
 

@@ -107,7 +107,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     protected void onAttach(@NonNull View view) {
         if (mPresenter.isTablet()) {
-            mActivity.getHomeController().setNavigationBarEnabled(false);
+            mActivity.getMainController().setNavigationBarEnabled(false);
         } else {
             mActivity.getMainController().hideBottomNav();
         }
@@ -118,7 +118,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     @Override
     public void onDetach(View view) {
         if (mPresenter.isTablet()) {
-            mActivity.getHomeController().setNavigationBarEnabled(true);
+            mActivity.getMainController().setNavigationBarEnabled(true);
         } else if (!mWillShowRegistration) {
             mActivity.getMainController().showBottomNav();
         }
@@ -130,7 +130,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     public void refreshContents() {
         super.refreshContents();
         if (mPresenter.isTablet()) {
-            mActivity.getHomeController().setNavigationBarEnabled(false);
+            mActivity.getMainController().setNavigationBarEnabled(false);
         } else {
             mActivity.getMainController().hideBottomNav();
         }
@@ -159,8 +159,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void setUp(View view) {
-        mActivity.setDraggableViewPager(false);
-
         boolean shouldToolbarBeVisible = mActivity.getResources().getBoolean(R.bool.login_toolbar_visibility);
 
         mToolbar.setVisibility(shouldToolbarBeVisible ? View.VISIBLE : View.GONE);
@@ -219,7 +217,7 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public boolean handleBack() {
-        mActivity.getHomeController().goToPreviousContainerFromLogin(mActivity.isAuthorized());
+        mActivity.getMainController().goToPreviousContainerFromLogin(mActivity.isAuthorized());
 
         if (mPresenter.isTablet() && getBoolean(R.bool.master_detail_enabled)) {
             return true;

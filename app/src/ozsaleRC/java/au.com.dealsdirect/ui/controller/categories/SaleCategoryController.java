@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +24,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -39,6 +42,7 @@ import au.com.dealsdirect.ui.controller.categories.listener.SaleCategoryClickLis
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
+import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
 
@@ -110,8 +114,6 @@ public class SaleCategoryController extends BaseController
         super.onViewBound(view);
 
         assert (mActivity) != null;
-        mActivity.setDraggableViewPager(false);
-        mActivity.setCategoriesRouter(getRouter());
         mActivity.setSaleCategoryController(this);
         hideKeyboard();
 
@@ -130,7 +132,7 @@ public class SaleCategoryController extends BaseController
         super.onViewDidAppear(previousController);
         if (previousController == null) {
             mPresenter.callGetCategoryTree();
-            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+            mActivity.getMainController().setSavedCurrentItem();
         }
     }
 
@@ -151,11 +153,10 @@ public class SaleCategoryController extends BaseController
     }
 
     private void addToMap(List<GetCategoryTreeResponse> categories) {
-        List<GetCategoryTreeResponse> newList;
 
         for (GetCategoryTreeResponse category : categories) {
-            for (GetCategoryTreeResponse subcategory : updateCategoryChildren(category)) {
-                newList = updateCategoryChildren(subcategory);
+            for (GetCategoryTreeResponse subcategory : includeAllInChildren(category)) {
+                final List<GetCategoryTreeResponse> newList = includeAllInChildren(subcategory);
                 //add to map if there are children other than "All" subcategory
                 if (newList.size() > 1) {
                     addToMap(newList);
@@ -166,28 +167,34 @@ public class SaleCategoryController extends BaseController
         }
     }
 
-    private List<GetCategoryTreeResponse> updateCategoryChildren(GetCategoryTreeResponse categoryTree) {
+    private GetCategoryTreeResponse createAllFromCategory(GetCategoryTreeResponse categoryTree) {
         GetCategoryTreeResponse getCategoryTreeResponse = new GetCategoryTreeResponse();
-        getCategoryTreeResponse.setName("All");
+        getCategoryTreeResponse.setName(mActivity.getString(R.string.category_all));
         getCategoryTreeResponse.setKey(categoryTree.getKey());
         getCategoryTreeResponse.setChildren(new ArrayList<>());
         getCategoryTreeResponse.setNodeType("usual");
         getCategoryTreeResponse.setId(categoryTree.getId());
+        return getCategoryTreeResponse;
+    }
 
-        List<GetCategoryTreeResponse> newList = new ArrayList<>();
+    private List<GetCategoryTreeResponse> includeAllInChildren(GetCategoryTreeResponse parent) {
+        if (parent == null || parent.getChildren() == null) {
+            return new LinkedList<>();
+        }
 
-        if (categoryTree.getChildren() != null) {
-            for (int i = 0; i < categoryTree.getChildren().size() + 1; i++) {
-
-                if (i == 0) {
-                    newList.add(getCategoryTreeResponse);
-
-                } else {
-                    newList.add(categoryTree.getChildren().get(i - 1));
-                }
+        final LinkedList<GetCategoryTreeResponse> children = new LinkedList<>(parent.getChildren());
+        final String nameAll = mActivity.getString(R.string.category_all);
+        boolean shouldAdd = true;
+        for (GetCategoryTreeResponse child : children) {
+            if (child.getName().equalsIgnoreCase(nameAll)) {
+                shouldAdd = false;
+                break;
             }
         }
-        return newList;
+        if (shouldAdd) {
+            children.add(0, createAllFromCategory(parent));
+        }
+        return children;
     }
 
     @Override
@@ -211,18 +218,7 @@ public class SaleCategoryController extends BaseController
     @Override
     public void onSubCategoryItemClicked(String categoryID, String categoryName, String categoryKey,
                                          List<SearchChipModel> chipFilters) {
-        mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
-
-        SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
-                .FromCategory(categoryKey, categoryKey, mCategories, new HashSet<>(chipFilters));
-
-        SaleItemsController controller = SaleItemsController.newInstance(parameters);
-
-        mActivity.getCategoriesRouter().pushController(RouterTransaction.with(controller)
-                .tag(getResources().getString(R.string.sale_items_controller_tag))
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+        showSaleItems(categoryKey, new HashSet<>(chipFilters));
     }
 
     @Override
@@ -233,7 +229,7 @@ public class SaleCategoryController extends BaseController
 
         //noinspection ConstantConditions
         if (getCategoryTreeResponse != null && getCategoryTreeResponse.getChildren() != null) {
-            SubSaleCategoryAdapter subCategoryAdapter = new SubSaleCategoryAdapter(mActivity, (getCategoryTreeResponse.getChildren()), mSubCategoryItemClickListener, this, mCategoryMap);
+            SubSaleCategoryAdapter subCategoryAdapter = new SubSaleCategoryAdapter(mActivity, includeAllInChildren(getCategoryTreeResponse), mSubCategoryItemClickListener, this, mCategoryMap);
             subCategoryAdapter.setParentPosition(position);
 
             if (saleCategoryViewHolder != null) {
@@ -310,5 +306,48 @@ public class SaleCategoryController extends BaseController
                 mRecyclerView.smoothScrollBy(0, (height1 + top1) - (height2 + top2));
             }
         }
+    }
+
+    public void showSaleItems(String categoryId) {
+        showSaleItems(mCategoryKeyMap.get(categoryId), new HashSet<>());
+    }
+
+    private void showSaleItems(String categoryKey, Set<SearchChipModel> chipFilters) {
+        mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
+
+        SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
+                .FromCategory(categoryKey, categoryKey, findMainCategoryWithKey(categoryKey), chipFilters);
+
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .tag(getResources().getString(R.string.sale_items_controller_tag))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler());
+
+        Router router = mActivity.getCategoriesRouter();
+        List<RouterTransaction> backstack = router.getBackstack();
+        if (backstack.size() == 1) {
+            router.pushController(routerTransaction);
+        } else {
+            List<RouterTransaction> newBackstack = new LinkedList<>();
+            newBackstack.add(backstack.get(0));
+            newBackstack.add(routerTransaction);
+            router.setBackstack(newBackstack, new SimpleChangeHandler());
+        }
+        setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+    }
+
+    private List<GetCategoryTreeResponse> findMainCategoryWithKey(String key) {
+        String[] split = key.split(">>>");
+        if (split.length > 0) {
+            String mainKey = split[0];
+            for (GetCategoryTreeResponse category : mCategories) {
+                if (category.getKey().equals(mainKey)) {
+                    return Lists.newArrayList(category);
+                }
+            }
+        }
+        return new ArrayList<>();
     }
 }

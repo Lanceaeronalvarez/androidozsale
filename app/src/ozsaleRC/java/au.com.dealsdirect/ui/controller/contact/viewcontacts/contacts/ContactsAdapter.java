@@ -1,12 +1,14 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacts.contacts;
 
-import androidx.recyclerview.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +17,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.ui.controller.contact.listener.ContactClickListener;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpPresenter;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
@@ -26,17 +29,17 @@ import butterknife.ButterKnife;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewContactsItemViewHolder> {
 
-    List<GetContactsResponse.ContactList> mCurrentContactsList = Collections.emptyList();
+    List<GetContactsResponse> mCurrentContactsList = Collections.emptyList();
     private ViewContactsMvpPresenter mPresenter;
     private ContactClickListener mContactClickListener;
 
-    public void replace(List<GetContactsResponse.ContactList> items) {
+    public void replace(List<GetContactsResponse> items) {
         mCurrentContactsList = items;
         notifyDataSetChanged();
     }
 
     public ContactsAdapter(
-            List<GetContactsResponse.ContactList> contactLists,
+            List<GetContactsResponse> contactLists,
             ViewContactsMvpPresenter mvpPresenter,
             ContactClickListener contactClickListener) {
 
@@ -55,11 +58,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewCo
     @Override
     public void onBindViewHolder(ViewContactsItemViewHolder holder, int position) {
 
-        String itemSubject = mCurrentContactsList.get(position).getSubject();
-        String itemLastAnswer = mCurrentContactsList.get(position).getLastAnswer();
-        String itemLastComment = mCurrentContactsList.get(position).getLastComment();
-        String dateOfContactItem = mCurrentContactsList.get(position).getLastComment();
-        String dateHeaderFormatOfItem = DateUtils.getDayOfWeekFromDateString(itemLastAnswer.toString());
+        final String itemSubject = mCurrentContactsList.get(position).getSubject();
+        final String itemLastAnswer = mCurrentContactsList.get(position).getLastMessageDate();
+        final String lastMessage = mCurrentContactsList.get(position).getLastMessage();
+        final CharSequence itemLastComment = CommonUtils.checkIfStringHasHtmlElements(lastMessage) ?
+                Html.fromHtml(mCurrentContactsList.get(position).getLastMessage()) : lastMessage;
 
         holder.contactUsTitleTextView.setText(StringUtils.toTitleCase(itemSubject));
         holder.contactUsDescriptionTextView.setText(itemLastComment);

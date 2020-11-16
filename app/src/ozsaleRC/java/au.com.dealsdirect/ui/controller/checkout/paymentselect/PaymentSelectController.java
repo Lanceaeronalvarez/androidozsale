@@ -24,6 +24,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -94,7 +95,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(getString(R.string.checkout_controller));
+        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(CheckoutController.class.getName());
         return view;
     }
 
@@ -121,20 +122,22 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         int backstackSize = getRouter().getBackstackSize();
         String checkoutTag = getRouter().getBackstack().get(backstackSize - 1).tag();
 
-        for (int i = 0; i < paymentMethods.size(); i++) {
-            paymentMethods.get(i).setId(i);
+        if (paymentMethods != null) {
+            for (int i = 0; i < paymentMethods.size(); i++) {
+                paymentMethods.get(i).setId(i);
+            }
         }
 
-        boolean hasPaymentMethod = paymentMethods.size() > 0;
+        boolean hasPaymentMethod = paymentMethods != null && paymentMethods.size() > 0;
         mPaymentSubtitleText.setVisibility(hasPaymentMethod ? View.VISIBLE : View.GONE);
 
-        if (paymentMethods != null && hasPaymentMethod) {
+        if (hasPaymentMethod) {
             mPaymentMethods = new ArrayList<>(paymentMethods);
             mAdapter.replaceData(mPaymentMethods);
             showPaymentMethodsPlaceholder(false);
-        } else if (checkoutTag == getActivity().getString(R.string.checkout_controller) && (paymentMethods == null || !hasPaymentMethod)) {
+        } else if (checkoutTag != null && checkoutTag.equals(CheckoutController.class.getName())) {
             goToPaymentController();
-        } else if (!hasPaymentMethod) {
+        } else {
             showPaymentMethodsPlaceholder(true);
         }
     }

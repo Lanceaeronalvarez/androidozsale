@@ -1,70 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                   android:layout_width="match_parent"
-                                   android:layout_height="?attr/actionBarSize"
-                                   xmlns:tools="http://schemas.android.com/tools"
-                                   android:background="@color/toolbar_skin"
-                                   android:contentInsetEnd="0dp"
-                                   android:contentInsetLeft="0dp"
-                                   android:contentInsetRight="0dp"
-                                   android:contentInsetStart="0dp"
-                                   app:contentInsetEnd="0dp"
-                                   app:contentInsetLeft="0dp"
-                                   app:contentInsetRight="0dp"
-                                   app:contentInsetStart="0dp"
-                                   app:layout_scrollFlags="scroll|enterAlways">
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/toolbar_skin"
+    android:contentInsetStart="0dp"
+    android:contentInsetLeft="0dp"
+    android:contentInsetEnd="0dp"
+    android:contentInsetRight="0dp"
+    app:contentInsetEnd="0dp"
+    app:contentInsetLeft="0dp"
+    app:contentInsetRight="0dp"
+    app:contentInsetStart="0dp"
+    tools:ignore="MissingPrefix">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+        <ImageButton
+            android:id="@+id/partial_toolbar_hamburger"
+            android:layout_width="@dimen/partial_toolbar_button_width"
+            android:layout_height="@dimen/partial_toolbar_button_height"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@color/toolbar_skin"
+            android:padding="@dimen/margin_small"
+            android:src="@drawable/ic_action_menu"
+            android:textSize="@dimen/text_size_caption1" />
 
-            <ImageButton
-                android:id="@+id/partial_toolbar_hamburger"
-                android:layout_width="@dimen/partial_toolbar_button_width"
-                android:layout_height="@dimen/partial_toolbar_button_height"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/bg_toolbar_button"
-                android:padding="@dimen/partial_toolbar_button_padding"
-                android:src="@drawable/ic_action_menu" />
+        <TextView
+            android:id="@+id/partial_toolbar_logo_title_view"
+            fontPath="@string/font_app_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/toolbar_text_dark"
+            android:textSize="@dimen/text_size_headline2"
+            android:visibility="gone"
+            tools:ignore="MissingPrefix"
+            tools:text="Title" />
 
-            <TextView
-                android:id="@+id/partial_toolbar_logo_title_view"
-                fontPath="@string/font_app_medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_headline2"
-                tools:text="Title"
-                android:visibility="gone"
-                tools:ignore="MissingPrefix"/>
+        <ImageView
+            android:id="@+id/partial_toolbar_logo"
+            android:layout_width="@dimen/partial_toolbar_logo_width"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/logo_colored" />
 
-            <ImageView
-                android:id="@+id/partial_toolbar_logo"
-                android:layout_width="@dimen/partial_toolbar_logo_width"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:src="@drawable/logo_white" />
+        <ImageButton
+            android:id="@+id/partial_toolbar_search_icon"
+            android:layout_width="@dimen/partial_toolbar_button_width"
+            android:layout_height="@dimen/partial_toolbar_button_height"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_toolbar_button"
+            android:padding="@dimen/margin_extra_small"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_search"
+            android:textSize="@dimen/text_size_caption1"
+            android:visibility="invisible" />
 
-            <ImageButton
-                android:id="@+id/partial_toolbar_search_icon"
-                android:layout_width="@dimen/partial_toolbar_button_width"
-                android:layout_height="@dimen/partial_toolbar_button_height"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/bg_toolbar_button"
-                android:padding="@dimen/margin_extra_small"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_search" />
+    </RelativeLayout>
 
-        </RelativeLayout>
-
-    </LinearLayout>
 
 </androidx.appcompat.widget.Toolbar>

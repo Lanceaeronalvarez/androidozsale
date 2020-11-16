@@ -10,21 +10,6 @@ import com.mysale.genie.utility.LegacyBaseResponseValue;
  */
 public class AddAddress {
 
-//    @Override
-//    protected void executeUseCase(AddAddress.RequestValues requestValues) {
-//        mAddressesRepository.addAddress(requestValues, new AddressesDataSource.AddNewAddressCallback() {
-//            @Override
-//            public void onAddressAddedLoaded(ResponseValue address) {
-//                getUseCaseCallback().onSuccess(address);
-//            }
-//
-//            @Override
-//            public void onProcessFailed() {
-//                getUseCaseCallback().onError();
-//            }
-//        });
-//    }
-
     public static class RequestValues {
         public JsonObject address;
 

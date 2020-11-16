@@ -528,7 +528,6 @@ public class MyAccountsOurpayController extends BaseController
 
     @Override
     protected void onAttach(@NonNull View view) {
-        mActivity.setDraggableViewPager(false);
         mPresenter.onAttach(this);
         super.onAttach(view);
     }

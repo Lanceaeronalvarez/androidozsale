@@ -6,11 +6,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +15,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -35,7 +35,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequestOld;
 import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
 import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
 import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
@@ -328,7 +328,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
             String concatenateContactNo = mActivity.getResources().getString(R.string.contact_number_return_details) + contactNumber;
             mContactNumberText.setText(concatenateContactNo);
             GetContactHistoryRequest getContactHistoryRequest = new GetContactHistoryRequest();
-            getContactHistoryRequest.contactNo = getReturnDetailsResponseBody.getValue().getContactNumber();
+            getContactHistoryRequest.setNumber(getReturnDetailsResponseBody.getValue().getContactNumber());
             mPresenter.loadReturnContacts(getContactHistoryRequest);
         }
 
@@ -353,20 +353,19 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     }
 
     @Override
-    public void showContactMessageReturn(GetContactHistoryResponse.ResponseValue responseValue) {
+    public void showContactMessageReturn(GetContactHistoryResponse responseValue) {
 
-        au.com.dealsdirect.data.network.model.contacthistory.List lastItemPosition = responseValue.getList().get(0);
+        GetContactHistoryResponse.Message lastItemPosition = responseValue.getMessages().get(0);
 
-        mContactMessageDate.setText(DateUtils.getDateForContactMessages(lastItemPosition.getDate()));
+        mContactMessageDate.setText(DateUtils.getDateForContactMessages(lastItemPosition.getMessageDate()));
         mContactMessageText.setText(lastItemPosition.getText());
-        mReturnDetailsSubjectText.setText(lastItemPosition.getSubject());
+        mReturnDetailsSubjectText.setText(responseValue.getSubject());
 
         mReturnDetailsContactContainer.setOnClickListener(v -> {
             getRouter().pushController(RouterTransaction.with(ViewContactHistoryController.newInstance(
-                    lastItemPosition.getSubject(),
-                    "",
-                    lastItemPosition.getInvoiceNo(),
-                    DateUtils.getDateForContactMessages(lastItemPosition.getDate()),
+                    responseValue.getSubject(),
+                    responseValue.getInvoiceNumber(),
+                    DateUtils.getDateForContactMessages(lastItemPosition.getMessageDate()),
                     Integer.parseInt(contactNumber),
                     true))
                     .pushChangeHandler(new HorizontalChangeHandler())
@@ -407,12 +406,18 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     }
 
     @Override
-    public void finishedSendMessage(String message) {
+    public void finishedSendMessage(String response) {
         if (shouldUploadImage) {
             uploadImages();
         }
         mReturnDetailsWriteMessageEditText.getText().clear();
         mPresenter.loadCurrentReturnDetails(mReturnID);
+        String message;
+        if (response.equals("true")) {
+            message = mActivity.getString(R.string.message_submitted);
+        } else {
+            message = response;
+        }
         CustomAlertDialog.showCustomAlertDialog(
                 mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
                 message);
@@ -482,17 +487,16 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         if (newBitmap != null && ImageUploadUtil.getFileSizeInMb(
                 ImageUploadUtil.getFileSize(newBitmap)) < mPresenter.getImageLimit()) {
 
-                File file = ImageUploadUtil.getFileForUpload(mActivity, position, newBitmap);
-                if (file != null) {
-                    mImageFileHashMap.put(position, file);
-                }
+            File file = ImageUploadUtil.getFileForUpload(mActivity, position, newBitmap);
+            if (file != null) {
+                mImageFileHashMap.put(position, file);
+            }
 
         } else {
             CustomAlertDialog.showCustomAlertDialog(mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     mActivity.getResources().getString(R.string.error_upload_image));
         }
-
 
 
     }
@@ -504,29 +508,29 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
             Uri chosenImageUri = data.getData();
             Bitmap mBitmap = null;
 
-                ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
-                imageLinks.setIsURL(false);
-                imageLinks.setLink(String.valueOf(chosenImageUri));
-                mImageUriArray.add(0, imageLinks);
+            ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
+            imageLinks.setIsURL(false);
+            imageLinks.setLink(String.valueOf(chosenImageUri));
+            mImageUriArray.add(0, imageLinks);
 
-                if (hasSavedInstance) {
-                    mPresenter.loadCurrentReturnDetails(mReturnID);
+            if (hasSavedInstance) {
+                mPresenter.loadCurrentReturnDetails(mReturnID);
+            } else {
+
+                if (mReturnDetailsImageList.getAdapter() != null) {
+                    ((ReturnDetailsAddImageAdapter) mReturnDetailsImageList.getAdapter()).addItem();
                 } else {
-
-                    if (mReturnDetailsImageList.getAdapter() != null) {
-                        ((ReturnDetailsAddImageAdapter) mReturnDetailsImageList.getAdapter()).addItem();
-                    } else {
-                        ReturnDetailsAddImageAdapter imageAdapter = new ReturnDetailsAddImageAdapter(mActivity, this,
-                                mImageUriArray);
-                        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
-                        mReturnDetailsImageList.setAdapter(imageAdapter);
-                        mReturnDetailsImageList.setLayoutManager(layoutManager);
-                    }
+                    ReturnDetailsAddImageAdapter imageAdapter = new ReturnDetailsAddImageAdapter(mActivity, this,
+                            mImageUriArray);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+                    mReturnDetailsImageList.setAdapter(imageAdapter);
+                    mReturnDetailsImageList.setLayoutManager(layoutManager);
                 }
+            }
 
-                if (attachmentId == null) {
-                    mPresenter.setAttachment(ImageUploadUtil.getAttachmentIdRequest(mReturnID));
-                }
+            if (attachmentId == null) {
+                mPresenter.setAttachment(ImageUploadUtil.getAttachmentIdRequest(mReturnID));
+            }
 
         }
     }
@@ -538,7 +542,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         } else {
             if (mContactNumber == null || mContactNumber.equals("0")) {
                 hideKeyboard();
-                CreateContactRequest createContactRequest = new CreateContactRequest();
+                CreateContactRequestOld createContactRequest = new CreateContactRequestOld();
 
                 if (!mInvoiceNumber.isEmpty()) {
                     createContactRequest.invoiceNo = Integer.valueOf(mInvoiceNumber);
@@ -564,10 +568,10 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
                 String replyMessage = mReturnDetailsWriteMessageEditText.getText().toString();
 
                 ReplyContactRequest replyContactRequest = new ReplyContactRequest();
-                replyContactRequest.comments = replyMessage;
-                replyContactRequest.contactNo = Integer.parseInt(mContactNumber);
+                replyContactRequest.setText(replyMessage);
+                replyContactRequest.setNumber(Integer.parseInt(mContactNumber));
 
-                if (replyContactRequest.comments.isEmpty()) {
+                if (replyContactRequest.getText().isEmpty()) {
 
                     CustomAlertDialog.showCustomAlertDialog(
                             mActivity,

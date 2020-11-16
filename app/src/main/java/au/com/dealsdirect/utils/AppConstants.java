@@ -82,6 +82,10 @@ public final class AppConstants {
     public static final String ORDER_PRICE_RESTRICT = "OrderPriceRestriction";
     public static final String KEY_SHIPPING_HOVER = "_Shipping_Rules_hover";
 
+    public static final int SMILE_ICON = 30;
+    public static final int NEUTRAL_ICON = 20;
+    public static final int SAD_ICON = 10;
+
 
     private AppConstants() {
         // This utility class is not publicly instantiable

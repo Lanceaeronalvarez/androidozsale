@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/viewholder_banner_layout"
     android:layout_width="match_parent"
@@ -15,8 +15,20 @@
     <ImageView
         android:id="@+id/viewholder_banner_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:scaleType="centerInside"
         android:transitionName="image" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/viewholder_horizontal_scrolling_cell_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/horizontal_banner_title_height"
+        android:fontFamily="@string/font_app_bold"
+        android:text="Title"
+        android:textAlignment="center"
+        android:textColor="@color/text_dark"
+        android:textSize="@dimen/text_size_caption2"
+        android:textStyle="bold" />
+
+</LinearLayout>

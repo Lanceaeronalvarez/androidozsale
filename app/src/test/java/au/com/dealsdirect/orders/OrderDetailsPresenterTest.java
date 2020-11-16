@@ -87,7 +87,7 @@ public class OrderDetailsPresenterTest {
     public void loadOrderDetailsTest() {
         GetOrderPaymentDetails.ResponseValue responseValue = new Gson().fromJson(mockResopnse, GetOrderPaymentDetails.ResponseValue.class);
         GetOrderPaymentDetails.RequestValues requestValues = new GetOrderPaymentDetails.RequestValues("0");
-        doReturn(Observable.just(responseValue)).when(dataManager).callGetOrderPaymentDetails(requestValues);
+        doReturn(Observable.just(responseValue)).when(dataManager).callGetOrderDetails(requestValues);
 
         mPresenter.loadOrderDetails(requestValues);
         mTestScheduler.triggerActions();

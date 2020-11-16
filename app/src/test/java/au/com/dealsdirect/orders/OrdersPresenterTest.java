@@ -176,7 +176,7 @@ public class OrdersPresenterTest {
     public void applyDeliveryAddress() {
         GetPaymentsList.ResponseValue responseValue = new Gson().fromJson(mockResponse, GetPaymentsList.ResponseValue.class);
         ArgumentCaptor<GetPaymentsList.RequestValues> requestCaptor = ArgumentCaptor.forClass(GetPaymentsList.RequestValues.class);
-        doReturn(Observable.just(responseValue)).when(dataManager).callGetPaymentsList(requestCaptor.capture());
+        doReturn(Observable.just(responseValue)).when(dataManager).callGetOrders(requestCaptor.capture());
 
         mPresenter.loadOrders();
         mTestScheduler.triggerActions();

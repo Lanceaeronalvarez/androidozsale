@@ -196,7 +196,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         });
 
         holder.itemView.setOnClickListener(v -> {
-            mClickListener.showItemDetail(holder, 0, "",
+            mClickListener.showItemDetail(holder.image, 0, "",
                     LegacyStringImageUtils.generateImageUrl(item.brandID, item.imageID, item.fileName),
                     "", item.getSaleID(), false, item.getItem(), item.getItem(),
                     String.valueOf(item.getPrice()), String.valueOf(item.getPrice()), item.getItemID());

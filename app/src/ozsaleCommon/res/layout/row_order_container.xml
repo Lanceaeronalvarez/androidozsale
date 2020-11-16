@@ -9,55 +9,53 @@
     tools:ignore="MissingPrefix">
 
     <RelativeLayout
-        android:id="@+id/my_order_number_container"
+        android:id="@+id/my_order_information_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/padding_default"
-        android:paddingEnd="@dimen/padding_default">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/my_order_information_header"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/order_number_text_identifier"
+            fontPath="@string/font_app_semibold"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginBottom="@dimen/margin_small">
+            android:layout_centerVertical="true"
+            android:text="@string/order_sharp_colon"
+            android:textColor="@color/text_extra_dark"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingStart="@dimen/padding_default"
+            android:textSize="@dimen/text_size_headline3"
+            tools:ignore="HardcodedText" />
 
-            <TextView
-                android:id="@+id/order_number_text_identifier"
-                fontPath="@string/font_app_semibold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/order_sharp_colon"
-                android:textColor="@color/text_extra_dark"
-                android:layout_centerVertical="true"
-                android:textSize="@dimen/text_size_headline3"
-                tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/order_number_text_value"
+            fontPath="@string/font_app_semibold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_toRightOf="@id/order_number_text_identifier"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_headline3"
+            tools:ignore="HardcodedText"
+            tools:text="204400890" />
 
-            <TextView
-                android:id="@+id/order_number_text_value"
-                fontPath="@string/font_app_semibold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="@dimen/margin_small"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:layout_toRightOf="@id/order_number_text_identifier"
-                android:textColor="@color/text_extra_dark"
-                android:textSize="@dimen/text_size_headline3"
-                android:layout_centerVertical="true"
-                tools:ignore="HardcodedText"
-                tools:text="204400890" />
-
-            <ImageView
-                android:id="@+id/order_number_right_arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:padding="@dimen/margin_small"
-                android:src="@drawable/ic_disclosure_indicator" />
-
-        </RelativeLayout>
+        <ImageView
+            android:id="@+id/order_number_right_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingTop="@dimen/margin_medium"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="34dp"
+            android:src="@drawable/ic_disclosure_indicator"
+            tools:ignore="ContentDescription" />
 
     </RelativeLayout>
 

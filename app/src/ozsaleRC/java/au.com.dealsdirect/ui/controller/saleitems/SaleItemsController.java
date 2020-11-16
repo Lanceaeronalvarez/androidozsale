@@ -100,6 +100,7 @@ import butterknife.OnClick;
 import butterknife.OnTouch;
 import butterknife.Optional;
 
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.HEADER;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_LIST;
@@ -747,7 +748,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     protected void onAttach(@NonNull View view) {
-        mActivity.setDraggableViewPager(false);
         mPresenter.onAttach(this);
         if (mAppBar != null) {
             mAppBar.addOnOffsetChangedListener(this);
@@ -771,8 +771,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
-
-        mActivity.setDraggableViewPager(false);
 
         if (isViewAttached() && isViewBound()) {
             determineToolbarTitle();
@@ -814,7 +812,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     mGenieCategory = null;
                     mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
                     if (mHasSavedInstance) {
-                        mActivity.getMainController().getHomeController().setSavedCurrentItem();
+                        mActivity.getMainController().setSavedCurrentItem();
                     } else {
                         showKeyboard();
                     }
@@ -972,8 +970,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void setUp(View view) {
 
-        mActivity.setDraggableViewPager(false);
-
         if (mEndDate == null || mEndDate.isEmpty() || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
             mSaleItemsRemainingTimeText.setVisibility(View.GONE);
             mSaleEndsInText.setVisibility(View.GONE);
@@ -1096,7 +1092,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @OnClick(R.id.partial_checkout_empty_button)
     void shopNow() {
 
-        mActivity.setShopsAsVisibleContainer();
+        mActivity.getMainController().showShopController();
     }
 
 
@@ -1199,12 +1195,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mInitialCategoryTree.isEmpty() || source.isEmpty()) {
             mCategoryTreeResponse = source;
         } else {
-            for (GetCategoryTreeResponse initial : mInitialCategoryTree) {
-                if (initial.getKey().equals(source.get(0).getKey())) {
-                    mCategoryTreeResponse = Lists.newArrayList(initial);
-                    return;
-                }
-            }
+            mCategoryTreeResponse = new ArrayList<>(mInitialCategoryTree);
         }
     }
 
@@ -1377,7 +1368,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         determineWhereToShowAds();
 
         onRefreshEnd();
-
     }
 
     @Override
@@ -1651,8 +1641,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void setupSearchFilters() {
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
+        mSearchFilterSkeleton.setVisibility(View.GONE);
         if (mSearchFilterMvpView == null) {
-            mSearchFilterSkeleton.setVisibility(View.GONE);
 
             SearchFilterController.Parameters.FromItemsList parameters = new SearchFilterController
                     .Parameters.FromItemsList(
@@ -2183,22 +2173,28 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (!isViewBound()) {
             return;
         }
+        ViewGroup.LayoutParams lp = mAppBar.getLayoutParams();
+
         switch (mSourceMode) {
             case NORMAL:
-                mAppBar.setVisibility(View.VISIBLE);
+                lp.height = WRAP_CONTENT;
+                mAppBar.setElevation(getResources().getDimension(R.dimen.margin_extra_small));
                 mSaleItemsToolbarField.setVisibility(View.VISIBLE);
                 mTabLayout.setVisibility(View.VISIBLE);
                 mSaleItemsBackIcon.setVisibility(View.VISIBLE);
                 mSaleItemsBackIcon.setEnabled(true);
                 break;
             case WISHLIST:
-                mAppBar.setVisibility(View.GONE);
+                lp.height = 1;
+                mAppBar.setElevation(0);
                 mSaleItemsToolbarField.setVisibility(View.GONE);
                 mTabLayout.setVisibility(View.GONE);
                 mSaleItemsBackIcon.setVisibility(View.INVISIBLE);
                 mSaleItemsBackIcon.setEnabled(false);
                 break;
         }
+
+        mAppBar.setLayoutParams(lp);
     }
 
     private void showPlaceholder(boolean show) {

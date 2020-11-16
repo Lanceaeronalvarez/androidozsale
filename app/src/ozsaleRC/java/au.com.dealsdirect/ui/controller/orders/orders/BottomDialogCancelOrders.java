@@ -1,11 +1,6 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +10,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -30,12 +27,10 @@ import au.com.dealsdirect.utils.ImageUtils;
  */
 public class BottomDialogCancelOrders extends BottomSheetDialogFragment {
 
-    private String invoiceNumber = "";
-    private String reason = "";
+    private int invoiceNumber = 0;
     private boolean shouldShowCancelOrder = false;
     private String imageUrl = "";
-    private String quantity = "";
-    private String totalItems = "";
+    private int quantity = 0;
     private String itemDescription = "";
     private BottomDialogButtonListener listener;
 
@@ -57,11 +52,7 @@ public class BottomDialogCancelOrders extends BottomSheetDialogFragment {
             Bundle bundle = getArguments();
 
             if (bundle.containsKey(ActionConstants.ORDER_INVOICE_NUMBER)) {
-                invoiceNumber = bundle.getString(ActionConstants.ORDER_INVOICE_NUMBER);
-            }
-
-            if (bundle.containsKey(ActionConstants.ORDER_REASON)) {
-                reason = bundle.getString(ActionConstants.ORDER_REASON);
+                invoiceNumber = bundle.getInt(ActionConstants.ORDER_INVOICE_NUMBER);
             }
 
             if (bundle.containsKey(ActionConstants.ORDER_SHOULD_SHOW_CANCEL_ORDER)) {
@@ -77,11 +68,7 @@ public class BottomDialogCancelOrders extends BottomSheetDialogFragment {
             }
 
             if (bundle.containsKey(ActionConstants.ORDER_QUANTITY)) {
-                quantity = bundle.getString(ActionConstants.ORDER_QUANTITY);
-            }
-
-            if (bundle.containsKey(ActionConstants.ORDER_SUBTOTAL_ITEM)) {
-                totalItems = bundle.getString(ActionConstants.ORDER_SUBTOTAL_ITEM);
+                quantity = bundle.getInt(ActionConstants.ORDER_QUANTITY);
             }
         }
 
@@ -94,7 +81,8 @@ public class BottomDialogCancelOrders extends BottomSheetDialogFragment {
             ImageButton mCloseButton = v.findViewById(R.id.img_order_button_close);
             TextView mTextOrderNumber = v.findViewById(R.id.cancel_order_number_text);
 
-            mTextOrderNumber.setText(invoiceNumber);
+            String description = Integer.toString(invoiceNumber);
+            mTextOrderNumber.setText(description);
 
             mYesButton.setOnClickListener(v1 -> {
                 BottomDialogCancelOrders.this.dismiss();
@@ -126,15 +114,16 @@ public class BottomDialogCancelOrders extends BottomSheetDialogFragment {
 
             ImageUtils.loadImage(imageUrl, mItemImage);
 
-            mQuantity.setQuantity(Integer.parseInt(quantity));
+            mQuantity.setQuantity(1);
             mQuantity.setAutoUpdateQuantity(false);
-            mQuantity.setMax(Integer.parseInt(totalItems));
+            mQuantity.setMin(1);
+            mQuantity.setMax(quantity);
             mQuantity.setEditTextToNonEditable();
 
             mQuantity.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
                 @Override
                 public void onQuantityIncrease(ProductQuantityLayout view, int value) {
-                    if (value < Integer.parseInt(totalItems)) {
+                    if (value < quantity) {
                         value++;
                     }
                     mQuantity.setQuantity(value);
@@ -142,7 +131,7 @@ public class BottomDialogCancelOrders extends BottomSheetDialogFragment {
 
                 @Override
                 public void onQuantityDecrease(ProductQuantityLayout view, int value) {
-                    if (value != 1) {
+                    if (value > 1) {
                         value--;
                     }
                     mQuantity.setQuantity(value);

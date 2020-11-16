@@ -20,7 +20,9 @@ public class DateUtils {
 
     public static String[] months = new DateFormatSymbols().getMonths();
 
-    public static final String GMT_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public static final String GMT_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+
+    public static final String GMT_FORMAT_NO_MILLISECONDS = "yyyy-MM-dd'T'HH:mm:ss";
 
     public static final String TIME_FORMAT = "HH:mm:ss";
 
@@ -162,8 +164,13 @@ public class DateUtils {
     }
 
     public static Date gmtDateFromServerDateString(String dateString) {
-        Date date = new Date(getUTCFromServerDateString(dateString));
-
+        Date date;
+        SimpleDateFormat format = new SimpleDateFormat(GMT_FORMAT, Locale.ENGLISH);
+        try {
+            date = format.parse(dateString);
+        } catch (ParseException e) {
+            date = new Date(getUTCFromServerDateString(dateString));
+        }
         return date;
     }
 
@@ -210,13 +217,14 @@ public class DateUtils {
     }
 
     public static Date dateFromServerDateString(String dateString) {
-
-        if (checkIfGmtFormat(dateString)) {
-            try {
+        try {
+            if (checkIfGmtFormat(dateString, true)) {
                 return new SimpleDateFormat(GMT_FORMAT, Locale.getDefault()).parse(dateString);
-            } catch (ParseException e) {
-                return Calendar.getInstance().getTime();
+            } else if (checkIfGmtFormat(dateString, false)) {
+                return new SimpleDateFormat(GMT_FORMAT_NO_MILLISECONDS, Locale.getDefault()).parse(dateString);
             }
+        } catch (ParseException e) {
+            return Calendar.getInstance().getTime();
         }
 
         String longString = "";
@@ -234,9 +242,9 @@ public class DateUtils {
         return cal.getTime();
     }
 
-    public static boolean checkIfGmtFormat(String dateString) {
+    public static boolean checkIfGmtFormat(String dateString, boolean hasMilliseconds) {
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat apiDateFormat = new SimpleDateFormat(GMT_FORMAT);
+        SimpleDateFormat apiDateFormat = new SimpleDateFormat(hasMilliseconds ? GMT_FORMAT : GMT_FORMAT_NO_MILLISECONDS);
 
         try {
             apiDateFormat.parse(dateString);
@@ -317,6 +325,13 @@ public class DateUtils {
     public static String getDateStringWithTimeZone(Date date) {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+
+        return df.format(date);
+    }
+
+    public static String getServerDateStringWithTimeZone(Date date) {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat df = new SimpleDateFormat(GMT_FORMAT);
 
         return df.format(date);
     }
@@ -421,7 +436,7 @@ public class DateUtils {
         return String.format("%02d:%02d:%02d", hours % 24, minutes % 60, seconds % 60);
     }
 
-    public static boolean hasDayPassed(int pastDay){
+    public static boolean hasDayPassed(int pastDay) {
         Calendar calander = Calendar.getInstance();
         int currentDay = calander.get(Calendar.DAY_OF_YEAR);
         return pastDay != currentDay;

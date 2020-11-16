@@ -3,11 +3,6 @@ package au.com.dealsdirect.ui.controller.account;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
@@ -28,7 +29,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -51,8 +54,6 @@ import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
-import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
-import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -105,6 +106,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     private boolean mIsChangeInProgress = false;
 
     private ArrayList<AccountItem> mAccountItems;
+    private Map<String, Integer> mAccountItemsMap = new HashMap<>();
     private boolean mIsLoginSuccessful;
     private String mChosenOption = "";
 
@@ -170,7 +172,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         if (mHasSavedInstance) {
             createAccountItems();
             mPresenter.loadAccountItems(mAccountItems);
-            mActivity.getMainController().getHomeController().setSavedCurrentItem();
+            mActivity.getMainController().setSavedCurrentItem();
         }
 
         mIsChangeInProgress = false;
@@ -273,6 +275,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
             newAccountItem = new AccountItem(i, title, Collections.emptyList());
             mAccountItems.add(newAccountItem);
+            mAccountItemsMap.put(title, i);
         }
 
 //        TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
@@ -304,6 +307,18 @@ public class AccountController extends BaseController implements AccountMvpView,
 
 
     @Override
+    public void onTabSwitch(boolean intoThisView) {
+        super.onTabSwitch(intoThisView);
+        if (intoThisView) {
+            if (!mActivity.isAuthorized() && mPresenter.isTablet() && mAccountItemAdapter != null) {
+                int selectedPosition = mAccountItemAdapter.getSelectedPosition() == null ? 0 : mAccountItemAdapter.getSelectedPosition();
+                mAccountItemAdapter.setSelectedPosition(selectedPosition);
+                mPresenter.onAccountItemClick(mActivity, mAccountItemAdapter.getTitle(selectedPosition));
+            }
+        }
+    }
+
+    @Override
     public void showAccountItems(List<AccountItem> accountItems) {
         mRecyclerViewExpandableItemManager = new RecyclerViewExpandableItemManager(null);
         mLayoutManager = new LinearLayoutManager(mActivity);
@@ -311,11 +326,8 @@ public class AccountController extends BaseController implements AccountMvpView,
 //        final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
 //        animator.setSupportsChangeAnimations(false);
 
-        if (!getBoolean(R.bool.is_tablet)) {
-            mAccountItemAdapter = new AccountItemAdapter(mActivity, accountItems, mPresenter);
-        } else {
-            mAccountItemAdapter = new AccountItemAdapter(mActivity, accountItems, mPresenter, true);
-        }
+        mAccountItemAdapter = new AccountItemAdapter(mActivity, accountItems, mPresenter);
+
         mAccountRecyclerView.setAdapter(mRecyclerViewExpandableItemManager.createWrappedAdapter(mAccountItemAdapter));
         mAccountRecyclerView.setLayoutManager(mLayoutManager);
         // NOTE: need to disable change animations to ripple effect work properly
@@ -333,6 +345,8 @@ public class AccountController extends BaseController implements AccountMvpView,
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.DETAILS, RouterTransaction.with(DetailsController.newInstance()).pushChangeHandler(new FadeChangeHandler())
                     .popChangeHandler(new FadeChangeHandler()));
         }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_details)));
     }
 
     @Override
@@ -350,34 +364,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.VIEW_ADDRESSES, RouterTransaction.with(controller));
         }
-    }
 
-    @Override
-    public void showChangeDeliveryAddressController(boolean calledFromOrder, String orderID) {
-        ViewAddressController.Parameters.DisplayViewAddress parameters = new ViewAddressController.Parameters
-                .DisplayViewAddress(false, null, calledFromOrder, orderID);
-
-        ViewAddressController controller = ViewAddressController.newInstance(parameters);
-        getDisplayRouter().pushController(RouterTransaction.with(controller)
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-    }
-
-    @Override
-    public void showReturnDetails(String returnID, String productName, boolean isFromOrders) {
-
-        RouterTransaction routerTransaction = RouterTransaction.with(ReturnDetailsController.newInstance(returnID, productName, isFromOrders))
-                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
-
-        getDisplayRouter().pushController(routerTransaction);
-    }
-
-    @Override
-    public void addNewReturns(int invoiceNumber, boolean calledFromOrder, String productId) {
-        RouterTransaction routerTransaction = RouterTransaction.with(NewReturnController.newInstance(invoiceNumber, calledFromOrder, productId))
-                .pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler());
-
-        getDisplayRouter().pushController(routerTransaction);
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_addresses)));
     }
 
     @Override
@@ -387,6 +375,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.ORDERS, RouterTransaction.with(OrdersController.newInstance()));
         }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_orders)));
     }
 
     @Override
@@ -396,6 +386,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.VIEW_VOUCHERS, RouterTransaction.with(ViewVouchersController.newInstance()));
         }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_vouchers)));
     }
 
     @Override
@@ -404,12 +396,14 @@ public class AccountController extends BaseController implements AccountMvpView,
             //needed to tag this transaction
             //for future improvement, allow setting tag in gatekeeper.
             getRouter().pushController(RouterTransaction.with(CurrentReturnsController.newInstance())
-                    .tag(getString(R.string.current_returns_controller))
+                    .tag(CurrentReturnsController.class.getName())
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CURRENT_RETURNS, RouterTransaction.with(CurrentReturnsController.newInstance()));
         }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_returns)));
     }
 
     @Override
@@ -419,6 +413,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.PAYMENT_SELECT, RouterTransaction.with(PaymentSelectController.newInstance()));
         }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_payments)));
     }
 
     @Override
@@ -428,6 +424,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.MY_ACCOUNTS_OURPAY, RouterTransaction.with(MyAccountsOurpayController.newInstance()));
         }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_ourpay)));
     }
 
     @Override
@@ -449,6 +447,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.LANGUAGE, RouterTransaction.with(LanguageController.newInstance()));
         }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_language)));
     }
 
     @Override
@@ -458,6 +458,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.CONTACT_US, RouterTransaction.with(ViewContactsController.newInstance()));
         }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_contact_us)));
     }
 
     @Override
@@ -474,6 +476,8 @@ public class AccountController extends BaseController implements AccountMvpView,
                 GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.INVITE, RouterTransaction.with(InviteSendController.newInstance()));
             }
         }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_invite_friend)));
     }
 
     @Override
@@ -483,6 +487,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.COUNTRY, RouterTransaction.with(new CountryController(false)));
         }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_country)));
     }
 
     @Override
@@ -492,6 +498,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.NOTIFICATION, RouterTransaction.with(NotificationController.newInstance()));
         }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_notification)));
     }
 
     @Override
@@ -509,6 +517,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         } else {
             GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.LEGALITIES, RouterTransaction.with(new LegalitiesController(bundle)));
         }
+
+        mAccountItemAdapter.setSelectedPosition(null);
     }
 
     @Override
@@ -527,9 +537,9 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_out));
                 }
 
-                mActivity.getHomeController().resetRouters();
+                mActivity.getMainController().resetCheckoutRouter();
                 if (mPresenter.isTablet()) {
-                    mActivity.getMainController().getHomeController().resetAccountRouter();
+                    mActivity.getMainController().resetAccountRouter();
                 }
             }
 
@@ -553,14 +563,14 @@ public class AccountController extends BaseController implements AccountMvpView,
             public void success() {
                 mPresenter.loadAccountItems(mAccountItems);
                 CartUtil.setValueToCart(0);
-                mActivity.getMainController().getHomeController().removeBasketItemCount();
+                mActivity.getMainController().removeBasketItemCount();
                 mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_in));
                 mPresenter.setActiveCheckoutSessionFalse();
 
                 //reset routers with unique user info
-                mActivity.getMainController().getHomeController().resetRouters();
-                mActivity.getHomeRouter().popToRoot();
-                mActivity.setShopsAsVisibleContainer();
+                mActivity.getMainController().resetCheckoutRouter();
+                mActivity.getMainController().getRouter().popToRoot();
+                mActivity.getMainController().showShopController();
                 mActivity.callPublicSettings();
                 mActivity.refreshBannersFromLogout();
                 mActivity.refreshWishlist();
@@ -600,8 +610,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mRightToolbarButton.setVisibility(View.VISIBLE);
-
-        mActivity.getMainController().setViewpagerDraggable(false);
     }
 
     @Override
@@ -617,7 +625,7 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     public boolean handleBack() {
         if (mAccountDetailRouter != null && mAccountDetailRouter.getBackstackSize() == 1) {
-            mActivity.getHomeController().goBackToHomePage();
+            mActivity.getMainController().showShopController();
             return true;
         }
 
@@ -636,7 +644,11 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mPresenter.onAttach(AccountController.this);
                     mActivity.callGCMRegisterSubscriber();
                     mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_out));
-                    mActivity.getMainController().getHomeController().initControllers(true);
+                    mActivity.getMainController().resetShopRouter();
+                    mActivity.getMainController().resetCategoriesRouter();
+                    mActivity.getMainController().resetAccountRouter();
+                    mActivity.getMainController().resetWishlistRouter();
+                    mActivity.getMainController().resetCheckoutRouter();
                 }
 
                 @Override

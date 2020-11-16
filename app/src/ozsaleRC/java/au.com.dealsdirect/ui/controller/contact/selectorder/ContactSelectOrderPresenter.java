@@ -4,16 +4,13 @@ package au.com.dealsdirect.ui.controller.contact.selectorder;
  */
 
 
-import com.androidnetworking.error.ANError;
-
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
-import au.com.dealsdirect.data.network.model.contactorder.ContactOrderList;
-import au.com.dealsdirect.data.network.model.contactorder.ContactOrders;
+import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -30,18 +27,17 @@ public class ContactSelectOrderPresenter<V extends ContactSelectOrderMvpView> ex
     public void loadContactUsOrders() {
         getMvpView().showLoading();
 
-        doApiCallForResponse(getDataManager().callGetContactOrders(), new AppApiCallback(){
+        doApiCallForResponse(getDataManager().callGetContactOrders(), new AppApiCallback() {
             @Override
-            public void onSuccess(Object response) {
+            public void onSuccess(List<?> response) {
                 super.onSuccess(response);
-                ContactOrders orders = (ContactOrders) response;
-                getMvpView().showContactOrders(orders.getContactOrderResponse().getList());
+                getMvpView().showContactOrders((List<ContactOrderResponse>) response);
             }
         });
     }
 
     @Override
-    public void selectContactOrder(ContactOrderList contactOrderList){
-        getMvpView().onContactOrderSelected(contactOrderList);
+    public void selectContactOrder(ContactOrderResponse contactOrderResponse) {
+        getMvpView().onContactOrderSelected(contactOrderResponse);
     }
 }

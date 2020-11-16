@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.ImageUploadUtil;
-import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -30,11 +29,11 @@ import butterknife.ButterKnife;
 public class ImageDisplayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private List<au.com.dealsdirect.data.network.model.contacthistory.List.Attachments> mUrlImages = new ArrayList<>();
+    private List<GetContactHistoryResponse.Message.Attachment> mUrlImages = new ArrayList<>();
 
 
     public ImageDisplayAdapter(Context context,
-                               List<au.com.dealsdirect.data.network.model.contacthistory.List.Attachments> urlImages) {
+                               List<GetContactHistoryResponse.Message.Attachment> urlImages) {
         mContext = context;
         mUrlImages = urlImages;
     }
@@ -49,7 +48,7 @@ public class ImageDisplayAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        au.com.dealsdirect.data.network.model.contacthistory.List.Attachments attachments = mUrlImages.get(position);
+        GetContactHistoryResponse.Message.Attachment attachments = mUrlImages.get(position);
 
         Glide.with(mContext)
                 .asBitmap()

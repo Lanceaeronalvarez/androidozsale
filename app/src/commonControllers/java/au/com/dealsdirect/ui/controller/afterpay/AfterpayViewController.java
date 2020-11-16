@@ -140,7 +140,7 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
                 .putString(BundleKeys.KEY_ESTIMATED_DELIVERY, delivery);
 
         if (mPresenter.isTablet()) {
-            Router router = mActivity.getHomeController().getPopUpHostRouter();
+            Router router = mActivity.getMainController().getPopUpHostRouter();
             Bundle bundle = bundleBuilder
                     .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.PAYMENT_SUCCESS)
                     .build();

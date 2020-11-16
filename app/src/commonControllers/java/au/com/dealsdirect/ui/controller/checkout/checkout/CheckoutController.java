@@ -72,7 +72,6 @@ import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostMvpVie
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
-import au.com.dealsdirect.ui.controller.home.HomeController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
@@ -273,7 +272,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     private OurpayPanel ourpayPanel;
 
-    private CheckoutHostMvpView mCheckoutHostView;
+    private CheckoutHostMvpView mCheckoutHostView = null;
 
     private CompositeDisposable mClickListeners;
     private CompositeDisposable mChangeClickListeners;
@@ -301,7 +300,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.ADD_ADDRESS);
         } else {
             ViewAddressController.Parameters.DisplayViewAddress parameters = new ViewAddressController.Parameters
-                    .DisplayViewAddress(true, null, false, "");
+                    .DisplayViewAddress(true, mDeliveryAddress, false, "");
 
             ViewAddressController controller = ViewAddressController.newInstance(parameters);
             getRouter().pushController(RouterTransaction.with(controller)
@@ -352,6 +351,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
+        if (!mIsCartLoading && mPresenter.checkIsLoggedIn()) {
+            loadCart(); //preload if logged in
+        }
 
 //        registerClickListeners();
     }
@@ -364,17 +366,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.onAttach(this);
         mVcoPresenter.onAttach(this);
 
-        if (getBoolean(R.bool.is_tablet) && getBoolean(R.bool.master_detail_enabled)) {
-            CheckoutHostController existingController = mActivity.getMainController().getCheckoutHostController();
-            if (!mHasSavedInstance || existingController == null) {
-                mCheckoutHostView = (CheckoutHostMvpView) mActivity.getCheckoutRouter().getControllerWithTag(getString(R.string.checkout_host_controller));
-            } else {
-                mCheckoutHostView = existingController;
-            }
-        }
         return view;
     }
-
 
     @Override
     protected void onViewBound(@NonNull View view) {
@@ -423,7 +416,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (!mPresenter.isTablet() || !getBoolean(R.bool.master_detail_enabled)) {
             mRecyclerView.setVisibility(View.VISIBLE);
             mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
-            mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getHomeController().openLocationFilterHash(locationFilterHash));
+            mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         }
@@ -513,8 +506,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         } else {
             showNoCartItemsLayout();
         }
-
-        mActivity.getMainController().setViewpagerDraggable(false);
     }
 
     @Override
@@ -537,7 +528,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
             if (ourpay != null && ourpay.isCanUse()) {
 
-                if (((MainActivity) getActivity()).getMainController().getHomeController().isCheckoutRouterVisible()) {
+                if (((MainActivity) getActivity()).getMainController().isCheckoutPageVisible()) {
                     Log.d("ourpay", "checkout controller is visible");
                     boolean isPaymentInvalid = paymentMethod == null ? false : (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS) ||
                             paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) ||
@@ -620,8 +611,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showCartDetailsOnHost(List<MappedShipment> items) {
-        if (mCheckoutHostView != null) {
-            mCheckoutHostView.showCartDetails(items);
+        if (getCheckoutHostView() != null) {
+            getCheckoutHostView().showCartDetails(items);
         }
     }
 
@@ -650,16 +641,16 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showCartDetailsFooter(boolean show) {
-        if (mCheckoutHostView != null) {
-            mCheckoutHostView.showCartDetailsFooter(show);
+        if (getCheckoutHostView() != null) {
+            getCheckoutHostView().showCartDetailsFooter(show);
         }
         refreshItemList(show);
     }
 
     @Override
     public void showCartDetailsPostcode(String postcode) {
-        if (mCheckoutHostView != null) {
-            mCheckoutHostView.showCartDetailsPostcode(postcode);
+        if (getCheckoutHostView() != null) {
+            getCheckoutHostView().showCartDetailsPostcode(postcode);
         }
         if (mAdapter == null) {
             return;
@@ -706,6 +697,24 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             }
             displayPaymentDetails();
         }
+    }
+
+    private CheckoutHostMvpView getCheckoutHostView() {
+        if (mCheckoutHostView == null) {
+            if (getBoolean(R.bool.is_tablet) && getBoolean(R.bool.master_detail_enabled)) {
+                CheckoutHostController existingController = mActivity.getMainController().getCheckoutHostController();
+                if (!mHasSavedInstance || existingController == null) {
+                    if (mActivity.getCheckoutRouter() != null) {
+                        mCheckoutHostView = (CheckoutHostMvpView) mActivity.getCheckoutRouter()
+                                .getControllerWithTag(CheckoutHostController.class.getName());
+                    }
+                } else {
+                    mCheckoutHostView = existingController;
+                }
+            }
+        }
+
+        return mCheckoutHostView;
     }
 
     private void displayDeliveryOptionsUI(String deliveryOptionName, Double deliveryOptionPrice) {
@@ -1060,9 +1069,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void updateCheckoutBadge() {
-        HomeController homeController = mActivity.getMainController().getHomeController();
         if (mActivity.isAuthorized()) {
-            homeController.getPresenter().callGetBasketItemsQuantity();
+            mActivity.getMainController().updateBasketItemsQuantity();
         }
     }
 
@@ -1239,8 +1247,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .popChangeHandler(new FadeChangeHandler())
                 .pushChangeHandler(new FadeChangeHandler());
 
-        if (mActivity.getHomeController().getPopUpHostRouter() != null) {
-            mActivity.getHomeController().getPopUpHostRouter().setRoot(routerTransaction);
+        if (mActivity.getMainController().getPopUpHostRouter() != null) {
+            mActivity.getMainController().getPopUpHostRouter().setRoot(routerTransaction);
         } else {
             getDisplayRouter().pushController(routerTransaction);
         }
@@ -1250,7 +1258,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_AFTERPAY, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.AFTERPAY);
 
-        if (commonPaymentAbilityDetermination()) {
+        if (!commonPaymentAbilityDetermination()) {
             return;
         }
 
@@ -1263,8 +1271,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .popChangeHandler(new FadeChangeHandler())
                 .pushChangeHandler(new FadeChangeHandler());
 
-        if (mActivity.getHomeController().getPopUpHostRouter() != null) {
-            mActivity.getHomeController().getPopUpHostRouter().setRoot(routerTransaction);
+        if (mActivity.getMainController().getPopUpHostRouter() != null) {
+            mActivity.getMainController().getPopUpHostRouter().setRoot(routerTransaction);
         } else {
             getDisplayRouter().pushController(routerTransaction);
         }
@@ -1304,7 +1312,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.OURPAY_PHONE_VERIFIATION);
 
                     if (mPresenter.isTablet() && getBoolean(R.bool.is_ozsale_app)) {
-                        GateKeeper.setRoot(mActivity.getHomeController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
+                        GateKeeper.setRoot(mActivity.getMainController().getPopUpHostRouter(), GateKeeper.Destination.POP_UP_HOST, RouterTransaction.with(new PopUpHostController(bundle)).
                                 pushChangeHandler(new FadeChangeHandler()).popChangeHandler(new FadeChangeHandler()));
                     } else {
                         GateKeeper.push(getRouter(), GateKeeper.Destination.SMS_VERIFICATION, bundle,
@@ -1325,8 +1333,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Optional
     @OnClick(R.id.partial_checkout_empty_button)
     void shopNow() {
-
-        mActivity.setShopsAsVisibleContainer();
+        mActivity.getMainController().showShopController();
     }
 
     private String formAddressDetails(DeliveryAddress deliveryAddress) {
@@ -1449,7 +1456,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         registerClickListeners();
 
-        if (!mIsCartLoading) {
+        if (!mIsCartLoading &&
+                (previousController != null || mPresenter.checkIsLoggedIn())) {
             loadCart();
         }
     }
@@ -1652,7 +1660,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
-    public void showItemDetail(RecyclerView.ViewHolder viewHolder, int position, String seoIdentifierId, String imageUrl,
+    public void showItemDetail(View sourceView, int position, String seoIdentifierId, String imageUrl,
                                String skuId, String saleId, boolean isFreeDelivery,
                                String itemName, String brandName, String price, String oldPrice,
                                String productID) {
@@ -1681,11 +1689,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .with(SaleItemDetailsController.newInstance(parameters));
 
         int[] originalPos = new int[2];
-        viewHolder.itemView.getLocationOnScreen(originalPos);
+        sourceView.getLocationOnScreen(originalPos);
         int left = originalPos[0];
         int top = originalPos[1];
-        int width = viewHolder.itemView.getWidth();
-        int height = viewHolder.itemView.getHeight();
+        int width = sourceView.getWidth();
+        int height = sourceView.getHeight();
         routerTransaction = routerTransaction
                 .pushChangeHandler(new ArcZoomChangeHandler(left, top, width, height))
                 .popChangeHandler(new ArcZoomChangeHandler(left, top, width, height));
