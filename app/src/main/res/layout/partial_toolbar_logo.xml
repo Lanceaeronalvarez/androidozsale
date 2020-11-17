@@ -47,6 +47,7 @@
             android:layout_width="@dimen/partial_toolbar_logo_width"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            android:scaleType="centerInside"
             android:src="@drawable/logo_colored" />
 
         <ImageButton
