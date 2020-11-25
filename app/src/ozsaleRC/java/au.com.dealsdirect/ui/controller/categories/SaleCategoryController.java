@@ -313,6 +313,13 @@ public class SaleCategoryController extends BaseController
     }
 
     private void showSaleItems(String categoryKey, Set<SearchChipModel> chipFilters) {
+        final Router router = mActivity.getCategoriesRouter();
+
+        if (categoryKey == null) {
+            router.popToRoot();
+            return;
+        }
+
         mActivity.getMainController().setChosenCategoryItemKey(categoryKey);
 
         SaleItemsController.Parameters.FromCategory parameters = new SaleItemsController.Parameters
@@ -325,7 +332,6 @@ public class SaleCategoryController extends BaseController
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler());
 
-        Router router = mActivity.getCategoriesRouter();
         List<RouterTransaction> backstack = router.getBackstack();
         if (backstack.size() == 1) {
             router.pushController(routerTransaction);
@@ -339,12 +345,14 @@ public class SaleCategoryController extends BaseController
     }
 
     private List<GetCategoryTreeResponse> findMainCategoryWithKey(String key) {
-        String[] split = key.split(">>>");
-        if (split.length > 0) {
-            String mainKey = split[0];
-            for (GetCategoryTreeResponse category : mCategories) {
-                if (category.getKey().equals(mainKey)) {
-                    return Lists.newArrayList(category);
+        if (key != null) {
+            String[] split = key.split(">>>");
+            if (split.length > 0) {
+                String mainKey = split[0];
+                for (GetCategoryTreeResponse category : mCategories) {
+                    if (category.getKey().equals(mainKey)) {
+                        return Lists.newArrayList(category);
+                    }
                 }
             }
         }
