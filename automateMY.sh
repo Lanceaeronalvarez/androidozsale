@@ -3,8 +3,8 @@ OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 
 flavorName=mysaleRC
 buildTypeAssemble=MysaleRCRelease
-expectedVersionName="4.7.0"
-expectedVersionCode="273"
+expectedVersionName="4.7.1"
+expectedVersionCode="278"
 SPACE=" "
 philippines="Philippines"
 thailand="Thailand"

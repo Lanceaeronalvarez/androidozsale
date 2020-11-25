@@ -622,7 +622,8 @@ public class MainController extends BaseController implements MainMvpView {
 
                 }
             });
-        } else if (mActivity.isAuthorized() && !mCheckoutHostController.isCartLoading()) {
+        } else if (mActivity.isAuthorized() &&
+                mCheckoutHostController != null && !mCheckoutHostController.isCartLoading()) {
             mCheckoutHostController.loadCart();
         }
 
