@@ -435,6 +435,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mVcoButton.setOnClickListener(action -> {
             onVisaCheckoutButtonClicked();
         });
+
+        registerClickListeners();
     }
 
     @Override
@@ -1454,6 +1456,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public void onViewDidAppear(Controller previousController) {
         super.onViewDidAppear(previousController);
 
+        unregisterClickListeners();
         registerClickListeners();
 
         if (!mIsCartLoading &&
