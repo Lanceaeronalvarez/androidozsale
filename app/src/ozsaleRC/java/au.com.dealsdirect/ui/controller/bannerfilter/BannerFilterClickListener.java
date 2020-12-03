@@ -7,5 +7,6 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
  */
 
 public interface BannerFilterClickListener {
-    void onBannerClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse);
+    void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse);
+    void onBrandsClicked();
 }

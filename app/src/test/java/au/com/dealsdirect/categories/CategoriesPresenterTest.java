@@ -57,7 +57,7 @@ public class CategoriesPresenterTest {
     public void testLoadCategories(){
         List<GetCategoryTreeResponse> response = new ArrayList<>();
         doReturn(Observable.just(response))
-                .when(mMockDataManager).callGetGetCategories();
+                .when(mMockDataManager).callGetCategories();
 
         mPresenter.callGetCategoryTree();
         mTestScheduler.triggerActions();
@@ -73,7 +73,7 @@ public class CategoriesPresenterTest {
         String errMsg = "error";
 
         doReturn(Observable.error(new Exception(errMsg)))
-                .when(mMockDataManager).callGetGetCategories();
+                .when(mMockDataManager).callGetCategories();
 
         mPresenter.callGetCategoryTree();
         mTestScheduler.triggerActions();

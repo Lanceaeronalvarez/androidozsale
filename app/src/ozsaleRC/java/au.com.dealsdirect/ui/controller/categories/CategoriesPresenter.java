@@ -1,15 +1,10 @@
 package au.com.dealsdirect.ui.controller.categories;
 
-import android.util.Log;
-
-import com.androidnetworking.error.ANError;
-
 import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
@@ -39,7 +34,7 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
         }
 
         doApiCallForResponse(getDataManager()
-                .callGetGetCategories(), new AppApiCallback() {
+                .callGetCategories(), new AppApiCallback() {
             @Override
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);

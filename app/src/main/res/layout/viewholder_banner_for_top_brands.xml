@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewholder_banner_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/banner_mobile_height"
+    android:layout_marginBottom="1dp"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <ImageView
+        android:id="@+id/viewholder_banner_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:transitionName="image" />
+
+    <RelativeLayout
+        android:id="@+id/viewholder_brand_banner_info_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_extra_large">
+
+        <ImageView
+            android:id="@+id/viewholder_brand_banner_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_info" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="@dimen/margin_extra_small"
+        android:layout_marginBottom="@dimen/margin_extra_small"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/viewholder_banner_info_name"
+            fontPath="@string/font_app_regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/viewholder_banner_discount"
+            android:layout_alignParentStart="true"
+            android:background="#8a000000"
+            android:padding="@dimen/margin_extra_small"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_caption2"
+            tools:text="Atom Pro Compression" />
+
+    </LinearLayout>
+
+</RelativeLayout>

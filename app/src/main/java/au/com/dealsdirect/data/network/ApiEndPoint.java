@@ -137,6 +137,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/categorytree/", ApiUrlVersion.v5.apiVersion());
     }
 
+    public static String getTopBrands() {
+        return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/brands/topbrands/", ApiUrlVersion.v5.apiVersion());
+    }
+
     public static String getSales() {
         return getFormattedUrl(ApiService.SALE, ACCOUNT_ID_DELIMETER + "/banners/grouped/", ApiUrlVersion.v3.apiVersion());
     }

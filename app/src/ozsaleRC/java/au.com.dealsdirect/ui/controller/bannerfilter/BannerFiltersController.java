@@ -82,7 +82,8 @@ public class BannerFiltersController extends BaseController implements BannerFil
 
     @Override
     protected void setUp(View view) {
-        bannerFiltersAdapter = new BannerFiltersAdapter(mActivity, this, new ArrayList<>());
+        bannerFiltersAdapter = new BannerFiltersAdapter(this, new ArrayList<>());
+        bannerFiltersAdapter.setBrandsAvailable(true);
         mBannerFiltersRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mBannerFiltersRecyclerView.setAdapter(bannerFiltersAdapter);
 
@@ -153,11 +154,20 @@ public class BannerFiltersController extends BaseController implements BannerFil
     }
 
     @Override
-    public void onBannerClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
-        ShopsController shopsController = ShopsController.fromCategories(
+    public void onCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
+        ShopsController shopsController = ShopsController.instanceWithCategoryFilter(
                 getCategoryTreeResponse.getId(),
                 getCategoryTreeResponse.getKey()
         );
+        getRouter().pushController(
+                RouterTransaction.with(shopsController)
+                        .popChangeHandler(new HorizontalChangeHandler())
+                        .pushChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    @Override
+    public void onBrandsClicked() {
+        ShopsController shopsController = ShopsController.instanceWithBrandsOnlyFilter();
         getRouter().pushController(
                 RouterTransaction.with(shopsController)
                         .popChangeHandler(new HorizontalChangeHandler())

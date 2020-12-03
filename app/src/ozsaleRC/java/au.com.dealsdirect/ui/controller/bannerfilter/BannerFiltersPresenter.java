@@ -43,7 +43,7 @@ public class BannerFiltersPresenter<V extends BannerFiltersMvpView> extends Base
             getMvpView().showCategories(response.getTreeResponses());
         }
         doApiCallForResponse(getDataManager()
-                .callGetGetCategories(), new AppApiCallback() {
+                .callGetCategories(), new AppApiCallback() {
             @Override
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);

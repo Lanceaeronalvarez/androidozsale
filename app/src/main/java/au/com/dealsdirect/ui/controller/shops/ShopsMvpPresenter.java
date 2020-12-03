@@ -21,6 +21,8 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     void loadCategoryTree();
 
+    void loadTopBrands();
+
     boolean isAccessAnonymousEnabled();
 
     void cancelRequest();

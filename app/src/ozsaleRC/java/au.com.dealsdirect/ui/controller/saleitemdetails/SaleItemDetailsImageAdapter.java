@@ -16,8 +16,6 @@ import com.github.chrisbanes.photoview.ScalableImageView;
 import com.mysale.genie.utility.GenericEvent;
 import com.mysale.genie.utility.RxBus;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import au.com.dealsdirect.R;
@@ -35,9 +33,7 @@ import io.reactivex.disposables.Disposable;
 public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private boolean mIsTablet;
-    private View mContainerToToggle;
-    private List<View> mViewsToToggle = new ArrayList<>();
-    private List<String> mData = new LinkedList<>();
+    private List<String> mData;
     private LoadImagesListener mLoadImagesListener;
     private int mViewType;
     private SaleDetailsImageListener mSaleDetailsListener;
@@ -48,7 +44,6 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
             mLoadImagesListener.imagesLoaded();
         }
     };
-    private SaleItemDetailsMvpView mSaleItemDetailsView;
     private Activity mActivity;
 
     public void replaceData(List<String> data) {
@@ -95,22 +90,16 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public SaleItemDetailsImageAdapter(Activity activity,
                                        boolean isTablet,
-                                       View container,
-                                       ArrayList<View> views,
                                        LoadImagesListener loadImagesListener,
                                        List<String> data,
                                        int viewType,
-                                       SaleItemDetailsMvpView saleItemDetailsMvpView,
                                        SaleDetailsImageListener saleDetailsImageListener) {
 
         this.mActivity = activity;
         this.mIsTablet = isTablet;
-        this.mContainerToToggle = container;
-        this.mViewsToToggle = views != null ? views : new ArrayList<>();
         this.mLoadImagesListener = loadImagesListener;
         this.mData = data;
         this.mViewType = viewType;
-        this.mSaleItemDetailsView = saleItemDetailsMvpView;
         this.mSaleDetailsListener = saleDetailsImageListener;
     }
 
@@ -172,9 +161,6 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        mSaleItemDetailsView = null;
-        mViewsToToggle = null;
-        mContainerToToggle = null;
         mLoadImagesListener = null;
         super.onDetachedFromRecyclerView(recyclerView);
     }
@@ -213,7 +199,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
         switch (mViewType) {
             case 1:
                 ScalableImageView scalableImageView = (ScalableImageView) vh.image;
-                scalableImageView.setZoomable(mSaleItemDetailsView.getVerticalOffset() == 0);
+                scalableImageView.setZoomable(mSaleDetailsListener.getVerticalOffset() == 0);
                 vh.eventBusSubscription = RxBus.instance().subscribe(action -> {
                     if (action instanceof Pair && ((Pair) action).first == GenericEvent.Events.SALE_ITEM_DETAILS_VERTICAL_OFFSET &&
                             !scalableImageView.getAttacher().isScaling()) {
@@ -223,7 +209,7 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                 scalableImageView.setOnScaleChangeListener((scaleFactor, focusX, focusY) -> {
                     final float scale = scalableImageView.getScale();
                     final boolean resetZoom = scale <= Math.round(1.00f);
-                    mSaleItemDetailsView.toggleClipPadding(resetZoom);
+                    mSaleDetailsListener.toggleClipPadding(resetZoom);
                     mSaleDetailsListener.onImageRescale(scale);
                 });
                 break;

@@ -15,4 +15,7 @@ public interface SaleDetailsImageListener {
 
     void reloadSaleItemDetails(RecommendedItemsResponse response);
 
+    void toggleClipPadding(boolean isClipped);
+
+    int getVerticalOffset();
 }

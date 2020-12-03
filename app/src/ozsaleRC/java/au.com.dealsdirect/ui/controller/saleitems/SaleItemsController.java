@@ -308,6 +308,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
+        public static final class FromTopBrands extends Parameters {
+            private String mBrandName;
+
+            public FromTopBrands(String brandName) {
+                mBrandName = brandName;
+            }
+
+            public String getBrandName() {
+                return mBrandName;
+            }
+        }
+
         public static final class FromSaleItemDeepLink extends Parameters {
             private String mBannerTitle;
             private String mSaleId;
@@ -602,6 +614,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             title = ((Parameters.FromShopSearch) parameters).getTitle();
             controller.mFromShopSearch = true;
             controller.mSearchQuery = ((Parameters.FromShopSearch) parameters).getSearchKey();
+        } else if (parameters instanceof Parameters.FromTopBrands) {
+            title = ((Parameters.FromTopBrands) parameters).getBrandName();
+            controller.mFromShopSearch = true;
+            controller.mChipFilters.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, title, title, 0));
         } else if (parameters instanceof Parameters.FromCategory) {
             title = ((Parameters.FromCategory) parameters).getTitle();
             controller.mCategoryKey = ((Parameters.FromCategory) parameters).getCategoryMap();
@@ -826,7 +842,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
                     if (mHasSavedInstance) {
                         mActivity.getMainController().setSavedCurrentItem();
-                    } else {
+                    } else if (mChipFilters.isEmpty()){
                         showKeyboard();
                     }
                     if (mInitialLoad) {
@@ -1703,6 +1719,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
 
             mSearchFilterMvpView.setRepository(SaleItemsController.this);
+            mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
         }
         showCollapsingToolbar();
     }

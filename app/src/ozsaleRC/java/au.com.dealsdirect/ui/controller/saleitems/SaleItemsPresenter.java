@@ -281,7 +281,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadBrandBubbles() {
-        doApiCallForResponse(getDataManager().callGetGetCategories(),
+        doApiCallForResponse(getDataManager().callGetCategories(),
                 new AppApiCallback() {
                     @Override
                     public void onSuccess(List<?> list) {

@@ -31,6 +31,7 @@ import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
+import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
@@ -248,11 +249,19 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<List<GetCategoryTreeResponse>> callGetGetCategories() {
+    public Observable<List<GetCategoryTreeResponse>> callGetCategories() {
         return Rx2AndroidNetworking.get(ApiEndPoint.getCategoryTree())
                 .addHeaders(mApiHeader.get())
                 .build()
                 .getObjectListObservable(GetCategoryTreeResponse.class);
+    }
+
+    @Override
+    public Observable<List<GetTopBrandsResponse>> callGetTopBrands() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getTopBrands())
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectListObservable(GetTopBrandsResponse.class);
     }
 
     @Override

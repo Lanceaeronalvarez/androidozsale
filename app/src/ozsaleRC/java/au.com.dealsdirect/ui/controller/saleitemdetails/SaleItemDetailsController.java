@@ -95,7 +95,6 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.main.Settings;
-import au.com.dealsdirect.ui.controller.saleitemdetails.listener.ImageTappedListener;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -131,8 +130,7 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
  * Created by smartwave on 08/06/2017.
  */
 
-public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView,
-        LoadImagesListener, SaleDetailsImageListener, ImageTappedListener {
+public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView {
 
     private final static int ACTIVITY_INDICATOR_DELAY = 2000; // milliseconds
 
@@ -422,11 +420,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mHtmlHeader = "";
     private String mHtmlFooter = "";
 
-    private LoadImagesListener mLoadImagesListener;
-    private ImageTappedListener recentlyViewedListener;
-    private boolean mImagesLoaded = false;
-
     private ArrayList<Pair<String, String>> mProductSizes = new ArrayList<>();
+
+    private boolean mImagesLoaded = false;
 
     private boolean mHasSizes = false;
     private int mSelectedSizeIndex = -1;
@@ -465,7 +461,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private ElasticDragDismissFrameLayout.ElasticDragDismissCallback mDragDismissListener;
 
     private Map<String, String> mSavedPersonalizationData;
-    private SaleDetailsImageListener mSaleDetailsImageListener;
 
     private Handler addToCartDelayHandler;
     private Runnable addToCartDelayRunnable;
@@ -713,9 +708,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mRootView.addListener(mDragDismissListener);
         }
 
-        mLoadImagesListener = this;
-        mSaleDetailsImageListener = this;
-        recentlyViewedListener = this;
         mProductSharedImage.setTransitionName(getResources().getString(R.string.transition_sale_image_indexed, mFromPosition));
 
         if (mItemLowResImageDrawable != null) {
@@ -729,13 +721,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(
                 mActivity,
                 mPresenter.isTablet(),
-                mProductDetailScrollView,
-                null,
-                mLoadImagesListener,
+                loadImagesListener(),
                 new ArrayList<>(),
                 2,
-                this,
-                mSaleDetailsImageListener);
+                saleDetailsImageListener());
         mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
         mOtherImagesRv.setVisibility(View.INVISIBLE);
 
@@ -758,13 +747,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         SaleItemDetailsImageAdapter mSaleItemImagesAdapter = new SaleItemDetailsImageAdapter(
                 mActivity,
                 mPresenter.isTablet(),
-                null,
-                toggledViews,
-                mLoadImagesListener,
+                loadImagesListener(),
                 new ArrayList<>(),
                 1,
-                this,
-                mSaleDetailsImageListener);
+                saleDetailsImageListener());
         mProductImagesRv.setAdapter(mSaleItemImagesAdapter);
         mProductImagesRv.setEnabled(false);
         mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -1457,18 +1443,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public int getVerticalOffset() {
-        return mToolbarVerticalOffset;
-    }
-
-    @Override
-    public void toggleClipPadding(boolean isClipped) {
-        mProductCoordinatorLayout.setClipChildren(isClipped);
-        mProductCoordinatorLayout.setClipToPadding(isClipped);
-
-    }
-
-    @Override
     public void setDynamicDiscount(String discountText) {
         if (discountText == null) {
             mProductDiscountTextView.setVisibility(View.GONE);
@@ -1524,8 +1498,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
 
         adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.YouMayAlsoLike);
-        SaleItemDetailsScrollingImageAdapter mYouMayAlsoLikeAdapter = new SaleItemDetailsScrollingImageAdapter(mActivity, mPresenter,
-                this, mYouMayAlsoLikeList, mRecommendedList);
+        SaleItemDetailsScrollingImageAdapter mYouMayAlsoLikeAdapter = new SaleItemDetailsScrollingImageAdapter(
+                mActivity,
+                mPresenter,
+                saleDetailsImageListener(),
+                mYouMayAlsoLikeList,
+                mRecommendedList);
 
         mYouMayAlsoLikeAdapter.setSlidingBannersAdapter(adapter);
 
@@ -1564,8 +1542,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
 
-        SaleItemDetailsScrollingImageAdapter mRecommendedAdapter = new SaleItemDetailsScrollingImageAdapter(mActivity, mPresenter,
-                this, new ArrayList<>(), recommendedItemsResponseList);
+        SaleItemDetailsScrollingImageAdapter mRecommendedAdapter = new SaleItemDetailsScrollingImageAdapter(
+                mActivity,
+                mPresenter,
+                saleDetailsImageListener(),
+                new ArrayList<>(),
+                recommendedItemsResponseList);
 
         mRecommendedAdapter.setSlidingBannersAdapter(adapter);
         adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.RecommendedItems);
@@ -1605,8 +1587,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.RecentlyViewed);
         adapter.setShouldRepeatCellsToFillWidth(false);
-        RecentlyViewedItemAdapter recentlyViewedAdapter = new RecentlyViewedItemAdapter(mActivity, mPresenter,
-                recentlyViewedListener, response);
+        RecentlyViewedItemAdapter recentlyViewedAdapter = new RecentlyViewedItemAdapter(
+                mActivity,
+                mPresenter,
+                recentlyItemResponse -> {
+                    mProductDetailScrollView.smoothScrollTo(0, 0);
+                    mPresenter.loadSaleItemDetails(recentlyItemResponse.getId(), recentlyItemResponse.getSeoIdentifier());
+                },
+                response);
 
         recentlyViewedAdapter.setSlidingBannersAdapter(adapter);
 
@@ -1626,12 +1614,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mRecentlyViewedRecyclerView.setLayoutManager(mLayoutManager);
         mRecentlyViewedRecyclerView.getRecycledViewPool().clear();
 
-    }
-
-    @Override
-    public void imageTapped(RecentlyViewedItemResponse recentlyItemResponse) {
-        mProductDetailScrollView.smoothScrollTo(0, 0);
-        mPresenter.loadSaleItemDetails(recentlyItemResponse.getId(), recentlyItemResponse.getSeoIdentifier());
     }
 
     @Override
@@ -1869,22 +1851,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         return qualityImages;
     }
 
-    @Override
-    public void imagesLoaded() {
-        if (isAttached()) {
-            mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
-            mProductSharedImage.setVisibility(View.GONE);
-
-            mImagesLoaded = true;
-
-            mProductImagesRv.setEnabled(true);
-            mOtherImagesRv.setVisibility(View.VISIBLE);
-            mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-            mSizesContainer.setVisibility(!mProductSizes.isEmpty() ? View.VISIBLE : View.GONE);
-        }
-
-    }
-
     @OnClick(R.id.toolbar_left_view)
     void dismissArrowDown() {
         mActivity.onBackPressed();
@@ -2043,28 +2009,60 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
     }
 
-    @Override
-    public void onImageRescale(float scale) {
-        if (scale > 1.1f) { // set the threshold to 1.1 due to floating point error
-            mProductImagesRv.setZ(10);
-            mProductDetailsButtonContainer.setVisibility(View.GONE);
-            mSoldOutView.setVisibility(View.GONE);
-        } else {
-            mProductImagesRv.setZ(0);
-            mProductDetailsButtonContainer.setVisibility(View.VISIBLE);
-            mSoldOutView.setVisibility(mIsSoldout ? View.VISIBLE : View.GONE);
-        }
+    private LoadImagesListener loadImagesListener() {
+        return () -> {
+            if (isAttached()) {
+                mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
+                mProductSharedImage.setVisibility(View.GONE);
+
+                mImagesLoaded = true;
+
+                mProductImagesRv.setEnabled(true);
+                mOtherImagesRv.setVisibility(View.VISIBLE);
+                mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+                mSizesContainer.setVisibility(!mProductSizes.isEmpty() ? View.VISIBLE : View.GONE);
+            }
+        };
     }
 
-    @Override
-    public void reloadSaleItemDetails(GetYouMayAlsoLikeResponse response) {
-        mProductDetailScrollView.smoothScrollTo(0, 0);
-        mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
-    }
+    private SaleDetailsImageListener saleDetailsImageListener() {
+        return new SaleDetailsImageListener() {
+            @Override
+            public void onImageRescale(float scale) {
+                if (scale > 1.1f) { // set the threshold to 1.1 due to floating point error
+                    mProductImagesRv.setZ(10);
+                    mProductDetailsButtonContainer.setVisibility(View.GONE);
+                    mSoldOutView.setVisibility(View.GONE);
+                } else {
+                    mProductImagesRv.setZ(0);
+                    mProductDetailsButtonContainer.setVisibility(View.VISIBLE);
+                    mSoldOutView.setVisibility(mIsSoldout ? View.VISIBLE : View.GONE);
+                }
+            }
 
-    @Override
-    public void reloadSaleItemDetails(RecommendedItemsResponse response) {
-        mProductDetailScrollView.smoothScrollTo(0, 0);
-        mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
+            @Override
+            public void reloadSaleItemDetails(GetYouMayAlsoLikeResponse response) {
+                mProductDetailScrollView.smoothScrollTo(0, 0);
+                mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
+            }
+
+            @Override
+            public void reloadSaleItemDetails(RecommendedItemsResponse response) {
+                mProductDetailScrollView.smoothScrollTo(0, 0);
+                mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
+            }
+
+            @Override
+            public int getVerticalOffset() {
+                return mToolbarVerticalOffset;
+            }
+
+            @Override
+            public void toggleClipPadding(boolean isClipped) {
+                mProductCoordinatorLayout.setClipChildren(isClipped);
+                mProductCoordinatorLayout.setClipToPadding(isClipped);
+
+            }
+        };
     }
 }

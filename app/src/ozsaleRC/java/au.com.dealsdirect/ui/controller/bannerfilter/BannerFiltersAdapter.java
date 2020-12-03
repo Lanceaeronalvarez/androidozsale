@@ -1,11 +1,13 @@
 package au.com.dealsdirect.ui.controller.bannerfilter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +23,21 @@ import butterknife.ButterKnife;
 
 public class BannerFiltersAdapter extends RecyclerView.Adapter<BannerFiltersAdapter.BannerFiltersViewHolder> {
 
-    private Context mContext;
+    private static final int CATEGORY_NORMAL = 0;
+    private static final int CATEGORY_BRAND = 1;
+
     private BannerFilterClickListener mClickListener;
     private List<GetCategoryTreeResponse> mBannerFilterList;
 
-    public BannerFiltersAdapter(Context context, BannerFilterClickListener clickListener,
+    private boolean isBrandsAvailable = true;
+
+    public BannerFiltersAdapter(BannerFilterClickListener clickListener,
                                 ArrayList<GetCategoryTreeResponse> bannerFilterList) {
-        this.mContext = context;
         this.mClickListener = clickListener;
         this.mBannerFilterList = bannerFilterList;
     }
 
+    @NonNull
     @Override
     public BannerFiltersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_text_item, parent, false);
@@ -40,18 +46,41 @@ public class BannerFiltersAdapter extends RecyclerView.Adapter<BannerFiltersAdap
 
     @Override
     public void onBindViewHolder(BannerFiltersViewHolder holder, int position) {
-        holder.bannerFilterText.setText(mBannerFilterList.get(position).getName());
-        holder.itemView.setOnClickListener(view -> mClickListener.onBannerClicked(position, mBannerFilterList.get(position)));
+        switch (holder.getItemViewType()) {
+            case CATEGORY_NORMAL:
+                holder.bannerFilterText.setText(mBannerFilterList.get(position).getName());
+                holder.itemView.setOnClickListener(view -> mClickListener.onCategoryClicked(position, mBannerFilterList.get(position)));
+                break;
+            case CATEGORY_BRAND:
+                holder.bannerFilterText.setText("Brands");
+                holder.itemView.setOnClickListener(view -> mClickListener.onBrandsClicked());
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position < mBannerFilterList.size() ? CATEGORY_NORMAL : CATEGORY_BRAND;
     }
 
     @Override
     public int getItemCount() {
-        return mBannerFilterList.size();
+        return mBannerFilterList.size() + (!mBannerFilterList.isEmpty() && isBrandsAvailable ? 1 : 0);
     }
 
     public void replaceData(List<GetCategoryTreeResponse> bannerFilterList) {
         this.mBannerFilterList = bannerFilterList;
         notifyDataSetChanged();
+    }
+
+    public boolean isBrandsAvailable() {
+        return isBrandsAvailable;
+    }
+
+    public void setBrandsAvailable(boolean brandsAvailable) {
+        isBrandsAvailable = brandsAvailable;
     }
 
     public static class BannerFiltersViewHolder extends RecyclerView.ViewHolder {

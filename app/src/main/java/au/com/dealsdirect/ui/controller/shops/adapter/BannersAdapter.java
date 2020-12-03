@@ -55,7 +55,7 @@ import static android.graphics.Typeface.BOLD;
  * dp Created by Admin on 6/7/17.
  */
 
-public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyRecyclerHeadersAdapter {
+public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyRecyclerHeadersAdapter, ResettableDimensions {
 
     private int mOrientation;
 
@@ -677,6 +677,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return mGroups;
     }
 
+    @Override
     public void setupDimensions(int orientation) {
 
         int resId;

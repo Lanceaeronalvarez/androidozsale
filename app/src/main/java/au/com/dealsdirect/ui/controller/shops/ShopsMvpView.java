@@ -6,6 +6,7 @@ package au.com.dealsdirect.ui.controller.shops;
 import java.util.List;
 
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -20,6 +21,8 @@ public interface ShopsMvpView extends MvpView {
     void showCategoryBanners(GetBannerResponse getBannerResponses);
 
     void storeCategories(List<GetCategoryTreeResponse> categories);
+
+    void showTopBrands(List<GetTopBrandsResponse> topBrands);
 
     void unBindPaginate();
 
