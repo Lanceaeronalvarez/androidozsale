@@ -765,6 +765,7 @@
     <string name="returns_enquiry">Returns Enquiry</string>
 
     <string name="done">Done</string>
+    <string name="free_text">Free</string>
     <string name="free_shipping_text">Free Shipping</string>
     <string name="shipping_text">Shipping</string>
     <string name="promo_shipping_text">Add extra xxx of eligible products or choose Select\nto get</string>

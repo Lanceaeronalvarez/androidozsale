@@ -726,7 +726,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         String ourpaySelectBeforePurchaseDesc = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY);
         String freeText = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_DELIVERYOPTION_OPS_FREE);
 
-        String priceText = isAddressValid() && deliveryOptionPrice != null ? PriceUtils.getPriceStringValue(deliveryOptionPrice) : null;
+        String priceText = null;
+        if (isAddressValid() && (!mPresenter.isShippingByPostcodeEnabled() || isShipmentAvailable) && deliveryOptionPrice != null) {
+            priceText = deliveryOptionPrice > 0 ? PriceUtils.getPriceStringValue(deliveryOptionPrice) : mActivity.getResources().getString(R.string.free_text);
+        }
+
         if (deliveryOptionName.equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.STANDARD.toString()) ||
                 deliveryOptionName.equalsIgnoreCase(OurpayTemplateText.DeliveryOptions.EXPRESS.toString())) {
             mDeliveryOptionTypeText.setVisibility(View.VISIBLE);
@@ -779,6 +783,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }.getType()));
         bundle.putString(BundleKeys.DELIVERY_OPTIONS_DELIVERY_ADDRESS_ID, deliveryAddressId);
         bundle.putString(BundleKeys.DELIVERY_OPTIONS_DELIVERY_SERVICE_PACKAGE_DETAIL, new Gson().toJson(mDeliveryServicePackageDetail, DeliveryServicePackageDetail.class));
+        bundle.putBoolean(BundleKeys.DELIVERY_OPTIONS_IS_ADDRESS_VALID, isAddressValid() && (!mPresenter.isShippingByPostcodeEnabled() || isShipmentAvailable));
         getRouter().pushController(RouterTransaction.with(new DeliveryOptionsController(bundle)).
                 pushChangeHandler(new HorizontalChangeHandler(false)).popChangeHandler(new HorizontalChangeHandler()));
 

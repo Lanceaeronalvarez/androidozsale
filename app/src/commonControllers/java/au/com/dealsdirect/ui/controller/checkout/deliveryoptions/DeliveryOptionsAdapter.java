@@ -52,10 +52,12 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private RecyclerView mRecyclerView;
     private DeliveryOptionsOurPaySelectViewHolder mOurPaySelectViewHolder;
     private SetDeliveryOptionsObjectGenerator mSetDeliveryOptionsObjectGenerator;
+    private boolean mIsAddressValid;
 
     public DeliveryOptionsAdapter(MainActivity mainActivity, RecyclerView recyclerView,
                                   List<DeliveryOption> deliveryOptionList,
                                   String deliveryAddressId, DeliveryServicePackageDetail deliveryServiceDetailPackage,
+                                  boolean isAddressValid,
                                   DeliveryOptionsMvpPresenter mvpPresenter) {
         mActivity = mainActivity;
         mRecyclerView = recyclerView;
@@ -64,6 +66,7 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         mDeliveryOptions = deliveryOptionList;
         mDeliveryAddressId = deliveryAddressId;
         mDeliveryServicePackageDetail = deliveryServiceDetailPackage;
+        mIsAddressValid = isAddressValid;
         if (mDeliveryServicePackageDetail != null) {
             mDeliveryServicePackageDetailId = mDeliveryServicePackageDetail.getDeliveryServicePackageDetailID();
         }
@@ -90,8 +93,8 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        DeliveryOption deliveryOption = mDeliveryOptions.get(position);
-        boolean isSelected = deliveryOption.getSelected();
+        final DeliveryOption deliveryOption = mDeliveryOptions.get(position);
+        final boolean isSelected = deliveryOption.getSelected();
 
         if (isSelected) {
             mPreviousItem = mCurrentItem = deliveryOption;
@@ -100,35 +103,41 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         holder.itemView.setOnClickListener(v -> onSelectListener(deliveryOption, holder));
 
         if (holder instanceof DeliveryOptionsRegularViewHolder) {
-            ((DeliveryOptionsRegularViewHolder) holder).deliveryOptionExpressDescTextView.setVisibility(View.GONE);
+            final DeliveryOptionsRegularViewHolder deliveryOptionsRegularViewHolder = ((DeliveryOptionsRegularViewHolder) holder);
 
-            List<String> deliveryOptionTitles = deliveryOption.getDeliveryOptions();
-            String deliveryOptionTitle = deliveryOptionTitles.isEmpty() ? "" : deliveryOptionTitles.get(0);
+            deliveryOptionsRegularViewHolder.deliveryOptionExpressDescTextView.setVisibility(View.GONE);
+
+            final List<String> deliveryOptionTitles = deliveryOption.getDeliveryOptions();
+            final String deliveryOptionTitle = deliveryOptionTitles.isEmpty() ? "" : deliveryOptionTitles.get(0);
             String deliveryOptionName = "";
-            Double deliveryPrice = deliveryOption.getPrice();
+            final Double deliveryPrice = deliveryOption.getPrice();
+            String deliveryPriceText = null;
+            if (mIsAddressValid && deliveryPrice != null) {
+                deliveryPriceText = deliveryPrice > 0 ? PriceUtils.getPriceStringValue(deliveryPrice) : mActivity.getResources().getString(R.string.free_text);
+            }
 
             if (OurpayTemplateText.DeliveryOptions.STANDARD.equalsName(deliveryOptionTitle)) {  // get the name from template texts;
                 deliveryOptionName = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_DELIVERYOPTION_STANDARD_TITLE);
             } else if (OurpayTemplateText.DeliveryOptions.EXPRESS.equalsName(deliveryOptionTitle)) {
                 deliveryOptionName = mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_DELIVERYOPTION_EXPRESS_TITLE);
-                ((DeliveryOptionsRegularViewHolder) holder).deliveryOptionExpressDescTextView.setVisibility(View.VISIBLE);
-                ((DeliveryOptionsRegularViewHolder) holder).deliveryOptionExpressDescTextView.setText(mExpressDescText);
+                deliveryOptionsRegularViewHolder.deliveryOptionExpressDescTextView.setVisibility(View.VISIBLE);
+                deliveryOptionsRegularViewHolder.deliveryOptionExpressDescTextView.setText(mExpressDescText);
             }
 
-            ((DeliveryOptionsRegularViewHolder) holder).deliveryOptionCheckBox.setChecked(isSelected);
-            ((DeliveryOptionsRegularViewHolder) holder).deliveryOptionTypeTextView.setText(deliveryOptionName);
-            ((DeliveryOptionsRegularViewHolder) holder).deliveryOptionPriceTextView
-                    .setText(deliveryPrice != null ? PriceUtils.getPriceStringValue(deliveryPrice) : null);
+            deliveryOptionsRegularViewHolder.deliveryOptionCheckBox.setChecked(isSelected);
+            deliveryOptionsRegularViewHolder.deliveryOptionTypeTextView.setText(deliveryOptionName);
+            deliveryOptionsRegularViewHolder.deliveryOptionPriceTextView.setText(deliveryPriceText);
 
         } else if (holder instanceof DeliveryOptionsOurPaySelectViewHolder) {
+            final DeliveryOptionsOurPaySelectViewHolder deliveryOptionsOurPaySelectViewHolder = ((DeliveryOptionsOurPaySelectViewHolder) holder);
 
-            ((DeliveryOptionsOurPaySelectViewHolder) holder).ourpaySelectCheckBox.setChecked(isSelected);
-            ((DeliveryOptionsOurPaySelectViewHolder) holder).ourpaySelectDescTextView.setText(mOurPaySelectDescText);
-            ((DeliveryOptionsOurPaySelectViewHolder) holder).ourpaySelectOptionsRecyclerView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+            deliveryOptionsOurPaySelectViewHolder.ourpaySelectCheckBox.setChecked(isSelected);
+            deliveryOptionsOurPaySelectViewHolder.ourpaySelectDescTextView.setText(mOurPaySelectDescText);
+            deliveryOptionsOurPaySelectViewHolder.ourpaySelectOptionsRecyclerView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
 
-            String completeTncText = mActivity.getString(R.string.by_choosing_ourpay_select) + " " + mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_OURPAY_TC_TEXT);
-            ((DeliveryOptionsOurPaySelectViewHolder) holder).ourpaySelectTncTextView.setText(Html.fromHtml(completeTncText));
-            ((DeliveryOptionsOurPaySelectViewHolder) holder).ourpaySelectTncTextView.setOnClickListener(v -> mPresenter.onTermsAndConditionsClicked());
+            final String completeTncText = mActivity.getString(R.string.by_choosing_ourpay_select) + " " + mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_OURPAY_TC_TEXT);
+            deliveryOptionsOurPaySelectViewHolder.ourpaySelectTncTextView.setText(Html.fromHtml(completeTncText));
+            deliveryOptionsOurPaySelectViewHolder.ourpaySelectTncTextView.setOnClickListener(v -> mPresenter.onTermsAndConditionsClicked());
 
         }
     }
