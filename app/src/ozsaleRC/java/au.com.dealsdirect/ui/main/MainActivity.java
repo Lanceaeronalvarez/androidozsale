@@ -79,8 +79,7 @@ import au.com.dealsdirect.ui.base.BaseController.CommonControllerChangeListener;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
-import au.com.dealsdirect.ui.controller.categories.SaleCategoryController;
+import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
@@ -146,13 +145,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private FetchTokenHandler mFetchTokenHandler;
 
     private MainController mMainController;
-    private CategoriesController mCategoriesController;
+    private CategoriesMvpView mCategoriesView;
     private CheckoutController mCheckoutController;
     private ViewContactsController mContactsController;
     private AccountController mAccountController;
     private SearchFilterController mSearchFilterController;
     private SearchFilterController mShopSearchFilterController;
-    private SaleCategoryController mSaleCategoryController;
 
     private AuthHandler mAuthHandler;
 
@@ -1086,20 +1084,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mPresenter.getShippingTitle();
     }
 
-    public void setCategoriesController(CategoriesController categoriesController) {
-        mCategoriesController = categoriesController;
-    }
-
-    public CategoriesController getCategoriesController() {
-        return mCategoriesController;
-    }
-
-    public SaleCategoryController getSaleCategoryController() {
-        return mSaleCategoryController;
-    }
-
-    public void setSaleCategoryController(SaleCategoryController saleCategoryController) {
-        this.mSaleCategoryController = saleCategoryController;
+    public CategoriesMvpView getCategoriesController() {
+        if (mCategoriesView == null && getMainController() != null && getMainController().getCategoriesRouter() != null) {
+            for (RouterTransaction routerTransaction : getMainController().getCategoriesRouter().getBackstack()) {
+                if (routerTransaction.controller() instanceof CategoriesMvpView) {
+                    mCategoriesView = (CategoriesMvpView) routerTransaction.controller();
+                    break;
+                }
+            }
+        }
+        return mCategoriesView;
     }
 
     public boolean getIsMyPayEnabled() {

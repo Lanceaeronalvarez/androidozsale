@@ -18,4 +18,6 @@ public interface CategoriesMvpView extends MvpView {
     void hideNoNetworklayout();
 
     void showSaleItems(String categoryId);
+
+    String getCategoryKeyFromId(String id);
 }

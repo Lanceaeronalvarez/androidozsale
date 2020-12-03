@@ -39,7 +39,7 @@ import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
+import au.com.dealsdirect.ui.controller.categories.OldCategoriesController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.OnClickFreeDeliveryListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -468,10 +468,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @Override
     public void onBannerClicked(String categoryId) {
-        CategoriesMvpView categoriesMvpView = mActivity.getCategoriesController();
-        if (categoriesMvpView == null) {
-            categoriesMvpView = mActivity.getSaleCategoryController();
-        }
+        final CategoriesMvpView categoriesMvpView = mActivity.getCategoriesController();
         if (categoriesMvpView == null) {
             return;
         }
@@ -1073,8 +1070,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         if (categoryKey != null && mActivity.getCategoriesController() != null) {
 
-            CategoriesController categoriesController = mActivity.getCategoriesController();
-            String categoryMapKey = categoriesController.getCategoryKey(categoryId);
+            final CategoriesMvpView categoriesView = mActivity.getCategoriesController();
+            final String categoryMapKey = categoriesView.getCategoryKeyFromId(categoryId);
 
             mCategoryKey = categoryMapKey;
             mCategoryID = categoryMapKey;
