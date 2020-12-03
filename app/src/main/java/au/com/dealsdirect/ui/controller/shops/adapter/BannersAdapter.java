@@ -65,7 +65,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private GetBannerResponse.Banner promoBanner;
     private Activity mActivity;
     private ShopsMvpPresenter mPresenter;
-    private RecyclerView recyclerView = null;
     private int mWidth;
     private int mHeight;
     private int mWidthForPromoBanner;
@@ -77,14 +76,15 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final float DISCOUNT_VALUE_SCALE_FACTOR = 1.8f;
 
     // note: please don't combine different banner types
-    public static final int VIEW_HOLDER_TYPE_LANDSCAPE = 1;
-    public static final int VIEW_HOLDER_TYPE_NORMAL_BANNER = 1 << 1;
-    public static final int VIEW_HOLDER_TYPE_PROMO_BANNER = 1 << 2;
-    public static final int VIEW_HOLDER_TYPE_SLIDING_BANNER = 1 << 3;
-    public static final int VIEW_HOLDER_TYPE_CATEGORY_BANNER = 1 << 4;
-    public static final int VIEW_HOLDER_TYPE_SPONSORED_BANNER = 1 << 5;
-    public static final int VIEW_HOLDER_TYPE_FOOTER = 1 << 6;
-    public static final int VIEW_HOLDER_TYPE_SPACER = 1 << 7;
+    public static final int VIEW_HOLDER_TYPE_OLD = 1;
+    public static final int VIEW_HOLDER_TYPE_LANDSCAPE = 1 << 1;
+    public static final int VIEW_HOLDER_TYPE_NORMAL_BANNER = 1 << 2;
+    public static final int VIEW_HOLDER_TYPE_PROMO_BANNER = 1 << 3;
+    public static final int VIEW_HOLDER_TYPE_SLIDING_BANNER = 1 << 4;
+    public static final int VIEW_HOLDER_TYPE_CATEGORY_BANNER = 1 << 5;
+    public static final int VIEW_HOLDER_TYPE_SPONSORED_BANNER = 1 << 6;
+    public static final int VIEW_HOLDER_TYPE_FOOTER = 1 << 7;
+    public static final int VIEW_HOLDER_TYPE_SPACER = 1 << 8;
 
     private static final int[] BANNER_ORDER = {
             VIEW_HOLDER_TYPE_PROMO_BANNER,
@@ -95,14 +95,28 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             VIEW_HOLDER_TYPE_NORMAL_BANNER
     };
 
+    private boolean useOldBannerDimensions = false;
+
     private static final int THROTTLE_FIRST_WINDOW_DURATION = 1000;
 
-    private int removeViewHolderOrientationModifier(int viewHolderType) {
+    public static int removeViewHolderOrientationModifier(int viewHolderType) {
         return viewHolderType & (~VIEW_HOLDER_TYPE_LANDSCAPE);
     }
 
-    private int isViewHolderTypeLandscape(int viewHolderType) {
-        return viewHolderType & VIEW_HOLDER_TYPE_LANDSCAPE;
+    public static boolean isViewHolderTypeLandscape(int viewHolderType) {
+        return (viewHolderType & VIEW_HOLDER_TYPE_LANDSCAPE) != 0;
+    }
+
+    public static int removeViewHolderOldModifier(int viewHolderType) {
+        return viewHolderType & (~VIEW_HOLDER_TYPE_OLD);
+    }
+
+    public static boolean isViewHolderOldType(int viewHolderType) {
+        return (viewHolderType & VIEW_HOLDER_TYPE_OLD) != 0;
+    }
+
+    public static int removeViewHolderTypeModifiers(int viewHolderType) {
+        return removeViewHolderOldModifier(removeViewHolderOrientationModifier(viewHolderType));
     }
 
     private HorizontalScrollingBannerAdapter mSlidingBannersAdapter = null;
@@ -117,6 +131,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ShopsMvpPresenter presenter,
             List<GetBannerResponse.Group> sales,
             int orientation,
+            boolean useOldBannerDimensions,
             OnClickFreeDeliveryListener listener) {
 
         replace(sales);
@@ -124,16 +139,16 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mActivity = activity;
         mPresenter = presenter;
 
-        mWidth = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_width : R.integer.banner_mobile_width);
-        mHeight = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_height : R.integer.banner_mobile_height);
-        mWidthForPromoBanner = mActivity.getResources().getInteger(R.integer.banner_mobile_width);
-        mHeightForPromoBanner = mActivity.getResources().getInteger(R.integer.banner_mobile_height);
+        mWidthForPromoBanner = mActivity.getResources().getInteger(R.integer.old_banner_mobile_width);
+        mHeightForPromoBanner = mActivity.getResources().getInteger(R.integer.old_banner_mobile_height);
 
         mOrientation = orientation;
 
+        this.useOldBannerDimensions = useOldBannerDimensions;
+
         mListener = listener;
 
-        setupDimensions(orientation);
+        resetDimensions();
     }
 
     class SpacerViewHolder extends RecyclerView.ViewHolder {
@@ -176,7 +191,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @BindView(R.id.adView_banner)
         View adView;
 
-        BannerViewHolder(View view, int height) {
+        BannerViewHolder(View view, int height, int viewType) {
             super(view);
             ButterKnife.bind(this, view);
 
@@ -186,10 +201,12 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 layout.setLayoutParams(params);
             }
 
-            if (view.getContext().getResources().getBoolean(R.bool.is_using_old_banner)) {
-                name.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.bg_banner_name_old));
-            } else {
-                name.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.bg_banner_name_new));
+            if (isViewHolderOldType(viewType)) {
+                if (view.getContext().getResources().getBoolean(R.bool.is_using_older_banner)) {
+                    name.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.bg_banner_name_old));
+                } else {
+                    name.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.bg_banner_name_new));
+                }
             }
         }
 
@@ -235,7 +252,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int previousCount = mSales.size();
 
             for (GetBannerResponse.Group group : bannerResponses) {
-                mSales.addAll(group.getBanners());
+                for (GetBannerResponse.Banner banner : group.getBanners()) {
+                    preloadImageForBanner(banner);
+                    mSales.add(banner);
+                }
             }
 
             if (mOffset == 0 && promoBanner != null) {
@@ -246,11 +266,9 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 GetBannerResponse.Group bannerGroup = bannerResponses.get(bannerResponses.size() - 1);
                 mOffset = bannerGroup.getBanners().size();
                 mLastGroupType = bannerGroup.getType();
-                if (recyclerView != null && !recyclerView.isComputingLayout()) {
-                    notifyItemRangeInserted(
-                            getPositionOfNormalBanners() + previousCount,
-                            mSales.size() - previousCount);
-                }
+                notifyItemRangeInserted(
+                        getPositionOfNormalBanners() + previousCount,
+                        mSales.size() - previousCount);
             }
         }
     }
@@ -259,7 +277,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
 
-        switch (removeViewHolderOrientationModifier(viewType)) {
+        switch (removeViewHolderOldModifier(removeViewHolderOrientationModifier(viewType))) {
             case VIEW_HOLDER_TYPE_SPACER:
                 return new SpacerViewHolder(new View(parent.getContext(), null));
             case VIEW_HOLDER_TYPE_SLIDING_BANNER:
@@ -291,15 +309,20 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         .inflate(R.layout.footer_ads, parent, false);
                 return new BannerViewHolder(view);
             default:
-                if (parent.getContext().getResources().getBoolean(R.bool.is_using_old_banner)) {
-                    view = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.viewholder_old_banner, parent, false);
+                if (isViewHolderOldType(viewType)) {
+                    if (parent.getContext().getResources().getBoolean(R.bool.is_using_older_banner)) {
+                        view = LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.viewholder_older_banner, parent, false);
+                    } else {
+                        view = LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.viewholder_old_banner, parent, false);
+                    }
                 } else {
                     view = LayoutInflater.from(parent.getContext())
                             .inflate(R.layout.viewholder_banner, parent, false);
                 }
 
-                return new BannerViewHolder(view, mComputedHeight);
+                return new BannerViewHolder(view, mComputedHeight, viewType);
         }
     }
 
@@ -324,7 +347,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             horizontalRecyclerViewHolder.onViewBound();
             horizontalRecyclerViewHolders.add(horizontalRecyclerViewHolder);
         }
-        switch (removeViewHolderOrientationModifier(holder.getItemViewType())) {
+        switch (removeViewHolderOldModifier(removeViewHolderOrientationModifier(holder.getItemViewType()))) {
             case VIEW_HOLDER_TYPE_SPACER:
                 break;
             case VIEW_HOLDER_TYPE_SLIDING_BANNER:
@@ -373,7 +396,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 break;
             default:
                 synchronized (mSales) {
-                    int viewType = removeViewHolderOrientationModifier(holder.getItemViewType());
+                    int viewType = removeViewHolderOldModifier(removeViewHolderOrientationModifier(holder.getItemViewType()));
                     GetBannerResponse.Banner item;
                     int width;
                     int height;
@@ -601,7 +624,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private boolean isViewTypeVisible(int viewType) {
-        switch (viewType & (~VIEW_HOLDER_TYPE_LANDSCAPE)) {
+        switch (removeViewHolderOrientationModifier(viewType)) {
             case VIEW_HOLDER_TYPE_PROMO_BANNER:
                 return promoBanner != null;
             case VIEW_HOLDER_TYPE_SLIDING_BANNER:
@@ -614,7 +637,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 return isSlidingBannersVisible() || isCategoryBannersVisible() || isSponsoredBannersVisible();
             default:
                 for (int value : BANNER_ORDER) {
-                    if (value == (viewType & (~VIEW_HOLDER_TYPE_LANDSCAPE))) {
+                    if (value == (removeViewHolderOrientationModifier(viewType))) {
                         return true;
                     }
                 }
@@ -627,7 +650,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (isViewTypeVisible(viewType)) {
             for (int i = BANNER_ORDER.length - 1; i >= 0; i--) {
                 if (pos < 0) {
-                    if (BANNER_ORDER[i] == (viewType & (~VIEW_HOLDER_TYPE_LANDSCAPE))) {
+                    if (BANNER_ORDER[i] == removeViewHolderOrientationModifier(viewType)) {
                         pos = i;
                     }
                 } else if (!isViewTypeVisible(BANNER_ORDER[i])) {
@@ -678,19 +701,34 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
+    public void resetDimensions() {
+        if (useOldBannerDimensions) {
+            mWidth = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.old_banner_tablet_width : R.integer.old_banner_mobile_width);
+            mHeight = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.old_banner_tablet_height : R.integer.old_banner_mobile_height);
+        } else {
+            mWidth = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.sale_banner_tablet_width : R.integer.sale_banner_mobile_width);
+            mHeight = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.sale_banner_tablet_height : R.integer.sale_banner_mobile_height);
+        }
+        setupDimensions(mOrientation);
+    }
+
+    @Override
     public void setupDimensions(int orientation) {
 
-        int resId;
-        switch (ScreenUtils.getOrientation(mActivity)) {
-            case Configuration.ORIENTATION_LANDSCAPE:
-                resId = mPresenter.isTablet() ? R.integer.banner_tablet_landscape_column_count : R.integer.banner_mobile_landscape_column_count;
-                break;
-            default:
-                resId = mPresenter.isTablet() ? R.integer.banner_tablet_portrait_column_count : R.integer.banner_mobile_portrait_column_count;
-                break;
+        int minColumns = mPresenter.getBannerColumnCount();
+        if (useOldBannerDimensions || minColumns < 1) {
+            int resId;
+            switch (ScreenUtils.getOrientation(mActivity)) {
+                case Configuration.ORIENTATION_LANDSCAPE:
+                    resId = mPresenter.isTablet() ? R.integer.old_banner_tablet_landscape_column_count : R.integer.old_banner_mobile_landscape_column_count;
+                    break;
+                default:
+                    resId = mPresenter.isTablet() ? R.integer.old_banner_tablet_portrait_column_count : R.integer.old_banner_mobile_portrait_column_count;
+                    break;
+            }
+            minColumns = mActivity.getResources().getInteger(resId);
         }
-        int minColumns = mActivity.getResources().getInteger(resId);
-        int maxColumns = minColumns;
+        final int maxColumns = minColumns;
 
         mOrientation = orientation;
 
@@ -720,8 +758,15 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private Pair<Integer, Integer> slidingBannersImageSize() {
-        final int width = mActivity.getResources().getInteger(R.integer.sliding_banner_width);
-        final int height = mActivity.getResources().getInteger(R.integer.sliding_banner_height);
+        int width;
+        int height;
+        if (useOldBannerDimensions) {
+            width = mActivity.getResources().getInteger(R.integer.old_sliding_banner_width);
+            height = mActivity.getResources().getInteger(R.integer.old_sliding_banner_height);
+        } else {
+            width = mActivity.getResources().getInteger(R.integer.sliding_banner_width);
+            height = mActivity.getResources().getInteger(R.integer.sliding_banner_height);
+        }
         return new Pair<>(width, height);
     }
 
@@ -848,16 +893,14 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mSales.clear();
             mGroups.clear();
             promoBanner = null;
-            if (recyclerView != null && !recyclerView.isComputingLayout()) {
-                recyclerView.getRecycledViewPool().clear();
-                notifyDataSetChanged();
-            }
+            notifyDataSetChanged();
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        int viewType = mOrientation == Configuration.ORIENTATION_LANDSCAPE ? VIEW_HOLDER_TYPE_LANDSCAPE : 0;
+        int viewType = (useOldBannerDimensions ? 1 : 0) |
+                (mOrientation == Configuration.ORIENTATION_LANDSCAPE ? VIEW_HOLDER_TYPE_LANDSCAPE : 0);
         if (position == getPositionOfPromoBanner()) {
             viewType = viewType | VIEW_HOLDER_TYPE_PROMO_BANNER;
         } else if (position == getPositionOfSpacer()) {
@@ -899,9 +942,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int index = getPositionOfSlidingBanners();
             mSlidingBannersAdapter.setOnBannerTappedListener(null);
             mSlidingBannersAdapter = null;
-            if (recyclerView != null) {
-                recyclerView.getRecycledViewPool().clear();
-            }
             notifyDataSetChanged();
         } else {
             mSlidingBannersAdapter = slidingBannersAdapter;
@@ -910,9 +950,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         .setOnBannerTappedListener((banner, position) -> BannersAdapter.this
                                 .onBannerTapped(banner, position, "",
                                         Events.BannerClickEvent, banner.getBannerType()));
-            }
-            if (recyclerView != null) {
-                recyclerView.getRecycledViewPool().clear();
             }
             notifyDataSetChanged();
         }
@@ -929,20 +966,15 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int index = getPositionOfCategoryBanners();
             mCategoryBannersAdapter.setOnBannerTappedListener(null);
             mCategoryBannersAdapter = null;
-            if (recyclerView != null) {
-                recyclerView.getRecycledViewPool().clear();
-            }
             notifyDataSetChanged();
         } else {
             mCategoryBannersAdapter = categoryBannersAdapter;
+            mCategoryBannersAdapter.preloadBannerImages(mActivity);
             if (mCategoryBannersAdapter != null) {
                 mCategoryBannersAdapter
                         .setOnBannerTappedListener((banner, position) -> BannersAdapter.this
                                 .onBannerTapped(banner, position, "",
                                         Events.BannerClickEvent, banner.getBannerType()));
-            }
-            if (recyclerView != null) {
-                recyclerView.getRecycledViewPool().clear();
             }
             notifyDataSetChanged();
         }
@@ -959,34 +991,17 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int index = getPositionOfSponsoredBanners();
             mSponsoredBannersAdapter.setOnBannerTappedListener(null);
             mSponsoredBannersAdapter = null;
-            if (recyclerView != null) {
-                recyclerView.getRecycledViewPool().clear();
-            }
             notifyDataSetChanged();
         } else {
             mSponsoredBannersAdapter = sponsoredBannersAdapter;
+            mSponsoredBannersAdapter.preloadBannerImages(mActivity);
             if (mSponsoredBannersAdapter != null) {
                 mSponsoredBannersAdapter.setOnBannerTappedListener((banner, position) -> BannersAdapter.this
                         .onBannerTapped(banner, position, "",
                                 Events.SponsoredBannerClickEvent, banner.getBannerText()));
             }
-            if (recyclerView != null) {
-                recyclerView.getRecycledViewPool().clear();
-            }
             notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        this.recyclerView = recyclerView;
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        this.recyclerView = null;
     }
 
     public void restartHorizontalViewHolders() {
@@ -999,5 +1014,23 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         for (HorizontalRecyclerViewHolder viewHolder : horizontalRecyclerViewHolders) {
             viewHolder.onViewRecycled();
         }
+    }
+
+    @Override
+    public boolean isUseOldBannerDimensions() {
+        return useOldBannerDimensions;
+    }
+
+    @Override
+    public void setUseOldBannerDimensions(boolean useOldBannerDimensions) {
+        this.useOldBannerDimensions = useOldBannerDimensions;
+    }
+
+    private void preloadImageForBanner(GetBannerResponse.Banner banner) {
+        final int width = banner == promoBanner ? mWidthForPromoBanner : mWidth;
+        final int height = banner == promoBanner ? mHeightForPromoBanner : mHeight;
+        final String imgUrl = ImageUtils.appendBannerSizeUrl(banner.getImage(), width, height);
+
+        ImageUtils.preLoadImage(imgUrl, mActivity);
     }
 }

@@ -877,7 +877,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Observable<String> callCloseTicketSatisfaction(int global, String contactNumber) {
-        return mApiHelper.callCloseTicketSatisfaction(global,contactNumber);
+        return mApiHelper.callCloseTicketSatisfaction(global, contactNumber);
     }
 
     @Override
@@ -1539,6 +1539,26 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public int getMobilePhoneBannerColumns() {
+        return mPreferencesHelper.getMobilePhoneBannerColumns();
+    }
+
+    @Override
+    public void setMobilePhoneBannerColumns(Integer columns) {
+        mPreferencesHelper.setMobilePhoneBannerColumns(columns);
+    }
+
+    @Override
+    public int getMobileTabletBannerColumns() {
+        return mPreferencesHelper.getMobileTabletBannerColumns();
+    }
+
+    @Override
+    public void setMobileTabletBannerColumns(Integer columns) {
+        mPreferencesHelper.setMobileTabletBannerColumns(columns);
+    }
+
+    @Override
     public void setReCaptchaSiteKey(String key) {
         mPreferencesHelper.setReCaptchaSiteKey(key);
     }
@@ -1781,5 +1801,15 @@ public class AppDataManager implements DataManager {
     @Override
     public void setTemplateTextsSource(GetTemplateTextsResponse.GetTemplateTextsValue source) {
         mTemplateTextsHelper.setTemplateTextsSource(source);
+    }
+
+    @Override
+    public void setPrefersOldShopBannerDimensions(boolean doesPrefer) {
+        mPreferencesHelper.setPrefersOldShopBannerDimensions(doesPrefer);
+    }
+
+    @Override
+    public boolean getPrefersOldShopBannersDimensions() {
+        return mPreferencesHelper.getPrefersOldShopBannersDimensions();
     }
 }

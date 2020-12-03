@@ -38,17 +38,22 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
     private int mWidth;
     private int mHeight;
     private int mNumberOfColumns;
-    private int mOffset;
+
+    boolean useOldBannerDimensions;
 
     private OnBrandBannerClickListener mOnBrandBannerClickListener;
 
     private static final int THROTTLE_FIRST_WINDOW_DURATION = 1000;
+
+    private static final int VIEWTYPE_OLD = 0;
+    private static final int VIEWTYPE_NEW = 1;
 
     public BrandsBannersAdapter(
             Activity activity,
             ShopsMvpPresenter presenter,
             List<GetTopBrandsResponse> topBrands,
             int orientation,
+            boolean useOldBannerDimensions,
             OnBrandBannerClickListener onBrandBannerClickListener) {
 
         mTopBrands = topBrands;
@@ -56,14 +61,13 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
         mActivity = activity;
         mPresenter = presenter;
 
-        mWidth = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_width : R.integer.banner_mobile_width);
-        mHeight = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.banner_tablet_height : R.integer.banner_mobile_height);
-
         mOrientation = orientation;
+
+        this.useOldBannerDimensions = useOldBannerDimensions;
 
         mOnBrandBannerClickListener = onBrandBannerClickListener;
 
-        setupDimensions(orientation);
+        resetDimensions();
     }
 
     static class BrandBannerViewHolder extends RecyclerView.ViewHolder {
@@ -104,14 +108,14 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
         GetTopBrandsResponse item = mTopBrands.get(position);
         int width = mWidth;
         int height = mHeight;
-        if (item.getName() != null && !item.getName().isEmpty()) {
+        if (useOldBannerDimensions && item.getName() != null && !item.getName().isEmpty()) {
             holder.name.setVisibility(View.VISIBLE);
             holder.name.setText(item.getName());
         } else {
             holder.name.setVisibility(View.GONE);
         }
 
-        if (item.getDescription() != null && !item.getDescription().isEmpty()) {
+        if (useOldBannerDimensions && item.getDescription() != null && !item.getDescription().isEmpty()) {
             holder.info.setVisibility(View.VISIBLE);
             holder.info.setOnClickListener(v -> {
                 if (mOnBrandBannerClickListener != null) {
@@ -150,19 +154,33 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
     }
 
     @Override
-    public void setupDimensions(int orientation) {
-
-        int resId;
-        switch (ScreenUtils.getOrientation(mActivity)) {
-            case Configuration.ORIENTATION_LANDSCAPE:
-                resId = mPresenter.isTablet() ? R.integer.banner_tablet_landscape_column_count : R.integer.banner_mobile_landscape_column_count;
-                break;
-            default:
-                resId = mPresenter.isTablet() ? R.integer.banner_tablet_portrait_column_count : R.integer.banner_mobile_portrait_column_count;
-                break;
+    public void resetDimensions() {
+        if (useOldBannerDimensions) {
+            mWidth = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.old_banner_tablet_width : R.integer.old_banner_mobile_width);
+            mHeight = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.old_banner_tablet_height : R.integer.old_banner_mobile_height);
+        } else {
+            mWidth = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.sale_banner_tablet_width : R.integer.sale_banner_mobile_width);
+            mHeight = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.sale_banner_tablet_height : R.integer.sale_banner_mobile_height);
         }
-        int minColumns = mActivity.getResources().getInteger(resId);
-        int maxColumns = minColumns;
+        setupDimensions(mOrientation);
+    }
+
+    @Override
+    public void setupDimensions(int orientation) {
+        int minColumns = mPresenter.getBannerColumnCount();
+        if (useOldBannerDimensions || minColumns < 1) {
+            int resId;
+            switch (ScreenUtils.getOrientation(mActivity)) {
+                case Configuration.ORIENTATION_LANDSCAPE:
+                    resId = mPresenter.isTablet() ? R.integer.old_banner_tablet_landscape_column_count : R.integer.old_banner_mobile_landscape_column_count;
+                    break;
+                default:
+                    resId = mPresenter.isTablet() ? R.integer.old_banner_tablet_portrait_column_count : R.integer.old_banner_mobile_portrait_column_count;
+                    break;
+            }
+            minColumns = mActivity.getResources().getInteger(resId);
+        }
+        final int maxColumns = minColumns;
 
         mOrientation = orientation;
 
@@ -190,8 +208,23 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return useOldBannerDimensions ? VIEWTYPE_OLD : VIEWTYPE_NEW;
+    }
+
+    @Override
     public int getNumberOfColumns() {
         return mNumberOfColumns;
+    }
+
+    @Override
+    public boolean isUseOldBannerDimensions() {
+        return useOldBannerDimensions;
+    }
+
+    @Override
+    public void setUseOldBannerDimensions(boolean useOldBannerDimensions) {
+        this.useOldBannerDimensions = useOldBannerDimensions;
     }
 
     public interface OnBrandBannerClickListener {

@@ -21,7 +21,7 @@
     <bool name="is_dynamic_discount_banners_enabled">true</bool>
     <bool name="should_use_old_category_layout">false</bool>
 
-    <bool name="is_using_old_banner">true</bool>
+    <bool name="is_using_older_banner">true</bool>
     <bool name="is_using_test_ads">true</bool>
 
     <bool name="is_pull_to_refresh_enabled">false</bool>

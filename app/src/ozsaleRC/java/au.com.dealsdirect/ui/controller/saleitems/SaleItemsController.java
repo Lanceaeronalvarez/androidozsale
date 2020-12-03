@@ -1345,7 +1345,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         mPaginateManager.setHasMoreDataToLoad(false);
                     }
                 } else {
-                    mPaginateManager = PaginateUtils.init(mActivity, mSaleItemsRecyclerView, mPaginateCallbacks);
+                    mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
                     mSaleItemsRecyclerView.scrollToPosition(0);
                 }
                 mSaleItemsAdapter.replaceData(items);

@@ -180,6 +180,11 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String SHIPPING_BY_POSTCODE_ENABLED = "SHIPPING_BY_POSTCODE_ENABLED";
 
+    private static final String PHONE_BANNER_COLUMNS = "PHONE_BANNER_COLUMNS";
+    private static final String TABLET_BANNER_COLUMNS = "TABLET_BANNER_COLUMNS";
+
+    private static final String PREFERS_OLD_SHOP_BANNER_DIMENSIONS = "PREFERS_OLD_SHOP_BANNER_DIMENSIONS";
+
     private Context mContext;
 
     @Inject
@@ -912,6 +917,34 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
+    public int getMobilePhoneBannerColumns() {
+        return Prefs.getInt(PHONE_BANNER_COLUMNS, -1);
+    }
+
+    @Override
+    public void setMobilePhoneBannerColumns(Integer columns) {
+        if (columns == null) {
+            Prefs.remove(PHONE_BANNER_COLUMNS);
+        } else {
+            Prefs.putInt(PHONE_BANNER_COLUMNS, columns);
+        }
+    }
+
+    @Override
+    public int getMobileTabletBannerColumns() {
+        return Prefs.getInt(TABLET_BANNER_COLUMNS, -1);
+    }
+
+    @Override
+    public void setMobileTabletBannerColumns(Integer columns) {
+        if (columns == null) {
+            Prefs.remove(TABLET_BANNER_COLUMNS);
+        } else {
+            Prefs.putInt(TABLET_BANNER_COLUMNS, columns);
+        }
+    }
+
+    @Override
     public void setReCaptchaSiteKey(String key) {
         Prefs.putString(RECAPTCHA_SITE_KEY, key);
     }
@@ -1040,5 +1073,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public void setStripePaymentMethodId(String paymentMethodId) {
         Prefs.putString(STRIPE_PAYMENT_METHOD_ID, paymentMethodId);
+    }
+
+    @Override
+    public void setPrefersOldShopBannerDimensions(boolean doesPrefer) {
+        Prefs.putBoolean(PREFERS_OLD_SHOP_BANNER_DIMENSIONS, doesPrefer);
+    }
+
+    @Override
+    public boolean getPrefersOldShopBannersDimensions() {
+        return Prefs.getBoolean(PREFERS_OLD_SHOP_BANNER_DIMENSIONS, false);
     }
 }

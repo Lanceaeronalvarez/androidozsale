@@ -206,5 +206,19 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         return getDataManager().isGoogleAdsEnabled();
     }
 
+    @Override
+    public int getBannerColumnCount() {
+        return isTablet() ? getDataManager().getMobileTabletBannerColumns() : getDataManager().getMobilePhoneBannerColumns();
+    }
+
+    @Override
+    public boolean getPrefersOldShopBannerDimensions() {
+        return getDataManager().getPrefersOldShopBannersDimensions();
+    }
+
+    @Override
+    public void setPrefersOldShopBannerDimensions(boolean doesPrefer) {
+        getDataManager().setPrefersOldShopBannerDimensions(doesPrefer);
+    }
 }
 

@@ -330,6 +330,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setIsPaypalCreditEnabled(value.getPayments().getBrainTree().isPaypalCreditEnabled());
                 getDataManager().setIsOurpayDashboardEnabled(value.getMyAccount().isShowOurpaySchedulerInMyAccount());
                 getDataManager().setShippingByPostcodeEnabled(value.getCheckout().getShippingByPostcodeEnabled());
+                getDataManager().setMobilePhoneBannerColumns(value.getShop().getMobilePhoneBannerColumns());
+                getDataManager().setMobileTabletBannerColumns(value.getShop().getMobileTabletBannerColumns());
 
                 if (value.getPayments().getVisaCheckout() != null) {
                     getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());

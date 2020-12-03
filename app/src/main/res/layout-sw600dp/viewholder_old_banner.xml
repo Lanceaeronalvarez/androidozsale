@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/viewholder_banner_layout"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/banner_mobile_height"
-    android:layout_marginBottom="1dp"
+    android:layout_height="@dimen/banner_tablet_height"
     android:background="@color/white"
     android:clickable="true"
     android:orientation="vertical"
@@ -12,14 +12,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/controller_shop_banner_margin">
 
         <ImageView
             android:id="@+id/viewholder_banner_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:transitionName="image" />
+            android:scaleType="fitCenter"
+            android:transitionName="image"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -41,7 +42,7 @@
                 android:lineSpacingMultiplier="0.80"
                 android:textColor="@color/white"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:textSize="@dimen/text_size_caption3"
+                android:textSize="@dimen/text_size_caption2"
                 tools:text="extra\n50%\noff" />
 
             <ImageView
@@ -52,54 +53,44 @@
                 android:layout_alignParentBottom="true"
                 android:src="@drawable/ic_free_delivery" />
 
-
         </RelativeLayout>
 
-
-
         <LinearLayout
-            android:id="@+id/viewholder_banner_discount_content"
-            android:layout_width="wrap_content"
+            android:id="@+id/viewholder_banner_info_group"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_marginRight="@dimen/margin_extra_small"
-            android:layout_above="@+id/viewholder_banner_info_content"
+            android:layout_marginLeft="@dimen/margin_extra_small"
+            android:layout_marginBottom="@dimen/margin_extra_small"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/viewholder_banner_name"
+                fontPath="@string/font_app_regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/viewholder_banner_discount"
+                android:layout_alignParentStart="true"
+                android:background="#8a000000"
+                android:gravity="center"
+                android:padding="@dimen/margin_extra_small"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_caption1"
+                tools:text="Atom Pro Compression" />
+
             <TextView
                 android:id="@+id/viewholder_banner_discount"
                 fontPath="@string/font_app_bold"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:background="@color/bg_banner_discount"
+                android:gravity="center"
                 android:padding="@dimen/margin_extra_small"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_caption3"
+                android:textSize="@dimen/text_size_caption2"
                 tools:text="Up To 50% Off" />
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/viewholder_banner_info_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_extra_small"
-            android:layout_marginBottom="@dimen/margin_extra_small"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/viewholder_banner_name"
-            fontPath="@string/font_app_regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/viewholder_banner_discount"
-            android:layout_alignParentStart="true"
-            android:background="#8a000000"
-            android:padding="@dimen/margin_extra_small"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_caption2"
-            tools:text="Atom Pro Compression" />
-
-        </LinearLayout>
-
     </RelativeLayout>
 </LinearLayout>

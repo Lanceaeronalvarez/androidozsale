@@ -66,6 +66,10 @@ public class FeatureUsageEventType {
         public static final int CLICK_ON_A_BRAND_FROM_TOP_MENU = 1072;
     }
 
+    public static class ShopPage {
+        public static final int TOGGLE_SALE_BANNER_SIZE = 1141;
+    }
+
     public static class Search {
         public static final int TOGGLE_GRID_SIZE_TO_LARGE = 1118;
         public static final int TOGGLE_GRID_SIZE_TO_SMALL = 1119;

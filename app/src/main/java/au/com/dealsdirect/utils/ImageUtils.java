@@ -67,10 +67,28 @@ public class ImageUtils {
 
     static Transformation<Bitmap> centerInside = new CenterInside();
 
+    @SuppressLint("CheckResult")
+    public static void preLoadImage(String url, Context context) {
+        try {
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .format(DecodeFormat.PREFER_ARGB_8888);
+
+            Glide.with(context)
+                    .asBitmap()
+                    .apply(options)
+                    .load(url)
+                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                    .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+        } catch (Exception e) {
+            Log.e("ImageUtils", e.getMessage(), e);
+        }
+    }
+
     public static void loadImage(String url, ImageView imageView) {
         try {
             RequestOptions options = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .format(DecodeFormat.PREFER_ARGB_8888);
 
             Glide.with(imageView)
@@ -90,7 +108,7 @@ public class ImageUtils {
                                  RequestListener<Bitmap> requestListener) {
         try {
             RequestOptions options = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .format(DecodeFormat.PREFER_ARGB_8888);
 
             if (isWebP) {
@@ -119,11 +137,11 @@ public class ImageUtils {
     public static void loadImageWithBackupDrawable(String url, ImageView imageView, Drawable backupDrawable) {
         try {
             RequestOptions options = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .format(DecodeFormat.PREFER_ARGB_8888);
 
             RequestOptions optionsNotWebP = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .signature(new ObjectKey(url + "_notWebP"))
                     .format(DecodeFormat.PREFER_ARGB_8888);
 
@@ -148,7 +166,7 @@ public class ImageUtils {
     public static void loadImageDontAnimate(String url, ImageView imageView) {
         try {
             RequestOptions options = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .skipMemoryCache(true)
                     .format(DecodeFormat.PREFER_ARGB_8888)
                     .dontAnimate();
@@ -174,7 +192,7 @@ public class ImageUtils {
         try {
             RequestOptions options = new RequestOptions()
                     .placeholder(placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .format(DecodeFormat.PREFER_ARGB_8888);
 
             if (callback != null) {
@@ -212,7 +230,7 @@ public class ImageUtils {
     public static void loadImageImmediate(String url, ImageView imageView, ImageLoadedCallback callback) {
         try {
             RequestOptions options = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .skipMemoryCache(true)
                     .format(DecodeFormat.PREFER_ARGB_8888)
                     .priority(Priority.IMMEDIATE);

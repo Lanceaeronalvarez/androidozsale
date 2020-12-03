@@ -41,4 +41,9 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     boolean isGoogleAdsEnabled();
 
+    int getBannerColumnCount();
+
+    boolean getPrefersOldShopBannerDimensions();
+
+    void setPrefersOldShopBannerDimensions(boolean doesPrefer);
 }
