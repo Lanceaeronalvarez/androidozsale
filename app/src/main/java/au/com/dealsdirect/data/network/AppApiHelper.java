@@ -1359,6 +1359,7 @@ public class AppApiHelper implements ApiHelper {
     public Observable<List<GetWishlistIdResponse>> callGetWishlistIdsOnly() {
         return Rx2AndroidNetworking.get(ApiEndPoint.getWishlistIdsOnly())
                 .addHeaders(mApiHeader.get())
+                .doNotCacheResponse()
                 .build()
                 .getObjectListObservable(GetWishlistIdResponse.class);
     }
@@ -1367,6 +1368,7 @@ public class AppApiHelper implements ApiHelper {
     public Observable<List<GetSaleItemsResponse.Products>> callGetWishlist() {
         return Rx2AndroidNetworking.get(ApiEndPoint.getWishlist())
                 .addHeaders(mApiHeader.get())
+                .doNotCacheResponse()
                 .build()
                 .getObjectListObservable(GetSaleItemsResponse.Products.class);
     }
@@ -1377,6 +1379,7 @@ public class AppApiHelper implements ApiHelper {
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(
                         new CallAddToWishlistRequest(productId, seoIdentifier)))
+                .doNotCacheResponse()
                 .build()
                 .getStringObservable();
     }
@@ -1386,6 +1389,7 @@ public class AppApiHelper implements ApiHelper {
         return Rx2AndroidNetworking.delete(ApiEndPoint.removeFromWishlist())
                 .addHeaders(mApiHeader.get())
                 .addPathParameter("product_id", productId)
+                .doNotCacheResponse()
                 .build()
                 .getStringObservable();
     }
