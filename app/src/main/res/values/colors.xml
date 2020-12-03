@@ -282,4 +282,6 @@
     <color name="enter_address_text_color">#46A1D8</color>
 
     <color name="user_feedback_bg">#CAEDC7</color>
+
+    <color name="sold_out_background">#91000000</color>
 </resources>

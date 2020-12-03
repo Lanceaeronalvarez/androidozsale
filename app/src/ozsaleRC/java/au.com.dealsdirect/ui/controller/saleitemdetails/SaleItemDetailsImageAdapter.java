@@ -3,12 +3,13 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import androidx.core.util.Pair;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.chrisbanes.photoview.CustomPhotoViewAttacher;
 import com.github.chrisbanes.photoview.ScalableImageView;
@@ -220,10 +221,10 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                     }
                 });
                 scalableImageView.setOnScaleChangeListener((scaleFactor, focusX, focusY) -> {
-                    float scale = (float) Math.round(scalableImageView.getScale());
-                    boolean resetZoom = scale <= 1.00f;
+                    final float scale = scalableImageView.getScale();
+                    final boolean resetZoom = scale <= Math.round(1.00f);
                     mSaleItemDetailsView.toggleClipPadding(resetZoom);
-                    mSaleDetailsListener.scaleImage(resetZoom);
+                    mSaleDetailsListener.onImageRescale(scale);
                 });
                 break;
             default:

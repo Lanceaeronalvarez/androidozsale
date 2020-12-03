@@ -801,7 +801,7 @@
                                 <RelativeLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_above="@id/viewholder_banner_info_group"
+                                    android:layout_alignParentBottom="true"
                                     android:layout_alignParentRight="true"
                                     android:layout_marginRight="@dimen/margin_extra_small"
                                     android:layout_marginBottom="@dimen/margin_tiny">
@@ -832,6 +832,23 @@
                                         android:visibility="gone" />
 
                                 </RelativeLayout>
+
+                                <TextView
+                                    android:id="@+id/product_details_sold_out"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_marginTop="@dimen/margin_small"
+                                    android:background="@color/sold_out_background"
+                                    android:paddingLeft="64dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingRight="64dp"
+                                    android:paddingBottom="8dp"
+                                    android:text="@string/sold_out"
+                                    android:textColor="@color/white"
+                                    fontPath="@string/font_app_regular"
+                                    android:textSize="@dimen/text_size_title"
+                                    android:visibility="gone" />
 
                             </RelativeLayout>
 

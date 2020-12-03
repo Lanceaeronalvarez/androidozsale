@@ -1,11 +1,5 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails.listener;
 
-import android.graphics.Matrix;
-import android.graphics.RectF;
-import android.widget.ImageView;
-
-import com.github.chrisbanes.photoview.OnScaleChangedListener;
-
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 
@@ -15,7 +9,7 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsRes
 
 public interface SaleDetailsImageListener {
 
-    void scaleImage(boolean hideImage);
+    void onImageRescale(float scale);
 
     void reloadSaleItemDetails(GetYouMayAlsoLikeResponse response);
 

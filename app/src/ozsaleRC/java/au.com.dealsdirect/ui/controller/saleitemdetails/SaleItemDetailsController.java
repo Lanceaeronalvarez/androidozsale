@@ -406,6 +406,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     RecyclerView mRecentlyViewedRecyclerView;
     @BindView(R.id.controller_product_details_recently_viewed_container)
     LinearLayout mRecentlyViewedContainer;
+
+    @BindView(R.id.product_details_sold_out)
+    TextView mSoldOutView;
+
     int[] mSharedImageLocation;
 
     public static final String TAG = SaleItemDetailsController.class.getSimpleName();
@@ -867,6 +871,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 }
             });
         }
+
+        mSoldOutView.setVisibility(mIsSoldout ? View.VISIBLE : View.GONE);
 
         mProductBrand.setOnClickListener(v -> {
             showProductList(mProductBrand.getText().toString());
@@ -2038,13 +2044,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
-    public void scaleImage(boolean hideImage) {
-        if (!hideImage) {
+    public void onImageRescale(float scale) {
+        if (scale > 1.1f) { // set the threshold to 1.1 due to floating point error
             mProductImagesRv.setZ(10);
             mProductDetailsButtonContainer.setVisibility(View.GONE);
+            mSoldOutView.setVisibility(View.GONE);
         } else {
             mProductImagesRv.setZ(0);
             mProductDetailsButtonContainer.setVisibility(View.VISIBLE);
+            mSoldOutView.setVisibility(mIsSoldout ? View.VISIBLE : View.GONE);
         }
     }
 
