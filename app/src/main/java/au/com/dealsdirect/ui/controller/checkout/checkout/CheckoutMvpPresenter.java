@@ -62,4 +62,6 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     String getStripePublicKey();
 
     TemplateTextsHelper.TemplateTextsRepository getTemplateTextsRepository();
+
+    void saveAgeRestrictionData(String date, String postcode);
 }

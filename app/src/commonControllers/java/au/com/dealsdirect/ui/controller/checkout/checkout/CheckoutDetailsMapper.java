@@ -171,8 +171,8 @@ public class CheckoutDetailsMapper {
         return sourceValue.getDeliveryAddress();
     }
 
-    public Boolean getAgeRestricted() {
-        return sourceValue.getAgeRestricted();
+    public Boolean isAgeRestricted() {
+        return sourceValue.isAgeRestricted();
     }
 
     public Summary getSummary() {

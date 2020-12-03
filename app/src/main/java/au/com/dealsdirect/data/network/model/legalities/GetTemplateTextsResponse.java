@@ -158,6 +158,12 @@ public class GetTemplateTextsResponse {
         @SerializedName("_ImpossibleToDeliverAtLocation_Message")
         @Expose
         private String impossibleToDeliverAtLocationMessage;
+        @SerializedName("_AgeRestrictedText")
+        @Expose
+        private String ageRestrictedText;
+        @SerializedName("_PleaseConfirmAgeRestrictedText")
+        @Expose
+        private String pleaseConfirmAgeRestrictedText;
 
 
         public String getCheckoutMyPayPayExceedLimit() {
@@ -358,6 +364,14 @@ public class GetTemplateTextsResponse {
 
         public String getImpossibleToDeliverAtLocationMessage() {
             return impossibleToDeliverAtLocationMessage;
+        }
+
+        public String getAgeRestrictedText() {
+            return ageRestrictedText;
+        }
+
+        public String getPleaseConfirmAgeRestrictedText() {
+            return pleaseConfirmAgeRestrictedText;
         }
     }
 }

@@ -1,12 +1,14 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -15,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,9 +43,13 @@ import com.mysale.genie.utility.RxBus;
 import com.stripe.android.model.Card;
 import com.visa.checkout.VisaCheckoutSdk;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -56,7 +63,10 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliverySe
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.AgeRestrictionOperationType;
+import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
@@ -88,6 +98,7 @@ import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CommonUtils;
+import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -182,6 +193,15 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     View mAddressChangeView;
     @BindView(R.id.partial_checkout_payment_change)
     View mPaymentChangeView;
+
+    @BindView(R.id.partial_checkout_age_restriction_container)
+    ViewGroup mAgeRestrictionContainer;
+    @BindView(R.id.partial_checkout_age_restriction_date_input)
+    EditText mAgeRestrictionDateInput;
+    @BindView(R.id.partial_checkout_age_restriction_description)
+    TextView mAgeRestrictionDescription;
+    @BindView(R.id.partial_checkout_age_restriction_notice)
+    TextView mAgeRestrictionNotice;
 
     @BindView(R.id.partial_checkout_button_holder)
     View mButtonHolder;
@@ -283,6 +303,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private boolean isStripe;
 
     private boolean isShipmentAvailable = true;
+
+    private boolean hasAgeRestriction = false;
+    private Calendar birthday = Calendar.getInstance();
 
     public static CheckoutController newInstance() {
         return new CheckoutController(
@@ -435,6 +458,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mVcoButton.setOnClickListener(action -> {
             onVisaCheckoutButtonClicked();
         });
+
+        setupAgeRestriction();
 
         registerClickListeners();
     }
@@ -1122,6 +1147,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private boolean commonPaymentAbilityDetermination() {
+        if (hasAgeRestriction && !isAgeValid()) {
+            mAgeRestrictionNotice.setVisibility(View.VISIBLE);
+            CommonUtils.shakeView(mAgeRestrictionNotice);
+            return false;
+        }
         if (!isAddressValid()) {
             showAddAddressController();
             return false;
@@ -1707,7 +1737,88 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .popChangeHandler(new ArcZoomChangeHandler(left, top, width, height));
 
         getRouter().pushController(routerTransaction);
+    }
 
+    private void setupAgeRestriction() {
+        mAgeRestrictionDateInput.setInputType(InputType.TYPE_NULL);
+        mAgeRestrictionDateInput.setClickable(true);
+        mAgeRestrictionDateInput.setFocusableInTouchMode(false);
+        mAgeRestrictionDateInput.setOnClickListener(view -> {
+            final Calendar cal = Calendar.getInstance();
+            final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            try {
+                cal.setTime(dateFormat.parse(mAgeRestrictionDateInput.getText().toString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            final DatePickerDialog datePickerDialog = new DatePickerDialog(mActivity,
+                    R.style.DatePickerTheme,
+                    (v, year, month, dayOfMonth) -> {
+
+                        final Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, month);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.HOUR, 0);
+                        calendar.set(Calendar.MINUTE, 0);
+                        calendar.set(Calendar.SECOND, 0);
+                        calendar.set(Calendar.MILLISECOND, 0);
+
+                        mAgeRestrictionDateInput.setText(dateFormat.format(calendar.getTime()));
+                        birthday = calendar;
+                        saveAgeRestrictionData();
+
+                        logCommonCheckoutEvent(isAgeValid() ? AgeRestrictionOperationType.VALID.getValue() : AgeRestrictionOperationType.NOTVALID.getValue());
+
+                        mAgeRestrictionNotice.setVisibility(isAgeValid() ? View.GONE : View.VISIBLE);
+                    },
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH));
+
+            datePickerDialog.show();
+            logCommonCheckoutEvent(AgeRestrictionOperationType.OPEN.getValue());
+        });
+    }
+
+    @Override
+    public void showAgeRestriction(boolean hasAgeRestriction) {
+        this.hasAgeRestriction = hasAgeRestriction;
+        mAgeRestrictionContainer.setVisibility(hasAgeRestriction ? View.VISIBLE : View.GONE);
+        mAgeRestrictionNotice.setVisibility(View.GONE);
+
+        mAgeRestrictionDescription.setText(mPresenter.getTemplateTextsRepository().getAgeRestrictedText());
+        mAgeRestrictionNotice.setText(mPresenter.getTemplateTextsRepository().getPleaseConfirmAgeRestrictedText());
+    }
+
+    private boolean isAgeValid() {
+        final Calendar now = Calendar.getInstance();
+        return birthday != null && DateUtils.yearsBetweenCalendar(birthday, now) >= 18;
+    }
+
+    private void saveAgeRestrictionData() {
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss", Locale.getDefault());
+        final String dateString = dateFormat.format(birthday.getTime());
+        final String postcode = mDeliveryAddress != null ? mDeliveryAddress.getPostcode() : null;
+        mPresenter.saveAgeRestrictionData(dateString, postcode);
+    }
+
+    private void logCommonCheckoutEvent(int operation) {
+        CommonCheckoutRequest request = new CommonCheckoutRequest();
+        request.setEventType(EventTypeId.EVENT_CHECKOUT);
+        request.setErrorDescription("");
+        request.setResult(1);
+        request.setGuestCheckout(false);
+        request.setOperation(operation);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
+
+        parameters.put(DataCollector.EventParameters.COMMON_CHECKOUT_REQUEST, request);
+
+        DataCollector.logEvent(Events.CommonCheckoutEvent, parameters);
     }
 }
 

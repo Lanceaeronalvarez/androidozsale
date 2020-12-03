@@ -38,6 +38,7 @@ import au.com.dealsdirect.data.network.model.afterpay.AfterPayCreatePaymentReque
 import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderRequest;
 import au.com.dealsdirect.data.network.model.afterpay.CreateAfterpayOrderResponse;
 import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
+import au.com.dealsdirect.data.network.model.agerestriction.SaveAgeRestrictedConsentDataRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
@@ -62,13 +63,11 @@ import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
-import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
 import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
-import au.com.dealsdirect.data.network.model.contactsubjecttemplates.ContactSubjectTemplatesResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequestOld;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponseOld;
@@ -82,7 +81,7 @@ import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
-import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
+import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
@@ -757,7 +756,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<String> callStartCheckoutEvent(StartCheckoutRequest request) {
+    public Observable<String> callStartCheckoutEvent(CommonCheckoutRequest request) {
         return mApiHelper.callStartCheckoutEvent(request);
     }
 
@@ -916,6 +915,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetPublicSaleDetailsResponse> callGetPublicSaleDetails(GetPublicSaleDetailsRequest request) {
         return mApiHelper.callGetPublicSaleDetails(request);
+    }
+
+    @Override
+    public Observable<String> callSaveAgeRestrictedConsentData(SaveAgeRestrictedConsentDataRequest request) {
+        return mApiHelper.callSaveAgeRestrictedConsentData(request);
     }
 
     @Override

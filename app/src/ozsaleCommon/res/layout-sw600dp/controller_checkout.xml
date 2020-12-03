@@ -44,6 +44,8 @@
 
             <include layout="@layout/partial_checkout_summary" />
 
+            <include layout="@layout/partial_checkout_age_restriction" />
+
             <include layout="@layout/partial_checkout_button" />
 
         </LinearLayout>

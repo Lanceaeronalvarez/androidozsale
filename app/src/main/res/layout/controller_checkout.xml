@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_default"
@@ -35,8 +33,8 @@
                 android:layout_marginBottom="@dimen/margin_small"
                 android:layout_weight="4"
                 android:paddingLeft="@dimen/padding_default"
-                android:paddingRight="@dimen/padding_default"
                 android:paddingTop="@dimen/margin_small"
+                android:paddingRight="@dimen/padding_default"
                 android:text="@string/checkout_order_label"
                 android:textAllCaps="true"
                 android:textColor="@color/text_dark"
@@ -54,6 +52,8 @@
             <include layout="@layout/partial_checkout_voucher" />
 
             <include layout="@layout/partial_checkout_summary" />
+
+            <include layout="@layout/partial_checkout_age_restriction" />
 
             <include layout="@layout/partial_checkout_button" />
 

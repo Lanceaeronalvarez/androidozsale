@@ -718,6 +718,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/number={number}:close", ApiUrlVersion.v1.apiVersion());
     }
 
+    public static String saveAgeRestrictedConsentData() {
+        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "SaveAgeRestrictedConsentData");
+    }
+
     private ApiEndPoint() {
         // This class is not publicly instantiable
     }

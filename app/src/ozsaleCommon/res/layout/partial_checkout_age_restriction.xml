@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/partial_checkout_age_restriction_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding_default"
+    android:background="@color/row_background_color"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_default">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/partial_checkout_age_restriction_date_input"
+                style="@style/DDEditTextPlainStyle"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rounded_corner_border"
+                android:hint="dd/mm/yyyy"
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_caption1" />
+
+            <TextView
+                android:id="@+id/partial_checkout_age_restriction_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_caption1"
+                tools:text="By purchasing from this sale you are confirming you are over 18 years old" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/partial_checkout_age_restriction_notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:orientation="horizontal"
+            android:text="You are too young to get this thing. Ask your mommy first."
+            android:textColor="@color/red"
+            android:textSize="@dimen/text_size_caption1" />
+
+    </LinearLayout>
+
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+
+</LinearLayout>
