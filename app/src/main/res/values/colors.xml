@@ -283,5 +283,8 @@
 
     <color name="user_feedback_bg">#CAEDC7</color>
 
+    <color name="brand_bubble_text_color">#323232</color>
+    <color name="brand_bubble">#D6D7DD</color>
+
     <color name="sold_out_background">#91000000</color>
 </resources>

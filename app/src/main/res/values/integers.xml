@@ -38,4 +38,5 @@
     <integer name="sliding_banner_height">350</integer>
     <integer name="you_may_also_like_width">225</integer>
     <integer name="you_may_also_like_height">360</integer>
+    <integer name="brand_bubbles_max_results">10</integer>
 </resources>

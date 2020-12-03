@@ -59,4 +59,5 @@ public interface SaleItemsMvpView extends MvpView {
 
     void toggleTabSelection();
 
+    void storeBrandNames(BrandNames brandNames);
 }

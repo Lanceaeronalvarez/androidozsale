@@ -337,4 +337,6 @@
 
     <dimen name="horizontal_banner_title_height">18dp</dimen>
 
+    <dimen name="controller_brand_bubbles_height">40dp</dimen>
+
 </resources>

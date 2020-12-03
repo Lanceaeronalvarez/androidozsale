@@ -159,7 +159,6 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                     Log.d("CategoryPresenter", "success load category tree");
 
                     if (response != null) {
-
                         getMvpView().storeCategories(response);
                     }
 
