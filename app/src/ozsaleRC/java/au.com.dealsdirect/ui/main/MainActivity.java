@@ -94,7 +94,6 @@ import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderSatisfactionDialog;
 import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderTrackerDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.BottomSheetSizesDialog;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.BottomSheetInfoDialog;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -414,15 +413,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showLoginController(Router router, AuthHandler handler) {
         mAuthHandler = handler;
         //any router can show login controller
-        Controller currentController = getCurrentController(router);
+        final Controller currentController = getCurrentController(router);
 
         if (!mPresenter.isTablet()) {
-            if (currentController instanceof SaleItemDetailsController ||
-                    currentController instanceof AccountController) {
-                GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
-            } else {
-                GateKeeper.push(router, GateKeeper.Destination.LOGIN);
-            }
+            GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
         } else if (!getMainController().isPopUpControllerVisible()) {
             Bundle bundle = new BundleBuilder(new Bundle())
                     .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.LOGIN)
