@@ -115,7 +115,7 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
             holder.name.setVisibility(View.GONE);
         }
 
-        if (useOldBannerDimensions && item.getDescription() != null && !item.getDescription().isEmpty()) {
+        if (item.getDescription() != null && !item.getDescription().isEmpty()) {
             holder.info.setVisibility(View.VISIBLE);
             holder.info.setOnClickListener(v -> {
                 if (mOnBrandBannerClickListener != null) {
