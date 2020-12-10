@@ -943,7 +943,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mSlidingBannersAdapter.setOnBannerTappedListener(null);
             mSlidingBannersAdapter = null;
             notifyDataSetChanged();
-        } else {
+        } else if (willInsert) {
             mSlidingBannersAdapter = slidingBannersAdapter;
             if (mSlidingBannersAdapter != null) {
                 mSlidingBannersAdapter
@@ -967,7 +967,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mCategoryBannersAdapter.setOnBannerTappedListener(null);
             mCategoryBannersAdapter = null;
             notifyDataSetChanged();
-        } else {
+        } else if (willInsert) {
             mCategoryBannersAdapter = categoryBannersAdapter;
             mCategoryBannersAdapter.preloadBannerImages(mActivity);
             if (mCategoryBannersAdapter != null) {
@@ -992,7 +992,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mSponsoredBannersAdapter.setOnBannerTappedListener(null);
             mSponsoredBannersAdapter = null;
             notifyDataSetChanged();
-        } else {
+        } else if (willInsert) {
             mSponsoredBannersAdapter = sponsoredBannersAdapter;
             mSponsoredBannersAdapter.preloadBannerImages(mActivity);
             if (mSponsoredBannersAdapter != null) {
