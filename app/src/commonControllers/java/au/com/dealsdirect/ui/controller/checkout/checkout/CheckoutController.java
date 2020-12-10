@@ -961,7 +961,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         if (mPresenter.isShippingByPostcodeEnabled() && !isShipmentAvailable) {
             mSummaryShippingFeeTextView.setVisibility(View.VISIBLE);
-            mSummaryShippingFeeTextView.setText(mPresenter.getTemplateTextsRepository().getUnavailable());
+            final String unavailableText = mPresenter.getTemplateTextsRepository() == null ? "Unavailable" : mPresenter.getTemplateTextsRepository().getUnavailable();
+            mSummaryShippingFeeTextView.setText(unavailableText);
             mSummaryShippingFeeTextView.setTextColor(mActivity.getResources().getColor(R.color.checkout_item_footer_red_text_color));
             mFreeShippingLayout.setVisibility(View.GONE);
         } else if (!isAddressValid()) {
@@ -1788,8 +1789,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mAgeRestrictionContainer.setVisibility(hasAgeRestriction ? View.VISIBLE : View.GONE);
         mAgeRestrictionNotice.setVisibility(birthday == null || isAgeValid() ? View.GONE : View.VISIBLE);
 
-        mAgeRestrictionDescription.setText(mPresenter.getTemplateTextsRepository().getAgeRestrictedText());
-        mAgeRestrictionNotice.setText(mPresenter.getTemplateTextsRepository().getPleaseConfirmAgeRestrictedText());
+        if (mPresenter.getTemplateTextsRepository() != null) {
+            mAgeRestrictionDescription.setText(mPresenter.getTemplateTextsRepository().getAgeRestrictedText());
+            mAgeRestrictionNotice.setText(mPresenter.getTemplateTextsRepository().getPleaseConfirmAgeRestrictedText());
+        }
     }
 
     private boolean isAgeValid() {

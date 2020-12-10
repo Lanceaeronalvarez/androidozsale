@@ -275,9 +275,10 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             spannableStringBuilder.append(": ");
 
             if (mPresenter.isShippingByPostcodeEnabled() && !shippingAvailability) {
+                final String unavailableText = mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation() == null ? "Unavailable" : mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation();
                 spannableStringBuilder.append(" \n ");
                 spannableStringBuilder.append(
-                        mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocation(),
+                        unavailableText,
                         new ForegroundColorSpan(redColor),
                         SPAN_EXCLUSIVE_INCLUSIVE);
             } else {
