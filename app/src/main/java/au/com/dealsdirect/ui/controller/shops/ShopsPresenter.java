@@ -213,7 +213,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
     @Override
     public boolean getPrefersOldShopBannerDimensions() {
-        return getDataManager().getPrefersOldShopBannersDimensions();
+        return isTablet() || getDataManager().getPrefersOldShopBannersDimensions();
     }
 
     @Override

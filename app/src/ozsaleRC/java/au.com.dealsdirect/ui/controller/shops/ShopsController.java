@@ -596,6 +596,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private void resetDimensionToggleButton(boolean useOldDimensions) {
+        shopsControllerDimensionsToggle.setVisibility(mPresenter.isTablet() ? View.GONE : View.VISIBLE);
         shopsControllerDimensionsToggle.setImageResource(
                 useOldDimensions ? R.drawable.shop_banner_toggle_list : R.drawable.shop_banner_toggle_grid);
     }
