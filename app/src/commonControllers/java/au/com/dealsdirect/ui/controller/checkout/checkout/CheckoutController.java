@@ -305,7 +305,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private boolean isShipmentAvailable = true;
 
     private boolean hasAgeRestriction = false;
-    private Calendar birthday = Calendar.getInstance();
+    private Calendar birthday = null;
 
     public static CheckoutController newInstance() {
         return new CheckoutController(
@@ -1786,7 +1786,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public void showAgeRestriction(boolean hasAgeRestriction) {
         this.hasAgeRestriction = hasAgeRestriction;
         mAgeRestrictionContainer.setVisibility(hasAgeRestriction ? View.VISIBLE : View.GONE);
-        mAgeRestrictionNotice.setVisibility(View.GONE);
+        mAgeRestrictionNotice.setVisibility(birthday == null || isAgeValid() ? View.GONE : View.VISIBLE);
 
         mAgeRestrictionDescription.setText(mPresenter.getTemplateTextsRepository().getAgeRestrictedText());
         mAgeRestrictionNotice.setText(mPresenter.getTemplateTextsRepository().getPleaseConfirmAgeRestrictedText());
@@ -1798,6 +1798,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void saveAgeRestrictionData() {
+        if (birthday == null) {
+            return;
+        }
         final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss", Locale.getDefault());
         final String dateString = dateFormat.format(birthday.getTime());
         final String postcode = mDeliveryAddress != null ? mDeliveryAddress.getPostcode() : null;
