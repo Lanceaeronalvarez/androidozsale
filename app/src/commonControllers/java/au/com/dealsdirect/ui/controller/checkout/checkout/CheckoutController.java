@@ -1652,12 +1652,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 total,
                 AppConstants.VCO);
 
-        if (!isAddressValid()) {
-
-            //push add new address fragment.
-            showAddAddressController();
+        if (!commonPaymentAbilityDetermination()) {
             return;
         }
+
         getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.VISACHECKOUT);
         PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.VCO.getValue());
         mVcoPresenter.payWithVisaCheckout(mValue.getSummary().getTotal());
