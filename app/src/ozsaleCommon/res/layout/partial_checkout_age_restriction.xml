@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_rounded_corner_border"
                 android:hint="dd/mm/yyyy"
+                android:textAlignment="center"
                 android:textColor="@color/row_checkout_text_dark_color"
                 android:textSize="@dimen/text_size_caption1" />
 
@@ -58,7 +59,7 @@
             android:orientation="horizontal"
             android:paddingLeft="@dimen/padding_default"
             android:paddingRight="@dimen/padding_default"
-            android:text="You are too young to get this thing. Ask your mommy first."
+            android:text="Please confirm that you are over 18 years old"
             android:textColor="@color/red"
             android:textSize="@dimen/text_size_caption1" />
 
