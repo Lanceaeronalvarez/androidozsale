@@ -108,7 +108,7 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
         GetTopBrandsResponse item = mTopBrands.get(position);
         int width = mWidth;
         int height = mHeight;
-        if (useOldBannerDimensions && item.getName() != null && !item.getName().isEmpty()) {
+        if ((useOldBannerDimensions || mPresenter.isTablet()) && item.getName() != null && !item.getName().isEmpty()) {
             holder.name.setVisibility(View.VISIBLE);
             holder.name.setText(item.getName());
         } else {
