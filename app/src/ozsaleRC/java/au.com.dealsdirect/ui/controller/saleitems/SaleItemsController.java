@@ -2566,7 +2566,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         };
 
         if (searchTerm == null || searchTerm.isEmpty()) {
-            mBrandBubblesAdapter = new BrandBubblesAdapter(searchTerm, new ArrayList<>(mBrandNames.getBrandNames()), onSelectListener);
+            List<String> brandNames = new ArrayList<>(mBrandNames.getBrandNames());
+            brandNames = brandNames.size() > 10 ? brandNames.subList(0, 10) : brandNames;
+            mBrandBubblesAdapter = new BrandBubblesAdapter(searchTerm, brandNames, onSelectListener);
             mBrandBubblesRecyclerView.setAdapter(mBrandBubblesAdapter);
             return;
         }
@@ -2580,7 +2582,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             final List<String> searchResults = mBrandNames.getBrandNamesMatchingString(searchTerm, maxResults);
             final Handler mainHandler = new Handler(Looper.getMainLooper());
             mainHandler.post(() -> {
-                mBrandBubblesAdapter = new BrandBubblesAdapter(searchTerm, searchResults, onSelectListener);
+                final List<String> brandNames = searchResults.size() > 10 ? searchResults.subList(0, 10) : searchResults;
+                mBrandBubblesAdapter = new BrandBubblesAdapter(searchTerm, brandNames, onSelectListener);
                 mBrandBubblesRecyclerView.setAdapter(mBrandBubblesAdapter);
             });
         });
