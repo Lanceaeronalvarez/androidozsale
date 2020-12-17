@@ -140,6 +140,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     static final String KEY_UNAVAILABLE = "_Unavailable";
     static final String KEY_CALCULATE = "_Calculate";
     static final String KEY_IMPOSSIBLE_TO_DELIVER_AT_LOCATION_MESSAGE = "_ImpossibleToDeliverAtLocation_Message";
+    static final String KEY_AGE_RESTRICTED_TEXT = "_AgeRestrictedText";
+    static final String KEY_PLEASE_CONFIRM_AGE_RESTRICTED_TEXT = "_PleaseConfirmAgeRestrictedText";
 
     private static String[] templateTextsKeys = {
             KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT, //0
@@ -182,7 +184,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_IMPOSSIBLE_TO_DELIVER_AT_LOCATION,
             KEY_UNAVAILABLE,
             KEY_CALCULATE,
-            KEY_IMPOSSIBLE_TO_DELIVER_AT_LOCATION_MESSAGE
+            KEY_IMPOSSIBLE_TO_DELIVER_AT_LOCATION_MESSAGE,
+            KEY_AGE_RESTRICTED_TEXT,
+            KEY_PLEASE_CONFIRM_AGE_RESTRICTED_TEXT
     };
 
 
@@ -326,6 +330,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setIsPaypalCreditEnabled(value.getPayments().getBrainTree().isPaypalCreditEnabled());
                 getDataManager().setIsOurpayDashboardEnabled(value.getMyAccount().isShowOurpaySchedulerInMyAccount());
                 getDataManager().setShippingByPostcodeEnabled(value.getCheckout().getShippingByPostcodeEnabled());
+                getDataManager().setMobilePhoneBannerColumns(value.getShop().getMobilePhoneBannerColumns());
+                getDataManager().setMobileTabletBannerColumns(value.getShop().getMobileTabletBannerColumns());
 
                 if (value.getPayments().getVisaCheckout() != null) {
                     getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());

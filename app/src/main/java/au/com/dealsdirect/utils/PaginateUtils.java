@@ -22,21 +22,18 @@ public class PaginateUtils {
 
     public static final int DEFAULT_COUNT = 48;
 
-    public static final int LOADING_TRIGGER_THRESHOLD = 100;
-
     private static final boolean ADD_LOADING_LIST_ITEM = true;
 
     public static Paginate init(RecyclerView recyclerView, Paginate.Callbacks callbacks) {
         return Paginate.with(recyclerView, callbacks)
-                .setLoadingTriggerThreshold(LOADING_TRIGGER_THRESHOLD)
                 .addLoadingListItem(PaginateUtils.ADD_LOADING_LIST_ITEM)
                 .setLoadingListItemCreator(new DDLoadingListItemCreator())
                 .build();
     }
 
-    public static Paginate init(Context context, RecyclerView recyclerView, Paginate.Callbacks callbacks) {
+    public static Paginate init(RecyclerView recyclerView, int loadingTriggerThreshold, Paginate.Callbacks callbacks) {
         return Paginate.with(recyclerView, callbacks)
-                .setLoadingTriggerThreshold(context.getResources().getInteger(R.integer.sale_items_threshold))
+                .setLoadingTriggerThreshold(loadingTriggerThreshold)
                 .addLoadingListItem(PaginateUtils.ADD_LOADING_LIST_ITEM)
                 .setLoadingListItemCreator(new DDLoadingListItemCreator())
                 .build();

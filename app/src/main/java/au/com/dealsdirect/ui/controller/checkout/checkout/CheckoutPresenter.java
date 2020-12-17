@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.ApiEndPoint;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.agerestriction.SaveAgeRestrictedConsentDataRequest;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
@@ -21,7 +22,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrent
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
+import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
@@ -303,39 +304,39 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     @Override
     public void logInitiateCheckout(Context context, String paymentType, int numItems, double price,
                                     String selectedPaymentType) {
-        StartCheckoutRequest startCheckoutRequest = new StartCheckoutRequest();
-        startCheckoutRequest.setEventType(EventTypeId.EVENT_CHECKOUT);
-        startCheckoutRequest.setErrorDescription("");
-        startCheckoutRequest.setResult(0);
-        startCheckoutRequest.setGuestCheckout(0);
+        CommonCheckoutRequest commonCheckoutRequest = new CommonCheckoutRequest();
+        commonCheckoutRequest.setEventType(EventTypeId.EVENT_CHECKOUT);
+        commonCheckoutRequest.setErrorDescription("");
+        commonCheckoutRequest.setResult(0);
+        commonCheckoutRequest.setGuestCheckout(false);
 
         switch (selectedPaymentType) {
             case AppConstants.VCO:
-                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.VCO.getValue());
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.VCO.getValue());
                 break;
             case AppConstants.AFTERPAY:
-                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.AFTERPAY.getValue());
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.AFTERPAY.getValue());
                 break;
             case AppConstants.REGULAR:
-                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.REGULAR.getValue());
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.REGULAR.getValue());
                 break;
             case AppConstants.STRIPE:
-                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.STRIPE.getValue());
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.STRIPE.getValue());
                 break;
             case AppConstants.OURPAY:
-                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.OURPAY.getValue());
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.OURPAY.getValue());
                 break;
             case AppConstants.MASTERPASS:
-                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.MASTERPASS.getValue());
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.MASTERPASS.getValue());
                 break;
             case AppConstants.PAYPALCREDIT:
-                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPALCREDIT.getValue());
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPALCREDIT.getValue());
                 break;
             case AppConstants.PAYPAL:
-                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPAL.getValue());
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPAL.getValue());
                 break;
             default: // UNKNOWN
-                startCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.UNKNOWN.getValue());
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.UNKNOWN.getValue());
                 break;
         }
 
@@ -350,7 +351,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         parameters.put(DataCollector.EventParameters.NUMBER_OF_ITEMS, numItems);
         parameters.put(DataCollector.EventParameters.PRICE, price);
         parameters.put(DataCollector.EventParameters.COUNTRY_ID, getDataManager().getCountryId());
-        parameters.put(DataCollector.EventParameters.START_CHECKOUT_REQUEST, startCheckoutRequest);
+        parameters.put(DataCollector.EventParameters.START_CHECKOUT_REQUEST, commonCheckoutRequest);
 
         DataCollector.logEvent(Events.InitiateCheckout, parameters);
 
@@ -391,6 +392,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             getMvpView().showCartDetails(null);
             getMvpView().onError(response.getD().getMessage());
         }
+
+        getMvpView().showAgeRestriction(mappedValues.isAgeRestricted() == null ? false : mappedValues.isAgeRestricted());
 
         checkIfCartIsChanged(mappedValues);
     }
@@ -548,5 +551,17 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     @Override
     public TemplateTextsHelper.TemplateTextsRepository getTemplateTextsRepository() {
         return getDataManager().getTemplateTextsRepository();
+    }
+
+    @Override
+    public void saveAgeRestrictionData(String date, String postcode) {
+        doApiCallForResponse(getDataManager().callSaveAgeRestrictedConsentData(
+                new SaveAgeRestrictedConsentDataRequest(date, postcode, getDataManager().getCountryId())),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                    }
+                });
     }
 }

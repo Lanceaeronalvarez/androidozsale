@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by MTC on 2019-10-03.
  */
-public class StartCheckoutRequest {
+public class CommonCheckoutRequest {
     @SerializedName("operation")
     @Expose
     private Integer operation;
@@ -27,7 +27,7 @@ public class StartCheckoutRequest {
     private String errorDescription;
     @SerializedName("isGuestCheckout")
     @Expose
-    private Integer isGuestCheckout;
+    private boolean isGuestCheckout;
 
     public Integer getOperation() {
         return operation;
@@ -77,11 +77,11 @@ public class StartCheckoutRequest {
         this.errorDescription = errorDescription;
     }
 
-    public Integer isGuestCheckout() {
+    public boolean isGuestCheckout() {
         return isGuestCheckout;
     }
 
-    public void setGuestCheckout(Integer guestCheckout) {
+    public void setGuestCheckout(boolean guestCheckout) {
         isGuestCheckout = guestCheckout;
     }
 }

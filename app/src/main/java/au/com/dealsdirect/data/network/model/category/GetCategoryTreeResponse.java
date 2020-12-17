@@ -37,6 +37,9 @@ public class GetCategoryTreeResponse {
     @SerializedName("linkOptions")
     @Expose
     private LinkOptions linkOptions;
+    @SerializedName("brands")
+    @Expose
+    private List<Brand> brands;
 
     public GetCategoryTreeResponse() {
 
@@ -114,6 +117,10 @@ public class GetCategoryTreeResponse {
         this.isSelected = isSelected;
     }
 
+    public List<Brand> getBrands() {
+        return brands;
+    }
+
     public void traverseTree(TreeTraversalBlock block, Object option) {
         if (block.execute(this, option)) {
             for (GetCategoryTreeResponse child : children) {
@@ -132,7 +139,7 @@ public class GetCategoryTreeResponse {
         Object transformOption(GetCategoryTreeResponse parent, Object option);
     }
 
-    public class LinkOptions {
+    public static class LinkOptions {
         @SerializedName("category")
         public Category category;
         @SerializedName("facets")
@@ -192,4 +199,20 @@ public class GetCategoryTreeResponse {
 
     }
 
+    public static class Brand {
+        @SerializedName("name")
+        @Expose
+        private String name;
+        @SerializedName("value")
+        @Expose
+        private Integer value;
+
+        public String getName() {
+            return name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+    }
 }

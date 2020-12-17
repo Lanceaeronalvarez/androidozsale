@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /*
  * Created by Ayi on 18/05/2017.
@@ -440,5 +441,35 @@ public class DateUtils {
         Calendar calander = Calendar.getInstance();
         int currentDay = calander.get(Calendar.DAY_OF_YEAR);
         return pastDay != currentDay;
+    }
+
+    public static int yearsBetweenCalendar(Calendar start, Calendar end) {
+        final long differenceInMilliseconds = end.getTimeInMillis() - start.getTimeInMillis();
+        final long differenceInDays = TimeUnit.MILLISECONDS.toDays(differenceInMilliseconds);
+        final int numberOfLeapYears = leapYearsBetween(start.get(Calendar.YEAR), end.get(Calendar.YEAR), true);
+        final int numberOfYears = end.get(Calendar.YEAR) - start.get(Calendar.YEAR);
+        final double ratio = (double) numberOfLeapYears / (double) numberOfYears;
+        final double actualYears = ((differenceInDays / 365d) * (1 - ratio) + (differenceInDays / 366d) * ratio);
+        return (int) Math.floor(actualYears);
+    }
+
+    public static int leapYearsBetween(int start, int end, boolean inclusive)
+    {
+        if (inclusive) {
+            start--;
+            end++;
+        }
+        if (start > end || start <= 0) {
+            return -1;
+        }
+        // source: https://stackoverflow.com/a/4587611
+        return totalNumberOfLeapYears(end) - totalNumberOfLeapYears(start + 1);
+    }
+
+    private static int totalNumberOfLeapYears(int year)
+    {
+        // source: https://stackoverflow.com/a/4587611
+        year--;
+        return (year / 4) - (year / 100) + (year / 400);
     }
 }

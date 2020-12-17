@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginTop="@dimen/margin_small"
-            android:background="@color/icon_default"
+            android:background="@color/sold_out_background"
             android:paddingLeft="@dimen/sale_item_image_padding_left"
             android:paddingTop="@dimen/sale_item_image_padding_top"
             android:paddingRight="@dimen/sale_item_image_padding_right"

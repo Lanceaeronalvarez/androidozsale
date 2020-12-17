@@ -49,7 +49,7 @@ import butterknife.BindView;
 /**
  * Created by MTC on 2019-12-05.
  */
-public class SaleCategoryController extends BaseController
+public class NewCategoriesController extends BaseController
         implements CategoriesMvpView, SaleCategoryClickListener, SubCategoryItemClickListener {
 
     @Inject
@@ -76,14 +76,16 @@ public class SaleCategoryController extends BaseController
     private Map<String, List<GetCategoryTreeResponse>> mCategoryMap = new HashMap<>();
     public Map<String, String> mCategoryKeyMap = new HashMap<>();
 
-    public static SaleCategoryController newInstance() {
-        return new SaleCategoryController(
+    private QueuedShowSaleItems queuedShowSaleItems = null;
+
+    public static NewCategoriesController newInstance() {
+        return new NewCategoriesController(
                 new BundleBuilder(new Bundle())
                         .build());
     }
 
 
-    public SaleCategoryController(Bundle args) {
+    public NewCategoriesController(Bundle args) {
         super(args);
     }
 
@@ -114,14 +116,13 @@ public class SaleCategoryController extends BaseController
         super.onViewBound(view);
 
         assert (mActivity) != null;
-        mActivity.setSaleCategoryController(this);
         hideKeyboard();
 
         mPresenter.callGetCategoryTree();
 
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CategoriesController.class.getSimpleName());
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, OldCategoriesController.class.getSimpleName());
         DataCollector.logEvent(Events.addToCartJourneyViewProductCategory, parameters);
 
         setUp(view);
@@ -150,6 +151,11 @@ public class SaleCategoryController extends BaseController
 
         addToMap(mCategories);
         setupCategories();
+
+        if (queuedShowSaleItems != null) {
+            queuedShowSaleItems.show();
+            queuedShowSaleItems = null;
+        }
     }
 
     private void addToMap(List<GetCategoryTreeResponse> categories) {
@@ -309,7 +315,13 @@ public class SaleCategoryController extends BaseController
     }
 
     public void showSaleItems(String categoryId) {
-        showSaleItems(mCategoryKeyMap.get(categoryId), new HashSet<>());
+        if (mCategoryKeyMap.isEmpty() && mCategories == null) {
+            mActivity.getCategoriesRouter().popToRoot();
+            queuedShowSaleItems = () -> showSaleItems(categoryId);
+            mPresenter.callGetCategoryTree();
+        } else {
+            showSaleItems(mCategoryKeyMap.get(categoryId), new HashSet<>());
+        }
     }
 
     private void showSaleItems(String categoryKey, Set<SearchChipModel> chipFilters) {
@@ -357,5 +369,14 @@ public class SaleCategoryController extends BaseController
             }
         }
         return new ArrayList<>();
+    }
+
+    @Override
+    public String getCategoryKeyFromId(String id) {
+        return mCategoryKeyMap.get(id);
+    }
+
+    private interface QueuedShowSaleItems {
+        void show();
     }
 }

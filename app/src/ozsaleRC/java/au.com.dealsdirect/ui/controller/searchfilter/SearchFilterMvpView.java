@@ -34,6 +34,8 @@ public interface SearchFilterMvpView extends MvpView {
 
     Set<String> getCategoryKeys();
 
+    void clearCategoryKeys();
+
     void setSearchFilterControllerActive(boolean isTabActive);
 
     void setFacetFilterItems(List<Pair<String,String>> mFacetFilters);

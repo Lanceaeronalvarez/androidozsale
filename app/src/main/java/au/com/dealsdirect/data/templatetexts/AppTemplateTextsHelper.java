@@ -228,6 +228,16 @@ public class AppTemplateTextsHelper implements TemplateTextsHelper {
         public String getImpossibleToDeliverAtLocationMessage() {
             return source.getImpossibleToDeliverAtLocationMessage();
         }
+
+        @Override
+        public String getAgeRestrictedText() {
+            return source.getAgeRestrictedText();
+        }
+
+        @Override
+        public String getPleaseConfirmAgeRestrictedText() {
+            return source.getPleaseConfirmAgeRestrictedText();
+        }
     }
 
 

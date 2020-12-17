@@ -55,6 +55,7 @@ public class DeliveryOptionsController extends BaseController implements Deliver
     private DeliveryServicePackageDetail mDeliveryServicePackageDetail;
     private String mDeliveryAddressId;
     private CheckoutMvpView mCheckoutMvpView;
+    private boolean mIsAddressValid;
 
     public static DeliveryOptionsController newInstance() {
         return new DeliveryOptionsController(
@@ -68,6 +69,7 @@ public class DeliveryOptionsController extends BaseController implements Deliver
         }.getType());
         mDeliveryServicePackageDetail = new Gson().fromJson(args.getString(BundleKeys.DELIVERY_OPTIONS_DELIVERY_SERVICE_PACKAGE_DETAIL, ""), DeliveryServicePackageDetail.class);
         mDeliveryAddressId = args.getString(BundleKeys.DELIVERY_OPTIONS_DELIVERY_ADDRESS_ID, "");
+        mIsAddressValid = args.getBoolean(BundleKeys.DELIVERY_OPTIONS_IS_ADDRESS_VALID, true);
     }
 
     @Override
@@ -90,7 +92,14 @@ public class DeliveryOptionsController extends BaseController implements Deliver
         mToolbarTitleTextView.setText(getString(R.string.deliver_options_title));
         mToolbarRightButton.setVisibility(View.INVISIBLE);
 
-        mAdapter = new DeliveryOptionsAdapter(mActivity, mRecyclerView, mDeliveryOptions, mDeliveryAddressId, mDeliveryServicePackageDetail, mPresenter);
+        mAdapter = new DeliveryOptionsAdapter(
+                mActivity,
+                mRecyclerView,
+                mDeliveryOptions,
+                mDeliveryAddressId,
+                mDeliveryServicePackageDetail,
+                mIsAddressValid,
+                mPresenter);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mActivity, SimpleDividerItemDecoration.VERTICAL_LIST));

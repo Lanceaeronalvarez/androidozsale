@@ -263,6 +263,14 @@ public interface PreferencesHelper {
 
     boolean getShippingByPostcodeEnabled();
 
+    int getMobilePhoneBannerColumns();
+
+    void setMobilePhoneBannerColumns(Integer columns);
+
+    int getMobileTabletBannerColumns();
+
+    void setMobileTabletBannerColumns(Integer columns);
+
     void setReCaptchaSiteKey(String key);
 
     String getReCaptchaSiteKey();
@@ -308,4 +316,8 @@ public interface PreferencesHelper {
     void setShippingHover(GetTemplateTextsResponse.GetTemplateTextsValue value);
 
     String getShippingTitle();
+
+    void setPrefersOldShopBannerDimensions(boolean doesPrefer);
+
+    boolean getPrefersOldShopBannersDimensions();
 }

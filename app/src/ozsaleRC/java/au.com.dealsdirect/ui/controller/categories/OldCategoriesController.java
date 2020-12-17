@@ -52,7 +52,7 @@ import butterknife.OnClick;
  * dp Created by Admin on 6/6/17.
  */
 
-public class CategoriesController extends BaseController
+public class OldCategoriesController extends BaseController
         implements CategoriesMvpView, CategoryClickListener, SubCategoryItemClickListener {
 
     public static final String TAG = "CategoriesController";
@@ -95,14 +95,14 @@ public class CategoriesController extends BaseController
     private int searchTapCounter = 0;
     private boolean mHasSavedInstance;
 
-    public static CategoriesController newInstance() {
-        return new CategoriesController(
+    public static OldCategoriesController newInstance() {
+        return new OldCategoriesController(
                 new BundleBuilder(new Bundle())
                         .build());
     }
 
 
-    public CategoriesController(Bundle args) {
+    public OldCategoriesController(Bundle args) {
         super(args);
     }
 
@@ -126,14 +126,13 @@ public class CategoriesController extends BaseController
         super.onViewBound(view);
 
         assert (mActivity) != null;
-        mActivity.setCategoriesController(this);
         hideKeyboard();
 
         mPresenter.callGetCategoryTree();
 
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CategoriesController.class.getSimpleName());
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, OldCategoriesController.class.getSimpleName());
         DataCollector.logEvent(Events.addToCartJourneyViewProductCategory, parameters);
 
         setUp(view);
@@ -334,12 +333,12 @@ public class CategoriesController extends BaseController
         }
     }
 
+    @Override
+    public String getCategoryKeyFromId(String id) {
+        Log.d("deeplinkers", "get category key = " + id + " , " + mCategoryKeyMap.get(id));
+        Log.d("deeplinkers", "get category key = " + id + " , " + mCategoryKeyMap.get("SG9tZT4_PkJlZCAmIEJhdGg_Pj5TaGVldHM="));
 
-    public String getCategoryKey(String categoryId) {
-        Log.d("deeplinkers", "get category key = " + categoryId + " , " + mCategoryKeyMap.get(categoryId));
-        Log.d("deeplinkers", "get category key = " + categoryId + " , " + mCategoryKeyMap.get("SG9tZT4_PkJlZCAmIEJhdGg_Pj5TaGVldHM="));
-
-        return mCategoryKeyMap.get(categoryId);
+        return mCategoryKeyMap.get(id);
     }
 
     public void showSaleItems(String categoryId) {

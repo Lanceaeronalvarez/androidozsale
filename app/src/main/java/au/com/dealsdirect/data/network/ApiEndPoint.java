@@ -137,6 +137,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/categorytree/", ApiUrlVersion.v5.apiVersion());
     }
 
+    public static String getTopBrands() {
+        return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/brands/topbrands/", ApiUrlVersion.v5.apiVersion());
+    }
+
     public static String getSales() {
         return getFormattedUrl(ApiService.SALE, ACCOUNT_ID_DELIMETER + "/banners/grouped/", ApiUrlVersion.v3.apiVersion());
     }
@@ -712,6 +716,10 @@ public final class ApiEndPoint {
 
     public static String closeTicketSatisfaction() {
         return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/number={number}:close", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String saveAgeRestrictedConsentData() {
+        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "SaveAgeRestrictedConsentData");
     }
 
     private ApiEndPoint() {

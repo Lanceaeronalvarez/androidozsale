@@ -90,5 +90,9 @@ public interface TemplateTextsHelper {
 
         String getImpossibleToDeliverAtLocationMessage();
 
+        String getAgeRestrictedText();
+
+        String getPleaseConfirmAgeRestrictedText();
+
     }
 }

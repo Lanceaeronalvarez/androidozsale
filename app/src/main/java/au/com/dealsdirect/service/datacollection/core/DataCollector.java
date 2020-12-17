@@ -49,6 +49,7 @@ public class DataCollector {
         public static final String SALE_EVENT_REQUEST = "SALE_EVENT_REQUEST";
         public static final String WISHLIST_EVENT_REQUEST = "WISHLIST_EVENT_REQUEST";
         public static final String START_CHECKOUT_REQUEST = "START_CHECKOUT_REQUEST";
+        public static final String COMMON_CHECKOUT_REQUEST = "COMMON_CHECKOUT_REQUEST";
         public static final String YOU_MAY_ALSO_LIKE_REQUEST = "YOU_MAY_ALSO_LIKE_REQUEST";
         public static final String RECENTLY_VIEWED_REQUEST = "RECENTLY_VIEWED_REQUEST";
         public static final String RECOMMENDATION_EVENT_REQUEST = "RECOMMENDATION_EVENT_REQUEST";

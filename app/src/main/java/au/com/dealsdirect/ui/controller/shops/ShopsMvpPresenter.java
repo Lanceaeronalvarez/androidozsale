@@ -21,6 +21,8 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     void loadCategoryTree();
 
+    void loadTopBrands();
+
     boolean isAccessAnonymousEnabled();
 
     void cancelRequest();
@@ -39,4 +41,9 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     boolean isGoogleAdsEnabled();
 
+    int getBannerColumnCount();
+
+    boolean getPrefersOldShopBannerDimensions();
+
+    void setPrefersOldShopBannerDimensions(boolean doesPrefer);
 }

@@ -393,4 +393,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     public Router getCheckoutDetailRouter() {
         return mCheckoutDetailRouter;
     }
+
+    @Override
+    public void showAgeRestriction(boolean hasAgeRestriction) {
+        mCheckoutDetailView.showAgeRestriction(hasAgeRestriction);
+    }
 }

@@ -610,7 +610,7 @@ public class MainController extends BaseController implements MainMvpView {
         }
 
         if (!mActivity.isAuthorized() && !mIsInitialSavedInstanceLoad) {
-            mActivity.showLoginController(getCurrentRouter(), new AuthHandler() {
+            mActivity.showLoginController(routers.get(CHECKOUT_INDEX), new AuthHandler() {
                 @Override
                 public void success() {
                     resetCheckoutRouter();

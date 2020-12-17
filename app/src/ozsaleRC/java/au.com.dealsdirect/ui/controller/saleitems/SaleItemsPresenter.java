@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +16,7 @@ import au.com.dealsdirect.data.cachedresponses.ListOfSortingResponses;
 import au.com.dealsdirect.data.cachedresponses.ParamaterizedCachableRequest;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
@@ -276,4 +279,31 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         return getDataManager().getLastTimeStamp();
     }
 
+    @Override
+    public void loadBrandBubbles() {
+        doApiCallForResponse(getDataManager().callGetCategories(),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(List<?> list) {
+                        processBrandNamesInAnotherThread((List<GetCategoryTreeResponse>) list);
+                    }
+                });
+    }
+
+    private void processBrandNamesInAnotherThread(List<GetCategoryTreeResponse> response) {
+        if (response == null || response.isEmpty()) {
+            return;
+        }
+
+        final Handler handler = new Handler();
+        handler.post(() -> {
+            BrandNames output = new BrandNames(response);
+            final Handler mainHandler = new Handler(Looper.getMainLooper());
+            mainHandler.post(() -> {
+                if (getMvpView() != null) {
+                    getMvpView().storeBrandNames(output);
+                }
+            });
+        });
+    }
 }

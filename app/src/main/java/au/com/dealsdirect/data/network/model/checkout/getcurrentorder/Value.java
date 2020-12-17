@@ -93,7 +93,7 @@ public class Value {
         return deliveryAddress;
     }
 
-    public Boolean getAgeRestricted() {
+    public Boolean isAgeRestricted() {
         return isAgeRestricted;
     }
 

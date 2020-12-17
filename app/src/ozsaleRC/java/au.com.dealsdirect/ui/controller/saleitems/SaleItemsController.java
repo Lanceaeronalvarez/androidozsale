@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.util.Pair;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Controller;
@@ -306,6 +308,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
+        public static final class FromTopBrands extends Parameters {
+            private String mBrandName;
+
+            public FromTopBrands(String brandName) {
+                mBrandName = brandName;
+            }
+
+            public String getBrandName() {
+                return mBrandName;
+            }
+        }
+
         public static final class FromSaleItemDeepLink extends Parameters {
             private String mBannerTitle;
             private String mSaleId;
@@ -401,6 +415,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int mColumnCount;
     private int mCurrentProductDetailPosition = -1;
 
+    private BrandNames mBrandNames = null;
+    private BrandBubblesAdapter mBrandBubblesAdapter = null;
+    private Handler brandNameHandler = null;
+
     private boolean isSkeletonAnimating = false;
 
     @BindView(R.id.controller_sale_items_main_container)
@@ -464,6 +482,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.partial_toolbar_field_title_right_option)
     ImageButton mColumnView;
+
+    @BindView(R.id.controller_toolbar_brand_bubbles)
+    RecyclerView mBrandBubblesRecyclerView;
 
     private CustomGridLayoutManager mGridLayoutManager;
 
@@ -531,6 +552,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             AppLogger.d(TAG, "on text changed");
 
             mSearchQuery = s.toString();
+            refreshBrandBubbles(mSearchQuery);
+            showBrandBubbles();
             mIsSearch = true;
 
             if (mTextWatcherTimer != null) {
@@ -591,6 +614,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             title = ((Parameters.FromShopSearch) parameters).getTitle();
             controller.mFromShopSearch = true;
             controller.mSearchQuery = ((Parameters.FromShopSearch) parameters).getSearchKey();
+        } else if (parameters instanceof Parameters.FromTopBrands) {
+            title = ((Parameters.FromTopBrands) parameters).getBrandName();
+            controller.mFromShopSearch = true;
+            controller.mChipFilters.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, title, title, 0));
         } else if (parameters instanceof Parameters.FromCategory) {
             title = ((Parameters.FromCategory) parameters).getTitle();
             controller.mCategoryKey = ((Parameters.FromCategory) parameters).getCategoryMap();
@@ -806,6 +833,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 case NORMAL:
                     if (mSaleId != null && !mSaleId.isEmpty()) {
                         mPresenter.loadSaleBannerDetails(mSaleId);
+                    } else {
+                        showBrandBubbles();
                     }
                     mSaleItemsPageNumber = 0;
                     searchOperationType = null;
@@ -813,7 +842,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
                     if (mHasSavedInstance) {
                         mActivity.getMainController().setSavedCurrentItem();
-                    } else {
+                    } else if (mChipFilters.isEmpty()){
                         showKeyboard();
                     }
                     if (mInitialLoad) {
@@ -873,18 +902,23 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 if (mHasSavedInstance && isFromCategories()) {
                     if (mSearchQuery.length() > 0) {
                         mSaleItemsToolbarField.setText(mSearchQuery);
+                        refreshBrandBubbles(mSearchQuery);
                     } else {
                         mSaleItemsToolbarField.setText("");
+                        refreshBrandBubbles("");
                     }
                 } else if (mHasSavedInstance && !isFromCategories()) {
                     if (mShopSearchQuery.length() > 0) {
                         mSearchQuery = mShopSearchQuery;
                         mSaleItemsToolbarField.setText(mSearchQuery);
+                        refreshBrandBubbles(mSearchQuery);
                     } else {
                         mSaleItemsToolbarField.setText("");
+                        refreshBrandBubbles("");
                     }
                 } else if (mSearchQuery != null && mSearchQuery.length() > 0) {
                     mSaleItemsToolbarField.setText(mSearchQuery);
+                    refreshBrandBubbles(mSearchQuery);
                 } else {
                     mSaleItemsToolbarField.setHint(lookingForText);
                 }
@@ -954,6 +988,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsToolbarField.setOnEditorActionListener(null);
         mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
         hideKeyboard();
+        hideBrandBubbles();
         super.onDetach(view);
     }
 
@@ -1049,6 +1084,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mIsRecyclerViewScrollIdle = newState == 0;
                 if (newState != SCROLL_STATE_IDLE) {
                     hideKeyboard();
+                    hideBrandBubbles();
                 } else {
                     // Snaps search bar to expanded or hidden depending on whether
                     // t is halfway to 0 or 1
@@ -1064,6 +1100,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
         hideKeyboard();
+        hideBrandBubbles();
 
         // Log data event for genie sale event
         if (mFromBannerSearch) {
@@ -1077,6 +1114,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             DataCollector.logEvent(Events.SaleEvent, parameters);
         }
+
+        LinearLayoutManager brandBubblesLayoutManager = new LinearLayoutManager(mActivity);
+        brandBubblesLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        mBrandBubblesRecyclerView.setLayoutManager(brandBubblesLayoutManager);
 
         mFooterAds.setVisibility(View.GONE);
         setColumnViewEnabled(false);
@@ -1304,7 +1345,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         mPaginateManager.setHasMoreDataToLoad(false);
                     }
                 } else {
-                    mPaginateManager = PaginateUtils.init(mActivity, mSaleItemsRecyclerView, mPaginateCallbacks);
+                    mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
                     mSaleItemsRecyclerView.scrollToPosition(0);
                 }
                 mSaleItemsAdapter.replaceData(items);
@@ -1678,6 +1719,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
 
             mSearchFilterMvpView.setRepository(SaleItemsController.this);
+            mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
         }
         showCollapsingToolbar();
     }
@@ -1694,6 +1736,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         determineToolbarTitle();
         hideKeyboard();
+        hideBrandBubbles();
     }
 
     private String buildSearchQueryText(List<String> chipTitles) {
@@ -1951,6 +1994,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void onSelectTab(int tabPos) {
         hideKeyboard();
+        hideBrandBubbles();
         mSearchFilterMvpView.showFacetItem(tabPos);
         mPreviousTabName = mCurrentTabName;
         mCurrentTabName = mFacetFilters.get(tabPos).second;
@@ -1960,10 +2004,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void showCollapsingToolbar() {
         if (!isViewAttached() || !isViewBound()) return;
-        AppBarLayout.LayoutParams collapsingToolbarLayoutParams = (AppBarLayout.LayoutParams) mCollapsingToolbar.getLayoutParams();
-        collapsingToolbarLayoutParams.height = Math.round(getDimension(R.dimen.sale_details_app_bar_height));
-        mCollapsingToolbar.setLayoutParams(collapsingToolbarLayoutParams);
-
         mTabLayout.setVisibility(View.VISIBLE);
         mSearchFilterContainer.setVisibility(View.VISIBLE);
     }
@@ -2032,6 +2072,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void activateSearch() {
         if (!isViewAttached() || !isViewBound()) return;
 
+        showBrandBubbles();
+
         mSaleItemsToolbarField.setSelection(mSaleItemsToolbarField.getText().length());
         if (mSearchFilterMvpView != null) {
             mSearchFilterMvpView.closeFacets();
@@ -2041,6 +2083,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsToolbarField.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 hideKeyboard();
+                hideBrandBubbles();
                 mSearchQuery = textView.getText().toString();
                 mIsSearch = true;
                 showLoading();
@@ -2183,6 +2226,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mTabLayout.setVisibility(View.VISIBLE);
                 mSaleItemsBackIcon.setVisibility(View.VISIBLE);
                 mSaleItemsBackIcon.setEnabled(true);
+                if (mBrandNames == null && canShowBrandBubbles()) {
+                    mPresenter.loadBrandBubbles();
+                }
                 break;
             case WISHLIST:
                 lp.height = 1;
@@ -2191,6 +2237,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mTabLayout.setVisibility(View.GONE);
                 mSaleItemsBackIcon.setVisibility(View.INVISIBLE);
                 mSaleItemsBackIcon.setEnabled(false);
+                mBrandBubblesRecyclerView.setVisibility(View.GONE);
                 break;
         }
 
@@ -2479,11 +2526,86 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void onClickFreeDelivery(String deliveryThreshold, String deliveryType) {
         if (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) ||
-            deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
+                deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
 
             mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
                     mActivity.getShippingTitle());
 
+        }
+    }
+
+    @Override
+    public void storeBrandNames(BrandNames brandNames) {
+        mBrandNames = brandNames;
+        refreshBrandBubbles(mSearchQuery);
+    }
+
+    private void refreshBrandBubbles(String searchTerm) {
+        if (!isViewAttached() || mBrandNames == null || !canShowBrandBubbles()) {
+            return;
+        }
+
+        if (mBrandBubblesAdapter != null && mBrandBubblesAdapter.getCurrentSearchTerm().equals(searchTerm)) {
+            return;
+        }
+
+        final BrandBubblesAdapter.BrandBubbleOnSelectListener onSelectListener = brandName -> {
+            mChipFilters.clear();
+            mChipFilters.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, brandName, brandName, 0));
+            mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
+            mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
+            mSaleItemsToolbarField.setText("");
+            mSaleItemsToolbarField.addTextChangedListener(mTextWatcher);
+            hideKeyboard();
+            hideBrandBubbles();
+            mPresenter.loadSaleItems(
+                    createSaleItemsRequest(
+                            mSearchFilterMvpView.getCategoryKeys(),
+                            0,
+                            mChipFilters));
+        };
+
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            List<String> brandNames = new ArrayList<>(mBrandNames.getBrandNames());
+            brandNames = brandNames.size() > 10 ? brandNames.subList(0, 10) : brandNames;
+            mBrandBubblesAdapter = new BrandBubblesAdapter(searchTerm, brandNames, onSelectListener);
+            mBrandBubblesRecyclerView.setAdapter(mBrandBubblesAdapter);
+            return;
+        }
+
+        final int maxResults = mActivity.getResources().getInteger(R.integer.brand_bubbles_max_results);
+        if (brandNameHandler != null) {
+            brandNameHandler.removeCallbacksAndMessages(null);
+        }
+        brandNameHandler = new Handler();
+        brandNameHandler.post(() -> {
+            final List<String> searchResults = mBrandNames.getBrandNamesMatchingString(searchTerm, maxResults);
+            final Handler mainHandler = new Handler(Looper.getMainLooper());
+            mainHandler.post(() -> {
+                final List<String> brandNames = searchResults.size() > 10 ? searchResults.subList(0, 10) : searchResults;
+                mBrandBubblesAdapter = new BrandBubblesAdapter(searchTerm, brandNames, onSelectListener);
+                mBrandBubblesRecyclerView.setAdapter(mBrandBubblesAdapter);
+            });
+        });
+    }
+
+    private boolean canShowBrandBubbles() {
+        return mSaleId == null || mSaleId.isEmpty();
+    }
+
+    private void showBrandBubbles() {
+        if (isViewAttached() && canShowBrandBubbles()) {
+            mBrandBubblesRecyclerView.setVisibility(View.VISIBLE);
+            if (mBrandBubblesRecyclerView.getParent() instanceof LinearLayout) {
+                ((LinearLayout) mBrandBubblesRecyclerView.getParent()).invalidate();
+            }
+        }
+    }
+
+    private void hideBrandBubbles() {
+        mBrandBubblesRecyclerView.setVisibility(View.GONE);
+        if (mBrandBubblesRecyclerView.getParent() instanceof LinearLayout) {
+            ((LinearLayout) mBrandBubblesRecyclerView.getParent()).invalidate();
         }
     }
 }

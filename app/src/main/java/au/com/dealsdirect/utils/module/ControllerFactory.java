@@ -7,8 +7,8 @@ import com.bluelinelabs.conductor.Controller;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
-import au.com.dealsdirect.ui.controller.categories.SaleCategoryController;
+import au.com.dealsdirect.ui.controller.categories.NewCategoriesController;
+import au.com.dealsdirect.ui.controller.categories.OldCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
@@ -75,9 +75,9 @@ public class ControllerFactory {
             case POP_UP_HOST:
                 return PopUpHostController.newInstance();
             case CATEGORIES:
-                return CategoriesController.newInstance();
+                return OldCategoriesController.newInstance();
             case SALECATEGORY:
-                return SaleCategoryController.newInstance();
+                return NewCategoriesController.newInstance();
             case CHECKOUT:
                 return CheckoutController.newInstance();
             case CHECKOUT_HOST:
@@ -164,9 +164,9 @@ public class ControllerFactory {
             case POP_UP_HOST:
                 return new PopUpHostController(bundle);
             case CATEGORIES:
-                return new CategoriesController(bundle);
+                return new OldCategoriesController(bundle);
             case SALECATEGORY:
-                return new SaleCategoryController(bundle);
+                return new NewCategoriesController(bundle);
             case CHECKOUT:
                 return new CheckoutController(bundle);
             case CHECKOUT_HOST:
@@ -250,11 +250,11 @@ public class ControllerFactory {
             return GateKeeper.Destination.LOGIN;
         }
 
-        if (controller instanceof CategoriesController) {
+        if (controller instanceof OldCategoriesController) {
             return GateKeeper.Destination.CATEGORIES;
         }
 
-        if (controller instanceof SaleCategoryController) {
+        if (controller instanceof NewCategoriesController) {
             return GateKeeper.Destination.SALECATEGORY;
         }
 

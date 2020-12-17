@@ -79,8 +79,7 @@ import au.com.dealsdirect.ui.base.BaseController.CommonControllerChangeListener;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
-import au.com.dealsdirect.ui.controller.categories.CategoriesController;
-import au.com.dealsdirect.ui.controller.categories.SaleCategoryController;
+import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
@@ -95,9 +94,8 @@ import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderSatisfactionDialog;
 import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderTrackerDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.BottomSheetSizesDialog;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
-import au.com.dealsdirect.ui.controller.shops.BottomSheetFreeShippingDialog;
+import au.com.dealsdirect.ui.controller.shops.BottomSheetInfoDialog;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
@@ -146,13 +144,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private FetchTokenHandler mFetchTokenHandler;
 
     private MainController mMainController;
-    private CategoriesController mCategoriesController;
+    private CategoriesMvpView mCategoriesView;
     private CheckoutController mCheckoutController;
     private ViewContactsController mContactsController;
     private AccountController mAccountController;
     private SearchFilterController mSearchFilterController;
     private SearchFilterController mShopSearchFilterController;
-    private SaleCategoryController mSaleCategoryController;
 
     private AuthHandler mAuthHandler;
 
@@ -416,15 +413,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showLoginController(Router router, AuthHandler handler) {
         mAuthHandler = handler;
         //any router can show login controller
-        Controller currentController = getCurrentController(router);
+        final Controller currentController = getCurrentController(router);
 
         if (!mPresenter.isTablet()) {
-            if (currentController instanceof SaleItemDetailsController ||
-                    currentController instanceof AccountController) {
-                GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
-            } else {
-                GateKeeper.push(router, GateKeeper.Destination.LOGIN);
-            }
+            GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
         } else if (!getMainController().isPopUpControllerVisible()) {
             Bundle bundle = new BundleBuilder(new Bundle())
                     .putSerializable(BundleKeys.KEY_POP_UP_HOST_DESTINATION, GateKeeper.Destination.LOGIN)
@@ -1086,20 +1078,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         return mPresenter.getShippingTitle();
     }
 
-    public void setCategoriesController(CategoriesController categoriesController) {
-        mCategoriesController = categoriesController;
-    }
-
-    public CategoriesController getCategoriesController() {
-        return mCategoriesController;
-    }
-
-    public SaleCategoryController getSaleCategoryController() {
-        return mSaleCategoryController;
-    }
-
-    public void setSaleCategoryController(SaleCategoryController saleCategoryController) {
-        this.mSaleCategoryController = saleCategoryController;
+    public CategoriesMvpView getCategoriesController() {
+        if (mCategoriesView == null && getMainController() != null && getMainController().getCategoriesRouter() != null) {
+            for (RouterTransaction routerTransaction : getMainController().getCategoriesRouter().getBackstack()) {
+                if (routerTransaction.controller() instanceof CategoriesMvpView) {
+                    mCategoriesView = (CategoriesMvpView) routerTransaction.controller();
+                    break;
+                }
+            }
+        }
+        return mCategoriesView;
     }
 
     public boolean getIsMyPayEnabled() {
@@ -1267,7 +1255,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         handler.postDelayed(() -> {
             if (getMainController() != null) {
                 if (getShopController() == null) {
-                    ShopsController shopsController = ShopsController.fromCategories(
+                    ShopsController shopsController = ShopsController.instanceWithCategoryFilter(
                             categoryId,
                             categoryName
                     );
@@ -1511,11 +1499,24 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void showFreeShippingDialog(String deliveryThreshold, String deliveryType, String title) {
-        BottomSheetFreeShippingDialog bottomSheetFragment = new BottomSheetFreeShippingDialog();
+        BottomSheetInfoDialog bottomSheetFragment = new BottomSheetInfoDialog();
 
-        bottomSheetFragment.setDeliveryThreshold(deliveryThreshold);
-        bottomSheetFragment.setDeliveryType(deliveryType);
+        final String KEY_SHIPPING_AMOUNT = "[[Amount]]";
+        final String shippingAmount = Settings.getSelectedCountry().currencySign + deliveryThreshold;
+        final String description = deliveryType.replace(KEY_SHIPPING_AMOUNT, shippingAmount);
+
         bottomSheetFragment.setTitle(title);
+        bottomSheetFragment.setDescription(description);
+        bottomSheetFragment.setLayoutId(R.layout.bottom_sheet_free_shipping_info);
+
+        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
+    }
+
+    public void showInfoDialog(String title, String description) {
+        BottomSheetInfoDialog bottomSheetFragment = new BottomSheetInfoDialog();
+
+        bottomSheetFragment.setTitle(title);
+        bottomSheetFragment.setDescription(description);
 
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
     }

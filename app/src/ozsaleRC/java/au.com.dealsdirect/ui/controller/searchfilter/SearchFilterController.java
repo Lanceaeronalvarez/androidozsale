@@ -797,6 +797,11 @@ public class SearchFilterController extends BaseController implements SearchFilt
         return mCategoryKeys;
     }
 
+    @Override
+    public void clearCategoryKeys() {
+        mCategoryKeys.clear();
+    }
+
     private void checkParentSelection(GetCategoryTreeResponse category) {
         if (category == null) {
             return;

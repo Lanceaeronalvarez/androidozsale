@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.shops.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -550,5 +551,12 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     public void setShouldShowTitle(boolean shouldShowTitle) {
         this.shouldShowTitle = shouldShowTitle;
+    }
+
+    public void preloadBannerImages(Context context) {
+        for (GetBannerResponse.Banner item : dataSource) {
+            final String url = ImageUtils.appendBannerSizeUrl(item.getImage(), imageWidth, imageHeight);
+            ImageUtils.preLoadImage(url, context);
+        }
     }
 }

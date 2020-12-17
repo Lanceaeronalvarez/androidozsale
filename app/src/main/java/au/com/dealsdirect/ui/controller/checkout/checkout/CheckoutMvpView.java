@@ -77,4 +77,6 @@ public interface CheckoutMvpView extends MvpView {
     void initializeVisaCheckout();
 
     void setIsShipmentAvailable(boolean isShipmentAvailable);
+
+    void showAgeRestriction(boolean hasAgeRestriction);
 }

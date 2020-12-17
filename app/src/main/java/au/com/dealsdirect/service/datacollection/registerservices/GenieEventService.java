@@ -25,7 +25,7 @@ import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
-import au.com.dealsdirect.data.network.model.events.StartCheckoutRequest;
+import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.VisitorInfo;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
@@ -150,7 +150,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 new LoggingService.LogInitiateCheckout(new InitiateCheckOutEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
-                        callStartCheckoutEvent((StartCheckoutRequest) parameters.get(DataCollector.EventParameters.START_CHECKOUT_REQUEST));
+                        callStartCheckoutEvent((CommonCheckoutRequest) parameters.get(DataCollector.EventParameters.START_CHECKOUT_REQUEST));
                     }
                 }));
 
@@ -200,6 +200,16 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                         callFeatureUsageEvent((FeatureUsageEventRequest) parameters.get(DataCollector.EventParameters.FEATURE_EVENT_REQUEST));
                     }
                 }));
+
+        //register common checkout event
+        DataCollector.EventRegistry.register(generateEventKey(Events.CommonCheckoutEvent, getServiceKey()), Events.CommonCheckoutEvent,
+                new LoggingService.LogInitiateCheckout(new InitiateCheckOutEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        callStartCheckoutEvent((CommonCheckoutRequest) parameters.get(DataCollector.EventParameters.COMMON_CHECKOUT_REQUEST));
+                    }
+                }));
+
     }
 
     private static String generateEventKey(Events events, String service) {
@@ -359,7 +369,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
     }
 
-    private static void callStartCheckoutEvent(StartCheckoutRequest request) {
+    private static void callStartCheckoutEvent(CommonCheckoutRequest request) {
         request.setFrontEndInfo(includeFrontEndInfo());
         request.setVisitorInfo(includeVisitorInfo());
 
