@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Priority;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
@@ -455,7 +456,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), width, height);
 
 
-                    ImageUtils.loadImage(imgUrl, bannerViewHolder.image);
+                    ImageUtils.loadImageWithPriority(imgUrl, bannerViewHolder.image, Priority.HIGH);
 
                     if (bannerViewHolder.subscription != null) {
                         bannerViewHolder.subscription.dispose();
@@ -739,7 +740,13 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     ScreenUtils.getScreenWidth(mActivity),
                     minColumns, maxColumns);
             mNumberOfColumns = grid.getColumn();
-            mComputedHeight = (int) grid.getItemHeight();
+            if (useOldBannerDimensions) {
+                mComputedHeight = (int) grid.getItemHeight();
+            } else {
+                final float margins = mActivity.getResources().getDimension(R.dimen.margin_tiny) * 2f;
+                final float ratio = (float) mHeight / (float) mWidth;
+                mComputedHeight = (int) ((grid.getItemWidth() - margins) * ratio + margins);
+            }
 
             setupSlidingBannersDimensions();
             setupCategoryBannersDimensions();
