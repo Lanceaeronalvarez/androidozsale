@@ -72,7 +72,8 @@ public class ImageUtils {
         try {
             RequestOptions options = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .format(DecodeFormat.PREFER_ARGB_8888);
+                    .format(DecodeFormat.PREFER_ARGB_8888)
+                    .priority(Priority.LOW);
 
             Glide.with(context)
                     .asBitmap()
@@ -90,6 +91,24 @@ public class ImageUtils {
             RequestOptions options = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .format(DecodeFormat.PREFER_ARGB_8888);
+
+            Glide.with(imageView)
+                    .asBitmap()
+                    .apply(options)
+                    .load(url)
+                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                    .into(imageView);
+        } catch (Exception e) {
+            Log.e("ImageUtils", e.getMessage(), e);
+        }
+    }
+
+    public static void loadImageWithPriority(String url, ImageView imageView, Priority priority) {
+        try {
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .format(DecodeFormat.PREFER_ARGB_8888)
+                    .priority(priority);
 
             Glide.with(imageView)
                     .asBitmap()

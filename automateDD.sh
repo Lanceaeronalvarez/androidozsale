@@ -4,8 +4,8 @@ OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 flavorName=dealsDirect2RC
 buildTypeAssemble=DealsDirect2RCRelease
 defaultCountry=Australia
-expectedVersionName="4.8.0"
-expectedVersionCode="284"
+expectedVersionName="4.8.1"
+expectedVersionCode="286"
 
 print_green(){
     printf "\e[1;32m$1\e[0m"

@@ -1015,6 +1015,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         request.setOffset(null);
         request.setLimit("999");
         request.setIncludeCampaignBanners(true);
+        request.setCategory(mCategoryID);
 
         mPresenter.loadSponsoredBanners(request);
     }
@@ -1024,6 +1025,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         request.setOffset(null);
         request.setLimit("50");
         request.setBannergroups("7");
+        request.setCategory(mCategoryID);
 
         mPresenter.loadCategoryBanners(request);
     }
