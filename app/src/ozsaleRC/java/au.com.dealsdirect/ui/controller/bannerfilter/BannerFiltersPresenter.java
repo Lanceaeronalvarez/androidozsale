@@ -27,12 +27,14 @@ public class BannerFiltersPresenter<V extends BannerFiltersMvpView> extends Base
 
     @Override
     public void callGetCategoryTree() {
-        if (isViewAttached()) {
-            if (!getMvpView().isNetworkConnected()) {
-                getMvpView().showNoNetworkLayout();
-            } else {
-                getMvpView().hideNoNetworklayout();
-            }
+        if (!isViewAttached()) {
+            return;
+        }
+
+        if (!getMvpView().isNetworkConnected()) {
+            getMvpView().showNoNetworkLayout();
+        } else {
+            getMvpView().hideNoNetworklayout();
         }
 
         CallGetCategoriesRequest request = new CallGetCategoriesRequest();
