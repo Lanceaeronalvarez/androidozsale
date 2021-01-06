@@ -624,6 +624,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             controller.mInitialCategoryTree = ((Parameters.FromCategory) parameters).getCategories();
             controller.mFromCategorySearch = true;
             controller.mChipFilters = ((Parameters.FromCategory) parameters).getPreSelectedFilter();
+            if (controller.mChipFilters == null) {
+                controller.mChipFilters = new HashSet<>();
+            }
             controller.mPreSelectedFilter = ((Parameters.FromCategory) parameters).getPreSelectedFilter();
         } else if (parameters instanceof Parameters.FromSaleItemDeepLink) {
             title = ((Parameters.FromSaleItemDeepLink) parameters).getBannerTitle();
@@ -663,6 +666,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (args.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
             mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<HashSet<SearchChipModel>>() {
             }.getType());
+            if (mChipFilters == null) {
+                mChipFilters = new HashSet<>();
+            }
         }
 
         mFromBannerSearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, false);
@@ -742,6 +748,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
                 mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<HashSet<SearchChipModel>>() {
                 }.getType());
+                if (mChipFilters == null) {
+                    mChipFilters = new HashSet<>();
+                }
             }
 
             if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) {
@@ -760,6 +769,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER)) {
                 mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, ""), new TypeToken<HashSet<SearchChipModel>>() {
                 }.getType());
+                if (mChipFilters == null) {
+                    mChipFilters = new HashSet<>();
+                }
             }
 
             if (savedInstanceState.containsKey(SHOP_KEY_SEARCH_TEXT)) {
@@ -1764,7 +1776,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mChipFilters = new HashSet<>();
             mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
         } else {
-            mChipFilters = chipsList;
+            mChipFilters = chipsList != null ? chipsList : new HashSet<>();
         }
         return createSaleItemsRequest(mCategoryKey, pageNumber, mChipFilters);
     }
