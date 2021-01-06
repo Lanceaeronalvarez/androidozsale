@@ -858,7 +858,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             });
         }
 
-        mSoldOutView.setVisibility(mIsSoldout ? View.VISIBLE : View.GONE);
+        mSoldOutView.setVisibility(mIsSoldout != null && mIsSoldout ? View.VISIBLE : View.GONE);
 
         mProductBrand.setOnClickListener(v -> {
             showProductList(mProductBrand.getText().toString());
