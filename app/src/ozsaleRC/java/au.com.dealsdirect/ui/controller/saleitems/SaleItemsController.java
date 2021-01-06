@@ -1253,6 +1253,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 public void onAnimationEnd(Animation animation) {
                     Handler mainHandler = new Handler(mActivity.getMainLooper());
                     Runnable myRunnable = () -> {
+                        if (!isAttached()) {
+                            return;
+                        }
                         isSkeletonAnimating = false;
                         showSaleItems(getSaleItemsResponse, forFacetCorrection, isFromCache);
                         if (mSaleItemsRecyclerView != null) {
