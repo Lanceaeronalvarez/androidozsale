@@ -2565,6 +2565,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         final BrandBubblesAdapter.BrandBubbleOnSelectListener onSelectListener = brandName -> {
+            if (!isAttached() || mSearchFilterMvpView == null) {
+                return;
+            }
+
             mChipFilters.clear();
             mChipFilters.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, brandName, brandName, 0));
             mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
