@@ -112,7 +112,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private BannersAdapter mBannersAdapter;
     private ResettableDimensions mResettableDimensionsAdapter = null;
     private Paginate.Callbacks mPaginateCallbacks;
-    private Paginate mPaginateManager;
+    private Paginate mPaginateManager = null;
 
     private int page = 0;
     private boolean loadingInProgress = false;
@@ -375,7 +375,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             loadSlidingBanners();
             loadSponsoredBanners();
             loadCategoryBanners();
-            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, bannerLimit / 2, mPaginateCallbacks);
         }
 
         if (mPreLoadedCategories.size() == 0) {
@@ -652,7 +651,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (mPaginateManager != null) {
                 mPaginateManager.unbind();
             }
-            shouldRestartPaginateManager = true;
+            if (!isFromCache) {
+                shouldRestartPaginateManager = true;
+            }
             if (mPaginateManager != null) {
                 mPaginateManager.setHasMoreDataToLoad(false);
             }
