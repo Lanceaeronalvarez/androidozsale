@@ -666,8 +666,12 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.WISHLIST, "ids", ApiUrlVersion.v4.apiVersion());
     }
 
-    public static String getWishlist() {
+    public static String getWishlistAll() {
         return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/wishlist", ApiUrlVersion.v4.apiVersion());
+    }
+
+    public static String getWishlistPaginated() {
+        return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/wishlist/search?limit={limit}&offset={offset}", ApiUrlVersion.v5.apiVersion());
     }
 
     public static String addToWishlist() {

@@ -450,7 +450,9 @@ public interface ApiHelper {
     // WISHLIST
     Observable<List<GetWishlistIdResponse>> callGetWishlistIdsOnly();
 
-    Observable<List<GetSaleItemsResponse.Products>> callGetWishlist();
+    Observable<List<GetSaleItemsResponse.Products>> callGetWishlistAll();
+
+    Observable<List<GetSaleItemsResponse.Products>> callGetWishlistPaginated(int limit, int offset);
 
     Observable<String> callAddToWishlist(String productId, String seoIdentifier);
 

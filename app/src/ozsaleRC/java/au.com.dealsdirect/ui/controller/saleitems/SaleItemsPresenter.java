@@ -46,8 +46,18 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadWishlist() {
-        doApiCallForResponse(getDataManager().callGetWishlist(), new AppApiCallback() {
+    public void loadWishlistAll() {
+        doApiCallForResponse(getDataManager().callGetWishlistAll(), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> list) {
+                getMvpView().showWishlist((List<GetSaleItemsResponse.Products>) list);
+            }
+        });
+    }
+
+    @Override
+    public void loadWishlistPaginated(int limit, int offset) {
+        doApiCallForResponse(getDataManager().callGetWishlistPaginated(limit, offset), new AppApiCallback() {
             @Override
             public void onSuccess(List<?> list) {
                 getMvpView().showWishlist((List<GetSaleItemsResponse.Products>) list);

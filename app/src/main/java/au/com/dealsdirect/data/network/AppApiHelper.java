@@ -1373,8 +1373,18 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlist() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.getWishlist())
+    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistPaginated(int limit, int offset) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getWishlistPaginated())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("limit", Integer.toString(limit))
+                .addPathParameter("offset", Integer.toString(offset))
+                .build()
+                .getObjectListObservable(GetSaleItemsResponse.Products.class);
+    }
+
+    @Override
+    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistAll() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getWishlistAll())
                 .addHeaders(mApiHeader.get())
                 .doNotCacheResponse()
                 .build()

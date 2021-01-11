@@ -836,8 +836,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlist() {
-        return mApiHelper.callGetWishlist();
+    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistAll() {
+        return mApiHelper.callGetWishlistAll();
+    }
+
+    @Override
+    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistPaginated(int limit, int offset) {
+        return mApiHelper.callGetWishlistPaginated(limit, offset);
     }
 
     @Override
