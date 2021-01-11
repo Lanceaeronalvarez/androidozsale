@@ -71,6 +71,8 @@ public class MainController extends BaseController implements MainMvpView {
     private static final String KEY_CURRENT_INDEX = "KEY_CURRENT_INDEX";
     private static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";
 
+    private int wishlistCount = 0;
+
     @SuppressLint("UseSparseArrays")
     private HashMap<Integer, Router> routers = new HashMap<>();
 
@@ -184,12 +186,8 @@ public class MainController extends BaseController implements MainMvpView {
 //        ADD "NEW" Badge to categories
 
         if (mPresenter.isInitialLaunch()) {
-            AHNotification notification = new AHNotification.Builder()
-                    .setText("NEW")
-                    .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.bottom_nav_badge))
-                    .setTextColor(ContextCompat.getColor(mActivity, R.color.white))
-                    .build();
-            mBottomNavigationView.setNotification(notification, CATEGORY_INDEX);
+            showNewTagOnCategory(true);
+            mPresenter.setInitialLaunchFalse();
         }
 
         setUp(view);
@@ -579,6 +577,8 @@ public class MainController extends BaseController implements MainMvpView {
             setViewPagerItem(CATEGORY_INDEX);
         }
 
+        showNewTagOnCategory(false);
+
         mIsInitialSavedInstanceLoad = false;
     }
 
@@ -642,6 +642,11 @@ public class MainController extends BaseController implements MainMvpView {
             setViewPagerItem(WISHLIST_INDEX);
         }
 
+        if (!mPresenter.hasWishlistBeenAccessed()) {
+            mPresenter.setHasWishlistBeenAccessed(true);
+            showWishlistItemCount(wishlistCount);
+        }
+
         mIsInitialSavedInstanceLoad = false;
     }
 
@@ -682,6 +687,8 @@ public class MainController extends BaseController implements MainMvpView {
                 .setTextColor(ContextCompat.getColor(mActivity, R.color.white))
                 .build();
         mBottomNavigationView.setNotification(notification, WISHLIST_INDEX);
+
+        wishlistCount = count;
     }
 
     public void updateBasketItemsQuantity() {
@@ -882,5 +889,14 @@ public class MainController extends BaseController implements MainMvpView {
                 mBottomNavigationView.disableItemAtPosition(i);
             }
         }
+    }
+
+    private void showNewTagOnCategory(boolean show) {
+        AHNotification notification = new AHNotification.Builder()
+                .setText(show ? "NEW" : "")
+                .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.bottom_nav_badge))
+                .setTextColor(ContextCompat.getColor(mActivity, R.color.white))
+                .build();
+        mBottomNavigationView.setNotification(notification, CATEGORY_INDEX);
     }
 }
