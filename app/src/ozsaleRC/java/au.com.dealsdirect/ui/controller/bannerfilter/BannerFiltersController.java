@@ -75,7 +75,6 @@ public class BannerFiltersController extends BaseController implements BannerFil
         super.onViewDidAppear(previousController);
 
         if (mHasSavedInstance) {
-            mPresenter.callGetCategoryTree();
             mActivity.getMainController().setSavedCurrentItem();
         }
     }
@@ -89,10 +88,6 @@ public class BannerFiltersController extends BaseController implements BannerFil
 
         mLeftImageButton.setVisibility(View.GONE);
         mTitleText.setText(getResources().getString(R.string.category_title));
-
-        if (!mHasSavedInstance) {
-            mPresenter.callGetCategoryTree();
-        }
     }
 
     @Override
@@ -105,6 +100,7 @@ public class BannerFiltersController extends BaseController implements BannerFil
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         mPresenter.onAttach(this);
+        mPresenter.callGetCategoryTree();
     }
 
     @Override
