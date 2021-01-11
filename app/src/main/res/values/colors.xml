@@ -283,6 +283,8 @@
 
     <color name="user_feedback_bg">#CAEDC7</color>
 
+    <color name="free_shipping_color">#46A1D8</color>
+
     <color name="brand_bubble_text_color">#323232</color>
     <color name="brand_bubble">#D6D7DD</color>
 

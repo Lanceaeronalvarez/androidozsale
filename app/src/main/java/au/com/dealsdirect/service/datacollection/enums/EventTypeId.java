@@ -18,4 +18,5 @@ public class EventTypeId {
     public static final String EVENT_SIMS = "sims";
     public static final int EVENT_SLIDER_BANNER = 10;
     public static final int EVENT_FEATURE_USAGE = 18;
+    public static final int EVENT_DELIVERY_PRICE_VIEW = 19;
 }

@@ -4,7 +4,6 @@ package au.com.dealsdirect.data.network;
 import java.util.HashMap;
 import java.util.Set;
 
-import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.ui.controller.main.Settings;
 
 public final class ApiEndPoint {
@@ -98,7 +97,7 @@ public final class ApiEndPoint {
 
         Settings.Country selectedCountry = Settings.getSelectedCountry();
         String root = "";
-        switch(service) {
+        switch (service) {
             case LEGACY:
                 root = selectedCountry.legacyRoot;
                 break;
@@ -174,7 +173,7 @@ public final class ApiEndPoint {
     }
 
     public static String getPromoInfo() {
-        return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/promo-info", ApiUrlVersion.v2.apiVersion());
+        return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/promo-info", ApiUrlVersion.v3.apiVersion());
     }
 
     public static String getOurpayData() {
@@ -202,6 +201,10 @@ public final class ApiEndPoint {
     }
 
     public static String getFeatureUsageEvent() {
+        return getFormattedUrl(ApiService.EVENTING, "events", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String getDeliveryPriceViewEvent() {
         return getFormattedUrl(ApiService.EVENTING, "events", ApiUrlVersion.v1.apiVersion());
     }
 
@@ -719,7 +722,16 @@ public final class ApiEndPoint {
     }
 
     public static String closeTicketSatisfaction() {
+
         return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/number={number}:close", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String getPostcodeDefault() {
+        return getFormattedUrl(ApiService.EVENTING, "users/current", ApiUrlVersion.v2.apiVersion());
+    }
+
+    public static String getPostcodeShippingPrice() {
+        return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/products/delivery?postCode={postcode}&skuId={skuid}&weight={weight}&height={height}&length=&width={width}&price={price}", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String saveAgeRestrictedConsentData() {

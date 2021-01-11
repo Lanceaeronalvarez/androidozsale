@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import java.util.List;
 
+import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
@@ -39,4 +40,10 @@ public interface SaleItemDetailsMvpView extends MvpView {
     void showRecentlyViewedItems(List<RecentlyViewedItemResponse> response);
 
     void showFreeShipping(String deliveryType, String deliveryThreshold);
+
+    void showPostcodeForm(boolean show);
+
+    void showDefaultPostcode(String postcode);
+
+    void showPreviewShippingPrice(GetPostcodeShippingPriceResponse response, String postcode, Integer operation);
 }

@@ -14,6 +14,8 @@ import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
@@ -142,6 +144,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                             getMvpView().setDynamicDiscount(response.getPercentOffText());
                             getMvpView().setIsAfterpayDetailsVisible(response.getAfterpayEnabled());
                             getMvpView().showFreeShipping(response.getDeliveryType(), response.getDeliveryThreshold());
+                            getMvpView().showPostcodeForm(response.getShowPostCode());
                         }
                     }
 
@@ -485,6 +488,52 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                     ANError anError = (ANError) throwable;
                     handleApiError(anError);
                 }
+            }
+        });
+    }
+
+    @Override
+    public void loadDefaultPostcode() {
+        doApiCallForResponse(getDataManager().getPostcodeDefault(), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                super.onSuccess(object);
+
+                if (object instanceof GetPostcodeDefaultResponse) {
+                    getMvpView().showDefaultPostcode(((GetPostcodeDefaultResponse) object).getPostcode());
+                } else {
+                    getMvpView().showDefaultPostcode(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                getMvpView().showDefaultPostcode(null);
+            }
+        });
+    }
+
+    @Override
+    public void loadPreviewShippingPrice(String postcode, String skuid, float price, int weight, int width, int height, Integer operation) {
+        doApiCallForResponse(getDataManager().getPostcodeShippingPrice(postcode, skuid, price, weight, width, height), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                super.onSuccess(object);
+
+                if (object instanceof GetPostcodeShippingPriceResponse) {
+                    getMvpView().showPreviewShippingPrice((GetPostcodeShippingPriceResponse) object, postcode, operation);
+                } else {
+                    getMvpView().showPreviewShippingPrice(null, postcode, operation);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                getMvpView().showPreviewShippingPrice(null, postcode, operation);
             }
         });
     }

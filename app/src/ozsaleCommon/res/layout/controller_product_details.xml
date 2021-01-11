@@ -214,12 +214,82 @@
                                 android:visibility="gone">
 
                                 <TextView
+                                    android:id="@+id/product_details_shipping_postcode_header"
                                     fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="6dp"
                                     android:padding="@dimen/margin_small"
                                     android:text="@string/shipping"
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_caption1"
+                                    android:visibility="gone" />
+
+                                <LinearLayout
+                                    android:id="@+id/product_details_shipping_postcode_container"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/margin_small"
+                                    android:layout_marginRight="@dimen/margin_small"
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
+
+                                    <TextView
+                                        android:id="@+id/product_details_shipping_postcode_preview_price"
+                                        fontPath="@string/font_app_regular"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginRight="@dimen/margin_small"
+                                        android:text="$10.00"
+                                        android:textColor="@color/text_extra_dark"
+                                        android:textSize="@dimen/text_size_body" />
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/bg_rounded_corner_border"
+                                        android:orientation="horizontal">
+
+                                        <EditText
+                                            android:id="@+id/product_details_shipping_postcode_input"
+                                            style="@style/DDEditTextStyle"
+                                            fontPath="@string/font_app_regular"
+                                            android:layout_width="105dp"
+                                            android:layout_height="wrap_content"
+                                            android:background="@color/transparent"
+                                            android:hint="Postcode"
+                                            android:lines="1"
+                                            android:textColor="@color/text_extra_dark" />
+
+                                        <Button
+                                            android:id="@+id/product_details_shipping_postcode_button"
+                                            style="@style/DDButtonStyle"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Ok" />
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/product_details_shipping_not_available"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/margin_small"
+                                    android:layout_marginRight="@dimen/margin_small"
+                                    android:text="Not available to deliver to your location"
+                                    android:textColor="#ff0000"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/product_details_shipping_desc_header"
+                                    fontPath="@string/font_app_bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:padding="@dimen/margin_small"
+                                    android:text="@string/estimated_delivery"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
 
