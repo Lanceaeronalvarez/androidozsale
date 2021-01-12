@@ -2149,11 +2149,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mShippingPreviewPrice.setText(null);
         final Boolean isAvailable = response == null ? null : response.isShippingAvailable();
         final Float shippingPrice = response == null ? null : response.getPrice();
-        if (isAvailable != null && isAvailable) {
-            if (mIsFreeDelivery) {
-                mShippingPreviewPrice.setText(getFreeShippingSpan());
-            } else if (shippingPrice != null && shippingPrice > 0) {
+        if (isAvailable != null && isAvailable && shippingPrice != null) {
+            if (shippingPrice > 0) {
                 mShippingPreviewPrice.setText(PriceUtils.getPriceStringValue(shippingPrice));
+            } else {
+                mShippingPreviewPrice.setText(getFreeShippingSpan());
             }
         }
         mShippingPostcodeNotAvailable.setVisibility(isAvailable != null && !isAvailable ? View.VISIBLE : View.GONE);
