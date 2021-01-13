@@ -125,4 +125,6 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void fetchCachedResponses();
 
     void pruneCachedResponses();
+
+    void callGetUserCurrent();
 }

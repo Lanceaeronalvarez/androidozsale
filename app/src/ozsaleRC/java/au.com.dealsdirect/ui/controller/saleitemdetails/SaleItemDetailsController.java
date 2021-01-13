@@ -13,10 +13,12 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
@@ -340,6 +342,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mShippingDescHeaderText;
     @BindView(R.id.product_details_shipping_desc_webview)
     WebView mShippingDescText;
+    @BindView(R.id.product_details_shipping_postcode_activity_indicator)
+    ProgressBar mShippingCalculateActivityIndicator;
+    @BindView(R.id.product_details_shipping_postcode_button)
+    Button mShippingCalculateButton;
     @BindView(R.id.product_description_text)
     WebView mProductDescriptionText;
     @BindView(R.id.product_about_pricing_text)
@@ -887,6 +893,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             showProductList(mProductBrand.getText().toString());
         });
 
+        mShippingPostcodeInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mPresenter.setDefaultPostcode(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         mShippingPostcodeContainer.setVisibility(View.GONE);
         mShippingPostcodeNotAvailable.setVisibility(View.GONE);
         mShippingPreviewPrice.setText(null);
@@ -2113,6 +2135,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 width = mAttributes.getWidth() == null ? 0 : mAttributes.getWidth().intValue();
                 height = mAttributes.getHeight() == null ? 0 : mAttributes.getHeight().intValue();
             }
+            showCalculateShippingPriceActivityIndicator(true);
             mPresenter.loadPreviewShippingPrice(
                     postcode.toString(),
                     mSkuId,
@@ -2121,6 +2144,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                     width,
                     height,
                     operation);
+        }
+    }
+
+    private void showCalculateShippingPriceActivityIndicator(boolean show) {
+        if (show) {
+            mShippingCalculateActivityIndicator.setVisibility(View.VISIBLE);
+//            mShippingCalculateActivityIndicator.animate();
+            mShippingCalculateButton.setText("");
+            mShippingCalculateButton.setEnabled(false);
+        } else {
+            mShippingCalculateActivityIndicator.setVisibility(View.GONE);
+            mShippingCalculateButton.setText("Ok");
+            mShippingCalculateButton.setEnabled(true);
         }
     }
 
@@ -2146,6 +2182,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showPreviewShippingPrice(GetPostcodeShippingPriceResponse response, String postcode, Integer operation) {
+        showCalculateShippingPriceActivityIndicator(false);
         mShippingPreviewPrice.setText(null);
         final Boolean isAvailable = response == null ? null : response.isShippingAvailable();
         final Float shippingPrice = response == null ? null : response.getPrice();

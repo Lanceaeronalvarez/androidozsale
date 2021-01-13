@@ -185,6 +185,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String PREFERS_OLD_SHOP_BANNER_DIMENSIONS = "PREFERS_OLD_SHOP_BANNER_DIMENSIONS";
 
+    private static final String DEFAULT_POSTCODE = "DEFAULT_POSTCODE";
+
     private Context mContext;
 
     @Inject
@@ -1083,5 +1085,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean getPrefersOldShopBannersDimensions() {
         return Prefs.getBoolean(PREFERS_OLD_SHOP_BANNER_DIMENSIONS, false);
+    }
+
+    @Override
+    public void setDefaultPostcode(String postcode) {
+        Prefs.putString(DEFAULT_POSTCODE, postcode);
+    }
+
+    @Override
+    public String getDefaultPostcode() {
+        return Prefs.getString(DEFAULT_POSTCODE, "");
     }
 }

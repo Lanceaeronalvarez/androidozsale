@@ -494,6 +494,12 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
     @Override
     public void loadDefaultPostcode() {
+        final String postcode = getDataManager().getDefaultPostcode();
+        if (postcode != null && !postcode.isEmpty()) {
+            getMvpView().showDefaultPostcode(postcode);
+            return;
+        }
+
         doApiCallForResponse(getDataManager().getPostcodeDefault(), new AppApiCallback() {
             @Override
             public void onSuccess(Object object) {
@@ -501,6 +507,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
                 if (object instanceof GetPostcodeDefaultResponse) {
                     getMvpView().showDefaultPostcode(((GetPostcodeDefaultResponse) object).getPostcode());
+                    setDefaultPostcode(((GetPostcodeDefaultResponse) object).getPostcode());
                 } else {
                     getMvpView().showDefaultPostcode(null);
                 }
@@ -513,6 +520,11 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 getMvpView().showDefaultPostcode(null);
             }
         });
+    }
+
+    @Override
+    public void setDefaultPostcode(String postcode) {
+        getDataManager().setDefaultPostcode(postcode);
     }
 
     @Override

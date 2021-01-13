@@ -1835,4 +1835,14 @@ public class AppDataManager implements DataManager {
     public boolean getPrefersOldShopBannersDimensions() {
         return mPreferencesHelper.getPrefersOldShopBannersDimensions();
     }
+
+    @Override
+    public void setDefaultPostcode(String postcode) {
+        mPreferencesHelper.setDefaultPostcode(postcode);
+    }
+
+    @Override
+    public String getDefaultPostcode() {
+        return mPreferencesHelper.getDefaultPostcode();
+    }
 }

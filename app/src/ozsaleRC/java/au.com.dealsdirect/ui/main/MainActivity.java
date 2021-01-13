@@ -1156,6 +1156,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void loginSuccessMethods() {
         //On success, must call AppSettings
         mPresenter.callGetAppSettings();
+        mPresenter.callGetUserCurrent();
         //On success, must get new braintree token
         mPresenter.fetchBTAuthorization();
         refreshWishlist();
