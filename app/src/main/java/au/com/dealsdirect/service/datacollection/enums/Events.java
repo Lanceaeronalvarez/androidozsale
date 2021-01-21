@@ -46,6 +46,7 @@ public enum Events {
     SponsoredBannerClickEvent("SponsoredBannerClickEvent"),
     RegularBannerClickEvent("RegularBannerClickEvent"),
     FeatureUsageEvent("FeatureUsageEvent"),
+    DeliveryPriceViewEvent("DeliveryPriceViewEvent"),
     CommonCheckoutEvent("CommonCheckoutEvent");
 
     private String value;

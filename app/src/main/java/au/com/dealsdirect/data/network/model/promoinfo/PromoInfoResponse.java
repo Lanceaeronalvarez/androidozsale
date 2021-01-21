@@ -9,14 +9,15 @@ import java.util.HashMap;
 public class PromoInfoResponse extends ArrayList<PromoInfoResponse.PromoInfo> {
 
     private static String KEY_PERCENTOFF = "PercentOff";
-    static String KEY_PERCENTOFFTEXT = "PercentOffText";
-    static String KEY_FREEDELIVERY = "FreeDelivery";
-    static String KEY_ISFREEDELIVERY = "IsFreeDelivery";
-    static String KEY_PRICE = "Price";
-    static String KEY_PRICE_DISCOUNTED = "DiscountedPrice";
-    static String KEY_AFTERPAYENABLED = "AfterPayEnabled";
-    static String KEY_DELIVERY_TYPE = "DeliveryType";
-    static String KEY_DELIVERY_THRESHOLD = "DeliveryThreshold";
+    private static String KEY_PERCENTOFFTEXT = "PercentOffText";
+    private static String KEY_FREEDELIVERY = "FreeDelivery";
+    private static String KEY_ISFREEDELIVERY = "IsFreeDelivery";
+    private static String KEY_PRICE = "Price";
+    private static String KEY_PRICE_DISCOUNTED = "DiscountedPrice";
+    private static String KEY_AFTERPAYENABLED = "AfterPayEnabled";
+    private static String KEY_DELIVERY_TYPE = "DeliveryType";
+    private static String KEY_DELIVERY_THRESHOLD = "DeliveryThreshold";
+    private static String KEY_SHOW_POSTCODE = "ShowPostcode";
 
     private HashMap<String, String> rearrangedDataStructure = null;
 
@@ -82,7 +83,12 @@ public class PromoInfoResponse extends ArrayList<PromoInfoResponse.PromoInfo> {
         return rearrangedDataStructure.get(KEY_DELIVERY_THRESHOLD);
     }
 
-    public class PromoInfo {
+    public boolean getShowPostCode() {
+        rearrangeDataStructure();
+        return Boolean.parseBoolean(rearrangedDataStructure.get(KEY_SHOW_POSTCODE));
+    }
+
+    public static class PromoInfo {
         @SerializedName("name")
         @Expose
         private String name;

@@ -75,6 +75,7 @@ import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
@@ -122,6 +123,8 @@ import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.Verif
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
+import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
@@ -771,6 +774,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<String> callDeliveryPriceViewEvent(DeliveryPriceViewEventRequest request) {
+        return mApiHelper.callDeliveryPriceViewEvent(request);
+    }
+
+    @Override
     public Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String langaugeId) {
         return mApiHelper.callGetPaymentPlans(countryId, langaugeId);
     }
@@ -836,8 +844,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlist() {
-        return mApiHelper.callGetWishlist();
+    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistAll() {
+        return mApiHelper.callGetWishlistAll();
+    }
+
+    @Override
+    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistPaginated(int limit, int offset) {
+        return mApiHelper.callGetWishlistPaginated(limit, offset);
     }
 
     @Override
@@ -915,6 +928,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetPublicSaleDetailsResponse> callGetPublicSaleDetails(GetPublicSaleDetailsRequest request) {
         return mApiHelper.callGetPublicSaleDetails(request);
+    }
+
+    @Override
+    public Observable<GetPostcodeDefaultResponse> getPostcodeDefault() {
+        return mApiHelper.getPostcodeDefault();
+    }
+
+    @Override
+    public Observable<GetPostcodeShippingPriceResponse> getPostcodeShippingPrice(String postcode, String skuid, float price, int weight, int width, int height) {
+        return mApiHelper.getPostcodeShippingPrice(postcode, skuid, price, weight, width, height);
     }
 
     @Override
@@ -1811,5 +1834,15 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean getPrefersOldShopBannersDimensions() {
         return mPreferencesHelper.getPrefersOldShopBannersDimensions();
+    }
+
+    @Override
+    public void setDefaultPostcode(String postcode) {
+        mPreferencesHelper.setDefaultPostcode(postcode);
+    }
+
+    @Override
+    public String getDefaultPostcode() {
+        return mPreferencesHelper.getDefaultPostcode();
     }
 }

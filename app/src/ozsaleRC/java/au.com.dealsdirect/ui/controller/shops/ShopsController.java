@@ -112,7 +112,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private BannersAdapter mBannersAdapter;
     private ResettableDimensions mResettableDimensionsAdapter = null;
     private Paginate.Callbacks mPaginateCallbacks;
-    private Paginate mPaginateManager;
+    private Paginate mPaginateManager = null;
 
     private int page = 0;
     private boolean loadingInProgress = false;
@@ -375,7 +375,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             loadSlidingBanners();
             loadSponsoredBanners();
             loadCategoryBanners();
-            mPaginateManager = PaginateUtils.init(shopsControllerBannerRecyclerView, bannerLimit / 2, mPaginateCallbacks);
         }
 
         if (mPreLoadedCategories.size() == 0) {
@@ -638,15 +637,23 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         boolean shouldRestartPaginateManager = false;
 
         if (isFromCache && mSalesFromCache == null) {
-            mSales = new ArrayList<>(mBannersAdapter.getData());
+            if (mBannersAdapter != null) {
+                mSales = new ArrayList<>(mBannersAdapter.getData());
+            } else {
+                mSales = new ArrayList<>();
+            }
         }
 
         if (page == 0 || isRefreshShop) {
-            mBannersAdapter.replace(moreGroups);
+            if (mBannersAdapter != null) {
+                mBannersAdapter.replace(moreGroups);
+            }
             if (mPaginateManager != null) {
                 mPaginateManager.unbind();
             }
-            shouldRestartPaginateManager = true;
+            if (!isFromCache) {
+                shouldRestartPaginateManager = true;
+            }
             if (mPaginateManager != null) {
                 mPaginateManager.setHasMoreDataToLoad(false);
             }
@@ -654,9 +661,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         } else {
             if (mSalesFromCache != null && !isFromCache) {
                 mSales.addAll(moreGroups);
-                mBannersAdapter.replace(mSales);
+                if (mBannersAdapter != null) {
+                    mBannersAdapter.replace(mSales);
+                }
             } else {
-                mBannersAdapter.addAll(moreGroups);
+                if (mBannersAdapter != null) {
+                    mBannersAdapter.addAll(moreGroups);
+                }
             }
 
             if (moreGroups.isEmpty()) {
@@ -667,11 +678,15 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             }
         }
 
-        if (isFromCache) {
+        if (isFromCache && mBannersAdapter != null) {
             mSalesFromCache = mBannersAdapter.getData();
         } else {
             mSalesFromCache = null;
-            mSales = mBannersAdapter.getData();
+            if (mBannersAdapter != null) {
+                mSales = mBannersAdapter.getData();
+            } else {
+                mSales = new ArrayList<>();
+            }
         }
 
         if (shouldRestartPaginateManager) {
@@ -1160,9 +1175,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void onTabSwitch(boolean intoThisView) {
         super.onTabSwitch(intoThisView);
         if (intoThisView) {
-            mBannersAdapter.restartHorizontalViewHolders();
+            if (mBannersAdapter != null) {
+                mBannersAdapter.restartHorizontalViewHolders();
+            }
         } else {
-            mBannersAdapter.stopHorizontalViewHolders();
+            if (mBannersAdapter != null) {
+                mBannersAdapter.stopHorizontalViewHolders();
+            }
         }
     }
 

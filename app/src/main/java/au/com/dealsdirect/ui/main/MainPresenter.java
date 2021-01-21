@@ -56,6 +56,7 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
+import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
 import au.com.dealsdirect.data.network.model.returns.FileSettingsResponse;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
@@ -1455,5 +1456,29 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getMvpView().deepLinkDefault();
             }
         }
+    }
+
+    @Override
+    public void callGetUserCurrent() {
+        doApiCallForResponse(getDataManager().getPostcodeDefault(), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object object) {
+                super.onSuccess(object);
+
+
+                if (object instanceof GetPostcodeDefaultResponse) {
+                    getDataManager().setDefaultPostcode(((GetPostcodeDefaultResponse) object).getPostcode());
+                } else {
+                    getDataManager().setDefaultPostcode(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                getDataManager().setDefaultPostcode(null);
+            }
+        });
     }
 }

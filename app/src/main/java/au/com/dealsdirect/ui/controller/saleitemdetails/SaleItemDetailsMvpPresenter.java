@@ -57,4 +57,10 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     void loadYouMayAlsoLike(String skuId);
 
     void addToRecentlyViewedItems(String productId, String masterSkuId);
+
+    void loadDefaultPostcode();
+
+    void setDefaultPostcode(String postcode);
+
+    void loadPreviewShippingPrice(String postcode, String skuid, float price, int weight, int width, int height, Integer operation);
 }

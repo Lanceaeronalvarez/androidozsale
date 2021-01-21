@@ -320,4 +320,8 @@ public interface PreferencesHelper {
     void setPrefersOldShopBannerDimensions(boolean doesPrefer);
 
     boolean getPrefersOldShopBannersDimensions();
+
+    void setDefaultPostcode(String postcode);
+
+    String getDefaultPostcode();
 }

@@ -12,7 +12,9 @@ import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPresenter<V> {
 
-    void loadWishlist();
+    void loadWishlistAll();
+
+    void loadWishlistPaginated(int limit, int offset);
 
     boolean isProductInWishlist(String productId);
 

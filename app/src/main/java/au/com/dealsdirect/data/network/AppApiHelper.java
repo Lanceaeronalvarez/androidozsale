@@ -66,6 +66,7 @@ import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
@@ -114,6 +115,8 @@ import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.Verif
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
+import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
@@ -341,7 +344,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<PromoInfoResponse> callPromoInfo(String skuId) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.getPromoInfo())
+        return Rx2AndroidNetworking.post(ApiEndPoint.getPromoInfo())
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(AppConstants.PARAM_SKUID, skuId)
                 .build()
@@ -1253,6 +1256,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<String> callDeliveryPriceViewEvent(DeliveryPriceViewEventRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getDeliveryPriceViewEvent())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
     public Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String languageId) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getPaymentPlans())
                 .addHeaders(mApiHeader.get())
@@ -1373,8 +1385,18 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlist() {
-        return Rx2AndroidNetworking.get(ApiEndPoint.getWishlist())
+    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistPaginated(int limit, int offset) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getWishlistPaginated())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("limit", Integer.toString(limit))
+                .addPathParameter("offset", Integer.toString(offset))
+                .build()
+                .getObjectListObservable(GetSaleItemsResponse.Products.class);
+    }
+
+    @Override
+    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistAll() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getWishlistAll())
                 .addHeaders(mApiHeader.get())
                 .doNotCacheResponse()
                 .build()
@@ -1454,6 +1476,28 @@ public class AppApiHelper implements ApiHelper {
                         new TicketSatisfactionRequest(global)))
                 .build()
                 .getStringObservable();
+    }
+
+    @Override
+    public Observable<GetPostcodeDefaultResponse> getPostcodeDefault() {
+        return Rx2AndroidNetworking.post(ApiEndPoint.getPostcodeDefault())
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectObservable(GetPostcodeDefaultResponse.class);
+    }
+
+    @Override
+    public Observable<GetPostcodeShippingPriceResponse> getPostcodeShippingPrice(String postcode, String skuid, float price, int weight, int width, int height) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getPostcodeShippingPrice())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("postcode", postcode)
+                .addPathParameter("skuid", skuid)
+                .addPathParameter("price", Float.toString(price))
+                .addPathParameter("weight", Integer.toString(weight))
+                .addPathParameter("width", Integer.toString(width))
+                .addPathParameter("height", Integer.toString(height))
+                .build()
+                .getObjectObservable(GetPostcodeShippingPriceResponse.class);
     }
 
     @Override

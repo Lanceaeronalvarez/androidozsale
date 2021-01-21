@@ -62,6 +62,7 @@ import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
@@ -109,6 +110,8 @@ import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.Verif
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
+import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
@@ -417,6 +420,8 @@ public interface ApiHelper {
 
     Observable<String> callFeatureUsageEvent(FeatureUsageEventRequest request);
 
+    Observable<String> callDeliveryPriceViewEvent(DeliveryPriceViewEventRequest request);
+
     // OURPAY
     Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String languageId);
 
@@ -450,7 +455,9 @@ public interface ApiHelper {
     // WISHLIST
     Observable<List<GetWishlistIdResponse>> callGetWishlistIdsOnly();
 
-    Observable<List<GetSaleItemsResponse.Products>> callGetWishlist();
+    Observable<List<GetSaleItemsResponse.Products>> callGetWishlistAll();
+
+    Observable<List<GetSaleItemsResponse.Products>> callGetWishlistPaginated(int limit, int offset);
 
     Observable<String> callAddToWishlist(String productId, String seoIdentifier);
 
@@ -467,6 +474,10 @@ public interface ApiHelper {
     Observable<TicketSatisfactionResponse> callGetTicketSatisfaction(String number);
 
     Observable<String> callCloseTicketSatisfaction(int global, String contactNumber);
+
+    Observable<GetPostcodeDefaultResponse> getPostcodeDefault();
+
+    Observable<GetPostcodeShippingPriceResponse> getPostcodeShippingPrice(String postcode, String skuid, float price, int weight, int width, int height);
 
     Observable<String> callSaveAgeRestrictedConsentData(SaveAgeRestrictedConsentDataRequest request);
 }

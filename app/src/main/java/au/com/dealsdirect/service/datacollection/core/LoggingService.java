@@ -461,4 +461,17 @@ public class LoggingService {
             logFeatureUsageEvent.LogDataEvents(parameters);
         }
     }
+
+    public static class LogDeliveryPriceViewEvent implements LoggingEventData {
+        private LogDataEvents logFeatureUsageEvent;
+
+        public LogDeliveryPriceViewEvent(LogDataEvents logFeatureUsageEvent) {
+            this.logFeatureUsageEvent = logFeatureUsageEvent;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logFeatureUsageEvent.LogDataEvents(parameters);
+        }
+    }
 }

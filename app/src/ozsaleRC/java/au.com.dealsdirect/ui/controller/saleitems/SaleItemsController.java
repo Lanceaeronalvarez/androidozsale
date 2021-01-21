@@ -39,7 +39,6 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mysale.genie.profiler.Profiler;
@@ -624,6 +623,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             controller.mInitialCategoryTree = ((Parameters.FromCategory) parameters).getCategories();
             controller.mFromCategorySearch = true;
             controller.mChipFilters = ((Parameters.FromCategory) parameters).getPreSelectedFilter();
+            if (controller.mChipFilters == null) {
+                controller.mChipFilters = new HashSet<>();
+            }
             controller.mPreSelectedFilter = ((Parameters.FromCategory) parameters).getPreSelectedFilter();
         } else if (parameters instanceof Parameters.FromSaleItemDeepLink) {
             title = ((Parameters.FromSaleItemDeepLink) parameters).getBannerTitle();
@@ -663,6 +665,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (args.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
             mChipFilters = JsonUtils.convertStringToObject(getArgs().getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<HashSet<SearchChipModel>>() {
             }.getType());
+            if (mChipFilters == null) {
+                mChipFilters = new HashSet<>();
+            }
         }
 
         mFromBannerSearch = getArgs().getBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, false);
@@ -742,6 +747,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
                 mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<HashSet<SearchChipModel>>() {
                 }.getType());
+                if (mChipFilters == null) {
+                    mChipFilters = new HashSet<>();
+                }
             }
 
             if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) {
@@ -760,6 +768,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER)) {
                 mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, ""), new TypeToken<HashSet<SearchChipModel>>() {
                 }.getType());
+                if (mChipFilters == null) {
+                    mChipFilters = new HashSet<>();
+                }
             }
 
             if (savedInstanceState.containsKey(SHOP_KEY_SEARCH_TEXT)) {
@@ -850,7 +861,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     }
                     break;
                 case WISHLIST:
-                    mPresenter.loadWishlist();
+                    mSaleItemsPageNumber = 0;
+                    mPresenter.loadWishlistPaginated(18, 0);
                     mSaleItemsRecyclerView.setLayoutAnimation(null);
                     break;
             }
@@ -1253,6 +1265,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 public void onAnimationEnd(Animation animation) {
                     Handler mainHandler = new Handler(mActivity.getMainLooper());
                     Runnable myRunnable = () -> {
+                        if (!isAttached()) {
+                            return;
+                        }
                         isSkeletonAnimating = false;
                         showSaleItems(getSaleItemsResponse, forFacetCorrection, isFromCache);
                         if (mSaleItemsRecyclerView != null) {
@@ -1396,17 +1411,27 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void showWishlist(List<GetSaleItemsResponse.Products> wishlist) {
         setColumnViewEnabled(true);
 
-        mHasLoadedAllItems = true;
-        if (mPaginateManager != null) {
-            mPaginateManager.setHasMoreDataToLoad(false);
+        if (mSaleItemsPageNumber == 0) {
+            mHasLoadedAllItems = false;
+            if (mPaginateManager != null) {
+                mPaginateManager.setHasMoreDataToLoad(true);
+            }
+            mSaleItemsAdapter.replaceData(wishlist);
+        } else if (!wishlist.isEmpty()){
+            mSaleItemsAdapter.addData(wishlist);
+        } else {
+            mHasLoadedAllItems = true;
         }
-        mSaleItemsPageNumber = 0;
-
-        mSaleItemsAdapter.replaceData(wishlist);
         mSaleItems = mSaleItemsAdapter.getData();
+
+        if (mPaginateManager == null) {
+            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+        }
 
         showPlaceholder(mSaleItems == null || mSaleItems.isEmpty());
         determineWhereToShowAds();
+
+        mIsLoadingProgress = false;
 
         onRefreshEnd();
     }
@@ -1560,7 +1585,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mWishlistPlaceholder.setVisibility(View.GONE);
                 mToolbar.setVisibility(View.GONE);
                 mSaleItemsRecyclerView.setVisibility(View.GONE);
-                mPresenter.loadWishlist();
+                mSaleItemsRecyclerView.scrollToPosition(0);
+                mSaleItemsPageNumber = 0;
+                mPresenter.loadWishlistPaginated(18, 0);
                 break;
         }
         mFooterAds.setVisibility(View.GONE);
@@ -1600,7 +1627,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 }
                 break;
             case WISHLIST:
-                mPresenter.loadWishlist();
+                mIsLoadingProgress = true;
+                mPresenter.loadWishlistPaginated(18, mSaleItems.size());
+                mSaleItemsPageNumber++;
                 break;
         }
     }
@@ -1761,7 +1790,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mChipFilters = new HashSet<>();
             mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
         } else {
-            mChipFilters = chipsList;
+            mChipFilters = chipsList != null ? chipsList : new HashSet<>();
         }
         return createSaleItemsRequest(mCategoryKey, pageNumber, mChipFilters);
     }
@@ -2550,6 +2579,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         final BrandBubblesAdapter.BrandBubbleOnSelectListener onSelectListener = brandName -> {
+            if (!isAttached() || mSearchFilterMvpView == null) {
+                return;
+            }
+
             mChipFilters.clear();
             mChipFilters.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, brandName, brandName, 0));
             mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);

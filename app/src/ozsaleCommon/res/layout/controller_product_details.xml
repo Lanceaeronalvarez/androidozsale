@@ -214,12 +214,102 @@
                                 android:visibility="gone">
 
                                 <TextView
+                                    android:id="@+id/product_details_shipping_postcode_header"
                                     fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="6dp"
                                     android:padding="@dimen/margin_small"
                                     android:text="@string/shipping"
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_caption1"
+                                    android:visibility="gone" />
+
+                                <LinearLayout
+                                    android:id="@+id/product_details_shipping_postcode_container"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/margin_small"
+                                    android:layout_marginRight="@dimen/margin_small"
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
+
+                                    <TextView
+                                        android:id="@+id/product_details_shipping_postcode_preview_price"
+                                        fontPath="@string/font_app_regular"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginRight="@dimen/margin_small"
+                                        android:text="$10.00"
+                                        android:textColor="@color/text_extra_dark"
+                                        android:textSize="@dimen/text_size_body" />
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/bg_rounded_corner_border"
+                                        android:orientation="horizontal">
+
+                                        <EditText
+                                            android:id="@+id/product_details_shipping_postcode_input"
+                                            style="@style/DDEditTextStyle"
+                                            fontPath="@string/font_app_regular"
+                                            android:layout_width="105dp"
+                                            android:layout_height="wrap_content"
+                                            android:background="@color/transparent"
+                                            android:hint="Postcode"
+                                            android:lines="1"
+                                            android:textColor="@color/text_extra_dark" />
+
+                                        <RelativeLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content">
+
+                                            <FrameLayout
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content">
+
+                                                <Button
+                                                    android:id="@+id/product_details_shipping_postcode_button"
+                                                    style="@style/DDButtonStyle"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="Ok" />
+                                            </FrameLayout>
+
+                                            <ProgressBar
+                                                android:id="@+id/product_details_shipping_postcode_activity_indicator"
+                                                android:layout_width="36dp"
+                                                android:layout_height="36dp"
+                                                android:layout_centerInParent="true"
+                                                android:indeterminate="true"
+                                                android:indeterminateTint="@color/white"
+                                                android:indeterminateTintMode="src_in"
+                                                android:visibility="gone" />
+                                        </RelativeLayout>
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/product_details_shipping_not_available"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/margin_small"
+                                    android:layout_marginRight="@dimen/margin_small"
+                                    android:text="Not available to deliver to your location"
+                                    android:textColor="#ff0000"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/product_details_shipping_desc_header"
+                                    fontPath="@string/font_app_bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:padding="@dimen/margin_small"
+                                    android:text="@string/estimated_delivery"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
 
@@ -801,8 +891,8 @@
                                 <RelativeLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentBottom="true"
                                     android:layout_alignParentRight="true"
+                                    android:layout_alignParentBottom="true"
                                     android:layout_marginRight="@dimen/margin_extra_small"
                                     android:layout_marginBottom="@dimen/margin_tiny">
 
@@ -835,6 +925,7 @@
 
                                 <TextView
                                     android:id="@+id/product_details_sold_out"
+                                    fontPath="@string/font_app_regular"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_centerInParent="true"
@@ -846,7 +937,6 @@
                                     android:paddingBottom="8dp"
                                     android:text="@string/sold_out"
                                     android:textColor="@color/white"
-                                    fontPath="@string/font_app_regular"
                                     android:textSize="@dimen/text_size_title"
                                     android:visibility="gone" />
 

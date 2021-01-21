@@ -13,11 +13,14 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.style.DynamicDrawableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
@@ -34,6 +37,7 @@ import android.view.animation.LinearInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +47,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -77,10 +82,13 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.Attributes;
 import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.Personalisation;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
@@ -123,6 +131,7 @@ import butterknife.OnClick;
 
 import static android.graphics.Typeface.BOLD;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
+import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
 import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 
@@ -272,6 +281,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private String mSaleId;
     private String mSkuId;
+    private Attributes mAttributes = null;
     private String mItemImageUrl;
     private Drawable mItemLowResImageDrawable = null;
     private String mSeoIdentifierId;
@@ -279,6 +289,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mSalePrice;
     private String mSaleOldPrice;
     private String mBrandName;
+    private String mSupplierId;
     private Ourpay mOurpay;
     private List<GetSaleItemDetailsResponse> mSkuVariants = new ArrayList<>();
     private String mEndDate;
@@ -317,8 +328,24 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     PersonalisationLayout mPersonalisationLayout;
     @BindView(R.id.product_details_shipping_desc_container)
     LinearLayout mShippingContainer;
+    @BindView(R.id.product_details_shipping_postcode_preview_price)
+    TextView mShippingPreviewPrice;
+    @BindView(R.id.product_details_shipping_postcode_input)
+    EditText mShippingPostcodeInput;
+    @BindView(R.id.product_details_shipping_not_available)
+    TextView mShippingPostcodeNotAvailable;
+    @BindView(R.id.product_details_shipping_postcode_header)
+    TextView mShippingPostcodeHeader;
+    @BindView(R.id.product_details_shipping_postcode_container)
+    ViewGroup mShippingPostcodeContainer;
+    @BindView(R.id.product_details_shipping_desc_header)
+    TextView mShippingDescHeaderText;
     @BindView(R.id.product_details_shipping_desc_webview)
     WebView mShippingDescText;
+    @BindView(R.id.product_details_shipping_postcode_activity_indicator)
+    ProgressBar mShippingCalculateActivityIndicator;
+    @BindView(R.id.product_details_shipping_postcode_button)
+    Button mShippingCalculateButton;
     @BindView(R.id.product_description_text)
     WebView mProductDescriptionText;
     @BindView(R.id.product_about_pricing_text)
@@ -464,6 +491,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private Handler addToCartDelayHandler;
     private Runnable addToCartDelayRunnable;
+
+    private boolean hasLoadedPostcodeForm = false;
 
     final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = new
             ViewTreeObserver.OnScrollChangedListener() {
@@ -858,12 +887,32 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             });
         }
 
-        mSoldOutView.setVisibility(mIsSoldout ? View.VISIBLE : View.GONE);
+        mSoldOutView.setVisibility(mIsSoldout != null && mIsSoldout ? View.VISIBLE : View.GONE);
 
         mProductBrand.setOnClickListener(v -> {
             showProductList(mProductBrand.getText().toString());
         });
 
+        mShippingPostcodeInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mPresenter.setDefaultPostcode(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        mShippingPostcodeContainer.setVisibility(View.GONE);
+        mShippingPostcodeNotAvailable.setVisibility(View.GONE);
+        mShippingPreviewPrice.setText(null);
+        mShippingPreviewPrice.setVisibility(View.GONE);
     }
 
     private void showProductList(String searchKey) {
@@ -1006,6 +1055,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mMasterProductId = saleDetail.getAttributes().getProductId();
 
         mSkuId = saleDetail.getSkuId();
+        mAttributes = saleDetail.getAttributes();
 
         if (mPresenter.isAuthorized()) {
             mPresenter.loadRecentlyViewedItems();
@@ -1014,6 +1064,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSeoIdentifierId = saleDetail.getSeoIdentifier();
         mSaleName = saleDetail.getName();
         mBrandName = saleDetail.getBrandName();
+        mSupplierId = saleDetail.getSupplier();
         mSalePrice = PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue());
         mSaleOldPrice = PriceUtils.getPriceStringValue(saleDetail.getOriginalPrice().getValue());
 
@@ -1079,9 +1130,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
         }
 
-        if (shippingInformation != null) {
+        mShippingContainer.setVisibility(shippingInformation != null ? View.VISIBLE : View.GONE);
+        mShippingDescHeaderText.setVisibility(shippingInformation != null ? View.VISIBLE : View.GONE);
 
-            mShippingContainer.setVisibility(View.VISIBLE);
+        if (shippingInformation != null) {
             mShippingDescText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mShippingDescText.startAnimation(anim);
 
@@ -1221,6 +1273,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (isAddToBasketInputBuffered) {
             isAddToBasketInputBuffered = false;
             addToBasket();
+        }
+
+        if (mIsFreeDelivery) {
+            mShippingPreviewPrice.setText(getFreeShippingSpan());
+            mShippingPreviewPrice.setVisibility(mShippingPreviewPrice.getText() != null && mShippingPreviewPrice.getText().length() > 0 ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -2064,5 +2121,154 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             }
         };
+    }
+
+    private void getPreviewShippingPrice(CharSequence postcode, int operation) {
+        if (postcode != null && postcode.length() > 0 &&
+                mSkuId != null && !mSkuId.isEmpty() &&
+                mSalePrice != null && !mSalePrice.isEmpty()) {
+            int weight = 0;
+            int width = 0;
+            int height = 0;
+            if (mAttributes != null) {
+                weight = mAttributes.getWeight() == null ? 0 : mAttributes.getWeight().intValue();
+                width = mAttributes.getWidth() == null ? 0 : mAttributes.getWidth().intValue();
+                height = mAttributes.getHeight() == null ? 0 : mAttributes.getHeight().intValue();
+            }
+            showCalculateShippingPriceActivityIndicator(true);
+            mPresenter.loadPreviewShippingPrice(
+                    postcode.toString(),
+                    mSkuId,
+                    Float.parseFloat(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length())),
+                    weight,
+                    width,
+                    height,
+                    operation);
+        }
+    }
+
+    private void showCalculateShippingPriceActivityIndicator(boolean show) {
+        if (show) {
+            mShippingCalculateActivityIndicator.setVisibility(View.VISIBLE);
+            mShippingCalculateButton.setText("");
+            mShippingCalculateButton.setEnabled(false);
+        } else {
+            mShippingCalculateActivityIndicator.setVisibility(View.GONE);
+            mShippingCalculateButton.setText("Ok");
+            mShippingCalculateButton.setEnabled(true);
+        }
+    }
+
+    @OnClick(R.id.product_details_shipping_postcode_button)
+    public void onClickShippingPricePreview() {
+        mActivity.hideKeyboard();
+        final String postcode = mShippingPostcodeInput.getText() == null ? "" : mShippingPostcodeInput.getText().toString();
+        getPreviewShippingPrice(postcode, DeliveryPriceViewEventRequest.OPERATION_BY_CLICK);
+    }
+
+    @Override
+    public void showDefaultPostcode(String postcode) {
+        final String oldPostcode = mShippingPostcodeInput.getText() == null ? "" : mShippingPostcodeInput.getText().toString();
+        if (postcode != null && !postcode.isEmpty() && oldPostcode.isEmpty()) {
+            mShippingPostcodeInput.setText(postcode);
+            getPreviewShippingPrice(postcode, DeliveryPriceViewEventRequest.OPERATION_AUTO);
+        }
+        // this callback will only take place when postcode form is to be shown
+        mShippingContainer.setVisibility(View.VISIBLE);
+        mShippingPostcodeHeader.setVisibility(View.VISIBLE);
+        mShippingPostcodeContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showPreviewShippingPrice(GetPostcodeShippingPriceResponse response, String postcode, Integer operation) {
+        showCalculateShippingPriceActivityIndicator(false);
+        mShippingPreviewPrice.setText(null);
+        final Boolean isAvailable = response == null ? null : response.isShippingAvailable();
+        final Float shippingPrice = response == null ? null : response.getPrice();
+        if (isAvailable != null && isAvailable && shippingPrice != null) {
+            if (shippingPrice > 0) {
+                mShippingPreviewPrice.setText(PriceUtils.getPriceStringValue(shippingPrice));
+            } else {
+                mShippingPreviewPrice.setText(getFreeShippingSpan());
+            }
+        }
+        mShippingPostcodeNotAvailable.setVisibility(isAvailable != null && !isAvailable ? View.VISIBLE : View.GONE);
+        mShippingPreviewPrice.setVisibility(mShippingPreviewPrice.getText() != null && mShippingPreviewPrice.getText().length() > 0 ? View.VISIBLE : View.GONE);
+
+        if (response != null && operation != null) {
+            logDeliveryPriceViewEvent(operation, postcode, response);
+        }
+    }
+
+    @Override
+    public void showPostcodeForm(boolean show) {
+        if (hasLoadedPostcodeForm) {
+            return;
+        }
+        hasLoadedPostcodeForm = true;
+        if (show) {
+            mPresenter.loadDefaultPostcode();
+        } else {
+            mShippingPostcodeHeader.setVisibility(View.GONE);
+            mShippingPostcodeContainer.setVisibility(View.GONE);
+            logDeliveryPriceViewEvent(mIsFreeDelivery ? DeliveryPriceViewEventRequest.OPERATION_NONE : DeliveryPriceViewEventRequest.OPERATION_AUTO,
+                    null,
+                    null);
+        }
+    }
+
+    private CharSequence getFreeShippingSpan() {
+        final int color = mActivity.getResources().getColor(R.color.free_shipping_color);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+        int imagePosition = spannableStringBuilder.length();
+        String freeShippingString = "   " +
+                mActivity.getResources().getString(R.string.free_shipping_text).toUpperCase();
+        spannableStringBuilder.append(
+                freeShippingString,
+                new StyleSpan(BOLD),
+                SPAN_EXCLUSIVE_INCLUSIVE);
+
+        spannableStringBuilder.setSpan(
+                new ForegroundColorSpan(color),
+                0,
+                spannableStringBuilder.length(),
+                SPAN_EXCLUSIVE_INCLUSIVE);
+
+        Drawable d = ContextCompat.getDrawable(mActivity, R.drawable.ic_free_shipping);
+        if (d != null) {
+            d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+            ImageSpan imageSpan = new ImageSpan(d, DynamicDrawableSpan.ALIGN_BASELINE);
+            spannableStringBuilder.setSpan(imageSpan, imagePosition + 1, imagePosition + 2, SPAN_INCLUSIVE_EXCLUSIVE);
+        }
+        return spannableStringBuilder;
+    }
+
+    private void logDeliveryPriceViewEvent(int operation, String postcode, GetPostcodeShippingPriceResponse response) {
+        DeliveryPriceViewEventRequest.DeliveryPriceInfo info = new DeliveryPriceViewEventRequest.DeliveryPriceInfo();
+        info.setOperation(operation);
+        info.setPostcode(postcode);
+        info.setFreeShipping(mIsFreeDelivery);
+        if (operation != DeliveryPriceViewEventRequest.OPERATION_NONE) {
+            if (response != null) {
+                info.setDeliveryPrice(response.getPrice());
+                info.setShippingAvailable(response.isShippingAvailable());
+                if (response.getAdditional() != null) {
+                    info.setShippingPolicyName(response.getAdditional().getShippingPolicyName());
+                    info.setShippingPolicyId(response.getAdditional().getShippingPolicyId());
+                }
+            }
+            info.setSupplierId(mSupplierId);
+            info.setProductId(mMasterProductId);
+        }
+        DeliveryPriceViewEventRequest request = new DeliveryPriceViewEventRequest();
+        request.setEventType(EventTypeId.EVENT_DELIVERY_PRICE_VIEW);
+        request.setDeliveryPriceInfo(info);
+
+        HashMap<String, Object> eventParameters = new HashMap<>();
+        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
+        eventParameters.put(DataCollector.EventParameters.DELIVERY_PRICE_VIEW_EVENT_REQUEST, request);
+
+        DataCollector.logEvent(Events.DeliveryPriceViewEvent, eventParameters);
     }
 }
