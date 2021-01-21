@@ -2150,7 +2150,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private void showCalculateShippingPriceActivityIndicator(boolean show) {
         if (show) {
             mShippingCalculateActivityIndicator.setVisibility(View.VISIBLE);
-//            mShippingCalculateActivityIndicator.animate();
             mShippingCalculateButton.setText("");
             mShippingCalculateButton.setEnabled(false);
         } else {
