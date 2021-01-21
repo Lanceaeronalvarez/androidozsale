@@ -59,8 +59,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -84,8 +84,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -190,8 +190,8 @@ android {
         }
 
         dealsDirect2RC {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -216,8 +216,8 @@ android {
         }
 
         dealsDirect2Test {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -237,8 +237,8 @@ android {
         }
 
         ooRC {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -262,8 +262,8 @@ android {
         }
 
         ooTest {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -304,8 +304,8 @@ android {
         }
 
         topbuy2RC {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -350,8 +350,8 @@ android {
         }
 
         topbuy2Test {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -394,8 +394,8 @@ android {
         }
 
         ozsaleRC {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -420,8 +420,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "au.com.ozsale.test"
 
             ext.appName = "Ozsale Test"
@@ -445,8 +445,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -471,8 +471,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "sg.com.singsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -492,8 +492,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -518,8 +518,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "nz.co.nzsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -540,8 +540,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -565,8 +565,8 @@ android {
         }
 
         mysaleTest {
-            versionCode 286
-            versionName "4.8.1"
+            versionCode 292
+            versionName "4.9.0"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
