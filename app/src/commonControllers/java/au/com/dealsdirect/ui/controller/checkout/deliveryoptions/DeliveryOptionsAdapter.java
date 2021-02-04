@@ -100,7 +100,11 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mPreviousItem = mCurrentItem = deliveryOption;
         }
 
-        holder.itemView.setOnClickListener(v -> onSelectListener(deliveryOption, holder));
+        if (deliveryOption.isAvailable()) {
+            holder.itemView.setOnClickListener(v -> onSelectListener(deliveryOption, holder));
+        } else {
+            holder.itemView.setOnClickListener(null);
+        }
 
         if (holder instanceof DeliveryOptionsRegularViewHolder) {
             final DeliveryOptionsRegularViewHolder deliveryOptionsRegularViewHolder = ((DeliveryOptionsRegularViewHolder) holder);
@@ -137,8 +141,16 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             final String completeTncText = mActivity.getString(R.string.by_choosing_ourpay_select) + " " + mActivity.getMyTemplateTexts(OurpayTemplateText.KEY_OURPAY_TC_TEXT);
             deliveryOptionsOurPaySelectViewHolder.ourpaySelectTncTextView.setText(Html.fromHtml(completeTncText));
-            deliveryOptionsOurPaySelectViewHolder.ourpaySelectTncTextView.setOnClickListener(v -> mPresenter.onTermsAndConditionsClicked());
 
+            if (deliveryOption.isAvailable()) {
+                deliveryOptionsOurPaySelectViewHolder.ourpaySelectCheckBox.setEnabled(true);
+                deliveryOptionsOurPaySelectViewHolder.container.setAlpha(1f);
+                deliveryOptionsOurPaySelectViewHolder.ourpaySelectTncTextView.setOnClickListener(v -> mPresenter.onTermsAndConditionsClicked());
+            } else {
+                deliveryOptionsOurPaySelectViewHolder.ourpaySelectCheckBox.setEnabled(false);
+                deliveryOptionsOurPaySelectViewHolder.container.setAlpha(0.5f);
+                deliveryOptionsOurPaySelectViewHolder.ourpaySelectTncTextView.setOnClickListener(null);
+            }
         }
     }
 
@@ -247,6 +259,8 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         TextView ourpaySelectDescTextView;
         @BindView(R.id.delivery_option_ops_text_tc)
         TextView ourpaySelectTncTextView;
+        @BindView(R.id.delivery_option_container)
+        ViewGroup container;
 
         public DeliveryOptionsOurPaySelectViewHolder(View itemView) {
             super(itemView);
