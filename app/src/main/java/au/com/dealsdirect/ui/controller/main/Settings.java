@@ -196,10 +196,10 @@ public class Settings {
                                     "$",
                                     "oo.com.au",
                                     "EN",
-                                    "https://gui-oa-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.oa.mysaledev.com/",
+                                    "https://www.oa.mysaledev.com/",
                                     "AUD",
-                                    "https://www.oa.mysaledev.com")} );
+                                    "https://www.oa.mysaledev.com/")} );
 
         } else if (BuildConfig.FLAVOR.equals("buyinviteRC")){
             populatePackageWithCountries(
@@ -235,8 +235,8 @@ public class Settings {
                                     "$",
                                     "buyinvite.com.au",
                                     "EN",
-                                    "https://gui-ba-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.ba.mysaledev.com/",
+                                    "https://www.ba.mysaledev.com/",
                                     "AUD",
                                     "https://www.ba.mysaledev.com/"),
 
@@ -298,8 +298,8 @@ public class Settings {
                                     "S$",
                                     "singsale.com.sg",
                                     "EN",
-                                    "https://gui-si-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.si.mysaledev.com/",
+                                    "https://www.si.mysaledev.com/",
                                     "SGD",
                                     "https://www.si.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("dealsDirectRC") || BuildConfig.FLAVOR.equals("dealsDirect2RC")){
@@ -324,8 +324,8 @@ public class Settings {
                                     "$",
                                     "dealsdirect.com.au",
                                     "EN",
-                                    "https://gui-da-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.da.mysaledev.com/",
+                                    "https://www.da.mysaledev.com/",
                                     "AUD",
                                     "https://www.da.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("topbuyRC") || BuildConfig.FLAVOR.equals("topbuy2RC")){
@@ -350,8 +350,8 @@ public class Settings {
                                     "$",
                                     "topbuy.com.au",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.ta.mysaledev.com/",
+                                    "https://www.ta.mysaledev.com/",
                                     "AUD",
                                     "https://www.ta.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("mysaleRC")){
@@ -416,8 +416,8 @@ public class Settings {
                                     "₱",
                                     "mysale.ph",
                                     "EN",
-                                    "https://gui-ph-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.ph.mysaledev.com/",
+                                    "https://www.ph.mysaledev.com/",
                                     "PHP",
                                     "https://www.ph.mysaledev.com/"),
                             new Country("Thailand",
@@ -482,8 +482,8 @@ public class Settings {
                                     "NZ$",
                                     "nzsale.co.nz",
                                     "EN",
-                                    "https://gui-nz-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.nz.mysaledev.com/",
+                                    "https://www.nz.mysaledev.com/",
                                     "NZD",
                                     "https://www.nz.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("thaisaleRC")){
