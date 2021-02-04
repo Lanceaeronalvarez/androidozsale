@@ -678,6 +678,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         getMvpView().hideLoading();
 
                         if (responseValue.isResult() && responseValue.isAuthenticated()) {
+
+                            getDataManager().setCurrentPaymentToken(responseValue.getPaymentToken());
+                            getDataManager().setCurrentPaymentType(responseValue.getPaymentType());
+
                             getMvpView().onAuthorizationFetched(responseValue.getPaymentToken(), responseValue.getPaymentType());
 
                             if (getMvpView().getFetchTokenHandler() != null)
@@ -1273,6 +1277,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                         //Clear payment info
                         PaymentInfo.resetPaymentInfo();
                         CardInfo.clearCardInfo();
+
+                        getDataManager().setCurrentPaymentType(null);
+                        getDataManager().setCurrentPaymentToken(null);
+
                         //Clear braintree
                         getMvpView().performBraintreeReset();
                         //Call Public App Settings

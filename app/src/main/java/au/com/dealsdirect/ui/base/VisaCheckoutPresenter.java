@@ -58,7 +58,14 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
     }
 
     private void setupVisaCheckoutBraintree(boolean isFromCheckout) {
-        getMvpView().onSetupVisaCheckoutBraintree(getDataManager().getPublicPaymentToken(), getDataManager().getPublicPaymentType(),
+        String paymentToken = getDataManager().getPublicPaymentToken();
+        String paymentType = getDataManager().getPublicPaymentType();
+        if (getDataManager().isAuthorized() && !getDataManager().getCurrentPaymentToken().isEmpty()) {
+            paymentToken = getDataManager().getCurrentPaymentToken();
+            paymentType = getDataManager().getCurrentPaymentType();
+        }
+
+        getMvpView().onSetupVisaCheckoutBraintree(paymentToken, paymentType,
                 isFromCheckout);
     }
 
@@ -175,6 +182,12 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
 
     @Override
     public void initializeBraintree() {
-        getMvpView().initializeBrainTree(getDataManager().getPublicPaymentToken(), getDataManager().getPublicPaymentType());
+        String paymentToken = getDataManager().getPublicPaymentToken();
+        String paymentType = getDataManager().getPublicPaymentType();
+        if (getDataManager().isAuthorized() && !getDataManager().getCurrentPaymentToken().isEmpty()) {
+            paymentToken = getDataManager().getCurrentPaymentToken();
+            paymentType = getDataManager().getCurrentPaymentType();
+        }
+        getMvpView().initializeBrainTree(paymentToken, paymentType);
     }
 }

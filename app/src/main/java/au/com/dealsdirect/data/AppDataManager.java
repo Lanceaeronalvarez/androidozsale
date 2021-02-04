@@ -1392,8 +1392,28 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setCurrentPaymentToken(String paymentToken) {
+        mPreferencesHelper.setCurrentPaymentToken(paymentToken);
+    }
+
+    @Override
+    public String getCurrentPaymentToken() {
+        return mPreferencesHelper.getCurrentPaymentToken();
+    }
+
+    @Override
     public String getPublicPaymentType() {
         return mPreferencesHelper.getPublicPaymentType();
+    }
+
+    @Override
+    public void setCurrentPaymentType(String paymentType) {
+        mPreferencesHelper.setCurrentPaymentType(paymentType);
+    }
+
+    @Override
+    public String getCurrentPaymentType() {
+        return mPreferencesHelper.getCurrentPaymentType();
     }
 
     @Override
