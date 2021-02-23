@@ -799,6 +799,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mSlidingBannersAdapter.setupDimensions(
                     (int) slidingBannersGrid.getItemWidth(),
                     (int) slidingBannersGrid.getItemHeight());
+            mSlidingBannersAdapter.setUseHigherResolution(!useOldBannerDimensions);
         }
     }
 

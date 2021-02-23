@@ -62,6 +62,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     private boolean shouldRepeatCellsToFillWidth = true;
 
+    private boolean useHigherResolution = false;
+
     public enum BannerViewType {
         ShopBanner,
         YouMayAlsoLike,
@@ -174,7 +176,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
                 item = dataSource.get(virtualPosition);
 
-                imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), imageWidth, imageHeight);
+                imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), imageWidth, imageHeight, useHigherResolution);
 
                 if (holder.subscription != null) {
                     holder.subscription.dispose();
@@ -551,6 +553,14 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     public void setShouldShowTitle(boolean shouldShowTitle) {
         this.shouldShowTitle = shouldShowTitle;
+    }
+
+    public boolean isUseHigherResolution() {
+        return useHigherResolution;
+    }
+
+    public void setUseHigherResolution(boolean useHigherResolution) {
+        this.useHigherResolution = useHigherResolution;
     }
 
     public void preloadBannerImages(Context context) {
