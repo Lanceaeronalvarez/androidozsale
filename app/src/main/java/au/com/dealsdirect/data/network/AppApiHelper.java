@@ -43,6 +43,7 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentIntentStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethodStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionGPay;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
@@ -748,6 +749,15 @@ public class AppApiHelper implements ApiHelper {
         return Rx2AndroidNetworking.post(ApiEndPoint.createPaymentTransaction())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues))
+                .build()
+                .getObjectObservable(CreatePaymentTransaction.ResponseValue.class);
+    }
+
+    @Override
+    public Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionGPay(CreatePaymentTransactionGPay.RequestValue requestValues) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.createPaymentTransactionForGPay())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues, true))
                 .build()
                 .getObjectObservable(CreatePaymentTransaction.ResponseValue.class);
     }

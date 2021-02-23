@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -42,16 +43,31 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.braintreepayments.cardform.view.CardForm;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.wallet.AutoResolveHelper;
+import com.google.android.gms.wallet.IsReadyToPayRequest;
+import com.google.android.gms.wallet.PaymentData;
+import com.google.android.gms.wallet.PaymentDataRequest;
+import com.google.android.gms.wallet.PaymentsClient;
+import com.google.android.gms.wallet.Wallet;
+import com.google.android.gms.wallet.WalletConstants;
 import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 import com.stripe.android.ApiResultCallback;
+import com.stripe.android.GooglePayConfig;
+import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.PaymentIntentResult;
 import com.stripe.android.Stripe;
 import com.stripe.android.model.PaymentIntent;
 import com.stripe.android.model.PaymentMethodCreateParams;
 import com.visa.checkout.VisaPaymentSummary;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,6 +77,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
@@ -120,6 +137,8 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.logEv
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
+    private static final int LOAD_PAYMENT_DATA_REQUEST_CODE = 53;
+
     private static final String TAG = "MainActivity";
     private Router mRouter;
 
@@ -166,6 +185,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private Stripe mStripe;
     private boolean hasCalledStripeIntent = false;
     private String clientSecret;
+
+    private PaymentsClient paymentsClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,6 +243,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             IntrospectionUtils.verifyVersion(getApplicationContext());
         }
 
+        paymentsClient = Wallet.getPaymentsClient(this,
+                new Wallet.WalletOptions.Builder()
+                        .setEnvironment(BuildConfig.IS_TEST ? WalletConstants.ENVIRONMENT_TEST : WalletConstants.ENVIRONMENT_PRODUCTION)
+                        .build());
         setUp();
     }
 
@@ -292,7 +317,28 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         // Call router for callbacks after going out the app and back inside
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (hasCalledStripeIntent) {
+        if (requestCode == LOAD_PAYMENT_DATA_REQUEST_CODE) {
+            switch (resultCode) {
+                case RESULT_OK: {
+                    onGooglePayResult(data);
+                    break;
+                }
+                case RESULT_CANCELED: {
+                    break;
+                }
+                case AutoResolveHelper.RESULT_ERROR: {
+                    // Log the status for debugging
+                    // Generally there is no need to show an error to
+                    // the user as the Google Payment API will do that
+                    final Status status =
+                            AutoResolveHelper.getStatusFromIntent(data);
+                    break;
+                }
+                default: {
+                    // Do nothing.
+                }
+            }
+        } else if (hasCalledStripeIntent) {
             hasCalledStripeIntent = false;
             getStripeObject().onPaymentResult(requestCode, data,
                     new ApiResultCallback<PaymentIntentResult>() {
@@ -1342,6 +1388,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             getAccountController().reloadAccountItems();
         }
         initializeStripeObject();
+        initializeStripePaymentConfiguration();
     }
 
     private void initializeStripeObject() {
@@ -1352,6 +1399,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         }
     }
+
+    private void initializeStripePaymentConfiguration() {
+        String key = mPresenter.stripePublicKey();
+        if (key != null && !key.isEmpty()) {
+            PaymentConfiguration.init(this, key);
+        }
+    }
+
 
     private Stripe getStripeObject() {
         initializeStripeObject();
@@ -1581,6 +1636,131 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         } else {
             currentController.getRouter().handleBack();
         }
+    }
+
+    @NonNull
+    private PaymentDataRequest createGPaymentDataRequest(double price, String currency) {
+        try {
+            final JSONObject tokenizationSpec =
+                    new GooglePayConfig(this).getTokenizationSpecification();
+            final JSONObject cardPaymentMethod = new JSONObject()
+                    .put("type", "CARD")
+                    .put(
+                            "parameters",
+                            new JSONObject()
+                                    .put("allowedAuthMethods", new JSONArray()
+                                            .put("PAN_ONLY")
+                                            .put("CRYPTOGRAM_3DS"))
+                                    .put("allowedCardNetworks",
+                                            new JSONArray()
+                                                    .put("AMEX")
+                                                    .put("DISCOVER")
+                                                    .put("MASTERCARD")
+                                                    .put("VISA"))
+
+                                    // require billing address
+                                    .put("billingAddressRequired", true)
+                                    .put(
+                                            "billingAddressParameters",
+                                            new JSONObject()
+                                                    // require full billing address
+                                                    .put("format", "MIN")
+
+                                                    // require phone number
+                                                    .put("phoneNumberRequired", true)
+                                    )
+                    )
+                    .put("tokenizationSpecification", tokenizationSpec);
+
+            // create PaymentDataRequest
+            @SuppressLint("DefaultLocale") final String paymentDataRequest = new JSONObject()
+                    .put("apiVersion", 2)
+                    .put("apiVersionMinor", 0)
+                    .put("allowedPaymentMethods",
+                            new JSONArray().put(cardPaymentMethod))
+                    .put("transactionInfo", (new JSONObject())
+                            .put("totalPrice", String.format("%.2f", price))
+                            .put("totalPriceStatus", "FINAL")
+                            .put("currencyCode", currency)
+                    )
+                    .put("merchantInfo", new JSONObject()
+                            .put("merchantName", getResources().getString(R.string.app_name)))
+
+                    // require email address
+                    .put("emailRequired", true)
+                    .toString();
+
+            return PaymentDataRequest.fromJson(paymentDataRequest);
+        } catch (JSONException ignored) { // exception is only for checking NaN
+            return PaymentDataRequest.fromJson("");
+        }
+    }
+
+    public void isReadyToGPay(OnCompleteListener<Boolean> onCompleteListener) {
+        final IsReadyToPayRequest request = createIsReadyToGPayRequest();
+        paymentsClient.isReadyToPay(request).addOnCompleteListener(onCompleteListener);
+    }
+
+    @NonNull
+    private IsReadyToPayRequest createIsReadyToGPayRequest() {
+        final JSONArray allowedAuthMethods = new JSONArray();
+        allowedAuthMethods.put("PAN_ONLY");
+        allowedAuthMethods.put("CRYPTOGRAM_3DS");
+
+        final JSONArray allowedCardNetworks = new JSONArray();
+        allowedCardNetworks.put("AMEX");
+        allowedCardNetworks.put("DISCOVER");
+        allowedCardNetworks.put("MASTERCARD");
+        allowedCardNetworks.put("VISA");
+
+        final JSONObject isReadyToPayRequestJson = new JSONObject();
+        try {
+            isReadyToPayRequestJson.put("allowedAuthMethods", allowedAuthMethods);
+            isReadyToPayRequestJson.put("allowedCardNetworks", allowedCardNetworks);
+        } catch (JSONException ignored) {
+        } // exception is only checking for NaN
+
+        return IsReadyToPayRequest.fromJson(isReadyToPayRequestJson.toString());
+    }
+
+    public void payWithGoogle(double price) {
+        AutoResolveHelper.resolveTask(
+                paymentsClient.loadPaymentData(
+                        createGPaymentDataRequest(price, Settings.getSelectedCountry().currencyCode)),
+                this,
+                LOAD_PAYMENT_DATA_REQUEST_CODE
+        );
+    }
+
+    private void onGooglePayResult(@NonNull Intent data) {
+        final PaymentData paymentData = PaymentData.getFromIntent(data);
+        if (paymentData == null) {
+            return;
+        }
+
+        try {
+            final PaymentMethodCreateParams paymentMethodCreateParams =
+                    PaymentMethodCreateParams.createFromGooglePay(
+                            new JSONObject(paymentData.toJson()));
+
+            showGPayLoading();
+            mStripe.createPaymentMethod(
+                    paymentMethodCreateParams,
+                    new ApiResultCallback<com.stripe.android.model.PaymentMethod>() {
+                        @Override
+                        public void onSuccess(@NonNull com.stripe.android.model.PaymentMethod result) {
+                            mPresenter.createPaymentTransactionGPay(result.id);
+                        }
+
+                        @Override
+                        public void onError(@NonNull Exception e) {
+                            hideGPayLoading();
+                            MainActivity.this.onError(e);
+                        }
+                    }
+            );
+        } catch (JSONException ignored) {
+        } // exception is only checking for NaN
     }
 
     public void fetchCachedResponses() {

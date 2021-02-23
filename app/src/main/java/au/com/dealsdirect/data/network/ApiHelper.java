@@ -40,6 +40,7 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentIntentStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethodStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionGPay;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
@@ -318,6 +319,8 @@ public interface ApiHelper {
     Observable<ClearOrder.ResponseValue> callClearOrder(ClearOrder.RequestValue model);
 
     Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransaction(CreatePaymentTransaction.RequestValue model);
+
+    Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionGPay(CreatePaymentTransactionGPay.RequestValue model);
 
     Observable<CreatePaymentTransaction.ResponseValue> callCreatePaymentTransactionVco(CreatePaymentTransactionVco.RequestValue model);
 

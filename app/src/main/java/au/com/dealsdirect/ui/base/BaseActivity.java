@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
@@ -112,6 +113,24 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     }
 
     @Override
+    public void showGPayLoading() {
+        hideGPayLoading();
+        if (!isFinishing() || !isDestroyed()) {
+            mProgressDialog = CommonUtils.showLoadingDialogGPay(this);
+        }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    @Override
+    public void hideGPayLoading() {
+        if (mProgressDialog != null && mProgressDialog.isShowing() && (!isFinishing() || !isDestroyed())) {
+            mProgressDialog.cancel();
+        }
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    @Override
     public void showAfterpayLoading() {
         hideAfterpayLoading();
         if (!isFinishing() || !isDestroyed()) {
@@ -134,12 +153,12 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
         }
     }
 
-
     @Override
     public void hideLoading() {
         if (mProgressDialog != null && mProgressDialog.isShowing() && (!isFinishing() || !isDestroyed())) {
             mProgressDialog.cancel();
         }
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     @Override

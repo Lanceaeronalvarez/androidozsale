@@ -60,6 +60,7 @@ import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
@@ -207,6 +208,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     View mButtonHolder;
     @BindView(R.id.partial_checkout_button_pay)
     Button mPayButton;
+    @BindView(R.id.partial_checkout_button_g_pay_container)
+    View mGPayButtonContainer;
+    @BindView(R.id.partial_checkout_button_g_pay)
+    View mGPayButton;
     @BindView(R.id.partial_checkout_button_paypal)
     RelativeLayout mPaypalButton;
     @BindView(R.id.partial_checkout_button_paypal_credit)
@@ -306,6 +311,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     private boolean hasAgeRestriction = false;
     private Calendar birthday = null;
+
+    private boolean isGPayAvailable = false;
 
     public static CheckoutController newInstance() {
         return new CheckoutController(
@@ -1205,6 +1212,17 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mValue.getSummary().getTotal(), paymentLogType);
     }
 
+    private void onGPayButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_GPAY, mItemList.size(),
+                mValue.getSummary().getTotal(), AppConstants.GPAY);
+
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity == null) {
+            return;
+        }
+        activity.payWithGoogle(mValue.getSummary().getTotal());
+    }
+
     private void onPaypalButtonClick() {
         mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.PAYPAL);
@@ -1421,8 +1439,16 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mButtonHolder.setVisibility(View.VISIBLE);
         setPaymentButtonsVisibility(getAllButtons(), View.GONE);
         checkVisiblePaymentButtons();
+        showGPayButtonIfAvailable();
+        ((MainActivity) getActivity()).isReadyToGPay(task -> {
+            isGPayAvailable = task.isSuccessful() && mPresenter.isStripeEnabled();
+            showGPayButtonIfAvailable();
+        });
     }
 
+    private void showGPayButtonIfAvailable() {
+        mGPayButtonContainer.setVisibility(isGPayAvailable ? View.VISIBLE : View.GONE);
+    }
 
     private void setPaymentButtonsVisibility(List<View> buttons, int visibility) {
         for (View button : buttons) {
@@ -1509,11 +1535,19 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void registerClickListeners() {
+        if (mClickListeners != null) {
+            return;
+        }
+
         mClickListeners = new CompositeDisposable();
         mClickListeners.add(RxView.clicks(mPayButton)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> onPayButtonClick()));
+        mClickListeners.add(RxView.clicks(mGPayButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onGPayButtonClick()));
         mClickListeners.add(RxView.clicks(mPaypalButton)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())

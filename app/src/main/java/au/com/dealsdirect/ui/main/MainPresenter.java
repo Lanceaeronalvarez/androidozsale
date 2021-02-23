@@ -45,6 +45,7 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentIntentStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentMethodStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
+import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionGPay;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionStripe;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
@@ -970,6 +971,27 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         );
     }
 
+    @Override
+    public void createPaymentTransactionGPay(String token) {
+        getMvpView().showGPayLoading();
+
+        String languageId = getDataManager().getLanguageId();
+        String countryId = getDataManager().getCountryId();
+        CreatePaymentTransactionGPay.RequestValue.Request requestValue =
+                new CreatePaymentTransactionGPay.RequestValue.Request("stripeGooglePay", token);
+        getCompositeDisposable().add(getDataManager()
+                .callCreatePaymentTransactionGPay(new CreatePaymentTransactionGPay.RequestValue(requestValue, countryId, languageId, null))
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(responseValue -> {
+                    getMvpView().showGPayLoading();
+                    mStripePaymentCallback.accept(responseValue);
+                }, throwable -> {
+                    getMvpView().hideGPayLoading();
+                    mStripePaymentThrowableCallback.accept(throwable);
+                })
+        );
+    }
 
     @Override
     public void createPaymentTransactionVco(VisaPaymentSummary visaPaymentSummary) {
@@ -1052,41 +1074,37 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         );
     }
 
-    private Consumer<CreatePaymentTransaction.ResponseValue> mStripePaymentCallback = new Consumer<CreatePaymentTransaction.ResponseValue>() {
-        @Override
-        public void accept(@NonNull CreatePaymentTransaction.ResponseValue responseValue) throws Exception {
-            if (!isViewAttached()) {
-                return;
-            }
-
-            if (responseValue.getD().getValue().getErrorMessage() != null) {
-                getMvpView().showErrorMessage(responseValue.getD().getValue().getErrorMessage());
-            } else if (responseValue.getD().getResult() && responseValue.getD().getValue().getIsPaid()) {
-                getMvpView().showCreatePaymentTransactionSuccess(responseValue.getD().getValue().getPaymentType().toString(),
-                        responseValue);
-            } else if (!responseValue.getD().getValue().getIsPaid() && responseValue.getD().getValue().getResponse().equalsIgnoreCase(AppConstants.USE_STRIPE_SDK)) {
-                getMvpView().show3DSecureStripe(responseValue.getD().getValue().getClientSecret());
-            }
-
+    private Consumer<CreatePaymentTransaction.ResponseValue> mStripePaymentCallback = responseValue -> {
+        if (!isViewAttached()) {
+            return;
         }
+
+        getMvpView().hideLoading();
+
+        if (responseValue.getD().getValue().getErrorMessage() != null) {
+            getMvpView().showErrorMessage(responseValue.getD().getValue().getErrorMessage());
+        } else if (responseValue.getD().getResult() && responseValue.getD().getValue().getIsPaid()) {
+            getMvpView().showCreatePaymentTransactionSuccess(responseValue.getD().getValue().getPaymentType().toString(),
+                    responseValue);
+        } else if (!responseValue.getD().getValue().getIsPaid() && responseValue.getD().getValue().getResponse().equalsIgnoreCase(AppConstants.USE_STRIPE_SDK)) {
+            getMvpView().show3DSecureStripe(responseValue.getD().getValue().getClientSecret());
+        }
+
     };
 
-    private Consumer<Throwable> mStripePaymentThrowableCallback = new Consumer<Throwable>() {
-        @Override
-        public void accept(@NonNull Throwable throwable) throws Exception {
-            if (!isViewAttached()) {
-                return;
-            }
+    private Consumer<Throwable> mStripePaymentThrowableCallback = throwable -> {
+        if (!isViewAttached()) {
+            return;
+        }
 
-            getMvpView().hideLoading();
+        getMvpView().hideLoading();
 
-            getMvpView().onError(throwable.getMessage());
+        getMvpView().onError(throwable.getMessage());
 
-            // handle load accounts error here
-            if (throwable instanceof ANError) {
-                ANError anError = (ANError) throwable;
-                handleApiError(anError);
-            }
+        // handle load accounts error here
+        if (throwable instanceof ANError) {
+            ANError anError = (ANError) throwable;
+            handleApiError(anError);
         }
     };
 

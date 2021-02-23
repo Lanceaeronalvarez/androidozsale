@@ -128,6 +128,21 @@ public abstract class BaseController
     }
 
     @Override
+    public void showGPayLoading() {
+        if (mActivity != null) {
+            mActivity.showGPayLoading();
+        }
+    }
+
+    @Override
+    public void hideGPayLoading() {
+        if (mActivity != null) {
+            mActivity.hideGPayLoading();
+            mActivity.updateSnackbar(mActivity.isNetworkConnected());
+        }
+    }
+
+    @Override
     public void showAfterpayLoading() {
         if (mActivity != null) {
             mActivity.showAfterpayLoading();
