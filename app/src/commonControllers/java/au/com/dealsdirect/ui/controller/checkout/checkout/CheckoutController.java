@@ -60,8 +60,8 @@ import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
@@ -127,9 +127,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public static final String CARD_VISA_CHECKOUT = "VisaCheckoutBraintree";
     public static final String CARD_MASTERCARD = "MasterCard";
     public static final String CARD_VISA = "Visa";
-    private final int OurPayTCDisabled = 0;
-    private final int OurPayTCShowUnchecked = 1;
-    private final int OurPayTCShowChecked = 2;
 
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
@@ -689,7 +686,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         if (mAdapter == null) {
             return;
         }
-        mAdapter.setPostcodeOverride(postcode);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -1521,7 +1517,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         unregisterClickListeners();
         registerClickListeners();
 
-        if (!mIsCartLoading &&
+        if (!mIsCartLoading && !(previousController instanceof ViewAddressController) &&
                 (previousController != null || mPresenter.checkIsLoggedIn())) {
             loadCart();
         }
@@ -1829,6 +1825,13 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 mAgeRestrictionNotice.setText(mPresenter.getTemplateTextsRepository().getPleaseConfirmAgeRestrictedText());
             }
         }
+    }
+
+    @Override
+    public void updateCartWithValue(Value value) {
+        CheckoutDetailsMapper mappedValues = new CheckoutDetailsMapper(value);
+        mPresenter.updateCartValues(mappedValues);
+        showAgeRestriction(mappedValues.isAgeRestricted() == null ? false : mappedValues.isAgeRestricted());
     }
 
     private boolean isAgeValid() {

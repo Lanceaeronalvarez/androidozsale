@@ -27,6 +27,7 @@ import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.address.DeleteUserAddress;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -249,8 +250,9 @@ public class ViewAddressController extends BaseController implements ViewAddress
     }
 
     @Override
-    public void backToCheckout() {
+    public void backToCheckout(Value value) {
         if (mCalledFromCart) {
+            mActivity.getMainController().getCheckoutHostController().updateCartWithValue(value);
             mActivity.onBackPressed();
         }
     }

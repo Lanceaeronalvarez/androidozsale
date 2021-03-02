@@ -667,6 +667,7 @@ public class AppApiHelper implements ApiHelper {
         return Rx2AndroidNetworking.post(ApiEndPoint.getCurrentOrder())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(requestValues, true))
+                .doNotCacheResponse()
                 .build()
                 .getObjectObservable(GetCurrentOrder.ResponseValue.class);
     }
