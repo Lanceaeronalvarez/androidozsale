@@ -193,9 +193,18 @@ public interface PreferencesHelper {
 
     String getPublicPaymentToken();
 
+    void setCurrentPaymentToken(String paymentToken);
+
+    String getCurrentPaymentToken();
+
     void setPublicPaymentType(String publicPaymentType);
 
     String getPublicPaymentType();
+
+    void setCurrentPaymentType(String paymentType);
+
+    String getCurrentPaymentType();
+
 
     void setIsNotificationsEnabled(boolean isNotificationsEnabled);
 

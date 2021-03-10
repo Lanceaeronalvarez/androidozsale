@@ -7,8 +7,8 @@ resourceLocationFolder=buyinviteTest
 australia=Australia
 SPACE=" "
 nz="New${SPACE}Zealand"
-expectedVersionName="4.9.0"
-expectedVersionCode="292"
+expectedVersionName="4.10.0"
+expectedVersionCode="302"
 
 print_green(){
     printf "\e[1;32m$1\e[0m"

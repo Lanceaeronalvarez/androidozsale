@@ -311,6 +311,9 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         commonCheckoutRequest.setGuestCheckout(false);
 
         switch (selectedPaymentType) {
+            case AppConstants.GPAY:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.GPAY.getValue());
+                break;
             case AppConstants.VCO:
                 commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.VCO.getValue());
                 break;

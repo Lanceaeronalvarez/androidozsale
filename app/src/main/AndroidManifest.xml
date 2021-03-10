@@ -179,6 +179,10 @@
             android:name="au.com.dealsdirect.utils.GlideImage.GlideSetup"
             android:value="GlideModule" />
 
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+
     </application>
 
 </manifest>

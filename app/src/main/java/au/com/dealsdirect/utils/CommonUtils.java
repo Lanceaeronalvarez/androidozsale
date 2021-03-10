@@ -79,6 +79,20 @@ public final class CommonUtils {
         return progressDialog;
     }
 
+    public static ProgressDialog showLoadingDialogGPay(Context context) {
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.show();
+        if (progressDialog.getWindow() != null) {
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            progressDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
+        progressDialog.setContentView(R.layout.gpay_loading_indicator_layout);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+        return progressDialog;
+    }
+
     public static ProgressDialog showLoadingDialogAfterpay(Context context) {
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.show();

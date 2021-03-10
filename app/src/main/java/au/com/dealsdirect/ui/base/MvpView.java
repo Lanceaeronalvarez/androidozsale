@@ -39,6 +39,10 @@ public interface MvpView {
 
     void hideOurpayLoading();
 
+    void showGPayLoading();
+
+    void hideGPayLoading();
+
     void showAfterpayLoading();
 
     void hideAfterpayLoading();

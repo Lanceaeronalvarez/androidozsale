@@ -196,10 +196,10 @@ public class Settings {
                                     "$",
                                     "oo.com.au",
                                     "EN",
-                                    "https://gui-oa-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.oa.mysaledev.com/",
+                                    "https://www.oa.mysaledev.com/",
                                     "AUD",
-                                    "https://www.oa.mysaledev.com")} );
+                                    "https://www.oa.mysaledev.com/")} );
 
         } else if (BuildConfig.FLAVOR.equals("buyinviteRC")){
             populatePackageWithCountries(
@@ -235,8 +235,8 @@ public class Settings {
                                     "$",
                                     "buyinvite.com.au",
                                     "EN",
-                                    "https://gui-ba-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.ba.mysaledev.com/",
+                                    "https://www.ba.mysaledev.com/",
                                     "AUD",
                                     "https://www.ba.mysaledev.com/"),
 
@@ -246,8 +246,8 @@ public class Settings {
                                     "NZ$",
                                     "buyinvite.co.nz",
                                     "EN",
-                                    "https://gui-bn-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.bn.mysaledev.com/",
+                                    "https://www.bn.mysaledev.com/",
                                     "NZD",
                                     "https://www.bn.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("ozsaleRC")){
@@ -298,8 +298,8 @@ public class Settings {
                                     "S$",
                                     "singsale.com.sg",
                                     "EN",
-                                    "https://gui-si-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.si.mysaledev.com/",
+                                    "https://www.si.mysaledev.com/",
                                     "SGD",
                                     "https://www.si.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("dealsDirectRC") || BuildConfig.FLAVOR.equals("dealsDirect2RC")){
@@ -324,8 +324,8 @@ public class Settings {
                                     "$",
                                     "dealsdirect.com.au",
                                     "EN",
-                                    "https://gui-da-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.da.mysaledev.com/",
+                                    "https://www.da.mysaledev.com/",
                                     "AUD",
                                     "https://www.da.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("topbuyRC") || BuildConfig.FLAVOR.equals("topbuy2RC")){
@@ -350,8 +350,8 @@ public class Settings {
                                     "$",
                                     "topbuy.com.au",
                                     "EN",
-                                    "https://genie-ui-"+ BuildConfig.APP_NAME +"-pre.mysaledev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.ta.mysaledev.com/",
+                                    "https://www.ta.mysaledev.com/",
                                     "AUD",
                                     "https://www.ta.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("mysaleRC")){
@@ -416,8 +416,8 @@ public class Settings {
                                     "₱",
                                     "mysale.ph",
                                     "EN",
-                                    "https://gui-ph-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.ph.mysaledev.com/",
+                                    "https://www.ph.mysaledev.com/",
                                     "PHP",
                                     "https://www.ph.mysaledev.com/"),
                             new Country("Thailand",
@@ -426,8 +426,8 @@ public class Settings {
                                     "฿",
                                     "mysale.co.th",
                                     "EN",
-                                    "https://gui-th-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.th.mysaledev.com/",
+                                    "https://www.th.mysaledev.com/",
                                     "THB",
                                     "https://www.th.mysaledev.com/"),
                             new Country("Malaysia",
@@ -435,9 +435,9 @@ public class Settings {
                                     "34849BC9-EB96-4E2B-9698-B71F11F73297",
                                     "RM",
                                     "mysale.my",
-                                    "EN",
-                                    "https://gui-my-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "MY",
+                                    "https://www.my.mysaledev.com/",
+                                    "https://www.my.mysaledev.com/",
                                     "MYR",
                                     "https://www.my.mysaledev.com/"),
                             new Country("United Kingdom",
@@ -446,18 +446,18 @@ public class Settings {
                                     "£",
                                     "mysale.co.uk",
                                     "EN",
-                                    "https://gui-uk-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.uk.mysaledev.com/",
+                                    "https://www.uk.mysaledev.com/",
                                     "GBP",
                                     "https://www.uk.mysaledev.com/"),
                             new Country("HongKong",
-                                    "EN",
+                                    "HK",
                                     "ED03076F-912B-4287-9580-6E2F52D33580",
                                     "HK$",
                                     "mysale.hk",
                                     "EN",
-                                    "https://gui-hk-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.hk.mysaledev.com/",
+                                    "https://www.hk.mysaledev.com/",
                                     "HKD",
                                     "https://www.hk.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("nzsaleRC")){
@@ -482,8 +482,8 @@ public class Settings {
                                     "NZ$",
                                     "nzsale.co.nz",
                                     "EN",
-                                    "https://gui-nz-pre.mysalegenie-dev.com/",
-                                    "https://api.mysaledev.com/",
+                                    "https://www.nz.mysaledev.com/",
+                                    "https://www.nz.mysaledev.com/",
                                     "NZD",
                                     "https://www.nz.mysaledev.com/")} );
         } else if (BuildConfig.FLAVOR.equals("thaisaleRC")){

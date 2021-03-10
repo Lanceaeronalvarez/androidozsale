@@ -27,6 +27,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAd
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.ourpay.Ourpay;
@@ -397,5 +398,10 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     public void showAgeRestriction(boolean hasAgeRestriction) {
         mCheckoutDetailView.showAgeRestriction(hasAgeRestriction);
+    }
+
+    @Override
+    public void updateCartWithValue(Value value) {
+        mCheckoutDetailView.updateCartWithValue(value);
     }
 }

@@ -12,7 +12,6 @@ import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
-import timber.log.Timber;
 
 /**
  * Created by smartwave on 20/06/2017.
@@ -34,7 +33,7 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
                     super.onSuccess(response);
 
                     getMvpView().showAddresses(((GetAddresses.ResponseValue) response));
-                    
+
                 }
             });
         }
@@ -53,13 +52,16 @@ public class ViewAddressPresenter<V extends ViewAddressMvpView> extends BasePres
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                if (((ApplyAddressResponse) response).d.getResult()) {
-//                            GDebug.log("DEBUG", "ApplyDeliveryAddress success");
-                    getMvpView().backToCheckout();
+                if (response instanceof ApplyAddressResponse) {
+                    ApplyAddressResponse applyAddressResponse = (ApplyAddressResponse) response;
+                    if (applyAddressResponse.d.getResult()) {
+                        getMvpView().backToCheckout(applyAddressResponse.d.value);
+                    }
                 }
             }
         });
     }
+
 
     @Override
     public void deleteUserDeliveryAddress(AddressesItem deliveryAddress) {

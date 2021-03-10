@@ -9,6 +9,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAd
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
@@ -79,4 +80,6 @@ public interface CheckoutMvpView extends MvpView {
     void setIsShipmentAvailable(boolean isShipmentAvailable);
 
     void showAgeRestriction(boolean hasAgeRestriction);
+
+    void updateCartWithValue(Value value);
 }

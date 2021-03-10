@@ -334,6 +334,10 @@ public class ImageUtils {
     }
 
     public static String appendBannerSizeUrl(String url, int width, int height) {
+        return appendBannerSizeUrl(url, width, height, false);
+    }
+
+    public static String appendBannerSizeUrl(String url, int width, int height, boolean useHigherResolution) {
 
         String bannerSize = String.format("_%dx%d", width, height);
 
@@ -348,6 +352,14 @@ public class ImageUtils {
         }
 
         url = String.format("%s%s.%s", removedExtension, bannerSize, extension);
+
+        if (useHigherResolution) {
+            if (url.contains("?")) {
+                url += "&width=800";
+            } else {
+                url += "?width=800";
+            }
+        }
 
         return url;
     }

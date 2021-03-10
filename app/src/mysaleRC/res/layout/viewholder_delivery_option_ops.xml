@@ -8,6 +8,7 @@
     android:padding="@dimen/padding_default_half">
 
     <LinearLayout
+        android:id="@+id/delivery_option_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

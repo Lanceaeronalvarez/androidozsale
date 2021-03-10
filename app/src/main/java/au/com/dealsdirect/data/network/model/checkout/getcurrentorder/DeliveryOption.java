@@ -36,6 +36,9 @@ public class DeliveryOption {
     @SerializedName(value = "AgreedWithTerms", alternate = {"agreedWithTerms"})
     @Expose
     private boolean agreedWithTerms;
+    @SerializedName(value = "IsAvailable", alternate = {"isAvailable"})
+    @Expose
+    private boolean isAvailable;
 
     public List<String> getDeliveryOptions() {
         return deliveryOptions;
@@ -83,5 +86,13 @@ public class DeliveryOption {
 
     public void setAgreedWithTerms(boolean agreedWithTerms) {
         this.agreedWithTerms = agreedWithTerms;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 }

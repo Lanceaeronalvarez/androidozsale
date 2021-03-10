@@ -67,6 +67,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PUBLIC_PAYMENT_TOKEN = "PUBLIC_PAYMENT_TOKEN";
     private static final String PUBLIC_PAYMENT_TYPE = "PUBLIC_PAYMENT_TYPE";
 
+    private static final String CURRENT_PAYMENT_TOKEN = "PUBLIC_PAYMENT_TOKEN";
+    private static final String CURRENT_PAYMENT_TYPE = "PUBLIC_PAYMENT_TYPE";
+
     /* mypay */
     private static final String PAYMENT_MYPAY_TEMPLATE_TEXTS_KEY = "settings_mypay_template_texts";
     private static final String MYPAY_EXCEED_LIMIT = "_checkoutMyPayPayExceedLimit";
@@ -726,6 +729,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
+    public void setCurrentPaymentToken(String paymentToken) {
+        Prefs.putString(CURRENT_PAYMENT_TOKEN, paymentToken);
+    }
+
+    @Override
+    public String getCurrentPaymentToken() {
+        return Prefs.getString(CURRENT_PAYMENT_TOKEN, "");
+    }
+
+    @Override
     public void setPublicPaymentType(String publicPaymentType) {
         Prefs.putString(PUBLIC_PAYMENT_TYPE, publicPaymentType);
     }
@@ -733,6 +746,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public String getPublicPaymentType() {
         return Prefs.getString(PUBLIC_PAYMENT_TYPE, "");
+    }
+
+    @Override
+    public void setCurrentPaymentType(String paymentType) {
+        Prefs.putString(CURRENT_PAYMENT_TYPE, paymentType);
+    }
+
+    @Override
+    public String getCurrentPaymentType() {
+        return Prefs.getString(CURRENT_PAYMENT_TYPE, "");
     }
 
     @Override

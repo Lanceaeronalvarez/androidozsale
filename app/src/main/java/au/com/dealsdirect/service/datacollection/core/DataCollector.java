@@ -219,6 +219,7 @@ public class DataCollector {
             PAYPAL(9),
             AFTERPAY(6),
             STRIPE(501),
+            GPAY(560),
             UNKNOWN(8);
 
             private int value;

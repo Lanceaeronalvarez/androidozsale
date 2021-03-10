@@ -513,6 +513,10 @@ public final class ApiEndPoint {
         return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "CreatePaymentTransaction");
     }
 
+    public static String createPaymentTransactionForGPay() {
+        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "CreatePaymentTransaction");
+    }
+
     public static String removeUserPaymentMethod() {
         return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "RemoveUserPaymentMethod");
     }

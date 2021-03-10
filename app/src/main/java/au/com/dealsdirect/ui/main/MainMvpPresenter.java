@@ -48,6 +48,8 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken, String provider);
 
+    void createPaymentTransactionGPay(String token);
+
     void createPaymentTransactionVco(VisaPaymentSummary visaPaymentSummary);
 
     void createPaymentTransactionStripe(String paymentType, String paymentMethodId, String provider);
