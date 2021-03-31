@@ -110,7 +110,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
                 youMayLikeItem = mYouMayAlsoLikeList.get(virtualPosition);
 
-                imgUrl = youMayLikeItem.getImageList().get(0);
+                imgUrl = youMayLikeItem.getImages().get(0);
 
                 holder.title.setText(youMayLikeItem.getName());
 

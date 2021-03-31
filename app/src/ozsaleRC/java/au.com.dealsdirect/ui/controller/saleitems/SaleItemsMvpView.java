@@ -11,6 +11,7 @@ import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
@@ -25,7 +26,7 @@ public interface SaleItemsMvpView extends MvpView {
 
     void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection, boolean isFromCache);
 
-    void showWishlist(List<GetSaleItemsResponse.Products> wishlist);
+    void showWishlist(List<SaleItemProduct> wishlist);
 
     void updateWishlistWithAddition(String productId);
 
@@ -43,6 +44,8 @@ public interface SaleItemsMvpView extends MvpView {
                             String skuId,
                             String saleId,
                             boolean isFreeDelivery,
+                            String discountText,
+                            String discountedPriceText,
                             boolean isSoldOut);
 
     GetSaleItemsRequest createSaleItemsRequest(String categoryKey, int pageNumber, Set<SearchChipModel> chipsList);

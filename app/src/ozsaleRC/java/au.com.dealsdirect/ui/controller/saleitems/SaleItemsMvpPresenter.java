@@ -40,6 +40,8 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
                             String skuId,
                             String saleId,
                             boolean isFreeDelivery,
+                            String discountText,
+                            String discountedPriceText,
                             boolean isSoldOut);
 
     void loadSortingFacets();

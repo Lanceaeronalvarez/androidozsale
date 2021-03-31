@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse.Products;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.ViewHolder> {
     private static final int SCREEN_TRANSITION_DELAY = 2000;
 
-    private List<Products> mData;
+    private List<SaleItemProduct> mData;
     private Activity mActivity;
     private SaleItemsMvpPresenter mPresenter;
     private String mSaleId;
@@ -85,10 +85,10 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         ImageView freeDelivery;
 
         @BindView(R.id.vh_sale_item_discount)
-        TextView discount;
+        TextView discountPercentTextView;
 
-        @BindView(R.id.vh_sale_item_sale_price)
-        TextView salePrice;
+        @BindView(R.id.vh_sale_item_discounted_price)
+        TextView discountedPriceTextView;
 
         @Nullable
         @BindView(R.id.adView_banner)
@@ -124,7 +124,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
 
     public SaleItemsAdapter(
             Activity activity,
-            List<Products> saleItems,
+            List<SaleItemProduct> saleItems,
             SaleItemsMvpPresenter presenter,
             String saleId, int minColumn,
             SaleItemsMvpPresenter.WishlistDelayedCallback delayedCallbackForWishlist,
@@ -185,7 +185,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         if (holder.getItemViewType() == 0 && mData.size() != 0) {
-            Products product = mData.get(position);
+            SaleItemProduct product = mData.get(position);
             if (product == null) {
                 setupViewHolderSkeleton(holder, true);
             } else {
@@ -201,12 +201,12 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     @SuppressLint("CheckResult")
-    private void setupViewHolder(ViewHolder holder, Products product) {
+    private void setupViewHolder(ViewHolder holder, SaleItemProduct product) {
         String url = product.getImages().isEmpty() ? "" : (product.getImages().size() < 4 ? product.getImages().get(0) : product.getImages().get(1));
 
         String urlHigherRes = ImageUtils.removeResolutionModifierInImageUrl(url);
 
-        holder.name.setText(product.getProductName());
+        holder.name.setText(product.getName());
 
         String saleItemPrice = null;
         String saleItemOldPrice = null;
@@ -238,15 +238,15 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         holder.oldPrice.setText(saleItemOldPrice);
         holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         holder.freeDelivery.setVisibility(product.getFreeDelivery() ? View.VISIBLE : View.GONE);
-        int discountValue = product.getSalePercentOff();
-        double salePriceValue = product.getSalePrice() != null ?
+        final int discountValue = product.getSalePercentOff();
+        final double salePriceValue = product.getSalePrice() != null ?
                 product.getSalePrice().getValue() : 0;
-        holder.discount.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
-        holder.salePrice.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
-        holder.discount.setText(product.getSalePercentOffText());
-        holder.salePrice.setText(PriceUtils.getRpStringValue(salePriceValue));
+        holder.discountPercentTextView.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
+        holder.discountedPriceTextView.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
+        holder.discountPercentTextView.setText(product.getSalePercentOffText());
+        holder.discountedPriceTextView.setText(PriceUtils.getRpStringValue(salePriceValue));
 
-        holder.setLiked(mPresenter.isProductInWishlist(product.getProductId()));
+        holder.setLiked(mPresenter.isProductInWishlist(product.getId()));
 
         RxView.clicks(holder.itemView)
                 .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
@@ -260,18 +260,20 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
                                 product.getSkus().get(0).getId(),
                         mSaleId,
                         product.getFreeDelivery(),
+                        product.getSalePercentOffText(),
+                        PriceUtils.getRpStringValue(salePriceValue),
                         product.isSoldOut()));
 
         holder.likeButton.setOnClickListener(v -> {
             holder.setLiked(!holder.isLiked());
             if (holder.isLiked()) {
                 mPresenter.addToWishlist(
-                        product.getProductId(),
+                        product.getId(),
                         product.getSeoIdentifier(),
                         delayedCallbackForWishlist);
             } else {
                 mPresenter.removeFromWishlist(
-                        product.getProductId(),
+                        product.getId(),
                         delayedCallbackForWishlist);
 
             }
@@ -303,11 +305,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         holder.oldPrice.setText(" ");
         holder.oldPrice.setBackground(skeletonFixedHeightWidthPadding);
         holder.freeDelivery.setVisibility(View.GONE);
-        holder.discount.setVisibility(View.GONE);
-        holder.salePrice.setVisibility(View.GONE);
+        holder.discountPercentTextView.setVisibility(View.GONE);
+        holder.discountedPriceTextView.setVisibility(View.GONE);
         holder.likeButton.setVisibility(showSkeleton ? View.GONE : View.VISIBLE);
-        holder.discount.setText(null);
-        holder.salePrice.setText(null);
+        holder.discountPercentTextView.setText(null);
+        holder.discountedPriceTextView.setText(null);
 
         RxView.clicks(holder.itemView)
                 .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
@@ -324,7 +326,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         super.onViewDetachedFromWindow(holder);
     }
 
-    public void replaceData(List<Products> saleItems) {
+    public void replaceData(List<SaleItemProduct> saleItems) {
         int previousCount = mData.size();
         mData = saleItems;
         if (previousCount > 0 || !saleItems.isEmpty()) {
@@ -338,11 +340,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         mCurrentItemCount = getItemCount();
     }
 
-    public void addData(List<Products> saleItems) {
+    public void addData(List<SaleItemProduct> saleItems) {
         addData(saleItems, true);
     }
 
-    public void addData(List<Products> saleItems, boolean withAnimation) {
+    public void addData(List<SaleItemProduct> saleItems, boolean withAnimation) {
         int previousCount = mData.size();
         mData.addAll(saleItems);
         if (withAnimation) {
@@ -358,7 +360,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         return mData.size() + (mIsFooterEnabled && !mData.isEmpty() ? 1 : 0);
     }
 
-    public List<Products> getData() {
+    public List<SaleItemProduct> getData() {
         return mData;
     }
 

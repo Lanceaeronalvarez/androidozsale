@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemFacet;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
@@ -40,9 +40,9 @@ public interface SearchFilterMvpView extends MvpView {
 
     void setFacetFilterItems(List<Pair<String,String>> mFacetFilters);
 
-    List<Pair<String, String>> parseFacets(List<GetSaleItemsResponse.Facets> facets);
+    List<Pair<String, String>> parseFacets(List<SaleItemFacet> facets);
 
-    void updateFacets(List<GetSaleItemsResponse.Facets> facets);
+    void updateFacets(List<SaleItemFacet> facets);
 
     void closeFacets();
 

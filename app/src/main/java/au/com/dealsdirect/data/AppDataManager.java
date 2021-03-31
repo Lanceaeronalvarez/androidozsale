@@ -155,6 +155,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
@@ -850,12 +851,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistAll() {
+    public Observable<List<SaleItemProduct>> callGetWishlistAll() {
         return mApiHelper.callGetWishlistAll();
     }
 
     @Override
-    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistPaginated(int limit, int offset) {
+    public Observable<List<SaleItemProduct>> callGetWishlistPaginated(int limit, int offset) {
         return mApiHelper.callGetWishlistPaginated(limit, offset);
     }
 
