@@ -142,6 +142,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
@@ -458,9 +459,9 @@ public interface ApiHelper {
     // WISHLIST
     Observable<List<GetWishlistIdResponse>> callGetWishlistIdsOnly();
 
-    Observable<List<GetSaleItemsResponse.Products>> callGetWishlistAll();
+    Observable<List<SaleItemProduct>> callGetWishlistAll();
 
-    Observable<List<GetSaleItemsResponse.Products>> callGetWishlistPaginated(int limit, int offset);
+    Observable<List<SaleItemProduct>> callGetWishlistPaginated(int limit, int offset);
 
     Observable<String> callAddToWishlist(String productId, String seoIdentifier);
 

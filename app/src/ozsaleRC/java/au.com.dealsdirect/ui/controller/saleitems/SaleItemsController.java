@@ -69,6 +69,8 @@ import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemFacet;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
@@ -396,9 +398,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mEndDate = "";
 
     private Map<String, GetCategoryTreeResponse> mCategoryMap = new HashMap<>();
-    private List<GetSaleItemsResponse.Products> mSaleItems = new LinkedList<>();
-    private List<GetSaleItemsResponse.Products> mSaleItemsFromCache = null;
-    private List<GetSaleItemsResponse.Facets> mFacets = new ArrayList<>();
+    private List<SaleItemProduct> mSaleItems = new LinkedList<>();
+    private List<SaleItemProduct> mSaleItemsFromCache = null;
+    private List<SaleItemFacet> mFacets = new ArrayList<>();
     private List<GetCategoryTreeResponse> mCategoryTreeResponse = new LinkedList<>();
     private List<GetCategoryTreeResponse> mInitialCategoryTree = new LinkedList<>();
     private List<SortingResponse> mSortingResponse = new ArrayList<>();
@@ -883,7 +885,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mCurrentProductDetailPosition >= 0 &&
                 mCurrentProductDetailPosition < mSaleItems.size()) {
             if (mSourceMode == SourceMode.WISHLIST &&
-                    !mPresenter.isProductInWishlist(mSaleItems.get(mCurrentProductDetailPosition).getProductId())) {
+                    !mPresenter.isProductInWishlist(mSaleItems.get(mCurrentProductDetailPosition).getId())) {
                 mSaleItems.remove(mCurrentProductDetailPosition);
                 mSaleItemsAdapter.removeData(mCurrentProductDetailPosition);
             } else {
@@ -1296,10 +1298,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mGenieTotal = getSaleItemsResponse.total;
         mGenieQuery = getSaleItemsResponse.query;
 
-        for (GetSaleItemsResponse.Facets facet : getSaleItemsResponse.getFacets()) {
+        for (SaleItemFacet facet : getSaleItemsResponse.getFacets()) {
             if (facet.getFacetName().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
                 int maxPrice = 0;
-                for (GetSaleItemsResponse.Values value : facet.getFacetValues()) {
+                for (SaleItemFacet.Value value : facet.getFacetValues()) {
                     int price = (int) Math.ceil(Float.parseFloat(value.getValue()));
                     if (maxPrice < price) {
                         maxPrice = price;
@@ -1334,7 +1336,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
         mShouldRefreshFacets = true;
 
-        List<GetSaleItemsResponse.Products> items = getSaleItemsResponse.products;
+        List<SaleItemProduct> items = getSaleItemsResponse.products;
 
         mIsLoadingProgress = false;
 
@@ -1408,7 +1410,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void showWishlist(List<GetSaleItemsResponse.Products> wishlist) {
+    public void showWishlist(List<SaleItemProduct> wishlist) {
         setColumnViewEnabled(true);
 
         if (mSaleItemsPageNumber == 0) {
@@ -1447,7 +1449,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             return;
         }
         for (int i = 0; i < mSaleItems.size(); i++) {
-            if (mSaleItems.get(i).getProductId().equals(productId)) {
+            if (mSaleItems.get(i).getId().equals(productId)) {
                 mSaleItems.remove(i);
                 mSaleItemsAdapter.removeData(i);
                 break;
@@ -1654,6 +1656,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                                    String skuId,
                                    String saleId,
                                    boolean isFreeDelivery,
+                                   String discountText,
+                                   String discountedPriceText,
                                    boolean isSoldOut) {
         if (!isViewAttached() || willOpenSaleDetails) {
             return;
@@ -1679,10 +1683,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 ((SaleItemsAdapter.ViewHolder) viewHolder).brand.getText().toString(),
                 ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString(),
                 ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString(),
+                discountText,
+                discountedPriceText,
                 mSalesOrigin,
-                mEndDate,
-                isFreeDelivery,
-                isSoldOut);
+                mEndDate, isFreeDelivery, isSoldOut);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));
@@ -2509,7 +2513,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         final LayoutAnimationController controller =
                 AnimationUtils.loadLayoutAnimation(mActivity, R.anim.layout_sale_list_skeleton);
 
-        ArrayList<GetSaleItemsResponse.Products> nullList = new ArrayList<>();
+        ArrayList<SaleItemProduct> nullList = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             nullList.add(null);
         }

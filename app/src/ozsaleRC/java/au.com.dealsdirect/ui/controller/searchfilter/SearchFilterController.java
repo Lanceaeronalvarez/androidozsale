@@ -31,7 +31,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemFacet;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.service.datacollection.enums.SearchOperationType;
 import au.com.dealsdirect.ui.base.BaseController;
@@ -66,7 +66,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
         }
 
         public static final class FromItemsList extends Parameters {
-            private List<GetSaleItemsResponse.Facets> mFacets;
+            private List<SaleItemFacet> mFacets;
             private List<SortingResponse> mSortingFacets;
             private List<GetCategoryTreeResponse> mCategoryTree;
             private List<String> mBrandList;
@@ -75,7 +75,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
             private Set<SearchChipModel> mPreselectedFilter;
             private boolean mIsFromCategory;
 
-            public FromItemsList(List<GetSaleItemsResponse.Facets> facets,
+            public FromItemsList(List<SaleItemFacet> facets,
                                  List<SortingResponse> sortingFacets,
                                  List<GetCategoryTreeResponse> categoryTree,
                                  List<String> brandList,
@@ -93,7 +93,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
                 mPreselectedFilter = preselectedFilter;
             }
 
-            public ArrayList<GetSaleItemsResponse.Facets> getFacets() {
+            public ArrayList<SaleItemFacet> getFacets() {
                 return mFacets == null ? new ArrayList<>() : new ArrayList<>(mFacets);
             }
 
@@ -190,7 +190,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
     @BindView(R.id.movingMinPrice)
     TextView mMinPrice;
 
-    List<GetSaleItemsResponse.Facets> mFacets;
+    List<SaleItemFacet> mFacets;
     List<GetCategoryTreeResponse> mCategoryTree;
     List<SortingResponse> mSortingFacets = new ArrayList<>();
     private Map<String, GetCategoryTreeResponse> mCategoryMap = new HashMap<>();
@@ -250,7 +250,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     public SearchFilterController(Bundle args) {
         super(args);
-        mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {
+        mFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_FACET_STRING, ""), new TypeToken<ArrayList<SaleItemFacet>>() {
         }.getType());
         mSortingFacets = JsonUtils.convertStringToObject(args.getString(BundleKeys.KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {
         }.getType());
@@ -304,7 +304,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
         if (savedInstanceState.containsKey(KEY_FROM_CATEGORIES) &&
                 savedInstanceState.getBoolean(KEY_FROM_CATEGORIES)) {
             mHasSavedInstance = savedInstanceState.getBoolean(KEY_HAS_SAVED_INSTANCE);
-            mFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {
+            mFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_FACET_STRING, ""), new TypeToken<ArrayList<SaleItemFacet>>() {
             }.getType());
             mSortingFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {
             }.getType());
@@ -325,7 +325,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
             isFromCategory = savedInstanceState.getBoolean(KEY_FROM_CATEGORIES);
         } else {
             mHasSavedInstance = savedInstanceState.getBoolean(SHOP_KEY_HAS_SAVED_INSTANCE);
-            mFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(SHOP_KEY_FACET_STRING, ""), new TypeToken<ArrayList<GetSaleItemsResponse.Facets>>() {
+            mFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(SHOP_KEY_FACET_STRING, ""), new TypeToken<ArrayList<SaleItemFacet>>() {
             }.getType());
             mSortingFacets = JsonUtils.convertStringToObject(savedInstanceState.getString(SHOP_KEY_SORTING_STRING, ""), new TypeToken<ArrayList<SortingResponse>>() {
             }.getType());
@@ -429,7 +429,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
     }
 
     @Override
-    public List<Pair<String, String>> parseFacets(List<GetSaleItemsResponse.Facets> facets) {
+    public List<Pair<String, String>> parseFacets(List<SaleItemFacet> facets) {
         mFacets = facets;
         mBrandList = new ArrayList<>();
         mSizeList = new ArrayList<>();
@@ -442,14 +442,14 @@ public class SearchFilterController extends BaseController implements SearchFilt
             switch (facets.get(i).getFacetName()) {
                 case BundleKeys.BRANDS_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        SaleItemFacet.Value facetValue = facets.get(i).getFacetValues().get(j);
                         mBrandList.add(facetValue.getValue());
                     }
                     mFacetFilters.add(new Pair<String, String>(BundleKeys.BRANDS_FACETFILTER_NAME, BRANDS_FACET_FILTER_TYPE));
                     break;
                 case BundleKeys.SIZES_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        SaleItemFacet.Value facetValue = facets.get(i).getFacetValues().get(j);
                         mSizeList.add(facetValue.getValue());
                     }
                     mFacetFilters.add(new Pair<String, String>(BundleKeys.SIZES_FACETFILTER_NAME, SIZE_FACET_FILTER_TYPE));
@@ -459,7 +459,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
                     break;
                 case BundleKeys.COLORS_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        SaleItemFacet.Value facetValue = facets.get(i).getFacetValues().get(j);
                         mColorList.add(facetValue.getValue());
                     }
                     if (!mFacetFilters.contains(pricePair)) {
@@ -469,14 +469,14 @@ public class SearchFilterController extends BaseController implements SearchFilt
                     break;
                 case BundleKeys.DELIVERY_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        SaleItemFacet.Value facetValue = facets.get(i).getFacetValues().get(j);
                         mDelivery.add(facetValue.getValue());
                     }
                     mFacetFilters.add(new Pair<String, String>(BundleKeys.DELIVERY_FACETFILTER_NAME, DELIVERY_FACET_FILTER_TYPE));
                     break;
                 case BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        SaleItemFacet.Value facetValue = facets.get(i).getFacetValues().get(j);
                         mNewArrivals.add(facetValue.getValue());
                     }
                     mFacetFilters.add(new Pair<String, String>(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME, NEW_ARRIVAL_FACET_FILTER_TYPE));
@@ -491,7 +491,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
     }
 
     @Override
-    public void updateFacets(List<GetSaleItemsResponse.Facets> facets) {
+    public void updateFacets(List<SaleItemFacet> facets) {
         mBrandList = new ArrayList<>();
         mSizeList = new ArrayList<>();
         mColorList = new ArrayList<>();
@@ -501,31 +501,31 @@ public class SearchFilterController extends BaseController implements SearchFilt
             switch (facets.get(i).getFacetName()) {
                 case BundleKeys.BRANDS_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        SaleItemFacet.Value facetValue = facets.get(i).getFacetValues().get(j);
                         mBrandList.add(facetValue.getValue());
                     }
                     break;
                 case BundleKeys.SIZES_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        SaleItemFacet.Value facetValue = facets.get(i).getFacetValues().get(j);
                         mSizeList.add(facetValue.getValue());
                     }
                     break;
                 case BundleKeys.COLORS_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        SaleItemFacet.Value facetValue = facets.get(i).getFacetValues().get(j);
                         mColorList.add(facetValue.getValue());
                     }
                     break;
                 case BundleKeys.DELIVERY_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        SaleItemFacet.Value facetValue = facets.get(i).getFacetValues().get(j);
                         mDelivery.add(facetValue.getValue());
                     }
                     break;
                 case BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME:
                     for (int j = 0; j < facets.get(i).getFacetValues().size(); j++) {
-                        GetSaleItemsResponse.Values facetValue = facets.get(i).getFacetValues().get(j);
+                        SaleItemFacet.Value facetValue = facets.get(i).getFacetValues().get(j);
                         mNewArrivals.add(facetValue.getValue());
                     }
                     break;

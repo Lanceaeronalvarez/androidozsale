@@ -20,104 +20,84 @@ or alternatively using `brew cask install fastlane`
 fastlane dd_build
 ```
 
-### fabric_deploy_ba_test
+### firebase_deploy_ba_test
 ```
-fastlane fabric_deploy_ba_test
+fastlane firebase_deploy_ba_test
 ```
-
-### fabric_deploy_ba_rc
+Distribut app using Firebase app distribution
+### firebase_deploy_ba_rc
 ```
-fastlane fabric_deploy_ba_rc
-```
-
-### fabric_deploy_dd_test
-```
-fastlane fabric_deploy_dd_test
+fastlane firebase_deploy_ba_rc
 ```
 
-### fabric_deploy_dd_rc
+### firebase_deploy_dd_test
 ```
-fastlane fabric_deploy_dd_rc
-```
-
-### fabric_deploy_oo_rc
-```
-fastlane fabric_deploy_oo_rc
+fastlane firebase_deploy_dd_test
 ```
 
-### fabric_deploy_oo_test
+### firebase_deploy_dd_rc
 ```
-fastlane fabric_deploy_oo_test
-```
-
-### fabric_deploy_lc_test
-```
-fastlane fabric_deploy_lc_test
+fastlane firebase_deploy_dd_rc
 ```
 
-### fabric_deploy_tb_rc
+### firebase_deploy_oo_rc
 ```
-fastlane fabric_deploy_tb_rc
-```
-
-### fabric_deploy_tb_test
-```
-fastlane fabric_deploy_tb_test
+fastlane firebase_deploy_oo_rc
 ```
 
-### fabric_deploy_ourpay_test
+### firebase_deploy_oo_test
 ```
-fastlane fabric_deploy_ourpay_test
-```
-
-### fabric_deploy_ozsale_rc
-```
-fastlane fabric_deploy_ozsale_rc
+fastlane firebase_deploy_oo_test
 ```
 
-### fabric_deploy_ozsale_test
+### firebase_deploy_tb_rc
 ```
-fastlane fabric_deploy_ozsale_test
-```
-
-### fabric_deploy_singsale_rc
-```
-fastlane fabric_deploy_singsale_rc
+fastlane firebase_deploy_tb_rc
 ```
 
-### fabric_deploy_singsale_test
+### firebase_deploy_tb_test
 ```
-fastlane fabric_deploy_singsale_test
-```
-
-### fabric_deploy_cocosa_rc
-```
-fastlane fabric_deploy_cocosa_rc
+fastlane firebase_deploy_tb_test
 ```
 
-### fabric_deploy_cocosa_test
+### firebase_deploy_ozsale_rc
 ```
-fastlane fabric_deploy_cocosa_test
-```
-
-### fabric_deploy_nzsale_rc
-```
-fastlane fabric_deploy_nzsale_rc
+fastlane firebase_deploy_ozsale_rc
 ```
 
-### fabric_deploy_nzsale_test
+### firebase_deploy_ozsale_test
 ```
-fastlane fabric_deploy_nzsale_test
-```
-
-### fabric_deploy_mysale_rc
-```
-fastlane fabric_deploy_mysale_rc
+fastlane firebase_deploy_ozsale_test
 ```
 
-### fabric_deploy_mysale_test
+### firebase_deploy_singsale_rc
 ```
-fastlane fabric_deploy_mysale_test
+fastlane firebase_deploy_singsale_rc
+```
+
+### firebase_deploy_singsale_test
+```
+fastlane firebase_deploy_singsale_test
+```
+
+### firebase_deploy_nzsale_rc
+```
+fastlane firebase_deploy_nzsale_rc
+```
+
+### firebase_deploy_nzsale_test
+```
+fastlane firebase_deploy_nzsale_test
+```
+
+### firebase_deploy_mysale_rc
+```
+fastlane firebase_deploy_mysale_rc
+```
+
+### firebase_deploy_mysale_test
+```
+fastlane firebase_deploy_mysale_test
 ```
 
 

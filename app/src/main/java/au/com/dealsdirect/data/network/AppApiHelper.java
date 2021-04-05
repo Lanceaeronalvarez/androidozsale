@@ -147,6 +147,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
@@ -1398,22 +1399,22 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistPaginated(int limit, int offset) {
+    public Observable<List<SaleItemProduct>> callGetWishlistPaginated(int limit, int offset) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getWishlistPaginated())
                 .addHeaders(mApiHeader.get())
                 .addPathParameter("limit", Integer.toString(limit))
                 .addPathParameter("offset", Integer.toString(offset))
                 .build()
-                .getObjectListObservable(GetSaleItemsResponse.Products.class);
+                .getObjectListObservable(SaleItemProduct.class);
     }
 
     @Override
-    public Observable<List<GetSaleItemsResponse.Products>> callGetWishlistAll() {
+    public Observable<List<SaleItemProduct>> callGetWishlistAll() {
         return Rx2AndroidNetworking.get(ApiEndPoint.getWishlistAll())
                 .addHeaders(mApiHeader.get())
                 .doNotCacheResponse()
                 .build()
-                .getObjectListObservable(GetSaleItemsResponse.Products.class);
+                .getObjectListObservable(SaleItemProduct.class);
     }
 
     @Override

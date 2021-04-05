@@ -162,6 +162,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             private String mEndDate;
             private boolean mIsFreeDelivery;
             private Boolean mIsSoldOut;
+            private String mDiscountText;
+            private String mDiscountedPriceText;
 
             public FromItemsList(Integer position,
                                  Drawable lowResImageDrawable,
@@ -173,6 +175,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                  String productBrand,
                                  String price,
                                  String oldPrice,
+                                 String discountText,
+                                 String discountedPriceText,
                                  String salesOrigin,
                                  String endDate,
                                  boolean isFreeDelivery,
@@ -191,6 +195,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mEndDate = endDate;
                 mIsFreeDelivery = isFreeDelivery;
                 mIsSoldOut = isSoldOut;
+
+                mDiscountedPriceText = discountedPriceText;
+                mDiscountText = discountText;
             }
 
             public Integer getPosition() {
@@ -252,6 +259,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             public void setIsSoldOut(Boolean isSoldOut) {
                 mIsSoldOut = isSoldOut;
             }
+
+            public String getDiscountText() {
+                return mDiscountText;
+            }
+
+            public void setDiscountText(String discountText) {
+                mDiscountText = discountText;
+            }
+
+            public String getDiscountedPriceText() {
+                return mDiscountedPriceText;
+            }
+
+            public void setDiscountedPriceText(String discountedPriceText) {
+                mDiscountedPriceText = discountedPriceText;
+            }
         }
 
         public static final class FromDeepLink extends Parameters {
@@ -296,6 +319,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private boolean mIsFreeDelivery;
     private CountDownTimer mCountDownTimer;
 
+    private String discountTextFromSaleItemsList;
+    private String discountedPriceTextFromSaleItemsList;
+
     private boolean shouldAfterpayDetailsBeVisible = false;
     GridLayoutManager mLayoutManager;
     List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
@@ -314,10 +340,30 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mProductName;
     @BindView(R.id.productBrand)
     TextView mProductBrand;
+
+    @BindView(R.id.productPriceContainer)
+    ViewGroup mProductPriceContainer;
+    @BindView(R.id.productPriceTitle)
+    TextView mProductPriceTitleTextView;
     @BindView(R.id.productPrice)
-    TextView mProductPrice;
+    TextView mProductPriceValueTextView;
+    @BindView(R.id.controller_details_price_info)
+    ImageButton mPriceInfoButton;
+
+    @BindView(R.id.productPreviousPriceContainer)
+    ViewGroup mProductPreviousPriceContainer;
     @BindView(R.id.productPreviousPrice)
-    TextView mProductPreviousPrice;
+    TextView mProductPreviousPriceValueTextView;
+    @BindView(R.id.controller_details_old_price_info)
+    ImageButton mProductPreviousPriceInfoButton;
+
+    @BindView(R.id.productDiscountPriceContainer)
+    ViewGroup mProductDiscountPriceContainer;
+    @BindView(R.id.productDiscountTitle)
+    TextView mProductDiscountPriceTitleTextView;
+    @BindView(R.id.productDiscountPrice)
+    TextView mProductDiscountPriceValueTextView;
+
     @BindView(R.id.product_details_sizes_container)
     ViewGroup mSizesContainer;
     @BindView(R.id.product_details_size_list)
@@ -382,8 +428,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ProgressBar mAddToCartProgressBar;
     @BindView(R.id.product_details_button_overlay)
     ImageView mAddToCartOverlay;
-    @BindView(R.id.productPreviousPriceLabel)
-    TextView mProductPreviousPriceLabel;
 
     @BindView(R.id.controller_image_frame_layout)
     RelativeLayout mProductDetailsImageLayout;
@@ -395,10 +439,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mToolbarItemBrandTextView;
     @BindView(R.id.toolbar_item_name)
     TextView mToolbarItemNameTextView;
-    @BindView(R.id.controller_details_price_info)
-    ImageButton mPriceInfoButton;
-    @BindView(R.id.controller_details_old_price_info)
-    ImageButton mOldPriceInfoButton;
     @BindView(R.id.product_about_old_pricing_text)
     WebView mOldProductPricing;
     @BindView(R.id.main_layout)
@@ -416,7 +456,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_free_delivery)
     ImageView mFreeDeliveryImageView;
     @BindView(R.id.product_details_percent_off)
-    TextView mProductDiscountTextView;
+    TextView mProductDiscountPogTextView;
     @BindView(R.id.controller_product_details_button_container)
     RelativeLayout mProductDetailsButtonContainer;
     @BindView(R.id.controller_product_details_like_recyclerview)
@@ -540,6 +580,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             controller.mIsFreeDelivery = ((Parameters.FromItemsList) parameters).getIsFreeDelivery();
             controller.mOrigin = origin != null ? origin : DataCollector.EventParameters.ViewSource.SALE;
             controller.mIsSoldout = ((Parameters.FromItemsList) parameters).isSoldOut();
+
+            controller.discountTextFromSaleItemsList = ((Parameters.FromItemsList) parameters).getDiscountText();
+            controller.discountedPriceTextFromSaleItemsList = ((Parameters.FromItemsList) parameters).getDiscountedPriceText();
         } else if (parameters instanceof Parameters.FromDeepLink) {
             controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
             controller.mSkuId = ((Parameters.FromDeepLink) parameters).getSkuId();
@@ -705,10 +748,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductName.setText(mSaleName);
         }
 
-        mProductPrice.setText(mSalePrice);
-        mProductPreviousPrice.setText(mSaleOldPrice);
-        mProductPreviousPrice.setPaintFlags(
-                mProductPreviousPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        mProductPriceValueTextView.setText(mSalePrice);
+        mProductPreviousPriceValueTextView.setText(mSaleOldPrice);
+        mProductPreviousPriceValueTextView.setPaintFlags(
+                mProductPreviousPriceValueTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        mProductPreviousPriceContainer.setVisibility(mSaleOldPrice == null || mSalePrice.isEmpty() ? View.GONE : View.VISIBLE);
 
         mProductDetailBottomCard.setVisibility(View.VISIBLE);
 
@@ -913,6 +957,24 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mShippingPostcodeNotAvailable.setVisibility(View.GONE);
         mShippingPreviewPrice.setText(null);
         mShippingPreviewPrice.setVisibility(View.GONE);
+
+        setupDiscountTextDisplay();
+    }
+
+    private void setupDiscountTextDisplay() {
+        final boolean hasDiscount = discountTextFromSaleItemsList != null;
+        mProductDiscountPriceContainer.setVisibility(hasDiscount ? View.VISIBLE : View.GONE);
+        mProductDiscountPriceTitleTextView.setText(discountTextFromSaleItemsList);
+        mProductDiscountPriceValueTextView.setText(discountedPriceTextFromSaleItemsList);
+
+        mProductPriceTitleTextView.setVisibility(hasDiscount ? View.VISIBLE : View.GONE);
+        if (hasDiscount) {
+            mProductPriceValueTextView.setPaintFlags(
+                    mProductPreviousPriceValueTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            mProductPriceValueTextView.setPaintFlags(
+                    mProductPreviousPriceValueTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
     }
 
     private void showProductList(String searchKey) {
@@ -942,7 +1004,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
-
     }
 
     private void setupSaleRemainingTime(String endDate) {
@@ -995,7 +1056,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductDetailScrollView.setOnTouchListener(null);
         }
         mPriceInfoButton.setOnClickListener(null);
-        mOldPriceInfoButton.setOnClickListener(null);
+        mProductPreviousPriceInfoButton.setOnClickListener(null);
         mProductImagesRv.setOnFlingListener(null);
         mProductImagesRv.setOnTouchListener(null);
         mProductImagesRv.setLayoutManager(null);
@@ -1011,8 +1072,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private void updatePriceDetails(GetSaleItemDetailsResponse saleDetail) {
         //update Price
-        mProductPrice.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
-        mProductPreviousPrice.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
+        mProductPriceValueTextView.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
+        mProductPreviousPriceValueTextView.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
 
         //update Images
         List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
@@ -1147,7 +1208,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             mPriceInfoButton.setOnClickListener(view -> toggleProductInfoWebView(shippingPricing, true));
 
-            mOldPriceInfoButton.setOnClickListener(view -> toggleProductInfoWebView(rrpPricing, false));
+            mProductPreviousPriceInfoButton.setOnClickListener(view -> toggleProductInfoWebView(rrpPricing, false));
 
         }
 
@@ -1257,9 +1318,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         showAddToCartButton();
 
         boolean isOldPriceInfoVisible = saleDetail.getOriginalPrice().getValue() <= 0;
-        mOldPriceInfoButton.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
-        mProductPreviousPrice.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
-        mProductPreviousPriceLabel.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
+        mProductPreviousPriceContainer.setVisibility(isOldPriceInfoVisible ? View.GONE : View.VISIBLE);
 
         updatePriceDetails(saleDetail);
 
@@ -1502,7 +1561,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Override
     public void setDynamicDiscount(String discountText) {
         if (discountText == null) {
-            mProductDiscountTextView.setVisibility(View.GONE);
+            mProductDiscountPogTextView.setVisibility(View.GONE);
             return;
         }
         String percentOffText = discountText.trim();
@@ -1514,8 +1573,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         SpannableString string = new SpannableString(percentOffText);
         string.setSpan(new StyleSpan(BOLD), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         string.setSpan(new RelativeSizeSpan(DISCOUNT_VALUE_SCALE_FACTOR), SPANNABLE_STRING_START_INDEX, spannableStringEndParameter, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mProductDiscountTextView.setVisibility(View.VISIBLE);
-        mProductDiscountTextView.setText(string);
+        mProductDiscountPogTextView.setVisibility(View.VISIBLE);
+        mProductDiscountPogTextView.setText(string);
+    }
+
+    @Override
+    public void setPercentOffText(String percentOffText) {
+        discountTextFromSaleItemsList = percentOffText;
+        setupDiscountTextDisplay();
     }
 
     @Override
@@ -1555,14 +1620,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
 
         adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.YouMayAlsoLike);
-        SaleItemDetailsScrollingImageAdapter mYouMayAlsoLikeAdapter = new SaleItemDetailsScrollingImageAdapter(
+        SaleItemDetailsScrollingImageAdapter youMayAlsoLikeAdapter = new SaleItemDetailsScrollingImageAdapter(
                 mActivity,
                 mPresenter,
                 saleDetailsImageListener(),
                 mYouMayAlsoLikeList,
                 mRecommendedList);
 
-        mYouMayAlsoLikeAdapter.setSlidingBannersAdapter(adapter);
+        youMayAlsoLikeAdapter.setSlidingBannersAdapter(adapter);
 
         GridLayoutManager mLayoutManager = new GridLayoutManager(
                 mActivity,
@@ -1576,7 +1641,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 return 1;
             }
         });
-        mYouMayAlsoLikeRecyclerview.setAdapter(mYouMayAlsoLikeAdapter);
+        mYouMayAlsoLikeRecyclerview.setAdapter(youMayAlsoLikeAdapter);
         mYouMayAlsoLikeRecyclerview.setLayoutManager(mLayoutManager);
         mYouMayAlsoLikeRecyclerview.getRecycledViewPool().clear();
     }
@@ -1649,6 +1714,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mPresenter,
                 recentlyItemResponse -> {
                     mProductDetailScrollView.smoothScrollTo(0, 0);
+                    final double salePriceValue = recentlyItemResponse.getSalePrice() != null ?
+                            recentlyItemResponse.getSalePrice().getValue() : 0;
+                    discountedPriceTextFromSaleItemsList = salePriceValue > 0 ? PriceUtils.getRpStringValue(salePriceValue) : null;
+                    discountTextFromSaleItemsList = recentlyItemResponse.getSalePercentOffText();
+                    setupDiscountTextDisplay();
+                    mProductDiscountPogTextView.setVisibility(View.GONE);
                     mPresenter.loadSaleItemDetails(recentlyItemResponse.getId(), recentlyItemResponse.getSeoIdentifier());
                 },
                 response);
@@ -2100,12 +2171,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             @Override
             public void reloadSaleItemDetails(GetYouMayAlsoLikeResponse response) {
                 mProductDetailScrollView.smoothScrollTo(0, 0);
+                final double salePriceValue = response.getSalePrice() != null ?
+                        response.getSalePrice().getValue() : 0;
+                discountedPriceTextFromSaleItemsList = salePriceValue > 0 ? PriceUtils.getRpStringValue(salePriceValue) : null;
+                discountTextFromSaleItemsList = response.getSalePercentOffText();
+                setupDiscountTextDisplay();
+                mProductDiscountPogTextView.setVisibility(View.GONE);
                 mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
             }
 
             @Override
             public void reloadSaleItemDetails(RecommendedItemsResponse response) {
                 mProductDetailScrollView.smoothScrollTo(0, 0);
+                discountedPriceTextFromSaleItemsList = null;
+                discountTextFromSaleItemsList = null;
+                setupDiscountTextDisplay();
+                mProductDiscountPogTextView.setVisibility(View.GONE);
                 mPresenter.loadSaleItemDetails(response.getId(), response.getSeoIdentifier());
             }
 
