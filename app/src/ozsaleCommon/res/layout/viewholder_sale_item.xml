@@ -148,7 +148,7 @@
         tools:text="Up To 50% Off" />
 
     <TextView
-        android:id="@+id/vh_sale_item_sale_price"
+        android:id="@+id/vh_sale_item_discounted_price"
         fontPath="@string/font_app_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

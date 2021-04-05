@@ -19,6 +19,7 @@ import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.ui.base.BasePresenter;
@@ -50,7 +51,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         doApiCallForResponse(getDataManager().callGetWishlistAll(), new AppApiCallback() {
             @Override
             public void onSuccess(List<?> list) {
-                getMvpView().showWishlist((List<GetSaleItemsResponse.Products>) list);
+                getMvpView().showWishlist((List<SaleItemProduct>) list);
             }
         });
     }
@@ -60,7 +61,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         doApiCallForResponse(getDataManager().callGetWishlistPaginated(limit, offset), new AppApiCallback() {
             @Override
             public void onSuccess(List<?> list) {
-                getMvpView().showWishlist((List<GetSaleItemsResponse.Products>) list);
+                getMvpView().showWishlist((List<SaleItemProduct>) list);
             }
         });
     }
@@ -223,6 +224,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                                    String skuId,
                                    String saleId,
                                    boolean isFreeDelivery,
+                                   String discountText,
+                                   String discountedPriceText,
                                    boolean isSoldOut) {
         getMvpView().hideKeyboard();
         getMvpView().showProductDetails(
@@ -234,6 +237,8 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                 skuId,
                 saleId,
                 isFreeDelivery,
+                discountText,
+                discountedPriceText,
                 isSoldOut);
     }
 

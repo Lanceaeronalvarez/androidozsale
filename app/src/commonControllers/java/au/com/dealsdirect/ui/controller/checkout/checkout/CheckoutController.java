@@ -1747,10 +1747,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 brandName,
                 price,
                 oldPrice,
+                null,
+                null,
                 "",
-                "",
-                isFreeDelivery,
-                false);
+                "", isFreeDelivery, false);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));

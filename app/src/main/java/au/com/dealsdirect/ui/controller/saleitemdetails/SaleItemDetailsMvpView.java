@@ -31,6 +31,8 @@ public interface SaleItemDetailsMvpView extends MvpView {
 
     void setDynamicDiscount(String discountText);
 
+    void setPercentOffText(String percentOffText);
+
     void setIsAfterpayDetailsVisible(boolean visible);
 
     void showRecommendedItems(List<RecommendedItemsResponse> recommendedItemsResponseList);

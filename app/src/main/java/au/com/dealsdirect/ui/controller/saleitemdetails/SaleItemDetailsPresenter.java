@@ -142,6 +142,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                         if (o instanceof PromoInfoResponse) {
                             PromoInfoResponse response = (PromoInfoResponse) o;
                             getMvpView().setDynamicDiscount(response.getPercentOffText());
+                            getMvpView().setPercentOffText(response.getPercentOffText());
                             getMvpView().setIsAfterpayDetailsVisible(response.getAfterpayEnabled());
                             getMvpView().showFreeShipping(response.getDeliveryType(), response.getDeliveryThreshold());
                             getMvpView().showPostcodeForm(response.getShowPostCode());
