@@ -110,7 +110,9 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
                 youMayLikeItem = mYouMayAlsoLikeList.get(virtualPosition);
 
-                imgUrl = youMayLikeItem.getImages().get(0);
+                if (youMayLikeItem.getImages() != null && !youMayLikeItem.getImages().isEmpty()) {
+                    imgUrl = youMayLikeItem.getImages().get(0);
+                }
 
                 holder.title.setText(youMayLikeItem.getName());
 
@@ -134,7 +136,9 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
                 recommendedItemsResponse = mRecommendedList.get(virtualPosition);
 
-                imgUrl = recommendedItemsResponse.getImages().get(0);
+                if (recommendedItemsResponse.getImages() != null && !recommendedItemsResponse.getImages().isEmpty()) {
+                    imgUrl = recommendedItemsResponse.getImages().get(0);
+                }
 
                 holder.title.setText(recommendedItemsResponse.getName());
 
@@ -156,7 +160,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
             case RecentlyViewed:
                 virtualPosition = position % mRecentlyViewedList.size();
                 recentlyItemResponse = mRecentlyViewedList.get(virtualPosition);
-                if (recentlyItemResponse.getImages().size() != 0) {
+                if (recentlyItemResponse.getImages() != null && !recentlyItemResponse.getImages().isEmpty()) {
                     imgUrl = recentlyItemResponse.getImages().get(0);
                 }
                 holder.title.setText(recentlyItemResponse.getName());
@@ -214,16 +218,16 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     public int getItemCount() {
         switch (getBannerViewType()) {
             case YouMayAlsoLike:
-                return (mYouMayAlsoLikeList != null && mYouMayAlsoLikeList.size() != 0) ?
+                return (mYouMayAlsoLikeList != null && !mYouMayAlsoLikeList.isEmpty()) ?
                         mYouMayAlsoLikeList.size() + getEdgeBufferSize() * 2 : 0;
             case RecommendedItems:
-                return (mRecommendedList != null && mRecommendedList.size() != 0) ?
+                return (mRecommendedList != null && !mRecommendedList.isEmpty()) ?
                         mRecommendedList.size() + getEdgeBufferSize() * 2 : 0;
             case RecentlyViewed:
-                return (mRecentlyViewedList != null && mRecentlyViewedList.size() != 0) ?
+                return (mRecentlyViewedList != null && !mRecentlyViewedList.isEmpty()) ?
                         mRecentlyViewedList.size() + getEdgeBufferSize() * 2 : 0;
             default:
-                return (dataSource != null && dataSource.size() != 0) ?
+                return (dataSource != null && !dataSource.isEmpty()) ?
                         dataSource.size() + getEdgeBufferSize() * 2 : 0;
         }
     }
@@ -375,7 +379,9 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
             }
         }
 
-        if (recyclerView != null && recyclerView.getWidth() > 0 && cellWidth > 0) {
+        if (datasourceSize == 0) {
+            return 0;
+        } else if (recyclerView != null && recyclerView.getWidth() > 0 && cellWidth > 0) {
             return (int) (2 * Math.ceil(recyclerView.getWidth() / (float) cellWidth));
         } else {
             return Math.max(3, datasourceSize);
