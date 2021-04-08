@@ -1,10 +1,13 @@
 
 package au.com.dealsdirect.data.network.model.banner;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
 
 import au.com.dealsdirect.data.cachedresponses.CachableResponse;
 
@@ -294,6 +297,21 @@ public class GetBannerResponse extends CachableResponse {
                 banner.setGroup(this);
             }
             return banners;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(type, title);
+        }
+
+        @Override
+        public boolean equals(@Nullable Object obj) {
+            if (obj instanceof Group) {
+                final Group other = (Group) obj;
+                return ((other.type != null && other.type.equals(type)) || other.type == type) &&
+                        ((other.title != null && other.title.equals(title)) || other.title == title);
+            }
+            return false;
         }
     }
 }

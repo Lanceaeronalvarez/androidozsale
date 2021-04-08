@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Priority;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
-public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<HorizontalScrollingBannerAdapter.ViewHolder> {
+public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private boolean hasInitializedDimensions = false;
 
@@ -66,6 +67,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     public enum BannerViewType {
         ShopBanner,
+        PromoBanner,
         YouMayAlsoLike,
         RecentlyViewed,
         RecommendedItems
@@ -78,7 +80,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = null;
 
         switch (getBannerViewType()) {
@@ -88,6 +90,10 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.viewholder_product_details_cell, parent, false);
                 return new ViewHolder(view, cellWidth);
+            case PromoBanner:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.viewholder_banner_for_promo, parent, false);
+                return new PromoBannerViewHolder(view, cellWidth);
             default:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.viewholder_banner_for_horizontal, parent, false);
@@ -96,7 +102,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         String imgUrl = "";
         GetBannerResponse.Banner item;
         GetYouMayAlsoLikeResponse youMayLikeItem;
@@ -114,13 +120,13 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                     imgUrl = youMayLikeItem.getImages().get(0);
                 }
 
-                holder.title.setText(youMayLikeItem.getName());
+                ((ViewHolder) holder).title.setText(youMayLikeItem.getName());
 
-                if (holder.subscription != null) {
-                    holder.subscription.dispose();
+                if (((ViewHolder) holder).subscription != null) {
+                    ((ViewHolder) holder).subscription.dispose();
                 }
 
-                holder.subscription = RxView.clicks(holder.layout)
+                ((ViewHolder) holder).subscription = RxView.clicks(((ViewHolder) holder).layout)
                         .throttleFirst(
                                 THROTTLE_FIRST_WINDOW_DURATION,
                                 TimeUnit.MILLISECONDS)
@@ -140,13 +146,13 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                     imgUrl = recommendedItemsResponse.getImages().get(0);
                 }
 
-                holder.title.setText(recommendedItemsResponse.getName());
+                ((ViewHolder) holder).title.setText(recommendedItemsResponse.getName());
 
-                if (holder.subscription != null) {
-                    holder.subscription.dispose();
+                if (((ViewHolder) holder).subscription != null) {
+                    ((ViewHolder) holder).subscription.dispose();
                 }
 
-                holder.subscription = RxView.clicks(holder.layout)
+                ((ViewHolder) holder).subscription = RxView.clicks(((ViewHolder) holder).layout)
                         .throttleFirst(
                                 THROTTLE_FIRST_WINDOW_DURATION,
                                 TimeUnit.MILLISECONDS)
@@ -163,8 +169,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                 if (recentlyItemResponse.getImages() != null && !recentlyItemResponse.getImages().isEmpty()) {
                     imgUrl = recentlyItemResponse.getImages().get(0);
                 }
-                holder.title.setText(recentlyItemResponse.getName());
-                holder.subscription = RxView.clicks(holder.layout)
+                ((ViewHolder) holder).title.setText(recentlyItemResponse.getName());
+                ((ViewHolder) holder).subscription = RxView.clicks(((ViewHolder) holder).layout)
                         .throttleFirst(
                                 THROTTLE_FIRST_WINDOW_DURATION,
                                 TimeUnit.MILLISECONDS)
@@ -175,6 +181,47 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                             }
                         });
                 break;
+            case PromoBanner: {
+                PromoBannerViewHolder promoBannerViewHolder = (PromoBannerViewHolder) holder;
+                virtualPosition = position % dataSource.size();
+
+                item = dataSource.get(virtualPosition);
+
+                imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), imageWidth, imageHeight, true);
+                ImageUtils.loadImageWithPriority(imgUrl, promoBannerViewHolder.image, Priority.HIGH);
+
+                if (promoBannerViewHolder.subscription != null) {
+                    promoBannerViewHolder.subscription.dispose();
+                }
+
+                if (item.getGroup() != null && item.getGroup().getIsClickable() != null) {
+                    promoBannerViewHolder.subscription = RxView.clicks(promoBannerViewHolder.layout)
+                            .throttleFirst(
+                                    THROTTLE_FIRST_WINDOW_DURATION,
+                                    TimeUnit.MILLISECONDS)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(action -> {
+                                if (onBannerTappedListener != null) {
+                                    onBannerTappedListener.onBannerTapped(item, position);
+                                }
+                            });
+                }
+
+
+                if (item.getDescription() != null && !item.getDescription().isEmpty()) {
+                    promoBannerViewHolder.name.setVisibility(View.VISIBLE);
+                    promoBannerViewHolder.name.setText(item.getDescription());
+                } else {
+                    promoBannerViewHolder.name.setVisibility(View.GONE);
+                }
+                if (item.getBannerText() != null && !item.getBannerText().isEmpty()) {
+                    promoBannerViewHolder.discount.setVisibility(View.VISIBLE);
+                    promoBannerViewHolder.discount.setText(item.getBannerText());
+                } else {
+                    promoBannerViewHolder.discount.setVisibility(View.GONE);
+                }
+            }
+            break;
             default:
                 virtualPosition = position % dataSource.size();
 
@@ -182,12 +229,12 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
                 imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), imageWidth, imageHeight, useHigherResolution);
 
-                if (holder.subscription != null) {
-                    holder.subscription.dispose();
+                if (((ViewHolder) holder).subscription != null) {
+                    ((ViewHolder) holder).subscription.dispose();
                 }
 
                 if (item.getGroup() != null && item.getGroup().getIsClickable() != null) {
-                    holder.subscription = RxView.clicks(holder.layout)
+                    ((ViewHolder) holder).subscription = RxView.clicks(((ViewHolder) holder).layout)
                             .throttleFirst(
                                     THROTTLE_FIRST_WINDOW_DURATION,
                                     TimeUnit.MILLISECONDS)
@@ -201,15 +248,15 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
 
                 String title = item.getBannerText();
                 if (shouldShowTitle && title != null) {
-                    holder.title.setText(title);
-                    holder.title.setVisibility(View.VISIBLE);
+                    ((ViewHolder) holder).title.setText(title);
+                    ((ViewHolder) holder).title.setVisibility(View.VISIBLE);
                 } else {
-                    holder.title.setVisibility(View.GONE);
+                    ((ViewHolder) holder).title.setVisibility(View.GONE);
                 }
         }
 
-        if (!imgUrl.isEmpty() && !CommonUtils.isActivityOfViewDestroyed(holder.image)) {
-            ImageUtils.loadImage(imgUrl, holder.image);
+        if (holder instanceof ViewHolder && !imgUrl.isEmpty() && !CommonUtils.isActivityOfViewDestroyed(((ViewHolder) holder).image)) {
+            ImageUtils.loadImage(imgUrl, ((ViewHolder) holder).image);
         }
 
     }
@@ -536,6 +583,40 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Horiz
                 params.width = width;
                 layout.setLayoutParams(params);
             }
+        }
+
+        Disposable subscription;
+    }
+
+    class PromoBannerViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.viewholder_banner_layout)
+        ViewGroup layout;
+
+        @BindView(R.id.viewholder_banner_image)
+        ImageView image;
+
+        @BindView(R.id.viewholder_banner_name)
+        TextView name;
+
+        @BindView(R.id.viewholder_banner_discount)
+        TextView discount;
+
+        PromoBannerViewHolder(View view, int width) {
+            super(view);
+            ButterKnife.bind(this, view);
+
+            if (width > 0) {
+                ViewGroup.LayoutParams params = layout.getLayoutParams();
+                params.width = width;
+                layout.setLayoutParams(params);
+            }
+
+        }
+
+        PromoBannerViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
         }
 
         Disposable subscription;

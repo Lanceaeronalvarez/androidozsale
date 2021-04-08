@@ -3,8 +3,8 @@
     <!--No items placeholder icons visibility VISIBLE,INVISIBLE,GONE(0,1,2 respectively)-->
     <integer name="no_items_placeholder_icon_visibility">0</integer>
     <integer name="gender_option_visibility">2</integer>
-    <integer name="sale_banner_mobile_width">642</integer>
-    <integer name="sale_banner_mobile_height">603</integer>
+    <integer name="sale_banner_mobile_width">475</integer>
+    <integer name="sale_banner_mobile_height">325</integer>
     <integer name="sale_banner_tablet_width">642</integer>
     <integer name="sale_banner_tablet_height">603</integer>
     <integer name="sliding_banner_width">475</integer>
