@@ -72,8 +72,8 @@
                                 android:layout_height="match_parent"
                                 android:background="@color/white"
                                 android:orientation="vertical"
-                                android:paddingLeft="@dimen/padding_default_half"
-                                android:paddingRight="@dimen/padding_default_half"
+                                android:paddingLeft="2dp"
+                                android:paddingRight="2dp"
                                 android:visibility="gone">
 
                                 <TextView
@@ -81,7 +81,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/product_details_subtitle_indent"
-                                    android:padding="@dimen/margin_extra_small"
+                                    android:paddingTop="@dimen/margin_extra_small"
+                                    android:paddingBottom="@dimen/margin_extra_small"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp"
                                     android:text="@string/pricing"
                                     android:textAllCaps="true"
                                     android:textColor="@color/text_medium"
@@ -147,7 +150,10 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="3dp"
-                                        android:padding="@dimen/margin_extra_small"
+                                        android:paddingTop="@dimen/margin_extra_small"
+                                        android:paddingBottom="@dimen/margin_extra_small"
+                                        android:paddingLeft="2dp"
+                                        android:paddingRight="2dp"
                                         android:text="@string/size"
                                         android:textAllCaps="true"
                                         android:textColor="@color/text_medium"
@@ -219,7 +225,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="6dp"
-                                    android:padding="@dimen/margin_small"
+                                    android:paddingTop="@dimen/margin_small"
+                                    android:paddingBottom="@dimen/margin_small"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp"
                                     android:text="@string/shipping"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1"
@@ -308,7 +317,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="6dp"
-                                    android:padding="@dimen/margin_small"
+                                    android:paddingTop="@dimen/margin_small"
+                                    android:paddingBottom="@dimen/margin_small"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp"
                                     android:text="@string/estimated_delivery"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
@@ -336,7 +348,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="6dp"
-                                    android:padding="@dimen/margin_small"
+                                    android:paddingTop="@dimen/margin_small"
+                                    android:paddingBottom="@dimen/margin_small"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp"
                                     android:text="@string/return_policy"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
@@ -449,7 +464,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="3dp"
-                                    android:padding="@dimen/margin_extra_small"
+                                    android:paddingTop="@dimen/margin_small"
+                                    android:paddingBottom="@dimen/margin_small"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp"
                                     android:text="@string/about"
                                     android:textAllCaps="true"
                                     android:textColor="@color/text_medium"
@@ -576,7 +594,11 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="6dp"
-                                    android:padding="@dimen/margin_small"
+                                    android:paddingTop="@dimen/margin_small"
+                                    android:paddingBottom="@dimen/margin_small"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp"
+                                    android:textAllCaps="true"
                                     android:text="@string/you_may_also_like"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
@@ -605,7 +627,11 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="6dp"
-                                    android:padding="@dimen/margin_small"
+                                    android:paddingTop="@dimen/margin_small"
+                                    android:paddingBottom="@dimen/margin_small"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp"
+                                    android:textAllCaps="true"
                                     android:text="@string/recommended_for_you"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
@@ -634,7 +660,11 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="6dp"
-                                    android:padding="@dimen/margin_small"
+                                    android:paddingTop="@dimen/margin_small"
+                                    android:paddingBottom="@dimen/margin_small"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp"
+                                    android:textAllCaps="true"
                                     android:text="@string/recently_viewed"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
@@ -746,7 +776,7 @@
                                             android:layout_marginEnd="@dimen/margin_tiny"
                                             android:maxLines="1"
                                             android:textColor="@color/text_light"
-                                            android:textSize="@dimen/text_size_body"
+                                            android:textSize="@dimen/text_size_caption1"
                                             tools:text="$1120.50" />
 
                                         <ImageButton
@@ -776,7 +806,7 @@
                                             android:maxLines="1"
                                             android:text="WAS"
                                             android:textColor="@color/text_dark"
-                                            android:textSize="@dimen/text_size_caption2" />
+                                            android:textSize="@dimen/text_size_caption1" />
 
                                         <TextView
                                             android:id="@+id/productPrice"
@@ -815,16 +845,16 @@
                                             android:maxLines="1"
                                             android:text="Extra 10% Off"
                                             android:textColor="@color/banner_discount_color"
-                                            android:textSize="@dimen/text_size_caption2" />
+                                            android:textSize="@dimen/text_size_caption1" />
 
                                         <TextView
                                             android:id="@+id/productDiscountPrice"
-                                            fontPath="@string/font_app_regular"
+                                            fontPath="@string/font_app_bold"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:maxLines="1"
                                             android:textColor="@color/banner_discount_color"
-                                            android:textSize="@dimen/text_size_headline3"
+                                            android:textSize="@dimen/text_size_headline2"
                                             tools:text="$1000.00" />
 
                                     </LinearLayout>
