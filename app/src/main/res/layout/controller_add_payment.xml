@@ -23,10 +23,10 @@
                 android:id="@+id/address_office_delivery_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_default_half"
                 android:layout_marginLeft="@dimen/padding_default"
-                android:layout_marginRight="@dimen/padding_default"
                 android:layout_marginTop="@dimen/padding_default"
+                android:layout_marginRight="@dimen/padding_default"
+                android:layout_marginBottom="@dimen/padding_default_half"
                 android:text="@string/enter_card_details"
                 android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_caption2" />
@@ -35,13 +35,29 @@
                 android:id="@+id/card_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <include
-                layout="@layout/partial_add_payment_cardform"
-                android:id="@+id/stripe_form_layout"/>
+                android:id="@+id/stripe_form_layout"
+                layout="@layout/partial_add_payment_cardform" />
 
-            <include layout="@layout/partial_checkout_button" />
+            <include
+                android:id="@+id/add_payment_checkout_buttons"
+                layout="@layout/partial_checkout_button" />
+
+            <Button
+                android:id="@+id/add_payment_add_button"
+                style="@style/DDButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_regular"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="Add"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:layout_marginTop="@dimen/padding_default"
+                android:layout_marginRight="@dimen/padding_default"
+                android:textSize="@dimen/text_size_headline2"
+                android:visibility="gone" />
 
         </LinearLayout>
 
