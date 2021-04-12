@@ -70,7 +70,10 @@ public class GateKeeper {
         STRICT_CONSENT_UI,
         MY_ACCOUNTS_OURPAY,
         MY_ACCOUNTS_SELECT,
-        COMMON_WEBVIEW
+        COMMON_WEBVIEW,
+        CURRENT_RETURNS_INFO,
+        NEW_RETURNS_INFO,
+        NEW_RETURNS_SUCCESS
         //add more destinations
     }
 

@@ -4,100 +4,51 @@ package au.com.dealsdirect.data.network.model.returns.createreturn;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CreateReturnRequestResponse {
+import java.util.List;
 
-    @SerializedName("__type")
+public class CreateReturnRequestResponse {
+    @SerializedName("messages")
     @Expose
-    private String type;
-    @SerializedName("IsAuthenticated")
-    @Expose
-    private Boolean isAuthenticated;
-    @SerializedName("Value")
-    @Expose
-    private Value value;
-    @SerializedName("Result")
-    @Expose
-    private Boolean result;
-    @SerializedName("Message")
-    @Expose
-    private String message;
-    @SerializedName("ID")
+    private List<String> messages;
+    @SerializedName("id")
     @Expose
     private String id;
-    @SerializedName("InvoiceNo")
+    @SerializedName("invoice_number")
     @Expose
     private String invoiceNumber;
-    @SerializedName("ReasonForReturn")
+    @SerializedName("reason")
     @Expose
-    private String reasonForReturn;
+    private String reason;
 
-    public String getType() {
-        return type;
+    public List<String> getMessages() {
+        return messages;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Boolean getIsAuthenticated() {
-        return isAuthenticated;
-    }
-
-    public void setIsAuthenticated(Boolean isAuthenticated) {
-        this.isAuthenticated = isAuthenticated;
-    }
-
-    public Boolean getResult() {
-        return result;
-    }
-
-    public void setResult(Boolean result) {
-        this.result = result;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Value getValue() {
-        return value;
-    }
-
-    public class Value {
-        @SerializedName("ID")
-        private String returnId;
-        @SerializedName("InvoiceNo")
-        private String invoiceNumber;
-        @SerializedName("ReasonForReturn")
-        private String reasonForReturn;
-
-        public String getReturnId() {
-            return returnId;
-        }
-
-        public String getInvoiceNumber() {
-            return invoiceNumber;
-        }
-
-        public String getReasonForReturn() {
-            return reasonForReturn;
-        }
+    public void setMessages(List<String> messages) {
+        this.messages = messages;
     }
 
     public String getId() {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
 
-    public String getReasonForReturn() {
-        return reasonForReturn;
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 }

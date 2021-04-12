@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.returns.returnorders.List;
+import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
+import au.com.dealsdirect.data.network.model.returns.returnorders.ReturnOrdersList;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import butterknife.BindView;
@@ -21,10 +23,10 @@ import butterknife.ButterKnife;
  */
 public class ReturnOrdersImageAdapter extends RecyclerView.Adapter<ReturnOrdersImageAdapter.ReturnOrdersImageViewHolder> {
 
-    private java.util.List<List.ItemImages> mItemImageList = new ArrayList<>();
+    private List<GetReturnOrders.Item> mItems;
 
-    public ReturnOrdersImageAdapter(java.util.List<List.ItemImages> itemImagesList) {
-        mItemImageList = itemImagesList;
+    public ReturnOrdersImageAdapter(List<GetReturnOrders.Item> items) {
+        mItems = items;
     }
 
     @NonNull
@@ -37,8 +39,7 @@ public class ReturnOrdersImageAdapter extends RecyclerView.Adapter<ReturnOrdersI
     @Override
     public void onBindViewHolder(@NonNull ReturnOrdersImageViewHolder holder, int position) {
 
-        String imageUrl = LegacyStringImageUtils.generateImageUrl(mItemImageList.get(position).getBrandId(),
-                mItemImageList.get(position).getImageId(), mItemImageList.get(position).getFileName());
+        final String imageUrl = mItems.get(position).getImageUrl();
 
         ImageUtils.loadImage(imageUrl, holder.currentReturnImage);
 
@@ -46,7 +47,7 @@ public class ReturnOrdersImageAdapter extends RecyclerView.Adapter<ReturnOrdersI
 
     @Override
     public int getItemCount() {
-        return mItemImageList.size();
+        return mItems.size();
     }
 
     static class ReturnOrdersImageViewHolder extends RecyclerView.ViewHolder {

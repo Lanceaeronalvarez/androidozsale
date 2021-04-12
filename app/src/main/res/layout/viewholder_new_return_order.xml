@@ -92,7 +92,7 @@
 
                         <TextView
                             android:fontFamily="@string/font_app_regular"
-                            android:id="@+id/new_returns_order_item_count_value"
+                            android:id="@+id/new_returns_order_item_size_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#9e9e9e"
