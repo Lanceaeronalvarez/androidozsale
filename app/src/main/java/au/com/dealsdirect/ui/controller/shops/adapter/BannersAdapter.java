@@ -56,12 +56,12 @@ import static android.graphics.Typeface.BOLD;
  * dp Created by Admin on 6/7/17.
  */
 
-public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ResettableDimensions {
+public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyRecyclerHeadersAdapter, ResettableDimensions {
 
     private int mOrientation;
 
     private int mComputedHeight = -1;
-    private final List<GetBannerResponse.Group> mGroups = new ArrayList<>();
+    private List<GetBannerResponse.Group> mGroups = new ArrayList<>();
     private final List<GetBannerResponse.Banner> mSales = new ArrayList<>();
     private GetBannerResponse.Banner promoBanner;
     private Activity mActivity;
@@ -453,7 +453,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                     String imgUrl;
 
-                    imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), width, height, !useOldBannerDimensions);
+                    imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), width, height);
 
 
                     ImageUtils.loadImageWithPriority(imgUrl, bannerViewHolder.image, Priority.HIGH);
@@ -564,7 +564,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    @Nullable
     private String titleForHeader(int position) {
         synchronized (mSales) {
             if (position == getPositionOfSponsoredBanners()) {
@@ -576,6 +575,25 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             return null;
         }
+    }
+
+    @Override
+    public long getHeaderId(int position) {
+        String title = titleForHeader(position);
+        return title == null ? -1 : title.hashCode() * 10 + mOrientation;
+    }
+
+    @Override
+    public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_banner_header, parent, false);
+        return new HeaderViewHolder(view);
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        HeaderViewHolder holder = (HeaderViewHolder) viewHolder;
+        String title = titleForHeader(position);
+        holder.headerText.setText(title == null ? "" : title);
     }
 
     @Override
@@ -725,7 +743,9 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (useOldBannerDimensions) {
                 mComputedHeight = (int) grid.getItemHeight();
             } else {
-                mComputedHeight = (int) (grid.getItemHeight() + mActivity.getResources().getDimension(R.dimen.banner_sale_info_height));
+                final float margins = mActivity.getResources().getDimension(R.dimen.margin_tiny) * 2f;
+                final float ratio = (float) mHeight / (float) mWidth;
+                mComputedHeight = (int) ((grid.getItemWidth() - margins) * ratio + margins);
             }
 
             setupSlidingBannersDimensions();
@@ -768,7 +788,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return new ImageUtils.Grid(
                 1,
                 grid.getItemWidth(),
-                grid.getItemHeight() + mActivity.getResources().getDimension(R.dimen.banner_sale_info_height) + mActivity.getResources().getDimension(R.dimen.horizontal_banner_circle_indicator_height));
+                grid.getItemHeight() + mActivity.getResources().getDimension(R.dimen.horizontal_banner_circle_indicator_height));
     }
 
     private void setupSlidingBannersDimensions() {
@@ -779,7 +799,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mSlidingBannersAdapter.setupDimensions(
                     (int) slidingBannersGrid.getItemWidth(),
                     (int) slidingBannersGrid.getItemHeight());
-            mSlidingBannersAdapter.setUseHigherResolution(true);
+            mSlidingBannersAdapter.setUseHigherResolution(!useOldBannerDimensions);
         }
     }
 
@@ -1017,39 +1037,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private void preloadImageForBanner(GetBannerResponse.Banner banner) {
         final int width = banner == promoBanner ? mWidthForPromoBanner : mWidth;
         final int height = banner == promoBanner ? mHeightForPromoBanner : mHeight;
-        final String imgUrl = ImageUtils.appendBannerSizeUrl(banner.getImage(), width, height, !useOldBannerDimensions);
+        final String imgUrl = ImageUtils.appendBannerSizeUrl(banner.getImage(), width, height);
 
         ImageUtils.preLoadImage(imgUrl, mActivity);
-    }
-
-    public StickyRecyclerHeadersAdapter getStickyRecyclerHeadersAdapter() {
-        return new StickyRecyclerHeadersAdapter() {
-            @Override
-            public long getHeaderId(int position) {
-                String title = titleForHeader(position);
-                if (title != null) {
-                    return title.hashCode();
-                }
-                return -1;
-            }
-
-            @Override
-            public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_banner_header, parent, false);
-                return new HeaderViewHolder(view);
-            }
-
-            @Override
-            public void onBindHeaderViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-                HeaderViewHolder holder = (HeaderViewHolder) viewHolder;
-                String title = titleForHeader(position);
-                holder.headerText.setText(title == null ? "" : title);
-            }
-
-            @Override
-            public int getItemCount() {
-                return BannersAdapter.this.getItemCount();
-            }
-        };
     }
 }

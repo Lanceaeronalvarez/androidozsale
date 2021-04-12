@@ -339,5 +339,4 @@
 
     <dimen name="controller_brand_bubbles_height">40dp</dimen>
 
-    <dimen name="banner_sale_info_height">48dp</dimen>
 </resources>

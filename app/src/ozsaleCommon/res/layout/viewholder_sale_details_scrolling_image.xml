@@ -19,7 +19,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/viewholder_horizontal_scrolling_banner_indicator"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/horizontal_banner_circle_indicator_height"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:isScrollContainer="true"
             android:overScrollMode="never"
