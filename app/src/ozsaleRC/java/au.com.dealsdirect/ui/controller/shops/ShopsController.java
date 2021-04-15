@@ -340,7 +340,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 }
             };
 
-            shopsControllerBannerRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBannersAdapter));
+            shopsControllerBannerRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBannersAdapter.getStickyRecyclerHeadersAdapter()));
         } else {
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
             mShopsControllerToolbarTextView.setText("Brands");
@@ -714,6 +714,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (!slidingBanners.isEmpty()) {
                 adapter = new HorizontalScrollingBannerAdapter();
                 adapter.setDataSource(slidingBanners);
+                adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.PromoBanner);
             }
         }
         mBannersAdapter.setSlidingBannersAdapter(adapter);

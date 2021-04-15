@@ -289,4 +289,6 @@
     <color name="brand_bubble">#D6D7DD</color>
 
     <color name="sold_out_background">#91000000</color>
+
+    <color name="banner_discount_background_color">#323232</color>
 </resources>
