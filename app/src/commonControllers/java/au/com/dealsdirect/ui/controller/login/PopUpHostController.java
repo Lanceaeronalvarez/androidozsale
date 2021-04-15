@@ -18,9 +18,6 @@ import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.checkout.ourpay.OurpaySMSVerificationController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
-import au.com.dealsdirect.ui.controller.returns.returninfo.CurrentReturnsInfoController;
-import au.com.dealsdirect.ui.controller.returns.returninfo.NewReturnInfoController;
-import au.com.dealsdirect.ui.controller.returns.returnsuccess.NewReturnSuccessController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -84,16 +81,6 @@ public class PopUpHostController extends BaseController implements PopUpHostMvpV
                 break;
             case AFTERPAY:
                 mPopUpHostChildRouter.setRoot(RouterTransaction.with(new AfterpayViewController(getArgs())));
-                break;
-            case CURRENT_RETURNS_INFO:
-                mPopUpHostChildRouter.setRoot(RouterTransaction.with(new CurrentReturnsInfoController(getArgs())));
-                break;
-            case NEW_RETURNS_INFO:
-                mPopUpHostChildRouter.setRoot(RouterTransaction.with(new NewReturnInfoController(getArgs())));
-                break;
-            case NEW_RETURNS_SUCCESS:
-                mPopUpHostChildRouter.setRoot(RouterTransaction.with(new NewReturnSuccessController(getArgs())));
-                break;
             default:
                 break;
         }

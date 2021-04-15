@@ -5,30 +5,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_default"
-    android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/controller_current_returns_recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:layout_alignParentBottom="true"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        android:paddingBottom="56dp"
-        android:visibility="gone"
-        app:rvp_flingFactor="0.15"
-        app:rvp_singlePageFling="true"
-        app:rvp_triggerOffset="0.25" />
+        android:layout_above="@+id/controller_current_returns_request_button"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/address_office_delivery_subtitle"
+            fontPath="@string/font_app_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_default"
+            android:layout_marginTop="@dimen/padding_default"
+            android:layout_marginRight="@dimen/padding_default"
+            android:layout_marginBottom="@dimen/padding_default_half"
+            android:text="@string/my_returns"
+            android:textAllCaps="true"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_caption2" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/controller_current_returns_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:visibility="gone"
+            app:rvp_flingFactor="0.15"
+            app:rvp_singlePageFling="true"
+            app:rvp_triggerOffset="0.25" />
+
+    </LinearLayout>
 
     <include
         layout="@layout/partial_no_returns_placeholder_layout"
         android:visibility="gone" />
-
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/partial_toolbar_arrow" />
 
     <Button
         android:id="@+id/controller_current_returns_request_button"
@@ -37,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/padding_default"
-        android:text="Request New Return"
+        android:text="@string/add_new_returns"
         android:textSize="@dimen/text_size_headline2"
         android:visibility="gone" />
 

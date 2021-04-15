@@ -4,16 +4,16 @@ package au.com.dealsdirect.ui.controller.returns.newreturn;
  */
 
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
-import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponse;
-import au.com.dealsdirect.data.network.model.returns.newreturn.ImageAttachment;
-import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnItem;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -33,8 +33,8 @@ public class NewReturnPresenter<V extends NewReturnMvpView> extends BasePresente
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                CreateReturnRequestResponse getNewReturnCreateResponse = (CreateReturnRequestResponse) response;
-                getMvpView().finishCreateReturnRequest(getNewReturnCreateResponse);
+                CreateReturnRequestResponseBody getNewReturnCreateResponse = (CreateReturnRequestResponseBody) response;
+                getMvpView().finishCreateReturnRequest(getNewReturnCreateResponse.getCreateReturnRequestResponse());
             }
 
             @Override
@@ -48,24 +48,33 @@ public class NewReturnPresenter<V extends NewReturnMvpView> extends BasePresente
 
     @Override
     public void getReturnOrderDetail(int invoiceNo) {
+        NewReturnOrderDetailRequest newReturnOrderDetailRequest = new NewReturnOrderDetailRequest();
+        newReturnOrderDetailRequest.invoiceNo = invoiceNo;
+
         doApiCallForResponse(getDataManager()
-                .callGetNewReturnOrderDetail(Integer.toString(invoiceNo)), new AppApiCallback() {
+                .callGetNewReturnOrderDetail(newReturnOrderDetailRequest), new AppApiCallback() {
             @Override
-            public void onSuccess(List<?> response) {
+            public void onSuccess(Object response) {
                 super.onSuccess(response);
-                getMvpView().loadReturnOrderDetail((List<NewReturnItem>) response);
+                NewReturnOrderDetailResponseBody getNewReturnOrderDetail = (NewReturnOrderDetailResponseBody) response;
+                getMvpView().loadReturnOrderDetail(getNewReturnOrderDetail.getNewReturnOrderDetailResponse());
             }
         });
     }
 
+    public void updateReturnValue(String itemId, int position, int productQuantityValue,
+                                  boolean isChecked, String productName) {
+        getMvpView().onReturnValueUpdated(itemId, position, productQuantityValue, isChecked, productName);
+    }
+
     @Override
-    public void setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest, boolean hasUploadedImage) {
-        doApiCallForResponse(getDataManager().setAttachment(returnId, setAttachmentRequest), new AppApiCallback() {
+    public void setAttachment(SetAttachmentRequest setAttachmentRequest, boolean hasUploadedImage) {
+        doApiCallForResponse(getDataManager().setAttachment(setAttachmentRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
-                final String setAttachmentResponse = ((String) response).replace("\"", "");
+                SetAttachmentResponse setAttachmentResponse = (SetAttachmentResponse) response;
 
                 if (!hasUploadedImage) {
                     getMvpView().getAttachmentId(setAttachmentResponse);

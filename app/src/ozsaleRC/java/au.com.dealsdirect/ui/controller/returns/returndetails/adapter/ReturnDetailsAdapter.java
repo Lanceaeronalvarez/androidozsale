@@ -1,19 +1,24 @@
 package au.com.dealsdirect.ui.controller.returns.returndetails.adapter;
 
+import android.content.Context;
+import androidx.recyclerview.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
+import java.util.Collections;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturn;
+import au.com.dealsdirect.data.network.model.returns.returndetails.Item;
 import au.com.dealsdirect.utils.ImageUtils;
+import au.com.dealsdirect.utils.LegacyStringImageUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,11 +29,20 @@ import butterknife.ButterKnife;
 
 public class ReturnDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<CurrentReturn.Item> mReturnDetailsList;
+    private int lastPosition = -1;
+
+    List<Item> mReturnDetailsList = Collections.emptyList();
+    double mSubTotal;
+    Context mContext;
 
     public ReturnDetailsAdapter(
-            List<CurrentReturn.Item> orderList) {
+            List<Item> orderList,
+            double subtotal,
+            Context context){
+
+        this.mSubTotal = subtotal;
         this.mReturnDetailsList = orderList;
+        this.mContext = context;
     }
 
 
@@ -42,42 +56,66 @@ public class ReturnDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        final ReturnDetailsViewHolder viewHolder = (ReturnDetailsViewHolder) holder;
-        final CurrentReturn.Item item = mReturnDetailsList.get(position);
-        viewHolder.myReturnsDetailsPriceValueTextView.setText(PriceUtils.getPriceStringValue(item.getPrice()));
-        viewHolder.myReturnsDetailsSubTotalValueTextView.setText(PriceUtils.getPriceStringValue(item.getPriceTotal()));
-        viewHolder.myReturnsDetailsProductItemCountValueTextView.setText(Integer.toString(item.getQuantity()));
-        viewHolder.myReturnsDetailsProductItemSizeValueTextView.setText(item.getSize());
-        viewHolder.myReturnsDetailsTitleTextView.setText(item.getName());
+        String itemCost = PriceUtils.getPriceStringValue(mReturnDetailsList.get(position).getPrice());
+        String itemSubTotal = PriceUtils.getPriceStringValue(mReturnDetailsList.get(position).getSubTotal());
 
-        ImageUtils.loadImage(item.getImageUrl(), viewHolder.myReturnsDetailsProductImageView);
+        Log.d("itemiterator", "position = "+position );
+        String itemSize = mReturnDetailsList.get(position).getSize();
+        String brandId = mReturnDetailsList.get(position).getBrandID();
+        String imageId = mReturnDetailsList.get(position).getImageID();
+        String fileName = mReturnDetailsList.get(position).getFile();
+        int itemReturnCount = mReturnDetailsList.get(position).getCount();
+        Log.d("itemiterator", "position = "+position+ "itemssize  = "+itemSize +" , brandid = "+brandId+" , imageid = "+imageId );
+
+        String imageUrl = LegacyStringImageUtils.generateImageUrl(brandId,imageId,fileName);
+        ImageUtils.loadImage(imageUrl, ((ReturnDetailsViewHolder) holder).myReturnsDetailsProductImageView);
+
+
+        ((ReturnDetailsViewHolder) holder).myReturnsDetailsProductNameValueTextView.setText(mReturnDetailsList.get(position).getItem());
+        ((ReturnDetailsViewHolder) holder).myReturnsDetailsPriceValueTextView.setText(itemCost);
+        ((ReturnDetailsViewHolder) holder).myReturnsDetailsSubTotalValueTextView.setText(itemSubTotal);
+        ((ReturnDetailsViewHolder) holder).myReturnsDetailsProductItemCountValueTextView.setText(itemReturnCount+" ");
+
+        if (itemSize.isEmpty()){
+            ((ReturnDetailsViewHolder) holder).myReturnDetailSizeContainer.setVisibility(View.GONE);
+        }else{
+            ((ReturnDetailsViewHolder) holder).myReturnsDetailsProductItemSizeValueTextView.setText(itemSize);
+        }
+
     }
 
 
-    @Override
-    public int getItemCount() {
-        if (mReturnDetailsList == null) {
+    @Override public int getItemCount() {
+        if (mReturnDetailsList == null){
             return 0;
         }
         return mReturnDetailsList.size();
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    @Override public void onAttachedToRecyclerView(RecyclerView recyclerView){
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    static class ReturnDetailsViewHolder extends RecyclerView.ViewHolder {
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
+
+    class ReturnDetailsViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.viewholder_return_detail_row_container)
         public LinearLayout myReturnDetailItem;
         @BindView(R.id.viewholder_returns_details_size_container)
         public ViewGroup myReturnDetailSizeContainer;
         @BindView(R.id.viewholder_return_detail_image_view)
         public ImageView myReturnsDetailsProductImageView;
-        @BindView(R.id.viewholder_return_details_item_title)
-        public TextView myReturnsDetailsTitleTextView;
-        @BindView(R.id.viewholder_return_details_item_subtitle)
-        public TextView myReturnsDetailsSubtitleTextView;
+        @BindView(R.id.viewholder_return_details_item_name)
+        public TextView myReturnsDetailsProductNameValueTextView;
         @BindView(R.id.viewholder_returns_details_item_count_value)
         public TextView myReturnsDetailsProductItemCountValueTextView;
         @BindView(R.id.viewholder_returns_details_size_value)

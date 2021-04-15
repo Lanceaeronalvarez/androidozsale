@@ -15,6 +15,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponse;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnMvpView;
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnPresenter;

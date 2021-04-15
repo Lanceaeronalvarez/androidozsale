@@ -5,21 +5,19 @@ package au.com.dealsdirect.ui.controller.returns.returndetails;
 
 
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
-import au.com.dealsdirect.data.network.model.returns.createreturn.ReturnReceivedRequest;
-import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturn;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
+import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponseBody;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface ReturnDetailsMvpView extends MvpView {
 
-    void showCurrentReturnDetails(CurrentReturn item);
+    void showCurrentReturnDetails(GetReturnDetailsResponseBody getReturnDetailsResponseBody);
 
     void showContactMessageReturn(GetContactHistoryResponse responseValue);
 
-    void refreshReturnDetails(String setAttachmentResponse);
+    void refreshReturnDetails(SetAttachmentResponse setAttachmentResponse);
 
     void getImageUrl(String imageUrl);
 
     void finishedSendMessage(String response);
-
-    void returnSatisfactionReceived(ReturnReceivedRequest request, boolean hasSetSatisfactionAlready);
 }

@@ -4,7 +4,7 @@ package au.com.dealsdirect.ui.controller.returns.returndetails;
  */
 
 
-import java.util.List;
+import com.androidnetworking.error.ANError;
 
 import javax.inject.Inject;
 
@@ -13,20 +13,17 @@ import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
-import au.com.dealsdirect.data.network.model.returns.createreturn.ReturnReceivedRequest;
-import au.com.dealsdirect.data.network.model.returns.createreturn.ReturnReceivedSatisfactionResponse;
-import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturn;
-import au.com.dealsdirect.data.network.model.returns.newreturn.ImageAttachment;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequestOld;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponseOld;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
+import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 public class ReturnDetailsPresenter<V extends ReturnDetailsMvpView> extends BasePresenter<V> implements ReturnDetailsMvpPresenter<V> {
-
-    private Disposable setReturnReceivedRequestDisposable = null;
 
     @Inject
     public ReturnDetailsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
@@ -35,18 +32,37 @@ public class ReturnDetailsPresenter<V extends ReturnDetailsMvpView> extends Base
 
     @Override
     public void loadCurrentReturnDetails(String returnId) {
-        doApiCallForResponse(getDataManager().callGetReturnDetails(returnId), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                getMvpView().showCurrentReturnDetails((CurrentReturn) response);
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
-            }
-        });
+        GetReturnDetailRequest getReturnDetailRequest = new GetReturnDetailRequest(returnId);
+
+        getCompositeDisposable()
+                .add(getDataManager()
+                        .callGetReturnDetails(getReturnDetailRequest)
+                        .subscribeOn(getSchedulerProvider().io())
+                        .observeOn(getSchedulerProvider().ui())
+                        .subscribe(getReturnDetail -> {
+
+                            if (!isViewAttached()) {
+                                return;
+                            }
+                            getMvpView().hideLoading();
+                            getMvpView().showCurrentReturnDetails(getReturnDetail.getGetReturnDetailsResponseBody());
+
+                        }, throwable -> {
+
+                            if (!isViewAttached()) {
+                                return;
+                            }
+
+                            getMvpView().hideLoading();
+                            getMvpView().onError(throwable.getMessage());
+
+                            // handle load accounts error here
+                            if (throwable instanceof ANError) {
+                                ANError anError = (ANError) throwable;
+                                handleApiError(anError);
+                            }
+                        }));
     }
 
     @Override
@@ -70,17 +86,14 @@ public class ReturnDetailsPresenter<V extends ReturnDetailsMvpView> extends Base
     }
 
     @Override
-    public void setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest) {
-        doApiCallForResponse(getDataManager().setAttachment(returnId, setAttachmentRequest), new AppApiCallback() {
+    public void setAttachment(SetAttachmentRequest setAttachmentRequest) {
+        doApiCallForResponse(getDataManager().setAttachment(setAttachmentRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
-                String attachmentId = "";
-                if (response instanceof String) {
-                    attachmentId = ((String) response).replace("\"", "");
-                }
-                getMvpView().refreshReturnDetails(attachmentId);
+                SetAttachmentResponse setAttachmentResponse = (SetAttachmentResponse) response;
+                getMvpView().refreshReturnDetails(setAttachmentResponse);
 
             }
 
@@ -107,17 +120,14 @@ public class ReturnDetailsPresenter<V extends ReturnDetailsMvpView> extends Base
     }
 
     @Override
-    public void sendMessage(String returnId, CreateContactRequest createContactRequest) {
+    public void sendMessage(CreateContactRequestOld createContactRequest) {
 
-        doApiCallForResponse(getDataManager().callCreateContact(createContactRequest), new AppApiCallback() {
+        doApiCallForResponse(getDataManager().callCreateContactOld(createContactRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                try {
-                    setContactNumberForReturns(returnId, Integer.parseInt((String) response));
-                } catch (NumberFormatException ignore) {
-                    getMvpView().finishedSendMessage("");
-                }
+                CreateContactResponseOld myContactSubject = (CreateContactResponseOld) response;
+                getMvpView().finishedSendMessage(myContactSubject.getCreateContact().getMessage());
             }
         });
     }
@@ -136,63 +146,10 @@ public class ReturnDetailsPresenter<V extends ReturnDetailsMvpView> extends Base
 
     }
 
-    private void setContactNumberForReturns(String returnId, int contactNumber) {
-        doApiCallForResponse(getDataManager().callSetContactForReturns(returnId, contactNumber), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                getMvpView().finishedSendMessage((String) response);
-            }
-        });
-    }
-
     @Override
     public int getImageLimit() {
         return getDataManager().getFileSizeLimit();
     }
 
 
-    @Override
-    public void callSetReturnReceived(ReturnReceivedRequest receivedRequest) {
-        cancelPreviousSetReturnReceivedRequest();
-        setReturnReceivedRequestDisposable = doApiCallForResponse(
-                getDataManager().callSetReturnReceived(receivedRequest), new AppApiCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        super.onSuccess(response);
-                    }
-                });
-    }
-
-    @Override
-    public void callSetReturnNotReceived(ReturnReceivedRequest receivedRequest) {
-        cancelPreviousSetReturnReceivedRequest();
-        setReturnReceivedRequestDisposable = doApiCallForResponse(
-                getDataManager().callSetReturnNotReceived(receivedRequest), new AppApiCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        super.onSuccess(response);
-                    }
-                });
-    }
-
-    private void cancelPreviousSetReturnReceivedRequest() {
-        if (setReturnReceivedRequestDisposable != null) {
-            getCompositeDisposable().delete(setReturnReceivedRequestDisposable);
-            setReturnReceivedRequestDisposable = null;
-        }
-    }
-
-    @Override
-    public void callGetReturnReceivedSatisfaction(ReturnReceivedRequest receivedRequest) {
-        doApiCallForResponse(getDataManager().callGetReturnReceivedSatisfaction(receivedRequest), new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                getMvpView().returnSatisfactionReceived(
-                        receivedRequest,
-                        response instanceof ReturnReceivedSatisfactionResponse && ((ReturnReceivedSatisfactionResponse) response).getHasRating());
-            }
-        });
-    }
 }

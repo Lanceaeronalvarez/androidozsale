@@ -8,6 +8,7 @@ import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryReq
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
 import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -82,7 +83,10 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
 
                 if (!hasUploadedImage) {
                     String attachmentId = "";
-                    if (response instanceof String) {
+                    if (response instanceof SetAttachmentResponse) {
+                        SetAttachmentResponse setAttachmentResponse = (SetAttachmentResponse) response;
+                        attachmentId = setAttachmentResponse.getD().getValue();
+                    } else if (response instanceof String) {
                         attachmentId = ((String) response).replace("\"", "");
                     }
                     getMvpView().setAttachmentId(attachmentId);

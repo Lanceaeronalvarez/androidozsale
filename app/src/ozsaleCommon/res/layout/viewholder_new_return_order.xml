@@ -6,7 +6,8 @@
     android:orientation="vertical"
     tools:ignore="HardcodedText,MissingPrefix">
 
-    <LinearLayout
+
+    <RelativeLayout
         android:id="@+id/new_return_item_set_detail_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,76 +16,55 @@
         android:orientation="vertical"
         android:padding="@dimen/margin_extra_small">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/border_thin"
-            android:background="@color/border_regular" />
-
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/header_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                fontPath="@string/font_app_regular"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:text="Invoice"
-                android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_caption2" />
+                android:layout_weight="4"
+                android:padding="@dimen/padding_default"
+                tools:text="Invoice" />
 
             <TextView
                 android:id="@+id/new_return_item_invoice"
-                fontPath="@string/font_app_bold"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
+                android:layout_weight="9"
                 android:padding="@dimen/padding_default"
-                android:text="Philosophy Cotton Sleeveless Plain"
-                android:textColor="@color/text_extra_dark"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="Philosophy Cotton Sleeveless Plain" />
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                android:padding="@dimen/margin_small"
+                android:layout_weight="1"
                 android:src="@drawable/ic_gray_chevron" />
 
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/border_thin"
-            android:background="@color/border_regular" />
+        </LinearLayout>
 
         <LinearLayout
+            android:layout_below="@+id/header_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/header_container"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small">
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:orientation="horizontal">
 
             <CheckBox
                 android:id="@+id/new_return_item_detail_checkbox"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/viewholder_return_order_checkbox_height"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:layout_marginRight="@dimen/margin_small"
-                android:button="@drawable/circular_checkbox" />
+                android:layout_height="@dimen/viewholder_return_order_checkbox_height" />
 
             <ImageView
                 android:id="@+id/new_return_detail_item_image"
                 android:layout_width="@dimen/viewholder_return_order_image_width"
                 android:layout_height="@dimen/viewholder_return_order_image_height"
-                android:layout_marginRight="@dimen/margin_tiny"
+                android:padding="@dimen/margin_extra_small"
                 android:scaleType="fitCenter" />
 
             <LinearLayout
@@ -95,43 +75,41 @@
 
                 <TextView
                     android:id="@+id/new_return_request_item_name"
-                    fontPath="@string/font_app_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="2"
                     android:paddingEnd="@dimen/margin_extra_large"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:text="Philosophy Cotton Sleeveless Plain"
                     android:textColor="@color/text_extra_dark"
-                    android:textSize="@dimen/text_size_caption1"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/text_size_caption1" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_tiny"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginTop="@dimen/margin_tiny">
 
 
                     <LinearLayout
+                        android:id="@+id/new_returns_order_item_total_cost_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_tiny"
-                        android:visibility="gone">
+                        android:layout_marginTop="@dimen/margin_tiny">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Size:"
+                            android:text="Quantity:"
                             android:textSize="@dimen/text_size_caption2" />
 
                         <TextView
-                            android:id="@+id/new_returns_order_item_size_value"
+                            android:id="@+id/new_returns_order_item_count_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_extra_small"
-                            android:text="Small"
+                            tools:text="0"
                             android:textColor="@color/text_extra_dark"
+                            android:layout_marginStart="@dimen/margin_extra_small"
                             android:textSize="@dimen/text_size_caption2" />
 
                     </LinearLayout>
@@ -141,23 +119,19 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            fontPath="@string/font_app_regular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Item Price: "
-                            android:textColor="@color/text_extra_dark"
-                            android:textSize="@dimen/text_size_caption2" />
+                            android:text="Price: "
+                            android:textSize="@dimen/text_size_caption2"/>
 
                         <TextView
                             android:id="@+id/new_return_item_price"
-                            fontPath="@string/font_app_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_extra_small"
-                            android:text="$89.00"
                             android:textColor="@color/text_extra_dark"
+                            android:layout_marginLeft="@dimen/margin_extra_small"
                             android:textSize="@dimen/text_size_caption2"
-                            android:textStyle="bold" />
+                            tools:text="$89.00" />
 
                     </LinearLayout>
 
@@ -166,23 +140,19 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            fontPath="@string/font_app_regular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Subtotal: "
-                            android:textColor="@color/text_extra_dark"
-                            android:textSize="@dimen/text_size_caption2" />
+                            android:textSize="@dimen/text_size_caption2"/>
 
                         <TextView
                             android:id="@+id/new_returns_order_subtotal"
-                            fontPath="@string/font_app_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_extra_small"
-                            android:text="$12.00"
                             android:textColor="@color/text_extra_dark"
                             android:textSize="@dimen/text_size_caption2"
-                            android:textStyle="bold"
+                            android:layout_marginLeft="@dimen/margin_extra_small"
+                            tools:text="$12.00"
                             tools:ignore="HardcodedText" />
                     </LinearLayout>
 
@@ -198,7 +168,7 @@
             </LinearLayout>
 
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
     <View
         android:id="@+id/my_returns_set_detail_item_divider"

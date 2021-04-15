@@ -4,13 +4,10 @@ package au.com.dealsdirect.ui.controller.returns.returndetails;
  */
 
 
-import java.util.List;
-
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
-import au.com.dealsdirect.data.network.model.returns.createreturn.ReturnReceivedRequest;
-import au.com.dealsdirect.data.network.model.returns.newreturn.ImageAttachment;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequestOld;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface ReturnDetailsMvpPresenter<V extends ReturnDetailsMvpView> extends MvpPresenter<V> {
@@ -19,7 +16,7 @@ public interface ReturnDetailsMvpPresenter<V extends ReturnDetailsMvpView> exten
 
     void loadReturnContacts(GetContactHistoryRequest request);
 
-    void setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest);
+    void setAttachment(SetAttachmentRequest setAttachmentRequest);
 
     String getUserAgent();
 
@@ -27,15 +24,9 @@ public interface ReturnDetailsMvpPresenter<V extends ReturnDetailsMvpView> exten
 
     String getEventUserId();
 
-    void sendMessage(String returnId, CreateContactRequest createContactRequest);
+    void sendMessage(CreateContactRequestOld createContactRequest);
 
     void replyMessage(ReplyContactRequest replyContactRequest);
 
     int getImageLimit();
-
-    void callSetReturnReceived(ReturnReceivedRequest receivedRequest);
-
-    void callSetReturnNotReceived(ReturnReceivedRequest receivedRequest);
-
-    void callGetReturnReceivedSatisfaction(ReturnReceivedRequest receivedRequest);
 }

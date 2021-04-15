@@ -59,8 +59,8 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.controller.orders.tracking.OrderTrackingClickListener;
-import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsListener;
+import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
@@ -195,8 +195,9 @@ public class AddContactController extends BaseController
                 case "request_return":
                     getRouter().popToRoot();
                     mActivity.getAccountController().showMyReturns();
+                    // TODO: implmenet going straight to new return; need to migrate my returns first
                     mActivity.getAccountController().getDisplayRouter()
-                            .pushController(RouterTransaction.with(NewReturnController.newInstance(mInvoiceNumber, false, null))
+                            .pushController(RouterTransaction.with(ReturnOrdersController.newInstance())
                                     .pushChangeHandler(new HorizontalChangeHandler())
                                     .popChangeHandler(new HorizontalChangeHandler()));
                     break;

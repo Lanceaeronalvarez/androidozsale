@@ -13,9 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
         android:orientation="horizontal"
-        android:paddingTop="64dp"
-        android:clipToPadding="false"
-        android:clipChildren="false"
         tools:ignore="UselessParent">
 
         <View

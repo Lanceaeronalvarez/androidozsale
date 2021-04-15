@@ -61,6 +61,8 @@ import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequestOld;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponseOld;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
@@ -126,12 +128,14 @@ import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
 import au.com.dealsdirect.data.network.model.returns.FileSettingsResponse;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
-import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponse;
-import au.com.dealsdirect.data.network.model.returns.createreturn.ReturnReceivedRequest;
-import au.com.dealsdirect.data.network.model.returns.createreturn.ReturnReceivedSatisfactionResponse;
-import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturn;
-import au.com.dealsdirect.data.network.model.returns.newreturn.ImageAttachment;
-import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnItem;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
+import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
+import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
@@ -869,6 +873,16 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<CreateContactResponseOld> callCreateContactOld(CreateContactRequestOld createContactRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.createContactOld())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(createContactRequest))
+                .build()
+                .getObjectObservable(CreateContactResponseOld.class);
+    }
+
+
+    @Override
     public Observable<String> callCreateContact(CreateContactRequest createContactRequest) {
         return Rx2AndroidNetworking.put(ApiEndPoint.createContact())
                 .addHeaders(mApiHeader.get())
@@ -1053,88 +1067,48 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<List<CurrentReturn>> callGetCurrentReturns() {
+    public Observable<CurrentReturnResponseBody> callGetCurrentReturns() {
         return Rx2AndroidNetworking.post(ApiEndPoint.getReturns())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
                 .build()
-                .getObjectListObservable(CurrentReturn.class);
+                .getObjectObservable(CurrentReturnResponseBody.class);
     }
 
     @Override
-    public Observable<List<GetReturnOrders>> callGetReturnOrders() {
+    public Observable<GetReturnOrders> callGetReturnOrders() {
         return Rx2AndroidNetworking.post(ApiEndPoint.getReturnOrders())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(null))
                 .build()
-                .getObjectListObservable(GetReturnOrders.class);
+                .getObjectObservable(GetReturnOrders.class);
     }
 
     @Override
-    public Observable<CurrentReturn> callGetReturnDetails(String returnId) {
+    public Observable<GetReturnDetailsResponse> callGetReturnDetails(GetReturnDetailRequest getReturnDetailRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getReturnDetails())
                 .addHeaders(mApiHeader.get())
-                .addPathParameter("return_id", returnId)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(getReturnDetailRequest))
                 .build()
-                .getObjectObservable(CurrentReturn.class);
+                .getObjectObservable(GetReturnDetailsResponse.class);
     }
 
     @Override
-    public Observable<String> callSetContactForReturns(String returnId, int contactNumber) {
-        return Rx2AndroidNetworking.put(ApiEndPoint.setContactForReturns())
-                .addHeaders(mApiHeader.get())
-                .addPathParameter("return_id", returnId)
-                .addPathParameter("contact_number", Integer.toString(contactNumber))
-                .doNotCacheResponse()
-                .build()
-                .getStringObservable();
-    }
-
-    @Override
-    public Observable<List<NewReturnItem>> callGetNewReturnOrderDetail(String invoiceNumber) {
+    public Observable<NewReturnOrderDetailResponseBody> callGetNewReturnOrderDetail(NewReturnOrderDetailRequest newReturnOrderDetailRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getReturnOrderDetail())
                 .addHeaders(mApiHeader.get())
-                .addPathParameter("invoice_number", invoiceNumber)
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(newReturnOrderDetailRequest))
                 .build()
-                .getObjectListObservable(NewReturnItem.class);
+                .getObjectObservable(NewReturnOrderDetailResponseBody.class);
     }
 
     @Override
-    public Observable<CreateReturnRequestResponse> callCreateReturnRequest(CreateReturnRequest createReturnRequest) {
-        return Rx2AndroidNetworking.put(ApiEndPoint.createReturn())
+    public Observable<CreateReturnRequestResponseBody> callCreateReturnRequest(CreateReturnRequest createReturnRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.createReturn())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(createReturnRequest))
-                .doNotCacheResponse()
                 .build()
-                .getObjectObservable(CreateReturnRequestResponse.class);
-    }
-
-    @Override
-    public Observable<String> callSetReturnReceived(ReturnReceivedRequest receivedRequest) {
-        return Rx2AndroidNetworking.put(ApiEndPoint.callSetReturnReceived())
-                .addHeaders(mApiHeader.get())
-                .addPathParameter("return_id", receivedRequest.getReturnId())
-                .addJSONObjectBody(new JSONObject(receivedRequest.getSatisfactionMap()))
-                .build()
-                .getStringObservable();
-    }
-
-    @Override
-    public Observable<String> callSetReturnNotReceived(ReturnReceivedRequest receivedRequest) {
-        return Rx2AndroidNetworking.put(ApiEndPoint.callSetReturnNotReceived())
-                .addHeaders(mApiHeader.get())
-                .addPathParameter("return_id", receivedRequest.getReturnId())
-                .build()
-                .getStringObservable();
-    }
-
-    @Override
-    public Observable<ReturnReceivedSatisfactionResponse> callGetReturnReceivedSatisfaction(ReturnReceivedRequest receivedRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.callGetReturnReceivedSatisfaction())
-                .addHeaders(mApiHeader.get())
-                .addPathParameter("return_id", receivedRequest.getReturnId())
-                .build()
-                .getObjectObservable(ReturnReceivedSatisfactionResponse.class);
+                .getObjectObservable(CreateReturnRequestResponseBody.class);
     }
 
     @Override
@@ -1388,14 +1362,12 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<String> setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest) {
-        return Rx2AndroidNetworking.put(ApiEndPoint.setAttachment())
+    public Observable<SetAttachmentResponse> setAttachment(SetAttachmentRequest setAttachmentRequest) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.setAttachment())
                 .addHeaders(mApiHeader.get())
-                .addPathParameter("return_id", returnId)
-                .addJSONArrayBody(JsonUtils.convertToJsonArray(setAttachmentRequest))
-                .doNotCacheResponse()
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(setAttachmentRequest))
                 .build()
-                .getStringObservable();
+                .getObjectObservable(SetAttachmentResponse.class);
     }
 
     @Override

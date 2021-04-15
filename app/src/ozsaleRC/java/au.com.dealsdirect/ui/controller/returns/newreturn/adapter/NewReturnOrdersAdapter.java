@@ -1,19 +1,25 @@
 package au.com.dealsdirect.ui.controller.returns.newreturn.adapter;
 
 import android.content.Context;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnItem;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderList;
+import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnMvpPresenter;
 import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder;
-import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOrderViewHolder.ValueChangedListener;
+import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
+import au.com.dealsdirect.utils.ImageUtils;
+import au.com.dealsdirect.utils.LegacyStringImageUtils;
+import au.com.dealsdirect.utils.PriceUtils;
 
 /**
  * dp Created by Admin on 7/25/17.
@@ -21,60 +27,116 @@ import au.com.dealsdirect.ui.controller.returns.newreturn.viewholder.NewReturnOr
 
 public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderViewHolder> {
 
-    private Boolean[] mDataChecked;
+    private NewReturnMvpPresenter mPresenter;
+    Boolean[] mDataChecked;
 
-    private List<NewReturnItem> mCurrentReturnList;
-    private Context mContext;
-    private String mProductId;
-    private int mInvoiceNumber;
-
-    private ValueChangedListener listener;
+    public HashMap<String, NewReturnOrderViewHolder> returnViewMap = new HashMap<>();
+    List<NewReturnOrderList> mCurrentReturnList = Collections.emptyList();
+    Context mContext;
+    String mProductId;
+    int mInvoiceNumber;
 
     public NewReturnOrdersAdapter(
-            List<NewReturnItem> orderList,
+            List<NewReturnOrderList> orderList,
             Context context,
-            ValueChangedListener listener,
+            NewReturnMvpPresenter mvpPresenter,
             String productId, int invoiceNumber) {
 
         mCurrentReturnList = orderList;
         mContext = context;
-        this.listener = listener;
+        mPresenter = mvpPresenter;
         mProductId = productId;
         mInvoiceNumber = invoiceNumber;
-        setupDataChecked();
-    }
-
-    private void setupDataChecked() {
         mDataChecked = new Boolean[mCurrentReturnList.size()];
-        for (int i = 0; i < mCurrentReturnList.size(); i++) {
-            final NewReturnItem item = mCurrentReturnList.get(i);
-            mDataChecked[i] = mProductId != null && !mProductId.isEmpty() && item.getId().equalsIgnoreCase(mProductId);
-        }
+        Arrays.fill(this.mDataChecked, false);
     }
 
-    @NonNull
     @Override
-    public NewReturnOrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public NewReturnOrderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.viewholder_new_return_order, parent, false);
-        return new NewReturnOrderViewHolder(v);
+        NewReturnOrderViewHolder holder = new NewReturnOrderViewHolder(v);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(NewReturnOrderViewHolder holder, int position) {
-        final NewReturnItem item = mCurrentReturnList.get(position);
 
-        holder.setup(item, mInvoiceNumber);
+        String productId = mCurrentReturnList.get(position).getID();
+        String productName = mCurrentReturnList.get(position).getItem();
+        int productItemCount = mCurrentReturnList.get(position).getCount();
+        String productPrice = PriceUtils.getPriceStringValue(mCurrentReturnList.get(position).getPrice());
+        String productSubTotal = PriceUtils.getPriceStringValue(mCurrentReturnList.get(position).getSubtotal());
 
-        final ValueChangedListener itemListener = (item1, isChecked) -> {
-            mDataChecked[position] = isChecked;
-            if (listener != null) {
-                listener.updateReturnValue(item1, isChecked);
+        holder.newReturnItemQuantityText.setText(String.valueOf(productItemCount));
+        holder.newReturnItemPriceTextView.setText(productPrice);
+        holder.newReturnItemSubTotalTextView.setText(productSubTotal);
+        holder.newReturnItemNameTextView.setText(productName);
+
+        holder.productQuantityLayout.setMax(productItemCount);
+        holder.productQuantityLayout.setQuantity(1);
+        holder.productQuantityLayout.setEditTextToNonEditable();
+
+        String invoiceNumber = mContext.getResources().getString(R.string.invoice_text)+ " " +
+                mInvoiceNumber;
+        holder.newReturnInvoiceText.setText(invoiceNumber);
+
+        if (mProductId != null && !mProductId.isEmpty()) {
+            if (productId.equalsIgnoreCase(mProductId)) {
+                holder.newReturnItemCheckBox.setChecked(true);
+                mDataChecked[position] = true;
+                int quantityVal = Integer.valueOf(holder.productQuantityLayout.getQuantity());
+                if(quantityVal == 0){
+                    holder.productQuantityLayout.setQuantity(1);
+                }
+                mPresenter.updateReturnValue(productId, position, Integer.valueOf(holder.productQuantityLayout.getQuantity()),
+                        true, productName);
+
+            } else {
+                holder.newReturnItemCheckBox.setChecked(mDataChecked[position]);
             }
-        };
+        } else {
+            holder.newReturnItemCheckBox.setChecked(mDataChecked[position]);
+        }
 
-        holder.setupCheckBox(item, mDataChecked[position], itemListener);
+        holder.newReturnItemCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mDataChecked[position] = isChecked;
+                int quantityVal = Integer.valueOf(holder.productQuantityLayout.getQuantity());
+                if(isChecked && quantityVal == 0){
+                    holder.productQuantityLayout.setQuantity(1);
+                }
+                mPresenter.updateReturnValue(productId, position, Integer.valueOf(holder.productQuantityLayout.getQuantity()),
+                        isChecked, productName);
+            }
+        });
 
-        holder.setupQuantityLayout(item, itemListener);
+        holder.productQuantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
+            @Override
+            public void onQuantityIncrease(ProductQuantityLayout view, int value) {
+                mPresenter.updateReturnValue(productId, position, value, mDataChecked[position], productName);
+                holder.productQuantityLayout.resetLoaders();
+            }
+
+            @Override
+            public void onQuantityDecrease(ProductQuantityLayout view, int value) {
+                if(mDataChecked[position] && value == 0){
+                    mDataChecked[position] = false;
+                    notifyItemChanged(position);
+                } else {
+                    mPresenter.updateReturnValue(productId, position, value, mDataChecked[position], productName);
+                }
+                holder.productQuantityLayout.resetLoaders();
+            }
+        });
+
+        String imageBrandId = mCurrentReturnList.get(position).getBrandID();
+        String imageId = mCurrentReturnList.get(position).getImageID();
+        String imageFileName = mCurrentReturnList.get(position).getFileName();
+
+        String imageUrl = LegacyStringImageUtils.generateImageUrl(imageBrandId, imageId, imageFileName);
+
+        ImageUtils.loadImageImmediate(imageUrl, holder.newReturnItemImageView, null);
     }
 
     @Override
@@ -82,7 +144,7 @@ public class NewReturnOrdersAdapter extends RecyclerView.Adapter<NewReturnOrderV
         return mCurrentReturnList != null ? mCurrentReturnList.size() : 0;
     }
 
-    public List<NewReturnItem> getData() {
+    public List<NewReturnOrderList> getData() {
         return mCurrentReturnList;
     }
 }

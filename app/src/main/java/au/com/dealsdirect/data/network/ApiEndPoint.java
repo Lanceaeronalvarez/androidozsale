@@ -395,39 +395,23 @@ public final class ApiEndPoint {
 
     /* Return Controller */
     public static String getReturns() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/returns", ApiUrlVersion.v1.apiVersion());
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetReturns", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getReturnOrders() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/return-orders", ApiUrlVersion.v1.apiVersion());
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetReturnOrders", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getReturnOrderDetail() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/return-orders/invoices/number={invoice_number}", ApiUrlVersion.v1.apiVersion());
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetReturnOrderDetail", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getReturnDetails() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/returns/{return_id}", ApiUrlVersion.v1.apiVersion());
-    }
-
-    public static String setContactForReturns() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/returns/{return_id}/threads/number={contact_number}", ApiUrlVersion.v1.apiVersion());
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetReturnDetails", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String createReturn() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/returns", ApiUrlVersion.v1.apiVersion());
-    }
-
-    public static String callSetReturnReceived() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/returns/{return_id}:received", ApiUrlVersion.v1.apiVersion());
-    }
-
-    public static String callSetReturnNotReceived() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/returns/{return_id}:not_received", ApiUrlVersion.v1.apiVersion());
-    }
-
-    public static String callGetReturnReceivedSatisfaction() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/returns/{return_id}:return_satisfaction", ApiUrlVersion.v1.apiVersion());
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateReturn", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     /* Address Controller */
@@ -706,7 +690,7 @@ public final class ApiEndPoint {
     }
 
     public static String setAttachment() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/returns/{return_id}/attachments", ApiUrlVersion.v1.apiVersion());
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "SetAttachment", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String setAttachmentForContact() {

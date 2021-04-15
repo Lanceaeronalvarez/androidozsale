@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -34,8 +39,11 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import au.com.dealsdirect.BuildConfig;
+import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.ApiEndPoint;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
 import au.com.dealsdirect.service.fcm.GNotification;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import okhttp3.Cookie;
 
 /**
@@ -64,6 +72,30 @@ public class ImageUploadUtil {
 
     public static int convertImageLimitToBytes(int sizeInMb) {
         return (sizeInMb * 1000000);
+    }
+
+    public SetAttachmentRequest attachUploadedImages(String returnID, String url) {
+        ArrayList<SetAttachmentRequest.Items> itemsList = new ArrayList<>();
+
+        SetAttachmentRequest setAttachmentRequest = new SetAttachmentRequest();
+        setAttachmentRequest.setId(returnID);
+        setAttachmentRequest.setType("return");
+
+        SetAttachmentRequest.Items items = new SetAttachmentRequest.Items();
+        items.setType("image/jpeg");
+        items.setUrl(url);
+        itemsList.add(items);
+
+        setAttachmentRequest.setListItems(itemsList);
+        return setAttachmentRequest;
+    }
+
+    public static SetAttachmentRequest getAttachmentIdRequest(String returnId) {
+        SetAttachmentRequest setAttachmentRequest = new SetAttachmentRequest();
+        setAttachmentRequest.setId(returnId);
+        setAttachmentRequest.setType("return");
+        setAttachmentRequest.setListItems(new ArrayList<>());
+        return setAttachmentRequest;
     }
 
     private static void checkSSL() {
@@ -209,23 +241,23 @@ public class ImageUploadUtil {
         }
 
         String cookieValue = output.toString();
-        String removePath = cookieValue.replace("path=/", "");
-        return removePath.replace("; httponly", "");
+        String removePath = cookieValue.replace("path=/","");
+        return removePath.replace("; httponly","");
     }
 
 
-    public static class UploadFileToServer extends AsyncTask<Object, Integer, String> {
+   public static class UploadFileToServer extends AsyncTask<Object, Integer, String> {
 
-        public AsyncResponse delegate = null;
-        int imageCount = 0;
-        private ProgressDialog progressDialog;
-        private final Context mContext;
-        private boolean showProgressDialog = true;
+       public AsyncResponse delegate = null;
+       int imageCount = 0;
+       private ProgressDialog progressDialog;
+       private final Context mContext;
+       private boolean showProgressDialog = true;
 
-        public UploadFileToServer(final Context context, boolean showLoading) {
-            mContext = context;
-            showProgressDialog = showLoading;
-        }
+       public UploadFileToServer(final Context context, boolean showLoading) {
+           mContext = context;
+           showProgressDialog = showLoading;
+       }
 
         @Override
         protected void onPreExecute() {
@@ -247,11 +279,11 @@ public class ImageUploadUtil {
         @Override
         protected String doInBackground(Object... params) {
 
-            String attachmentId = (String) params[0];
-            File file = (File) params[1];
-            String userAgent = (String) params[2];
-            imageCount = (int) params[3];
-            String fileName = (String) params[4];
+           String attachmentId = (String) params[0];
+           File file = (File) params[1];
+           String userAgent = (String) params[2];
+           imageCount = (int) params[3];
+           String fileName = (String) params[4];
 
             return ImageUploadUtil.uploadImage(attachmentId, file,
                     userAgent, fileName);
@@ -262,9 +294,7 @@ public class ImageUploadUtil {
         protected void onPostExecute(String result) {
             // view response from server
             AppLogger.d("Response from server: " + result);
-            if (showProgressDialog) {
-                progressDialog.dismiss();
-            }
+            if (showProgressDialog) { progressDialog.dismiss(); }
             delegate.asyncExecutionFinished(result, imageCount);
             super.onPostExecute(result);
         }
@@ -358,7 +388,7 @@ public class ImageUploadUtil {
     }
 
 
-    public static File getFileForUpload(Activity activity, int position, Bitmap bitmap) {
+    public static File getFileForUpload(Activity activity, int position, Bitmap bitmap){
 
         try {
             File file = new File(activity.getCacheDir(), GNotification.getDeviceID(activity) + position + ".jpg");

@@ -1,17 +1,17 @@
 package au.com.dealsdirect.ui.controller.returns.returnorders;
 
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -21,7 +21,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.adapter.ReturnOrdersAdapter;
@@ -49,6 +48,9 @@ public class ReturnOrdersController extends BaseController
 
     @BindView(R.id.no_returns_placeholder)
     LinearLayout mPlaceholderLayout;
+
+    @BindView(R.id.controller_return_orders_list_container)
+    RelativeLayout mReturnOrdersListContainer;
 
     @Inject
     ReturnOrdersMvpPresenter<ReturnOrdersMvpView> mPresenter;
@@ -105,25 +107,25 @@ public class ReturnOrdersController extends BaseController
     }
 
     @Override
-    public void showOrders(List<GetReturnOrders> newReturnsOrders) {
+    public void showOrders(List<au.com.dealsdirect.data.network.model.returns.returnorders.List> newReturnsOrders) {
 
         if (newReturnsOrders == null) {
 
             mPlaceholderLayout.setVisibility(View.VISIBLE);
-            mReturnOrdersRecyclerView.setVisibility(View.GONE);
+            mReturnOrdersListContainer.setVisibility(View.GONE);
 
             return;
         } else if (newReturnsOrders.isEmpty()) {
 
             mPlaceholderLayout.setVisibility(View.VISIBLE);
-            mReturnOrdersRecyclerView.setVisibility(View.GONE);
+            mReturnOrdersListContainer.setVisibility(View.GONE);
         } else {
 
             mPlaceholderLayout.setVisibility(View.GONE);
-            mReturnOrdersRecyclerView.setVisibility(View.VISIBLE);
+            mReturnOrdersListContainer.setVisibility(View.VISIBLE);
         }
 
-        final ReturnOrdersAdapter adapter = new ReturnOrdersAdapter(mActivity, newReturnsOrders, this::onReturnOrderItemClicked);
+        final ReturnOrdersAdapter adapter = new ReturnOrdersAdapter(mActivity, newReturnsOrders, mPresenter);
 
         mReturnOrdersRecyclerView.addItemDecoration(new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL));
 
@@ -131,7 +133,8 @@ public class ReturnOrdersController extends BaseController
         mReturnOrdersRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
     }
 
-    private void onReturnOrderItemClicked(GetReturnOrders newReturnsOrder) {
+    @Override
+    public void onReturnOrderItemClicked(au.com.dealsdirect.data.network.model.returns.returnorders.List newReturnsOrder) {
         getRouter().pushController(RouterTransaction.with(NewReturnController.newInstance(newReturnsOrder))
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));

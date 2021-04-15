@@ -10,6 +10,6 @@
         android:layout_width="@dimen/order_image_width"
         android:layout_height="@dimen/order_image_height"
         android:layout_marginEnd="@dimen/margin_small"
-        android:scaleType="centerInside"/>
+        android:scaleType="fitXY"/>
 
 </LinearLayout>

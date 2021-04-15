@@ -4,10 +4,8 @@ package au.com.dealsdirect.ui.controller.returns.newreturn;
  */
 
 
-import java.util.List;
-
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
-import au.com.dealsdirect.data.network.model.returns.newreturn.ImageAttachment;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 public interface NewReturnMvpPresenter<V extends NewReturnMvpView> extends MvpPresenter<V> {
@@ -16,7 +14,10 @@ public interface NewReturnMvpPresenter<V extends NewReturnMvpView> extends MvpPr
 
     void getReturnOrderDetail(int invoiceNo);
 
-    void setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest, boolean hasUploadedImage);
+    void updateReturnValue(String itemId, int position, int productQuantityValue,
+                           boolean isChecked, String productName);
+
+    void setAttachment(SetAttachmentRequest setAttachmentRequest, boolean hasUploadedImage);
 
     String getUserAgent();
 

@@ -57,11 +57,12 @@ import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequestOld;
+import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponseOld;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
-import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
@@ -69,6 +70,7 @@ import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
+import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
@@ -121,12 +123,14 @@ import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
 import au.com.dealsdirect.data.network.model.returns.FileSettingsResponse;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
-import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponse;
-import au.com.dealsdirect.data.network.model.returns.createreturn.ReturnReceivedRequest;
-import au.com.dealsdirect.data.network.model.returns.createreturn.ReturnReceivedSatisfactionResponse;
-import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturn;
-import au.com.dealsdirect.data.network.model.returns.newreturn.ImageAttachment;
-import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnItem;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
+import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
+import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
+import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
+import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
@@ -343,6 +347,8 @@ public interface ApiHelper {
 
     Observable<List<ContactSubjectResponse>> callGetContactSubjects(boolean isPublic);
 
+    Observable<CreateContactResponseOld> callCreateContactOld(CreateContactRequestOld createContactRequest);
+
     Observable<String> callGetContactSubjectsTemplates(String id);
 
     Observable<String> callCreateContact(CreateContactRequest createContactRequest);
@@ -368,24 +374,15 @@ public interface ApiHelper {
     Observable<List<SortingResponse>> callSortingFacets();
 
     // RETURN API CALLS
-    Observable<List<CurrentReturn>> callGetCurrentReturns();
+    Observable<CurrentReturnResponseBody> callGetCurrentReturns();
 
-    Observable<List<GetReturnOrders>> callGetReturnOrders();
+    Observable<GetReturnOrders> callGetReturnOrders();
 
-    Observable<CurrentReturn> callGetReturnDetails(String returnId);
+    Observable<GetReturnDetailsResponse> callGetReturnDetails(GetReturnDetailRequest getReturnDetailRequest);
 
-    Observable<String> callSetContactForReturns(String returnId, int contactNumber);
+    Observable<NewReturnOrderDetailResponseBody> callGetNewReturnOrderDetail(NewReturnOrderDetailRequest newReturnOrderDetailRequest);
 
-    Observable<List<NewReturnItem>> callGetNewReturnOrderDetail(String invoiceNumber);
-
-    Observable<CreateReturnRequestResponse> callCreateReturnRequest(CreateReturnRequest createReturnRequest);
-
-    Observable<String> callSetReturnReceived(ReturnReceivedRequest receivedRequest);
-
-    Observable<String> callSetReturnNotReceived(ReturnReceivedRequest receivedRequest);
-
-    Observable<ReturnReceivedSatisfactionResponse> callGetReturnReceivedSatisfaction(ReturnReceivedRequest receivedRequest);
-
+    Observable<CreateReturnRequestResponseBody> callCreateReturnRequest(CreateReturnRequest createReturnRequest);
 
     // SMS VERIFICATION
     Observable<VerificationNormalizePhoneResponseBody> callNormalizePhone(VerificationNormalizePhoneRequest verificationNormalizePhoneRequest);
@@ -452,7 +449,7 @@ public interface ApiHelper {
     Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request);
 
     // ATTACHMENTS
-    Observable<String> setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest);
+    Observable<SetAttachmentResponse> setAttachment(SetAttachmentRequest setAttachmentRequest);
 
     Observable<String> setAttachmentForContact(SetAttachmentForContactRequest setAttachmentRequest);
 
