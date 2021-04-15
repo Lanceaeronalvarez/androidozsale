@@ -81,6 +81,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private static final String TEXT_ALL = "• All";
     private static final int INITIAL_BANNER_COUNT = 25;
 
+    private static boolean SLIDING_BANNERS_ENABLED = true;
+    private static boolean CATEGORY_BANNERS_ENABLED = false;
+    private static boolean SPONSORED_BANNERS_ENABLED = false;
 
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
@@ -1014,6 +1017,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     public void loadSlidingBanners() {
+        if (!SLIDING_BANNERS_ENABLED) {
+            return;
+        }
+
         GetBannerRequest request = new GetBannerRequest();
         if (mCategoryID != null && !mCategoryID.isEmpty()) {
             request.setCategory(mCategoryID);
@@ -1026,6 +1033,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     public void loadSponsoredBanners() {
+        if (!SPONSORED_BANNERS_ENABLED) {
+            return;
+        }
+
         GetBannerRequest request = new GetBannerRequest();
         request.setCategory("U3BvbnNvcmVk");
         request.setOffset(null);
@@ -1037,6 +1048,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     public void loadCategoryBanners() {
+        if (!CATEGORY_BANNERS_ENABLED) {
+            return;
+        }
+
         GetBannerRequest request = new GetBannerRequest();
         request.setOffset(null);
         request.setLimit("50");
