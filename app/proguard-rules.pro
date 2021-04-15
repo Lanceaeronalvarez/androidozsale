@@ -43,9 +43,8 @@
 -keepattributes Exceptions, Signature, InnerClasses, LineNumberTable
 
 # Crashlytics
--keep class com.crashlytics.** { *; }
--keep class com.crashlytics.android.**
--dontwarn com.crashlytics.android.core.**
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**
 -keepattributes SourceFile,LineNumberTable
 
 # Braintree
