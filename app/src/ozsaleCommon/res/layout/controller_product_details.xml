@@ -72,19 +72,17 @@
                                 android:layout_height="match_parent"
                                 android:background="@color/white"
                                 android:orientation="vertical"
-                                android:paddingLeft="2dp"
-                                android:paddingRight="2dp"
+                                android:paddingLeft="1.5dp"
+                                android:paddingRight="@dimen/margin_small"
                                 android:visibility="gone">
 
                                 <TextView
                                     fontPath="@string/font_app_semibold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/product_details_subtitle_indent"
+                                    android:layout_marginLeft="@dimen/product_details_subtitle_indent"
                                     android:paddingTop="@dimen/margin_extra_small"
                                     android:paddingBottom="@dimen/margin_extra_small"
-                                    android:paddingLeft="2dp"
-                                    android:paddingRight="2dp"
                                     android:text="@string/pricing"
                                     android:textAllCaps="true"
                                     android:textColor="@color/text_medium"
@@ -113,9 +111,9 @@
                                 android:layout_height="wrap_content"
                                 android:background="@color/white"
                                 android:orientation="vertical"
-                                android:paddingLeft="2dp"
+                                android:paddingLeft="@dimen/margin_small"
                                 android:paddingTop="@dimen/margin_extra_small"
-                                android:paddingRight="2dp"
+                                android:paddingRight="@dimen/margin_small"
                                 android:paddingBottom="@dimen/margin_extra_small"
                                 android:visibility="gone" />
 
@@ -125,9 +123,9 @@
                                 android:layout_height="wrap_content"
                                 android:background="@color/white"
                                 android:orientation="vertical"
-                                android:paddingLeft="2dp"
+                                android:paddingLeft="@dimen/margin_small"
                                 android:paddingTop="@dimen/margin_extra_small"
-                                android:paddingRight="2dp"
+                                android:paddingRight="@dimen/margin_small"
                                 android:paddingBottom="@dimen/margin_extra_small"
                                 android:visibility="gone" />
 
@@ -137,6 +135,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="@dimen/margin_small"
                                 android:background="@color/white"
+                                android:paddingLeft="@dimen/margin_small"
+                                android:paddingRight="@dimen/margin_small"
                                 android:paddingBottom="@dimen/margin_small"
                                 android:visibility="gone">
 
@@ -151,8 +151,6 @@
                                         android:layout_height="wrap_content"
                                         android:paddingTop="@dimen/margin_extra_small"
                                         android:paddingBottom="@dimen/margin_extra_small"
-                                        android:paddingLeft="2dp"
-                                        android:paddingRight="2dp"
                                         android:text="@string/size"
                                         android:textAllCaps="true"
                                         android:textColor="@color/text_medium"
@@ -184,8 +182,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/sizeLabel"
                                     android:layout_marginTop="@dimen/margin_extra_small"
-                                    android:paddingLeft="2dp"
-                                    android:paddingRight="2dp"
                                     app:max_select="1" />
 
                                 <TextView
@@ -194,8 +190,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_below="@id/product_details_size_list"
-                                    android:layout_marginStart="3dp"
-                                    android:paddingLeft="@dimen/margin_extra_small"
                                     android:text="@string/please_select_size"
                                     android:textAllCaps="true"
                                     android:textColor="@color/red"
@@ -216,6 +210,8 @@
                                 android:layout_height="match_parent"
                                 android:background="@color/white"
                                 android:orientation="vertical"
+                                android:paddingLeft="1.5dp"
+                                android:paddingRight="@dimen/margin_small"
                                 android:visibility="gone">
 
                                 <TextView
@@ -223,10 +219,9 @@
                                     fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:paddingLeft="8.5dp"
                                     android:paddingTop="@dimen/margin_small"
                                     android:paddingBottom="@dimen/margin_small"
-                                    android:paddingLeft="2dp"
-                                    android:paddingRight="2dp"
                                     android:text="@string/shipping"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1"
@@ -236,9 +231,8 @@
                                     android:id="@+id/product_details_shipping_postcode_container"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="2dp"
-                                    android:layout_marginRight="2dp"
                                     android:orientation="horizontal"
+                                    android:paddingLeft="8.5dp"
                                     android:visibility="gone">
 
                                     <TextView
@@ -303,8 +297,7 @@
                                     android:id="@+id/product_details_shipping_not_available"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="2dp"
-                                    android:layout_marginRight="2dp"
+                                    android:paddingLeft="8.5dp"
                                     android:text="Not available to deliver to your location"
                                     android:textColor="#ff0000"
                                     android:visibility="gone" />
@@ -314,11 +307,9 @@
                                     fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="6dp"
+                                    android:paddingLeft="8.5dp"
                                     android:paddingTop="@dimen/margin_small"
                                     android:paddingBottom="@dimen/margin_small"
-                                    android:paddingLeft="2dp"
-                                    android:paddingRight="2dp"
                                     android:text="@string/estimated_delivery"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
@@ -329,7 +320,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/margin_tiny" />
 
-
                             </LinearLayout>
 
                             <LinearLayout
@@ -339,17 +329,17 @@
                                 android:layout_marginTop="@dimen/margin_small"
                                 android:background="@color/white"
                                 android:orientation="vertical"
+                                android:paddingLeft="1.5dp"
+                                android:paddingRight="@dimen/margin_small"
                                 android:visibility="gone">
 
                                 <TextView
                                     fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="6dp"
+                                    android:paddingLeft="8.5dp"
                                     android:paddingTop="@dimen/margin_small"
                                     android:paddingBottom="@dimen/margin_small"
-                                    android:paddingLeft="2dp"
-                                    android:paddingRight="2dp"
                                     android:text="@string/return_policy"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
@@ -369,7 +359,9 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginTop="@dimen/margin_small"
                                 android:background="@color/white"
-                                android:orientation="vertical">
+                                android:orientation="vertical"
+                                android:paddingLeft="1.5dp"
+                                android:paddingRight="@dimen/margin_small">
 
                                 <WebView
                                     android:id="@+id/product_description_text"
@@ -455,17 +447,17 @@
                                 android:layout_marginBottom="@dimen/margin_small"
                                 android:background="@color/white"
                                 android:orientation="vertical"
+                                android:paddingLeft="1.5dp"
+                                android:paddingRight="@dimen/margin_small"
                                 android:visibility="gone">
 
                                 <TextView
                                     fontPath="@string/font_app_semibold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="3dp"
+                                    android:paddingLeft="8.5dp"
                                     android:paddingTop="@dimen/margin_small"
                                     android:paddingBottom="@dimen/margin_small"
-                                    android:paddingLeft="2dp"
-                                    android:paddingRight="2dp"
                                     android:text="@string/about"
                                     android:textAllCaps="true"
                                     android:textColor="@color/text_medium"
@@ -591,13 +583,12 @@
                                     fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="6dp"
+                                    android:paddingLeft="@dimen/margin_small"
                                     android:paddingTop="@dimen/margin_small"
+                                    android:paddingRight="@dimen/margin_small"
                                     android:paddingBottom="@dimen/margin_small"
-                                    android:paddingLeft="2dp"
-                                    android:paddingRight="2dp"
-                                    android:textAllCaps="true"
                                     android:text="@string/you_may_also_like"
+                                    android:textAllCaps="true"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
 
@@ -624,13 +615,12 @@
                                     fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="6dp"
+                                    android:paddingLeft="@dimen/margin_small"
                                     android:paddingTop="@dimen/margin_small"
+                                    android:paddingRight="@dimen/margin_small"
                                     android:paddingBottom="@dimen/margin_small"
-                                    android:paddingLeft="2dp"
-                                    android:paddingRight="2dp"
-                                    android:textAllCaps="true"
                                     android:text="@string/recommended_for_you"
+                                    android:textAllCaps="true"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
 
@@ -657,13 +647,12 @@
                                     fontPath="@string/font_app_bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="6dp"
+                                    android:paddingLeft="@dimen/margin_small"
                                     android:paddingTop="@dimen/margin_small"
+                                    android:paddingRight="@dimen/margin_small"
                                     android:paddingBottom="@dimen/margin_small"
-                                    android:paddingLeft="2dp"
-                                    android:paddingRight="2dp"
-                                    android:textAllCaps="true"
                                     android:text="@string/recently_viewed"
+                                    android:textAllCaps="true"
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1" />
 
@@ -704,9 +693,9 @@
                                 android:id="@+id/controller_product_details_title_description"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="2dp"
+                                android:layout_marginLeft="@dimen/margin_small"
                                 android:layout_marginTop="8dp"
-                                android:layout_marginRight="2dp"
+                                android:layout_marginRight="@dimen/margin_small"
                                 android:layout_marginBottom="8dp"
                                 android:orientation="vertical">
 
@@ -763,9 +752,9 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="match_parent"
                                         android:layout_marginEnd="@dimen/margin_small"
-                                        android:paddingBottom="1dp"
                                         android:gravity="bottom"
-                                        android:orientation="horizontal">
+                                        android:orientation="horizontal"
+                                        android:paddingBottom="1dp">
 
                                         <TextView
                                             android:id="@+id/productPreviousPrice"
@@ -793,9 +782,9 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="match_parent"
                                         android:layout_marginEnd="@dimen/margin_small"
-                                        android:paddingBottom="1dp"
                                         android:gravity="bottom"
-                                        android:orientation="horizontal">
+                                        android:orientation="horizontal"
+                                        android:paddingBottom="1dp">
 
                                         <TextView
                                             android:id="@+id/productPriceTitle"
@@ -835,8 +824,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="match_parent"
                                         android:gravity="bottom"
-                                        android:paddingBottom="1dp"
-                                        android:orientation="horizontal">
+                                        android:orientation="horizontal"
+                                        android:paddingBottom="1dp">
 
                                         <TextView
                                             android:id="@+id/productDiscountTitle"
@@ -1080,9 +1069,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_regular"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:background="@drawable/bg_button_rounded"
                 android:orientation="horizontal"
@@ -1141,9 +1130,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginRight="2dp"
+                android:layout_marginRight="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:clipChildren="false"
                 android:clipToPadding="false">
