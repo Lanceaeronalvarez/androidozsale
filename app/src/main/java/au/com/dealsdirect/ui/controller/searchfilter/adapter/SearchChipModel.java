@@ -6,6 +6,13 @@ package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
 public class SearchChipModel {
 
+    private String mFilterType;
+    private String mChipTitle;
+    private String mKey;
+    private int mIndex;
+    private int minValue;
+    private int maxValue;
+
     public SearchChipModel(String mFilterType, String mChipTitle, String key, int mIndex) {
         this.mFilterType = mFilterType;
         this.mChipTitle = mChipTitle;
@@ -37,12 +44,6 @@ public class SearchChipModel {
         this.mIndex = mIndex;
     }
 
-    private String mFilterType;
-    private String mChipTitle;
-    private String mKey;
-    private int mIndex;
-    private int minValue;
-
     public int getMaxValue() {
         return maxValue;
     }
@@ -66,6 +67,4 @@ public class SearchChipModel {
     public void setKey(String key) {
         mKey = key;
     }
-
-    private int maxValue;
 }
