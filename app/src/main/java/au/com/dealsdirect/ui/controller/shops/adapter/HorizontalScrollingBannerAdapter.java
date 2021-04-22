@@ -96,7 +96,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
                 return new PromoBannerViewHolder(view, cellWidth);
             default:
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.viewholder_banner_for_horizontal, parent, false);
+                        .inflate(R.layout.viewholder_banner_for_horizontal,
+                                parent, false);
                 return new ViewHolder(view, cellWidth);
         }
     }

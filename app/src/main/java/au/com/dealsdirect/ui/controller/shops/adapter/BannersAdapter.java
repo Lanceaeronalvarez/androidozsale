@@ -455,7 +455,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                     imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), width, height, !useOldBannerDimensions);
 
-
                     ImageUtils.loadImageWithPriority(imgUrl, bannerViewHolder.image, Priority.HIGH);
 
                     if (bannerViewHolder.subscription != null) {
@@ -727,6 +726,9 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 mComputedHeight = (int) (grid.getItemHeight() + mActivity.getResources().getDimension(R.dimen.banner_sale_info_height));
             }
+            if (mPresenter.isTablet()) {
+                mComputedHeight += mActivity.getResources().getDimension(R.dimen.margin_tiny) * 2;
+            }
 
             setupSlidingBannersDimensions();
             setupCategoryBannersDimensions();
@@ -747,18 +749,21 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Pair<Integer, Integer> slidingBannersImageSize() {
         int width;
         int height;
-        if (useOldBannerDimensions) {
+        if (mPresenter.isTablet()) {
+            width = mActivity.getResources().getInteger(R.integer.sliding_banner_tablet_width);
+            height = mActivity.getResources().getInteger(R.integer.sliding_banner_tablet_height);
+        } else if (useOldBannerDimensions) {
             width = mActivity.getResources().getInteger(R.integer.old_sliding_banner_width);
             height = mActivity.getResources().getInteger(R.integer.old_sliding_banner_height);
         } else {
-            width = mActivity.getResources().getInteger(R.integer.sliding_banner_width);
-            height = mActivity.getResources().getInteger(R.integer.sliding_banner_height);
+            width = mActivity.getResources().getInteger(R.integer.sliding_banner_mobile_width);
+            height = mActivity.getResources().getInteger(R.integer.sliding_banner_mobile_height);
         }
         return new Pair<>(width, height);
     }
 
     private ImageUtils.Grid computeSlidingBannersGrid() {
-        final int numberOfColumns = 1;
+        final int numberOfColumns = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.sliding_banner_tablet_column_count : R.integer.sliding_banner_mobile_column_count);
         final int width = slidingBannersImageSize().first;
         final int height = slidingBannersImageSize().second;
         ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
@@ -776,8 +781,12 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ImageUtils.Grid slidingBannersGrid = computeSlidingBannersGrid();
             mSlidingBannersAdapter.setImageWidth(slidingBannersImageSize().first);
             mSlidingBannersAdapter.setImageHeight(slidingBannersImageSize().second);
+            int width = (int) slidingBannersGrid.getItemWidth();
+            if (mPresenter.isTablet()) {
+                width += mActivity.getResources().getDimension(R.dimen.promo_banner_tablet_right_padding);
+            }
             mSlidingBannersAdapter.setupDimensions(
-                    (int) slidingBannersGrid.getItemWidth(),
+                    width,
                     (int) slidingBannersGrid.getItemHeight());
             mSlidingBannersAdapter.setUseHigherResolution(true);
         }

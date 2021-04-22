@@ -80,8 +80,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private static final boolean BANNER_DIMENSIONS_TOGGLE_BUTTON_ENABLED = false;
-    private static final BannerDimensionsOverride OVERRIDE_BANNER_DIMENSIONS = BannerDimensionsOverride.USE_NEW;
-    private static final BannerDimensionsOverride OVERRIDE_BRAND_BANNER_DIMENSIONS = BannerDimensionsOverride.USE_OLD;
+    private static final BannerDimensionsOverride OVERRIDE_BANNER_DIMENSIONS_FOR_MOBILE = BannerDimensionsOverride.USE_NEW;
+    private static final BannerDimensionsOverride OVERRIDE_BANNER_DIMENSIONS_FOR_TABLET = BannerDimensionsOverride.USE_NEW;
+    private static final BannerDimensionsOverride OVERRIDE_BRAND_BANNER_DIMENSIONS_FOR_MOBILE = BannerDimensionsOverride.USE_NEW;
+    private static final BannerDimensionsOverride OVERRIDE_BRAND_BANNER_DIMENSIONS_FOR_TABLET = BannerDimensionsOverride.USE_OLD;
 
     public static final String TAG = "ShopsController";
     public static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
@@ -842,7 +844,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 mPresenter,
                 topBrands,
                 ScreenUtils.getOrientation(mActivity),
-                true,
+                getPrefersOldShopBannerDimensions(),
                 new BrandsBannersAdapter.OnBrandBannerClickListener() {
                     @Override
                     public void onBannerClick(GetTopBrandsResponse brand) {
@@ -1305,7 +1307,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private boolean getPrefersOldShopBannerDimensions() {
-        final BannerDimensionsOverride override = mIsBrandsOnly ? OVERRIDE_BRAND_BANNER_DIMENSIONS : OVERRIDE_BANNER_DIMENSIONS;
+        BannerDimensionsOverride override;
+        if (mIsBrandsOnly) {
+            override = mPresenter.isTablet() ? OVERRIDE_BRAND_BANNER_DIMENSIONS_FOR_TABLET : OVERRIDE_BRAND_BANNER_DIMENSIONS_FOR_MOBILE;
+        } else {
+            override = mPresenter.isTablet() ? OVERRIDE_BANNER_DIMENSIONS_FOR_TABLET : OVERRIDE_BANNER_DIMENSIONS_FOR_MOBILE;
+        }
         switch (override) {
             case USE_OLD:
                 return true;

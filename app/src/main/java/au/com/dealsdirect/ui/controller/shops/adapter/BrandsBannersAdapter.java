@@ -27,6 +27,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdapter.BrandBannerViewHolder> implements ResettableDimensions {
+
+    private static boolean SHOW_BRAND_DESCRIPTION = false;
+
     private List<GetTopBrandsResponse> mTopBrands;
 
     private int mOrientation;
@@ -108,7 +111,7 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
         GetTopBrandsResponse item = mTopBrands.get(position);
         int width = mWidth;
         int height = mHeight;
-        if ((useOldBannerDimensions || mPresenter.isTablet()) && item.getName() != null && !item.getName().isEmpty()) {
+        if (SHOW_BRAND_DESCRIPTION && useOldBannerDimensions && item.getName() != null && !item.getName().isEmpty()) {
             holder.name.setVisibility(View.VISIBLE);
             holder.name.setText(item.getName());
         } else {
@@ -172,10 +175,10 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
             int resId;
             switch (ScreenUtils.getOrientation(mActivity)) {
                 case Configuration.ORIENTATION_LANDSCAPE:
-                    resId = mPresenter.isTablet() ? R.integer.old_banner_tablet_landscape_column_count : R.integer.old_banner_mobile_landscape_column_count;
+                    resId = mPresenter.isTablet() ? R.integer.brand_banner_tablet_landscape_column_count : R.integer.old_banner_mobile_landscape_column_count;
                     break;
                 default:
-                    resId = mPresenter.isTablet() ? R.integer.old_banner_tablet_portrait_column_count : R.integer.old_banner_mobile_portrait_column_count;
+                    resId = mPresenter.isTablet() ? R.integer.brand_banner_tablet_portrait_column_count : R.integer.old_banner_mobile_portrait_column_count;
                     break;
             }
             minColumns = mActivity.getResources().getInteger(resId);
