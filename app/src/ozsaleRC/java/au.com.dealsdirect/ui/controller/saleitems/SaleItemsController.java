@@ -540,6 +540,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mGenieSort = null;
     private String mGenieFilters = null;
 
+    private Parameters mSavedParameters = null;
+
     private TextWatcher mTextWatcher = new TextWatcher() {
         private Timer mTextWatcherTimer = null;
 
@@ -604,6 +606,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public static SaleItemsController newInstance(Parameters parameters) {
         SaleItemsController controller = SaleItemsController.newInstance();
 
+        setupControllerWithParameters(controller, parameters);
+        controller.mSavedParameters = parameters;
+
+        if (controller.mFromShopSearch) {
+            controller.mSalesOrigin = DataCollector.EventParameters.ViewSource.SEARCH;
+        }
+        if (controller.mFromCategorySearch) {
+            controller.mSalesOrigin = DataCollector.EventParameters.ViewSource.CATEGORY;
+        }
+        return controller;
+    }
+
+    private static void setupControllerWithParameters(SaleItemsController controller, Parameters parameters) {
         String title = null;
 
         if (parameters instanceof Parameters.FromBannerClick) {
@@ -642,14 +657,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         title = title != null ? title.replaceAll(CATEGORY_KEY_SEPARATOR, CATEGORY_KEY_SEPARATOR_REPLACEMENT) : "";
         controller.mTitle = title;
-
-        if (controller.mFromShopSearch) {
-            controller.mSalesOrigin = DataCollector.EventParameters.ViewSource.SEARCH;
-        }
-        if (controller.mFromCategorySearch) {
-            controller.mSalesOrigin = DataCollector.EventParameters.ViewSource.CATEGORY;
-        }
-        return controller;
     }
 
     public SaleItemsController(Bundle args) {
@@ -695,36 +702,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         switch (mSourceMode) {
             case NORMAL:
-                if (mFromCategorySearch) {
-                    outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
-                    outState.putBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
-                    outState.putBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
-                    outState.putString(BundleKeys.SALEITEMS_CATEGORY_MAP, mCategoryKey);
-                    outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
-                    outState.putBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
-                    outState.putString(BundleKeys.SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
-                    outState.putString(BundleKeys.SALEITEMS_TITLE, mTitle);
-                    if (mSaleItemsToolbarField != null) {
-                        outState.putString(KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
-                    }
-                } else {
-                    outState.putBoolean(BundleKeys.SHOP_KEY_HAS_SAVED_INSTANCE, true);
-                    if (mSaleId != null && !mSaleId.isEmpty()) {
-                        outState.putString(BundleKeys.SHOP_SALEITEMS_SALE_ID, mSaleId);
-                    }
-                    outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_BANNER_SEARCH, mFromBannerSearch);
-                    outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_SHOP_SEARCH, mFromShopSearch);
-                    outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_SEARCH, mFromCategorySearch);
-                    outState.putBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK, mFromCategoryDeeplink);
-                    outState.putString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, String.valueOf(mChipFilters));
-                    outState.putString(BundleKeys.SHOP_SALEITEMS_TITLE, mTitle);
-                    if (mSaleItemsToolbarField != null) {
-                        outState.putString(SHOP_KEY_SEARCH_TEXT, mSaleItemsToolbarField.getText().toString());
-                    }
-                    if (mEndDate != null && !mEndDate.isEmpty()) {
-                        outState.putString(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE, mEndDate);
-                    }
-                }
+                outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+                outState.putString(BundleKeys.SALEITEMS_PARAMETERS, JsonUtils.convertToJsonObject(mSavedParameters).toString());
+                outState.putString(BundleKeys.SALEITEMS_PARAMETERS_TYPE, mSavedParameters.getClass().getName());
                 break;
             case WISHLIST:
                 outState.putBoolean(BundleKeys.SALEITEMS_IS_WISHLIST, true);
@@ -738,49 +718,20 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         if (savedInstanceState.getBoolean(BundleKeys.SALEITEMS_IS_WISHLIST, false)) {
             setSourceMode(SourceMode.WISHLIST);
-        } else if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH) &&
-                savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH)) {
-            mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
-            mCategoryKey = savedInstanceState.getString(BundleKeys.SALEITEMS_CATEGORY_MAP, "");
-            mFromBannerSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_BANNER_SEARCH);
-            mFromShopSearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_SHOP_SEARCH);
-            mFromCategorySearch = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_SEARCH);
-            mFromCategoryDeeplink = savedInstanceState.getBoolean(BundleKeys.SALEITEMS_FROM_CATEGORY_DEEPLINK);
-            if (savedInstanceState.containsKey(BundleKeys.SALEITEMS_CHIPS_FILTER)) {
-                mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SALEITEMS_CHIPS_FILTER, ""), new TypeToken<HashSet<SearchChipModel>>() {
-                }.getType());
-                if (mChipFilters == null) {
-                    mChipFilters = new HashSet<>();
-                }
-            }
-
-            if (savedInstanceState.containsKey(KEY_SEARCH_TEXT)) {
-                mSearchQuery = savedInstanceState.getString(KEY_SEARCH_TEXT, "");
-            }
-            mTitle = savedInstanceState.getString(BundleKeys.SALEITEMS_TITLE);
         } else {
-            mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.SHOP_KEY_HAS_SAVED_INSTANCE);
-            if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_SALE_ID)) {
-                mSaleId = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_SALE_ID);
-            }
-            mFromBannerSearch = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_BANNER_SEARCH);
-            mFromShopSearch = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_SHOP_SEARCH);
-            mFromCategorySearch = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_SEARCH);
-            mFromCategoryDeeplink = savedInstanceState.getBoolean(BundleKeys.SHOP_SALEITEMS_FROM_CATEGORY_DEEPLINK);
-            if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER)) {
-                mChipFilters = JsonUtils.convertStringToObject(savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_CHIPS_FILTER, ""), new TypeToken<HashSet<SearchChipModel>>() {
-                }.getType());
-                if (mChipFilters == null) {
-                    mChipFilters = new HashSet<>();
+            mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+            final String parameterTypeName = savedInstanceState.getString(BundleKeys.SALEITEMS_PARAMETERS_TYPE);
+            final String parameterJson = savedInstanceState.getString(BundleKeys.SALEITEMS_PARAMETERS);
+            if (parameterTypeName != null) {
+                try {
+                    final Object object = JsonUtils.convertStringToObject(parameterJson, Class.forName(parameterTypeName));
+                    if (object instanceof Parameters) {
+                        final Parameters parametersObject = (Parameters) object;
+                        setupControllerWithParameters(this, parametersObject);
+                        mSavedParameters = parametersObject;
+                    }
+                } catch (ClassNotFoundException ignore) {
                 }
-            }
-
-            if (savedInstanceState.containsKey(SHOP_KEY_SEARCH_TEXT)) {
-                mShopSearchQuery = savedInstanceState.getString(SHOP_KEY_SEARCH_TEXT);
-            }
-            mTitle = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_TITLE);
-            if (savedInstanceState.containsKey(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE)) {
-                mEndDate = savedInstanceState.getString(BundleKeys.SHOP_SALEITEMS_KEY_END_DATE);
             }
         }
     }
@@ -855,7 +806,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
                     if (mHasSavedInstance) {
                         mActivity.getMainController().setSavedCurrentItem();
-                    } else if (mChipFilters.isEmpty()){
+                    } else if (mChipFilters.isEmpty()) {
                         showKeyboard();
                     }
                     if (mInitialLoad) {
@@ -1419,7 +1370,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mPaginateManager.setHasMoreDataToLoad(true);
             }
             mSaleItemsAdapter.replaceData(wishlist);
-        } else if (!wishlist.isEmpty()){
+        } else if (!wishlist.isEmpty()) {
             mSaleItemsAdapter.addData(wishlist);
         } else {
             mHasLoadedAllItems = true;
@@ -1568,6 +1519,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     public void refreshContents() {
         super.refreshContents();
+        if (!isAttached() || !isViewAttached()) {
+            return;
+        }
+
         resetViewBasedOnSourceMode();
         switch (mSourceMode) {
             case NORMAL:

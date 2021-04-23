@@ -1,25 +1,15 @@
 package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.widget.NestedScrollView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,24 +30,17 @@ import com.braintreepayments.cardform.OnCardFormSubmitListener;
 import com.braintreepayments.cardform.utils.CardType;
 import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
-import com.google.gson.Gson;
 import com.mysale.genie.utility.RxBus;
 import com.stripe.android.model.Card;
 import com.stripe.android.view.CardNumberEditText;
 import com.visa.checkout.VisaCheckoutSdk;
-import com.visa.checkout.VisaPaymentSummary;
 
-import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
@@ -72,20 +55,17 @@ import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
-import au.com.dealsdirect.ui.main.CardInfo;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
-import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.ExpiryDateDialog;
 import au.com.dealsdirect.utils.ExpiryDateEditText;
 import au.com.dealsdirect.utils.IntrospectionUtils;
-import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.*;
+import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.PaymentOption;
+import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.decompress;
 
 /*
  * Created by smartwave on 29/06/2017.
@@ -133,6 +113,10 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     View mButtonHolder;
     @BindView(R.id.partial_checkout_button_pay)
     Button mPayButton;
+    @BindView(R.id.add_payment_checkout_buttons)
+    ViewGroup mCheckoutButtons;
+    @BindView(R.id.add_payment_add_button)
+    Button mAddButton;
     @BindView(R.id.partial_checkout_button_paypal_text)
     TextView mTextPaypal;
     @BindView(R.id.partial_checkout_button_paypal)
@@ -164,22 +148,16 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @BindView(R.id.stripe_card_form_cvv)
     CardNumberEditText mStripeCVV;
 
-
     @BindView(R.id.partial_toolbar_title)
     TextView mViewAddressToolarTitle;
 
-    CheckoutMvpView mCheckoutMvpView;
+    private CheckoutMvpView mCheckoutMvpView;
 
-    private boolean isFromCart = false;
+    private boolean isFromCart;
     private boolean isPayPalSubmitClicked = false;
-    private boolean mIsOurpaySelectDeliveryMethod = false;
+    private boolean mIsOurpaySelectDeliveryMethod;
     private String mCartTotalCost;
     private CheckoutDetailsMapper mCurrentOrderValue;
-
-    public OurpayPanel ourpayPanel;
-    private RelativeLayout mButtonOurpay;
-    private OurPayToggleSwitch mOurpayTncCheckBox;
-    private ExpiryDateDialog mExpirationDateDialog;
 
     public static AddPaymentController newInstance() {
         return new AddPaymentController(new BundleBuilder(new Bundle()).build());
@@ -279,6 +257,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             });
         }
 
+        mCheckoutButtons.setVisibility(isFromCart ? View.VISIBLE : View.GONE);
+        mAddButton.setVisibility(isFromCart ? View.GONE : View.VISIBLE);
+
         if (isFromCart) {
             if (mVcoPresenter.isVisaCheckoutEnabled()) {
                 mVcoPresenter.setupVisaCheckout(true);
@@ -315,6 +296,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mPaypalButton.setVisibility(View.VISIBLE);
         mTextPaypal.setVisibility(View.VISIBLE);
 
+        mAddButton.setOnClickListener(action -> {
+            onCardFormSubmit();
+        });
 
         mPayButton.setOnClickListener(action -> {
             onCardFormSubmit();
@@ -546,7 +530,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 boolean isPaymentInvalid = paymentMethod == null ? false : paymentMethod.getPaymentType().equalsIgnoreCase(OurpayStateManager.CARD_MASTERPASS);
                 OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, isPaymentInvalid);
 
-                ourpayPanel = new OurpayPanel((BaseActivity) mActivity, getRouter());
+                OurpayPanel ourpayPanel = new OurpayPanel((BaseActivity) mActivity, getRouter());
                 mOurpayHolder.removeAllViews();
                 if (mOurpayHolder.getChildCount() == 0) { //add view if there is no childview yet
                     mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay, isRowVisible -> {
@@ -556,10 +540,10 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                     }));
                 }
 
-                mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
+                RelativeLayout mButtonOurpay = (RelativeLayout) mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                 mButtonOurpay.setOnClickListener(view -> onCardFormSubmit());
 
-                mOurpayTncCheckBox = mOurpayHolder.findViewById(R.id.ourpay_toggle_switch_tc);
+                OurPayToggleSwitch mOurpayTncCheckBox = mOurpayHolder.findViewById(R.id.ourpay_toggle_switch_tc);
                 mOurpayTncCheckBox.setClickable(false);
                 OurpayPanel.TermsAndConditionStates termsAndConditionStatesState = OurpayPanel.TermsAndConditionStates.values()[value.getOurPaySelectTermsAndConditions()];
                 mOurpayTncCheckBox.setOurPayToggleSwitch(termsAndConditionStatesState);

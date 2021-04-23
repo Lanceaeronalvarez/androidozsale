@@ -28,6 +28,8 @@ public class BundleKeys {
     public static final String SALEITEMS_KEY_CATEGORIES = "SaleItemsController.KEY_CATEGORIES";
     public static final String SALEITEMS_FROM_CATEGORIES = "SaleItemsController.FROM_CATEGORIES";
     public static final String SALEITEMS_IS_WISHLIST = "SaleItemsController.SALEITEMS_IS_WISHLIST";
+    public static final String SALEITEMS_PARAMETERS = "SaleItemsController.PARAMETERS";
+    public static final String SALEITEMS_PARAMETERS_TYPE = "SaleItemsController.PARAMETERS_TYPE";
 
     //sale items from shop
     public static final String SHOP_SALEITEMS_SALE_ID = "SaleItemsController.SHOP_SALEITEMS_SALE_ID";

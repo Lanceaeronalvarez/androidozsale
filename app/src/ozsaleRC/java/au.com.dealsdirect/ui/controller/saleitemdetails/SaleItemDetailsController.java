@@ -1118,9 +1118,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSkuId = saleDetail.getSkuId();
         mAttributes = saleDetail.getAttributes();
 
-        if (mPresenter.isAuthorized()) {
-            mPresenter.loadRecentlyViewedItems();
-        }
+        mPresenter.loadRecentlyViewedItems();
 
         mSeoIdentifierId = saleDetail.getSeoIdentifier();
         mSaleName = saleDetail.getName();

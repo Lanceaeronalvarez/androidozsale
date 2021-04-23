@@ -339,4 +339,10 @@
 
     <dimen name="controller_brand_bubbles_height">40dp</dimen>
 
+    <dimen name="banner_sale_info_height">48dp</dimen>
+    <dimen name="banner_sale_info_discount_height">24dp</dimen>
+<!--  banner_sale_info_height minus half of banner_sale_info_discount_height  -->
+    <dimen name="banner_sale_info_discount_bottom_offset">36dp</dimen>
+
+    <dimen name="promo_banner_tablet_right_padding">2dp</dimen>
 </resources>
