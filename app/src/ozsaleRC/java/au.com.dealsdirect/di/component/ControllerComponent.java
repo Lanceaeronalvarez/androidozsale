@@ -44,6 +44,7 @@ import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsCon
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
+import au.com.dealsdirect.ui.controller.returns.returnspolicy.ReturnsPolicyViewController;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -167,4 +168,6 @@ public interface ControllerComponent {
     void inject(AfterpayViewController controller);
 
     void inject(FloatingImageViewerController controller);
+
+    void inject(ReturnsPolicyViewController controller);
 }

@@ -134,6 +134,9 @@ import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsPrese
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersMvpPresenter;
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersMvpView;
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersPresenter;
+import au.com.dealsdirect.ui.controller.returns.returnspolicy.ReturnsPolicyMvpPresenter;
+import au.com.dealsdirect.ui.controller.returns.returnspolicy.ReturnsPolicyMvpView;
+import au.com.dealsdirect.ui.controller.returns.returnspolicy.ReturnsPolicyPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesMvpView;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesPresenter;
@@ -467,6 +470,11 @@ public class ControllerModule {
 
     @Provides
     FloatingImageViewerMvpPresenter<FloatingImageViewerMvpView> provideFloatingImageViewerMvpPresenter(FloatingImageViewerPresenter<FloatingImageViewerMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ReturnsPolicyMvpPresenter<ReturnsPolicyMvpView> provideReturnsPolicyMvpPresenter(ReturnsPolicyPresenter<ReturnsPolicyMvpView> presenter) {
         return presenter;
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -20,6 +21,9 @@ public class BottomSheetInfoDialog extends BottomSheetDialogFragment {
 
     private String title = "";
     private String description = "";
+    private String buttonTitle = "";
+    private OnButtonClickListener onButtonClickListener = null;
+    private boolean dismissOnButtonClick = true;
 
     private int layoutId = R.layout.bottom_sheet_info;
 
@@ -33,13 +37,33 @@ public class BottomSheetInfoDialog extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(layoutId, container, false);
 
-        TextView textViewDescription = v.findViewById(R.id.bottom_sheet_info_description);
-        TextView textViewTitle = v.findViewById(R.id.bottom_sheet_info_title);
+        final TextView textViewDescription = v.findViewById(R.id.bottom_sheet_info_description);
+        final TextView textViewTitle = v.findViewById(R.id.bottom_sheet_info_title);
+        final Button button = v.findViewById(R.id.bottom_sheet_info_button);
 
         textViewDescription.setText(getDescription());
         textViewTitle.setText(getTitle());
 
+        if (shouldHideButton()) {
+            button.setVisibility(View.GONE);
+        } else {
+            button.setVisibility(View.VISIBLE);
+            button.setText(buttonTitle);
+            button.setOnClickListener(v1 -> {
+                if (dismissOnButtonClick) {
+                    dismiss();
+                }
+                if (onButtonClickListener != null) {
+                    onButtonClickListener.onClick();
+                }
+            });
+        }
+
         return v;
+    }
+
+    private boolean shouldHideButton() {
+        return buttonTitle == null || onButtonClickListener == null;
     }
 
     public String getTitle() {
@@ -64,5 +88,26 @@ public class BottomSheetInfoDialog extends BottomSheetDialogFragment {
 
     public void setLayoutId(int layoutId) {
         this.layoutId = layoutId;
+    }
+
+    public void setupButton(String buttonTitle, OnButtonClickListener onButtonClickListener) {
+        this.buttonTitle = buttonTitle;
+        this.onButtonClickListener = onButtonClickListener;
+    }
+
+    public Boolean isDismissOnButtonClick() {
+        if (shouldHideButton()) {
+            return null;
+        } else {
+            return dismissOnButtonClick;
+        }
+    }
+
+    public void setDismissOnButtonClick(boolean dismissOnButtonClick) {
+        this.dismissOnButtonClick = dismissOnButtonClick;
+    }
+
+    public interface OnButtonClickListener {
+        void onClick();
     }
 }

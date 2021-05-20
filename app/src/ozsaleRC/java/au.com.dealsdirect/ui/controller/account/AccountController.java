@@ -60,6 +60,7 @@ import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
+import au.com.dealsdirect.ui.controller.returns.returnspolicy.ReturnsPolicyViewController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -420,6 +421,22 @@ public class AccountController extends BaseController implements AccountMvpView,
         mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_returns)));
 
         logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.RETURNS_MENU);
+    }
+
+    @Override
+    public void showReturnsPolicy() {
+        if (!mPresenter.isTablet()) {
+            getRouter().pushController(RouterTransaction.with(ReturnsPolicyViewController.newInstance())
+                    .tag(CurrentReturnsController.class.getName())
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
+        } else {
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.RETURNS_POLICY, RouterTransaction.with(ReturnsPolicyViewController.newInstance()));
+        }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_returns_policy)));
+
+        logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.PRIVACY_POLICY);
     }
 
     @Override

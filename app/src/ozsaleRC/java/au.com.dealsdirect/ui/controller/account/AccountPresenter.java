@@ -58,6 +58,7 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
         put(AccountOption.ORDERS, () -> getMvpView().showMyOrders());
         put(AccountOption.VOUCHERS, () -> getMvpView().showMyVouchers());
         put(AccountOption.RETURNS, () -> getMvpView().showMyReturns());
+        put(AccountOption.RETURNSPOLICY, () -> getMvpView().showReturnsPolicy());
         put(AccountOption.CONTACTUS, () -> getMvpView().showContactUs());
         put(AccountOption.PAYMENTS, () -> getMvpView().showMyPaymentsController());
         put(AccountOption.OURPAY, () -> getMvpView().showMyAccountsOurpay());

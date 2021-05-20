@@ -28,6 +28,8 @@ public interface AccountMvpView extends MvpView {
 
     void showMyReturns();
 
+    void showReturnsPolicy();
+
     void showMyPaymentsController();
 
     void showMyAccountsOurpay();

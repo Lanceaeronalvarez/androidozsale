@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/padding_default"
+    android:paddingBottom="@dimen/padding_default"
+    tools:ignore="MissingPrefix">
+
+    <ImageView
+        android:id="@+id/step_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/returns_policy_step_1" />
+
+    <TextView
+        android:id="@+id/step_title"
+        fontPath="@string/font_app_bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_small"
+        android:text="Step 1"
+        android:textAlignment="center"
+        android:textColor="#2b3899"
+        android:textSize="@dimen/text_size_caption1"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/step_description"
+        fontPath="@string/font_app_regular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_default"
+        android:paddingRight="@dimen/padding_default"
+        android:text="Description Description Description Description \nDescription Description \nDescription Description Description \nDescription "
+        android:textAlignment="center"
+        android:textColor="@color/text_dark"
+        android:textSize="@dimen/text_size_caption1" />
+
+</LinearLayout>

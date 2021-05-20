@@ -14,6 +14,7 @@ public enum AccountOption {
     ORDERS(R.string.account_orders, true),
     VOUCHERS(R.string.account_vouchers, true),
     RETURNS(R.string.account_returns, true),
+    RETURNSPOLICY(R.string.account_returns_policy, false),
     CONTACTUS(R.string.account_contact_us, true),
     PAYMENTS(R.string.account_payments, true),
     OURPAY(R.string.account_ourpay, true),

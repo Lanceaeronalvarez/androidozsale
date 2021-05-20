@@ -51,6 +51,7 @@ public class GateKeeper {
         ORDERS,
         ORDER_DETAILS,
         CURRENT_RETURNS,
+        RETURNS_POLICY,
         RETURN_ORDERS,
         VIEW_ADDRESSES,
         ADD_NEW_ADDRESS,

@@ -10,7 +10,6 @@
     app:behavior_peekHeight="0dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,18 +27,31 @@
             android:textSize="@dimen/text_size_body"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/bottom_sheet_info_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginBottom="@dimen/margin_medium"
-            fontPath="@string/font_app_semibold"
-            android:lineSpacingExtra="@dimen/margin_tiny"
-            android:textColor="@color/text_medium"
-            android:textSize="@dimen/text_size_body" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/bottom_sheet_info_description"
+                fontPath="@string/font_app_semibold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:lineSpacingExtra="@dimen/margin_tiny"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_body" />
+        </ScrollView>
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/bottom_sheet_info_button"
+        style="@style/DDButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_default"
+        android:text="Button"
+        android:textSize="@dimen/text_size_headline2" />
 
 </LinearLayout>
