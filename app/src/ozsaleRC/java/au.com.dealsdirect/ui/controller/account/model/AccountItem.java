@@ -1,39 +1,31 @@
 package au.com.dealsdirect.ui.controller.account.model;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by smartwave on 24/05/2018.
  */
 
 public class AccountItem {
-    long mId;
-    String mTitle;
-    List<AccountSubItem> mSubItems;
+    private AccountOption option;
+    private List<AccountItem> subItems;
 
-    public AccountItem(long mId, String mTitle, List<AccountSubItem> mSubItems) {
-        this.mId = mId;
-        this.mTitle = mTitle;
-        this.mSubItems = mSubItems;
+    public AccountItem(AccountOption option, List<AccountItem> subItems) {
+        this.option = option;
+        this.subItems = subItems;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public AccountOption getOption() {
+        return option;
     }
 
-    public void setTitle(String mTitle) {
-        this.mTitle = mTitle;
+    public List<AccountItem> getSubItems() {
+        return subItems;
     }
 
-    public List<AccountSubItem> getSubItems() {
-        return mSubItems;
+    @Override
+    public int hashCode() {
+        return Objects.hash(option, subItems);
     }
-
-    public void setSubItems(List<AccountSubItem> mSubItems) {
-        this.mSubItems = mSubItems;
-    }
-    public long getId() {
-        return mId;
-    }
-
 }

@@ -151,10 +151,7 @@
         <item>@string/account_language</item>
         <item>@string/account_country</item>
         <item>@string/account_contact_us</item>
-        <item>@string/account_about_us</item>
-        <item>@string/account_privacy</item>
-        <item>@string/account_tnc</item>
-        <item>@string/account_tutorial</item>
+        <item>@string/account_information</item>
     </string-array>
 
     <string-array name="account_drawable_array">

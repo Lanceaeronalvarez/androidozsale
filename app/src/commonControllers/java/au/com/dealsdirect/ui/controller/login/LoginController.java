@@ -45,6 +45,8 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
 
 public class LoginController extends BaseController implements LoginMvpView {
 
+    private static final boolean SHOULD_SHOW_LEGALITIES = false;
+
     public static final String TAG = "LoginController";
     public static final String AUTH_HANDLER = "AUTH_HANDLER";
 
@@ -168,11 +170,15 @@ public class LoginController extends BaseController implements LoginMvpView {
             startLogin();
         });
 
-        if (mLegalitiesContainer != null) {
+        if (mLegalitiesContainer != null && SHOULD_SHOW_LEGALITIES) {
             mAboutUsTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_ABOUT_US, getString(R.string.account_about_us)));
             mTncTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
             mPrivacyTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_PRIVACY, getString(R.string.account_privacy)));
         }
+
+        mAboutUsTextView.setVisibility(SHOULD_SHOW_LEGALITIES ? View.VISIBLE : View.INVISIBLE);
+        mTncTextView.setVisibility(SHOULD_SHOW_LEGALITIES ? View.VISIBLE : View.INVISIBLE);
+        mPrivacyTextView.setVisibility(SHOULD_SHOW_LEGALITIES ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void startLogin() {

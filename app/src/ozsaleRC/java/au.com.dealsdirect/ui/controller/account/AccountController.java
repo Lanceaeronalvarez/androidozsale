@@ -37,15 +37,21 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
+import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.service.datacollection.enums.FeatureUsageEventType;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.adapter.AccountItemAdapter;
 import au.com.dealsdirect.ui.controller.account.model.AccountItem;
-import au.com.dealsdirect.ui.controller.account.model.AccountSubItem;
+import au.com.dealsdirect.ui.controller.account.model.AccountOption;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
+import au.com.dealsdirect.ui.controller.information.InformationMenuController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
@@ -106,9 +112,9 @@ public class AccountController extends BaseController implements AccountMvpView,
     private boolean mIsChangeInProgress = false;
 
     private ArrayList<AccountItem> mAccountItems;
-    private Map<String, Integer> mAccountItemsMap = new HashMap<>();
+    private Map<AccountItem, Integer> mAccountItemsMap = new HashMap<>();
     private boolean mIsLoginSuccessful;
-    private String mChosenOption = "";
+    private AccountOption mChosenOption = null;
 
     private boolean mHasSavedInstance = false;
 
@@ -178,7 +184,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         mIsChangeInProgress = false;
         if (mIsLoginSuccessful) {
             mPresenter.onAccountItemClick(mActivity, mChosenOption);
-            mChosenOption = "";
+            mChosenOption = null;
             mIsLoginSuccessful = false;
         }
     }
@@ -257,42 +263,42 @@ public class AccountController extends BaseController implements AccountMvpView,
         mAccountItems = new ArrayList<>();
         AccountItem newAccountItem;
         for (int i = 0; i < titles.length(); i++) {
-            String title = getString(titles.getResourceId(i, 0));
+            AccountOption option = AccountOption.getFromStringResourceId(titles.getResourceId(i, -1));
 
-            if (!mPresenter.isOurpayEnabled() && title.equals(getString(R.string.account_ourpay))) {
+            if (option == null) {
+                continue;
+            }
+
+            if (!mPresenter.isOurpayEnabled() && option.equals(AccountOption.OURPAY)) {
                 continue;
             }
 
             //skip if multi country not enabled
-            if (!Settings.getIsMultiCountry() && title.equals(getString(R.string.account_country))) {
+            if (!Settings.getIsMultiCountry() && option.equals(AccountOption.COUNTRY)) {
                 continue;
             }
 
             //skip if multi language not enabled
-            if (!mPresenter.isMultiLanguage() && title.equals(getString(R.string.account_language))) {
+            if (!mPresenter.isMultiLanguage() && option.equals(AccountOption.LANGUAGE)) {
                 continue;
             }
 
-            newAccountItem = new AccountItem(i, title, Collections.emptyList());
+            newAccountItem = new AccountItem(option, Collections.emptyList());
             mAccountItems.add(newAccountItem);
-            mAccountItemsMap.put(title, i);
+            mAccountItemsMap.put(newAccountItem, i);
         }
-
-//        TypedArray drawable = mActivity.getResources().obtainTypedArray(R.array.account_drawable_array);
-//        drawables = new ArrayList<>();
-//        for (int i = 0; i < drawable.length(); i++) {
-//            drawables.add(drawable.getResourceId(i, 0));
-//        }
     }
 
-    private List<AccountSubItem> createSubAccountItems(int resourceArrayId) {
-        List<AccountSubItem> accountSubItems = new ArrayList<>();
+    private List<AccountItem> createSubAccountItems(int resourceArrayId) {
+        List<AccountItem> accountSubItems = new ArrayList<>();
 
         TypedArray subItemTitles = getResources().obtainTypedArray(resourceArrayId);
 
         for (int i = 0; i < subItemTitles.length(); i++) {
-            String title = getString(subItemTitles.getResourceId(i, 0));
-            accountSubItems.add(new AccountSubItem(i, title));
+            AccountOption option = AccountOption.getFromStringResourceId(subItemTitles.getResourceId(i, -1));
+            if (option != null) {
+                accountSubItems.add(new AccountItem(option, Collections.emptyList()));
+            }
         }
 
         return accountSubItems;
@@ -313,7 +319,7 @@ public class AccountController extends BaseController implements AccountMvpView,
             if (!mActivity.isAuthorized() && mPresenter.isTablet() && mAccountItemAdapter != null) {
                 int selectedPosition = mAccountItemAdapter.getSelectedPosition() == null ? 0 : mAccountItemAdapter.getSelectedPosition();
                 mAccountItemAdapter.setSelectedPosition(selectedPosition);
-                mPresenter.onAccountItemClick(mActivity, mAccountItemAdapter.getTitle(selectedPosition));
+                mPresenter.onAccountItemClick(mActivity, mAccountItemAdapter.getAccountItem(selectedPosition).getOption());
             }
         }
     }
@@ -347,6 +353,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_details)));
+
+        logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.DETAILS_MENU);
     }
 
     @Override
@@ -366,6 +374,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_addresses)));
+
+        logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.ADDRESSES_MENU);
     }
 
     @Override
@@ -377,6 +387,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_orders)));
+
+        logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.ORDERS_MENU);
     }
 
     @Override
@@ -388,6 +400,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_vouchers)));
+
+        logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.VOUCHERS_MENU);
     }
 
     @Override
@@ -404,6 +418,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_returns)));
+
+        logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.RETURNS_MENU);
     }
 
     @Override
@@ -415,6 +431,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_payments)));
+
+        logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.PAYMENTS_MENU);
     }
 
     @Override
@@ -426,6 +444,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_ourpay)));
+
+        logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.OURPAY_MENU);
     }
 
     @Override
@@ -460,6 +480,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_contact_us)));
+
+        logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.CONTACT_MENU);
     }
 
     @Override
@@ -478,6 +500,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_invite_friend)));
+
+        logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.INVITE_A_FRIEND_MENU);
     }
 
     @Override
@@ -503,10 +527,10 @@ public class AccountController extends BaseController implements AccountMvpView,
     }
 
     @Override
-    public void showLegalities(String key, String title) {
+    public void showLegalities(String key, AccountOption option) {
         Bundle bundle = new BundleBuilder(new Bundle())
                 .putString(BundleKeys.TEMPLATE_KEY, key)
-                .putString(BundleKeys.LEGALITIES_TITLE, title)
+                .putString(BundleKeys.LEGALITIES_TITLE, mActivity.getResources().getString(option.getTitleResourceId()))
                 .build();
         if (!mPresenter.isTablet()) {
             GateKeeper.push(getDisplayRouter(),
@@ -519,10 +543,35 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         mAccountItemAdapter.setSelectedPosition(null);
+
+        switch (option) {
+            case ABOUTUS:
+                logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.ABOUT_US);
+                break;
+            case TERMSANDCONDITIONS:
+                logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.TERMS_AND_CONDITIONS);
+                break;
+            case PRIVACYPOLICY:
+                logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.PRIVACY_POLICY);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
-    public void triggerLogin(String option) {
+    public void showInformationMenu() {
+        if (!mPresenter.isTablet()) {
+            GateKeeper.push(getDisplayRouter(), GateKeeper.Destination.INFORMATION_MENU, new HorizontalChangeHandler(), new HorizontalChangeHandler());
+        } else {
+            GateKeeper.setRoot(getDisplayRouter(), GateKeeper.Destination.INFORMATION_MENU, RouterTransaction.with(InformationMenuController.newInstance()));
+        }
+
+        mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_information)));
+    }
+
+    @Override
+    public void triggerLogin(AccountOption option) {
         AccountMvpView mvpView = this;
 
         mActivity.showLoginController(getDisplayRouter(), new AuthHandler() {
@@ -664,6 +713,18 @@ public class AccountController extends BaseController implements AccountMvpView,
         return getDisplayRouter().getBackstackSize();
     }
 
+    private void logMenuSelectFeatureUsageEvent(int featureUsageEventType) {
+        FeatureUsageEventRequest featureUsageEventRequest = new FeatureUsageEventRequest();
+        featureUsageEventRequest.setEventType(EventTypeId.EVENT_FEATURE_USAGE);
+        featureUsageEventRequest.setFeatureInfo(new FeatureUsageEventRequest.FeatureInfo(featureUsageEventType));
+
+        HashMap<String, Object> eventParameters = new HashMap<>();
+        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, AccountController.class.getSimpleName());
+        eventParameters.put(DataCollector.EventParameters.FEATURE_EVENT_REQUEST, featureUsageEventRequest);
+
+        DataCollector.logEvent(Events.FeatureUsageEvent, eventParameters);
+    }
 }
 
          

@@ -66,6 +66,7 @@ public class GateKeeper {
         LANGUAGE,
         COUNTRY,
         NOTIFICATION,
+        INFORMATION_MENU,
         TUTORIAL,
         STRICT_CONSENT_UI,
         MY_ACCOUNTS_OURPAY,

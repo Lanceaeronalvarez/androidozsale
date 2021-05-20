@@ -427,6 +427,8 @@
     <string name="account_invite_friend">Invite Your Friends</string>
     <string name="account_language">My Languages</string>
     <string name="account_contact_us">Contact Us</string>
+    <string name="account_terms_and_conditions">Terms and Conditions</string>
+    <string name="account_returns_policy">Returns Policy</string>
     <string name="account_country">My Country</string>
     <string name="account_ourpay">Ourpay</string>
     <string name="account_select">Select</string>
@@ -438,6 +440,7 @@
     <string name="account_tnc">Terms &amp; Conditions</string>
     <string name="account_tutorial">Tutorial</string>
     <string name="account_logout">Logout</string>
+    <string name="account_information">Information</string>
     <string name="personalise">Personalise</string>
     <string name="please_fill_up_personalisation_details">Please fill up personalisation details</string>
     <string name="max_characters">Max characters:&#160;</string>
@@ -488,9 +491,7 @@
         <item>@string/account_country</item>
         <item>@string/account_ourpay</item>
         <!--<item>@string/account_select</item>-->
-        <item>@string/account_tnc</item>
-        <item>@string/account_privacy</item>
-        <item>@string/account_about_us</item>
+        <item>@string/account_information</item>
     </integer-array>
 
     <integer-array name="account_drawable_array">

@@ -57,6 +57,8 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
 
 public class RegisterController extends VisaCheckoutController implements RegisterMvpView {
 
+    private static final boolean SHOULD_SHOW_LEGALITIES = false;
+
     public static final String TAG = "RegisterController";
 
     private static final String KEY_TEXT = "RegisterController.KEY_TEXT";
@@ -198,11 +200,15 @@ public class RegisterController extends VisaCheckoutController implements Regist
             mVcoPresenter.setupVisaCheckout(false);
         }
 
-        if (mLegalitiesContainer != null) {
+        if (mLegalitiesContainer != null && SHOULD_SHOW_LEGALITIES) {
             mAboutUsTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_ABOUT_US, getString(R.string.account_about_us)));
             mTncTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_TNC, getString(R.string.account_tnc)));
             mPrivacyTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_PRIVACY, getString(R.string.account_privacy)));
         }
+
+        mAboutUsTextView.setVisibility(SHOULD_SHOW_LEGALITIES ? View.VISIBLE : View.INVISIBLE);
+        mTncTextView.setVisibility(SHOULD_SHOW_LEGALITIES ? View.VISIBLE : View.INVISIBLE);
+        mPrivacyTextView.setVisibility(SHOULD_SHOW_LEGALITIES ? View.VISIBLE : View.INVISIBLE);
 
         /* GDPR split type registration */
         if (mTermsText != null) {
