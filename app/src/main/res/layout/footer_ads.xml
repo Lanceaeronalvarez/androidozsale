@@ -226,5 +226,33 @@
         android:foregroundGravity="bottom"
         android:gravity="center_horizontal|bottom" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/viewholder_banner_stickers_container3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/viewholder_banner_stickers_container2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/viewholder_banner_stickers_container1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+    </LinearLayout>
+</LinearLayout>

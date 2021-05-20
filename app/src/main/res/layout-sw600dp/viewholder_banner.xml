@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="@dimen/margin_tiny"
     android:clickable="true"
     android:orientation="vertical"
+    android:padding="@dimen/margin_tiny"
     tools:ignore="MissingPrefix">
 
     <RelativeLayout
@@ -50,57 +50,93 @@
 
         </LinearLayout>
 
-        <RelativeLayout
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/banner_sale_info_discount_bottom_offset"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/viewholder_banner_stickers_container3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/viewholder_banner_info_group"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_extra_small"
-            android:layout_marginBottom="@dimen/margin_tiny">
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/viewholder_banner_stickers_container2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/viewholder_banner_stickers_container1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/viewholder_banner_discount"
+                fontPath="@string/font_app_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/banner_sale_info_discount_height"
+                android:layout_margin="1dp"
+                android:background="@drawable/bg_banner_discount"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/margin_extra_small"
+                android:paddingRight="@dimen/margin_extra_small"
+                android:text="STARTING FROM $2.95"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_caption1" />
 
             <TextView
                 android:id="@+id/viewholder_banner_percent_off"
                 fontPath="@string/font_app_regular"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="right"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:background="@drawable/bg_banners_percent_off"
-                android:gravity="center"
-                android:lineSpacingMultiplier="0.80"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_caption3"
-                tools:text="extra\n50%\noff" />
-
-            <ImageView
-                android:id="@+id/viewholder_banner_free_delivery"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="bottom"
-                android:src="@drawable/ic_free_delivery" />
+                android:layout_height="@dimen/banner_sale_info_discount_height"
+                android:layout_margin="1dp"
+                android:background="@drawable/bg_banner_percent_off"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/margin_extra_small"
+                android:paddingRight="@dimen/margin_extra_small"
+                android:text="EXTRA 20% OFF"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_caption1" />
 
-        </RelativeLayout>
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/viewholder_banner_discount"
-        fontPath="@string/font_app_regular"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/banner_sale_info_discount_height"
-        android:background="@drawable/bg_banner_discount"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/banner_sale_info_discount_bottom_offset"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:paddingLeft="@dimen/margin_extra_small"
-        android:paddingRight="@dimen/margin_extra_small"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_caption1"
-
-        tools:text="Up To 50% Off" />
+            <TextView
+                android:id="@+id/viewholder_banner_free_delivery"
+                fontPath="@string/font_app_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/banner_sale_info_discount_height"
+                android:layout_margin="1dp"
+                android:background="@drawable/bg_banner_free_delivery"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/margin_extra_small"
+                android:paddingRight="@dimen/margin_extra_small"
+                android:text="FREE SHIPPING"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_caption1" />
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>

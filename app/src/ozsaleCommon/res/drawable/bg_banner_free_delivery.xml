@@ -4,7 +4,13 @@
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/corner_radius_default" />
             <stroke android:width="@dimen/border_regular" android:color="#ffffff" />
-            <solid android:color="@color/banner_discount_background_color"/>
+            <solid android:color="@color/free_shipping_color"/>
+            <gradient
+                android:type="linear"
+                android:angle="90"
+                android:startColor="@color/free_shipping_color_dark"
+                android:endColor="@color/free_shipping_color" />
+
         </shape>
     </item>
 </selector>
