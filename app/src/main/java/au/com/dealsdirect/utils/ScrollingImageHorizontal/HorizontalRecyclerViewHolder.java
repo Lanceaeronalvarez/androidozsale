@@ -298,7 +298,7 @@ public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
         if (adapter == null) {
             return 0;
         }
-        return (recyclerView.computeHorizontalScrollOffset() + (recyclerView.getWidth() - adapter.getCellWidth())) % adapter.getCellWidth();
+        return (recyclerView.computeHorizontalScrollOffset() - (recyclerView.getWidth() - adapter.getCellWidth())) % adapter.getCellWidth();
     }
 
     private int getXBeforeNextPosition() {
