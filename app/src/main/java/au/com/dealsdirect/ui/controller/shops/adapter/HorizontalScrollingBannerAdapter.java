@@ -301,7 +301,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public void setRecentlyViewedList(List<RecentlyViewedItemResponse> mRecentlyViewedList) {
-        this.mRecentlyViewedList = mRecentlyViewedList;
+        this.mRecentlyViewedList = new ArrayList<>(mRecentlyViewedList);
         if (recyclerView != null && !recyclerView.isComputingLayout()) {
             notifyDataSetChanged();
         }
@@ -309,7 +309,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
 
     public void setDataSource(List<GetBannerResponse.Banner> dataSource) {
         if (dataSource != null) {
-            this.dataSource = dataSource;
+            this.dataSource = new ArrayList<>(dataSource);
         } else {
             this.dataSource = new ArrayList<>();
         }
@@ -319,7 +319,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public void setYouMayAlsoLikeList(List<GetYouMayAlsoLikeResponse> youMayAlsoLikeList) {
-        this.mYouMayAlsoLikeList = youMayAlsoLikeList;
+        this.mYouMayAlsoLikeList = new ArrayList<>(youMayAlsoLikeList);
         if (recyclerView != null && !recyclerView.isComputingLayout()) {
             notifyDataSetChanged();
         }
@@ -330,7 +330,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public void setRecommendedList(List<RecommendedItemsResponse> mRecommendedList) {
-        this.mRecommendedList = mRecommendedList;
+        this.mRecommendedList = new ArrayList<>(mRecommendedList);
         if (recyclerView != null && !recyclerView.isComputingLayout()) {
             notifyDataSetChanged();
         }
