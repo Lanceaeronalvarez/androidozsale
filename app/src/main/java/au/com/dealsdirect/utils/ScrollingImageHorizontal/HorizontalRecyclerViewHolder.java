@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +46,12 @@ public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
     public CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private static final int SCROLL_INTERVAL = 3;
+
+    @BindView(R.id.viewholder_banner_header_text)
+    TextView headerTextView;
+
+    @BindView(R.id.viewholder_banner_header_text_container)
+    ViewGroup headerContainer;
 
     @BindView(R.id.viewholder_horizontal_scrolling_banner_layout)
     ViewGroup layout;
@@ -119,6 +126,14 @@ public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
             if (adapter != null) {
                 adapter.resetReyclerViewPosition();
             }
+        }
+
+        if (adapter != null && adapter.getBackgroundColorOverride() != null) {
+            headerContainer.setBackgroundColor(adapter.getBackgroundColorOverride());
+            headerTextView.setBackgroundColor(adapter.getBackgroundColorOverride());
+        } else {
+            headerContainer.setBackground(null);
+            headerTextView.setBackground(null);
         }
     }
 
@@ -321,5 +336,14 @@ public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
             adapter.wrapScrollPosition(speed);
         }
 
+    }
+
+    public void setHeaderText(String text) {
+        if (text == null || text.isEmpty()) {
+            headerContainer.setVisibility(View.GONE);
+        } else {
+            headerContainer.setVisibility(View.VISIBLE);
+            headerTextView.setText(text);
+        }
     }
 }

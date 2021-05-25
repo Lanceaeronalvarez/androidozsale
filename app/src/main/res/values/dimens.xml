@@ -93,8 +93,8 @@
     <dimen name="banner_tablet_height">294dp</dimen>
     <dimen name="horizontal_banner_spacing">1dp</dimen>
     <dimen name="horizontal_banner_bottom_padding">1dp</dimen>
-    <dimen name="horizontal_banner_spacer_size">14dp</dimen>
-    <dimen name="horizontal_banner_spacer_size_for_tablet">50dp</dimen>
+    <dimen name="horizontal_banner_spacer_size">16dp</dimen>
+    <dimen name="horizontal_banner_spacer_size_for_tablet">28dp</dimen>
     <dimen name="horizontal_banner_circle_indicator_height">28dp</dimen>
 
     <!-- Checkout -->
@@ -335,14 +335,15 @@
     <dimen name="recently_viewed_height">225dp</dimen>
     <dimen name="recently_viewed_width">250dp</dimen>
 
-    <dimen name="horizontal_banner_title_height">18dp</dimen>
+    <dimen name="horizontal_banner_title_height">24dp</dimen>
+    <dimen name="horizontal_banner_header_title_height">56dp</dimen>
 
     <dimen name="controller_brand_bubbles_height">40dp</dimen>
 
     <dimen name="banner_sale_info_height">48dp</dimen>
-    <dimen name="banner_sale_info_discount_height">24dp</dimen>
+    <dimen name="banner_sale_info_discount_height">32dp</dimen>
 <!--  banner_sale_info_height minus half of banner_sale_info_discount_height  -->
-    <dimen name="banner_sale_info_discount_bottom_offset">36dp</dimen>
+    <dimen name="banner_sale_info_discount_bottom_offset">32dp</dimen>
 
     <dimen name="promo_banner_tablet_right_padding">2dp</dimen>
 </resources>

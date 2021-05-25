@@ -8,8 +8,9 @@
     android:clickable="true"
     android:orientation="vertical"
     android:paddingLeft="@dimen/horizontal_banner_spacing"
+    android:paddingTop="@dimen/margin_tiny"
     android:paddingRight="@dimen/horizontal_banner_spacing"
-    android:paddingBottom="@dimen/horizontal_banner_bottom_padding"
+    android:paddingBottom="@dimen/margin_medium"
     tools:ignore="MissingPrefix">
 
     <ImageView
@@ -17,14 +18,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
         android:transitionName="image" />
 
     <TextView
-        fontPath="@string/font_app_bold"
         android:id="@+id/viewholder_horizontal_scrolling_cell_title"
+        fontPath="@string/font_app_bold"
         android:layout_width="match_parent"
         android:layout_height="@dimen/horizontal_banner_title_height"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
         android:text="Title"
         android:textAlignment="center"
         android:textColor="@color/text_dark"

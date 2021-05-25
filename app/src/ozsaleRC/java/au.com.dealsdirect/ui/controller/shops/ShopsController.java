@@ -94,7 +94,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private static final int INITIAL_BANNER_COUNT = 25;
 
     private static boolean SLIDING_BANNERS_ENABLED = true;
-    private static boolean CATEGORY_BANNERS_ENABLED = false;
+    private static boolean CATEGORY_BANNERS_ENABLED = true;
     private static boolean SPONSORED_BANNERS_ENABLED = false;
 
     @Inject
@@ -730,6 +730,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 adapter = new HorizontalScrollingBannerAdapter();
                 adapter.setDataSource(slidingBanners);
                 adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.PromoBanner);
+                adapter.setImageResolutionOverride(mActivity.getResources().getInteger(R.integer.banner_resolution_override));
             }
         }
         mBannersAdapter.setSlidingBannersAdapter(adapter);
@@ -769,6 +770,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void showCategoryBanners(GetBannerResponse getBannerResponses) {
         HorizontalScrollingBannerAdapter adapter = null;
+        String title = null;
         if (getBannerResponses != null) {
             List<GetBannerResponse.Banner> categoryBanners = new ArrayList<>();
             List<GetBannerResponse.Group> groups = getBannerResponses.getGroups();
@@ -782,6 +784,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                                     categoryBanners.add(banner);
                                 }
                             }
+                            title = group.getTitle();
                         }
                     }
                 }
@@ -789,8 +792,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (!categoryBanners.isEmpty()) {
                 adapter = new HorizontalScrollingBannerAdapter();
                 adapter.setDataSource(categoryBanners);
-                adapter.setTitle(null);
+                adapter.setTitle(title.toUpperCase());
                 adapter.setShouldShowTitle(true);
+                adapter.setUseCircularImage(true);
+                adapter.setImageResolutionOverride(mActivity.getResources().getInteger(R.integer.category_banner_resolution_override));
+                adapter.setBackgroundColorOverride(mActivity.getResources().getColor(R.color.background_default));
             }
         }
         mBannersAdapter.setCategoryBannersAdapter(adapter);

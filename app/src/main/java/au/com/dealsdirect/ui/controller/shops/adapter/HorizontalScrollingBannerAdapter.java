@@ -41,6 +41,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
     private int imageWidth;
     private int imageHeight;
 
+    private Integer backgroundColorOverride = null;
+
     private List<GetBannerResponse.Banner> dataSource = new ArrayList<>();
     private boolean shouldShowTitle = false;
 
@@ -63,7 +65,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
 
     private boolean shouldRepeatCellsToFillWidth = true;
 
-    private boolean useHigherResolution = false;
+    private Integer imageResolutionOverride = null;
+    private boolean useCircularImage = false;
 
     public enum BannerViewType {
         ShopBanner,
@@ -89,16 +92,16 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
             case RecentlyViewed:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.viewholder_product_details_cell, parent, false);
-                return new ViewHolder(view, cellWidth);
+                return new ViewHolder(view, cellWidth, backgroundColorOverride);
             case PromoBanner:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.viewholder_banner_for_promo, parent, false);
-                return new PromoBannerViewHolder(view, cellWidth);
+                return new PromoBannerViewHolder(view, cellWidth, backgroundColorOverride);
             default:
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.viewholder_banner_for_horizontal,
+                        .inflate(useCircularImage ? R.layout.viewholder_banner_for_horizontal_circular : R.layout.viewholder_banner_for_horizontal,
                                 parent, false);
-                return new ViewHolder(view, cellWidth);
+                return new ViewHolder(view, cellWidth, backgroundColorOverride);
         }
     }
 
@@ -188,7 +191,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
 
                 item = dataSource.get(virtualPosition);
 
-                imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), imageWidth, imageHeight, true);
+                imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), imageWidth, imageHeight);
                 ImageUtils.loadImageWithPriority(imgUrl, promoBannerViewHolder.image, Priority.HIGH);
 
                 if (promoBannerViewHolder.subscription != null) {
@@ -228,7 +231,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
 
                 item = dataSource.get(virtualPosition);
 
-                imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), imageWidth, imageHeight, useHigherResolution);
+                imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), imageWidth, imageHeight, imageResolutionOverride);
 
                 if (((ViewHolder) holder).subscription != null) {
                     ((ViewHolder) holder).subscription.dispose();
@@ -257,7 +260,11 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
         }
 
         if (holder instanceof ViewHolder && !imgUrl.isEmpty() && !CommonUtils.isActivityOfViewDestroyed(((ViewHolder) holder).image)) {
-            ImageUtils.loadImage(imgUrl, ((ViewHolder) holder).image);
+            if (useCircularImage) {
+                ImageUtils.loadImageWithCircleCrop(imgUrl, ((ViewHolder) holder).image);
+            } else {
+                ImageUtils.loadImage(imgUrl, ((ViewHolder) holder).image);
+            }
         }
 
     }
@@ -575,7 +582,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
         @BindView(R.id.viewholder_horizontal_scrolling_cell_title)
         TextView title;
 
-        ViewHolder(View view, int width) {
+        ViewHolder(View view, int width, Integer backgroundColorOverride) {
             super(view);
             ButterKnife.bind(this, view);
 
@@ -583,6 +590,10 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
                 ViewGroup.LayoutParams params = layout.getLayoutParams();
                 params.width = width;
                 layout.setLayoutParams(params);
+            }
+
+            if (backgroundColorOverride != null) {
+                view.setBackgroundColor(backgroundColorOverride);
             }
         }
 
@@ -603,7 +614,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
         @BindView(R.id.viewholder_banner_discount)
         TextView discount;
 
-        PromoBannerViewHolder(View view, int width) {
+        PromoBannerViewHolder(View view, int width, Integer backgroundColorOverride) {
             super(view);
             ButterKnife.bind(this, view);
 
@@ -613,6 +624,9 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
                 layout.setLayoutParams(params);
             }
 
+            if (backgroundColorOverride != null) {
+                view.setBackgroundColor(backgroundColorOverride);
+            }
         }
 
         PromoBannerViewHolder(View view) {
@@ -643,12 +657,28 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
         this.shouldShowTitle = shouldShowTitle;
     }
 
-    public boolean isUseHigherResolution() {
-        return useHigherResolution;
+    public Integer getImageResolutionOverride() {
+        return imageResolutionOverride;
     }
 
-    public void setUseHigherResolution(boolean useHigherResolution) {
-        this.useHigherResolution = useHigherResolution;
+    public void setImageResolutionOverride(Integer imageResolutionOverride) {
+        this.imageResolutionOverride = imageResolutionOverride;
+    }
+
+    public boolean isUseCircularImage() {
+        return useCircularImage;
+    }
+
+    public void setUseCircularImage(boolean useCircularImage) {
+        this.useCircularImage = useCircularImage;
+    }
+
+    public Integer getBackgroundColorOverride() {
+        return backgroundColorOverride;
+    }
+
+    public void setBackgroundColorOverride(Integer backgroundColorOverride) {
+        this.backgroundColorOverride = backgroundColorOverride;
     }
 
     public void preloadBannerImages(Context context) {

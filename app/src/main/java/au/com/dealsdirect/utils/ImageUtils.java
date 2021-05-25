@@ -103,6 +103,24 @@ public class ImageUtils {
         }
     }
 
+    public static void loadImageWithCircleCrop(String url, ImageView imageView) {
+        try {
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .format(DecodeFormat.PREFER_ARGB_8888);
+
+            Glide.with(imageView)
+                    .asBitmap()
+                    .apply(options)
+                    .load(url)
+                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                    .circleCrop()
+                    .into(imageView);
+        } catch (Exception e) {
+            Log.e("ImageUtils", e.getMessage(), e);
+        }
+    }
+
     public static void loadImageWithPriority(String url, ImageView imageView, Priority priority) {
         try {
             RequestOptions options = new RequestOptions()
@@ -334,10 +352,10 @@ public class ImageUtils {
     }
 
     public static String appendBannerSizeUrl(String url, int width, int height) {
-        return appendBannerSizeUrl(url, width, height, false);
+        return appendBannerSizeUrl(url, width, height, null);
     }
 
-    public static String appendBannerSizeUrl(String url, int width, int height, boolean useHigherResolution) {
+    public static String appendBannerSizeUrl(String url, int width, int height, Integer resolutionOverride) {
 
         String bannerSize = String.format("_%dx%d", width, height);
 
@@ -353,11 +371,11 @@ public class ImageUtils {
 
         url = String.format("%s%s.%s", removedExtension, bannerSize, extension);
 
-        if (useHigherResolution) {
+        if (resolutionOverride != null) {
             if (url.contains("?")) {
-                url += "&width=800";
+                url += "&width=" + resolutionOverride;
             } else {
-                url += "?width=800";
+                url += "?width=" + resolutionOverride;
             }
         }
 
@@ -448,10 +466,10 @@ public class ImageUtils {
         }
     }
 
-    public static Grid getExactGridDefinition(int columnCount, float ratio, float canvasWidth) {
+    public static Grid getExactGridDefinition(float columnCount, float ratio, float canvasWidth) {
         float width = canvasWidth / columnCount;
         float height = width * ratio;
-        return new Grid(columnCount, width, height);
+        return new Grid((int) columnCount, width, height);
     }
 
     public static Grid getRangedGridDefinition(int proposedWidth, int proposedHeight, float canvasWidth, int minColumn) {
