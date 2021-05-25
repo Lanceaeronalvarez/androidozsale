@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +25,7 @@ import au.com.dealsdirect.ui.controller.shops.BottomSheetInfoDialog;
 import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class ReturnsPolicyViewController extends BaseController implements ReturnsPolicyMvpView {
 
@@ -88,7 +88,7 @@ public class ReturnsPolicyViewController extends BaseController implements Retur
     @Override
     protected void setUp(View view) {
         mTitleTextView.setText(R.string.account_returns_policy);
-        mLeftToolbarButton.setVisibility(View.INVISIBLE);
+        mLeftToolbarButton.setVisibility(mPresenter.isTablet() ? View.INVISIBLE : View.VISIBLE);
 
         setupTopAdapter();
         setupAdapter();
@@ -151,6 +151,11 @@ public class ReturnsPolicyViewController extends BaseController implements Retur
 
     private void gotoMyReturns() {
         mActivity.getAccountController().showMyReturns();
+    }
+
+    @OnClick(R.id.partial_toolbar_left_view)
+    public void onBackClick() {
+        getRouter().popCurrentController();
     }
 
     private void showFaq(String title, String content) {
