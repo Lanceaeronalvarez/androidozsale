@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_default"
-        android:text="Free Returns within 30 days*"
+        android:text="Returns Process at a Glance"
         android:textColor="#2b3899"
         android:textStyle="bold" />
 
