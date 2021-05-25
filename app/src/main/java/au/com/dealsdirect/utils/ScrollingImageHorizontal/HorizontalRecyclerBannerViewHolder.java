@@ -15,6 +15,8 @@ import com.mysale.genie.views.custom.recyclerview.CustomLinearLayoutManager;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Nullable;
+
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.listeners.OnHorizontalSwipeTouchListener;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalCircleIndicatorAdapter;
@@ -31,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by MTC on 2020-06-05.
  */
-public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
+public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder {
 
     private boolean isAutoScroll;
 
@@ -47,9 +49,11 @@ public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
 
     private static final int SCROLL_INTERVAL = 3;
 
+    @Nullable
     @BindView(R.id.viewholder_banner_header_text)
     TextView headerTextView;
 
+    @Nullable
     @BindView(R.id.viewholder_banner_header_text_container)
     ViewGroup headerContainer;
 
@@ -57,16 +61,16 @@ public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
     ViewGroup layout;
 
     @BindView(R.id.viewholder_horizontal_scrolling_banner_recycler_view)
-    public RecyclerView recyclerView;
+    RecyclerView recyclerView;
 
     @BindView(R.id.viewholder_horizontal_scrolling_banner_indicator)
-    public RecyclerView circleIndicatorRecyclerView;
+    RecyclerView circleIndicatorRecyclerView;
 
-    public HorizontalRecyclerViewHolder(View view,
-                                        int height,
-                                        HorizontalScrollingBannerAdapter adapter,
-                                        boolean isAutoScroll,
-                                        boolean isSwipeEnabled) {
+    public HorizontalRecyclerBannerViewHolder(View view,
+                                              int height,
+                                              HorizontalScrollingBannerAdapter adapter,
+                                              boolean isAutoScroll,
+                                              boolean isSwipeEnabled) {
         super(view);
         ButterKnife.bind(this, view);
 
@@ -128,12 +132,14 @@ public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
             }
         }
 
-        if (adapter != null && adapter.getBackgroundColorOverride() != null) {
-            headerContainer.setBackgroundColor(adapter.getBackgroundColorOverride());
-            headerTextView.setBackgroundColor(adapter.getBackgroundColorOverride());
-        } else {
-            headerContainer.setBackground(null);
-            headerTextView.setBackground(null);
+        if (headerContainer != null) {
+            if (adapter != null && adapter.getBackgroundColorOverride() != null) {
+                headerContainer.setBackgroundColor(adapter.getBackgroundColorOverride());
+                headerTextView.setBackgroundColor(adapter.getBackgroundColorOverride());
+            } else {
+                headerContainer.setBackground(null);
+                headerTextView.setBackground(null);
+            }
         }
     }
 
@@ -162,7 +168,7 @@ public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
     }
 
     private final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = () ->
-            HorizontalRecyclerViewHolder.this.onScrollChanged(recyclerView.computeHorizontalScrollOffset());
+            HorizontalRecyclerBannerViewHolder.this.onScrollChanged(recyclerView.computeHorizontalScrollOffset());
 
 
     public void onViewRecycled() {
@@ -339,11 +345,26 @@ public class HorizontalRecyclerViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setHeaderText(String text) {
+        if (headerContainer == null) {
+            return;
+        }
         if (text == null || text.isEmpty()) {
             headerContainer.setVisibility(View.GONE);
         } else {
             headerContainer.setVisibility(View.VISIBLE);
             headerTextView.setText(text);
+        }
+    }
+
+    public void setCircleIndicatorVisibility(int visibility) {
+        if (circleIndicatorRecyclerView != null) {
+            circleIndicatorRecyclerView.setVisibility(visibility);
+        }
+    }
+
+    public void setCirclIndicatorAdapter(RecyclerView.Adapter adapter) {
+        if (circleIndicatorRecyclerView != null) {
+            circleIndicatorRecyclerView.setAdapter(adapter);
         }
     }
 }

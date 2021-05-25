@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,10 +50,6 @@ class BannerViewHolder extends RecyclerView.ViewHolder {
     LinearLayout stickersContainer2;
     @BindView(R.id.viewholder_banner_stickers_container3)
     LinearLayout stickersContainer3;
-
-    @Nullable
-    @BindView(R.id.adView_banner)
-    View adView;
 
     BannerViewHolder(View view, int height, int viewType) {
         super(view);

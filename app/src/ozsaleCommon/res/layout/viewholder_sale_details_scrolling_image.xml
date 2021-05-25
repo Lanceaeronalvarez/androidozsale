@@ -1,28 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/viewholder_horizontal_scrolling_banner_layout"
+    android:id="@+id/viewholder_horizontal_scrolling_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
-    <TextView
-        android:id="@+id/viewholder_banner_header_text"
-        fontPath="@string/font_app_bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="@dimen/margin_medium"
-        android:text="Header"
-        android:textAlignment="center"
-        android:textColor="@color/text_extra_dark"
-        android:textSize="@dimen/text_size_body"
-        android:textStyle="bold"
-        android:visibility="gone"/>
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/viewholder_horizontal_scrolling_banner_recycler_view"
+        android:id="@+id/viewholder_horizontal_scrolling_item_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -33,7 +19,7 @@
         android:visibility="gone">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/viewholder_horizontal_scrolling_banner_indicator"
+            android:id="@+id/viewholder_horizontal_scrolling_item_indicator"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/horizontal_banner_circle_indicator_height"
             android:layout_centerHorizontal="true"

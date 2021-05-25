@@ -14,14 +14,14 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.ImageTappedListener;
-import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
-import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerViewHolder;
+import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerItemViewHolder;
 
 /**
  * Created by MTC on 2020-01-02.
@@ -30,7 +30,7 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
 
     private Context mContext;
     private List<RecentlyViewedItemResponse> mData;
-    private HorizontalScrollingBannerAdapter mSlidingBannersAdapter = null;
+    private HorizontalScrollingItemsAdapter mSlidingBannersAdapter = null;
     private static final float SLIDING_BANNER_WIDTH_PERCENT = 0.7f;
     public static final int VIEW_HOLDER_TYPE_LANDSCAPE = 1;
     public static final int VIEW_HOLDER_TYPE_SLIDING_BANNER = 1 << 2;
@@ -62,7 +62,7 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.viewholder_sale_details_scrolling_image, parent, false);
 
-        return new HorizontalRecyclerViewHolder(view,
+        return new HorizontalRecyclerItemViewHolder(view,
                 (int) computeSlidingBannersGrid().getItemHeight(),
                 mSlidingBannersAdapter,
                 false,
@@ -72,8 +72,8 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        if (holder instanceof HorizontalRecyclerViewHolder) {
-            HorizontalRecyclerViewHolder horizontalRecyclerViewHolder = (HorizontalRecyclerViewHolder) holder;
+        if (holder instanceof HorizontalRecyclerItemViewHolder) {
+            HorizontalRecyclerItemViewHolder horizontalRecyclerViewHolder = (HorizontalRecyclerItemViewHolder) holder;
             horizontalRecyclerViewHolder.onViewRecycled();
         }
     }
@@ -81,7 +81,7 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        HorizontalRecyclerViewHolder horizontalRecyclerViewHolder = (HorizontalRecyclerViewHolder) holder;
+        HorizontalRecyclerItemViewHolder horizontalRecyclerViewHolder = (HorizontalRecyclerItemViewHolder) holder;
         horizontalRecyclerViewHolder.onViewBound();
         setupSlidingBannersDimensions();
         horizontalRecyclerViewHolder.setAdapter(mSlidingBannersAdapter);
@@ -132,10 +132,10 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder instanceof HorizontalRecyclerViewHolder) {
-            HorizontalRecyclerViewHolder viewHolder = (HorizontalRecyclerViewHolder) holder;
+        if (holder instanceof HorizontalRecyclerItemViewHolder) {
+            HorizontalRecyclerItemViewHolder viewHolder = (HorizontalRecyclerItemViewHolder) holder;
             viewHolder.onViewRecycled();
-            viewHolder.recyclerView.setAdapter(null);
+            viewHolder.setAdapter(null);
         }
         super.onViewRecycled(holder);
     }
@@ -152,7 +152,7 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
         this.recyclerView = null;
     }
 
-    public void setSlidingBannersAdapter(HorizontalScrollingBannerAdapter slidingBannersAdapter) {
+    public void setSlidingBannersAdapter(HorizontalScrollingItemsAdapter slidingBannersAdapter) {
         boolean willInsert = mSlidingBannersAdapter == null && slidingBannersAdapter != null;
         boolean willDelete = mSlidingBannersAdapter != null && slidingBannersAdapter == null;
         if (willDelete) {
@@ -164,7 +164,7 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
             mSlidingBannersAdapter = slidingBannersAdapter;
             if (mSlidingBannersAdapter != null) {
                 mSlidingBannersAdapter
-                        .setOnRecentlyViewedListener(RecentlyViewedItemAdapter.this::onBannerTapped);
+                        .setOnItemTappedListener(RecentlyViewedItemAdapter.this::onItemTapped);
             }
             notifyDataSetChanged();
         }
@@ -208,8 +208,13 @@ public class RecentlyViewedItemAdapter extends RecyclerView.Adapter<RecyclerView
         return mSlidingBannersAdapter != null;
     }
 
+    private void onItemTapped(SaleItemProduct item) {
+        if (item instanceof RecentlyViewedItemResponse) {
+            onItemTapped((RecentlyViewedItemResponse) item);
+        }
+    }
 
-    private void onBannerTapped(RecentlyViewedItemResponse responseLike) {
+    private void onItemTapped(RecentlyViewedItemResponse responseLike) {
         RecentlyViewedEventRequest recentlyViewedEventRequest = new RecentlyViewedEventRequest();
         recentlyViewedEventRequest.setEventType(EventTypeId.EVENT_RECENTLY_VIEWED);
 
