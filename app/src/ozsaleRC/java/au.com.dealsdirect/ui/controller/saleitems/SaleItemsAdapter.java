@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
  * dp Created by Admin on 6/8/17.
  */
 
-public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.ViewHolder> {
+public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int SCREEN_TRANSITION_DELAY = 2000;
 
     private List<SaleItemProduct> mData;
@@ -104,11 +104,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             layout.setLayoutParams(params);
         }
 
-        ViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-        }
-
         private boolean isLiked = true;
 
         public boolean isLiked() {
@@ -119,6 +114,17 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
             int drawableId = liked ? R.drawable.wishlist_product_list_active : R.drawable.wishlist_product_list_inactive;
             likeButton.setImageDrawable(likeButton.getContext().getResources().getDrawable(drawableId));
             isLiked = liked;
+        }
+    }
+
+    public static class FooterViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.adView_banner)
+        View adView;
+
+        FooterViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
         }
     }
 
@@ -167,7 +173,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
 
         if (viewType != FOOTER_VIEW) {
@@ -177,31 +183,32 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
         } else {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.footer_ads, parent, false);
-            return new ViewHolder(view);
+            return new FooterViewHolder(view);
         }
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        if (holder.getItemViewType() == 0 && mData.size() != 0) {
+        if (holder.getItemViewType() == 0 && mData.size() != 0 && holder instanceof SaleItemsAdapter.ViewHolder) {
             SaleItemProduct product = mData.get(position);
             if (product == null) {
-                setupViewHolderSkeleton(holder, true);
+                setupViewHolderSkeleton((SaleItemsAdapter.ViewHolder) holder, true);
             } else {
-                setupViewHolderSkeleton(holder, false);
-                setupViewHolder(holder, product);
+                setupViewHolderSkeleton((SaleItemsAdapter.ViewHolder) holder, false);
+                setupViewHolder((SaleItemsAdapter.ViewHolder) holder, product);
             }
-        } else {
-            if (holder.adView != null && mPresenter.isGoogleAdsEnabled()) {
-                CommonUtils.showAdmob(mActivity, holder.adView,
+        } else if (holder instanceof FooterViewHolder) {
+            final FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
+            if (footerViewHolder.adView != null && mPresenter.isGoogleAdsEnabled()) {
+                CommonUtils.showAdmob(mActivity, footerViewHolder.adView,
                         mActivity.getResources().getString(R.string.admob_products_id));
             }
         }
     }
 
     @SuppressLint("CheckResult")
-    private void setupViewHolder(ViewHolder holder, SaleItemProduct product) {
+    private void setupViewHolder(SaleItemsAdapter.ViewHolder holder, SaleItemProduct product) {
         String url = product.getImages().isEmpty() ? "" : (product.getImages().size() < 4 ? product.getImages().get(0) : product.getImages().get(1));
 
         String urlHigherRes = ImageUtils.removeResolutionModifierInImageUrl(url);
@@ -287,7 +294,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     @SuppressLint("CheckResult")
-    private void setupViewHolderSkeleton(ViewHolder holder, boolean showSkeleton) {
+    private void setupViewHolderSkeleton(SaleItemsAdapter.ViewHolder holder, boolean showSkeleton) {
         Drawable skeletonFixedHeightWidthPadding = showSkeleton ?
                 holder.itemView.getContext().getResources().getDrawable(R.drawable.bg_skeleton_fixed_height_with_right_padding) : null;
         Drawable skeletonFixedHeight = showSkeleton ? holder.itemView.getContext().getResources().getDrawable(R.drawable.bg_skeleton_fixed_height) : null;
@@ -319,9 +326,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<SaleItemsAdapter.View
     }
 
     @Override
-    public void onViewRecycled(ViewHolder holder) {
-        if (!mActivity.isDestroyed()) {
-            ImageUtils.clearImage(holder.image);
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        if (!mActivity.isDestroyed() && holder instanceof SaleItemsAdapter.ViewHolder) {
+            ImageUtils.clearImage(((SaleItemsAdapter.ViewHolder) holder).image);
         }
         super.onViewDetachedFromWindow(holder);
     }
