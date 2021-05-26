@@ -108,8 +108,6 @@ public class AccountController extends BaseController implements AccountMvpView,
     private RecyclerViewExpandableItemManager mRecyclerViewExpandableItemManager;
     private RecyclerView.LayoutManager mLayoutManager;
     private Router mAccountDetailRouter;
-    private String mDefaultChosenAccountOption = "";
-    private int mDefaultChosenAccountOptionPos = 0;
     private boolean mIsChangeInProgress = false;
 
     private ArrayList<AccountItem> mAccountItems;
@@ -193,8 +191,6 @@ public class AccountController extends BaseController implements AccountMvpView,
     @Override
     protected void setUp(View view) {
         // Setup views here
-        mDefaultChosenAccountOption = getString(R.string.account_details);
-
         mActivity.setAccountController(this);
 
         if (mPresenter.isTablet()) {

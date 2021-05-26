@@ -38,8 +38,10 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
 
         List<AccountAction> actions = new LinkedList<>();
 
-        if (!option.isNeedsAuthentication() || isAuthorized()) {
-            actions.add(accountActions.get(option));
+        if (option == null || !option.isNeedsAuthentication() || isAuthorized()) {
+            if (option != null) {
+                actions.add(accountActions.get(option));
+            }
         } else {
             actions.add(() -> getMvpView().triggerLogin(option));
             if (isTablet()) {
