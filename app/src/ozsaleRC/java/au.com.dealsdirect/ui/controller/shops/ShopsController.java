@@ -73,11 +73,13 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
 
 public class ShopsController extends BaseController implements ShopsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
 
-    private static enum BannerDimensionsOverride {
+    private enum BannerDimensionsOverride {
         DONT_OVERRIDE,
         USE_OLD,
         USE_NEW
     }
+
+    private static final boolean CIRCULAR_CATEGORY_BANNERS = false;
 
     private static final boolean BANNER_DIMENSIONS_TOGGLE_BUTTON_ENABLED = false;
     private static final BannerDimensionsOverride OVERRIDE_BANNER_DIMENSIONS_FOR_MOBILE = BannerDimensionsOverride.USE_NEW;
@@ -793,10 +795,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 adapter = new HorizontalScrollingBannerAdapter();
                 adapter.setDataSource(categoryBanners);
                 adapter.setTitle(title.toUpperCase());
-                adapter.setShouldShowTitle(true);
-                adapter.setUseCircularImage(true);
+                adapter.setShouldShowTitle(CIRCULAR_CATEGORY_BANNERS);
+                adapter.setUseCircularImage(CIRCULAR_CATEGORY_BANNERS);
                 adapter.setImageResolutionOverride(mActivity.getResources().getInteger(R.integer.category_banner_resolution_override));
-                adapter.setBackgroundColorOverride(mActivity.getResources().getColor(R.color.background_default));
+                if (CIRCULAR_CATEGORY_BANNERS) {
+                    adapter.setBackgroundColorOverride(mActivity.getResources().getColor(R.color.background_default));
+                }
             }
         }
         mBannersAdapter.setCategoryBannersAdapter(adapter);

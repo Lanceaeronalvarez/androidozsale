@@ -45,7 +45,8 @@
     <integer name="category_banner_width_for_tablet">313</integer>
     <integer name="category_banner_height_for_tablet">603</integer>
     <integer name="category_banner_column_count">3</integer>
-    <integer name="category_banner_column_count_for_tablet">5</integer>
+    <integer name="category_banner_column_count_for_tablet">3</integer>
+    <integer name="category_banner_circular_column_count_for_tablet">5</integer>
     <integer name="you_may_also_like_width">225</integer>
     <integer name="you_may_also_like_height">360</integer>
     <integer name="brand_bubbles_max_results">10</integer>

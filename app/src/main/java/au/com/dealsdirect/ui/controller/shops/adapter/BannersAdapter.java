@@ -743,20 +743,36 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private ImageUtils.Grid computeCategoryBannersGrid() {
+        final boolean useCircular = mCategoryBannersAdapter != null && mCategoryBannersAdapter.isUseCircularImage();
+
         final int numberOfColumns = mPresenter.isTablet() ?
-                mActivity.getResources().getInteger(R.integer.category_banner_column_count_for_tablet) :
+                mActivity.getResources().getInteger(
+                        useCircular ? R.integer.category_banner_circular_column_count_for_tablet : R.integer.category_banner_column_count_for_tablet) :
                 mActivity.getResources().getInteger(R.integer.category_banner_column_count);
         final int width = categoryBannersImageSize().first;
         final int height = categoryBannersImageSize().second;
-        final float extraPercentage = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.category_banner_partial_column_percentage_for_tablet : R.integer.category_banner_partial_column_percentage) / 100f;
-        ImageUtils.Grid grid = ImageUtils.getExactGridDefinition(numberOfColumns + extraPercentage,
-                height / (float) width,
-                ScreenUtils.getScreenWidth(mActivity));
-        return new ImageUtils.Grid(
-                1,
-                grid.getItemWidth(),
-                grid.getItemWidth() + mActivity.getResources().getDimension(R.dimen.horizontal_banner_header_title_height) + mActivity.getResources().getDimension(R.dimen.horizontal_banner_title_height)
-        );
+
+        if (!useCircular) {
+            ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
+                    width, height,
+                    ScreenUtils.getScreenWidth(mActivity),
+                    numberOfColumns, numberOfColumns);
+            return new ImageUtils.Grid(
+                    1,
+                    grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(),
+                    grid.getItemHeight() + mActivity.getResources().getDimension(R.dimen.horizontal_banner_title_height) + getBottomPaddingForHorizontalBanners()
+            );
+        } else {
+            final float extraPercentage = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.category_banner_partial_column_percentage_for_tablet : R.integer.category_banner_partial_column_percentage) / 100f;
+            ImageUtils.Grid grid = ImageUtils.getExactGridDefinition(numberOfColumns + extraPercentage,
+                    height / (float) width,
+                    ScreenUtils.getScreenWidth(mActivity));
+            return new ImageUtils.Grid(
+                    1,
+                    grid.getItemWidth(),
+                    grid.getItemWidth() + mActivity.getResources().getDimension(R.dimen.horizontal_banner_header_title_height) + mActivity.getResources().getDimension(R.dimen.horizontal_banner_title_height)
+            );
+        }
     }
 
     private void setupCategoryBannersDimensions() {
