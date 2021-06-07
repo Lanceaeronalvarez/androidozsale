@@ -96,7 +96,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private static final int INITIAL_BANNER_COUNT = 25;
 
     private static boolean SLIDING_BANNERS_ENABLED = true;
-    private static boolean CATEGORY_BANNERS_ENABLED = true;
+    private static boolean CATEGORY_BANNERS_ENABLED = false;
     private static boolean SPONSORED_BANNERS_ENABLED = false;
 
     @Inject
