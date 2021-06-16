@@ -5,8 +5,8 @@
     <integer name="gender_option_visibility">2</integer>
     <integer name="sale_banner_mobile_width">475</integer>
     <integer name="sale_banner_mobile_height">325</integer>
-    <integer name="sale_banner_tablet_width">320</integer>
-    <integer name="sale_banner_tablet_height">193</integer>
+    <integer name="sale_banner_tablet_width">684</integer>
+    <integer name="sale_banner_tablet_height">468</integer>
     <integer name="sliding_banner_mobile_width">475</integer>
     <integer name="sliding_banner_mobile_height">325</integer>
     <integer name="sliding_banner_tablet_width">684</integer>
