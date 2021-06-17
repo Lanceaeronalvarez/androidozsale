@@ -142,6 +142,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private final static int ACTIVITY_INDICATOR_DELAY = 2000; // milliseconds
 
+    private final static boolean IS_DISCOUNT_POG_ENABLED = false;
+
     public abstract static class Parameters {
         private Parameters() {
         }
@@ -1151,7 +1153,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
         DataCollector.logEvent(Events.CVItemDetails, parameters);
 
-        mPresenter.getDynamicDiscount(saleDetail.getSkuId());
+        if (!IS_DISCOUNT_POG_ENABLED) {
+            mPresenter.getDynamicDiscount(saleDetail.getSkuId());
+        }
 
         mFreeDeliveryImageView.setVisibility(mIsFreeDelivery ? View.VISIBLE : View.GONE);
 
@@ -1557,7 +1561,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void setDynamicDiscount(String discountText) {
-        if (discountText == null) {
+        if (!IS_DISCOUNT_POG_ENABLED || discountText == null) {
             mProductDiscountPogTextView.setVisibility(View.GONE);
             return;
         }
