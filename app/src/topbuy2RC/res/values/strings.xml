@@ -101,6 +101,7 @@
         <item>@string/account_ourpay</item>
         <item>@string/account_contact_us</item>
         <item>@string/account_notification</item>
+        <item>@string/account_information</item>
     </integer-array>
 
     <!-- Font Strings -->

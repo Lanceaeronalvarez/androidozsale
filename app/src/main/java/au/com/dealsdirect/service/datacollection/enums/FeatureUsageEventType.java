@@ -125,6 +125,12 @@ public class FeatureUsageEventType {
         public static final int OURPAY_HEADER = 1065;
         public static final int INVITE_A_FRIEND_MENU = 1066;
         public static final int INVITE_A_FRIEND_HEADER = 1067;
+        public static final int ABOUT_US = 1084;
+        public static final int TERMS_AND_CONDITIONS = 1085;
+        public static final int RETURNS_POLICY = 1086;
+        public static final int PRIVACY_POLICY = 1088;
+        public static final int GIFTS_MENU = 1131;
+        public static final int GIFTS_HEADER = 1132;
     }
 
     public static class Codes {

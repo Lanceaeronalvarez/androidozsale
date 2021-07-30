@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewholder_banner_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/horizontal_banner_spacing"
+    android:paddingTop="@dimen/margin_tiny"
+    android:paddingRight="@dimen/horizontal_banner_spacing"
+    android:paddingBottom="@dimen/margin_medium"
+    tools:ignore="MissingPrefix">
+
+    <ImageView
+        android:id="@+id/viewholder_banner_image"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scaleType="fitCenter"
+        android:transitionName="image" />
+
+    <TextView
+        android:id="@+id/viewholder_horizontal_scrolling_cell_title"
+        fontPath="@string/font_app_bold"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/horizontal_banner_title_height"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="Title"
+        android:textAlignment="center"
+        android:textColor="@color/text_dark"
+        android:textSize="@dimen/text_size_caption2"
+        android:textStyle="bold" />
+
+</LinearLayout>

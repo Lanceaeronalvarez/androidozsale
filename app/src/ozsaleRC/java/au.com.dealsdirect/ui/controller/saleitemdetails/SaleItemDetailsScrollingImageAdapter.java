@@ -17,15 +17,15 @@ import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventRecommendedField;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
-import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
-import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerViewHolder;
+import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerItemViewHolder;
 
 
 /**
@@ -36,7 +36,7 @@ public class SaleItemDetailsScrollingImageAdapter extends RecyclerView.Adapter<R
     private Context mContext;
     private List<GetYouMayAlsoLikeResponse> mData;
     private List<RecommendedItemsResponse> mRecommendedData = new ArrayList<>();
-    private HorizontalScrollingBannerAdapter mSlidingBannersAdapter = null;
+    private HorizontalScrollingItemsAdapter mHorizontalScrollingItemsAdapter = null;
     private static final float SLIDING_BANNER_WIDTH_PERCENT = 0.7f;
     public static final int VIEW_HOLDER_TYPE_LANDSCAPE = 1;
     public static final int VIEW_HOLDER_TYPE_SLIDING_BANNER = 1 << 2;
@@ -70,9 +70,9 @@ public class SaleItemDetailsScrollingImageAdapter extends RecyclerView.Adapter<R
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.viewholder_sale_details_scrolling_image, parent, false);
 
-        return new HorizontalRecyclerViewHolder(view,
+        return new HorizontalRecyclerItemViewHolder(view,
                 (int) computeSlidingBannersGrid().getItemHeight(),
-                mSlidingBannersAdapter,
+                mHorizontalScrollingItemsAdapter,
                 true,
                 true);
     }
@@ -80,8 +80,8 @@ public class SaleItemDetailsScrollingImageAdapter extends RecyclerView.Adapter<R
     @Override
     public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        if (holder instanceof HorizontalRecyclerViewHolder) {
-            HorizontalRecyclerViewHolder horizontalRecyclerViewHolder = (HorizontalRecyclerViewHolder) holder;
+        if (holder instanceof HorizontalRecyclerItemViewHolder) {
+            HorizontalRecyclerItemViewHolder horizontalRecyclerViewHolder = (HorizontalRecyclerItemViewHolder) holder;
             horizontalRecyclerViewHolder.onViewRecycled();
         }
     }
@@ -89,13 +89,13 @@ public class SaleItemDetailsScrollingImageAdapter extends RecyclerView.Adapter<R
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        HorizontalRecyclerViewHolder horizontalRecyclerViewHolder = (HorizontalRecyclerViewHolder) holder;
+        HorizontalRecyclerItemViewHolder horizontalRecyclerViewHolder = (HorizontalRecyclerItemViewHolder) holder;
         horizontalRecyclerViewHolder.onViewBound();
         setupSlidingBannersDimensions();
-        horizontalRecyclerViewHolder.setAdapter(mSlidingBannersAdapter);
+        horizontalRecyclerViewHolder.setAdapter(mHorizontalScrollingItemsAdapter);
 
-        if (mSlidingBannersAdapter != null) {
-            mSlidingBannersAdapter.resetReyclerViewPosition();
+        if (mHorizontalScrollingItemsAdapter != null) {
+            mHorizontalScrollingItemsAdapter.resetReyclerViewPosition();
             horizontalRecyclerViewHolder.snapToCenter(false);
         }
     }
@@ -114,9 +114,9 @@ public class SaleItemDetailsScrollingImageAdapter extends RecyclerView.Adapter<R
     }
 
     private void setupSlidingBannersDimensions() {
-        if (mSlidingBannersAdapter != null) {
+        if (mHorizontalScrollingItemsAdapter != null) {
             ImageUtils.Grid slidingBannersGrid = computeSlidingBannersGrid();
-            mSlidingBannersAdapter.setupDimensions(
+            mHorizontalScrollingItemsAdapter.setupDimensions(
                     (int) slidingBannersGrid.getItemWidth(),
                     (int) slidingBannersGrid.getItemHeight());
         }
@@ -140,10 +140,10 @@ public class SaleItemDetailsScrollingImageAdapter extends RecyclerView.Adapter<R
 
     @Override
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder instanceof HorizontalRecyclerViewHolder) {
-            HorizontalRecyclerViewHolder viewHolder = (HorizontalRecyclerViewHolder) holder;
+        if (holder instanceof HorizontalRecyclerItemViewHolder) {
+            HorizontalRecyclerItemViewHolder viewHolder = (HorizontalRecyclerItemViewHolder) holder;
             viewHolder.onViewRecycled();
-            viewHolder.recyclerView.setAdapter(null);
+            viewHolder.setAdapter(null);
         }
         super.onViewRecycled(holder);
     }
@@ -160,26 +160,19 @@ public class SaleItemDetailsScrollingImageAdapter extends RecyclerView.Adapter<R
         this.recyclerView = null;
     }
 
-    public void setSlidingBannersAdapter(HorizontalScrollingBannerAdapter slidingBannersAdapter) {
-        boolean willInsert = mSlidingBannersAdapter == null && slidingBannersAdapter != null;
-        boolean willDelete = mSlidingBannersAdapter != null && slidingBannersAdapter == null;
+    public void setSlidingBannersAdapter(HorizontalScrollingItemsAdapter slidingBannersAdapter) {
+        boolean willInsert = mHorizontalScrollingItemsAdapter == null && slidingBannersAdapter != null;
+        boolean willDelete = mHorizontalScrollingItemsAdapter != null && slidingBannersAdapter == null;
         if (willDelete) {
             int index = getPositionOfSlidingBanners();
-            mSlidingBannersAdapter.setOnItemTappedListener(null);
-            mSlidingBannersAdapter = null;
+            mHorizontalScrollingItemsAdapter.setOnItemTappedListener(null);
+            mHorizontalScrollingItemsAdapter = null;
             notifyDataSetChanged();
         } else {
-            mSlidingBannersAdapter = slidingBannersAdapter;
-            if (mSlidingBannersAdapter != null) {
-
-                if (mSlidingBannersAdapter.getBannerViewType() == HorizontalScrollingBannerAdapter.BannerViewType.YouMayAlsoLike) {
-                    mSlidingBannersAdapter
-                            .setOnItemTappedListener(SaleItemDetailsScrollingImageAdapter.this::onBannerTapped);
-                } else {
-                    mSlidingBannersAdapter
-                            .setOnItemRecommendedListener(SaleItemDetailsScrollingImageAdapter.this::onBannerTapped);
-                }
-
+            mHorizontalScrollingItemsAdapter = slidingBannersAdapter;
+            if (mHorizontalScrollingItemsAdapter != null) {
+                mHorizontalScrollingItemsAdapter
+                        .setOnItemTappedListener(SaleItemDetailsScrollingImageAdapter.this::onItemTapped);
             }
             notifyDataSetChanged();
         }
@@ -220,11 +213,18 @@ public class SaleItemDetailsScrollingImageAdapter extends RecyclerView.Adapter<R
     }
 
     private boolean isSlidingBannersVisible() {
-        return mSlidingBannersAdapter != null;
+        return mHorizontalScrollingItemsAdapter != null;
     }
 
+    private void onItemTapped(SaleItemProduct item) {
+        if (item instanceof GetYouMayAlsoLikeResponse) {
+            onItemTapped((GetYouMayAlsoLikeResponse) item);
+        } else if (item instanceof RecommendedItemsResponse) {
+            onItemTapped((RecommendedItemsResponse) item);
+        }
+    }
 
-    private void onBannerTapped(GetYouMayAlsoLikeResponse responseLike) {
+    private void onItemTapped(GetYouMayAlsoLikeResponse responseLike) {
 
         YouMayAlsoLikeEventRequest YouMayAlsoLikeEventRequest = new YouMayAlsoLikeEventRequest();
         YouMayAlsoLikeEventRequest.setEventType(EventTypeId.EVENT_YOU_MAY_ALSO_LIKE);
@@ -253,7 +253,7 @@ public class SaleItemDetailsScrollingImageAdapter extends RecyclerView.Adapter<R
         mListener.reloadSaleItemDetails(responseLike);
     }
 
-    private void onBannerTapped(RecommendedItemsResponse response) {
+    private void onItemTapped(RecommendedItemsResponse response) {
         RecommendationEventRequest recommendationEventRequest = new RecommendationEventRequest();
         recommendationEventRequest.setEventType(EventTypeId.EVENT_RECOMMENDATION_VIEW);
 

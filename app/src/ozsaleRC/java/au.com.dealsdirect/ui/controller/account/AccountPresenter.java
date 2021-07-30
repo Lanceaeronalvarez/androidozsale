@@ -1,18 +1,18 @@
 package au.com.dealsdirect.ui.controller.account;
 
 import android.content.Context;
-import android.util.Log;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.account.model.AccountItem;
+import au.com.dealsdirect.ui.controller.account.model.AccountOption;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -27,73 +27,58 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     public AccountPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
                             CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
-
     }
 
     @Override
-    public void onAccountItemClick(Context context, String option) {
+    public void onAccountItemClick(Context context, AccountOption option) {
 
         if (!isViewAttached() || getMvpView().isChangeInProgress()) {
             return;
         }
 
-        if (!isNeedAuthorization(context, option)) {
-            showNoAuthenticationRequiredScreens(context, option);
+        List<AccountAction> actions = new LinkedList<>();
+
+        if (option == null || !option.isNeedsAuthentication() || isAuthorized()) {
+            if (option != null) {
+                actions.add(accountActions.get(option));
+            }
         } else {
-            if (getDataManager().isAuthorized()) {
-                showAuthenticationRequiredScreens(context, option);
-            } else {
-                if(getDataManager().isTablet()) {
-                    showAuthenticationRequiredScreens(context,
-                        context.getString(R.string.account_details));
-                }
-                getMvpView().triggerLogin(option);
+            actions.add(() -> getMvpView().triggerLogin(option));
+            if (isTablet()) {
+                actions.add(() -> getMvpView().showMyDetailsController());
             }
         }
-    }
 
-    private void showAuthenticationRequiredScreens(Context context, String option) {
-        if (option.equals(context.getString(R.string.account_details))) {
-            getMvpView().showMyDetailsController();
-        } else if (option.equals(context.getString(R.string.account_addresses))) {
-            getMvpView().showMyAddressesController();
-        } else if (option.equals(context.getString(R.string.account_orders))) {
-            getMvpView().showMyOrders();
-        } else if (option.equals(context.getString(R.string.account_vouchers))) {
-            getMvpView().showMyVouchers();
-        } else if (option.equals(context.getString(R.string.account_returns))) {
-            getMvpView().showMyReturns();
-        } else if (option.equals(context.getString(R.string.account_payments))) {
-            getMvpView().showMyPaymentsController();
-        } else if (option.equals(context.getString(R.string.account_ourpay))) {
-            getMvpView().showMyAccountsOurpay();
-        } else if (option.equals(context.getString(R.string.account_select))) {
-            getMvpView().showMyAccountsSelect();
-        } else if (option.equals(context.getString(R.string.account_contact_us))) {
-            getMvpView().showContactUs();
-        } else if (option.equals(context.getString(R.string.account_invite_friend))) {
-            getMvpView().showInviteAFriend();
+        for (AccountAction action : actions) {
+            action.action();
         }
     }
 
-    private void showNoAuthenticationRequiredScreens(Context context, String option) {
-        if (option.equals(context.getString(R.string.account_language))) {
-            getMvpView().showLanguage();
-        } else if (option.equals(context.getString(R.string.account_about_us))) {
-            getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_ABOUT_US, option);
-        } else if (option.equals(context.getString(R.string.account_privacy))) {
-            getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_PRIVACY, option);
-        } else if (option.equals(context.getString(R.string.account_tnc))) {
-            getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_TNC, option);
-        } else if (option.equals(context.getString(R.string.account_country))) {
-            getMvpView().showCountry();
-        } else if (option.equals(context.getString(R.string.account_notification))) {
-            getMvpView().showNotification();
-        } else if (option.equals(context.getString(R.string.account_tutorial))) {
-            getMvpView().showTutorial();
-        } else if (option.equals(context.getString(R.string.account_logout))) {
-            getMvpView().triggerLogout();
-        }
+    private HashMap<AccountOption, AccountAction> accountActions = new HashMap<AccountOption, AccountAction>() {{
+        put(AccountOption.MYDETAILS, () -> getMvpView().showMyDetailsController());
+        put(AccountOption.ADDRESSES, () -> getMvpView().showMyAddressesController());
+        put(AccountOption.ORDERS, () -> getMvpView().showMyOrders());
+        put(AccountOption.VOUCHERS, () -> getMvpView().showMyVouchers());
+        put(AccountOption.RETURNS, () -> getMvpView().showMyReturns());
+        put(AccountOption.RETURNSPOLICY, () -> getMvpView().showReturnsPolicy());
+        put(AccountOption.CONTACTUS, () -> getMvpView().showContactUs());
+        put(AccountOption.PAYMENTS, () -> getMvpView().showMyPaymentsController());
+        put(AccountOption.OURPAY, () -> getMvpView().showMyAccountsOurpay());
+        put(AccountOption.SELECT, () -> getMvpView().showMyAccountsSelect());
+        put(AccountOption.INVITEFRIEND, () -> getMvpView().showInviteAFriend());
+        put(AccountOption.LANGUAGE, () -> getMvpView().showLanguage());
+        put(AccountOption.ABOUTUS, () -> getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_ABOUT_US, AccountOption.ABOUTUS));
+        put(AccountOption.PRIVACYPOLICY, () -> getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_PRIVACY, AccountOption.PRIVACYPOLICY));
+        put(AccountOption.TERMSANDCONDITIONS, () -> getMvpView().showLegalities(BundleKeys.TEMPLATE_KEY_TNC, AccountOption.TERMSANDCONDITIONS));
+        put(AccountOption.COUNTRY, () -> getMvpView().showCountry());
+        put(AccountOption.NOTIFICATIONS, () -> getMvpView().showNotification());
+        put(AccountOption.TUTORIAL, () -> getMvpView().showTutorial());
+        put(AccountOption.LOGOUT, () -> getMvpView().triggerLogout());
+        put(AccountOption.INFORMATION, () -> getMvpView().showInformationMenu());
+    }};
+
+    private interface AccountAction {
+        void action();
     }
 
     @Override
@@ -139,20 +124,6 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     @Override
     public void loadAccountItems(List<AccountItem> accountItems) {
         getMvpView().showAccountItems(accountItems);
-    }
-
-    private boolean isNeedAuthorization(Context context, String option) {
-        Log.d("accounts", "option = " + option);
-        return option.equals(context.getString(R.string.account_details)) ||
-                option.equals(context.getString(R.string.account_addresses)) ||
-                option.equals(context.getString(R.string.account_orders)) ||
-                option.equals(context.getString(R.string.account_vouchers)) ||
-                option.equals(context.getString(R.string.account_returns)) ||
-                option.equals(context.getString(R.string.account_payments)) ||
-                option.equals(context.getString(R.string.account_ourpay)) ||
-                option.equals(context.getString(R.string.account_select)) ||
-                option.equals(context.getString(R.string.account_contact_us)) ||
-                option.equals(context.getString(R.string.account_invite_friend));
     }
 
 }

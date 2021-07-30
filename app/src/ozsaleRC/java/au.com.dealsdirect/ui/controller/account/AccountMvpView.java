@@ -6,6 +6,7 @@ import java.util.List;
 
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.account.model.AccountItem;
+import au.com.dealsdirect.ui.controller.account.model.AccountOption;
 
 /**
  * dp Created by Admin on 6/6/17.
@@ -27,6 +28,8 @@ public interface AccountMvpView extends MvpView {
 
     void showMyReturns();
 
+    void showReturnsPolicy();
+
     void showMyPaymentsController();
 
     void showMyAccountsOurpay();
@@ -45,9 +48,11 @@ public interface AccountMvpView extends MvpView {
 
     void showNotification();
 
-    void showLegalities(String key, String option);
+    void showLegalities(String key, AccountOption option);
 
-    void triggerLogin(String option);
+    void showInformationMenu();
+
+    void triggerLogin(AccountOption option);
 
     void triggerLogout();
 

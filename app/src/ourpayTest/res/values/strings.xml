@@ -194,7 +194,7 @@
         <item>@string/account_contact_us</item>
         <item>@string/account_tnc</item>
         <item>@string/account_privacy</item>
-        <item>@string/account_about_us</item>
+        <item>@string/account_information</item>
     </integer-array>
 
     <integer-array name="account_drawable_array">

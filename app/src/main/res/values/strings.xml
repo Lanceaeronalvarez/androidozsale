@@ -427,6 +427,8 @@
     <string name="account_invite_friend">Invite Your Friends</string>
     <string name="account_language">My Languages</string>
     <string name="account_contact_us">Contact Us</string>
+    <string name="account_terms_and_conditions">Terms and Conditions</string>
+    <string name="account_returns_policy">Returns Policy</string>
     <string name="account_country">My Country</string>
     <string name="account_ourpay">Ourpay</string>
     <string name="account_select">Select</string>
@@ -438,6 +440,7 @@
     <string name="account_tnc">Terms &amp; Conditions</string>
     <string name="account_tutorial">Tutorial</string>
     <string name="account_logout">Logout</string>
+    <string name="account_information">Information</string>
     <string name="personalise">Personalise</string>
     <string name="please_fill_up_personalisation_details">Please fill up personalisation details</string>
     <string name="max_characters">Max characters:&#160;</string>
@@ -484,13 +487,12 @@
         <item>@string/account_payments</item>
         <item>@string/account_vouchers</item>
         <item>@string/account_returns</item>
+        <item>@string/account_returns_policy</item>
         <item>@string/account_language</item>
         <item>@string/account_country</item>
         <item>@string/account_ourpay</item>
         <!--<item>@string/account_select</item>-->
-        <item>@string/account_tnc</item>
-        <item>@string/account_privacy</item>
-        <item>@string/account_about_us</item>
+        <item>@string/account_information</item>
     </integer-array>
 
     <integer-array name="account_drawable_array">
@@ -781,7 +783,7 @@
     <string name="recommended_for_you">Recommended for you</string>
     <string name="you_may_also_like">You may also like</string>
     <string name="recently_viewed">Recently Viewed</string>
-    
+
     <string name="enter_address_above">Enter address above</string>
 
     <string name="address_change_success">Address successfully changed</string>
@@ -790,4 +792,71 @@
     <string name="category_all">All</string>
     <string name="how_was_experience">How was your experience with our customer service?</string>
     <string name="thank_you_for_feedback">Thank you for your feedback, this will help us improve our service.</string>
+
+    <string name="returns_policy_step_title_1">Step 1</string>
+    <string name="returns_policy_step_title_2">Step 2</string>
+    <string name="returns_policy_step_title_3">Step 3</string>
+    <string name="returns_policy_step_title_4">Step 4</string>
+
+    <string-array name="returns_policy_step_titles">
+        <item>@string/returns_policy_step_title_1</item>
+        <item>@string/returns_policy_step_title_2</item>
+        <item>@string/returns_policy_step_title_3</item>
+        <item>@string/returns_policy_step_title_4</item>
+    </string-array>
+
+    <string name="returns_policy_step_description_1">You can request for a return within 30 days of receiving your order. Log in and go to My Returns. Select the item(s) you wish to return and indicate the reason for returning. Any attached photos, videos or additional comments in the form will be useful.</string>
+    <string name="returns_policy_step_description_2">Our Customer Team will review your request within 1 - 3 working days. Once approved, you will receive an email with your unique Return Authorisation Number (RAN) and the return instructions.</string>
+    <string name="returns_policy_step_description_3">Follow the instructions. Attach the return label to your parcel and pass it to the delivery service within 7 calendar days. Make sure the RAN is visible on the parcel.</string>
+    <string name="returns_policy_step_description_4">We will email you when we have received your parcel. We will process any refunds or store credits within 3 - 5 working days.</string>
+
+    <string-array name="returns_policy_step_descriptions">
+        <item>@string/returns_policy_step_description_1</item>
+        <item>@string/returns_policy_step_description_2</item>
+        <item>@string/returns_policy_step_description_3</item>
+        <item>@string/returns_policy_step_description_4</item>
+    </string-array>
+
+    <string name="returns_policy_faq_title_1">Do I have to pay to return my items?</string>
+    <string name="returns_policy_faq_title_2">What is a Change of Mind return?</string>
+    <string name="returns_policy_faq_title_3">What can I return as Change of Mind?</string>
+    <string name="returns_policy_faq_title_4">My return request is approved. How do I return my items?</string>
+    <string name="returns_policy_faq_title_5">When will I get my money back after returning the item?</string>
+    <string name="returns_policy_faq_title_6">My return items seem too bulky or too large to be returned according to the guidelines shown in your email. What should I do?</string>
+    <string name="returns_policy_faq_title_7">I just saw the refunded amount. Why didn’t I get a full refund?</string>
+    <string name="returns_policy_faq_title_8">Can I drop off my returned items directly to your office or your warehouse?</string>
+
+    <string-array name="returns_policy_faq_titles">
+        <item>@string/returns_policy_faq_title_1</item>
+        <item>@string/returns_policy_faq_title_2</item>
+        <item>@string/returns_policy_faq_title_3</item>
+        <item>@string/returns_policy_faq_title_4</item>
+        <item>@string/returns_policy_faq_title_5</item>
+        <item>@string/returns_policy_faq_title_6</item>
+        <item>@string/returns_policy_faq_title_7</item>
+        <item>@string/returns_policy_faq_title_8</item>
+    </string-array>
+
+    <string name="returns_policy_faq_content_1">We will provide a free return if your received item(s) is damaged, faulty or incorrect according to your order or item description. For Change of Mind returns, you will have to pay for the return charges. Please refer to the question ‘What is a Change of Mind return?’ to know if your return is to be lodged as ‘Change of Mind’.</string>
+    <string name="returns_policy_faq_content_2">A ‘Change of Mind’ return is to be lodged for item(s) delivered to you according to your order with no defects. This would include items that have the correct size, colour and product description according to your order.\n\nWe accept most items back for Change of Mind returns. However, we have additional considerations. Please refer to the question ‘What can I return as Change of Mind?’ for more details.</string>
+    <string name="returns_policy_faq_content_3">A ‘Change of Mind’ return is to be lodged for item(s) delivered to you according to your order with no defects. This would include items that have the correct size, colour and product description according to your order.\n\nWe accept most items back if you change your mind, however we do have the following considerations.\n\n\t• Returned items must be unused and be in a fine and resalable condition. All original packaging and tags (where applicable) must be intact. Any instruction manuals, guides, add-ons or free gifts must also be returned.\n\t• Items bought from Clearance sales or Warehouse Sales are non-returnable and non-refundable due to Change of Mind\n\t• Intimate apparel, swimwear, earrings, health &amp; beauty products are non-returnable and non-refundable. These items are deemed not resellable in the interest of hygiene.\n\t• The following items are also non-returnable and non-refundable:\n\t\t◦ Perishable products, liquor, food and beverages\n\t\t◦ Household essentials and general cleaning products\n\t\t◦ CDs, DVDs or any other products containing digital content\n\t\t◦ Customized or personalized products\n\t\t◦ Oversized or heavy items\n\nOnce your return is approved, you will receive an email on how to return your items. You will be requested to pay for the delivery charges of your return parcel. Once we have received your returned item(s), store credits will be deposited into your account and can be used within the next 6 months.</string>
+    <string name="returns_policy_faq_content_4">Look out for our email, which will indicate the return guidelines and your unique Return Authorisation Number (RAN). Depending on the items you wish to return, they should be returned either to our warehouse or directly to our suppliers.\n\nFor all returns except Change of Mind returns, please use our return delivery services, free of charge. Fill up the simple online form, print out the return label (which should indicate clearly your unique RAN), stick it to the return parcel, and pass it to the delivery service within 7 calendar days.\n\nFor Change of Mind returns, you may be requested to arrange for your own preferred delivery service within 7 calendar days. Please ensure your unique RAN is visible on the parcel.\n\nIf you still have not received the return guidelines and your unique RAN a few days after your request is approved, please contact our Customer Team via My Returns on the website.</string>
+    <string name="returns_policy_faq_content_5">For all returns except Change of Mind returns, once we have received your returned item(s), we will proceed with the refund back to your original payment method within 3 – 5 working days. Depending on the issuer or payment method, it may take an additional few working days for the refunded amount to appear on your statement.\n\nFor Change of Mind returns, store credits will be deposited into your account and can be used within the next 6 months.</string>
+    <string name="returns_policy_faq_content_6">Yes, while such cases are not common, we do come across them occasionally. Please contact our Customer Team for further discussion via My Returns on the website.</string>
+    <string name="returns_policy_faq_content_7">This may be because you request to return only some of the items in your order. The price value of the items that are not requested for return will not be refunded. Also, the delivery charges you paid for those items not requested for return will not be refunded.\n\nIn addition, if you have used any store credits, vouchers or promotion codes for your order, part of the refunded amount may be in the form of store credits.</string>
+    <string name="returns_policy_faq_content_8">Unfortunately, we don’t have the necessary facilities to accept any walk-in returns. All returns must be posted.</string>
+
+    <string-array name="returns_policy_faq_content">
+        <item>@string/returns_policy_faq_content_1</item>
+        <item>@string/returns_policy_faq_content_2</item>
+        <item>@string/returns_policy_faq_content_3</item>
+        <item>@string/returns_policy_faq_content_4</item>
+        <item>@string/returns_policy_faq_content_5</item>
+        <item>@string/returns_policy_faq_content_6</item>
+        <item>@string/returns_policy_faq_content_7</item>
+        <item>@string/returns_policy_faq_content_8</item>
+    </string-array>
+
+    <string name="go_to_my_returns">Go to My Returns</string>
+
 </resources>

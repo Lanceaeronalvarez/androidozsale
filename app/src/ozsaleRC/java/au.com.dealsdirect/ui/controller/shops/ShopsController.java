@@ -73,11 +73,13 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
 
 public class ShopsController extends BaseController implements ShopsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
 
-    private static enum BannerDimensionsOverride {
+    private enum BannerDimensionsOverride {
         DONT_OVERRIDE,
         USE_OLD,
         USE_NEW
     }
+
+    private static final boolean CIRCULAR_CATEGORY_BANNERS = false;
 
     private static final boolean BANNER_DIMENSIONS_TOGGLE_BUTTON_ENABLED = false;
     private static final BannerDimensionsOverride OVERRIDE_BANNER_DIMENSIONS_FOR_MOBILE = BannerDimensionsOverride.USE_NEW;
@@ -730,6 +732,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 adapter = new HorizontalScrollingBannerAdapter();
                 adapter.setDataSource(slidingBanners);
                 adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.PromoBanner);
+                adapter.setImageResolutionOverride(mActivity.getResources().getInteger(R.integer.banner_resolution_override));
             }
         }
         mBannersAdapter.setSlidingBannersAdapter(adapter);
@@ -769,6 +772,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void showCategoryBanners(GetBannerResponse getBannerResponses) {
         HorizontalScrollingBannerAdapter adapter = null;
+        String title = null;
         if (getBannerResponses != null) {
             List<GetBannerResponse.Banner> categoryBanners = new ArrayList<>();
             List<GetBannerResponse.Group> groups = getBannerResponses.getGroups();
@@ -782,6 +786,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                                     categoryBanners.add(banner);
                                 }
                             }
+                            title = group.getTitle();
                         }
                     }
                 }
@@ -789,8 +794,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             if (!categoryBanners.isEmpty()) {
                 adapter = new HorizontalScrollingBannerAdapter();
                 adapter.setDataSource(categoryBanners);
-                adapter.setTitle(null);
-                adapter.setShouldShowTitle(true);
+                adapter.setTitle(title.toUpperCase());
+                adapter.setShouldShowTitle(CIRCULAR_CATEGORY_BANNERS);
+                adapter.setUseCircularImage(CIRCULAR_CATEGORY_BANNERS);
+                adapter.setImageResolutionOverride(mActivity.getResources().getInteger(R.integer.category_banner_resolution_override));
+                if (CIRCULAR_CATEGORY_BANNERS) {
+                    adapter.setBackgroundColorOverride(mActivity.getResources().getColor(R.color.background_default));
+                }
             }
         }
         mBannersAdapter.setCategoryBannersAdapter(adapter);

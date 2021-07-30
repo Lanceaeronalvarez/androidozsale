@@ -27,6 +27,7 @@ import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
+import au.com.dealsdirect.ui.controller.information.InformationMenuController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
@@ -43,6 +44,7 @@ import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsCon
 import au.com.dealsdirect.ui.controller.returns.newreturn.NewReturnController;
 import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
+import au.com.dealsdirect.ui.controller.returns.returnspolicy.ReturnsPolicyViewController;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -157,6 +159,8 @@ public interface ControllerComponent {
     
     void inject(NotificationController controller);
 
+    void inject(InformationMenuController controller);
+
     void inject(MyAccountsOurpayController controller);
 
     void inject(WebViewController controller);
@@ -164,4 +168,6 @@ public interface ControllerComponent {
     void inject(AfterpayViewController controller);
 
     void inject(FloatingImageViewerController controller);
+
+    void inject(ReturnsPolicyViewController controller);
 }

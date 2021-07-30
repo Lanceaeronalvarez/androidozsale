@@ -244,6 +244,7 @@
     <color name="toolbar_fade_in_color">@color/white</color>
     <color name="refunded_state_color">@color/ourpay_red</color>
     <color name="banner_discount_color">#f09536</color>
+    <color name="banner_discount_color_dark">#fc6e21</color>
     <color name="bg_product_detail_discount_button">#00ba57</color>
     <color name="product_details_promotion_discount">#f8952b</color>
     <color name="bg_banner_discount">#CA433C</color>
@@ -283,7 +284,8 @@
 
     <color name="user_feedback_bg">#CAEDC7</color>
 
-    <color name="free_shipping_color">#46A1D8</color>
+    <color name="free_shipping_color">#46aded</color>
+    <color name="free_shipping_color_dark">#459dcc</color>
 
     <color name="brand_bubble_text_color">#323232</color>
     <color name="brand_bubble">#D6D7DD</color>

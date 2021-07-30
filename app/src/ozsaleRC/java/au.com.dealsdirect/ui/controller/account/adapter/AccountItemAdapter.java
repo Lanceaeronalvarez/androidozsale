@@ -15,6 +15,7 @@ import java.util.List;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.controller.account.AccountMvpPresenter;
 import au.com.dealsdirect.ui.controller.account.model.AccountItem;
+import au.com.dealsdirect.ui.controller.account.model.AccountOption;
 
 /**
  * dp Created by Admin on 6/20/17.
@@ -52,12 +53,14 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
 
     @Override
     public long getGroupId(int groupPosition) {
-        return mAccountItems.get(groupPosition).getId();
+//        return mAccountItems.get(groupPosition).getOption().getTitleResourceId();
+        return groupPosition;
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return mAccountItems.get(groupPosition).getSubItems().get(childPosition).getId();
+//        return mAccountItems.get(groupPosition).getSubItems().get(childPosition).getOption().getTitleResourceId();
+        return childPosition;
     }
 
     @Override
@@ -74,9 +77,11 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
 
     @Override
     public void onBindGroupViewHolder(AccountItemViewHolder holder, int groupPosition, int viewType) {
-        String title = mAccountItems.get(groupPosition).getTitle();
+        final AccountItem item = mAccountItems.get(groupPosition);
+        final AccountOption option = item.getOption();
+        final String title = holder.itemView.getContext().getResources().getString(option.getTitleResourceId());
 
-        if (title.equals(mContext.getString(R.string.account_options))) {
+        if (item.getSubItems().isEmpty()) {
             holder.mAccountArrowRight.setVisibility(View.INVISIBLE);
         } else {
             holder.mAccountArrowRight.setVisibility(View.VISIBLE);
@@ -89,24 +94,26 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
             if (mPresenter.isTablet() && mPresenter.willScreenChange(mContext, title)) {
                 setSelectedPosition(groupPosition);
             }
-            mPresenter.onAccountItemClick(mContext, title);
+            mPresenter.onAccountItemClick(mContext, option);
         });
 
     }
 
     @Override
     public void onBindChildViewHolder(AccountSubItemViewHolder holder, int groupPosition, int childPosition, int viewType) {
-        String title = mAccountItems.get(groupPosition).getSubItems().get(childPosition).getTitle();
+        final AccountItem item = mAccountItems.get(groupPosition);
+        final AccountItem subItem = item.getSubItems().get(childPosition);
+        final AccountOption option = subItem.getOption();
+        final String title = holder.itemView.getContext().getResources().getString(option.getTitleResourceId());
 
-        if (title.equals(mContext.getString(R.string.account_clear_cookies_data))) {
+        if (item.getSubItems().isEmpty()) {
             holder.mAccountArrowRight.setVisibility(View.INVISIBLE);
         } else {
             holder.mAccountArrowRight.setVisibility(View.VISIBLE);
         }
 
         holder.mAccountSubItemName.setText(title);
-        holder.itemView.setOnClickListener(view -> mPresenter.onAccountItemClick(mContext, title));
-
+        holder.itemView.setOnClickListener(view -> mPresenter.onAccountItemClick(mContext, option));
     }
 
     @Override
@@ -145,12 +152,7 @@ public class AccountItemAdapter extends AbstractExpandableItemAdapter<AccountIte
         }
     }
 
-    public String getTitle(int position) {
-        AccountItem item = mAccountItems.get(position);
-        if (item != null) {
-            return item.getTitle();
-        } else {
-            return "";
-        }
+    public AccountItem getAccountItem(int position) {
+        return mAccountItems.get(position);
     }
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_default"
+        android:paddingEnd="@dimen/padding_default">
+
+        <TextView
+            android:id="@+id/row_viewholder_text"
+            fontPath="@string/font_app_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/row_viewholder_image_right"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/viewholder_subcategory_height"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small"
+            android:text="Line 1\nLine 2\nLong Line Long Line Long Line Long Line Long Line Long Line Long Line Long Line Long Line "
+            android:textColor="@color/category_text_selector"
+            android:textSize="@dimen/text_size_body"
+            tools:ignore="MissingPrefix" />
+
+        <ImageView
+            android:id="@+id/row_viewholder_image_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_gray_chevron" />
+    </RelativeLayout>
+
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_marginStart="@dimen/padding_default" />
+
+</LinearLayout>

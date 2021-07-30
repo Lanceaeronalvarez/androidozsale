@@ -106,7 +106,6 @@ import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.LoadImagesListener;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
-import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.PersonalisationLayout;
@@ -142,6 +141,8 @@ import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView {
 
     private final static int ACTIVITY_INDICATOR_DELAY = 2000; // milliseconds
+
+    private final static boolean IS_DISCOUNT_POG_ENABLED = false;
 
     public abstract static class Parameters {
         private Parameters() {
@@ -1152,7 +1153,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
         DataCollector.logEvent(Events.CVItemDetails, parameters);
 
-        mPresenter.getDynamicDiscount(saleDetail.getSkuId());
+        if (!IS_DISCOUNT_POG_ENABLED) {
+            mPresenter.getDynamicDiscount(saleDetail.getSkuId());
+        }
 
         mFreeDeliveryImageView.setVisibility(mIsFreeDelivery ? View.VISIBLE : View.GONE);
 
@@ -1558,7 +1561,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void setDynamicDiscount(String discountText) {
-        if (discountText == null) {
+        if (!IS_DISCOUNT_POG_ENABLED || discountText == null) {
             mProductDiscountPogTextView.setVisibility(View.GONE);
             return;
         }
@@ -1614,10 +1617,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
         mYouMayAlsoLikeContainer.setVisibility(View.VISIBLE);
 
-        HorizontalScrollingBannerAdapter adapter = new HorizontalScrollingBannerAdapter();
+        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter();
         adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
 
-        adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.YouMayAlsoLike);
         SaleItemDetailsScrollingImageAdapter youMayAlsoLikeAdapter = new SaleItemDetailsScrollingImageAdapter(
                 mActivity,
                 mPresenter,
@@ -1655,9 +1657,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mRecommendedList = recommendedItemsResponseList;
 
-        HorizontalScrollingBannerAdapter adapter = null;
+        HorizontalScrollingItemsAdapter adapter = null;
         if (!recommendedItemsResponseList.isEmpty()) {
-            adapter = new HorizontalScrollingBannerAdapter();
+            adapter = new HorizontalScrollingItemsAdapter();
             adapter.setRecommendedList(recommendedItemsResponseList);
         }
 
@@ -1670,7 +1672,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 recommendedItemsResponseList);
 
         mRecommendedAdapter.setSlidingBannersAdapter(adapter);
-        adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.RecommendedItems);
 
         GridLayoutManager mLayoutManager = new GridLayoutManager(
                 mActivity,
@@ -1699,13 +1700,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
         mRecentlyViewedContainer.setVisibility(View.VISIBLE);
 
-        HorizontalScrollingBannerAdapter adapter = null;
+        HorizontalScrollingItemsAdapter adapter = null;
         if (!response.isEmpty()) {
-            adapter = new HorizontalScrollingBannerAdapter();
+            adapter = new HorizontalScrollingItemsAdapter();
             adapter.setRecentlyViewedList(response);
         }
 
-        adapter.setBannerViewType(HorizontalScrollingBannerAdapter.BannerViewType.RecentlyViewed);
         adapter.setShouldRepeatCellsToFillWidth(false);
         RecentlyViewedItemAdapter recentlyViewedAdapter = new RecentlyViewedItemAdapter(
                 mActivity,

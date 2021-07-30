@@ -23,16 +23,18 @@ import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsControl
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.details.DetailsController;
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
+import au.com.dealsdirect.ui.controller.information.InformationMenuController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
-import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
+import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.notification.NotificationController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
+import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
 import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.CurrentReturnsController;
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
@@ -43,7 +45,6 @@ import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.tutorial.TutorialController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
-import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
 import au.com.dealsdirect.ui.controller.webviewcontroller.WebViewController;
 
 /**
@@ -141,6 +142,8 @@ public class ControllerFactory {
                 return CountryController.newInstance();
             case NOTIFICATION:
                 return NotificationController.newInstance();
+            case INFORMATION_MENU:
+                return InformationMenuController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
             case MY_ACCOUNTS_OURPAY:
@@ -226,6 +229,8 @@ public class ControllerFactory {
                 return CountryController.newInstance();
             case NOTIFICATION:
                 return NotificationController.newInstance();
+            case INFORMATION_MENU:
+                return InformationMenuController.newInstance();
             case TUTORIAL:
                 return TutorialController.newInstance();
             case MY_ACCOUNTS_OURPAY:
@@ -282,11 +287,11 @@ public class ControllerFactory {
             return GateKeeper.Destination.MASTERPASS;
         }
 
-        if (controller instanceof  AddContactController) {
+        if (controller instanceof AddContactController) {
             return GateKeeper.Destination.ADD_CONTACT;
         }
 
-        if (controller instanceof  ViewVouchersController) {
+        if (controller instanceof ViewVouchersController) {
             return GateKeeper.Destination.VIEW_VOUCHERS;
         }
 
@@ -300,9 +305,9 @@ public class ControllerFactory {
 
         if (controller instanceof LegalitiesController) {
             return GateKeeper.Destination.LEGALITIES;
-	    }
+        }
 
-	    if (controller instanceof MyAccountsOurpayController) {
+        if (controller instanceof MyAccountsOurpayController) {
             return GateKeeper.Destination.MY_ACCOUNTS_OURPAY;
         }
 

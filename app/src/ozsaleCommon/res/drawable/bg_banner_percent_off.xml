@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="false" android:state_enabled="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/corner_radius_default" />
+            <stroke android:width="@dimen/border_regular" android:color="#ffffff" />
+            <gradient
+                android:type="linear"
+                android:angle="90"
+                android:startColor="@color/banner_discount_color_dark"
+                android:endColor="@color/banner_discount_color" />
+        </shape>
+    </item>
+</selector>
