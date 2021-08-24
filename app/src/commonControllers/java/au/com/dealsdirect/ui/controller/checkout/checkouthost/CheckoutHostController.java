@@ -371,8 +371,8 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
                 oldPrice,
                 null,
                 null,
-                "",
-                "", isFreeDelivery, false);
+                null,
+                "", "", isFreeDelivery, false);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));

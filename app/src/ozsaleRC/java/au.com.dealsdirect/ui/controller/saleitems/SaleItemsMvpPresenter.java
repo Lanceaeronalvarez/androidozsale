@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 /**
@@ -32,17 +33,14 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest);
 
-    void loadProductDetails(RecyclerView.ViewHolder viewHolder,
-                            int position,
-                            String seoIdentifierId,
+    void loadProductDetails(int position,
                             Drawable imagePlaceholderDrawable,
                             String imageUrl,
-                            String skuId,
-                            String saleId,
-                            boolean isFreeDelivery,
-                            String discountText,
-                            String discountedPriceText,
-                            boolean isSoldOut);
+                            SaleItemProduct product,
+                            int viewLeft,
+                            int viewTop,
+                            int viewWidth,
+                            int viewHeight);
 
     void loadSortingFacets();
 

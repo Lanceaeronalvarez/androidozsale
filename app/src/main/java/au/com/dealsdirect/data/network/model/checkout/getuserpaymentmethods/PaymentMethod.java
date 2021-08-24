@@ -1,8 +1,11 @@
 
 package au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.stripe.android.model.CardBrand;
 
 import java.io.Serializable;
 
@@ -36,6 +39,10 @@ public class PaymentMethod implements Serializable {
 
     private int id;
 
+    @NonNull
+    public CardBrand getCardBrand() {
+        return CardBrand.Companion.fromCode(paymentType);
+    }
     public String getPaymentType() {
         return paymentType;
     }

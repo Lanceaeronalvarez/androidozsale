@@ -450,6 +450,9 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     private boolean isShipmentAvailable(List<Shipment> shipments) {
+        if (shipments == null) {
+            return false;
+        }
         for (Shipment shipment : shipments) {
             if (!shipment.getShippingAvailability()) {
                 return false;

@@ -18,6 +18,8 @@ public class PromoInfoResponse extends ArrayList<PromoInfoResponse.PromoInfo> {
     private static String KEY_DELIVERY_TYPE = "DeliveryType";
     private static String KEY_DELIVERY_THRESHOLD = "DeliveryThreshold";
     private static String KEY_SHOW_POSTCODE = "ShowPostcode";
+    private static String KEY_SHIPPING_AVAILABILITY = "ShippingAvailability";
+    private static String KEY_DELIVERY_PRICE = "DeliveryPrice";
 
     private HashMap<String, String> rearrangedDataStructure = null;
 
@@ -85,7 +87,20 @@ public class PromoInfoResponse extends ArrayList<PromoInfoResponse.PromoInfo> {
 
     public boolean getShowPostCode() {
         rearrangeDataStructure();
-        return Boolean.parseBoolean(rearrangedDataStructure.get(KEY_SHOW_POSTCODE));
+        String showPostCodeString = rearrangedDataStructure.get(KEY_SHOW_POSTCODE);
+        return showPostCodeString != null && Boolean.parseBoolean(showPostCodeString);
+    }
+
+    public Boolean getShippingAvailability() {
+        rearrangeDataStructure();
+        String shippingAvailabilityString = rearrangedDataStructure.get(KEY_SHIPPING_AVAILABILITY);
+        return shippingAvailabilityString != null ? Boolean.parseBoolean(shippingAvailabilityString) : null;
+    }
+
+    public Float getDeliveryPrice() {
+        rearrangeDataStructure();
+        String deliveryPriceString = rearrangedDataStructure.get(KEY_DELIVERY_PRICE);
+        return deliveryPriceString != null ? Float.parseFloat(deliveryPriceString) : null;
     }
 
     public static class PromoInfo {

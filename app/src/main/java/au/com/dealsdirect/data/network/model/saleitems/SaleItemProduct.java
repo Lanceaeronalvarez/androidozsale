@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import au.com.dealsdirect.data.network.model.saleitemdetails.Attributes;
-import au.com.dealsdirect.data.network.model.saleitemdetails.OriginalPrice;
 
 public class SaleItemProduct {
     @SerializedName("id")
@@ -36,6 +35,14 @@ public class SaleItemProduct {
     @SerializedName("originalPrice")
     @Expose
     private Price originalPrice;
+
+    @SerializedName("priceRange")
+    @Expose
+    private PriceRange priceRange;
+
+    @SerializedName("priceRangeText")
+    @Expose
+    private String priceRangeText;
 
     @SerializedName("images")
     @Expose
@@ -160,6 +167,14 @@ public class SaleItemProduct {
         return price;
     }
 
+    public PriceRange getPriceRange() {
+        return priceRange;
+    }
+
+    public String getPriceRangeText() {
+        return priceRangeText;
+    }
+
     public String getLabelText() {
         return labelText;
     }
@@ -193,6 +208,24 @@ public class SaleItemProduct {
         }
     }
 
+    public static class PriceRange {
+        private String currency;
+        private double from;
+        private double to;
+
+        public double getFrom() {
+            return from;
+        }
+
+        public double getTo() {
+            return to;
+        }
+
+        public String getCurrency() {
+            return currency;
+        }
+    }
+
     public static class SalePrice extends Price {
     }
 
@@ -215,10 +248,10 @@ public class SaleItemProduct {
         private String labelText;
         @SerializedName("price")
         @Expose
-        private au.com.dealsdirect.data.network.model.saleitemdetails.Price price;
+        private Price price;
         @SerializedName("originalPrice")
         @Expose
-        private OriginalPrice originalPrice;
+        private Price originalPrice;
         @SerializedName("quantity")
         @Expose
         private int quantity;
@@ -287,19 +320,19 @@ public class SaleItemProduct {
             this.labelText = labelText;
         }
 
-        public au.com.dealsdirect.data.network.model.saleitemdetails.Price getPrice() {
+        public Price getPrice() {
             return price;
         }
 
-        public void setPrice(au.com.dealsdirect.data.network.model.saleitemdetails.Price price) {
+        public void setPrice(Price price) {
             this.price = price;
         }
 
-        public OriginalPrice getOriginalPrice() {
+        public Price getOriginalPrice() {
             return originalPrice;
         }
 
-        public void setOriginalPrice(OriginalPrice originalPrice) {
+        public void setOriginalPrice(Price originalPrice) {
             this.originalPrice = originalPrice;
         }
 

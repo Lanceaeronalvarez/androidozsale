@@ -205,7 +205,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         mPresenter.onAttach(this);
 //        mPresenter.callGetTemplateTexts();
-        MobileAds.initialize(this, getResources().getString(R.string.admob_app_id));
+        MobileAds.initialize(this);
 
         if (mAppHasSavedInstance && Settings.getIsMultiCountry() && !mPresenter.defaultCountryId().isEmpty()) {
             Settings.Country country = Settings.getCountryWithId(mPresenter.defaultCountryId());
@@ -1619,7 +1619,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 cardNumber, month, year, cvv);
 
         PaymentMethod paymentMethod = new PaymentMethod();
-        paymentMethod.setPaymentType(card.getBrand());
+        paymentMethod.setPaymentType(card.getBrand().getCode());
         paymentMethod.setDescription("******" + card.getLast4());
         paymentMethod.setProviderType(AppConstants.STRIPE);
         setPaymentMethodSelected(paymentMethod);

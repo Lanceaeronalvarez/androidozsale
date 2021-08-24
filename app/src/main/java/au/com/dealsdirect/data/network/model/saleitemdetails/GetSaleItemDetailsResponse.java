@@ -6,8 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class GetSaleItemDetailsResponse {
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 
+public class GetSaleItemDetailsResponse extends SaleItemProduct {
     @SerializedName("personalizationSchema")
     @Expose
     private String personalisation;
@@ -20,33 +21,9 @@ public class GetSaleItemDetailsResponse {
     @SerializedName("attributes")
     @Expose
     private Attributes attributes;
-    @SerializedName("name")
-    @Expose
-    private String name;
-    @SerializedName("description")
-    @Expose
-    private String description;
-    @SerializedName("labelText")
-    @Expose
-    private String labelText;
-    @SerializedName("isSoldOut")
-    @Expose
-    private boolean isSoldOut;
-    @SerializedName("price")
-    @Expose
-    private Price price;
-    @SerializedName("originalPrice")
-    @Expose
-    private OriginalPrice originalPrice;
     @SerializedName("quantity")
     @Expose
     private Integer quantity;
-    @SerializedName("images")
-    @Expose
-    private List<String> images = null;
-    @SerializedName("brandName")
-    @Expose
-    private String brandName;
     @SerializedName("countryOfOrigin")
     @Expose
     private String countryOfOrigin;
@@ -65,9 +42,6 @@ public class GetSaleItemDetailsResponse {
     @SerializedName("seoUrl")
     @Expose
     private String seoUrl;
-    @SerializedName("seoIdentifier")
-    @Expose
-    private String seoIdentifier;
     @SerializedName("productId")
     @Expose
     private String productId;
@@ -97,40 +71,9 @@ public class GetSaleItemDetailsResponse {
         return attributes;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getLabelText() {
-        return labelText;
-    }
-
-    public boolean isSoldOut() {
-        return isSoldOut;
-    }
-
-    public Price getPrice() {
-        return price;
-    }
-
-    public OriginalPrice getOriginalPrice() {
-        return originalPrice;
-    }
 
     public Integer getQuantity() {
         return quantity;
-    }
-
-    public List<String> getImages() {
-        return images;
-    }
-
-    public String getBrandName() {
-        return brandName;
     }
 
     public String getCountryOfOrigin() {
@@ -155,10 +98,6 @@ public class GetSaleItemDetailsResponse {
 
     public String getSeoUrl() {
         return seoUrl;
-    }
-
-    public String getSeoIdentifier() {
-        return seoIdentifier;
     }
 
     public String getProductId() {

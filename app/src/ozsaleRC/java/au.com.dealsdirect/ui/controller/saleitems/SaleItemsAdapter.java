@@ -240,36 +240,48 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         holder.soldout.setVisibility(product.isSoldOut() ? View.VISIBLE : View.GONE);
 
-        holder.brand.setText(product.getBrandName());
-        holder.price.setText(saleItemPrice);
-        holder.oldPrice.setText(saleItemOldPrice);
-        holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        holder.freeDelivery.setVisibility(product.getFreeDelivery() ? View.VISIBLE : View.GONE);
         final int discountValue = product.getSalePercentOff();
         final double salePriceValue = product.getSalePrice() != null ?
                 product.getSalePrice().getValue() : 0;
+        String discountedPriceText = PriceUtils.getRpStringValue(salePriceValue);
+        String priceText = saleItemPrice;
+        if (product.getPriceRangeText() != null && !product.getPriceRangeText().isEmpty()) {
+            if (discountValue > 0) {
+                discountedPriceText = product.getPriceRangeText() + " " + discountedPriceText;
+            } else {
+                priceText = product.getPriceRangeText() + " " + priceText;
+            }
+        }
+
+        holder.brand.setText(product.getBrandName());
+        holder.price.setText(priceText);
+        holder.oldPrice.setText(saleItemOldPrice);
+        holder.oldPrice.setPaintFlags(holder.oldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.freeDelivery.setVisibility(product.getFreeDelivery() ? View.VISIBLE : View.GONE);
         holder.discountPercentTextView.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
         holder.discountedPriceTextView.setVisibility(discountValue > 0 ? View.VISIBLE : View.GONE);
         holder.discountPercentTextView.setText(product.getSalePercentOffText());
-        holder.discountedPriceTextView.setText(PriceUtils.getRpStringValue(salePriceValue));
+        holder.discountedPriceTextView.setText(discountedPriceText);
 
         holder.setLiked(mPresenter.isProductInWishlist(product.getId()));
 
         RxView.clicks(holder.itemView)
                 .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
-                .subscribe(action -> mPresenter.loadProductDetails(
-                        holder,
-                        holder.getAdapterPosition(),
-                        product.getSeoIdentifier(),
-                        holder.image.getDrawable(),
-                        urlHigherRes,
-                        product.getSkus() == null || product.getSkus().isEmpty() ? "" :
-                                product.getSkus().get(0).getId(),
-                        mSaleId,
-                        product.getFreeDelivery(),
-                        product.getSalePercentOffText(),
-                        PriceUtils.getRpStringValue(salePriceValue),
-                        product.isSoldOut()));
+                .subscribe(action -> {
+                    int[] originalPos = new int[2];
+                    holder.itemView.getLocationOnScreen(originalPos);
+
+                    mPresenter.loadProductDetails(
+                            holder.getAdapterPosition(),
+                            holder.image.getDrawable(),
+                            urlHigherRes,
+                            product,
+                            originalPos[0],
+                            originalPos[1],
+                            holder.itemView.getWidth(),
+                            holder.itemView.getHeight()
+                    );
+                });
 
         holder.likeButton.setOnClickListener(v -> {
             holder.setLiked(!holder.isLiked());

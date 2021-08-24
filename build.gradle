@@ -8,26 +8,15 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.4'
+        classpath 'com.android.tools.build:gradle:4.2.2'
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
-        classpath 'com.google.gms:google-services:4.3.4'
+        classpath 'com.google.gms:google-services:4.3.8'
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3'
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:5.24.0"
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.3.0'
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:5.25.0"
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
-}
-
-plugins {
-    id 'com.gradle.build-scan' version '2.4.2'
-}
-
-buildScan {
-//    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
-//    licenseAgree = 'yes'
-    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-    termsOfServiceAgree = 'yes'
 }
 
 allprojects {
@@ -49,8 +38,8 @@ task clean(type: Delete) {
 ext {
     // Sdk and tools
     minSdkVersion = 21
-    targetSdkVersion = 29
-    compileSdkVersion = 29
+    targetSdkVersion = 30
+    compileSdkVersion = 30
     buildToolsVersion = '30.0.2'
 
     // App dependencies
@@ -64,14 +53,14 @@ ext {
     cookieJarVersion = 'v1.0.1'
 
     dagger2Version = '2.29'
-    rxjava2Version = '2.0.6'
-    rxandroidVersion = '2.0.1'
+    rxjava2Version = '2.2.13'
+    rxandroidVersion = '2.1.1'
     butterKnifeVersion = '8.8.1'
     greenDaoVersion = '3.2.2'
     placeholderviewVersion = '0.6.1'
     debugDBVersion = '1.0.0'
     timberVersion = '4.5.1'
-    guavaVersion = '22.0-android'
+    guavaVersion = '28.2-android'
     numberPickerVersion = '2.4.4'
 
     //Test dependencies
@@ -91,7 +80,7 @@ ext {
     flowLayoutVersion = '1.0.3'
     recyclerViewPagerVersion = 'v1.1.1'
 
-    braintreeVersion = '3.8.0'
+    braintreeVersion = '3.17.4'
     facebookVersion = '5.15.3'
 
     gcmVersion = '17.0.0'
