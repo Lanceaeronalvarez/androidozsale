@@ -3,8 +3,8 @@ OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 
 flavorName=mysaleRC
 buildTypeAssemble=MysaleRCRelease
-expectedVersionName="4.13.0"
-expectedVersionCode="337"
+expectedVersionName="4.13.1"
+expectedVersionCode="350"
 SPACE=" "
 philippines="Philippines"
 thailand="Thailand"
@@ -33,7 +33,7 @@ print_yellow "\n\nSTARTING AUTOMATION"
 
 # Getting Compile SDK Version
 print_blue "\n\nCHECKING COMPILE SDK"
-expectedCompileSDK="29"
+expectedCompileSDK="30"
 currentCompileSDK=$(./gradlew -q printCompileSdkVersion -PflavorName=$flavorName)
 if [ $expectedCompileSDK = "$currentCompileSDK" ]; then
 print_green "\nexpected: $expectedCompileSDK and current: $currentCompileSDK is the same\n"
@@ -53,7 +53,7 @@ fi
 
 # Checking target sdk version
 print_blue "\n\nCHECKING TARGET SDK"
-expectedTargetSDK="29"
+expectedTargetSDK="30"
 currentTargetSDK=$(./gradlew -q printTargetSdkVersion -PflavorName=$flavorName)
 if [ $expectedTargetSDK = "$currentTargetSDK" ]; then
 print_green "\nexpected: $expectedTargetSDK and current: $currentTargetSDK is the same\n"

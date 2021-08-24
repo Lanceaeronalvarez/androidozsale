@@ -22,6 +22,14 @@ public class GetPostcodeShippingPriceResponse {
         return shippingAvailability;
     }
 
+    public void setPrice(Float price) {
+        this.price = price;
+    }
+
+    public void setShippingAvailability(boolean shippingAvailability) {
+        this.shippingAvailability = shippingAvailability;
+    }
+
     public Additional getAdditional() {
         return additional;
     }

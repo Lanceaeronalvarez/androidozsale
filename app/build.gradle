@@ -59,8 +59,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -84,8 +84,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -104,94 +104,9 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
-        cocosaRC {
-            versionCode 146
-            versionName "2.5.6"
-            applicationId "uk.co.cocosa"
-
-            buildConfigField "String", "APP_NAME", "\"cocosa\""
-            buildConfigField "boolean", "IS_TEST", "false"
-
-            resValue "string", "app_name", "Cocosa"
-            def facebookAppId = "1455477634704544"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "8b8c0b64fa8ac9dc5b4835a68a356bf7"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "259952730881867"
-            resValue "string", "twitter_user_id", "twitter://user?user_id=2686522639"
-            resValue "string", "app_uri_hostname", "www.cocosa.com.au"
-
-            ext.newRelicAppToken = "AA29d6653b62c988db6cf1de11f5f6c98ca7a2b0c4"
-            resValue "string", "new_relic_app_token", ext.newRelicAppToken
-        }
-
-        cocosaTest {
-            versionCode 146
-            versionName "2.5.6"
-            applicationId "uk.co.cocosatest"
-
-            buildConfigField "String", "APP_NAME", "\"cocosa\""
-            buildConfigField "boolean", "IS_TEST", "true"
-
-            resValue "string", "app_name", "Cocosa Test"
-            def facebookAppId = "1455477634704544"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "8b8c0b64fa8ac9dc5b4835a68a356bf7"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "259952730881867"
-            resValue "string", "twitter_user_id", "twitter://user?user_id=2686522639"
-            resValue "string", "app_uri_hostname", "www.cocosa.com.au"
-
-            ext.newRelicAppToken = "AA29d6653b62c988db6cf1de11f5f6c98ca7a2b0c4"
-            resValue "string", "new_relic_app_token", ext.newRelicAppToken
-        }
-
-        dealsDirectRC {
-            versionCode 92
-            versionName "2.3.4"
-            applicationId "au.com.dealsdirect"
-
-            buildConfigField "String", "APP_NAME", "\"dealsdirect\""
-            buildConfigField "boolean", "IS_TEST", "false"
-
-            resValue "string", "app_name", "DealsDirect"
-            def facebookAppId = "1650094968544406"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "257280167216"
-            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
-
-            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token", ext.newRelicAppToken
-
-        }
-
-        dealsDirectTest {
-            versionCode 92
-            versionName "2.3.4"
-            applicationId "au.com.dealsdirect.test"
-
-            buildConfigField "String", "APP_NAME", "\"dealsdirect\""
-            buildConfigField "boolean", "IS_TEST", "true"
-
-            resValue "string", "app_name", "DealsDirect Test"
-            def facebookAppId = "1658400667713836"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "38e0530d1a0339d117b5474f0731f2af"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "257280167216"
-            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
-
-            ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "new_relic_app_token", ext.newRelicAppToken
-        }
-
         dealsDirect2RC {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -216,8 +131,8 @@ android {
         }
 
         dealsDirect2Test {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -237,8 +152,8 @@ android {
         }
 
         ooRC {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -262,8 +177,8 @@ android {
         }
 
         ooTest {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -282,30 +197,9 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
-        topbuyRC {
-            versionCode 106
-            versionName "2.3.3"
-            applicationId "au.com.topbuy"
-
-            buildConfigField "String", "APP_NAME", "\"topbuy\""
-            buildConfigField "boolean", "IS_TEST", "false"
-
-            resValue "string", "app_name", "TopBuy"
-            def facebookAppId = "1544909069170785"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "fb7a6db2221738ebe78810dff07e1223"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "47143367223"
-            resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
-            resValue "string", "app_uri_hostname", "www.topbuy.com.au"
-
-            ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
-            resValue "string", "new_relic_app_token", ext.newRelicAppToken
-        }
-
         topbuy2RC {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -328,30 +222,9 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
-        topbuyTest {
-            versionCode 106
-            versionName "2.3.3"
-            applicationId "au.com.topbuy.test"
-
-            buildConfigField "String", "APP_NAME", "\"topbuy\""
-            buildConfigField "boolean", "IS_TEST", "true"
-
-            resValue "string", "app_name", "TopBuy Test"
-            def facebookAppId = "1544909372504088"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "c1c38e066ad13cc4987929e3c2f73770"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "47143367223"
-            resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
-            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
-
-            ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
-            resValue "string", "new_relic_app_token", ext.newRelicAppToken
-        }
-
         topbuy2Test {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -367,35 +240,12 @@ android {
             resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
-            resValue "string", "new_relic_app_token", ext.newRelicAppToken
-        }
-
-        ourpayTest {
-            versionCode 4
-            versionName "0.9"
-            applicationId "au.com.ourpay.test"
-
-            buildConfigField "String", "API_ROOT", "\"https://www.dealsdirect.com.au/\""
-            buildConfigField "String", "API_LEGACY", "\"https://www.dealsdirect.com.au/papi/public/v3.20/\""
-            buildConfigField "String", "ACCOUNT_ID", "\"A56B0D62-AEF6-4653-848E-2ECDDB6E9B8C\""
-
-            resValue "string", "app_name", "Ourpay Test"
-            def facebookAppId = "1650094968544406"
-            resValue "string", "facebook_app_id", facebookAppId
-            resValue "string", "facebook_app_secret", "94da0f48bd2ffea25981e52c56f9260a"
-            resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
-            resValue "string", "fb_page_id", "257280167216"
-            resValue "string", "new_relic_app_token", "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
-            resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
-            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
-
-            ext.newRelicAppToken = "asjdasldkalsnasdT"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ozsaleRC {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -420,8 +270,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "au.com.ozsale.test"
 
             ext.appName = "Ozsale Test"
@@ -445,8 +295,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -471,8 +321,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "sg.com.singsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -492,8 +342,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -518,8 +368,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "nz.co.nzsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -540,8 +390,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -565,8 +415,8 @@ android {
         }
 
         mysaleTest {
-            versionCode 337
-            versionName "4.13.0"
+            versionCode 350
+            versionName "4.13.1"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -588,51 +438,6 @@ android {
     }
 
     sourceSets {
-        dealsDirectRC {
-            res.srcDirs = ['src/dealsDirectRC/res']
-            java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonHomeController/java/',
-                            'src/commonCategoriesController/java/',
-                            'src/commonRegisterController/java',
-                            'src/commonSaleItemDetailsController/java/',
-                            'src/commonSaleItemsController/java/',
-                            'src/commonSearchFilterController/java/',
-                            'src/commonContactControllers/java/',
-                            'src/commonReturnsControllers/java/',
-                            'src/commonShopsController/java/',
-                            'src/commonOrdersController/java',
-                            'src/commonMainController/java/',
-                            'src/commonAccountController/java',
-                            'src/commonPaymentsController/java',
-                            'src/commonAddressController/java',
-                            'src/commonActivity/java/',
-                            'src/dealsDirectRC/java/',
-                            'src/main/java/']
-        }
-
-        dealsDirectTest {
-            res.srcDirs = ['src/dealsDirectRC/res']
-            java.srcDirs = ['src/commonControllers/java/',
-                            'src/commonHomeController/java/',
-                            'src/commonCategoriesController/java/',
-                            'src/commonRegisterController/java',
-                            'src/commonSaleItemDetailsController/java/',
-                            'src/commonSaleItemsController/java/',
-                            'src/commonSearchFilterController/java/',
-                            'src/commonContactControllers/java/',
-                            'src/commonRegisterController/java',
-                            'src/commonReturnsControllers/java/',
-                            'src/commonOrdersController/java',
-                            'src/commonShopsController/java/',
-                            'src/commonMainController/java/',
-                            'src/commonAccountController/java',
-                            'src/commonAddressController/java',
-                            'src/commonPaymentsController/java',
-                            'src/commonActivity/java/',
-                            'src/dealsDirectRC/java/',
-                            'src/main/java/']
-        }
-
         dealsDirect2RC {
             res.srcDirs = ['src/dealsDirect2RC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
@@ -675,28 +480,6 @@ android {
                             'src/main/java/']
         }
 
-        ourpayTest {
-            java.srcDirs = ['src/ourpayTest/java/',
-                            'src/commonControllers/java/',
-                            'src/commonRegisterController/java',
-                            'src/commonSaleItemDetailsController/java/',
-                            'src/commonOrdersController/java',
-                            'src/commonContactControllers/java/',
-                            'src/commonAddressController',
-                            'src/commonReturnsControllers/java/',
-                            'src/commonPaymentsController/java',
-                            'src/commonAccountController/java',
-                            'src/main/java/']
-        }
-
-        topbuyTest {
-            java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
-        }
-
-        topbuyRC {
-            java.srcDirs = ['src/topbuyRC/java/', 'src/main/java/']
-        }
-
         topbuy2Test {
             res.srcDirs = ['src/topbuy2RC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
@@ -720,9 +503,7 @@ android {
 
         ozsaleTest {
             res.srcDirs = ['src/ozsaleRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
-                            'src/main/java/']
+            java.srcDirs = ['src/ozsaleRC/java', 'src/commonControllers/java/', 'src/main/java/']
         }
 
         singsaleRC {
@@ -734,20 +515,6 @@ android {
 
         singsaleTest {
             res.srcDirs = ['src/singsaleRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
-                            'src/main/java/']
-        }
-
-        cocosaRC {
-            res.srcDirs = ['src/cocosaRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
-                            'src/main/java/']
-        }
-
-        cocosaTest {
-            res.srcDirs = ['src/cocosaRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
                             'src/commonControllers/java/',
                             'src/main/java/']
@@ -813,18 +580,18 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.databinding:databinding-runtime:4.0.1'
-    implementation 'androidx.databinding:databinding-adapters:4.0.1'
+    implementation 'androidx.databinding:databinding-runtime:7.0.0'
+    implementation 'androidx.databinding:databinding-adapters:7.0.0'
 
     // android support libraries
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
 
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
 
     // font
     implementation "io.github.inflationx:calligraphy3:$rootProject.calligraphyVersion"
@@ -900,9 +667,6 @@ dependencies {
     // picker
     implementation "com.shawnlin:number-picker:$rootProject.numberPickerVersion"
 
-    // guava
-    implementation "com.google.guava:guava:$rootProject.guavaVersion"
-
     // braintree
     implementation "com.braintreepayments.api:braintree:$rootProject.braintreeVersion"
     implementation "com.braintreepayments.api:data-collector:$rootProject.braintreeVersion"
@@ -936,12 +700,12 @@ dependencies {
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 
     // NR
-    implementation 'com.newrelic.agent.android:android-agent:5.24.0'
+    implementation 'com.newrelic.agent.android:android-agent:6.2.0'
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:17.5.1'
     implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
-    implementation 'com.google.firebase:firebase-analytics:17.6.0'
+    implementation 'com.google.firebase:firebase-analytics:19.0.0'
     implementation 'com.google.firebase:firebase-messaging:20.3.0'
 
     implementation 'com.loopj.android:android-async-http:1.4.9'
@@ -954,15 +718,18 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
 
-    implementation 'com.google.android.gms:play-services-ads:19.4.0'
+    implementation 'com.google.android.gms:play-services-ads:20.2.0'
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // reCAPTCHA
-    implementation 'com.google.android.gms:play-services-safetynet:17.0.0'
+    implementation 'com.google.android.gms:play-services-safetynet:17.0.1'
 
-    implementation 'com.stripe:stripe-android:11.1.4'
+    implementation 'com.stripe:stripe-android:16.9.0'
 
-    implementation 'com.google.android.gms:play-services-wallet:18.0.0'
+    implementation 'com.google.android.gms:play-services-wallet:18.1.3'
+
+    // guava
+    implementation "com.google.guava:guava:$rootProject.guavaVersion"
 
     implementation project(path: ':genie-utility')
     implementation project(path: ':genie-animation')

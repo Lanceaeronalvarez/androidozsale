@@ -1,7 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
 import android.graphics.drawable.Drawable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 import java.util.Map;
@@ -36,17 +35,14 @@ public interface SaleItemsMvpView extends MvpView {
 
     void showSaleBannerDetails(GetSaleBannerDetailsResponse response);
 
-    void showProductDetails(RecyclerView.ViewHolder viewHolder,
-                            int position,
-                            String seoIdentifierId,
+    void showProductDetails(int position,
                             Drawable imagePlaceholderDrawable,
                             String imageUrl,
-                            String skuId,
-                            String saleId,
-                            boolean isFreeDelivery,
-                            String discountText,
-                            String discountedPriceText,
-                            boolean isSoldOut);
+                            SaleItemProduct product,
+                            int viewLeft,
+                            int viewTop,
+                            int viewWidth,
+                            int viewHeight);
 
     GetSaleItemsRequest createSaleItemsRequest(String categoryKey, int pageNumber, Set<SearchChipModel> chipsList);
 

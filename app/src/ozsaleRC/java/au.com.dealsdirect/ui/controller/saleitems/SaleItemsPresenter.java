@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.core.util.Pair;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -216,30 +215,24 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadProductDetails(RecyclerView.ViewHolder viewHolder,
-                                   int position,
-                                   String seoIdentifierId,
+    public void loadProductDetails(int position,
                                    Drawable imagePlaceholderDrawable,
                                    String imageUrl,
-                                   String skuId,
-                                   String saleId,
-                                   boolean isFreeDelivery,
-                                   String discountText,
-                                   String discountedPriceText,
-                                   boolean isSoldOut) {
+                                   SaleItemProduct product,
+                                   int viewLeft,
+                                   int viewTop,
+                                   int viewWidth,
+                                   int viewHeight) {
         getMvpView().hideKeyboard();
         getMvpView().showProductDetails(
-                viewHolder,
                 position,
-                seoIdentifierId,
                 imagePlaceholderDrawable,
                 imageUrl,
-                skuId,
-                saleId,
-                isFreeDelivery,
-                discountText,
-                discountedPriceText,
-                isSoldOut);
+                product,
+                viewLeft,
+                viewTop,
+                viewWidth,
+                viewHeight);
     }
 
     protected <T> Observable<T> wrapObservable(Observable<T> observable) {

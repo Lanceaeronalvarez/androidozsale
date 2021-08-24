@@ -60,7 +60,7 @@
             android:labelFor="@+id/bt_card_form_cvv"
             app:hintEnabled="false">
 
-            <com.stripe.android.view.CardNumberEditText
+            <com.stripe.android.view.CvcEditText
                 android:id="@+id/stripe_card_form_cvv"
                 style="@style/bt_card_form_field"
                 android:contentDescription="@string/bt_form_hint_cvv"

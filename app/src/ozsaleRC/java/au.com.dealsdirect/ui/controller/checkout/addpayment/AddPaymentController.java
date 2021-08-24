@@ -31,8 +31,9 @@ import com.braintreepayments.cardform.utils.CardType;
 import com.braintreepayments.cardform.view.CardEditText;
 import com.braintreepayments.cardform.view.CardForm;
 import com.mysale.genie.utility.RxBus;
-import com.stripe.android.model.Card;
+import com.stripe.android.model.CardBrand;
 import com.stripe.android.view.CardNumberEditText;
+import com.stripe.android.view.CvcEditText;
 import com.visa.checkout.VisaCheckoutSdk;
 
 import java.util.HashMap;
@@ -146,7 +147,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @BindView(R.id.stripe_card_form_expiration)
     ExpiryDateEditText mStripeExpiryDate;
     @BindView(R.id.stripe_card_form_cvv)
-    CardNumberEditText mStripeCVV;
+    CvcEditText mStripeCVV;
 
     @BindView(R.id.partial_toolbar_title)
     TextView mViewAddressToolarTitle;
@@ -285,7 +286,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mCardForm.setOnCardFormScanListener(this);
         mCameraButton.setBackground(null);
         mCameraButton.setImageDrawable(getResources().getDrawable(R.drawable.bg_credit_card));
-        mCameraButton.setVisibility(View.VISIBLE);
+//        mCameraButton.setVisibility(View.VISIBLE);
         mCameraButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
         mCameraButton.setPadding(0, 0, 0, 0);
         DrawableCompat.setTint(
@@ -357,7 +358,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         });
 
 
-        mStripeCardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, Card.getBrandIcon(Card.CardBrand.UNKNOWN), 0);
+        mStripeCardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, CardBrand.Unknown.getIcon(), 0);
 
         mStripeCardNumber.addTextChangedListener(new TextWatcher() {
             @Override
@@ -367,12 +368,12 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mStripeCardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, Card.getBrandIcon(mStripeCardNumber.getCardBrand()), 0);
+                mStripeCardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, mStripeCardNumber.getCardBrand().getIcon(), 0);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                mStripeCardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, Card.getBrandIcon(mStripeCardNumber.getCardBrand()), 0);
+                mStripeCardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, mStripeCardNumber.getCardBrand().getIcon(), 0);
             }
         });
 

@@ -3,9 +3,6 @@ package au.com.dealsdirect.ui.controller.checkout.paymentselect;
  * Created by CodeineBot on 1/11/17.
  */
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +11,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionDefault;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
-import com.stripe.android.model.Card;
+import com.stripe.android.model.CardBrand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,9 +72,9 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
         if (item.getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
             if (item.getPaymentType().equalsIgnoreCase(AppConstants.AMEX) ||
                     item.getPaymentType().equalsIgnoreCase(AppConstants.AMERICAN_EXPRESS)) {
-                holder.cardImageView.setImageResource(Card.getBrandIcon(Card.CardBrand.AMERICAN_EXPRESS));
+                holder.cardImageView.setImageResource(CardBrand.AmericanExpress.getIcon());
             } else {
-                holder.cardImageView.setImageResource(Card.getBrandIcon(Card.asCardBrand(item.getPaymentType())));
+                holder.cardImageView.setImageResource(item.getCardBrand().getIcon());
             }
         }
 
@@ -119,7 +120,7 @@ public class PaymentSelectAdapter extends RecyclerView.Adapter<PaymentSelectAdap
 
     @Override
     public int onGetSwipeReactionType(PaymentSelectViewHolder holder, int position, int x, int y) {
-        return isFromCart? SwipeableItemConstants.REACTION_CAN_NOT_SWIPE_ANY : SwipeableItemConstants.REACTION_CAN_SWIPE_LEFT;
+        return isFromCart ? SwipeableItemConstants.REACTION_CAN_NOT_SWIPE_ANY : SwipeableItemConstants.REACTION_CAN_SWIPE_LEFT;
     }
 
     @Override

@@ -100,7 +100,7 @@ projectDir = app_path + '/app/build/outputs/apk/' + app_flavor + '/release/'
                 app: app_id,
                 testers: emails,
                 release_notes_file: app_notes_path,
-                firebase_cli_path: “/usr/local/bin/firebase”,
+                firebase_cli_token: “1//0e4LvdZZE-1jXCgYIARAAGA4SNwF-L9IrpPdBdEY7adbkDRHHzFnSj928s8VpzbUtAckCFjtawWZNhQi4o7B8jmbV4f3oCPpJ2D0”,
                 apk_path: projectDir + apk_name
               )
     rescue Exception => e

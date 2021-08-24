@@ -144,10 +144,14 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
                     @Override
                     public void accept(Object response) throws Exception {
 
-                        if (mMvpView != null && mMvpView.isViewAttached()) {
-                            handleApiCallSuccess(response, callback);
-                        } else {
-                            queueSuccessResponse(response, callback);
+                        try {
+                            if (mMvpView != null && mMvpView.isViewAttached()) {
+                                handleApiCallSuccess(response, callback);
+                            } else {
+                                queueSuccessResponse(response, callback);
+                            }
+                        } catch (Exception e) {
+                            final StackTraceElement[] traceAccept = (e.getStackTrace());
                         }
                     }
                 }, new Consumer<Throwable>() {

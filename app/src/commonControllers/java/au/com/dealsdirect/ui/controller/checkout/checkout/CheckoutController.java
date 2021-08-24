@@ -41,6 +41,7 @@ import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.utility.RxBus;
 import com.stripe.android.model.Card;
+import com.stripe.android.model.CardBrand;
 import com.visa.checkout.VisaCheckoutSdk;
 
 import java.text.ParseException;
@@ -871,9 +872,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
                 if (paymentMethod.getPaymentType().equalsIgnoreCase(AppConstants.AMEX) ||
                         paymentMethod.getPaymentType().equalsIgnoreCase(AppConstants.AMERICAN_EXPRESS)) {
-                    cardBrandImageView.setImageResource(Card.getBrandIcon(Card.CardBrand.AMERICAN_EXPRESS));
+                    cardBrandImageView.setImageResource(CardBrand.AmericanExpress.getIcon());
                 } else {
-                    cardBrandImageView.setImageResource(Card.getBrandIcon(Card.asCardBrand(paymentMethod.getPaymentType())));
+                    cardBrandImageView.setImageResource(paymentMethod.getCardBrand().getIcon());
                 }
             }
 
@@ -1443,6 +1444,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private void showGPayButtonIfAvailable() {
+        if (!isViewAttached() || !isViewBound()) return;
+
         mGPayButtonContainer.setVisibility(isGPayAvailable ? View.VISIBLE : View.GONE);
     }
 
@@ -1749,8 +1752,8 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 oldPrice,
                 null,
                 null,
-                "",
-                "", isFreeDelivery, false);
+                null,
+                "", "", isFreeDelivery, false);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));

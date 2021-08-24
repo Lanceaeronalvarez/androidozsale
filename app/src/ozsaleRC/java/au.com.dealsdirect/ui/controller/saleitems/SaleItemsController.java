@@ -95,6 +95,7 @@ import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
+import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.TabLayoutUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -1603,17 +1604,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void showProductDetails(RecyclerView.ViewHolder viewHolder,
-                                   int position,
-                                   String seoIdentifierId,
+    public void showProductDetails(int position,
                                    Drawable imagePlaceholderDrawable,
                                    String imageUrl,
-                                   String skuId,
-                                   String saleId,
-                                   boolean isFreeDelivery,
-                                   String discountText,
-                                   String discountedPriceText,
-                                   boolean isSoldOut) {
+                                   SaleItemProduct product,
+                                   int viewLeft,
+                                   int viewTop,
+                                   int viewWidth,
+                                   int viewHeight) {
         if (!isViewAttached() || willOpenSaleDetails) {
             return;
         }
@@ -1631,17 +1629,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 .Parameters.FromItemsList(position,
                 imagePlaceholderDrawable,
                 imageUrl,
-                seoIdentifierId,
-                skuId,
-                saleId,
-                ((SaleItemsAdapter.ViewHolder) viewHolder).name.getText().toString(),
-                ((SaleItemsAdapter.ViewHolder) viewHolder).brand.getText().toString(),
-                ((SaleItemsAdapter.ViewHolder) viewHolder).price.getText().toString(),
-                ((SaleItemsAdapter.ViewHolder) viewHolder).oldPrice.getText().toString(),
-                discountText,
-                discountedPriceText,
-                mSalesOrigin,
-                mEndDate, isFreeDelivery, isSoldOut);
+                product.getSeoIdentifier(),
+                product.getSkus() == null || product.getSkus().isEmpty() ? "" : product.getSkus().get(0).getId(),
+                mSaleId,
+                product.getName(),
+                product.getBrandName(),
+                product.getPrice() != null ? PriceUtils.getPriceStringValue(product.getPrice().getValue()) : "",
+                product.getOriginalPrice() != null ? PriceUtils.getRpStringValue(product.getOriginalPrice().getValue()) : "",
+                product.getSalePercentOffText(),
+                PriceUtils.getRpStringValue(product.getSalePrice() != null ? product.getSalePrice().getValue() : 0),
+                product.getPriceRangeText(),
+                mSalesOrigin, mEndDate, product.getFreeDelivery(), product.isSoldOut());
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));
@@ -1653,15 +1651,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
         DataCollector.logEvent(Events.clicksEvent, eventParameters);
 
-        int[] originalPos = new int[2];
-        viewHolder.itemView.getLocationOnScreen(originalPos);
-        int left = originalPos[0];
-        int top = originalPos[1];
-        int width = viewHolder.itemView.getWidth();
-        int height = viewHolder.itemView.getHeight();
         routerTransaction = routerTransaction
-                .pushChangeHandler(new ArcZoomChangeHandler(left, top, width, height))
-                .popChangeHandler(new ArcZoomChangeHandler(left, top, width, height));
+                .pushChangeHandler(new ArcZoomChangeHandler(viewLeft, viewTop, viewWidth, viewHeight))
+                .popChangeHandler(new ArcZoomChangeHandler(viewLeft, viewTop, viewWidth, viewHeight));
 
         getRouter().pushController(routerTransaction);
 

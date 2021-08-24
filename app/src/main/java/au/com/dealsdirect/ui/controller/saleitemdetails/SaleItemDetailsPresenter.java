@@ -12,6 +12,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
+import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
@@ -142,10 +143,18 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                         if (o instanceof PromoInfoResponse) {
                             PromoInfoResponse response = (PromoInfoResponse) o;
                             getMvpView().setDynamicDiscount(response.getPercentOffText());
-                            getMvpView().setPercentOffText(response.getPercentOffText());
                             getMvpView().setIsAfterpayDetailsVisible(response.getAfterpayEnabled());
                             getMvpView().showFreeShipping(response.getDeliveryType(), response.getDeliveryThreshold());
                             getMvpView().showPostcodeForm(response.getShowPostCode());
+
+                            final Boolean shippingAvailability = response.getShippingAvailability();
+                            final Float deliveryPrice = response.getDeliveryPrice();
+                            if (shippingAvailability != null && deliveryPrice != null) {
+                                GetPostcodeShippingPriceResponse shippingPriceResponse = new GetPostcodeShippingPriceResponse();
+                                shippingPriceResponse.setPrice(deliveryPrice);
+                                shippingPriceResponse.setShippingAvailability(shippingAvailability);
+                                getMvpView().showPreviewShippingPrice(shippingPriceResponse, null, DeliveryPriceViewEventRequest.OPERATION_AUTO);
+                            }
                         }
                     }
 

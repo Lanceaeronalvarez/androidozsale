@@ -40,9 +40,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -165,6 +163,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             private Boolean mIsSoldOut;
             private String mDiscountText;
             private String mDiscountedPriceText;
+            private String mPriceRangeText;
 
             public FromItemsList(Integer position,
                                  Drawable lowResImageDrawable,
@@ -178,6 +177,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                  String oldPrice,
                                  String discountText,
                                  String discountedPriceText,
+                                 String priceRangeText,
                                  String salesOrigin,
                                  String endDate,
                                  boolean isFreeDelivery,
@@ -199,6 +199,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
                 mDiscountedPriceText = discountedPriceText;
                 mDiscountText = discountText;
+
+                mPriceRangeText = priceRangeText;
             }
 
             public Integer getPosition() {
@@ -239,6 +241,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             public String getOldPrice() {
                 return mOldPrice;
+            }
+
+            public String getPriceRangeText() {
+                return mPriceRangeText;
             }
 
             public String getSalesOrigin() {
@@ -312,6 +318,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mSaleName;
     private String mSalePrice;
     private String mSaleOldPrice;
+    private String mVariantPrice;
+    private String mVariantOldPrice;
     private String mBrandName;
     private String mSupplierId;
     private Ourpay mOurpay;
@@ -322,6 +330,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private String discountTextFromSaleItemsList;
     private String discountedPriceTextFromSaleItemsList;
+
+    private String priceRangeText = null;
 
     private boolean shouldAfterpayDetailsBeVisible = false;
     GridLayoutManager mLayoutManager;
@@ -374,7 +384,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_personalisation_layout)
     PersonalisationLayout mPersonalisationLayout;
     @BindView(R.id.product_details_shipping_desc_container)
-    LinearLayout mShippingContainer;
+    ViewGroup mShippingContainer;
     @BindView(R.id.product_details_shipping_postcode_preview_price)
     TextView mShippingPreviewPrice;
     @BindView(R.id.product_details_shipping_postcode_input)
@@ -406,19 +416,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_coordinator)
     CoordinatorLayout mProductCoordinatorLayout;
     @BindView(R.id.bottom_card)
-    LinearLayout mProductDetailBottomCard;
+    ViewGroup mProductDetailBottomCard;
     @BindView(R.id.product_details_name_price_container)
-    LinearLayout mProductPriceCategory;
+    ViewGroup mProductPriceCategory;
     @BindView(R.id.about_pricing_container)
-    LinearLayout mProductPricingContainer;
+    ViewGroup mProductPricingContainer;
     @BindView(R.id.product_about_container)
-    LinearLayout mProductAboutContainer;
+    ViewGroup mProductAboutContainer;
     @BindView(R.id.product_details_return_policy_container)
-    LinearLayout mReturnPolicyContainer;
+    ViewGroup mReturnPolicyContainer;
     @BindView(R.id.partial_item_details_ourpay_panel_holder)
-    LinearLayout mOurpayHolder;
+    ViewGroup mOurpayHolder;
     @BindView(R.id.partial_item_details_afterpay_panel_holder)
-    LinearLayout mAfterpayHolder;
+    ViewGroup mAfterpayHolder;
     @BindView(R.id.controller_sale_item_detail_scrollview)
     NestedScrollView mProductDetailScrollView;
     @BindView(R.id.product_details_add_to_basket_container)
@@ -431,11 +441,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ImageView mAddToCartOverlay;
 
     @BindView(R.id.controller_image_frame_layout)
-    RelativeLayout mProductDetailsImageLayout;
+    ViewGroup mProductDetailsImageLayout;
     @BindView(R.id.controller_sale_details_toolbar)
-    RelativeLayout mProductDetailsToolbar;
+    ViewGroup mProductDetailsToolbar;
     @BindView(R.id.controller_product_details_title_description)
-    LinearLayout mProductDetailsTitleLayout;
+    ViewGroup mProductDetailsTitleLayout;
     @BindView(R.id.toolbar_item_brand)
     TextView mToolbarItemBrandTextView;
     @BindView(R.id.toolbar_item_name)
@@ -443,11 +453,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_about_old_pricing_text)
     WebView mOldProductPricing;
     @BindView(R.id.main_layout)
-    LinearLayout mMainContentLayout;
+    ViewGroup mMainContentLayout;
     @BindView(R.id.product_details_image_animate)
     ImageView mImageViewToAnimate;
     @BindView(R.id.product_details_add_to_basket_timer)
-    LinearLayout mAddToCartTimer;
+    ViewGroup mAddToCartTimer;
     @BindView(R.id.product_details_add_to_basket_timer_text_view)
     TextView mAddToCartTimerTextView;
     @BindView(R.id.product_details_add_to_basket_timer_progress_dialog)
@@ -459,7 +469,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_percent_off)
     TextView mProductDiscountPogTextView;
     @BindView(R.id.controller_product_details_button_container)
-    RelativeLayout mProductDetailsButtonContainer;
+    ViewGroup mProductDetailsButtonContainer;
     @BindView(R.id.controller_product_details_like_recyclerview)
     RecyclerView mYouMayAlsoLikeRecyclerview;
     @BindView(R.id.controller_product_details_like_container)
@@ -471,7 +481,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.controller_product_details_recently_view_recyclerview)
     RecyclerView mRecentlyViewedRecyclerView;
     @BindView(R.id.controller_product_details_recently_viewed_container)
-    LinearLayout mRecentlyViewedContainer;
+    ViewGroup mRecentlyViewedContainer;
 
     @BindView(R.id.product_details_sold_out)
     TextView mSoldOutView;
@@ -535,6 +545,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private boolean hasLoadedPostcodeForm = false;
 
+    private boolean isVariant = false;
+
     final ViewTreeObserver.OnScrollChangedListener onScrollChangedListener = new
             ViewTreeObserver.OnScrollChangedListener() {
 
@@ -575,6 +587,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             controller.mBrandName = ((Parameters.FromItemsList) parameters).getProductBrand();
             controller.mSalePrice = ((Parameters.FromItemsList) parameters).getPrice();
             controller.mSaleOldPrice = ((Parameters.FromItemsList) parameters).getOldPrice();
+            controller.mVariantPrice = controller.mSalePrice;
+            controller.mVariantOldPrice = controller.mVariantOldPrice;
             controller.mFromPosition = ((Parameters.FromItemsList) parameters).getPosition();
             String origin = ((Parameters.FromItemsList) parameters).getSalesOrigin();
             controller.mEndDate = ((Parameters.FromItemsList) parameters).getEndDate();
@@ -584,6 +598,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             controller.discountTextFromSaleItemsList = ((Parameters.FromItemsList) parameters).getDiscountText();
             controller.discountedPriceTextFromSaleItemsList = ((Parameters.FromItemsList) parameters).getDiscountedPriceText();
+
+            controller.priceRangeText = ((Parameters.FromItemsList) parameters).getPriceRangeText();
         } else if (parameters instanceof Parameters.FromDeepLink) {
             controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
             controller.mSkuId = ((Parameters.FromDeepLink) parameters).getSkuId();
@@ -602,6 +618,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleName = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME);
         mSalePrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE);
         mSaleOldPrice = args.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE);
+        mVariantPrice = mSalePrice;
+        mVariantOldPrice = mVariantOldPrice;
         mFromPosition = args.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
         mOrigin = args.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN, DataCollector.EventParameters.ViewSource.SALE);
     }
@@ -632,6 +650,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSaleName = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_NAME);
         mSalePrice = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_PRICE);
         mSaleOldPrice = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_ITEM_OLD_PRICE);
+        mVariantPrice = mSalePrice;
+        mVariantOldPrice = mVariantOldPrice;
         mFromPosition = savedInstanceState.getInt(BundleKeys.SALEITEMDETAILS_KEY_POSITION);
         mOrigin = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_SALE_ORIGIN);
         mEndDate = savedInstanceState.getString(BundleKeys.SALEITEMDETAILS_KEY_END_DATE);
@@ -749,11 +769,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductName.setText(mSaleName);
         }
 
-        mProductPriceValueTextView.setText(mSalePrice);
+        String priceText = mSalePrice;
+        if (priceRangeText != null && !priceRangeText.isEmpty() &&
+                (discountTextFromSaleItemsList == null || discountTextFromSaleItemsList.isEmpty())) {
+            priceText = priceRangeText + " " + priceText;
+        }
+
+        mProductPriceValueTextView.setText(priceText);
         mProductPreviousPriceValueTextView.setText(mSaleOldPrice);
         mProductPreviousPriceValueTextView.setPaintFlags(
                 mProductPreviousPriceValueTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         mProductPreviousPriceContainer.setVisibility(mSaleOldPrice == null || mSalePrice.isEmpty() ? View.GONE : View.VISIBLE);
+        setupDiscountTextDisplay();
 
         mProductDetailBottomCard.setVisibility(View.VISIBLE);
 
@@ -958,24 +985,35 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mShippingPostcodeNotAvailable.setVisibility(View.GONE);
         mShippingPreviewPrice.setText(null);
         mShippingPreviewPrice.setVisibility(View.GONE);
-
-        setupDiscountTextDisplay();
     }
 
     private void setupDiscountTextDisplay() {
-        final boolean hasDiscount = discountTextFromSaleItemsList != null;
-        mProductDiscountPriceContainer.setVisibility(hasDiscount ? View.VISIBLE : View.GONE);
-        mProductDiscountPriceTitleTextView.setText(discountTextFromSaleItemsList);
-        mProductDiscountPriceValueTextView.setText(discountedPriceTextFromSaleItemsList);
+        final boolean hasDiscount = discountedPriceTextFromSaleItemsList != null &&
+                !discountedPriceTextFromSaleItemsList.equalsIgnoreCase(mVariantPrice);
+        mProductDiscountPriceContainer.setVisibility(hasDiscount || discountTextFromSaleItemsList != null ? View.VISIBLE : View.GONE);
 
-        mProductPriceTitleTextView.setVisibility(hasDiscount ? View.VISIBLE : View.GONE);
-        if (hasDiscount) {
-            mProductPriceValueTextView.setPaintFlags(
-                    mProductPreviousPriceValueTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        } else {
+        if (!hasDiscount) {
+            mProductDiscountPriceValueTextView.setVisibility(View.GONE);
+            mProductPriceTitleTextView.setVisibility(View.GONE);
             mProductPriceValueTextView.setPaintFlags(
                     mProductPreviousPriceValueTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        } else {
+            mProductDiscountPriceValueTextView.setVisibility(View.VISIBLE);
+            String priceText = discountedPriceTextFromSaleItemsList;
+            if (!isVariant &&
+                    priceRangeText != null && !priceRangeText.isEmpty()) {
+                priceText = priceRangeText + " " + priceText;
+            }
+            mProductDiscountPriceValueTextView.setText(priceText);
+
+            mProductPriceTitleTextView.setVisibility(View.VISIBLE);
+            mProductPriceValueTextView.setText(mVariantPrice);
+            mProductPriceValueTextView.setPaintFlags(
+                    mProductPreviousPriceValueTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
+
+        mProductDiscountPriceTitleTextView.setVisibility(discountTextFromSaleItemsList != null ? View.VISIBLE : View.GONE);
+        mProductDiscountPriceTitleTextView.setText(discountTextFromSaleItemsList);
     }
 
     private void showProductList(String searchKey) {
@@ -1034,7 +1072,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void stretchImageView() {
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mProductDetailsImageLayout.getLayoutParams();
+        ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) mProductDetailsImageLayout.getLayoutParams();
         int bottomNavHeight = mActivity.getMainController().getBottomNav().getHeight();
 
         int screenAllowanceSize = mPresenter.isTablet() ? bottomNavHeight * 3 : bottomNavHeight * 2 + (int) getDimension(R.dimen.margin_extra_small);
@@ -1073,8 +1111,24 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private void updatePriceDetails(GetSaleItemDetailsResponse saleDetail) {
         //update Price
-        mProductPriceValueTextView.setText(PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()));
-        mProductPreviousPriceValueTextView.setText(PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue()));
+        final double salePriceValue = saleDetail.getSalePrice() != null ?
+                saleDetail.getSalePrice().getValue() : 0;
+        discountedPriceTextFromSaleItemsList = salePriceValue > 0 ? PriceUtils.getRpStringValue(salePriceValue) : null;
+        discountTextFromSaleItemsList = saleDetail.getSalePercentOffText();
+
+        priceRangeText = saleDetail.getPriceRangeText();
+        mVariantPrice = PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue());
+        String priceText = mVariantPrice;
+        if (!isVariant &&
+                priceRangeText != null && !priceRangeText.isEmpty() &&
+                (discountTextFromSaleItemsList == null || discountTextFromSaleItemsList.isEmpty())) {
+            priceText = priceRangeText + " " + priceText;
+        }
+
+        mProductPriceValueTextView.setText(priceText);
+
+        mVariantOldPrice = PriceUtils.getRpStringValue(saleDetail.getOriginalPrice().getValue());
+        mProductPreviousPriceValueTextView.setText(mVariantOldPrice);
 
         //update Images
         List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
@@ -1098,6 +1152,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             mPersonalisationLayout.setVisibility(View.GONE);
         }
+
+        setupDiscountTextDisplay();
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -1127,6 +1183,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSupplierId = saleDetail.getSupplier();
         mSalePrice = PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue());
         mSaleOldPrice = PriceUtils.getPriceStringValue(saleDetail.getOriginalPrice().getValue());
+
+        mVariantPrice = mSalePrice;
+        mVariantOldPrice = mSaleOldPrice;
+
+        priceRangeText = saleDetail.getPriceRangeText();
 
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
 
@@ -1195,15 +1256,18 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mShippingContainer.setVisibility(shippingInformation != null ? View.VISIBLE : View.GONE);
         mShippingDescHeaderText.setVisibility(shippingInformation != null ? View.VISIBLE : View.GONE);
 
-        if (shippingInformation != null) {
+        if (shippingInformation != null || deliveryInformation != null) {
             mShippingDescText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mShippingDescText.startAnimation(anim);
 
             if (deliveryInformation == null) {
                 mShippingDescText.loadDataWithBaseURL(null, mHtmlHeader + shippingInformation + mHtmlFooter,
                         "text/html", "UTF-8", null);
-            } else {
+            } else if (shippingInformation != null) {
                 mShippingDescText.loadDataWithBaseURL(null, mHtmlHeader + deliveryInformation + "<br/><br/>" + shippingInformation + mHtmlFooter,
+                        "text/html", "UTF-8", null);
+            } else {
+                mShippingDescText.loadDataWithBaseURL(null, mHtmlHeader + deliveryInformation + mHtmlFooter,
                         "text/html", "UTF-8", null);
             }
 
@@ -2101,8 +2165,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private void onSelectTag(int index) {
         int selectedIndex = index;
+        isVariant = true;
 
         if (selectedIndex < 0) {
+            isVariant = false;
             return;
         }
 
@@ -2110,6 +2176,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (isSizeSoldOut && !mAllowSelectingSoldoutSizes) {
             selectedIndex = mSelectedSizeIndex;
             if (selectedIndex < 0) {
+                isVariant = false;
                 return;
             }
             isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
@@ -2250,7 +2317,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         final String oldPostcode = mShippingPostcodeInput.getText() == null ? "" : mShippingPostcodeInput.getText().toString();
         if (postcode != null && !postcode.isEmpty() && oldPostcode.isEmpty()) {
             mShippingPostcodeInput.setText(postcode);
-            getPreviewShippingPrice(postcode, DeliveryPriceViewEventRequest.OPERATION_AUTO);
         }
         // this callback will only take place when postcode form is to be shown
         mShippingContainer.setVisibility(View.VISIBLE);
@@ -2275,6 +2341,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mShippingPreviewPrice.setVisibility(mShippingPreviewPrice.getText() != null && mShippingPreviewPrice.getText().length() > 0 ? View.VISIBLE : View.GONE);
 
         if (response != null && operation != null) {
+            if (postcode == null) {
+                postcode = mShippingPostcodeInput.getText() == null ? "" : mShippingPostcodeInput.getText().toString();
+            }
             logDeliveryPriceViewEvent(operation, postcode, response);
         }
     }
