@@ -441,110 +441,110 @@ android {
         dealsDirect2RC {
             res.srcDirs = ['src/dealsDirect2RC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         dealsDirect2Test {
             res.srcDirs = ['src/dealsDirect2RC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         ooRC {
             res.srcDirs = ['src/ooRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         ooTest {
             res.srcDirs = ['src/ooRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         buyinviteRC {
             res.srcDirs = ['src/buyinviteTest/res/', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         buyinviteTest {
             res.srcDirs = ['src/buyinviteTest/res/', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         topbuy2Test {
             res.srcDirs = ['src/topbuy2RC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         topbuy2RC {
             res.srcDirs = ['src/topbuy2RC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         ozsaleRC {
             res.srcDirs = ['src/ozsaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         ozsaleTest {
             res.srcDirs = ['src/ozsaleRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java', 'src/commonControllers/java/', 'src/main/java/']
+            java.srcDirs = ['src/ozsaleRC/java', 'src/commonUI/java/', 'src/main/java/']
         }
 
         singsaleRC {
             res.srcDirs = ['src/singsaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         singsaleTest {
             res.srcDirs = ['src/singsaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         nzsaleRC {
             res.srcDirs = ['src/nzsaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         nzsaleTest {
             res.srcDirs = ['src/nzsaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         mysaleRC {
             res.srcDirs = ['src/mysaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
         mysaleTest {
             res.srcDirs = ['src/mysaleRC/res', 'src/ozsaleCommon/res']
             java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonControllers/java/',
+                            'src/commonUI/java/',
                             'src/main/java/']
         }
 
