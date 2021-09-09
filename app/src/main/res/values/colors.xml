@@ -292,5 +292,5 @@
 
     <color name="sold_out_background">#91000000</color>
 
-    <color name="banner_discount_background_color">#323232</color>
+    <color name="banner_discount_background_color">#0c0c0c</color>
 </resources>

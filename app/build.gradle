@@ -59,7 +59,7 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "au.com.buyinvite.bi"
 
@@ -84,7 +84,7 @@ android {
         }
 
         buyinviteTest {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "au.com.buyinvite.bi.test"
 
@@ -105,7 +105,7 @@ android {
         }
 
         dealsDirect2RC {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "au.com.dealsdirect"
 
@@ -131,7 +131,7 @@ android {
         }
 
         dealsDirect2Test {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "au.com.dealsdirect.test"
 
@@ -152,7 +152,7 @@ android {
         }
 
         ooRC {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "au.com.oo"
 
@@ -177,7 +177,7 @@ android {
         }
 
         ooTest {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "au.com.oo.test"
 
@@ -198,7 +198,7 @@ android {
         }
 
         topbuy2RC {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "au.com.topbuy"
 
@@ -223,7 +223,7 @@ android {
         }
 
         topbuy2Test {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "au.com.topbuy.test"
 
@@ -244,14 +244,14 @@ android {
         }
 
         ozsaleRC {
-            versionCode 350
+            versionCode 352
             versionName "4.13.1"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            ext.appName = "Ozsale"
+            ext.appName = "OZSALE"
             ext.facebookAppId = "421544284547550"
             ext.facebookAppSecret = "f08401cb63ac18241e51e2184d8cd80a"
 
@@ -270,11 +270,11 @@ android {
         }
 
         ozsaleTest {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "au.com.ozsale.test"
 
-            ext.appName = "Ozsale Test"
+            ext.appName = "OZSALE Test"
             ext.facebookAppId = "437865102935987"
             ext.facebookAppSecret = "5c6326d03e5d2ba866ecada5b206b6d6"
 
@@ -295,14 +295,14 @@ android {
         }
 
         singsaleRC {
-            versionCode 350
+            versionCode 352
             versionName "4.13.1"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            ext.appName = "Singsale"
+            ext.appName = "SINGSALE"
             ext.facebookAppId = "213701285425668"
             ext.facebookAppSecret = "586750a24521ba339ff775ff2d729eb8"
 
@@ -321,14 +321,14 @@ android {
         }
 
         singsaleTest {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "sg.com.singsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
             buildConfigField "boolean", "IS_TEST", "true"
 
-            resValue "string", "app_name", "Singsale Test"
+            resValue "string", "app_name", "SINGSALE Test"
             def facebookAppId = "213701285425668"
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "586750a24521ba339ff775ff2d729eb8"
@@ -342,14 +342,14 @@ android {
         }
 
         nzsaleRC {
-            versionCode 350
+            versionCode 352
             versionName "4.13.1"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            ext.appName = "Nzsale"
+            ext.appName = "NZSALE"
             ext.facebookAppId = "122094841270614"
             ext.facebookAppSecret = "c427c4000b760c98c818350619930764"
 
@@ -368,14 +368,14 @@ android {
         }
 
         nzsaleTest {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "nz.co.nzsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
             buildConfigField "boolean", "IS_TEST", "true"
 
-            resValue "string", "app_name", "Nzsale Test"
+            resValue "string", "app_name", "NZSALE Test"
             def facebookAppId = "122094841270614"
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "c427c4000b760c98c818350619930764"
@@ -390,14 +390,14 @@ android {
         }
 
         mysaleRC {
-            versionCode 350
+            versionCode 352
             versionName "4.13.1"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
             buildConfigField "boolean", "IS_TEST", "false"
 
-            ext.appName = "Mysale"
+            ext.appName = "MYSALE"
             ext.facebookAppId = "485479254797079"
             ext.facebookAppSecret = "fee7b274d99b23eca0c283d48b2f453a"
 
@@ -415,14 +415,14 @@ android {
         }
 
         mysaleTest {
-            versionCode 350
+            versionCode 351
             versionName "4.13.1"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
             buildConfigField "boolean", "IS_TEST", "true"
 
-            resValue "string", "app_name", "Mysale Test"
+            resValue "string", "app_name", "MYSALE Test"
             def facebookAppId = "485479254797079"
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "fee7b274d99b23eca0c283d48b2f453a"
