@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacthistory;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
@@ -141,5 +143,22 @@ public class ViewContactHistoryPresenter<V extends ViewContactHistoryMvpView>
             }
         });
 
+    }
+
+    @Override
+    public void escalateContact(GetContactHistoryRequest contactHistoryRequest) {
+        doApiCallForResponse(getDataManager().callEscalateContact(contactHistoryRequest), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().escalateContactResult(true);
+            }
+            
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                getMvpView().escalateContactResult(false);
+            }
+        });
     }
 }

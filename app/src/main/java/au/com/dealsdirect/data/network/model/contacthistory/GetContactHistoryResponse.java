@@ -4,28 +4,28 @@ package au.com.dealsdirect.data.network.model.contacthistory;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class GetContactHistoryResponse {
     @SerializedName("number")
     @Expose
     private Integer number;
-
     @SerializedName("invoiceNumber")
     @Expose
     private Integer invoiceNumber;
-
     @SerializedName("subject")
     @Expose
     private String subject;
-
     @SerializedName("messages")
     @Expose
     private List<Message> messages;
-
     @SerializedName("actions")
     @Expose
     private List<String> actions;
+    @SerializedName("escalate")
+    @Expose
+    private Escalate escalate;
 
     public Integer getNumber() {
         return number;
@@ -45,6 +45,10 @@ public class GetContactHistoryResponse {
 
     public List<String> getActions() {
         return actions;
+    }
+
+    public Escalate getEscalate() {
+        return escalate;
     }
 
     public static class Message {
@@ -72,6 +76,9 @@ public class GetContactHistoryResponse {
         @Expose
         private String text;
 
+        private transient List<Attachment> imageAttachments = null;
+        private transient List<Attachment> linkAttachments = null;
+
         public String getId() {
             return id;
         }
@@ -96,7 +103,36 @@ public class GetContactHistoryResponse {
             return text;
         }
 
+        public List<Attachment> getImageAttachments() {
+            separateAttachmentsByType();
+            return imageAttachments;
+        }
+
+        public List<Attachment> getLinkAttachments() {
+            separateAttachmentsByType();
+            return linkAttachments;
+        }
+
+        private void separateAttachmentsByType() {
+            if (attachments == null || (imageAttachments != null && linkAttachments != null)) {
+                return;
+            }
+
+            imageAttachments = new LinkedList<>();
+            linkAttachments = new LinkedList<>();
+
+            for (Attachment attachment : attachments) {
+                if (attachment.isImage()) {
+                    imageAttachments.add(attachment);
+                } else {
+                    linkAttachments.add(attachment);
+                }
+            }
+        }
+
         public static class Attachment {
+            private final static String ATTACHMENT_TYPE_IMAGE = "image";
+
             @SerializedName("type")
             @Expose
             private String type;
@@ -112,6 +148,34 @@ public class GetContactHistoryResponse {
             public String getUrl() {
                 return url;
             }
+
+            public boolean isImage() {
+                return type.toLowerCase().contains(ATTACHMENT_TYPE_IMAGE);
+            }
+        }
+    }
+
+    public static class Escalate {
+        @SerializedName("text")
+        @Expose
+        private String text;
+        @SerializedName("text_color")
+        @Expose
+        private String textColor;
+        @SerializedName("background_color")
+        @Expose
+        private String backgroundColor;
+
+        public String getText() {
+            return text;
+        }
+
+        public String getTextColor() {
+            return textColor;
+        }
+
+        public String getBackgroundColor() {
+            return backgroundColor;
         }
     }
 }

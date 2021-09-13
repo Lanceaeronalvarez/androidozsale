@@ -35,6 +35,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse;
+import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse.Escalate;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryResponse.Message;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
@@ -69,6 +70,7 @@ public class ViewContactHistoryController extends BaseController implements View
     private static final String KEY_CONTACT_TIMESTAMP = "ContactHistoryTimeStamp";
     private static final String KEY_CONTACT_SUBJECT = "ContactSubject";
     private static final String KEY_IS_FROM_RETURN_DETAILS = "KEY_IS_FROM_RETURN_DETAILS";
+    private static final String ESCALATE_ACTION_KEY = "o_escalate";
 
     @BindView(R.id.contact_history_recycler_view)
     RecyclerView mContactHistoryRecyclerView;
@@ -102,6 +104,9 @@ public class ViewContactHistoryController extends BaseController implements View
     private String mMessageId = "";
     ImageUploadUtil.UploadFileToServer uploadFileToServer;
     private LinearLayoutManager mLayoutManager;
+
+    private ContactHistoryAdapter contactHistoryAdapter = null;
+
     private final ContactHistoryOnClickRatingListener contactHistoryOnClickRatingListener = new ContactHistoryOnClickRatingListener() {
         @Override
         public void onClickSmile() {
@@ -229,6 +234,7 @@ public class ViewContactHistoryController extends BaseController implements View
     @Override
     public void showContactHistory(GetContactHistoryResponse response) {
         setupMessagesAdapter(response.getMessages());
+        setupMessagesAdapter(response.getEscalate(), response.getActions());
 
         if (mImageUriArray.size() != 0) {
             mMessageId = response.getMessages().get(0).getId();
@@ -347,18 +353,29 @@ public class ViewContactHistoryController extends BaseController implements View
         setupMessagesAdapter(null, hasSatisfactionRating);
     }
 
-    private void setupMessagesAdapter(List<Message> messages, Boolean hasSatisfactionRating) {
-        ContactHistoryAdapter adapter;
-        if (mContactHistoryRecyclerView.getAdapter() instanceof ContactHistoryAdapter) {
-            adapter = (ContactHistoryAdapter) mContactHistoryRecyclerView.getAdapter();
+    private void setupMessagesAdapter(Escalate escalate, List<String> actions) {
+        if (contactHistoryAdapter != null) {
+            if (actions.contains(ESCALATE_ACTION_KEY)) {
+                contactHistoryAdapter.setEscalateAction(() -> mPresenter.escalateContact(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO))));
+            } else {
+                contactHistoryAdapter.setEscalateAction(null);
+            }
+            contactHistoryAdapter.setEscalate(escalate);
+            contactHistoryAdapter.notifyItemChanged(contactHistoryAdapter.getAdjustedFirstPosition());
+        }
+    }
 
-            final List<Message> oldMessages = adapter.getMessages();
-            final boolean oldHasSatisfactionRating = adapter.hasRating();
+    private void setupMessagesAdapter(List<Message> messages, Boolean hasSatisfactionRating) {
+        if (mContactHistoryRecyclerView.getAdapter() instanceof ContactHistoryAdapter) {
+            contactHistoryAdapter = (ContactHistoryAdapter) mContactHistoryRecyclerView.getAdapter();
+
+            final List<Message> oldMessages = contactHistoryAdapter.getMessages();
+            final boolean oldHasSatisfactionRating = contactHistoryAdapter.hasRating();
 
             boolean willRefreshFooter = false;
 
             if (hasSatisfactionRating != null) {
-                adapter.setHasRating(hasSatisfactionRating);
+                contactHistoryAdapter.setHasRating(hasSatisfactionRating);
                 if (oldHasSatisfactionRating != hasSatisfactionRating) {
                     willRefreshFooter = true;
                 }
@@ -373,9 +390,9 @@ public class ViewContactHistoryController extends BaseController implements View
                         index += 1;
                     }
 
-                    adapter.setMessages(messages);
+                    contactHistoryAdapter.setMessages(messages);
                     if (index > 0) {
-                        adapter.notifyItemRangeInserted(adapter.getStartIndexOfMessages(), index);
+                        contactHistoryAdapter.notifyItemRangeInserted(contactHistoryAdapter.getStartIndexOfMessages(), index);
                     }
 
                     if (isLastMessageFromStaff != isLastOldMessageFromStaff) {
@@ -383,22 +400,23 @@ public class ViewContactHistoryController extends BaseController implements View
                     }
                 } else {
                     willRefreshFooter = false;
-                    adapter.notifyDataSetChanged();
+                    contactHistoryAdapter.notifyDataSetChanged();
                 }
             }
 
             if (willRefreshFooter) {
-                adapter.notifyItemChanged(adapter.getFooterIndex());
+                contactHistoryAdapter.notifyItemChanged(contactHistoryAdapter.getFooterIndex());
             }
 
             mContactHistoryRecyclerView.smoothScrollToPosition(0);
         } else {
-            adapter = new ContactHistoryAdapter(
+            contactHistoryAdapter = new ContactHistoryAdapter(
                     messages != null ? messages : new ArrayList<>(),
                     hasSatisfactionRating != null ? hasSatisfactionRating : true,
+                    (type, url) -> mActivity.openAttachment(url),
                     contactHistoryOnClickRatingListener);
 
-            mContactHistoryRecyclerView.setAdapter(adapter);
+            mContactHistoryRecyclerView.setAdapter(contactHistoryAdapter);
             mContactHistoryRecyclerView.scrollToPosition(0);
         }
     }
@@ -534,5 +552,10 @@ public class ViewContactHistoryController extends BaseController implements View
         if (imagePosition + 1 < AppConstants.MAX_IMAGE_COUNT) {
             callUploadImage(imagePosition + 1);
         }
+    }
+
+    @Override
+    public void escalateContactResult(boolean result) {
+        mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO)));
     }
 }

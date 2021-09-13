@@ -19,4 +19,5 @@ public interface ViewContactHistoryMvpView extends MvpView {
 
     void showTicketSatisfaction(boolean hasTicketSatisfaction);
 
+    void escalateContactResult(boolean result);
 }

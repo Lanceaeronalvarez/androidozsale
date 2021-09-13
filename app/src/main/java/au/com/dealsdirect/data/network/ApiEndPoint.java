@@ -393,6 +393,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/subjects/{id}/templates", ApiUrlVersion.v1.apiVersion());
     }
 
+    public static String escalateContact() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/threads/number={number}:escalate", ApiUrlVersion.v1.apiVersion());
+    }
+
     /* Return Controller */
     public static String getReturns() {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetReturns", ApiUrlVersion.emptyVersion.apiVersion());
