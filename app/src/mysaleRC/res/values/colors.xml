@@ -10,7 +10,7 @@
     <color name="recyclerview_overscroll">@color/colorSecondary</color>
 
     <color name="status_bar">@color/bg_splash</color>
-    <color name="status_bar_splash">@color/bg_splash_color_end</color>
+    <color name="status_bar_splash">#000000</color>
 
     <color name="bg_splash_color_end">#FFA300</color>
     <color name="bg_splash_color_center">#FF8800</color>
@@ -62,8 +62,8 @@
     <color name="bg_button_tutorial">#f5f4f4</color>
     <color name="bg_button_tutorial_pressed">#ECECEC</color>
 
-    <color name="bg_button_addcart_default">#65D87F</color>
-    <color name="bg_button_addcart_pressed">#65D87F</color>
+    <color name="bg_button_addcart_default">#3FB549</color>
+    <color name="bg_button_addcart_pressed">#3FB549</color>
     <color name="bg_button_copy_to_clipboard">#292929</color>
 
     <!-- Text -->
@@ -159,4 +159,6 @@
 
     <color name="bg_fcm_notif">#FF7100</color>
 
+    <color name="banner_discount_background_color">#121217</color>
+    <color name="banner_discount_color">#F99E21</color>
 </resources>
