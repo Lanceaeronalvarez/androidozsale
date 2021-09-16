@@ -987,6 +987,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<String> callEscalateContact(GetContactHistoryRequest request) {
+        return Rx2AndroidNetworking.put(ApiEndPoint.escalateContact())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("number", request.getNumber().toString())
+                .build()
+                .getStringObservable();
+    }
+
+    @Override
     public Observable<AccountData> callGetAccountData() {
         return Rx2AndroidNetworking.get(ApiEndPoint.accountData())
                 .addHeaders(mApiHeader.get())

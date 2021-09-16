@@ -368,6 +368,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<String> callEscalateContact(GetContactHistoryRequest getContactHistoryRequest) {
+        return mApiHelper.callEscalateContact(getContactHistoryRequest);
+    }
+
+    @Override
     public Observable<AccountData> callGetAccountData() {
         return mApiHelper.callGetAccountData();
     }

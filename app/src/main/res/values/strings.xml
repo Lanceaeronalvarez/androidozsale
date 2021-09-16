@@ -859,4 +859,6 @@
 
     <string name="go_to_my_returns">Go to My Returns</string>
 
+    <string name="contact_escalate_message">Need to escalate?</string>
+    <string name="contact_escalated_message">Your ticket has been escalated.</string>
 </resources>

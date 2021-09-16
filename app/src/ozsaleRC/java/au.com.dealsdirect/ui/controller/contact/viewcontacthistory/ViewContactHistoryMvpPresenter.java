@@ -24,4 +24,6 @@ public interface ViewContactHistoryMvpPresenter<V extends ViewContactHistoryMvpV
     void getTicketSatisfaction(String number);
 
     void closeTicketSatisfaction(int global, String contactNumber);
+
+    void escalateContact(GetContactHistoryRequest contactHistoryRequest);
 }

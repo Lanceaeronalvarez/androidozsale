@@ -357,6 +357,8 @@ public interface ApiHelper {
 
     Observable<String> callReplyContact(ReplyContactRequest createContactRequest);
 
+    Observable<String> callEscalateContact(GetContactHistoryRequest getContactHistoryRequest);
+
     // LEGALITIES API CALLS
     Observable<GetTemplateTextResponse> callGetTemplateText(GetTemplateTextRequest templateTextRequest);
 
