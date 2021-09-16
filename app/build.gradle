@@ -104,7 +104,7 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
-        dealsDirect2RC {
+        dealsDirectRC {
             versionCode 357
             versionName "5.1.0"
             applicationId "au.com.dealsdirect"
@@ -130,7 +130,7 @@ android {
 
         }
 
-        dealsDirect2Test {
+        dealsDirectTest {
             versionCode 357
             versionName "5.1.0"
             applicationId "au.com.dealsdirect.test"
@@ -197,7 +197,7 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
-        topbuy2RC {
+        topbuyRC {
             versionCode 357
             versionName "5.1.0"
             applicationId "au.com.topbuy"
@@ -222,7 +222,7 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
-        topbuy2Test {
+        topbuyTest {
             versionCode 357
             versionName "5.1.0"
             applicationId "au.com.topbuy.test"
@@ -438,119 +438,84 @@ android {
     }
 
     sourceSets {
-        dealsDirect2RC {
-            res.srcDirs = ['src/dealsDirect2RC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+        dealsDirectRC {
+            res.srcDirs = ['src/dealsDirectRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
-        dealsDirect2Test {
-            res.srcDirs = ['src/dealsDirect2RC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+        dealsDirectTest {
+            res.srcDirs = ['src/dealsDirectRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
         ooRC {
-            res.srcDirs = ['src/ooRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+            res.srcDirs = ['src/ooRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
         ooTest {
-            res.srcDirs = ['src/ooRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+            res.srcDirs = ['src/ooRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
         buyinviteRC {
-            res.srcDirs = ['src/buyinviteTest/res/', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+            res.srcDirs = ['src/buyinviteRC/res/', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
         buyinviteTest {
-            res.srcDirs = ['src/buyinviteTest/res/', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+            res.srcDirs = ['src/buyinviteRC/res/', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
-        topbuy2Test {
-            res.srcDirs = ['src/topbuy2RC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+        topbuyTest {
+            res.srcDirs = ['src/topbuyRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
-        topbuy2RC {
-            res.srcDirs = ['src/topbuy2RC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+        topbuyRC {
+            res.srcDirs = ['src/topbuyRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
         ozsaleRC {
-            res.srcDirs = ['src/ozsaleRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+            res.srcDirs = ['src/ozsaleRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java']
         }
 
         ozsaleTest {
-            res.srcDirs = ['src/ozsaleRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java', 'src/commonUI/java/', 'src/main/java/']
+            res.srcDirs = ['src/ozsaleRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
         singsaleRC {
-            res.srcDirs = ['src/singsaleRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+            res.srcDirs = ['src/singsaleRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
         singsaleTest {
-            res.srcDirs = ['src/singsaleRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+            res.srcDirs = ['src/singsaleRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
         nzsaleRC {
-            res.srcDirs = ['src/nzsaleRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+            res.srcDirs = ['src/nzsaleRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
         nzsaleTest {
-            res.srcDirs = ['src/nzsaleRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+            res.srcDirs = ['src/nzsaleRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
         mysaleRC {
-            res.srcDirs = ['src/mysaleRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
+            res.srcDirs = ['src/mysaleRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
 
         mysaleTest {
-            res.srcDirs = ['src/mysaleRC/res', 'src/ozsaleCommon/res']
-            java.srcDirs = ['src/ozsaleRC/java',
-                            'src/commonUI/java/',
-                            'src/main/java/']
-        }
-
-        main {
-            java.srcDirs = ['src/main/java']
-            resources.srcDirs = ['src/main/resources']
+            res.srcDirs = ['src/mysaleRC/res', 'src/commonRes/res']
+            java.srcDirs = ['src/main/java/']
         }
     }
 
@@ -700,7 +665,7 @@ dependencies {
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 
     // NR
-    implementation 'com.newrelic.agent.android:android-agent:6.2.0'
+    implementation 'com.newrelic.agent.android:android-agent:6.2.1'
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:17.5.1'

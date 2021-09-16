@@ -1,8 +1,8 @@
 PROJECT_DIR='/Users/nicolluisyumang/Desktop/AndroidDealsDirect/'
 OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 
-flavorName=dealsDirect2RC
-buildTypeAssemble=DealsDirect2RCRelease
+flavorName=dealsDirectRC
+buildTypeAssemble=DealsDirectRCRelease
 defaultCountry=Australia
 expectedVersionName="5.1.0"
 expectedVersionCode="357"
@@ -31,7 +31,7 @@ print_green "\n\n\nClean app...\n"
 
 # Install APK on device / emulator
 print_blue "installing Release build...\n"
-./gradlew installdealsDirect2RCRelease
+./gradlew installdealsDirectRCRelease
 print_blue "\n\n\n Done Installing\n"
 
 #Launch Main Activity
