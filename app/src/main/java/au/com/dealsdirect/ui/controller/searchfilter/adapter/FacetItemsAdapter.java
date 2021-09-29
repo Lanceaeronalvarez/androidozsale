@@ -1,11 +1,12 @@
 package au.com.dealsdirect.ui.controller.searchfilter.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,7 +27,10 @@ import butterknife.ButterKnife;
 
 public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public List<FacetItem> getData() { return mData; }
+    public List<FacetItem> getData() {
+        return mData;
+    }
+
     public List<String> getTitles() {
         return mTitles;
     }
@@ -141,19 +145,27 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean isFacetItemActive(int position) {
         for (SearchChipModel chip : mSearchItemsList) {
-            if (chip.getChipTitle().equals(mData.get(position).getTitle())) {
+            if (isFacetItemActive(chip, position)) {
                 return true;
             }
         }
 
         if (mPreSelectedFilters != null && mPreSelectedFilters.size() != 0) {
             for (SearchChipModel chip : mPreSelectedFilters) {
-                if (chip.getChipTitle().equals(mData.get(position).getTitle())) {
+                if (isFacetItemActive(chip, position)) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    private boolean isFacetItemActive(SearchChipModel chip, int position) {
+        if (chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
+            return chip.getKey().equals(mData.get(position).getKey());
+        } else {
+            return chip.getChipTitle().equals(mData.get(position).getTitle());
+        }
     }
 
     private void addChip(int position) {
@@ -167,9 +179,9 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         String chipTitle = getTitles().get(position);
 
         if (mPreSelectedFilters != null && mPreSelectedFilters.size() != 0) {
-            for(Iterator<SearchChipModel> it = mPreSelectedFilters.iterator(); it.hasNext();) {
+            for (Iterator<SearchChipModel> it = mPreSelectedFilters.iterator(); it.hasNext(); ) {
                 SearchChipModel chip = it.next();
-                if(chip.getChipTitle().equals(mData.get(position))) {
+                if (chip.getChipTitle().equals(mData.get(position))) {
                     it.remove();
                 }
             }

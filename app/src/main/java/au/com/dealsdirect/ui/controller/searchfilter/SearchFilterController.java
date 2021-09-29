@@ -426,6 +426,13 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
         mOpaqueView.setOnClickListener(v -> closeFacets());
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
+
+        if (mPreviousSearchChips != null && !mPreviousSearchChips.isEmpty()) {
+            mOrigMinValue = 0;
+            SearchChipModel priceChip = findPriceChip();
+            mOrigMaxValue = Math.max(DEFAULT_PRICE_THRESHOLD, priceChip == null ? -1 : priceChip.getMaxValue());
+            replaceSearchChipModels(mPreviousSearchChips);
+        }
     }
 
     @Override
@@ -462,9 +469,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
                         SaleItemFacet.Value facetValue = facets.get(i).getFacetValues().get(j);
                         mColorList.add(facetValue.getValue());
                     }
-                    if (!mFacetFilters.contains(pricePair)) {
-                        mFacetFilters.add(pricePair);
-                    }
                     mFacetFilters.add(new Pair<String, String>(BundleKeys.COLORS_FACETFILTER_NAME, COLOR_FACET_FILTER_TYPE));
                     break;
                 case BundleKeys.DELIVERY_FACETFILTER_NAME:
@@ -485,7 +489,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
                     break;
             }
         }
-        if (facets.size() == 0) mFacetFilters.add(pricePair);
 
         return mFacetFilters;
     }
@@ -559,37 +562,37 @@ public class SearchFilterController extends BaseController implements SearchFilt
             mOrigMaxValue = DEFAULT_PRICE_THRESHOLD;
         }
 
-        if (mSeekbar != null) {
-            mSeekbar.setMaxValue(mOrigMaxValue);
+        if (mClearText != null) {
+            mClearText.setOnClickListener((v) -> {
+                if (!mHasSeekbarReset) {
+                    //remove previously selected price range
+                    for (SearchChipModel chip : mSearchItemsList) {
+                        if (chip.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
+                            mSearchItemsList.remove(chip);
+                            break;
+                        }
+
+                    }
+                    mPresenter.requestUpdate(
+                            mCategoryKeys,
+                            mSearchItemsList,
+                            BundleKeys.PRICE_FACETFILTER_NAME,
+                            0 + " to " + DEFAULT_PRICE_THRESHOLD,
+                            null,
+                            mBrandList.size(),
+                            minPrice,
+                            maxPrice,
+                            mSizeList,
+                            SearchOperationType.ADJUSTSLIDINGBAR);
+
+                    onResetPriceRange();
+                }
+            });
         }
 
-        mClearText.setOnClickListener((v) -> {
-            if (!mHasSeekbarReset) {
-                //remove previously selected price range
-                for (SearchChipModel chip : mSearchItemsList) {
-                    if (chip.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
-                        mSearchItemsList.remove(chip);
-                        break;
-                    }
-                }
-
-                mPresenter.requestUpdate(
-                        mCategoryKeys,
-                        mSearchItemsList,
-                        BundleKeys.PRICE_FACETFILTER_NAME,
-                        0 + " to " + DEFAULT_PRICE_THRESHOLD,
-                        null,
-                        mBrandList.size(),
-                        minPrice,
-                        maxPrice,
-                        mSizeList,
-                        SearchOperationType.ADJUSTSLIDINGBAR);
-
-                onResetPriceRange();
-            }
-        });
 
         if (mSeekbar != null) {
+            mSeekbar.setMaxValue(mOrigMaxValue);
             mSeekbar.setMinPriceMovingLayout(mMinPriceMovingLayout);
             mSeekbar.setMaxPriceMovingLayout(mMaxPriceMovingLayout);
             mSeekbar.setOnRangeSeekbarChangeListener((minValue, maxValue) -> {
@@ -654,22 +657,6 @@ public class SearchFilterController extends BaseController implements SearchFilt
         super.onDestroyView(view);
     }
 
-    private void updateValidChips() {
-        List<SearchChipModel> listToIterate = new ArrayList<>(mPreviousSearchChips);
-        for (SearchChipModel chip : listToIterate) {
-            boolean hasBrand = chip.getFilterType().equals(BundleKeys.BRANDS_FACETFILTER_NAME) &&
-                    !mBrandList.contains(chip.getChipTitle());
-            boolean hasSizes = chip.getFilterType().equals(BundleKeys.SIZES_FACETFILTER_NAME) &&
-                    !mSizeList.contains(chip.getChipTitle());
-            boolean hasColor = chip.getFilterType().equals(BundleKeys.COLORS_FACETFILTER_NAME) &&
-                    !mColorList.contains(chip.getChipTitle());
-
-            if (hasBrand || hasSizes || hasColor) {
-                mPreviousSearchChips.remove(chip);
-            }
-        }
-    }
-
     @Override
     public void showFacetItem(int position) {
         if (!isViewAttached() || !isViewBound()) return;
@@ -727,9 +714,11 @@ public class SearchFilterController extends BaseController implements SearchFilt
         mSeekbar.setMinStartValue(mOrigMinValue);
         mSeekbar.setMaxStartValue(mOrigMaxValue);
 
-        mSeekbar.apply();
-        mSeekbar.setMinThumbPosition(0);
-        mSeekbar.setMaxThumbPosition(1);
+        mSeekbar.setMinValue(mOrigMinValue)
+                .setMaxValue(mOrigMaxValue)
+                .setMinStartValue(mOrigMinValue)
+                .setMaxStartValue(mOrigMaxValue)
+                .apply();
 
         mSeekbar.resetMovingLayoutVisibility();
     }
@@ -747,8 +736,18 @@ public class SearchFilterController extends BaseController implements SearchFilt
         boolean doesSliderExist = false;
         for (SearchChipModel chipModel : chipModels) {
             if (chipModel.getFilterType().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
-                mSeekbar.setMinThumbPosition(chipModel.getMinValue() / mOrigMaxValue);
-                mSeekbar.setMaxThumbPosition(chipModel.getMaxValue() / mOrigMaxValue);
+                final float minValue = Math.min(0, chipModel.getMinValue());
+                final float maxValue = Math.max(DEFAULT_PRICE_THRESHOLD, chipModel.getMaxValue());
+                mSeekbar.setMaxValue(maxValue);
+                minPrice = chipModel.getMinValue();
+                maxPrice = chipModel.getMaxValue();
+                mMinPrice.setText(Settings.getSelectedCountry().currencySign + chipModel.getMinValue());
+                mMaxPrice.setText(Settings.getSelectedCountry().currencySign + chipModel.getMaxValue());
+                mSeekbar.setMinValue(minValue)
+                        .setMaxValue(maxValue)
+                        .setMinStartValue(minPrice)
+                        .setMaxStartValue(maxPrice)
+                        .apply();
                 doesSliderExist = true;
             }
         }

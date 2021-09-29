@@ -38,35 +38,6 @@ public class CustomRangeSeekbar extends CrystalRangeSeekbar {
         maxPriceMovingLayout = layout;
     }
 
-    public void setMinThumbPosition(float value) {
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) getLayoutParams();
-        float max = getWidth() - lp.rightMargin;
-
-        minPriceMovingLayout.setX(max * Math.min(Math.max(value, 0), 1));
-    }
-
-    public float getMinThumbPosition() {
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) getLayoutParams();
-        float max = getWidth() - lp.rightMargin;
-
-        return minPriceMovingLayout.getX() / max;
-    }
-
-    public void setMaxThumbPosition(float value) {
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) getLayoutParams();
-        float max = getWidth() - lp.rightMargin;
-
-        maxPriceMovingLayout.setX(max * Math.min(Math.max(value, 0), 1));
-    }
-
-    public float getMaxThumbPosition() {
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) getLayoutParams();
-        float max = getWidth() - lp.rightMargin;
-
-        return maxPriceMovingLayout.getX() / max;
-    }
-
-
     @Override
     protected void touchMove(float x, float y) {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) getLayoutParams();
@@ -115,8 +86,8 @@ public class CustomRangeSeekbar extends CrystalRangeSeekbar {
         }
     }
 
-    public void resetMovingLayoutVisibility(){
-        if(maxPriceMovingLayout!=null && minPriceMovingLayout!=null) {
+    public void resetMovingLayoutVisibility() {
+        if (maxPriceMovingLayout != null && minPriceMovingLayout != null) {
             maxPriceMovingLayout.setVisibility(VISIBLE);
             minPriceMovingLayout.setVisibility(VISIBLE);
         }
