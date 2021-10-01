@@ -270,7 +270,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.getProductDetails())
+        return Rx2AndroidNetworking.get(ApiEndPoint.getProductDetailsWithoutSales())
                 .addHeaders(mApiHeader.get())
                 .addPathParameter("seo_identifier", seoIdentifierId)
                 .build()
@@ -279,7 +279,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String saleId, String seoIdentifierId) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.getProductDetails())
+        return Rx2AndroidNetworking.get(ApiEndPoint.getProductDetailsWithSales())
                 .addHeaders(mApiHeader.get())
                 .addPathParameter("seo_identifier", seoIdentifierId)
                 .addPathParameter("sale_id", saleId)
