@@ -1,7 +1,9 @@
 package au.com.dealsdirect.ui.controller.shops;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,16 +31,21 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse.LinkOptions;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventParameters;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.enums.FeatureUsageEventType;
@@ -46,7 +53,9 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
+import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapterHelper;
 import au.com.dealsdirect.ui.controller.shops.adapter.BrandsBannersAdapter;
+import au.com.dealsdirect.ui.controller.shops.adapter.BrandsBannersAdapterHelper;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.ResettableDimensions;
 import au.com.dealsdirect.ui.custom.SearchEditText;
@@ -161,6 +170,133 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private boolean mIsRecyclerViewScrollIdle;
 
     private boolean mIsChangeInProgress = false;
+
+    private final BannersAdapterHelper bannersAdapterHelper = new BannersAdapterHelper() {
+        @Override
+        public int getBannerColumnCount() {
+            return mPresenter.getBannerColumnCount();
+        }
+
+        @Override
+        public boolean isGoogleAdsEnabled() {
+            return mPresenter.isGoogleAdsEnabled();
+        }
+
+        @Override
+        public void onClickFreeDelivery(String deliveryThreshold, String deliveryType) {
+            if (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) ||
+                    deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
+
+                mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
+                        mActivity.getShippingTitle());
+            }
+        }
+
+        @Override
+        public void specialBannerEvent(BannerClickEventRequest bannerClickEventRequest, String saleName) {
+            HashMap<String, Object> eventParameters = new HashMap<>();
+            eventParameters.put(DataCollector.EventParameters.BANNER_TYPE, "SliderBanners");
+            eventParameters.put(DataCollector.EventParameters.SALE_NAME, saleName);
+            eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+            eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, "SaleBanners");
+            eventParameters.put(DataCollector.EventParameters.BANNER_CLICK_REQUEST, bannerClickEventRequest);
+            DataCollector.logEvent(Events.BannerClickEvent, eventParameters);
+        }
+
+        @Override
+        public void onBannerTapped(GetBannerResponse.Banner banner, int position, String imgUrl, Events bannerType,
+                                   String saleName) {
+            if (banner.getLinkOptions() != null && banner.getLinkOptions().getLinkOptionType() == LinkOptions.LinkOptionType.CATEGORY) {
+                SaleItemsController.Parameters.FromCategoryBannerClick parameters = new SaleItemsController.Parameters
+                        .FromCategoryBannerClick(banner.getLinkOptions());
+
+                SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+                getRouter().pushController(RouterTransaction.with(controller)
+                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+            } else if (banner.getBannerType() != null && banner.getBannerType().equals("categoryShop")) {
+                // support for no linkOptions category banner
+
+                Uri uri = Uri.parse(banner.getLink());
+                String id = uri.getLastPathSegment();
+
+                specialBannerEvent(createBannerClickEventRequest(
+                        EventParameters.SpecialBannerType.SHOP_BY_CATEGORY, banner, position), saleName);
+
+                onBannerClicked(id);
+            } else if (banner.getLink() != null && !banner.getLink().isEmpty()) {
+                String link = banner.getLink();
+                Pattern pattern = Pattern.compile("(?<=/s/)([^?\\n\\r])+");
+                Matcher matcher = pattern.matcher(link);
+                String title = " ";
+                if (banner.getDescription() != null && !banner.getDescription().isEmpty()) {
+                    title = banner.getDescription();
+                }
+
+                specialBannerEvent(createBannerClickEventRequest(
+                        EventParameters.SpecialBannerType.SALE_CAMPAIGN, banner, position), saleName);
+
+                if (matcher.find()) {
+                    String id = matcher.group();
+                    onBannerClicked(
+                            id,
+                            title,
+                            banner.getId(),
+                            position,
+                            imgUrl,
+                            banner.getEndDate(),
+                            banner.getIsAvailable(),
+                            banner.getLinkOptions());
+
+                } else {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(banner.getLink()));
+                    mActivity.startActivity(browserIntent);
+                }
+            } else {
+
+                if (bannerType.equals(Events.RegularBannerClickEvent)) {
+                    HashMap<String, Object> eventParameters = new HashMap<>();
+                    eventParameters.put(DataCollector.EventParameters.BANNER_TYPE, "RegularBanners");
+                    eventParameters.put(DataCollector.EventParameters.SALE_NAME, saleName);
+                    eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+                    eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, "SaleBanners");
+                    DataCollector.logEvent(Events.BannerClickEvent, eventParameters);
+                } else if (bannerType.equals(Events.SponsoredBannerClickEvent)) {
+                    specialBannerEvent(createBannerClickEventRequest(
+                            EventParameters.SpecialBannerType.SPONSORED, banner, position), saleName);
+                }
+
+                onBannerClicked(
+                        banner.getDestinationId(),
+                        banner.getDescription(),
+                        banner.getId(),
+                        position,
+                        imgUrl,
+                        banner.getEndDate(),
+                        banner.getIsAvailable(),
+                        banner.getLinkOptions());
+
+            }
+        }
+
+        private BannerClickEventRequest createBannerClickEventRequest(EventParameters.SpecialBannerType type, GetBannerResponse.Banner banner, int position) {
+            BannerClickEventRequest bannerClickEventRequest = new BannerClickEventRequest();
+            bannerClickEventRequest.setEventType(EventTypeId.EVENT_SLIDER_BANNER);
+
+            BannerClickEventRequest.BannerInfo bannerInfo = new BannerClickEventRequest.BannerInfo();
+            bannerInfo.setBannerType(type.getValue());
+            bannerInfo.setSaleId(banner.getId());
+            bannerInfo.setLink(banner.getLink());
+            bannerInfo.setPos(position);
+            bannerInfo.setCategory("");
+
+            bannerClickEventRequest.setBannerInfo(bannerInfo);
+
+            return bannerClickEventRequest;
+        }
+    };
 
     @Override
     protected void onAttach(@NonNull View view) {
@@ -420,29 +556,36 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 mBannersAdapter = null;
                 BrandsBannersAdapter brandsBannersAdapter = new BrandsBannersAdapter(
                         mActivity,
-                        mPresenter,
                         new ArrayList<>(),
                         orientation,
                         getPrefersOldShopBannerDimensions(),
-                        null);
+                        mPresenter.isTablet(),
+                        new BrandsBannersAdapterHelper() {
+                            @Override
+                            public int getBannerColumnCount() {
+                                return mPresenter.getBannerColumnCount();
+                            }
+
+                            @Override
+                            public void onBannerClick(GetTopBrandsResponse brand) {
+
+                            }
+
+                            @Override
+                            public void onInfoClick(String title, String description) {
+
+                            }
+                        });
                 shopsControllerBannerRecyclerView.setAdapter(brandsBannersAdapter);
                 mResettableDimensionsAdapter = brandsBannersAdapter;
             } else {
                 mBannersAdapter = new BannersAdapter(
                         mActivity,
-                        mPresenter,
                         new ArrayList<>(),
                         orientation,
                         getPrefersOldShopBannerDimensions(),
-                        (deliveryThreshold, deliveryType) -> {
-                            if (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) ||
-                                    deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
-
-                                mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
-                                        mActivity.getShippingTitle());
-
-                            }
-                        });
+                        mPresenter.isTablet(),
+                        bannersAdapterHelper);
                 shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
                 mResettableDimensionsAdapter = mBannersAdapter;
             }
@@ -505,11 +648,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         }
     }
 
-    @Override
-    public void onBannerClicked(String saleId, String bannerTitle, String bannerId, int position, String imageUrl, String endDate, boolean isAvailable) {
+    private void onBannerClicked(String saleId, String bannerTitle, String bannerId, int position, String imageUrl, String endDate, boolean isAvailable, LinkOptions linkOptions) {
 
         SaleItemsController.Parameters.FromBannerClick parameters = new SaleItemsController.Parameters
-                .FromBannerClick(bannerTitle, saleId, bannerId, imageUrl, endDate, position);
+                .FromBannerClick(bannerTitle, saleId, bannerId, imageUrl, endDate, linkOptions, position);
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
@@ -522,28 +664,20 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         List<String> names = new ArrayList<>();
         names.add(bannerId + position);
+
+        // Check if sale is available
+        //TODO: Need computation for date and time when sale response is cached
         if (isAvailable) {
             getRouter().pushController(RouterTransaction.with(controller)
                     .tag(mActivity.getString(R.string.sale_items_controller_tag))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
         } else {
-
-            // Check if sale is available
-            //TODO: Need computation for date and time when sale response is cached
-            if (isAvailable) {
-                getRouter().pushController(RouterTransaction.with(controller)
-                        .tag(mActivity.getString(R.string.sale_items_controller_tag))
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
-            } else {
-                DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
-            }
+            DialogUtils.showYesDialog(mActivity, "", "Sale is currently closed", "OK", (dialogInterface, i) -> dialogInterface.dismiss());
         }
     }
 
-    @Override
-    public void onBannerClicked(String categoryId) {
+    private void onBannerClicked(String categoryId) {
         final CategoriesMvpView categoriesMvpView = mActivity.getCategoriesController();
         if (categoriesMvpView == null) {
             return;
@@ -851,11 +985,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         BrandsBannersAdapter adapter = new BrandsBannersAdapter(
                 mActivity,
-                mPresenter,
                 topBrands,
                 ScreenUtils.getOrientation(mActivity),
                 getPrefersOldShopBannerDimensions(),
-                new BrandsBannersAdapter.OnBrandBannerClickListener() {
+                mPresenter.isTablet(),
+                new BrandsBannersAdapterHelper() {
+                    @Override
+                    public int getBannerColumnCount() {
+                        return mPresenter.getBannerColumnCount();
+                    }
+
                     @Override
                     public void onBannerClick(GetTopBrandsResponse brand) {
                         SaleItemsController.Parameters.FromTopBrands parameters = new SaleItemsController.Parameters
@@ -873,8 +1012,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                     public void onInfoClick(String title, String description) {
                         mActivity.showInfoDialog(title, description);
                     }
-                }
-        );
+                });
         mResettableDimensionsAdapter = adapter;
         shopsControllerBannerRecyclerView.setAdapter(adapter);
         shopsControllerBannerRecyclerView.setVisibility(View.VISIBLE);
@@ -1050,6 +1188,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         request.setOffset(null);
         request.setLimit("10");
         request.setIncludeCampaignBanners(true);
+        request.setIncludePromoSales(true);
 
         mPresenter.loadSlidingBanners(request);
     }

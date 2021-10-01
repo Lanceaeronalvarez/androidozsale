@@ -60,6 +60,7 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse.LinkOptions;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
@@ -216,6 +217,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             private String mBannerId;
             private String mEndDate;
             private String mImageURL;
+            private LinkOptions mLinkOptions;
             private Integer mPosition;
 
             public FromBannerClick(String title,
@@ -223,12 +225,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                                    String bannerId,
                                    String imageURL,
                                    String endDate,
+                                   LinkOptions linkOptions,
                                    Integer position) {
                 mTitle = title;
                 mSaleId = saleId;
                 mBannerId = bannerId;
                 mImageURL = imageURL;
                 mEndDate = endDate;
+                mLinkOptions = linkOptions;
                 mPosition = position;
             }
 
@@ -252,8 +256,25 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 return mEndDate;
             }
 
+            public LinkOptions getLinkOptions() {
+                return mLinkOptions;
+            }
+
             public Integer getPosition() {
                 return mPosition;
+            }
+        }
+
+        public static final class FromCategoryBannerClick extends Parameters {
+            private LinkOptions mLinkOptions;
+
+            public FromCategoryBannerClick(
+                    LinkOptions linkOptions) {
+                mLinkOptions = linkOptions;
+            }
+
+            public LinkOptions getLinkOptions() {
+                return mLinkOptions;
             }
         }
 
@@ -541,6 +562,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mGenieSort = null;
     private String mGenieFilters = null;
 
+    private LinkOptions linkOptions = null;
+
     private Parameters mSavedParameters = null;
 
     private TextWatcher mTextWatcher = new TextWatcher() {
@@ -626,7 +649,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             title = ((Parameters.FromBannerClick) parameters).getTitle();
             controller.mSaleId = ((Parameters.FromBannerClick) parameters).getSaleId();
             controller.mEndDate = ((Parameters.FromBannerClick) parameters).getEndDate();
+            controller.linkOptions = ((Parameters.FromBannerClick) parameters).getLinkOptions();
             controller.mFromBannerSearch = true;
+        } else if (parameters instanceof Parameters.FromCategoryBannerClick) {
+            final LinkOptions linkOptions = ((Parameters.FromCategoryBannerClick) parameters).getLinkOptions();
+            title = linkOptions.getCategoryName();
+            controller.linkOptions = linkOptions;
+            controller.mCategoryKey = linkOptions.getCategoryName();
+            controller.mChipFilters = SearchChipModel.chipListFromLinkOptions(linkOptions);
+            controller.mFromCategorySearch = true;
         } else if (parameters instanceof Parameters.FromShopSearch) {
             title = ((Parameters.FromShopSearch) parameters).getTitle();
             controller.mFromShopSearch = true;
@@ -634,7 +665,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         } else if (parameters instanceof Parameters.FromTopBrands) {
             title = ((Parameters.FromTopBrands) parameters).getBrandName();
             controller.mFromShopSearch = true;
-            controller.mChipFilters.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, title, title, 0));
+            controller.mChipFilters.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, title, title));
         } else if (parameters instanceof Parameters.FromCategory) {
             title = ((Parameters.FromCategory) parameters).getTitle();
             controller.mCategoryKey = ((Parameters.FromCategory) parameters).getCategoryMap();
@@ -1087,6 +1118,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mFooterAds.setVisibility(View.GONE);
         setColumnViewEnabled(false);
+
+        if (linkOptions != null) {
+            mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
+            mSaleItemsToolbarField.setText(linkOptions.getSearchQuery());
+            mSearchQuery = linkOptions.getSearchQuery();
+        }
     }
 
     @OnClick(R.id.partial_toolbar_field_title_right_option)
@@ -1793,7 +1830,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             } else {
                 saleIds = new LinkedList<>(saleIds);
             }
-            saleIds.add(mSaleId);
+            if (!saleIds.contains(mSaleId)) {
+                saleIds.add(mSaleId);
+            }
             facetFilters.put("saleId", saleIds);
         }
 
@@ -1873,6 +1912,28 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
 
             getSaleItemsRequest.setHasFilters(true);
+        }
+
+        if (linkOptions != null) {
+            switch (linkOptions.getLinkOptionType()) {
+                case SALE: {
+                    // will override the mSaleId
+                    List<String> value = new LinkedList<>();
+                    value.add(linkOptions.getFacets().getSaleId());
+                    facetFilters.remove(BundleKeys.SALEID_FACETFILTER_NAME);
+                    facetFilters.put(BundleKeys.SALEID_FACETFILTER_NAME, value);
+                    break;
+                }
+                case PROMO: {
+                    List<String> value = new LinkedList<>();
+                    value.add(linkOptions.getFacets().getPromoSaleId());
+                    facetFilters.remove(BundleKeys.SALEID_FACETFILTER_NAME);
+                    facetFilters.put(BundleKeys.PROMOSALEID_FACETFILTER_NAME, value);
+                    break;
+                }
+                default:
+                    break;
+            }
         }
 
         String facetFiltersString = new Gson().toJson(facetFilters);
@@ -2535,7 +2596,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
 
             mChipFilters.clear();
-            mChipFilters.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, brandName, brandName, 0));
+            mChipFilters.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, brandName, brandName));
             mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
             mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
             mSaleItemsToolbarField.setText("");

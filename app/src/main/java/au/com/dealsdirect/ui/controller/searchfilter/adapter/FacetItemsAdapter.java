@@ -169,7 +169,7 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void addChip(int position) {
-        SearchChipModel newChip = new SearchChipModel(mFilterType, mData.get(position).getTitle(), mData.get(position).getKey(), position);
+        SearchChipModel newChip = new SearchChipModel(mFilterType, mData.get(position).getTitle(), mData.get(position).getKey());
         mSearchItemsList.add(newChip);
         mPresenter.onFacetItemClicked(mSearchItemsList, newChip, true);
     }
@@ -179,16 +179,18 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         String chipTitle = getTitles().get(position);
 
         if (mPreSelectedFilters != null && mPreSelectedFilters.size() != 0) {
+            final Set<SearchChipModel> newSet = new HashSet<>(mPreSelectedFilters);
             for (Iterator<SearchChipModel> it = mPreSelectedFilters.iterator(); it.hasNext(); ) {
                 SearchChipModel chip = it.next();
-                if (chip.getChipTitle().equals(mData.get(position))) {
-                    it.remove();
+                if (chip.getChipTitle().equals(mData.get(position).getTitle())) {
+                    newSet.remove(chip);
                 }
             }
+            mPreSelectedFilters = newSet;
         }
 
         for (SearchChipModel chip : mSearchItemsList) {
-            if (getFilterType() == BundleKeys.SORT_FACETFILTER_NAME && chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)
+            if (getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME) && chip.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)
                     || chip.getChipTitle().equals(chipTitle)) {
                 chipToRemove = chip;
                 break;

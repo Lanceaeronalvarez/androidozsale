@@ -619,7 +619,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
                     //add newly selected price range
                     if (mOrigMinValue != minValue.intValue() || mOrigMaxValue != maxValue.intValue()) {
-                        SearchChipModel priceChip = new SearchChipModel(BundleKeys.PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(), null, -1);
+                        SearchChipModel priceChip = new SearchChipModel(BundleKeys.PRICE_FACETFILTER_NAME, minValue.intValue() + " to " + maxValue.intValue(), null);
                         priceChip.setMaxValue(maxValue.intValue());
                         priceChip.setMinValue(minValue.intValue());
                         mSearchItemsList.add(priceChip);

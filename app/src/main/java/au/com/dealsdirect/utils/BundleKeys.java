@@ -84,6 +84,8 @@ public class BundleKeys {
     public static final String KEY_SALE_ITEMS_TITLE = "KEY_SALE_ITEMS_TITLE";
     public static final String KEY_HAS_DEFAULT_CATEGORY = "KEY_HAS_DEFAULT_CATEGORY";
 
+    public static final String SALEID_FACETFILTER_NAME = "saleId";
+    public static final String PROMOSALEID_FACETFILTER_NAME = "promoSaleId";
 
     //facet filters
     public static final String FACET_PAYLOAD = "FACET_PAYLOAD";

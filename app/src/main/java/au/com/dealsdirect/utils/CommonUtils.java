@@ -172,12 +172,12 @@ public final class CommonUtils {
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
-    public static void showAdmob(Activity activity, View view, String unitId) {
-        AdView adView = new AdView(activity);
+    public static void showAdmob(Context context, View view, String unitId) {
+        AdView adView = new AdView(context);
         adView.setAdSize(AdSize.SMART_BANNER);
 
         if (BuildConfig.DEBUG || BuildConfig.IS_TEST) {
-            adView.setAdUnitId(activity.getResources().getString(R.string.admob_test_unit_id));
+            adView.setAdUnitId(context.getResources().getString(R.string.admob_test_unit_id));
         } else {
             adView.setAdUnitId(unitId);
         }

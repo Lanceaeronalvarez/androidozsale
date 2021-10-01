@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -21,21 +22,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 
-
-/*
- * Created by Ayi on 02/06/2017.
- */
-
 public class StringUtils {
-
-//    public static void appendGrayTextToTeal(Context context, TextView textView, String grayText, String tealText) {
-//        Spannable text1 = new SpannableString(grayText);
-//        text1.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.gray_description_text)), 0, text1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        textView.setText(text1);
-//        Spannable text2 = new SpannableString(tealText);
-//        text2.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.teal_text)), 0, text2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        textView.append(text2);
-//    }
 
     public static String toTitleCase(String str) {
 
@@ -312,5 +299,32 @@ public class StringUtils {
 
     public static boolean isNumeric(String string) {
         return string.matches("-?\\d+(\\.\\d+)?");
+    }
+
+
+    public static String addQueryParameter(String url, String key, String value) {
+        return addQueryParameter(url, key, value, false);
+    }
+
+    public static String addQueryParameter(String url, String key, String value, boolean includeWhenValueNull) {
+        if (key == null || key.isEmpty() || (value == null && !includeWhenValueNull)){
+            return url;
+        }
+
+        String output = url;
+        if (!output.contains("?")) {
+            output += "?";
+        } else if (output.charAt(output.length() - 1) != '&') {
+            output += "&";
+        }
+
+        try {
+            output += URLEncoder.encode(key, null) + "=" + URLEncoder.encode(value, null);
+        } catch(Exception e) {
+            Log.e("StringUtils", "addQueryParameter exception: " + e.getMessage());
+            return url;
+        }
+
+        return output;
     }
 }

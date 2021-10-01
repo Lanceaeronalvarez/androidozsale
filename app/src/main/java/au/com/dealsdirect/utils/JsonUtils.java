@@ -3,6 +3,8 @@ package au.com.dealsdirect.utils;
  * Created by CodeineBot on 5/18/17.
  */
 
+import android.util.Pair;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -13,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JsonUtils {
@@ -22,10 +25,39 @@ public class JsonUtils {
     }
 
     public static JSONObject convertToJsonObject(Object object, boolean willSerializeNulls) {
+        return convertToJsonObject(object, willSerializeNulls, new ArrayList<>());
+    }
+
+    public static JSONObject convertToJsonObject(Object object, List<Pair<Class, Object>> adapters) {
+        return convertToJsonObject(object, false, adapters);
+    }
+
+    public static JSONObject convertToJsonObject(Object object, Pair<Class, Object> adapter) {
+        List<Pair<Class, Object>> adapters = new ArrayList<Pair<Class, Object>>() {{
+            add(adapter);
+        }};
+        return convertToJsonObject(object, false, adapters);
+    }
+
+    public static JSONObject convertToJsonObject(Object object, boolean willSerializeNulls, Pair<Class, Object> adapter) {
+        List<Pair<Class, Object>> adapters = new ArrayList<Pair<Class, Object>>() {{
+            add(adapter);
+        }};
+        return convertToJsonObject(object, willSerializeNulls, adapters);
+    }
+
+    public static JSONObject convertToJsonObject(Object object, boolean willSerializeNulls, List<Pair<Class, Object>> adapters) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         if (willSerializeNulls) {
             gsonBuilder = gsonBuilder.serializeNulls();
         }
+
+        if (adapters != null) {
+            for (Pair<Class, Object> classTypeAdapterPair : adapters) {
+                gsonBuilder.registerTypeAdapter(classTypeAdapterPair.first, classTypeAdapterPair.second);
+            }
+        }
+
         Gson gson = gsonBuilder.create();
         try {
             return new JSONObject(gson.toJson(object));

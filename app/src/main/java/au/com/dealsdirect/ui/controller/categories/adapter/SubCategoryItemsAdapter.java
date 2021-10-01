@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -24,21 +25,17 @@ import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * dp Created by Admin on 6/25/17.
- */
-
 public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryItemsAdapter.SubCategoryItemViewHolder> {
 
 
-    private List<GetCategoryTreeResponse> mData = new ArrayList<>();
-    private SubCategoryItemClickListener mCategoryAdapterClickListener;
+    private List<GetCategoryTreeResponse> mData;
+    private final SubCategoryItemClickListener mCategoryAdapterClickListener;
     private int lastPosition = -1;
     private boolean mAnimateInsert = true;
-    private Context mContext;
-    private GetCategoryTreeResponse.LinkOptions mMainLinkOption;
+    private final Context mContext;
+    private final GetCategoryTreeResponse.LinkOptions mMainLinkOption;
     private SubCategoryItemViewHolder mLastSelectedViewHolder = null;
-    private List<SearchChipModel> mChipFilter = new ArrayList<>();
+    private final List<SearchChipModel> mChipFilter = new ArrayList<>();
 
     public SubCategoryItemsAdapter(
             Context context,
@@ -54,8 +51,9 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
         mMainLinkOption = mainLinkOption;
     }
 
+    @NonNull
     @Override
-    public SubCategoryItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SubCategoryItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = null;
 
         if (mContext.getResources().getBoolean(R.bool.should_use_old_category_layout)) {
@@ -93,7 +91,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                     if (mData.get(position).getLinkOptions().getFacets() != null) {
                         for (int i = 0; i < mData.get(position).getLinkOptions().getFacets().getNewArrivals().size(); i++) {
                             SearchChipModel searchChipModel = new SearchChipModel(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME,
-                                    mData.get(position).getLinkOptions().getFacets().getNewArrivals().get(i), null, i);
+                                    mData.get(position).getLinkOptions().getFacets().getNewArrivals().get(i), null);
                             mChipFilter.add(searchChipModel);
                         }
                     }
@@ -107,7 +105,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
                         if (mMainLinkOption.getFacets() != null) {
                             for (int i = 0; i < mMainLinkOption.getFacets().getNewArrivals().size(); i++) {
                                 SearchChipModel searchChipModel = new SearchChipModel(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME,
-                                        mMainLinkOption.getFacets().getNewArrivals().get(i), null, i);
+                                        mMainLinkOption.getFacets().getNewArrivals().get(i), null);
                                 mChipFilter.add(searchChipModel);
                             }
                         }
@@ -116,7 +114,7 @@ public class SubCategoryItemsAdapter extends RecyclerView.Adapter<SubCategoryIte
 
                         for (int i = 0; i < mMainLinkOption.getFacets().getNewArrivals().size(); i++) {
                             SearchChipModel searchChipModel = new SearchChipModel(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME,
-                                    mMainLinkOption.getFacets().getNewArrivals().get(i), null, i);
+                                    mMainLinkOption.getFacets().getNewArrivals().get(i), null);
                             mChipFilter.add(searchChipModel);
                         }
 

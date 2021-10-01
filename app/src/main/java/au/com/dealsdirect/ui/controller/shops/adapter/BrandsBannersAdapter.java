@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.shops.adapter;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
-import au.com.dealsdirect.ui.controller.shops.ShopsMvpPresenter;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
@@ -35,16 +34,15 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
     private int mOrientation;
 
     private int mComputedHeight = -1;
-    private Activity mActivity;
-    private ShopsMvpPresenter mPresenter;
-    private RecyclerView recyclerView = null;
+    private final Context context;
     private int mWidth;
     private int mHeight;
     private int mNumberOfColumns;
+    private final boolean isTablet;
 
     boolean useOldBannerDimensions;
 
-    private OnBrandBannerClickListener mOnBrandBannerClickListener;
+    private final BrandsBannersAdapterHelper mBrandsBannersAdapterHelper;
 
     private static final int THROTTLE_FIRST_WINDOW_DURATION = 1000;
 
@@ -52,23 +50,23 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
     private static final int VIEWTYPE_NEW = 1;
 
     public BrandsBannersAdapter(
-            Activity activity,
-            ShopsMvpPresenter presenter,
+            Context context,
             List<GetTopBrandsResponse> topBrands,
             int orientation,
             boolean useOldBannerDimensions,
-            OnBrandBannerClickListener onBrandBannerClickListener) {
+            boolean isTablet,
+            BrandsBannersAdapterHelper brandsBannersAdapterHelper) {
 
         mTopBrands = topBrands;
 
-        mActivity = activity;
-        mPresenter = presenter;
+        this.context = context;
+        this.isTablet = isTablet;
 
         mOrientation = orientation;
 
         this.useOldBannerDimensions = useOldBannerDimensions;
 
-        mOnBrandBannerClickListener = onBrandBannerClickListener;
+        mBrandsBannersAdapterHelper = brandsBannersAdapterHelper;
 
         resetDimensions();
     }
@@ -97,6 +95,7 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
         }
     }
 
+    @NonNull
     @Override
     public BrandBannerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -106,7 +105,7 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
     }
 
     @Override
-    public void onBindViewHolder(BrandBannerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BrandBannerViewHolder holder, int position) {
 
         GetTopBrandsResponse item = mTopBrands.get(position);
         int width = mWidth;
@@ -121,8 +120,8 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
         if (item.getDescription() != null && !item.getDescription().isEmpty()) {
             holder.info.setVisibility(View.VISIBLE);
             holder.info.setOnClickListener(v -> {
-                if (mOnBrandBannerClickListener != null) {
-                    mOnBrandBannerClickListener.onInfoClick(item.getName(), item.getDescription());
+                if (mBrandsBannersAdapterHelper != null) {
+                    mBrandsBannersAdapterHelper.onInfoClick(item.getName(), item.getDescription());
                 }
             });
         } else {
@@ -145,8 +144,8 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
                         TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> {
-                    if (mOnBrandBannerClickListener != null) {
-                        mOnBrandBannerClickListener.onBannerClick(item);
+                    if (mBrandsBannersAdapterHelper != null) {
+                        mBrandsBannersAdapterHelper.onBannerClick(item);
                     }
                 });
     }
@@ -159,29 +158,29 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
     @Override
     public void resetDimensions() {
         if (useOldBannerDimensions) {
-            mWidth = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.old_banner_tablet_width : R.integer.old_banner_mobile_width);
-            mHeight = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.old_banner_tablet_height : R.integer.old_banner_mobile_height);
+            mWidth = context.getResources().getInteger(isTablet ? R.integer.old_banner_tablet_width : R.integer.old_banner_mobile_width);
+            mHeight = context.getResources().getInteger(isTablet ? R.integer.old_banner_tablet_height : R.integer.old_banner_mobile_height);
         } else {
-            mWidth = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.sale_banner_tablet_width : R.integer.sale_banner_mobile_width);
-            mHeight = mActivity.getResources().getInteger(mPresenter.isTablet() ? R.integer.sale_banner_tablet_height : R.integer.sale_banner_mobile_height);
+            mWidth = context.getResources().getInteger(isTablet ? R.integer.sale_banner_tablet_width : R.integer.sale_banner_mobile_width);
+            mHeight = context.getResources().getInteger(isTablet ? R.integer.sale_banner_tablet_height : R.integer.sale_banner_mobile_height);
         }
         setupDimensions(mOrientation);
     }
 
     @Override
     public void setupDimensions(int orientation) {
-        int minColumns = mPresenter.getBannerColumnCount();
+        int minColumns = mBrandsBannersAdapterHelper.getBannerColumnCount();
         if (useOldBannerDimensions || minColumns < 1) {
             int resId;
-            switch (ScreenUtils.getOrientation(mActivity)) {
+            switch (ScreenUtils.getOrientation(context)) {
                 case Configuration.ORIENTATION_LANDSCAPE:
-                    resId = mPresenter.isTablet() ? R.integer.brand_banner_tablet_landscape_column_count : R.integer.old_banner_mobile_landscape_column_count;
+                    resId = isTablet ? R.integer.brand_banner_tablet_landscape_column_count : R.integer.old_banner_mobile_landscape_column_count;
                     break;
                 default:
-                    resId = mPresenter.isTablet() ? R.integer.brand_banner_tablet_portrait_column_count : R.integer.old_banner_mobile_portrait_column_count;
+                    resId = isTablet ? R.integer.brand_banner_tablet_portrait_column_count : R.integer.old_banner_mobile_portrait_column_count;
                     break;
             }
-            minColumns = mActivity.getResources().getInteger(resId);
+            minColumns = context.getResources().getInteger(resId);
         }
         final int maxColumns = minColumns;
 
@@ -190,24 +189,12 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
         // Dynamic Height Computation
         ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
                 mWidth, mHeight,
-                ScreenUtils.getScreenWidth(mActivity),
+                ScreenUtils.getScreenWidth(context),
                 minColumns, maxColumns);
         mNumberOfColumns = grid.getColumn();
         mComputedHeight = (int) grid.getItemHeight();
 
         notifyDataSetChanged();
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        this.recyclerView = recyclerView;
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        this.recyclerView = null;
     }
 
     @Override
@@ -230,9 +217,4 @@ public class BrandsBannersAdapter extends RecyclerView.Adapter<BrandsBannersAdap
         this.useOldBannerDimensions = useOldBannerDimensions;
     }
 
-    public interface OnBrandBannerClickListener {
-        void onBannerClick(GetTopBrandsResponse brand);
-
-        void onInfoClick(String title, String description);
-    }
 }
