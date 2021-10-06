@@ -84,7 +84,7 @@ ext {
     facebookVersion = '5.15.3'
 
     gcmVersion = '17.0.0'
-    crystalRangeSeekbarVersion = '1.1.1'
+    crystalRangeSeekbarVersion = '1.1.3'
     stickyHeadersVersion = '0.4.3@aar'
 
     //transactiontoolarge logger

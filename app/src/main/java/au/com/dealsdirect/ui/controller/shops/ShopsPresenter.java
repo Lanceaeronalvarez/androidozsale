@@ -185,23 +185,6 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     }
 
     @Override
-    public void selectBanner(String saleId, String bannerTitle, String bannerId, int position, String imageUrl, String endDate, boolean isAvailable) {
-
-        if (!isViewAttached() || getMvpView().isChangeInProgress()) {
-            return;
-        }
-        getMvpView().onBannerClicked(saleId, bannerTitle, bannerId, position, imageUrl, endDate, isAvailable);
-    }
-
-    @Override
-    public void selectCategoryBanner(String categoryId) {
-        if (!isViewAttached() || getMvpView().isChangeInProgress()) {
-            return;
-        }
-        getMvpView().onBannerClicked(categoryId);
-    }
-
-    @Override
     public boolean isGoogleAdsEnabled() {
         return getDataManager().isGoogleAdsEnabled();
     }

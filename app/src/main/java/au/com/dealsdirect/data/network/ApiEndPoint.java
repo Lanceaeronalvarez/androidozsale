@@ -160,8 +160,13 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.SHOP, ACCOUNT_ID_DELIMETER + "/products", ApiUrlVersion.v4.apiVersion());
     }
 
-    public static String getProductDetails() {
-        return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/sales/{sale_id}/products/{seo_identifier}", ApiUrlVersion.v2.apiVersion());
+    public static String getProductDetailsWithoutSales() {
+        return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/products/{seo_identifier}/details", ApiUrlVersion.v2.apiVersion());
+    }
+
+    // note: sale_id is from a product list opened from banners
+    public static String getProductDetailsWithSales() {
+        return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/sales/{sale_id}/products/{seo_identifier}/details", ApiUrlVersion.v2.apiVersion());
     }
 
     public static String getProductDetailsFromCategories() {

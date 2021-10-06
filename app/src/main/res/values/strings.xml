@@ -495,21 +495,6 @@
         <item>@string/account_information</item>
     </integer-array>
 
-    <integer-array name="account_drawable_array">
-        <item>@drawable/bg_account_details</item>
-        <item>@drawable/bg_account_address</item>
-        <item>@drawable/bg_account_orders</item>
-        <item>@drawable/bg_account_payments</item>
-        <item>@drawable/bg_account_vouchers</item>
-        <item>@drawable/bg_account_returns</item>
-        <item>@drawable/bg_account_languages</item>
-        <item>@drawable/bg_account_country</item>
-        <item>@drawable/bg_account_terms_and_conditions</item>
-        <item>@drawable/bg_account_privacy_policy</item>
-        <item>@drawable/bg_account_about_us</item>
-        <item>@drawable/bg_account_logout</item>
-    </integer-array>
-
     <string-array name="gdpr_countries">
         <item>@string/united_kingdom</item>
     </string-array>

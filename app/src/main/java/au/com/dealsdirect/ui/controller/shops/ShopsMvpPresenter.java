@@ -29,16 +29,6 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     boolean isAuthorized();
 
-    void selectBanner(String saleId,
-                      String bannerTitle,
-                      String bannerId,
-                      int position,
-                      String imageUrl,
-                      String endDate,
-                      boolean isAvailable);
-
-    void selectCategoryBanner(String categoryId);
-
     boolean isGoogleAdsEnabled();
 
     int getBannerColumnCount();

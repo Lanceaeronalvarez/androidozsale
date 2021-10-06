@@ -40,6 +40,10 @@ public class GetBannerRequest implements CachableRequest {
     private Boolean includeCampaignBanners;
 
     @Expose
+    @SerializedName("includePromoSales")
+    private Boolean includePromoSales;
+
+    @Expose
     @SerializedName("bannergroups")
     private String bannergroups;
 
@@ -77,6 +81,14 @@ public class GetBannerRequest implements CachableRequest {
 
     public void setIncludeCampaignBanners(Boolean includeCampaignBanners) {
         this.includeCampaignBanners = includeCampaignBanners;
+    }
+
+    public Boolean getIncludePromoSales() {
+        return includePromoSales;
+    }
+
+    public void setIncludePromoSales(Boolean includePromoSales) {
+        this.includePromoSales = includePromoSales;
     }
 
     public void setBannergroups(String bannergroups) {

@@ -248,21 +248,6 @@
         <!--<item>@string/account_clear_cookies_data</item>-->
     </integer-array>
 
-    <integer-array name="account_drawable_array">
-        <item>@drawable/bg_account_details</item>
-        <item>@drawable/bg_account_address</item>
-        <item>@drawable/bg_account_orders</item>
-        <item>@drawable/bg_account_payments</item>
-        <item>@drawable/bg_account_returns</item>
-        <item>@drawable/bg_account_vouchers</item>
-        <item>@drawable/bg_account_invite_friend</item>
-    </integer-array>
-
-    <integer-array name="account_options_sub_item_drawable_array">
-        <item>@drawable/bg_account_languages</item>
-        <item>@drawable/bg_account_country</item>
-    </integer-array>
-
     <!--Placeholder remarks-->
     <string name="welcome_remark_subtitle_address">You do not currently have any address.</string>
     <string name="welcome_remark_title_address">Welcome to My Addresses!</string>

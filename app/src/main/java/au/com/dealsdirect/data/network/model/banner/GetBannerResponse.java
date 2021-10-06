@@ -1,15 +1,23 @@
 
 package au.com.dealsdirect.data.network.model.banner;
 
+import android.util.Pair;
+
 import androidx.annotation.Nullable;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import au.com.dealsdirect.data.cachedresponses.CachableResponse;
+import au.com.dealsdirect.utils.JsonUtils;
+
+import static au.com.dealsdirect.utils.StringUtils.addQueryParameter;
 
 public class GetBannerResponse extends CachableResponse {
 
@@ -102,166 +110,96 @@ public class GetBannerResponse extends CachableResponse {
         @SerializedName("deliveryType")
         @Expose
         private String deliveryType;
+        @SerializedName("linkOptions")
+        @Expose
+        private LinkOptions linkOptions;
 
-
-        public String getLink() {
-            return link;
+        public Group getGroup() {
+            return group;
         }
 
-        public void setLink(String link) {
-            this.link = link;
-        }
-
-        public Integer getPercentOff() {
-            return percentOff;
-        }
-
-        public void setPercentOff(Integer percentOff) {
-            this.percentOff = percentOff;
-        }
-
-        public Boolean getFreeDelivery() {
-            return isFreeDelivery;
-        }
-
-        public void setFreeDelivery(Boolean freeDelivery) {
-            isFreeDelivery = freeDelivery;
-        }
-
-        public String getPercentOffText() {
-            return percentOffText;
-        }
-
-        public void setPercentOffText(String percentOffText) {
-            this.percentOffText = percentOffText;
+        private void setGroup(Group group) {
+            this.group = group;
         }
 
         public String getId() {
             return id;
         }
 
-        public void setId(String id) {
-            this.id = id;
-        }
-
         public String getAccountId() {
             return accountId;
-        }
-
-        public void setAccountId(String accountId) {
-            this.accountId = accountId;
         }
 
         public Boolean getIsAvailable() {
             return isAvailable;
         }
 
-        public void setAvailable(Boolean available) {
-            isAvailable = available;
-        }
-
         public String getBannerText() {
             return bannerText;
-        }
-
-        public void setBannerText(String bannerText) {
-            this.bannerText = bannerText;
         }
 
         public String getDescription() {
             return description;
         }
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
         public String getStartDate() {
             return startDate;
-        }
-
-        public void setStartDate(String startDate) {
-            this.startDate = startDate;
         }
 
         public String getEndDate() {
             return endDate;
         }
 
-        public void setEndDate(String endDate) {
-            this.endDate = endDate;
-        }
-
         public String getDestinationId() {
             return destinationId;
-        }
-
-        public void setDestinationId(String destinationId) {
-            this.destinationId = destinationId;
         }
 
         public String getImage() {
             return image;
         }
 
-        public void setImage(String image) {
-            this.image = image;
-        }
-
         public Boolean getHasImage() {
             return hasImage;
-        }
-
-        public void setHasImage(Boolean hasImage) {
-            this.hasImage = hasImage;
         }
 
         public Attributes getAttributes() {
             return attributes;
         }
 
-        public void setAttributes(Attributes attributes) {
-            this.attributes = attributes;
-        }
-
         public List<String> getCategories() {
             return categories;
-        }
-
-        public void setCategories(List<String> categories) {
-            this.categories = categories;
         }
 
         public String getBannerType() {
             return bannerType;
         }
 
-        public void setBannerType(String bannerType) {
-            this.bannerType = bannerType;
+        public Integer getPercentOff() {
+            return percentOff;
         }
 
-        public Group getGroup() {
-            return group;
+        public Boolean getFreeDelivery() {
+            return isFreeDelivery;
         }
 
-        public void setGroup(Group group) {
-            this.group = group;
+        public String getPercentOffText() {
+            return percentOffText;
+        }
+
+        public String getLink() {
+            return link;
         }
 
         public int getDeliveryThreshold() {
             return deliveryThreshold;
         }
 
-        public void setDeliveryThreshold(int deliveryThreshold) {
-            this.deliveryThreshold = deliveryThreshold;
-        }
-
         public String getDeliveryType() {
             return deliveryType;
         }
 
-        public void setDeliveryType(String deliveryType) {
-            this.deliveryType = deliveryType;
+        public LinkOptions getLinkOptions() {
+            return linkOptions;
         }
     }
 
@@ -314,4 +252,181 @@ public class GetBannerResponse extends CachableResponse {
             return false;
         }
     }
+
+
+    public static class LinkOptions {
+        public enum LinkOptionType {
+            CATEGORY,
+            SALE,
+            PROMO,
+            UNKNOWN
+        }
+
+        @SerializedName("facets")
+        @Expose
+        private Facets facets;
+        @SerializedName("sorting")
+        @Expose
+        private String sorting;
+        @SerializedName("category")
+        @Expose
+        private Map<String, String> category;
+        @SerializedName("searchQuery")
+        @Expose
+        private String searchQuery;
+
+        public Facets getFacets() {
+            return facets;
+        }
+
+        public void setFacets(Facets facets) {
+            this.facets = facets;
+        }
+
+        public String getSorting() {
+            return sorting;
+        }
+
+        public void setSorting(String sorting) {
+            this.sorting = sorting;
+        }
+
+        public Map<String, String> getCategory() {
+            return category;
+        }
+
+        public void setCategory(Map<String, String> category) {
+            this.category = category;
+        }
+
+        public String getSearchQuery() {
+            return searchQuery;
+        }
+
+        public void setSearchQuery(String searchQuery) {
+            this.searchQuery = searchQuery;
+        }
+
+        public String toUrlParams(String url) {
+            String output = url;
+            output = addQueryParameter(output, "q", "q=" + searchQuery);
+            output = addQueryParameter(output, "ff", "ff=" +
+                    JsonUtils.convertToJsonObject(facets, new Pair<>(Facets.PriceLimit.class,
+                            (JsonSerializer<Facets.PriceLimit>) (src, typeOfSrc, context) -> {
+                                JsonArray jsonArray = new JsonArray();
+                                jsonArray.add(src.from + " to " + src.max);
+                                return jsonArray;
+                            })).toString());
+            output = addQueryParameter(output, "sa", "sa=" + sorting);
+            final String categoryName = category == null || category.get("name") == null ? "" : category.get("name");
+            output = addQueryParameter(output, "c", '[' + categoryName + ']');
+            return output;
+        }
+
+        public LinkOptionType getLinkOptionType() {
+            if (category != null) {
+                return LinkOptionType.CATEGORY;
+            } else if (facets != null) {
+                if (facets.getSaleId() != null) {
+                    return LinkOptionType.SALE;
+                } else if (facets.getPromoSaleId() != null) {
+                    return LinkOptionType.PROMO;
+                }
+            }
+            return LinkOptionType.UNKNOWN;
+        }
+
+        public String getCategoryName() {
+            assert category != null;
+            return category.get("name");
+        }
+
+        public String getCategoryId() {
+            assert category != null;
+            return category.get("id");
+        }
+
+        public static class Facets {
+            @SerializedName("skus.brandName")
+            @Expose
+            private List<String> brandNames;
+            @SerializedName("skus.attributes.size")
+            @Expose
+            private List<String> sizes;
+            @SerializedName("color")
+            @Expose
+            private List<String> colors;
+            @SerializedName("skus.attributesForFaceting.aud")
+            private PriceLimit priceLimit;
+            @SerializedName("newArrivals")
+            @Expose
+            private List<String> newArrivals;
+            @SerializedName("delivery")
+            @Expose
+            private List<String> delivery;
+            @SerializedName("saleId")
+            @Expose
+            private String saleId;
+            @SerializedName("promoSaleId")
+            @Expose
+            private String promoSaleId;
+
+            public List<String> getBrandNames() {
+                return brandNames;
+            }
+
+            public List<String> getSizes() {
+                return sizes;
+            }
+
+            public List<String> getColors() {
+                return colors;
+            }
+
+            public PriceLimit getPriceLimit() {
+                return priceLimit;
+            }
+
+            public List<String> getNewArrivals() {
+                return newArrivals;
+            }
+
+            public List<String> getDelivery() {
+                return delivery;
+            }
+
+            public String getSaleId() {
+                return saleId;
+            }
+
+            public String getPromoSaleId() {
+                return promoSaleId;
+            }
+
+            public static class PriceLimit {
+                @SerializedName("from")
+                @Expose
+                private int from;
+                @SerializedName("to")
+                @Expose
+                private int to;
+                @SerializedName("max")
+                @Expose
+                private int max;
+
+                public int getFrom() {
+                    return from;
+                }
+
+                public int getTo() {
+                    return to;
+                }
+
+                public int getMax() {
+                    return max;
+                }
+            }
+        }
+    }
+
 }
