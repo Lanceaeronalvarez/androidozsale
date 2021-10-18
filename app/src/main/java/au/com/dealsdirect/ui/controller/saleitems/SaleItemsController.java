@@ -647,6 +647,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         if (parameters instanceof Parameters.FromBannerClick) {
             title = ((Parameters.FromBannerClick) parameters).getTitle();
+            controller.mSaleName = title;
             controller.mSaleId = ((Parameters.FromBannerClick) parameters).getSaleId();
             controller.mEndDate = ((Parameters.FromBannerClick) parameters).getEndDate();
             controller.linkOptions = ((Parameters.FromBannerClick) parameters).getLinkOptions();
@@ -828,7 +829,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             switch (mSourceMode) {
                 case NORMAL:
                     if (mSaleId != null && !mSaleId.isEmpty()) {
-                        mPresenter.loadSaleBannerDetails(mSaleId);
+                        if (mSaleName == null || mSaleName.isEmpty()) {
+                            mPresenter.loadSaleBannerDetails(mSaleId);
+                        }
                     } else {
                         showBrandBubbles();
                     }
@@ -1566,7 +1569,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             case NORMAL:
                 setupSearchFilters();
                 if (mSaleId != null && !mSaleId.isEmpty()) {
-                    mPresenter.loadSaleBannerDetails(mSaleId);
+                    if (mSaleName == null || mSaleName.isEmpty()) {
+                        mPresenter.loadSaleBannerDetails(mSaleId);
+                    }
                 }
                 mSaleItemsPageNumber = 0;
                 searchOperationType = null;
@@ -1613,7 +1618,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         mIsLoadingProgress = true;
                         mSaleItemsPageNumber++;
                         if (mSaleId != null && !mSaleId.isEmpty()) {
-                            mPresenter.loadSaleBannerDetails(mSaleId);
+                            if (mSaleName == null || mSaleName.isEmpty()) {
+                                mPresenter.loadSaleBannerDetails(mSaleId);
+                            }
                         }
                         searchOperationType = null;
                         mGenieCategory = null;
@@ -2216,7 +2223,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mGenieMaxPrice = maxPrice;
         mGenieSizesCount = sizeList.size();
         if (mSaleId != null && !mSaleId.isEmpty()) {
-            mPresenter.loadSaleBannerDetails(mSaleId);
+            if (mSaleName == null || mSaleName.isEmpty()) {
+                mPresenter.loadSaleBannerDetails(mSaleId);
+            }
         }
         mSaleItemsPageNumber = 0;
         this.searchOperationType = searchOperationType;
