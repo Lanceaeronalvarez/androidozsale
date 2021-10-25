@@ -71,6 +71,7 @@ import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
+import au.com.dealsdirect.data.network.model.events.SellerLinkEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
@@ -135,6 +136,7 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.BuyBoxTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
@@ -367,6 +369,7 @@ public interface ApiHelper {
 
     Observable<List<TemplateTextResponse>> callGetNZCommissionTemplateTexts();
 
+    public Observable<List<BuyBoxTemplateTextResponse>> callGetBuyboxTemplateTexts();
 
     //GCM api calls
     Observable<RegisterDevice.ResponseValue> callRegisterDevice(RegisterDevice.RequestValue requestValue);
@@ -430,6 +433,8 @@ public interface ApiHelper {
     Observable<String> callFeatureUsageEvent(FeatureUsageEventRequest request);
 
     Observable<String> callDeliveryPriceViewEvent(DeliveryPriceViewEventRequest request);
+
+    Observable<String> callSellerLinkEvent(SellerLinkEventRequest request);
 
     // OURPAY
     Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String languageId);

@@ -19,4 +19,6 @@ public class EventTypeId {
     public static final int EVENT_SLIDER_BANNER = 10;
     public static final int EVENT_FEATURE_USAGE = 18;
     public static final int EVENT_DELIVERY_PRICE_VIEW = 19;
+
+    public static final int EVENT_SELLER_LINK = 24;
 }

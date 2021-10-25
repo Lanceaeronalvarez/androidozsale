@@ -18,9 +18,21 @@ public class SearchChipModel {
     private int minValue;
     private int maxValue;
 
+    public static Set<SearchChipModel> chipListFromStoreId(String storeId) {
+        if (storeId == null || storeId.isEmpty()) {
+            return null;
+        }
+
+        return new HashSet<SearchChipModel>() {
+            {
+                add(new SearchChipModel(BundleKeys.STORE_ID_FACETFILTER_NAME, storeId));
+            }
+        };
+    }
+
     public static Set<SearchChipModel> chipListFromLinkOptions(GetBannerResponse.LinkOptions linkOptions) {
         final GetBannerResponse.LinkOptions.Facets facets = linkOptions.getFacets();
-        Set<SearchChipModel> chipModels = new HashSet<>();
+        final Set<SearchChipModel> chipModels = new HashSet<>();
         if (linkOptions.getSorting() != null && !linkOptions.getSorting().isEmpty()) {
             chipModels.add(new SearchChipModel(BundleKeys.SORT_FACETFILTER_NAME, linkOptions.getSorting(), linkOptions.getSorting()));
         }

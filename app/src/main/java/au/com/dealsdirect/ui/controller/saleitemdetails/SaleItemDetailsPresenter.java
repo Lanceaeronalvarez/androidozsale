@@ -561,4 +561,19 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             }
         });
     }
+
+    @Override
+    public String getBuyboxTemplateTextTitle() {
+        return getDataManager().getBuyBoxTemplateTextTitle();
+    }
+
+    @Override
+    public String getBuyboxTemplateTextSellerTemplate() {
+        return getDataManager().getBuyBoxTemplateTextSellerTemplate();
+    }
+
+    @Override
+    public String getBuyboxTemplateTextButtonText() {
+        return getDataManager().getBuyBoxTemplateTextBottomText();
+    }
 }

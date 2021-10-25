@@ -282,6 +282,24 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
+        public static final class FromSeller extends Parameters {
+            private String mSellerName;
+            private String mStoreId;
+
+            public FromSeller(String sellerName, String storeId) {
+                mSellerName = sellerName;
+                mStoreId = storeId;
+            }
+
+            public String getSellerName() {
+                return mSellerName;
+            }
+
+            public String getStoreId() {
+                return mStoreId;
+            }
+        }
+
         public static final class FromCategory extends Parameters {
             private String mTitle;
             private String mCategoryMap;
@@ -734,6 +752,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             controller.linkOptions = linkOptions;
             controller.mCategoryKey = linkOptions.getCategoryName();
             controller.mChipFilters = SearchChipModel.chipListFromLinkOptions(linkOptions);
+            controller.mFromCategorySearch = true;
+        } else if (parameters instanceof Parameters.FromSeller) {
+            title = ((Parameters.FromSeller) parameters).getSellerName();
+            controller.mChipFilters = SearchChipModel.chipListFromStoreId(((Parameters.FromSeller) parameters).getStoreId());
             controller.mFromCategorySearch = true;
         } else if (parameters instanceof Parameters.FromShopSearch) {
             title = ((Parameters.FromShopSearch) parameters).getTitle();
@@ -1794,6 +1816,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         getRouter().pushController(routerTransaction);
 
         mFromShopSearch = false;
+
+        hideKeyboard();
     }
 
     private void setupSearchFilters() {
@@ -1961,6 +1985,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 ArrayList<String> deliveryFacetFilters = new ArrayList<>();
                 ArrayList<String> newArrivalFacetFilters = new ArrayList<>();
                 ArrayList<String> sortFacetFilters = new ArrayList<>();
+                ArrayList<String> storeIdFilters = new ArrayList<>();
 
                 for (SearchChipModel chip : chipsList) {
                     String facetName = chip.getFilterType();
@@ -1979,6 +2004,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         deliveryFacetFilters.add(chip.getChipTitle());
                     } else if (facetName.equals(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME)) {
                         newArrivalFacetFilters.add(chip.getChipTitle());
+                    } else if (facetName.equals(BundleKeys.STORE_ID_FACETFILTER_NAME)) {
+                        storeIdFilters.add(chip.getChipTitle());
                     }
                 }
 
@@ -2007,6 +2034,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 facetFilters.put(BundleKeys.PRICE_FACETFILTER_NAME, priceFacetFilters);
                 facetFilters.put(BundleKeys.DELIVERY_FACETFILTER_NAME, deliveryFacetFilters);
                 facetFilters.put(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME, newArrivalFacetFilters);
+                facetFilters.put(BundleKeys.STORE_ID_FACETFILTER_NAME, storeIdFilters);
 
             }
 

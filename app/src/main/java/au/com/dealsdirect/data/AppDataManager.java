@@ -84,6 +84,7 @@ import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
+import au.com.dealsdirect.data.network.model.events.SellerLinkEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
@@ -148,6 +149,7 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.BuyBoxTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
@@ -791,6 +793,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<String> callSellerLinkEvent(SellerLinkEventRequest request) {
+        return mApiHelper.callSellerLinkEvent(request);
+    }
+
+    @Override
     public Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String langaugeId) {
         return mApiHelper.callGetPaymentPlans(countryId, langaugeId);
     }
@@ -918,6 +925,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<List<TemplateTextResponse>> callGetNZCommissionTemplateTexts() {
         return mApiHelper.callGetNZCommissionTemplateTexts();
+    }
+
+    @Override
+    public Observable<List<BuyBoxTemplateTextResponse>> callGetBuyboxTemplateTexts() {
+        return mApiHelper.callGetBuyboxTemplateTexts();
     }
 
     @Override
@@ -1921,5 +1933,35 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean isSupplierOriginalPriceInfoEnabled() {
         return mPreferencesHelper.isSupplierOriginalPriceInfoEnabled();
+    }
+
+    @Override
+    public void setBuyBoxTemplateTextTitle(String title) {
+        mPreferencesHelper.setBuyBoxTemplateTextTitle(title);
+    }
+
+    @Override
+    public String getBuyBoxTemplateTextTitle() {
+        return mPreferencesHelper.getBuyBoxTemplateTextTitle();
+    }
+
+    @Override
+    public void setBuyBoxTemplateTextSellerTemplate(String sellerTemplate) {
+        mPreferencesHelper.setBuyBoxTemplateTextSellerTemplate(sellerTemplate);
+    }
+
+    @Override
+    public String getBuyBoxTemplateTextSellerTemplate() {
+        return mPreferencesHelper.getBuyBoxTemplateTextSellerTemplate();
+    }
+
+    @Override
+    public void setBuyBoxTemplateTextButtonText(String bottomText) {
+        mPreferencesHelper.setBuyBoxTemplateTextButtonText(bottomText);
+    }
+
+    @Override
+    public String getBuyBoxTemplateTextBottomText() {
+        return mPreferencesHelper.getBuyBoxTemplateTextBottomText();
     }
 }

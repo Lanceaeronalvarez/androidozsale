@@ -10,9 +10,9 @@ import au.com.dealsdirect.ui.base.MvpView;
  * Created by smartwave on 08/06/2017.
  */
 
-public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPresenter<V>{
+public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
-//    void loadProductDetails(GetPublicItemDetailsRequest publicItemDetailsRequest, GetPublicSaleDetailsRequest publicSaleDetailsRequest);
+    //    void loadProductDetails(GetPublicItemDetailsRequest publicItemDetailsRequest, GetPublicSaleDetailsRequest publicSaleDetailsRequest);
     void loadProductDetails(String saleId, String seoIdentifierId);
 
     void loadOurpayData(SaleItemDetails value);
@@ -62,4 +62,10 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     void setDefaultPostcode(String postcode);
 
     void loadPreviewShippingPrice(String postcode, String skuid, float price, int weight, int width, int height, Integer operation);
+
+    String getBuyboxTemplateTextTitle();
+
+    String getBuyboxTemplateTextSellerTemplate();
+
+    String getBuyboxTemplateTextButtonText();
 }

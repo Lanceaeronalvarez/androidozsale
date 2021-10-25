@@ -71,6 +71,7 @@ public class BundleKeys {
     public static final String PRICE_FACETFILTER_NAME = "skus.attributesForFaceting.aud";
     public static final String DELIVERY_FACETFILTER_NAME = "delivery";
     public static final String NEW_ARRIVAL_FACETFILTER_NAME = "newArrivals";
+    public static final String STORE_ID_FACETFILTER_NAME = "storeId";
     public static final String SEARCH_QUERY_NAME = "search_query";
     public static final String SORT_FACETFILTER_NAME = "sort";
     public static final String CATEGORY_TREE_FACET = "KEY_CATEGORY_FACET";

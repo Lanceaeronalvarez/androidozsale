@@ -56,6 +56,7 @@ import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.Logout;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
 import au.com.dealsdirect.data.network.model.returns.FileSettingsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.BuyBoxTemplateTextResponse;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
@@ -1366,6 +1367,29 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 if (list.size() > 1) {
                     getDataManager().setSupplierOriginalPriceInfoTemplateTextType2(((TemplateTextResponse)list.get(1)).getText());
                     SupplierOriginalPriceInfoHelper.setContent2(((TemplateTextResponse)list.get(1)).getText());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                Log.d("mainpresenter", " getTemplatetexts failed = " + throwable.getMessage());
+            }
+        });
+
+        // TODO: combine with Supplier Info
+        doApiCallForResponse(getDataManager().callGetBuyboxTemplateTexts(), new AppApiCallback() {
+            @Override
+            public void onSuccess(List<?> list) {
+                super.onSuccess(list);
+
+                if (list.size() > 0) {
+                    final BuyBoxTemplateTextResponse templateTextResponse = (BuyBoxTemplateTextResponse) list.get(0);
+                    final BuyBoxTemplateTextResponse.Templates templates = templateTextResponse.getTemplates();
+                    getDataManager().setBuyBoxTemplateTextTitle(templates.getTitle());
+                    getDataManager().setBuyBoxTemplateTextSellerTemplate(templates.getSellerTemplate());
+                    getDataManager().setBuyBoxTemplateTextButtonText(templates.getButtonText());
                 }
             }
 

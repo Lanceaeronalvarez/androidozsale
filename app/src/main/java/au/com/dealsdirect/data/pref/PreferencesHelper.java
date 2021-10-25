@@ -349,4 +349,16 @@ public interface PreferencesHelper {
     void setSupplierOriginalPriceInfoEnabled(boolean isEnabled);
 
     boolean isSupplierOriginalPriceInfoEnabled();
+
+    void setBuyBoxTemplateTextTitle(String title);
+
+    String getBuyBoxTemplateTextTitle();
+
+    void setBuyBoxTemplateTextSellerTemplate(String sellerTemplate);
+
+    String getBuyBoxTemplateTextSellerTemplate();
+
+    void setBuyBoxTemplateTextButtonText(String bottomText);
+
+    String getBuyBoxTemplateTextBottomText();
 }

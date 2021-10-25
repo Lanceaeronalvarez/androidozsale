@@ -323,6 +323,53 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/product_details_buybox_container"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="@dimen/margin_small"
+                                android:background="@color/white"
+                                android:orientation="vertical"
+                                android:paddingLeft="@dimen/margin_small"
+                                android:paddingRight="@dimen/margin_small"
+                                android:visibility="gone">
+
+                                <RelativeLayout
+                                    android:id="@+id/product_details_buybox_header_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:id="@+id/product_details_buybox_title"
+                                        fontPath="@string/font_app_bold"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentLeft="true"
+                                        android:layout_centerVertical="true"
+                                        android:paddingTop="@dimen/margin_medium"
+                                        android:paddingBottom="@dimen/margin_medium"
+                                        android:text="More Buying Options"
+                                        android:textColor="@color/text_extra_dark"
+                                        android:textSize="@dimen/text_size_caption1" />
+
+                                    <ImageView
+                                        android:id="@+id/product_details_buybox_minimize"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:paddingLeft="@dimen/margin_small"
+                                        android:scaleType="fitCenter"
+                                        android:src="@drawable/ic_chevron_up" />
+                                </RelativeLayout>
+
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/product_details_buybox_items"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:id="@+id/product_details_return_policy_container"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -468,6 +515,30 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/margin_tiny" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/product_seller_container"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="@dimen/margin_small"
+                                android:background="@color/white"
+                                android:orientation="vertical"
+                                android:paddingLeft="@dimen/margin_small"
+                                android:paddingRight="@dimen/margin_small"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/product_seller_text"
+                                    fontPath="@string/font_app_regular"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingTop="@dimen/margin_small"
+                                    android:paddingBottom="@dimen/margin_small"
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_caption1"
+                                    tools:text="Seller" />
 
                             </LinearLayout>
 

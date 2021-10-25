@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
@@ -898,5 +899,14 @@ public class MainController extends BaseController implements MainMvpView {
                 .setTextColor(ContextCompat.getColor(mActivity, R.color.white))
                 .build();
         mBottomNavigationView.setNotification(notification, CATEGORY_INDEX);
+    }
+
+    public void showReturnPolicy() {
+        showAccountController();
+        getAccountRouter().popToRoot();
+        final Controller controller = getAccountRouter().getBackstack().get(0).controller();
+        if (controller instanceof AccountController) {
+            ((AccountController) controller).showReturnsPolicy();
+        }
     }
 }

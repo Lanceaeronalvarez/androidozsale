@@ -27,6 +27,7 @@ import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
+import au.com.dealsdirect.data.network.model.events.SellerLinkEventRequest;
 import au.com.dealsdirect.data.network.model.events.VisitorInfo;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
@@ -45,6 +46,7 @@ import au.com.dealsdirect.service.datacollection.events.RecentlyViewedDataEvent;
 import au.com.dealsdirect.service.datacollection.events.RecommendationDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SaleBannersDataEvent;
 import au.com.dealsdirect.service.datacollection.events.SearchDataEvent;
+import au.com.dealsdirect.service.datacollection.events.SellerLinkEvent;
 import au.com.dealsdirect.service.datacollection.events.WishlistDataEvent;
 import au.com.dealsdirect.service.datacollection.events.YouMayAlsoLikeClickEvent;
 import au.com.dealsdirect.service.event.FrontEndType;
@@ -209,6 +211,15 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         super.LogDataEvents(parameters);
                         callDeliveryPriceViewEvent((DeliveryPriceViewEventRequest) parameters.get(DataCollector.EventParameters.DELIVERY_PRICE_VIEW_EVENT_REQUEST));
+                    }
+                }));
+
+        DataCollector.EventRegistry.register(generateEventKey(Events.SellerLinkEvent, getServiceKey()), Events.SellerLinkEvent,
+                new LoggingService.LogSellerLinkEvent(new SellerLinkEvent() {
+                    @Override
+                    public void LogDataEvents(HashMap<String, Object> parameters) {
+                        super.LogDataEvents(parameters);
+                        callSellerLinkEvent((SellerLinkEventRequest) parameters.get(DataCollector.EventParameters.SELLER_LINK_EVENT_REQUEST));
                     }
                 }));
 
@@ -536,6 +547,31 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
 
         getCompositeDisposable().add(getDataManager()
                 .callDeliveryPriceViewEvent(request)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(response -> {
+
+                    Log.d(TAG, response);
+
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        // handle load accounts error here
+                        if (throwable instanceof ANError) {
+                            ANError anError = (ANError) throwable;
+                            Log.d("Error", String.valueOf(anError.getErrorBody()));
+                        }
+                    }
+                }));
+    }
+
+    private static void callSellerLinkEvent(SellerLinkEventRequest request) {
+        request.setFrontEndInfo(includeFrontEndInfo());
+        request.setVisitorInfo(includeVisitorInfo());
+
+        getCompositeDisposable().add(getDataManager()
+                .callSellerLinkEvent(request)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(response -> {

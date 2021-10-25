@@ -197,6 +197,10 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String SUPPLIER_ORIGINAL_PRICE_INFO_ENABLED = "SUPPLIER_ORIGINAL_PRICE_INFO_ENABLED";
 
+    private static final String BUYBOX_TITLE = "BUYBOX_TITLE";
+    private static final String BUYBOX_SELLER_TEMPLATE = "BUYBOX_SELLER_TEMPLATE";
+    private static final String BUYBOX_BUTTON_TEXT = "BUYBOX_BOTTOM_TEXT";
+
     private Context mContext;
 
     @Inject
@@ -1166,5 +1170,35 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean isSupplierOriginalPriceInfoEnabled() {
         return Prefs.getBoolean(SUPPLIER_ORIGINAL_PRICE_INFO_ENABLED, false);
+    }
+
+    @Override
+    public void setBuyBoxTemplateTextTitle(String title) {
+        Prefs.putString(BUYBOX_TITLE, title);
+    }
+
+    @Override
+    public String getBuyBoxTemplateTextTitle() {
+        return Prefs.getString(BUYBOX_TITLE, "");
+    }
+
+    @Override
+    public void setBuyBoxTemplateTextSellerTemplate(String sellerTemplate) {
+        Prefs.putString(BUYBOX_SELLER_TEMPLATE, sellerTemplate);
+    }
+
+    @Override
+    public String getBuyBoxTemplateTextSellerTemplate() {
+        return Prefs.getString(BUYBOX_SELLER_TEMPLATE, "");
+    }
+
+    @Override
+    public void setBuyBoxTemplateTextButtonText(String bottomText) {
+        Prefs.putString(BUYBOX_BUTTON_TEXT, bottomText);
+    }
+
+    @Override
+    public String getBuyBoxTemplateTextBottomText() {
+        return Prefs.getString(BUYBOX_BUTTON_TEXT, "");
     }
 }

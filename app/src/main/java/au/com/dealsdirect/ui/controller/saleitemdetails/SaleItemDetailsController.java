@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -23,6 +24,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -54,6 +56,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
@@ -80,6 +83,7 @@ import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventReques
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
+import au.com.dealsdirect.data.network.model.events.SellerLinkEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
@@ -133,7 +137,6 @@ import static android.graphics.Typeface.BOLD;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
-import static au.com.dealsdirect.utils.BundleKeys.SALEITEMS_FROM_SHOP_SEARCH;
 
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView {
 
@@ -332,6 +335,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @Inject
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
 
+    private SaleItemDetails currentItem = null;
     // TODO: store SaleItemProduct instead of these
     private String mSaleId;
     private String mSkuId;
@@ -481,6 +485,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @BindView(R.id.price_block_container)
     ViewGroup priceBlockContainer;
+
+    @BindView(R.id.product_seller_container)
+    ViewGroup sellerContainer;
+    @BindView(R.id.product_seller_text)
+    TextView sellerTextView;
+
+    @BindView(R.id.product_details_buybox_container)
+    ViewGroup buyboxContainer;
+    @BindView(R.id.product_details_buybox_header_container)
+    ViewGroup buyBoxHeaderContainer;
+    @BindView(R.id.product_details_buybox_title)
+    TextView buyBoxTitleTextView;
+    @BindView(R.id.product_details_buybox_minimize)
+    ImageView buyBoxMinimizeButtonView;
+    @BindView(R.id.product_details_buybox_items)
+    RecyclerView buyBoxItemsRecyclerView;
 
     int[] mSharedImageLocation;
 
@@ -708,6 +728,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
+        hasLoadedPostcodeForm = false;
         setUp(view);
         getPriceBlockHelper().setFreeDeliveryTextViewText(null);
         if (partialProductDetailsToShow != null) {
@@ -715,6 +736,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             if (partialProductDetailsToShow.isFreeDelivery()) {
                 getPriceBlockHelper().setFreeDeliveryTextViewText(getFreeShippingSpan());
             }
+        }
+        if (currentItem != null) {
+            setupProductDetails(currentItem);
         }
         if (mIsSoldout != null) {
             showAddToCartButton();
@@ -1003,7 +1027,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSoldOutView.setVisibility(mIsSoldout != null && mIsSoldout ? View.VISIBLE : View.GONE);
 
         mProductBrand.setOnClickListener(v -> {
-            showProductList(mProductBrand.getText().toString());
+            gotoProductListWithSearchQuery(mProductBrand.getText().toString());
         });
 
         mShippingPostcodeInput.addTextChangedListener(new TextWatcher() {
@@ -1028,30 +1052,29 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mShippingPreviewPrice.setVisibility(View.GONE);
     }
 
-    private void showProductList(String searchKey) {
-
-        Bundle args = new Bundle();
-        args.putBoolean(SALEITEMS_FROM_SHOP_SEARCH, true);
-
-        SaleItemsController.Parameters.FromShopSearch parameters = new SaleItemsController.Parameters
+    private void gotoProductListWithSearchQuery(String searchKey) {
+        final SaleItemsController.Parameters.FromShopSearch parameters = new SaleItemsController.Parameters
                 .FromShopSearch(null, searchKey);
 
-        SaleItemsController saleItemsController = SaleItemsController.newInstance(parameters);
+        gotoProductListWithParameters(parameters);
+    }
 
+    private void gotoProductListWithParameters(SaleItemsController.Parameters parameters) {
+        final SaleItemsController saleItemsController = SaleItemsController.newInstance(parameters);
 
-        Controller controller = getRouter().getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
+        final Controller controller = getRouter().getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
         if (controller != null) {
             getRouter().popController(controller);
             getRouter().replaceTopController(RouterTransaction.with(saleItemsController)
                     .tag(getResources().getString(R.string.sale_items_controller_tag))
-                    .pushChangeHandler(new ArcZoomChangeHandler())
-                    .popChangeHandler(new ArcZoomChangeHandler()));
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
         } else {
             getRouter().popToRoot(new ArcZoomChangeHandler());
             getRouter().pushController(RouterTransaction.with(saleItemsController)
                     .tag(getResources().getString(R.string.sale_items_controller_tag))
-                    .pushChangeHandler(new ArcZoomChangeHandler())
-                    .popChangeHandler(new ArcZoomChangeHandler()));
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
         }
 
         setRetainViewMode(RetainViewMode.RETAIN_DETACH);
@@ -1115,6 +1138,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 //      mSizesFlowLayout.setAdapter(null);
         mSizesFlowLayout.setOnSelectListener(null);
         mProductDescriptionText.setWebViewClient(null);
+        mReturnPolicyText.setWebViewClient(null);
         if (mCountDownTimer != null) mCountDownTimer.cancel();
         super.onDestroyView(view);
     }
@@ -1162,6 +1186,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showProductDetails(SaleItemDetails saleDetail) {
+        currentItem = saleDetail;
         rrpTextCache.put(saleDetail.getProductId(), saleDetail.getRrpText());
         pricingTextCache.put(saleDetail.getProductId(), saleDetail.getPricing());
         if (onLoadProductDetails != null) {
@@ -1239,7 +1264,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
         }
 
-        mShippingContainer.setVisibility(shippingInformation != null ? View.VISIBLE : View.GONE);
+        mShippingContainer.setVisibility(shippingInformation != null ||
+                deliveryInformation != null ||
+                mShippingPostcodeContainer.getVisibility() == View.VISIBLE ? View.VISIBLE : View.GONE);
         mShippingDescHeaderText.setVisibility(shippingInformation != null ? View.VISIBLE : View.GONE);
 
         getPriceBlockHelper().setPriceInfoOnClickListener(v -> onPriceInfoClicked(saleDetail));
@@ -1262,6 +1289,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (returnPolicy != null) {
             mReturnPolicyContainer.setVisibility(View.VISIBLE);
+            mReturnPolicyText.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    mActivity.getMainController().showReturnPolicy();
+                    return true;
+                }
+            });
             mReturnPolicyText.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             mReturnPolicyText.startAnimation(anim);
             mReturnPolicyText.loadDataWithBaseURL(null, mHtmlHeader + returnPolicy + mHtmlFooter,
@@ -1295,7 +1329,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                ActivityLaunchUtil.launchActivity(mActivity, url);
+                if (!url.contains("about:blank")) {
+                    ActivityLaunchUtil.launchActivity(mActivity, url);
+                }
                 return true;
             }
 
@@ -1379,6 +1415,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             isAddToBasketInputBuffered = false;
             addToBasket();
         }
+
+        setupSeller(saleDetail);
+        setupBuyBox(saleDetail);
     }
 
     public void setupPartialProductDetails(SaleItemProduct saleDetail) {
@@ -1414,6 +1453,84 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mShippingPreviewPrice.setText(getFreeShippingSpan());
             mShippingPreviewPrice.setVisibility(mShippingPreviewPrice.getText() != null && mShippingPreviewPrice.getText().length() > 0 ? View.VISIBLE : View.GONE);
         }
+    }
+
+    private void setupSeller(SaleItemDetails saleDetail) {
+        if (saleDetail.getSellerName() != null && !saleDetail.getSellerName().isEmpty() &&
+                saleDetail.getSeoStoreId() != null && !saleDetail.getSeoStoreId().isEmpty()) {
+            final String productId = saleDetail.getProductId();
+            final String sellerName = saleDetail.getSellerName();
+            final String storeId = saleDetail.getSeoStoreId();
+            final Context context = sellerContainer.getContext();
+            SpannableStringBuilder sellerText = new SpannableStringBuilder();
+            sellerText.append(context.getResources().getString(R.string.product_details_seller_text));
+            sellerText.append(" ");
+            final int start = sellerText.length();
+            sellerText.append(sellerName, new UnderlineSpan(), SPAN_INCLUSIVE_EXCLUSIVE);
+            sellerText.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.text_link_color)), start, sellerText.length(), SPAN_INCLUSIVE_EXCLUSIVE);
+            sellerTextView.setText(sellerText);
+            sellerTextView.setOnClickListener(v -> {
+                gotoProductListWithParameters(new SaleItemsController.Parameters.FromSeller(sellerName, storeId));
+                logSellerLinkEvent(sellerName, productId, storeId);
+            });
+            sellerContainer.setVisibility(View.VISIBLE);
+        } else {
+            sellerTextView.setOnClickListener(null);
+            sellerContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private void setupBuyBox(SaleItemDetails saleDetail) {
+        if (saleDetail.getBuyBoxGroup() != null && !saleDetail.getBuyBoxGroup().isEmpty()) {
+            buyboxContainer.setVisibility(View.VISIBLE);
+            buyBoxTitleTextView.setText(StringUtils.toTitleCase(mPresenter.getBuyboxTemplateTextTitle()));
+            buyBoxItemsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
+            buyBoxItemsRecyclerView.setAdapter(new BuyboxItemsAdapter(
+                    saleDetail.getBuyBoxGroup(),
+                    mPresenter.getBuyboxTemplateTextSellerTemplate(),
+                    mPresenter.getBuyboxTemplateTextButtonText(),
+                    new BuyboxItemsAdapter.BuyBoxItemsHelper() {
+                        @Override
+                        public void onLinkPressed(SaleItemDetails.BuyBoxItem item) {
+                            gotoProductListWithParameters(new SaleItemsController.Parameters.FromSeller(
+                                    item.getSellerName(),
+                                    item.getSeoStoreId()
+                            ));
+                        }
+
+                        @Override
+                        public void onButtonPressed(SaleItemDetails.BuyBoxItem item) {
+                            mProductDetailScrollView.smoothScrollTo(0, 0);
+                            loadProductDetails(null, item.getSeoIdentifier());
+                        }
+                    }));
+            setBuyboxMinimized(true);
+            buyBoxHeaderContainer.setOnClickListener(v -> {
+                setBuyboxMinimized(!isBuyboxMinimized());
+            });
+        } else {
+            buyBoxHeaderContainer.setOnClickListener(null);
+            buyboxContainer.setVisibility(View.GONE);
+            buyBoxItemsRecyclerView.setAdapter(null);
+        }
+    }
+
+    private void setBuyboxMinimized(boolean isMinimized) {
+        if (isMinimized == isBuyboxMinimized()) {
+            return;
+        }
+
+        if (isMinimized) {
+            buyBoxMinimizeButtonView.setImageResource(R.drawable.ic_chevron_down);
+            buyBoxItemsRecyclerView.setVisibility(View.GONE);
+        } else {
+            buyBoxMinimizeButtonView.setImageResource(R.drawable.ic_chevron_up);
+            buyBoxItemsRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private boolean isBuyboxMinimized() {
+        return buyBoxItemsRecyclerView.getVisibility() != View.VISIBLE;
     }
 
     private void loadProductDetails(String saleId, String seoIdentifierId) {
@@ -2432,6 +2549,24 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         eventParameters.put(DataCollector.EventParameters.DELIVERY_PRICE_VIEW_EVENT_REQUEST, request);
 
         DataCollector.logEvent(Events.DeliveryPriceViewEvent, eventParameters);
+    }
+
+    private void logSellerLinkEvent(String sellerName, String productId, String storeId) {
+        SellerLinkEventRequest.SellerInfo sellerInfo = new SellerLinkEventRequest.SellerInfo();
+        sellerInfo.setSellerName(sellerName);
+        sellerInfo.setProductId(productId);
+        sellerInfo.setStoreId(storeId);
+
+        SellerLinkEventRequest request = new SellerLinkEventRequest();
+        request.setEventType(EventTypeId.EVENT_SELLER_LINK);
+        request.setSellerInfo(sellerInfo);
+
+        HashMap<String, Object> eventParameters = new HashMap<>();
+        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
+        eventParameters.put(DataCollector.EventParameters.SELLER_LINK_EVENT_REQUEST, request);
+
+        DataCollector.logEvent(Events.SellerLinkEvent, eventParameters);
     }
 
     private SaleItemProductPriceBlockHelper getPriceBlockHelper() {

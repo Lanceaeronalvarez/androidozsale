@@ -51,6 +51,12 @@
         <item name="android:textSize">@dimen/text_size_headline2</item>
     </style>
 
+    <style name="DDButtonStyleTransparent">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/bg_button_rounded_transparent</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
     <style name="DDJoinNowButtonStyle" parent="DDButtonStyle">
         <item name="android:background">@drawable/bg_button_join_now</item>
     </style>

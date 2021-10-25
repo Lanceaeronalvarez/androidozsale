@@ -54,6 +54,15 @@ public class SaleItemDetails extends SaleItemProduct {
     @SerializedName("supplier")
     @Expose
     private String supplier;
+    @SerializedName("sellerName")
+    @Expose
+    private String sellerName;
+    @SerializedName("seoStoreId")
+    @Expose
+    private String seoStoreId;
+    @SerializedName("buyBoxGroup")
+    @Expose
+    private List<BuyBoxItem> buyBoxItem;
 
     public String getPersonalisation() {
         return personalisation;
@@ -70,7 +79,6 @@ public class SaleItemDetails extends SaleItemProduct {
     public Attributes getAttributes() {
         return attributes;
     }
-
 
     public Integer getQuantity() {
         return quantity;
@@ -114,5 +122,136 @@ public class SaleItemDetails extends SaleItemProduct {
 
     public String getSupplier() {
         return supplier;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public String getSeoStoreId() {
+        return seoStoreId;
+    }
+
+    public List<BuyBoxItem> getBuyBoxGroup() {
+        return buyBoxItem;
+    }
+
+    public static class BuyBoxItem {
+        @SerializedName("deliveryPrice")
+        @Expose
+        private double deliveryPrice;
+
+        @SerializedName("deliveryThreshold")
+        @Expose
+        private int deliveryThreshold;
+
+        @SerializedName("deliveryType")
+        @Expose
+        private String deliveryType;
+
+        @SerializedName("isFreeDelivery")
+        @Expose
+        private boolean isFreeDelivery;
+
+        @SerializedName("masterProductId")
+        @Expose
+        private String masterProductId;
+
+        @SerializedName("masterSkuId")
+        @Expose
+        private String masterSkuId;
+
+        @SerializedName("name")
+        @Expose
+        private String name;
+
+        @SerializedName("price")
+        @Expose
+        private Price price;
+
+        @SerializedName("salePrice")
+        @Expose
+        private Price salePrice;
+
+        // TODO: unknown type and function
+//        @SerializedName("rank")
+//        @Expose
+//        private Integer rank;
+
+        @SerializedName("sellerName")
+        @Expose
+        private String sellerName;
+
+        @SerializedName("seoIdentifier")
+        @Expose
+        private String seoIdentifier;
+
+        @SerializedName("seoStoreId")
+        @Expose
+        private String seoStoreId;
+
+        @SerializedName("seoUrl")
+        @Expose
+        private String seoUrl;
+
+        @SerializedName("shippingText")
+        @Expose
+        private String shippingText;
+
+        public double getDeliveryPrice() {
+            return deliveryPrice;
+        }
+
+        public int getDeliveryThreshold() {
+            return deliveryThreshold;
+        }
+
+        public String getDeliveryType() {
+            return deliveryType;
+        }
+
+        public boolean isFreeDelivery() {
+            return isFreeDelivery;
+        }
+
+        public String getMasterProductId() {
+            return masterProductId;
+        }
+
+        public String getMasterSkuId() {
+            return masterSkuId;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Price getPrice() {
+            return price;
+        }
+
+        public Price getSalePrice() {
+            return salePrice;
+        }
+
+        public String getSellerName() {
+            return sellerName;
+        }
+
+        public String getSeoIdentifier() {
+            return seoIdentifier;
+        }
+
+        public String getSeoStoreId() {
+            return seoStoreId;
+        }
+
+        public String getSeoUrl() {
+            return seoUrl;
+        }
+
+        public String getShippingText() {
+            return shippingText;
+        }
     }
 }
