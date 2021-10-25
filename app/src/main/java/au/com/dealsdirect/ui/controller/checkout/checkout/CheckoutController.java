@@ -40,7 +40,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.utility.RxBus;
-import com.stripe.android.model.Card;
 import com.stripe.android.model.CardBrand;
 import com.visa.checkout.VisaCheckoutSdk;
 
@@ -1739,8 +1738,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             return;
         }
 
-        SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
-                .Parameters.FromItemsList(position,
+        SaleItemDetailsController.Parameters.FromCheckout parameters = new SaleItemDetailsController.Parameters.FromCheckout(position,
                 null,
                 imageUrl,
                 CommonUtils.loadSaleItem(mActivity, productID),
@@ -1750,9 +1748,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 brandName,
                 price,
                 oldPrice,
-                null,
-                null,
-                null,
                 "", "", isFreeDelivery, false);
 
         RouterTransaction routerTransaction = RouterTransaction

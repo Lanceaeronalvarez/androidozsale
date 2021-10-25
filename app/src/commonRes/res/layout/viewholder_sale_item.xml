@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/vh_sale_item_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/margin_extra_small"
-    android:layout_marginTop="@dimen/margin_small"
-    android:layout_marginRight="@dimen/margin_extra_small"
+    android:layout_height="match_parent"
     android:background="@color/transparent"
     android:orientation="vertical"
+    android:padding="@dimen/margin_extra_small"
     tools:ignore="MissingPrefix">
 
     <RelativeLayout
-        android:id="@+id/vh_sale_item_frame"
+        android:id="@+id/vh_sale_item_image_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/sale_item_image_height"
-        android:layout_centerHorizontal="true">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <ImageView
             android:id="@+id/vh_sale_item_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_deals"
             tools:ignore="ContentDescription" />
 
         <ImageView
@@ -50,41 +47,45 @@
             android:textSize="@dimen/text_size_body"
             android:visibility="visible" />
 
-        <ImageButton
-            android:id="@+id/vh_sale_item_like_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:background="@color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/wishlist_product_list_active" />
-
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/vh_sale_item_brand"
-        fontPath="@string/font_app_bold"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/vh_sale_item_frame"
-        android:layout_marginTop="@dimen/margin_extra_small"
-        android:gravity="left"
-        android:lines="1"
-        android:singleLine="true"
-        android:text=""
-        android:textColor="@color/text_extra_dark"
-        android:textSize="@dimen/text_size_caption1"
-        android:textStyle="bold"
-        android:visibility="visible"
-        tools:text="Brand Sample" />
+        android:layout_height="@dimen/product_list_item_like_button_size"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/vh_sale_item_brand"
+            fontPath="@string/font_app_bold"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/product_list_text_view_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:lines="1"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_caption1"
+            android:textStyle="bold"
+            android:visibility="visible"
+            tools:text="Brand Sample" />
+
+        <ImageButton
+            android:id="@+id/vh_sale_item_like_button"
+            android:layout_width="@dimen/product_list_item_like_button_size"
+            android:layout_height="@dimen/product_list_item_like_button_size"
+            android:background="@color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/wishlist_product_details_active" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/vh_sale_item_name"
         fontPath="@string/font_app_medium"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/vh_sale_item_brand"
+        android:layout_height="@dimen/product_list_text_view_height"
         android:ellipsize="end"
         android:gravity="left"
         android:lines="1"
@@ -94,73 +95,27 @@
         android:visibility="visible"
         tools:text="Item Name Sample" />
 
-    <LinearLayout
-        android:id="@+id/vh_sale_item_price_layout"
+    <RelativeLayout
+        android:id="@+id/price_block_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vh_sale_item_name"
-        android:layout_alignParentStart="true"
-        android:gravity="top"
-        android:orientation="horizontal">
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:gravity="center"
+        android:visibility="visible">
 
-        <TextView
-            android:id="@+id/vh_sale_item_price"
-            fontPath="@string/font_app_bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:lines="1"
-            android:singleLine="true"
-            android:text=""
-            android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_body"
-            android:textStyle="bold"
-            tools:text="$100.00" />
+        <include layout="@layout/partial_price_block_small" />
+    </RelativeLayout>
 
-        <TextView
-            android:id="@+id/vh_sale_item_old_price"
-            fontPath="@string/font_app_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/margin_small"
-            android:gravity="left"
-            android:lines="1"
-            android:singleLine="true"
-            android:textColor="@color/text_medium"
-            android:textSize="@dimen/text_size_caption1"
-            tools:text="$120.00" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/vh_sale_item_discount"
-        fontPath="@string/font_app_bold"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/skeleton_price_block_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vh_sale_item_price_layout"
-        android:background="@drawable/bg_product_list_discount"
-        android:gravity="left"
-        android:maxLines="1"
-        android:padding="@dimen/margin_extra_small"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_caption2"
-        tools:text="Up To 50% Off" />
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:gravity="center"
+        android:visibility="visible">
 
-    <TextView
-        android:id="@+id/vh_sale_item_discounted_price"
-        fontPath="@string/font_app_bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/vh_sale_item_discount"
-        android:layout_weight="0.5"
-        android:gravity="left"
-        android:lines="1"
-        android:singleLine="true"
-        android:text=""
-        android:textColor="@color/product_details_promotion_discount"
-        android:textSize="@dimen/text_size_body"
-        android:textStyle="bold"
-        tools:text="$100.00" />
+        <include layout="@layout/partial_price_block_small_skeleton" />
+    </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
 

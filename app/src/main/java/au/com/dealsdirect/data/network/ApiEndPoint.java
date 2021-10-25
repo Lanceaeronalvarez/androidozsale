@@ -229,7 +229,7 @@ public final class ApiEndPoint {
 
     /* Account Data*/
     public static String accountData() {
-        return getFormattedUrl(ApiService.SETTING, "settings/accountdata/" + ACCOUNT_ID_DELIMETER, ApiUrlVersion.v1.apiVersion());
+        return getFormattedUrl(ApiService.SETTING, "settings/accountdata/" + ACCOUNT_ID_DELIMETER, ApiUrlVersion.v2.apiVersion());
     }
 
     /*SMS VERIFICATION*/
@@ -758,6 +758,10 @@ public final class ApiEndPoint {
 
     public static String saveAgeRestrictedConsentData() {
         return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "SaveAgeRestrictedConsentData");
+    }
+
+    public static String getNZCommissionTemplateText() {
+        return getFormattedUrl(ApiService.SETTING, "settings/accounts/" + ACCOUNT_ID_DELIMETER + "/templates?templateTypes=1,2", ApiUrlVersion.v1.apiVersion());
     }
 
     private ApiEndPoint() {

@@ -358,8 +358,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
             return;
         }
 
-        SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
-                .Parameters.FromItemsList(position,
+        SaleItemDetailsController.Parameters.FromCheckout parameters = new SaleItemDetailsController.Parameters.FromCheckout(position,
                 null,
                 imageUrl,
                 CommonUtils.loadSaleItem(mActivity, productID),
@@ -369,9 +368,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
                 brandName,
                 price,
                 oldPrice,
-                null,
-                null,
-                null,
                 "", "", isFreeDelivery, false);
 
         RouterTransaction routerTransaction = RouterTransaction

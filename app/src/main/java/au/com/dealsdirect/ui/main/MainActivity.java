@@ -117,7 +117,9 @@ import au.com.dealsdirect.ui.controller.shops.BottomSheetInfoDialog;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
+import au.com.dealsdirect.ui.custom.BottomSheetInfoWebViewDialog;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.custom.SupplierOriginalPriceInfoHelper;
 import au.com.dealsdirect.utils.ActionConstants;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BraintreeUtils;
@@ -188,6 +190,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private String clientSecret;
 
     private PaymentsClient paymentsClient;
+
+    private SupplierOriginalPriceInfoHelper supplierOriginalPriceInfoHelper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1772,5 +1776,24 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void openAttachment(String url) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
+    }
+
+    public void showBottomSheetInfoWebViewDialog(String content, boolean showCloseButton) {
+        final BottomSheetInfoWebViewDialog bottomSheetFragment = new BottomSheetInfoWebViewDialog();
+
+        bottomSheetFragment.setCloseButtonVisible(showCloseButton);
+        bottomSheetFragment.setCloseButtonVisible(true);
+        bottomSheetFragment.setWebViewContent(content);
+
+        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_WEBVIEW_DIALOG_TAG);
+    }
+
+    public SupplierOriginalPriceInfoHelper getSupplierOriginalPriceInfoHelper() {
+        if (supplierOriginalPriceInfoHelper == null) {
+            if (mPresenter.getSupplierOriginalPriceInfoEnabled()) {
+                supplierOriginalPriceInfoHelper = new SupplierOriginalPriceInfoHelper();
+            }
+        }
+        return supplierOriginalPriceInfoHelper;
     }
 }

@@ -1,155 +1,81 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
-import au.com.dealsdirect.ui.controller.saleitemdetails.listener.ImageTappedListener;
-import au.com.dealsdirect.utils.CommonUtils;
-import au.com.dealsdirect.utils.ImageUtils;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemViewHolder;
 
-public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleItemViewHolder> {
 
     private boolean hasInitializedDimensions = false;
 
-    private int cellWidth;
-    private int cellHeight;
-
-    private int imageWidth;
-    private int imageHeight;
+    private int cellWidth = 1;
+    private int cellHeight = 1;
 
     private RecyclerView recyclerView = null;
 
     public OnItemTappedListener onItemTappedListener = null;
+    public WishlistListener wishlistListener = null;
 
-    private static final int THROTTLE_FIRST_WINDOW_DURATION = 1000;
-
-    List<SaleItemProduct> mDatasource;
-
-    private String saleId = "";
-    private String seoIdentifierId = "";
+    List<SaleItemProduct> mDatasource = null;
 
     private boolean shouldRepeatCellsToFillWidth = true;
 
-    private Integer imageResolutionOverride = null;
-    private boolean useCircularImage = false;
+    private final boolean isSupplierOriginalPriceInfoEnabled;
 
-
-    private String title;
-
-    public HorizontalScrollingItemsAdapter() {
+    public HorizontalScrollingItemsAdapter(boolean isSupplierOriginalPriceInfoEnabled) {
+        this.isSupplierOriginalPriceInfoEnabled = isSupplierOriginalPriceInfoEnabled;
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SaleItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.viewholder_product_details_cell, parent, false);
-        return new ViewHolder(view, cellWidth);
+                .inflate(R.layout.viewholder_sale_item, parent, false);
+        return new SaleItemViewHolder(view, new Pair<>(cellWidth, cellHeight), isSupplierOriginalPriceInfoEnabled);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        String imgUrl = "";
+    public void onBindViewHolder(@NonNull SaleItemViewHolder holder, int position) {
         final int virtualPosition = position % mDatasource.size();
         final SaleItemProduct saleItemProduct = mDatasource.get(virtualPosition);
 
-        if (saleItemProduct instanceof GetYouMayAlsoLikeResponse) {
-            final GetYouMayAlsoLikeResponse youMayLikeItem = (GetYouMayAlsoLikeResponse) saleItemProduct;
+        final String imgUrl = saleItemProduct.getImages().get(0);
 
-            if (youMayLikeItem.getImages() != null && !youMayLikeItem.getImages().isEmpty()) {
-                imgUrl = youMayLikeItem.getImages().get(0);
-            }
-
-            ((ViewHolder) holder).title.setText(youMayLikeItem.getName());
-
-            if (((ViewHolder) holder).subscription != null) {
-                ((ViewHolder) holder).subscription.dispose();
-            }
-
-            ((ViewHolder) holder).subscription = RxView.clicks(((ViewHolder) holder).layout)
-                    .throttleFirst(
-                            THROTTLE_FIRST_WINDOW_DURATION,
-                            TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(action -> {
-                        if (onItemTappedListener != null) {
-                            onItemTappedListener.onItemTapped(youMayLikeItem);
-                        }
-                    });
-        }
-        if (saleItemProduct instanceof RecommendedItemsResponse) {
-            final RecommendedItemsResponse recommendedItemsResponse = (RecommendedItemsResponse) saleItemProduct;
-
-            if (recommendedItemsResponse.getImages() != null && !recommendedItemsResponse.getImages().isEmpty()) {
-                imgUrl = recommendedItemsResponse.getImages().get(0);
-            }
-
-            ((ViewHolder) holder).title.setText(recommendedItemsResponse.getName());
-
-            if (((ViewHolder) holder).subscription != null) {
-                ((ViewHolder) holder).subscription.dispose();
-            }
-
-            ((ViewHolder) holder).subscription = RxView.clicks(((ViewHolder) holder).layout)
-                    .throttleFirst(
-                            THROTTLE_FIRST_WINDOW_DURATION,
-                            TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(action -> {
-                        if (onItemTappedListener != null) {
-                            onItemTappedListener.onItemTapped(recommendedItemsResponse);
-                        }
-                    });
-        }
-        if (saleItemProduct instanceof RecentlyViewedItemResponse) {
-            final RecentlyViewedItemResponse recentlyItemResponse = (RecentlyViewedItemResponse) saleItemProduct;
-
-            if (recentlyItemResponse.getImages() != null && !recentlyItemResponse.getImages().isEmpty()) {
-                imgUrl = recentlyItemResponse.getImages().get(0);
-            }
-            ((ViewHolder) holder).title.setText(recentlyItemResponse.getName());
-            ((ViewHolder) holder).subscription = RxView.clicks(((ViewHolder) holder).layout)
-                    .throttleFirst(
-                            THROTTLE_FIRST_WINDOW_DURATION,
-                            TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(action -> {
-                        if (onItemTappedListener != null) {
-                            onItemTappedListener.onItemTapped(recentlyItemResponse);
-                        }
-                    });
+        final boolean isProductInWishlist;
+        if (wishlistListener != null) {
+            isProductInWishlist = wishlistListener.isProductInWishlist(saleItemProduct);
+        } else {
+            isProductInWishlist = false;
         }
 
-        if (holder instanceof ViewHolder && !imgUrl.isEmpty() && !CommonUtils.isActivityOfViewDestroyed(((ViewHolder) holder).image)) {
-            if (useCircularImage) {
-                ImageUtils.loadImageWithCircleCrop(imgUrl, ((ViewHolder) holder).image);
-            } else {
-                ImageUtils.loadImage(imgUrl, ((ViewHolder) holder).image);
+        holder.setupViewHolderSkeleton(false);
+        holder.setupViewHolder(saleItemProduct, imgUrl, isProductInWishlist);
+        holder.itemView.setOnClickListener(v -> onItemTappedListener.onItemTapped(saleItemProduct, virtualPosition, mDatasource.size()));
+        holder.setPriceInfoOnClickListener(v -> onItemTappedListener.onPriceInfoTapped(saleItemProduct));
+        holder.setLikeButtonOnClickListener(v -> {
+            if (wishlistListener != null) {
+                holder.setLiked(!holder.isLiked());
+                if (holder.isLiked()) {
+                    wishlistListener.addToWishlist(saleItemProduct);
+                } else {
+                    wishlistListener.removeFromWishlist(saleItemProduct);
+                }
             }
-        }
-
+        });
     }
 
     @Override
@@ -191,14 +117,6 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<Recycl
         }
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public void setupDimensions(int width, int height) {
         cellWidth = width;
         cellHeight = height;
@@ -216,38 +134,6 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<Recycl
 
     public int getCellHeight() {
         return cellHeight;
-    }
-
-    public int getImageWidth() {
-        return imageWidth;
-    }
-
-    public void setImageWidth(int imageWidth) {
-        this.imageWidth = imageWidth;
-    }
-
-    public int getImageHeight() {
-        return imageHeight;
-    }
-
-    public void setImageHeight(int imageHeight) {
-        this.imageHeight = imageHeight;
-    }
-
-    public String getSaleId() {
-        return saleId;
-    }
-
-    public void setSaleId(String saleId) {
-        this.saleId = saleId;
-    }
-
-    public String getSeoIdentifierId() {
-        return seoIdentifierId;
-    }
-
-    public void setSeoIdentifierId(String seoIdentifierId) {
-        this.seoIdentifierId = seoIdentifierId;
     }
 
     private int getEdgeBufferSize() {
@@ -293,6 +179,14 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<Recycl
         this.onItemTappedListener = onItemTappedListener;
     }
 
+    public WishlistListener getWishlistListener() {
+        return wishlistListener;
+    }
+
+    public void setWishlistListener(WishlistListener wishlistListener) {
+        this.wishlistListener = wishlistListener;
+    }
+
     public void resetReyclerViewPosition() {
         if (recyclerView != null) {
             recyclerView.scrollToPosition(getEdgeBufferSize());
@@ -336,50 +230,16 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<Recycl
         return getCellWidth() * getDatasource().size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.viewholder_banner_layout)
-        ViewGroup layout;
-
-        @BindView(R.id.viewholder_banner_image)
-        public
-        ImageView image;
-
-        @Nullable
-        @BindView(R.id.viewholder_horizontal_scrolling_cell_title)
-        TextView title;
-
-        ViewHolder(View view, int width) {
-            super(view);
-            ButterKnife.bind(this, view);
-
-            if (width > 0) {
-                ViewGroup.LayoutParams params = layout.getLayoutParams();
-                params.width = width;
-                layout.setLayoutParams(params);
-            }
-        }
-
-        Disposable subscription;
-    }
-
     public interface OnItemTappedListener {
-        void onItemTapped(SaleItemProduct item);
+        void onItemTapped(SaleItemProduct item, int position, int size);
+        void onPriceInfoTapped(SaleItemProduct item);
     }
 
-    public Integer getImageResolutionOverride() {
-        return imageResolutionOverride;
-    }
+    public interface WishlistListener {
+        void addToWishlist(SaleItemProduct item);
 
-    public void setImageResolutionOverride(Integer imageResolutionOverride) {
-        this.imageResolutionOverride = imageResolutionOverride;
-    }
+        void removeFromWishlist(SaleItemProduct item);
 
-    public boolean isUseCircularImage() {
-        return useCircularImage;
-    }
-
-    public void setUseCircularImage(boolean useCircularImage) {
-        this.useCircularImage = useCircularImage;
+        boolean isProductInWishlist(SaleItemProduct item);
     }
 }

@@ -2,8 +2,6 @@ package au.com.dealsdirect.saleitemdetails;
 
 import com.google.gson.Gson;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
-import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsMvpView;
@@ -22,7 +20,6 @@ import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsPresenter
 import au.com.dealsdirect.utils.rx.TestSchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.internal.operators.observable.ObservableAll;
 import io.reactivex.schedulers.TestScheduler;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -58,15 +55,15 @@ public class SaleItemDetailsPresenterTest {
 
     @Test
     public void testLoadSaleItemDetails(){
-        GetSaleItemDetailsResponse response = new GetSaleItemDetailsResponse();
+        SaleItemDetails response = new SaleItemDetails();
 
         doReturn(Observable.just(response))
                 .when(mMockDataManager).callGetSaleItemDetails("");
 
-        mPresenter.loadSaleItemDetails("");
+        mPresenter.loadProductDetails("");
         mTestScheduler.triggerActions();
 
-        verify(mMockSaleItemDetailsView).showSaleDetails(response);
+        verify(mMockSaleItemDetailsView).showProductDetails(response);
     }
 
     @Test
@@ -81,14 +78,14 @@ public class SaleItemDetailsPresenterTest {
 
     @Test
     public void testGenerateOurPay(){
-        GetSaleItemDetailsResponse response = new GetSaleItemDetailsResponse();
+        SaleItemDetails response = new SaleItemDetails();
 
         mPresenter.generateOurpay(response);
         mTestScheduler.triggerActions();
 
         ArgumentCaptor<Ourpay> ourPayArgumentCaptor = ArgumentCaptor.forClass(Ourpay.class);
 
-        verify(mMockSaleItemDetailsView).showMyPayDetails(any(GetSaleItemDetailsResponse.class),ourPayArgumentCaptor.capture());
+        verify(mMockSaleItemDetailsView).showMyPayDetails(any(SaleItemDetails.class),ourPayArgumentCaptor.capture());
 
     }
 

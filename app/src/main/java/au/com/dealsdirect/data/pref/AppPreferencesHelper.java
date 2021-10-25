@@ -190,6 +190,13 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String DEFAULT_POSTCODE = "DEFAULT_POSTCODE";
 
+    private static final String SUPPLIER_ORIGINAL_PRICE_INFO_SALE_LIST = "SUPPLIER_ORIGINAL_PRICE_INFO_SALE_LIST";
+
+    private static final String SUPPLIER_ORIGINAL_PRICE_INFO_TEMPLATE_TEXT_1 = "SUPPLIER_ORIGINAL_PRICE_INFO_TEMPLATE_TEXT_1";
+    private static final String SUPPLIER_ORIGINAL_PRICE_INFO_TEMPLATE_TEXT_2 = "SUPPLIER_ORIGINAL_PRICE_INFO_TEMPLATE_TEXT_2";
+
+    private static final String SUPPLIER_ORIGINAL_PRICE_INFO_ENABLED = "SUPPLIER_ORIGINAL_PRICE_INFO_ENABLED";
+
     private Context mContext;
 
     @Inject
@@ -1118,5 +1125,46 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public String getDefaultPostcode() {
         return Prefs.getString(DEFAULT_POSTCODE, "");
+    }
+
+    @Override
+    public long getSupplierOriginalPriceInfoSaleListTimeAgreed() {
+        return Prefs.getLong(SUPPLIER_ORIGINAL_PRICE_INFO_SALE_LIST, -1);
+    }
+
+    @Override
+    public void setIsSupplierOriginalPriceInfoSaleListTimeAgreed(long timestamp) {
+        Prefs.putLong(SUPPLIER_ORIGINAL_PRICE_INFO_SALE_LIST, timestamp);
+    }
+
+    @Override
+    public void setSupplierOriginalPriceInfoTemplateTextType1(String text) {
+        Prefs.putString(SUPPLIER_ORIGINAL_PRICE_INFO_TEMPLATE_TEXT_1, text);
+    }
+
+    @Override
+    public String getSupplierOriginalPriceInfoTemplateTextType1() {
+        return Prefs.getString(SUPPLIER_ORIGINAL_PRICE_INFO_TEMPLATE_TEXT_1, "");
+    }
+
+    @Override
+    public void setSupplierOriginalPriceInfoTemplateTextType2(String text) {
+        Prefs.putString(SUPPLIER_ORIGINAL_PRICE_INFO_TEMPLATE_TEXT_2, text);
+
+    }
+
+    @Override
+    public String getSupplierOriginalPriceInfoTemplateTextType2() {
+        return Prefs.getString(SUPPLIER_ORIGINAL_PRICE_INFO_TEMPLATE_TEXT_2, "");
+    }
+
+    @Override
+    public void setSupplierOriginalPriceInfoEnabled(boolean isEnabled) {
+        Prefs.putBoolean(SUPPLIER_ORIGINAL_PRICE_INFO_ENABLED, isEnabled);
+    }
+
+    @Override
+    public boolean isSupplierOriginalPriceInfoEnabled() {
+        return Prefs.getBoolean(SUPPLIER_ORIGINAL_PRICE_INFO_ENABLED, false);
     }
 }

@@ -94,6 +94,7 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.data.network.model.legalities.TemplateTextResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -139,10 +140,10 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -269,22 +270,22 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId) {
+    public Observable<SaleItemDetails> callGetSaleItemDetails(String seoIdentifierId) {
         return Rx2AndroidNetworking.get(ApiEndPoint.getProductDetailsWithoutSales())
                 .addHeaders(mApiHeader.get())
                 .addPathParameter("seo_identifier", seoIdentifierId)
                 .build()
-                .getObjectObservable(GetSaleItemDetailsResponse.class);
+                .getObjectObservable(SaleItemDetails.class);
     }
 
     @Override
-    public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String saleId, String seoIdentifierId) {
+    public Observable<SaleItemDetails> callGetSaleItemDetails(String saleId, String seoIdentifierId) {
         return Rx2AndroidNetworking.get(ApiEndPoint.getProductDetailsWithSales())
                 .addHeaders(mApiHeader.get())
                 .addPathParameter("seo_identifier", seoIdentifierId)
                 .addPathParameter("sale_id", saleId)
                 .build()
-                .getObjectObservable(GetSaleItemDetailsResponse.class);
+                .getObjectObservable(SaleItemDetails.class);
     }
 
     @Override
@@ -926,6 +927,14 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(templateTextRequest))
                 .build()
                 .getObjectObservable(GetTemplateTextsResponse.class);
+    }
+
+    @Override
+    public Observable<List<TemplateTextResponse>> callGetNZCommissionTemplateTexts() {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getNZCommissionTemplateText())
+                .addHeaders(mApiHeader.get())
+                .build()
+                .getObjectListObservable(TemplateTextResponse.class);
     }
 
     @Override

@@ -8,7 +8,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -25,20 +24,6 @@ public class DateUtils {
 
     public static final String GMT_FORMAT_NO_MILLISECONDS = "yyyy-MM-dd'T'HH:mm:ss";
 
-    public static final String TIME_FORMAT = "HH:mm:ss";
-
-    public static final String KEY_MILLI_SECONDS = "milliseconds";
-
-    public static final String KEY_SECONDS = "seconds";
-
-    public static final String KEY_MINUTES = "minutes";
-
-    public static final String KEY_HOURS = "hours";
-
-    public static final String KEY_DAYS = "days";
-
-    public static final String KEY_WEEKS = "weeks";
-
     public static final int DATE_UTIL_MILLIS_TO_SEC = 1000;
 
     public static final int DATE_UTIL_MILLIS_TO_MIN = 60000;
@@ -48,8 +33,6 @@ public class DateUtils {
     public static final int DATE_UTIL_MILLIS_TO_DAY = 86400000;
 
     public static final int DATE_UTIL_MILLIS_TO_WEEK = 604800000;
-
-    private static HashMap<String, String> mDiffTimeMap = new HashMap<>();
 
     public static String convertStartEndDateToString(String startString, String endString) {
         @SuppressLint("SimpleDateFormat")
@@ -349,30 +332,40 @@ public class DateUtils {
         }
     }
 
-    public static HashMap<String, String> timeDivision(long remainingDiffInMilliSeconds) {
-        try {
+    public static class TimeDivision {
+        private final long hours;
+        private final long days;
+        private final long weeks;
 
+        public TimeDivision(long remainingDiffInMilliSeconds) {
             //get hours
             long hours = remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR;
 
             //get days
             long days;
-            days = hours / 24;
-            hours -= days * 24;
+            days = hours / 24L;
+            hours -= days * 24L;
 
             //get weeks
-            long weeks = days / 7;
-            days -= weeks * 7;
+            long weeks = days / 7L;
+            days -= weeks * 7L;
 
-            mDiffTimeMap.put(KEY_HOURS, String.valueOf(hours));
-            mDiffTimeMap.put(KEY_WEEKS, String.valueOf(weeks));
-            mDiffTimeMap.put(KEY_DAYS, String.valueOf(days));
-
-            return mDiffTimeMap;
-        } catch (NullPointerException e) {
-            return null;
+            this.hours = hours;
+            this.days = days;
+            this.weeks = weeks;
         }
 
+        public long getHours() {
+            return hours;
+        }
+
+        public long getDays() {
+            return days;
+        }
+
+        public long getWeeks() {
+            return weeks;
+        }
     }
 
     public static boolean isLessThanADay(long remainingDiffInMilliSeconds) {
@@ -388,12 +381,12 @@ public class DateUtils {
     }
 
     public static String getRemainingTimeValue(long remainingDiffInMilliSeconds) {
-        HashMap<String, String> map = timeDivision(remainingDiffInMilliSeconds);
+        final TimeDivision timeDivision = new TimeDivision(remainingDiffInMilliSeconds);
         String remainingTextViewValue = "";
-        boolean isGreaterThanTwoDays = !map.get(KEY_DAYS).isEmpty() && Integer.valueOf(map.get(KEY_DAYS)) > 2;
-        boolean isLessThanADay = Integer.valueOf(map.get(KEY_DAYS)) < 1;
+        boolean isGreaterThanTwoDays = timeDivision.getDays() > 2;
+        boolean isLessThanADay = timeDivision.getDays() < 1;
         if (!isGreaterThanTwoDays && !isLessThanADay) {
-            remainingTextViewValue = map.get(KEY_DAYS) + "d " + map.get(DateUtils.KEY_HOURS) + 'h';
+            remainingTextViewValue = timeDivision.getDays() + "d " + timeDivision.getHours() + 'h';
             return remainingTextViewValue;
         } else {
             return getRemainingTimeInTimeFormat(remainingDiffInMilliSeconds);
@@ -401,15 +394,15 @@ public class DateUtils {
     }
 
     public static String getRemainingTimeInWeeks(long remainingTimeInMilliSeconds) {
-        HashMap<String, String> map = timeDivision(remainingTimeInMilliSeconds);
+        final TimeDivision timeDivision = new TimeDivision(remainingTimeInMilliSeconds);
         String remainingTextViewValue = "";
-        boolean isWeekGreaterThanZero = (map != null && !map.get(KEY_WEEKS).isEmpty() && Integer.valueOf(map.get(KEY_WEEKS)) > 0);
-        boolean isDayLessThanOne = (map != null && !map.get(KEY_DAYS).isEmpty() && Integer.valueOf(map.get(KEY_DAYS)) < 1);
+        boolean isWeekGreaterThanZero = timeDivision.getWeeks() > 0;
+        boolean isDayLessThanOne = timeDivision.getDays() < 1;
         if (!isWeekGreaterThanZero && !isDayLessThanOne) {
-            remainingTextViewValue = map.get(KEY_DAYS) + "d " + map.get(DateUtils.KEY_HOURS) + 'h';
+            remainingTextViewValue = timeDivision.getDays() + "d " + timeDivision.getHours() + 'h';
             return remainingTextViewValue;
         } else if (isWeekGreaterThanZero) {
-            remainingTextViewValue = map.get(KEY_WEEKS) + "w " + map.get(DateUtils.KEY_DAYS) + 'd';
+            remainingTextViewValue = timeDivision.getWeeks() + "w " + timeDivision.getDays() + 'd';
             return remainingTextViewValue;
         } else {
             return getRemainingTimeInTimeFormat(remainingTimeInMilliSeconds);
@@ -453,8 +446,7 @@ public class DateUtils {
         return (int) Math.floor(actualYears);
     }
 
-    public static int leapYearsBetween(int start, int end, boolean inclusive)
-    {
+    public static int leapYearsBetween(int start, int end, boolean inclusive) {
         if (inclusive) {
             start--;
             end++;
@@ -466,8 +458,7 @@ public class DateUtils {
         return totalNumberOfLeapYears(end) - totalNumberOfLeapYears(start + 1);
     }
 
-    private static int totalNumberOfLeapYears(int year)
-    {
+    private static int totalNumberOfLeapYears(int year) {
         // source: https://stackoverflow.com/a/4587611
         year--;
         return (year / 4) - (year / 100) + (year / 400);

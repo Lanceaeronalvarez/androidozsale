@@ -42,7 +42,7 @@ public class ImageUtils {
 
     public static final String TAG = ImageUtils.class.getSimpleName();
     public static String IMAGE_SERVER_URL = "server_image_server_url";
-    private static final int NO_MAX_COLUMN = -1;
+    public static int NO_MAX_COLUMN = -1;
 
     public static abstract class ImageLoadedCallback {
 
@@ -472,8 +472,8 @@ public class ImageUtils {
         return new Grid((int) columnCount, width, height);
     }
 
-    public static Grid getRangedGridDefinition(int proposedWidth, int proposedHeight, float canvasWidth, int minColumn) {
-        return getRangedGridDefinition(proposedWidth, proposedHeight, canvasWidth, minColumn, NO_MAX_COLUMN);
+    public static Grid getRangedGridDefinition(int proposedWidth, int proposedHeight, float canvasWidth, int numberOfColumns) {
+        return getRangedGridDefinition(proposedWidth, proposedHeight, canvasWidth, numberOfColumns, numberOfColumns);
     }
 
     public static Grid getRangedGridDefinition(int proposedWidth, int proposedHeight,

@@ -21,10 +21,10 @@ import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeRes
 import au.com.dealsdirect.data.network.model.promoinfo.PromoInfoResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayError;
@@ -52,9 +52,11 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
-    public void loadSaleItemDetails(String saleId, String seoIdentifierId) {
+    public void loadProductDetails(String saleId, String seoIdentifierId) {
 
-        Observable<GetSaleItemDetailsResponse> callGetSaleItemDetailObservable = saleId == null || saleId.isEmpty() ?
+        // note: sale_id is from a product list opened from banners
+
+        Observable<SaleItemDetails> callGetSaleItemDetailObservable = saleId == null || saleId.isEmpty() ?
                 getDataManager().callGetSaleItemDetails(seoIdentifierId) :
                 getDataManager().callGetSaleItemDetails(saleId, seoIdentifierId);
 
@@ -62,10 +64,10 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
-                GetSaleItemDetailsResponse getSaleItemDetailsResponse = (GetSaleItemDetailsResponse) response;
+                SaleItemDetails saleItemDetails = (SaleItemDetails) response;
 
                 if (response != null) {
-                    getMvpView().showSaleDetails(getSaleItemDetailsResponse);
+                    getMvpView().showProductDetails(saleItemDetails);
                 }
 
                 getMvpView().hideLoading();
@@ -87,7 +89,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
-    public void loadOurpayData(final GetSaleItemDetailsResponse value) {
+    public void loadOurpayData(final SaleItemDetails value) {
         if (!getDataManager().isOurpayEnabled()) {
             return;
         }
@@ -205,7 +207,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
-    public void generateOurpay(GetSaleItemDetailsResponse value, OurpayDataResponse ourpayDataResponse) {
+    public void generateOurpay(SaleItemDetails value, OurpayDataResponse ourpayDataResponse) {
         Ourpay ourpay = new Ourpay();
 
         try {

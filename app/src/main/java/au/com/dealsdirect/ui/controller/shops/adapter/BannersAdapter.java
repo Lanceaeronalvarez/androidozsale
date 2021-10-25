@@ -45,7 +45,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private final List<GetBannerResponse.Group> mGroups = new ArrayList<>();
     private final List<GetBannerResponse.Banner> mSales = new ArrayList<>();
     private GetBannerResponse.Banner promoBanner;
-    private Context context;
+    private final Context context;
     private int mWidth;
     private int mHeight;
     private final int mWidthForPromoBanner;
@@ -77,7 +77,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             VIEW_HOLDER_TYPE_NORMAL_BANNER
     };
 
-    private boolean useOldBannerDimensions = false;
+    private boolean useOldBannerDimensions;
 
     private static final int THROTTLE_FIRST_WINDOW_DURATION = 1000;
 

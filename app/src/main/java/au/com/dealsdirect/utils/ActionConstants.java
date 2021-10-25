@@ -8,6 +8,7 @@ public class ActionConstants {
     // Bottom Dialog Order Bundle keys
     public static final String ORDER_ARRAYS = "ORDER_ARRAYS";
     public static final String ORDER_BOTTOM_DIALOG_TAG = "OrderBottomDialog";
+    public static final String ORDER_BOTTOM_WEBVIEW_DIALOG_TAG = "OrderBottomWebViewDialog";
     public static final String ORDER_TRACKING_STEP_BOTTOM_DIALOG_TAG = "OrderTrackingBottomDialog";
     public static final String ORDER_SATISFACTION_BOTTOM_DIALOG_TAG = "OrderSatisfactionBottomDialog";
     public static final String ORDER_INVOICE_NUMBER = "ORDER_INVOICE_NUMBER";

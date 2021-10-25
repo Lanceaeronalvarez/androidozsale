@@ -43,6 +43,9 @@ public class AccountData {
     @SerializedName("promoEvent")
     @Expose
     private PromoEvent promoEvent;
+    @SerializedName("pricingInfo")
+    @Expose
+    private SupplierOriginalPriceInfo supplierOriginalPriceInfo;
 
     public String getAccountId() {
         return accountId;
@@ -130,6 +133,10 @@ public class AccountData {
 
     public void setPromoEvent(PromoEvent promoEvent) {
         this.promoEvent = promoEvent;
+    }
+
+    public SupplierOriginalPriceInfo getSupplierOriginalPriceInfo() {
+        return supplierOriginalPriceInfo;
     }
 
     public static class Facebook {
@@ -344,6 +351,16 @@ public class AccountData {
 
         public void setTimeZoneOffset(Integer timeZoneOffset) {
             this.timeZoneOffset = timeZoneOffset;
+        }
+    }
+
+    public static class SupplierOriginalPriceInfo {
+        @SerializedName("isEnabled")
+        @Expose
+        boolean isEnabled;
+
+        public boolean isEnabled() {
+            return isEnabled;
         }
     }
 }

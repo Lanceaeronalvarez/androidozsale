@@ -8,13 +8,13 @@ import java.util.List;
 
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 
-public class GetSaleItemDetailsResponse extends SaleItemProduct {
+public class SaleItemDetails extends SaleItemProduct {
     @SerializedName("personalizationSchema")
     @Expose
     private String personalisation;
     @SerializedName("skuVariants")
     @Expose
-    private List<GetSaleItemDetailsResponse> skuVariants = null;
+    private List<SaleItemDetails> skuVariants = null;
     @SerializedName("skuId")
     @Expose
     private String skuId;
@@ -59,7 +59,7 @@ public class GetSaleItemDetailsResponse extends SaleItemProduct {
         return personalisation;
     }
 
-    public List<GetSaleItemDetailsResponse> getSkuVariants() {
+    public List<SaleItemDetails> getSkuVariants() {
         return skuVariants;
     }
 

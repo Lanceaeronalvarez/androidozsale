@@ -15,4 +15,14 @@
     <dimen name="voucher_cost_text_size">34dp</dimen>
     <dimen name="payment_success_order_number_text_size">35dp</dimen>
     <dimen name="ourpay_big_date_text_size">30dp</dimen>
+
+    <dimen name="price_block_height">56dp</dimen>
+
+    <dimen name="price_block_top_left_text_size">10sp</dimen>
+    <dimen name="price_block_top_right_text_size">11sp</dimen>
+    <dimen name="price_block_small_middle_left_text_size">13sp</dimen>
+    <dimen name="price_block_small_middle_right_text_size">10sp</dimen>
+    <dimen name="price_block_large_middle_left_text_size">18sp</dimen>
+    <dimen name="price_block_large_middle_right_text_size">12sp</dimen>
+    <dimen name="price_block_bottom_text_text_size">11sp</dimen>
 </resources>
