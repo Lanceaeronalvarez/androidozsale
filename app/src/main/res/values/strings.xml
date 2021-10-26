@@ -94,6 +94,12 @@
                         color: #6E6868;
                     }
 
+                    img {
+                        display: inline;
+                        height: auto;
+                        max-width: 100%;
+                    }
+
                     body {
                         -webkit-text-size-adjust: none;
                         font-family: __BODY_FONT_NAME__;
