@@ -62,6 +62,7 @@ public class DataCollector {
         public static final String SEARCH_TERM = "SEARCH_TERM";
         public static final String QUANTITY = "QUANTITY";
         public static final String DELIVERY_PRICE_VIEW_EVENT_REQUEST = "DELIVERY_PRICE_VIEW_EVENT_REQUEST";
+        public static final String SELLER_LINK_EVENT_REQUEST = "SELLER_LINK_EVENT_REQUEST";
         // START CHECKOUT
         public static final String START_CHECKOUT_VALUE = "kFIRParameterValue";
         public static final String START_CHECKOUT_CURRENCY = "kFIRParameterCurrency";

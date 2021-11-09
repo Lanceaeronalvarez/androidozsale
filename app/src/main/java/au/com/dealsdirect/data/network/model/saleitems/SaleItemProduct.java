@@ -90,6 +90,10 @@ public class SaleItemProduct {
     @SerializedName("deliveryType")
     @Expose
     private String deliveryType;
+    @SerializedName("savedMoneyValue")
+    private Double savedMoneyValue;
+    @SerializedName("totalPercentOff")
+    private Double totalPercentOff;
 
     public String getSalePercentOffText() {
         return salePercentOffText;
@@ -183,16 +187,20 @@ public class SaleItemProduct {
         return deliveryThreshold;
     }
 
-    public void setDeliveryThreshold(int deliveryThreshold) {
-        this.deliveryThreshold = deliveryThreshold;
-    }
-
     public String getDeliveryType() {
         return deliveryType;
     }
 
-    public void setDeliveryType(String deliveryType) {
-        this.deliveryType = deliveryType;
+    public boolean isFreeDelivery() {
+        return isFreeDelivery;
+    }
+
+    public Double getSavedMoneyValue() {
+        return savedMoneyValue;
+    }
+
+    public Double getTotalPercentOff() {
+        return totalPercentOff;
     }
 
     public static class Price {

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="price_block_height">64dp</dimen>
+
+    <dimen name="price_block_top_left_text_size">11sp</dimen>
+    <dimen name="price_block_top_right_text_size">12sp</dimen>
+    <dimen name="price_block_small_middle_left_text_size">18sp</dimen>
+    <dimen name="price_block_small_middle_right_text_size">14sp</dimen>
+    <dimen name="price_block_large_middle_left_text_size">22sp</dimen>
+    <dimen name="price_block_large_middle_right_text_size">18sp</dimen>
+    <dimen name="price_block_bottom_text_text_size">12sp</dimen>
+</resources>

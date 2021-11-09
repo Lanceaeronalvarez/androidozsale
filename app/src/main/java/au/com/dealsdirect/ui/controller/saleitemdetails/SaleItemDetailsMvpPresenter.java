@@ -2,8 +2,7 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
-import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
-import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 
@@ -11,12 +10,12 @@ import au.com.dealsdirect.ui.base.MvpView;
  * Created by smartwave on 08/06/2017.
  */
 
-public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPresenter<V>{
+public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
-//    void loadProductDetails(GetPublicItemDetailsRequest publicItemDetailsRequest, GetPublicSaleDetailsRequest publicSaleDetailsRequest);
-    void loadSaleItemDetails(String saleId, String seoIdentifierId);
+    //    void loadProductDetails(GetPublicItemDetailsRequest publicItemDetailsRequest, GetPublicSaleDetailsRequest publicSaleDetailsRequest);
+    void loadProductDetails(String saleId, String seoIdentifierId);
 
-    void loadOurpayData(GetSaleItemDetailsResponse value);
+    void loadOurpayData(SaleItemDetails value);
 
     void loadAfterpayData(Double price);
 
@@ -26,7 +25,7 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
 
     boolean isAuthorized();
 
-    void generateOurpay(GetSaleItemDetailsResponse value, OurpayDataResponse ourpayDataResponse);
+    void generateOurpay(SaleItemDetails value, OurpayDataResponse ourpayDataResponse);
 
     void callGetBasketItemsQuantity();
 
@@ -63,4 +62,10 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     void setDefaultPostcode(String postcode);
 
     void loadPreviewShippingPrice(String postcode, String skuid, float price, int weight, int width, int height, Integer operation);
+
+    String getBuyboxTemplateTextTitle();
+
+    String getBuyboxTemplateTextSellerTemplate();
+
+    String getBuyboxTemplateTextButtonText();
 }

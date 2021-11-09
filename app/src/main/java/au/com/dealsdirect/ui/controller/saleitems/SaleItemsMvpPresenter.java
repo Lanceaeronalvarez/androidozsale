@@ -1,10 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.graphics.drawable.Drawable;
-import androidx.recyclerview.widget.RecyclerView;
-
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
-import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 
 /**
@@ -33,14 +29,7 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest);
 
-    void loadProductDetails(int position,
-                            Drawable imagePlaceholderDrawable,
-                            String imageUrl,
-                            SaleItemProduct product,
-                            int viewLeft,
-                            int viewTop,
-                            int viewWidth,
-                            int viewHeight);
+    void loadProductDetails(String saleId, String seoIdentifier);
 
     void loadSortingFacets();
 
@@ -57,4 +46,8 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
     String getTimeStamp();
 
     void loadBrandBubbles();
+
+    long getSupplierOriginaPriceInfoTimeAgreed();
+
+    void setSupplierOriginaPriceInfoTimeAgreed(long timestamp);
 }

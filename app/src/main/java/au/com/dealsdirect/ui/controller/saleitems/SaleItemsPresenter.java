@@ -1,10 +1,11 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 
 import androidx.core.util.Pair;
+
+import com.androidnetworking.error.ANError;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import au.com.dealsdirect.data.cachedresponses.ParamaterizedCachableRequest;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
@@ -26,10 +28,6 @@ import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-
-/**
- * dp Created by Admin on 6/8/17.
- */
 
 public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresenter<V>
         implements SaleItemsMvpPresenter<V> {
@@ -215,24 +213,33 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadProductDetails(int position,
-                                   Drawable imagePlaceholderDrawable,
-                                   String imageUrl,
-                                   SaleItemProduct product,
-                                   int viewLeft,
-                                   int viewTop,
-                                   int viewWidth,
-                                   int viewHeight) {
-        getMvpView().hideKeyboard();
-        getMvpView().showProductDetails(
-                position,
-                imagePlaceholderDrawable,
-                imageUrl,
-                product,
-                viewLeft,
-                viewTop,
-                viewWidth,
-                viewHeight);
+    public void loadProductDetails(String saleId, String seoIdentifier) {
+        Observable<SaleItemDetails> callGetSaleItemDetailObservable = saleId == null || saleId.isEmpty() ?
+                getDataManager().callGetSaleItemDetails(seoIdentifier) :
+                getDataManager().callGetSaleItemDetails(saleId, seoIdentifier);
+
+        doApiCallForResponse(callGetSaleItemDetailObservable, new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                SaleItemDetails saleItemDetails = (SaleItemDetails) response;
+
+                if (response != null) {
+                    getMvpView().productDetailsReceived(saleItemDetails);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                super.onFailure(throwable);
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+                }
+            }
+        });
     }
 
     protected <T> Observable<T> wrapObservable(Observable<T> observable) {
@@ -313,5 +320,15 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                 }
             });
         });
+    }
+
+    @Override
+    public long getSupplierOriginaPriceInfoTimeAgreed() {
+        return getDataManager().getSupplierOriginalPriceInfoSaleListTimeAgreed();
+    }
+
+    @Override
+    public void setSupplierOriginaPriceInfoTimeAgreed(long timestamp) {
+        getDataManager().setIsSupplierOriginalPriceInfoSaleListTimeAgreed(timestamp);
     }
 }

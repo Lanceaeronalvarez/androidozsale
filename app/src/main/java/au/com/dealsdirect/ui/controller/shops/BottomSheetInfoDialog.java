@@ -44,19 +44,21 @@ public class BottomSheetInfoDialog extends BottomSheetDialogFragment {
         textViewDescription.setText(getDescription());
         textViewTitle.setText(getTitle());
 
-        if (shouldHideButton()) {
-            button.setVisibility(View.GONE);
-        } else {
-            button.setVisibility(View.VISIBLE);
-            button.setText(buttonTitle);
-            button.setOnClickListener(v1 -> {
-                if (dismissOnButtonClick) {
-                    dismiss();
-                }
-                if (onButtonClickListener != null) {
-                    onButtonClickListener.onClick();
-                }
-            });
+        if (button != null) {
+            if (shouldHideButton()) {
+                button.setVisibility(View.GONE);
+            } else {
+                button.setVisibility(View.VISIBLE);
+                button.setText(buttonTitle);
+                button.setOnClickListener(v1 -> {
+                    if (dismissOnButtonClick) {
+                        dismiss();
+                    }
+                    if (onButtonClickListener != null) {
+                        onButtonClickListener.onClick();
+                    }
+                });
+            }
         }
 
         return v;

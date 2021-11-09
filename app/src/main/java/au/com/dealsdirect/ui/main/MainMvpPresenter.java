@@ -129,4 +129,6 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     void pruneCachedResponses();
 
     void callGetUserCurrent();
+
+    boolean getSupplierOriginalPriceInfoEnabled();
 }

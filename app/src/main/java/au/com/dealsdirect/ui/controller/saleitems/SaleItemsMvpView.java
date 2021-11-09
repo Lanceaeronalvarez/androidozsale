@@ -1,13 +1,12 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
-import android.graphics.drawable.Drawable;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
@@ -35,14 +34,7 @@ public interface SaleItemsMvpView extends MvpView {
 
     void showSaleBannerDetails(GetSaleBannerDetailsResponse response);
 
-    void showProductDetails(int position,
-                            Drawable imagePlaceholderDrawable,
-                            String imageUrl,
-                            SaleItemProduct product,
-                            int viewLeft,
-                            int viewTop,
-                            int viewWidth,
-                            int viewHeight);
+    void productDetailsReceived(SaleItemDetails productDetails);
 
     GetSaleItemsRequest createSaleItemsRequest(String categoryKey, int pageNumber, Set<SearchChipModel> chipsList);
 

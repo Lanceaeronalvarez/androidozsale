@@ -94,13 +94,19 @@
                         color: #6E6868;
                     }
 
+                    img {
+                        display: inline;
+                        height: auto;
+                        max-width: 100%;
+                    }
+
                     body {
                         -webkit-text-size-adjust: none;
                         font-family: __BODY_FONT_NAME__;
                         color: __BOLD_FONT_COLOR__;
                         font-family: __BODY_FONT_NAME__;
                         font-size: 14px;
-                        background-color: #FFFFFF;
+                        background: transparent;
                         word-wrap: break-word;
                         padding-left: 0px;
                         padding-right: 0px;
@@ -846,4 +852,9 @@
 
     <string name="contact_escalate_message">Need to escalate?</string>
     <string name="contact_escalated_message">Your ticket has been escalated.</string>
+
+    <string name="price_block_bottom_text_prefix">Don\'t pay</string>
+    <string name="price_block_bottom_text_alternate_prefix">Suppliers RRP or ORP</string>
+
+    <string name="product_details_seller_text">Sold and delivered by</string>
 </resources>

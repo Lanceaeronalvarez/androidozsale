@@ -63,6 +63,7 @@ import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
@@ -70,7 +71,7 @@ import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
-import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
+import au.com.dealsdirect.data.network.model.events.SellerLinkEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
@@ -89,6 +90,7 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.data.network.model.legalities.TemplateTextResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -134,10 +136,11 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.BuyBoxTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -182,9 +185,9 @@ public interface ApiHelper {
 
     Observable<List<GetTopBrandsResponse>> callGetTopBrands();
 
-    Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String saleId, String seoIdentifierId);
+    Observable<SaleItemDetails> callGetSaleItemDetails(String saleId, String seoIdentifierId);
 
-    Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId);
+    Observable<SaleItemDetails> callGetSaleItemDetails(String seoIdentifierId);
 
     Observable<OurpayDataResponse> callGetOurpayData(OurpayDataRequest request);
 
@@ -364,6 +367,9 @@ public interface ApiHelper {
 
     Observable<GetTemplateTextsResponse> callGetTemplateTexts(GetTemplateTextsRequest templateTextRequest);
 
+    Observable<List<TemplateTextResponse>> callGetNZCommissionTemplateTexts();
+
+    public Observable<List<BuyBoxTemplateTextResponse>> callGetBuyboxTemplateTexts();
 
     //GCM api calls
     Observable<RegisterDevice.ResponseValue> callRegisterDevice(RegisterDevice.RequestValue requestValue);
@@ -428,6 +434,8 @@ public interface ApiHelper {
 
     Observable<String> callDeliveryPriceViewEvent(DeliveryPriceViewEventRequest request);
 
+    Observable<String> callSellerLinkEvent(SellerLinkEventRequest request);
+
     // OURPAY
     Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String languageId);
 
@@ -486,4 +494,6 @@ public interface ApiHelper {
     Observable<GetPostcodeShippingPriceResponse> getPostcodeShippingPrice(String postcode, String skuid, float price, int weight, int width, int height);
 
     Observable<String> callSaveAgeRestrictedConsentData(SaveAgeRestrictedConsentDataRequest request);
+
+
 }

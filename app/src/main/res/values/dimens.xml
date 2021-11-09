@@ -6,7 +6,6 @@
     <dimen name="padding_default">16dp</dimen>
     <dimen name="padding_default_half">8dp</dimen>
     <dimen name="default_button_height">48dp</dimen>
-    <dimen name="default_viewholder_item_height">43dp</dimen>
     <dimen name="label_space">3dp</dimen>
     <dimen name="status_bar_height">24dp</dimen>
 
@@ -195,7 +194,6 @@
     <dimen name="sale_item_image_padding_left">12dp</dimen>
     <dimen name="sale_item_image_padding_right">12dp</dimen>
     <dimen name="sale_item_image_padding_top">8dp</dimen>
-    <dimen name="sale_item_image_height">200dp</dimen>
     <dimen name="controller_sale_items_tab_height">40dp</dimen>
     <!-- sum of filter tabs, search edittext and margins-->
     <dimen name="collapsing_toolbar_height">90dp</dimen>
@@ -346,4 +344,21 @@
     <dimen name="banner_sale_info_discount_bottom_offset">32dp</dimen>
 
     <dimen name="promo_banner_tablet_right_padding">2dp</dimen>
+
+    <dimen name="price_block_height">40dp</dimen>
+    <dimen name="price_block_top_text_height">20dp</dimen>
+    <dimen name="price_block_bottom_text_single_height">16dp</dimen>
+    <dimen name="price_block_bottom_text_double_height">32dp</dimen>
+    <dimen name="price_block_free_shipping_text_height">0dp</dimen>
+
+    <dimen name="price_block_top_left_text_size">10sp</dimen>
+    <dimen name="price_block_top_right_text_size">11sp</dimen>
+    <dimen name="price_block_small_middle_left_text_size">14sp</dimen>
+    <dimen name="price_block_small_middle_right_text_size">11sp</dimen>
+    <dimen name="price_block_large_middle_left_text_size">18sp</dimen>
+    <dimen name="price_block_large_middle_right_text_size">12sp</dimen>
+    <dimen name="price_block_bottom_text_text_size">11sp</dimen>
+
+    <dimen name="product_list_item_like_button_size">24dp</dimen>
+    <dimen name="product_list_text_view_height">18dp</dimen>
 </resources>

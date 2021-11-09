@@ -323,6 +323,53 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/product_details_buybox_container"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="@dimen/margin_small"
+                                android:background="@color/white"
+                                android:orientation="vertical"
+                                android:paddingLeft="@dimen/margin_small"
+                                android:paddingRight="@dimen/margin_small"
+                                android:visibility="gone">
+
+                                <RelativeLayout
+                                    android:id="@+id/product_details_buybox_header_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:id="@+id/product_details_buybox_title"
+                                        fontPath="@string/font_app_bold"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentLeft="true"
+                                        android:layout_centerVertical="true"
+                                        android:paddingTop="@dimen/margin_medium"
+                                        android:paddingBottom="@dimen/margin_medium"
+                                        android:text="More Buying Options"
+                                        android:textColor="@color/text_extra_dark"
+                                        android:textSize="@dimen/text_size_caption1" />
+
+                                    <ImageView
+                                        android:id="@+id/product_details_buybox_minimize"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:paddingLeft="@dimen/margin_small"
+                                        android:scaleType="fitCenter"
+                                        android:src="@drawable/ic_chevron_up" />
+                                </RelativeLayout>
+
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/product_details_buybox_items"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:id="@+id/product_details_return_policy_container"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
@@ -468,6 +515,30 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/margin_tiny" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/product_seller_container"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="@dimen/margin_small"
+                                android:background="@color/white"
+                                android:orientation="vertical"
+                                android:paddingLeft="@dimen/margin_small"
+                                android:paddingRight="@dimen/margin_small"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/product_seller_text"
+                                    fontPath="@string/font_app_regular"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingTop="@dimen/margin_small"
+                                    android:paddingBottom="@dimen/margin_small"
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_caption1"
+                                    tools:text="Seller" />
 
                             </LinearLayout>
 
@@ -740,129 +811,16 @@
                                         android:visibility="invisible" />
                                 </RelativeLayout>
 
-
-                                <LinearLayout
+                                <RelativeLayout
+                                    android:id="@+id/price_block_container"
                                     android:layout_width="match_parent"
-                                    android:layout_height="24dp"
-                                    android:gravity="bottom"
-                                    android:orientation="horizontal">
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/margin_tiny"
+                                    android:gravity="left"
+                                    android:visibility="visible">
 
-                                    <LinearLayout
-                                        android:id="@+id/productPreviousPriceContainer"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginEnd="@dimen/margin_small"
-                                        android:gravity="bottom"
-                                        android:orientation="horizontal"
-                                        android:paddingBottom="1dp">
-
-                                        <TextView
-                                            android:id="@+id/productPreviousPrice"
-                                            fontPath="@string/font_app_light"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginEnd="@dimen/margin_tiny"
-                                            android:maxLines="1"
-                                            android:textColor="@color/text_light"
-                                            android:textSize="@dimen/text_size_caption1"
-                                            tools:text="$1120.50" />
-
-                                        <ImageButton
-                                            android:id="@+id/controller_details_old_price_info"
-                                            android:layout_width="@dimen/button_drawable_width"
-                                            android:layout_height="@dimen/button_drawable_height"
-                                            android:layout_marginStart="@dimen/margin_tiny"
-                                            android:layout_marginBottom="1dp"
-                                            android:background="@drawable/ourpay_info" />
-
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:id="@+id/productPriceContainer"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginEnd="@dimen/margin_small"
-                                        android:gravity="bottom"
-                                        android:orientation="horizontal"
-                                        android:paddingBottom="1dp">
-
-                                        <TextView
-                                            android:id="@+id/productPriceTitle"
-                                            fontPath="@string/font_app_regular"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginEnd="@dimen/margin_extra_small"
-                                            android:ellipsize="end"
-                                            android:maxLines="1"
-                                            android:text="WAS"
-                                            android:textColor="@color/text_dark"
-                                            android:textSize="@dimen/text_size_caption1" />
-
-                                        <TextView
-                                            android:id="@+id/productPrice"
-                                            fontPath="@string/font_app_regular"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginEnd="@dimen/margin_tiny"
-                                            android:layout_marginBottom="0.5dp"
-                                            android:maxLines="1"
-                                            android:textColor="@color/product_details_text_product_price"
-                                            android:textSize="@dimen/text_size_headline3"
-                                            tools:text="$1,150.00" />
-
-                                        <ImageButton
-                                            android:id="@+id/controller_details_price_info"
-                                            android:layout_width="@dimen/button_drawable_width"
-                                            android:layout_height="@dimen/button_drawable_height"
-                                            android:layout_marginBottom="1dp"
-                                            android:background="@drawable/ourpay_info" />
-
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:id="@+id/productDiscountPriceContainer"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:gravity="bottom"
-                                        android:orientation="horizontal"
-                                        android:paddingBottom="1dp">
-
-                                        <TextView
-                                            android:id="@+id/productDiscountTitle"
-                                            fontPath="@string/font_app_regular"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="match_parent"
-                                            android:layout_marginEnd="@dimen/margin_small"
-                                            android:layout_marginBottom="0.5dp"
-                                            android:gravity="bottom|right"
-                                            app:autoSizeTextType="uniform"
-                                            app:autoSizeMaxTextSize="@dimen/text_size_caption1"
-                                            app:autoSizeMinTextSize="1dp"
-                                            android:ellipsize="end"
-                                            android:maxLines="1"
-                                            android:layout_weight="1"
-                                            android:text="Extra 10% Off"
-                                            android:textColor="@color/banner_discount_color"
-                                            android:textSize="@dimen/text_size_caption1" />
-
-                                        <TextView
-                                            android:id="@+id/productDiscountPrice"
-                                            fontPath="@string/font_app_bold"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="match_parent"
-                                            android:gravity="bottom|left"
-                                            android:maxLines="1"
-                                            app:autoSizeTextType="uniform"
-                                            app:autoSizeMaxTextSize="@dimen/text_size_headline2"
-                                            app:autoSizeMinTextSize="1dp"
-                                            android:layout_weight="1"
-                                            android:textColor="@color/banner_discount_color"
-                                            android:textSize="@dimen/text_size_headline2"
-                                            tools:text="$1000.00" />
-
-                                    </LinearLayout>
-
-                                </LinearLayout>
+                                    <include layout="@layout/partial_price_block_large" />
+                                </RelativeLayout>
 
                             </LinearLayout>
 

@@ -76,6 +76,7 @@ import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
@@ -83,7 +84,7 @@ import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
-import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
+import au.com.dealsdirect.data.network.model.events.SellerLinkEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
 import au.com.dealsdirect.data.network.model.events.YouMayAlsoLikeEventRequest;
 import au.com.dealsdirect.data.network.model.fcm.NotificationEvent;
@@ -102,6 +103,7 @@ import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
+import au.com.dealsdirect.data.network.model.legalities.TemplateTextResponse;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
@@ -147,10 +149,11 @@ import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDeta
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.GetSaleItemDetailsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.BuyBoxTemplateTextResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetPublicSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -253,15 +256,14 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String seoIdentifierId) {
+    public Observable<SaleItemDetails> callGetSaleItemDetails(String seoIdentifierId) {
         return mApiHelper.callGetSaleItemDetails(seoIdentifierId);
 
     }
 
     @Override
-    public Observable<GetSaleItemDetailsResponse> callGetSaleItemDetails(String saleId, String seoIdentifierId) {
+    public Observable<SaleItemDetails> callGetSaleItemDetails(String saleId, String seoIdentifierId) {
         return mApiHelper.callGetSaleItemDetails(saleId, seoIdentifierId);
-
     }
 
     @Override
@@ -791,6 +793,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<String> callSellerLinkEvent(SellerLinkEventRequest request) {
+        return mApiHelper.callSellerLinkEvent(request);
+    }
+
+    @Override
     public Observable<GetPaymentPlansResponse> callGetPaymentPlans(String countryId, String langaugeId) {
         return mApiHelper.callGetPaymentPlans(countryId, langaugeId);
     }
@@ -913,6 +920,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetTemplateTextsResponse> callGetTemplateTexts(GetTemplateTextsRequest templateTextRequest) {
         return mApiHelper.callGetTemplateTexts(templateTextRequest);
+    }
+
+    @Override
+    public Observable<List<TemplateTextResponse>> callGetNZCommissionTemplateTexts() {
+        return mApiHelper.callGetNZCommissionTemplateTexts();
+    }
+
+    @Override
+    public Observable<List<BuyBoxTemplateTextResponse>> callGetBuyboxTemplateTexts() {
+        return mApiHelper.callGetBuyboxTemplateTexts();
     }
 
     @Override
@@ -1876,5 +1893,75 @@ public class AppDataManager implements DataManager {
     @Override
     public String getDefaultPostcode() {
         return mPreferencesHelper.getDefaultPostcode();
+    }
+
+    @Override
+    public long getSupplierOriginalPriceInfoSaleListTimeAgreed() {
+        return mPreferencesHelper.getSupplierOriginalPriceInfoSaleListTimeAgreed();
+    }
+
+    @Override
+    public void setIsSupplierOriginalPriceInfoSaleListTimeAgreed(long timestamp) {
+        mPreferencesHelper.setIsSupplierOriginalPriceInfoSaleListTimeAgreed(timestamp);
+    }
+
+    @Override
+    public void setSupplierOriginalPriceInfoTemplateTextType1(String text) {
+        mPreferencesHelper.setSupplierOriginalPriceInfoTemplateTextType1(text);
+    }
+
+    @Override
+    public String getSupplierOriginalPriceInfoTemplateTextType1() {
+        return mPreferencesHelper.getSupplierOriginalPriceInfoTemplateTextType1();
+    }
+
+    @Override
+    public void setSupplierOriginalPriceInfoTemplateTextType2(String text) {
+        mPreferencesHelper.setSupplierOriginalPriceInfoTemplateTextType2(text);
+    }
+
+    @Override
+    public String getSupplierOriginalPriceInfoTemplateTextType2() {
+        return mPreferencesHelper.getSupplierOriginalPriceInfoTemplateTextType2();
+    }
+
+    @Override
+    public void setSupplierOriginalPriceInfoEnabled(boolean isEnabled) {
+        mPreferencesHelper.setSupplierOriginalPriceInfoEnabled(isEnabled);
+    }
+
+    @Override
+    public boolean isSupplierOriginalPriceInfoEnabled() {
+        return mPreferencesHelper.isSupplierOriginalPriceInfoEnabled();
+    }
+
+    @Override
+    public void setBuyBoxTemplateTextTitle(String title) {
+        mPreferencesHelper.setBuyBoxTemplateTextTitle(title);
+    }
+
+    @Override
+    public String getBuyBoxTemplateTextTitle() {
+        return mPreferencesHelper.getBuyBoxTemplateTextTitle();
+    }
+
+    @Override
+    public void setBuyBoxTemplateTextSellerTemplate(String sellerTemplate) {
+        mPreferencesHelper.setBuyBoxTemplateTextSellerTemplate(sellerTemplate);
+    }
+
+    @Override
+    public String getBuyBoxTemplateTextSellerTemplate() {
+        return mPreferencesHelper.getBuyBoxTemplateTextSellerTemplate();
+    }
+
+    @Override
+    public void setBuyBoxTemplateTextButtonText(String bottomText) {
+        mPreferencesHelper.setBuyBoxTemplateTextButtonText(bottomText);
+    }
+
+    @Override
+    public String getBuyBoxTemplateTextBottomText() {
+        return mPreferencesHelper.getBuyBoxTemplateTextBottomText();
     }
 }

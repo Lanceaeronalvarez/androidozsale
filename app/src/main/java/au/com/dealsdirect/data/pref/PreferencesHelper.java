@@ -333,4 +333,32 @@ public interface PreferencesHelper {
     void setDefaultPostcode(String postcode);
 
     String getDefaultPostcode();
+
+    long getSupplierOriginalPriceInfoSaleListTimeAgreed();
+
+    void setIsSupplierOriginalPriceInfoSaleListTimeAgreed(long timestamp);
+
+    void setSupplierOriginalPriceInfoTemplateTextType1(String text);
+
+    String getSupplierOriginalPriceInfoTemplateTextType1();
+
+    void setSupplierOriginalPriceInfoTemplateTextType2(String text);
+
+    String getSupplierOriginalPriceInfoTemplateTextType2();
+
+    void setSupplierOriginalPriceInfoEnabled(boolean isEnabled);
+
+    boolean isSupplierOriginalPriceInfoEnabled();
+
+    void setBuyBoxTemplateTextTitle(String title);
+
+    String getBuyBoxTemplateTextTitle();
+
+    void setBuyBoxTemplateTextSellerTemplate(String sellerTemplate);
+
+    String getBuyBoxTemplateTextSellerTemplate();
+
+    void setBuyBoxTemplateTextButtonText(String bottomText);
+
+    String getBuyBoxTemplateTextBottomText();
 }

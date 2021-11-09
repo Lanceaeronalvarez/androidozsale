@@ -25,4 +25,6 @@
     <bool name="is_using_test_ads">true</bool>
 
     <bool name="is_pull_to_refresh_enabled">false</bool>
+
+    <bool name="price_block_is_three_lines">false</bool>
 </resources>

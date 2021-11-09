@@ -75,11 +75,6 @@ import in.srain.cube.views.ptr.PtrHandler;
 
 import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.ClickType.BANNER_CLICK;
 
-
-/**
- * dp Created by Admin on 6/6/17.
- */
-
 public class ShopsController extends BaseController implements ShopsMvpView, PtrHandler, AppBarLayout.OnOffsetChangedListener {
 
     private enum BannerDimensionsOverride {

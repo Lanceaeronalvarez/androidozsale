@@ -51,6 +51,12 @@
         <item name="android:textSize">@dimen/text_size_headline2</item>
     </style>
 
+    <style name="DDButtonStyleTransparent">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/bg_button_rounded_transparent</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
     <style name="DDJoinNowButtonStyle" parent="DDButtonStyle">
         <item name="android:background">@drawable/bg_button_join_now</item>
     </style>
@@ -209,12 +215,23 @@
         <item name="android:background">@drawable/bg_bottom_sheet_dialog</item>
     </style>
 
+    <style name="TransparentBottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
     <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="bottomSheetStyle">@style/BottomSheet</item>
     </style>
 
+    <style name="TransparentBackgroundBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/TransparentBottomSheet</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
+    <style name="BottomSheetDialogTransparentBackgroundTheme" parent="TransparentBackgroundBottomSheetDialog" />
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

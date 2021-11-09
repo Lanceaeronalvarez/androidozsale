@@ -68,6 +68,7 @@ import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemFacet;
@@ -85,8 +86,12 @@ import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpRepository;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.custom.AdaptiveTabLayout;
+import au.com.dealsdirect.ui.custom.BottomPopupView;
+import au.com.dealsdirect.ui.custom.BottomPopupWebViewContentAdapter;
 import au.com.dealsdirect.ui.custom.SearchEditText;
+import au.com.dealsdirect.ui.custom.SupplierOriginalPriceInfoHelper;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
+import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -96,7 +101,6 @@ import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
-import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.TabLayoutUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -118,7 +122,7 @@ import static com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROL
  * dp Created by Admin on 6/8/17.
  */
 
-public class SaleItemsController extends BaseController implements SaleItemsMvpView, AppBarLayout.OnOffsetChangedListener, SearchFilterMvpRepository, OnClickFreeDeliveryListener {
+public class SaleItemsController extends BaseController implements SaleItemsMvpView, AppBarLayout.OnOffsetChangedListener, SearchFilterMvpRepository {
 
     public enum SourceMode {
         NORMAL,
@@ -275,6 +279,24 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             public LinkOptions getLinkOptions() {
                 return mLinkOptions;
+            }
+        }
+
+        public static final class FromSeller extends Parameters {
+            private String mSellerName;
+            private String mStoreId;
+
+            public FromSeller(String sellerName, String storeId) {
+                mSellerName = sellerName;
+                mStoreId = storeId;
+            }
+
+            public String getSellerName() {
+                return mSellerName;
+            }
+
+            public String getStoreId() {
+                return mStoreId;
             }
         }
 
@@ -444,6 +466,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private boolean isSkeletonAnimating = false;
 
+    private BottomPopupView currentBottomPopupView = null;
+
     @BindView(R.id.controller_sale_items_main_container)
     ViewGroup mMainContainer;
 
@@ -566,6 +590,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private Parameters mSavedParameters = null;
 
+    private final Map<String, String> rrpTextCache = new HashMap<>();
+    private final Map<String, String> pricingTextCache = new HashMap<>();
+
     private TextWatcher mTextWatcher = new TextWatcher() {
         private Timer mTextWatcherTimer = null;
 
@@ -620,6 +647,73 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
     };
 
+    private SaleItemAdapterHelper saleItemAdapterHelper = new SaleItemAdapterHelper() {
+        @Override
+        public void onClickFreeDelivery(String deliveryThreshold, String deliveryType) {
+            if (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) ||
+                    deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
+
+                mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
+                        mActivity.getShippingTitle());
+
+            }
+        }
+
+        @Override
+        public boolean isProductInWishlist(SaleItemProduct item) {
+            return mPresenter.isProductInWishlist(item.getId());
+        }
+
+        @Override
+        public boolean isGoogleAdsEnabled() {
+            return mPresenter.isGoogleAdsEnabled();
+        }
+
+        @Override
+        public void onItemClicked(int position,
+                                  Drawable imagePlaceholderDrawable,
+                                  String imageUrl,
+                                  SaleItemProduct product,
+                                  int viewLeft,
+                                  int viewTop,
+                                  int viewWidth,
+                                  int viewHeight) {
+            showProductDetails(
+                    position,
+                    imagePlaceholderDrawable,
+                    imageUrl,
+                    product,
+                    viewLeft,
+                    viewTop,
+                    viewWidth,
+                    viewHeight);
+        }
+
+        @Override
+        public void addToWishlist(SaleItemProduct item, SaleItemsMvpPresenter.WishlistDelayedCallback wishlistDelayedCallback) {
+            mPresenter.addToWishlist(item.getId(), item.getSeoIdentifier(), wishlistDelayedCallback);
+        }
+
+        @Override
+        public void removeFromWishlist(SaleItemProduct item, SaleItemsMvpPresenter.WishlistDelayedCallback wishlistDelayedCallback) {
+            mPresenter.removeFromWishlist(item.getId(), wishlistDelayedCallback);
+        }
+
+        @Override
+        public void onPriceInfoClicked(SaleItemProduct item) {
+            String rrpText = rrpTextCache.get(item.getId());
+            String pricingText = pricingTextCache.get(item.getId());
+            if (mActivity.getSupplierOriginalPriceInfoHelper() != null) {
+                showItemPricingInfoView(mActivity.getSupplierOriginalPriceInfoHelper().getOriginalPriceInfoWebViewContent(rrpText, item));
+            } else if (rrpText != null) {
+                showItemPricingInfoView(getPricingInfo(rrpText, pricingText));
+            }
+            if (rrpText == null) {
+                mPresenter.loadProductDetails(mSaleId, item.getSeoIdentifier());
+            }
+        }
+    };
+
     @Inject
     SaleItemsMvpPresenter<SaleItemsMvpView> mPresenter;
 
@@ -658,6 +752,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             controller.linkOptions = linkOptions;
             controller.mCategoryKey = linkOptions.getCategoryName();
             controller.mChipFilters = SearchChipModel.chipListFromLinkOptions(linkOptions);
+            controller.mFromCategorySearch = true;
+        } else if (parameters instanceof Parameters.FromSeller) {
+            title = ((Parameters.FromSeller) parameters).getSellerName();
+            controller.mChipFilters = SearchChipModel.chipListFromStoreId(((Parameters.FromSeller) parameters).getStoreId());
             controller.mFromCategorySearch = true;
         } else if (parameters instanceof Parameters.FromShopSearch) {
             title = ((Parameters.FromShopSearch) parameters).getTitle();
@@ -847,6 +945,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     if (mInitialLoad) {
                         animateSkeletonUI();
                     }
+
+                    if (mActivity.getSupplierOriginalPriceInfoHelper() != null &&
+                            SupplierOriginalPriceInfoHelper.shouldShowSaleNotice(mPresenter.getSupplierOriginaPriceInfoTimeAgreed())) {
+                        showPricingInfoView();
+                    }
                     break;
                 case WISHLIST:
                     mSaleItemsPageNumber = 0;
@@ -1014,10 +1117,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             setupSaleRemainingTime(mEndDate);
         }
 
-        mColumnView.setVisibility(View.VISIBLE);
+        mColumnView.setVisibility(isGridViewEnabled() ? View.VISIBLE : View.INVISIBLE);
         mColumnCount = mPresenter.getColumnCount();
-        setGridViewMode(mColumnCount == mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
-                GridViewMode.MORE_IMAGES : GridViewMode.LARGER_IMAGES);
+        setGridViewMode(!isGridViewEnabled() || mColumnCount != mActivity.getResources().getInteger(R.integer.items_max_column_portrait) ?
+                GridViewMode.LARGER_IMAGES : GridViewMode.MORE_IMAGES);
         mGridViewModePreferenceHelper.resetTimeElapsed();
 
         mGridViewModePreferenceHelper.resetTimestamp();
@@ -1030,12 +1133,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
-        mSaleItemsAdapter = new SaleItemsAdapter(mActivity,
+        mSaleItemsAdapter = new SaleItemsAdapter(
+                mActivity,
                 mSaleItems,
-                mPresenter,
-                mSaleId,
                 mColumnCount,
-                this::logWishlistEvent, this);
+                true,
+                mActivity.getSupplierOriginalPriceInfoHelper() != null,
+                this::logWishlistEvent, saleItemAdapterHelper);
+
         mPaginateCallbacks = new Paginate.Callbacks() {
             @Override
             public void onLoadMore() {
@@ -1131,6 +1236,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @OnClick(R.id.partial_toolbar_field_title_right_option)
     void onColumnClick() {
+        if (!isGridViewEnabled()) {
+            return;
+        }
         mGridViewModePreferenceHelper.incrementTimeElapsedForGridViewMode(mGridViewMode);
         toggleGridViewMode();
     }
@@ -1170,10 +1278,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsAdapter = new SaleItemsAdapter(
                 mActivity,
                 mSaleItems,
-                mPresenter,
-                mSaleId,
                 mColumnCount,
-                this::logWishlistEvent, this);
+                true,
+                mActivity.getSupplierOriginalPriceInfoHelper() != null,
+                this::logWishlistEvent, saleItemAdapterHelper);
+
         CustomGridLayoutManager gridLayoutManager = new CustomGridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -1348,7 +1457,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
                 if (items.size() <= getResources().getInteger(R.integer.sale_items_threshold)) {
                     if (mPaginateManager == null || items.size() == 0) {
-                        showPlaceholder(true);
+                        if (mHasLoadedAllItems) {
+                            showPlaceholder(true);
+                        }
                     } else {
                         mHasLoadedAllItems = true;
                         mPaginateManager.setHasMoreDataToLoad(false);
@@ -1648,6 +1759,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
+    public void productDetailsReceived(SaleItemDetails productDetails) {
+        rrpTextCache.put(productDetails.getProductId(), productDetails.getRrpText());
+        pricingTextCache.put(productDetails.getProductId(), productDetails.getPricing());
+        if (mActivity.getSupplierOriginalPriceInfoHelper() != null) {
+            updatePricingInfoViewContent(
+                    mActivity.getSupplierOriginalPriceInfoHelper().getOriginalPriceInfoWebViewContent(
+                            productDetails.getRrpText(), productDetails));
+        } else {
+            final String pricingInfoText = getPricingInfo(productDetails.getRrpText(), productDetails.getPricing());
+            showItemPricingInfoView(pricingInfoText);
+        }
+    }
+
     public void showProductDetails(int position,
                                    Drawable imagePlaceholderDrawable,
                                    String imageUrl,
@@ -1660,6 +1784,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             return;
         }
 
+        if (currentBottomPopupView != null) {
+            currentBottomPopupView.dismiss(true);
+        }
+
         willOpenSaleDetails = true;
 
         if (mSearchFilterMvpView != null) {
@@ -1668,22 +1796,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsRecyclerView.smoothScrollToPosition(position);
 
         mCurrentProductDetailPosition = position;
-
-        SaleItemDetailsController.Parameters.FromItemsList parameters = new SaleItemDetailsController
-                .Parameters.FromItemsList(position,
-                imagePlaceholderDrawable,
-                imageUrl,
-                product.getSeoIdentifier(),
-                product.getSkus() == null || product.getSkus().isEmpty() ? "" : product.getSkus().get(0).getId(),
-                mSaleId,
-                product.getName(),
-                product.getBrandName(),
-                product.getPrice() != null ? PriceUtils.getPriceStringValue(product.getPrice().getValue()) : "",
-                product.getOriginalPrice() != null ? PriceUtils.getRpStringValue(product.getOriginalPrice().getValue()) : "",
-                product.getSalePercentOffText(),
-                PriceUtils.getRpStringValue(product.getSalePrice() != null ? product.getSalePrice().getValue() : 0),
-                product.getPriceRangeText(),
-                mSalesOrigin, mEndDate, product.getFreeDelivery(), product.isSoldOut());
+        SaleItemDetailsController.Parameters.FromProductList parameters = new SaleItemDetailsController.Parameters.FromProductList(
+                mSaleId, product, position, imagePlaceholderDrawable, imageUrl, mSalesOrigin, mEndDate);
 
         RouterTransaction routerTransaction = RouterTransaction
                 .with(SaleItemDetailsController.newInstance(parameters));
@@ -1702,6 +1816,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         getRouter().pushController(routerTransaction);
 
         mFromShopSearch = false;
+
+        hideKeyboard();
     }
 
     private void setupSearchFilters() {
@@ -1869,6 +1985,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 ArrayList<String> deliveryFacetFilters = new ArrayList<>();
                 ArrayList<String> newArrivalFacetFilters = new ArrayList<>();
                 ArrayList<String> sortFacetFilters = new ArrayList<>();
+                ArrayList<String> storeIdFilters = new ArrayList<>();
 
                 for (SearchChipModel chip : chipsList) {
                     String facetName = chip.getFilterType();
@@ -1887,6 +2004,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         deliveryFacetFilters.add(chip.getChipTitle());
                     } else if (facetName.equals(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME)) {
                         newArrivalFacetFilters.add(chip.getChipTitle());
+                    } else if (facetName.equals(BundleKeys.STORE_ID_FACETFILTER_NAME)) {
+                        storeIdFilters.add(chip.getChipTitle());
                     }
                 }
 
@@ -1915,6 +2034,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 facetFilters.put(BundleKeys.PRICE_FACETFILTER_NAME, priceFacetFilters);
                 facetFilters.put(BundleKeys.DELIVERY_FACETFILTER_NAME, deliveryFacetFilters);
                 facetFilters.put(BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME, newArrivalFacetFilters);
+                facetFilters.put(BundleKeys.STORE_ID_FACETFILTER_NAME, storeIdFilters);
 
             }
 
@@ -2153,7 +2273,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         GridLayoutManager gridLayoutManager = (GridLayoutManager) mSaleItemsRecyclerView.getLayoutManager();
         int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
-        mSaleItemsAdapter.computeItemViewDimensions();
+        mSaleItemsAdapter.computeItemViewDimensions(mActivity);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
         gridLayoutManager.scrollToPosition(currentScrollPosition);
 
@@ -2574,17 +2694,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     @Override
-    public void onClickFreeDelivery(String deliveryThreshold, String deliveryType) {
-        if (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) ||
-                deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
-
-            mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
-                    mActivity.getShippingTitle());
-
-        }
-    }
-
-    @Override
     public void storeBrandNames(BrandNames brandNames) {
         mBrandNames = brandNames;
         refreshBrandBubbles(mSearchQuery);
@@ -2660,6 +2769,74 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mBrandBubblesRecyclerView.setVisibility(View.GONE);
         if (mBrandBubblesRecyclerView.getParent() instanceof LinearLayout) {
             ((LinearLayout) mBrandBubblesRecyclerView.getParent()).invalidate();
+        }
+    }
+
+    private boolean isGridViewEnabled() {
+        return mPresenter.isTablet();
+    }
+
+    private static String getPricingInfo(String rrpText, String pricingText) {
+        String pricingInfoText = rrpText;
+        if (pricingInfoText != null && !pricingInfoText.isEmpty()) {
+            pricingInfoText += "<br/><br/>";
+        }
+        if (pricingInfoText == null) {
+            pricingInfoText = pricingText;
+        } else {
+            pricingInfoText += pricingText;
+        }
+        return pricingInfoText;
+    }
+
+    private void showItemPricingInfoView(String pricingInfoText) {
+        if (currentBottomPopupView != null) {
+            currentBottomPopupView.dismiss(true);
+        }
+        final BottomPopupWebViewContentAdapter adapter = new BottomPopupWebViewContentAdapter();
+        currentBottomPopupView = new BottomPopupView(mMainContainer, adapter);
+
+        adapter.setWebViewContent(pricingInfoText);
+        adapter.setOnCloseButtonClickListener(() -> currentBottomPopupView.dismiss(true));
+        adapter.setWebViewClientOverrideUrlLoading(url -> {
+            if (!url.contains("about:blank")) {
+                ActivityLaunchUtil.launchActivity(mActivity, url);
+            }
+            return true;
+        });
+        currentBottomPopupView.show(true);
+    }
+
+    private void updatePricingInfoViewContent(String pricingInfoText) {
+        if (currentBottomPopupView == null) {
+            return;
+        }
+
+        if (currentBottomPopupView.getAdapter() instanceof BottomPopupWebViewContentAdapter) {
+            final BottomPopupWebViewContentAdapter adapter = (BottomPopupWebViewContentAdapter) currentBottomPopupView.getAdapter();
+            adapter.setWebViewContent(pricingInfoText);
+        }
+    }
+
+    private void showPricingInfoView() {
+        if (mActivity.getSupplierOriginalPriceInfoHelper() != null) {
+            if (currentBottomPopupView != null) {
+                currentBottomPopupView.dismiss(true);
+            }
+            currentBottomPopupView = mActivity.getSupplierOriginalPriceInfoHelper()
+                    .createSaleListNoticeBottomPopupView(
+                            mMainContainer,
+                            () -> mPresenter.setSupplierOriginaPriceInfoTimeAgreed(System.currentTimeMillis()));
+            if (currentBottomPopupView.getAdapter() instanceof BottomPopupWebViewContentAdapter) {
+                ((BottomPopupWebViewContentAdapter) currentBottomPopupView.getAdapter()).setWebViewClientOverrideUrlLoading(url -> {
+                    if (!url.contains("about:blank")) {
+                        ActivityLaunchUtil.launchActivity(mActivity, url);
+                    }
+                    return true;
+                });
+            }
+
+            currentBottomPopupView.show(true);
         }
     }
 }
