@@ -130,7 +130,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @BindView(R.id.controller_sale_items_appbar)
     AppBarLayout mShopAppBarLayout;
 
-    private BannersAdapter mBannersAdapter;
+    private BannersAdapter mBannersAdapter = null;
     private ResettableDimensions mResettableDimensionsAdapter = null;
     private Paginate.Callbacks mPaginateCallbacks;
     private Paginate mPaginateManager = null;
@@ -488,7 +488,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 }
             };
 
-            shopsControllerBannerRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBannersAdapter.getStickyRecyclerHeadersAdapter()));
+            if (mBannersAdapter != null) {
+                shopsControllerBannerRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBannersAdapter.getStickyRecyclerHeadersAdapter()));
+            }
         } else {
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
             mShopsControllerToolbarTextView.setText("Brands");
@@ -845,6 +847,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @Override
     public void showSlidingBanners(GetBannerResponse getBannerResponses) {
+        if (mBannersAdapter == null) {
+            setupBannersView();
+        }
+
         HorizontalScrollingBannerAdapter adapter = null;
         List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
 
@@ -869,6 +875,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @Override
     public void showSponsoredBanners(GetBannerResponse getBannerResponses) {
+        if (mBannersAdapter == null) {
+            setupBannersView();
+        }
+
         HorizontalScrollingBannerAdapter adapter = null;
         if (getBannerResponses != null) {
             List<GetBannerResponse.Banner> sponsoredBanners = new ArrayList<>();
@@ -900,6 +910,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @Override
     public void showCategoryBanners(GetBannerResponse getBannerResponses) {
+        if (mBannersAdapter == null) {
+            setupBannersView();
+        }
+
         HorizontalScrollingBannerAdapter adapter = null;
         String title = null;
         if (getBannerResponses != null) {
@@ -1123,7 +1137,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         hasLoadedAllItems = true;
 
         //reset adapter
-        mBannersAdapter.clear();
+        if (mBannersAdapter != null) {
+            mBannersAdapter.clear();
+        }
 
         if (shopsControllerBannerRecyclerView != null) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
@@ -1259,10 +1275,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private GetBannerRequest createBannerRequest(String categoryId, int bannerOffset, int bannerLimit) {
-        String lastBannerType = mBannersAdapter.getItemCount() > 0 ? mBannersAdapter.getLastGroupType() : "";
+        final String lastBannerType = mBannersAdapter != null && mBannersAdapter.getItemCount() > 0 ? mBannersAdapter.getLastGroupType() : "";
 
         //start from 0 offset when bannerGroupType changes
-        if (lastBannerType != null && bannerGroupType != null && !lastBannerType.equals("") &&
+        if (mBannersAdapter != null &&
+                lastBannerType != null && bannerGroupType != null && !lastBannerType.equals("") &&
                 !lastBannerType.equals(bannerGroupType) && !bannerGroupType.equals("")) {
             bannerOffset = mBannersAdapter.getOffset();
         }
@@ -1285,8 +1302,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private GetBannerRequest createDeepLinkBannerRequest(String saleCategoryId, int bannerOffset, int bannerLimit) {
 
-        int lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
-        GetBannerResponse.Banner lastVisibleBanner = mBannersAdapter.getItem(lastVisiblePos);
+        final int lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
+        final GetBannerResponse.Banner lastVisibleBanner = mBannersAdapter != null ? mBannersAdapter.getItem(lastVisiblePos) : null;
         bannerGroupType = lastVisibleBanner != null ? lastVisibleBanner.getGroup().getType() : "";
 
         GetBannerRequest getBannerRequest = new GetBannerRequest();
