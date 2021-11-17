@@ -2386,12 +2386,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (!isViewBound()) {
             return;
         }
-        ViewGroup.LayoutParams lp = mAppBar.getLayoutParams();
 
         switch (mSourceMode) {
             case NORMAL:
-                lp.height = WRAP_CONTENT;
-                mAppBar.setElevation(getResources().getDimension(R.dimen.margin_extra_small));
                 mSaleItemsToolbarField.setVisibility(View.VISIBLE);
                 mTabLayout.setVisibility(View.VISIBLE);
                 mSaleItemsBackIcon.setVisibility(View.VISIBLE);
@@ -2401,13 +2398,31 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 }
                 break;
             case WISHLIST:
-                lp.height = 1;
-                mAppBar.setElevation(0);
                 mSaleItemsToolbarField.setVisibility(View.GONE);
                 mTabLayout.setVisibility(View.GONE);
                 mSaleItemsBackIcon.setVisibility(View.INVISIBLE);
                 mSaleItemsBackIcon.setEnabled(false);
                 mBrandBubblesRecyclerView.setVisibility(View.GONE);
+                break;
+        }
+
+        resetAppBarBasedOnSourceMode();
+    }
+
+    private void resetAppBarBasedOnSourceMode() {
+        if (!isViewAttached() || mAppBar == null) {
+            return;
+        }
+
+        ViewGroup.LayoutParams lp = mAppBar.getLayoutParams();
+        switch (mSourceMode) {
+            case NORMAL:
+                lp.height = WRAP_CONTENT;
+                mAppBar.setElevation(getResources().getDimension(R.dimen.margin_extra_small));
+                break;
+            case WISHLIST:
+                lp.height = 1;
+                mAppBar.setElevation(0);
                 break;
         }
 
