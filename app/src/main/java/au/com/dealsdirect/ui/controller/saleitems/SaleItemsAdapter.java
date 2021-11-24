@@ -249,6 +249,13 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void removeData(int position) {
+        removeData(position, true);
+    }
+
+    public void removeData(int position, boolean updateData) {
+        if (updateData) {
+            mData.remove(position);
+        }
         if (getItemCount() == 0 && mCurrentItemCount > 0) {
             notifyItemRangeRemoved(0, mCurrentItemCount);
         } else {

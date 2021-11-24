@@ -72,6 +72,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -568,6 +569,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private SaleItemDetailsHorizontalScrollingItemsHelper youMayAlsoLikeHelper = null;
     private SaleItemDetailsHorizontalScrollingItemsHelper recentlyViewedHelper = null;
 
+    private final Set<String> productListItemsToUpdate = new HashSet<>();
+
     private final Map<String, String> rrpTextCache = new HashMap<>();
     private final Map<String, String> pricingTextCache = new HashMap<>();
     private OnLoadProductDetails onLoadProductDetails = null;
@@ -592,18 +595,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     final private HorizontalScrollingItemsAdapter.WishlistListener horizontalItemsWishlistListener = new HorizontalScrollingItemsAdapter.WishlistListener() {
         @Override
         public void addToWishlist(SaleItemProduct item) {
+            final String productId = item.getId();
             SaleItemDetailsMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
-                logWishlistEvent(mProductId, true);
+                logWishlistEvent(productId, true);
             };
             mPresenter.addProductToWishlist(item.getId(), item.getSeoIdentifier(), getMasterProductId(item), delayedCallback);
+            productListItemsToUpdate.add(productId);
         }
 
         @Override
         public void removeFromWishlist(SaleItemProduct item) {
+            final String productId = item.getId();
             SaleItemDetailsMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
-                logWishlistEvent(mProductId, false);
+                logWishlistEvent(productId, false);
             };
             mPresenter.removeProductFromWishlist(item.getId(), delayedCallback);
+            productListItemsToUpdate.add(productId);
         }
 
         @Override
@@ -2217,6 +2224,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mPresenter.removeProductFromWishlist(mProductId, delayedCallback);
         }
         updateLikeButtonImage(isLiked);
+        productListItemsToUpdate.add(mProductId);
     }
 
     private void updateLikeButtonImage(boolean isLiked) {
@@ -2659,6 +2667,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             return "";
         }
+    }
+
+    public Set<String> getProductListItemsToUpdate() {
+        return productListItemsToUpdate;
     }
 
     private static String getPricingInfo(String rrpText, String pricingText) {
