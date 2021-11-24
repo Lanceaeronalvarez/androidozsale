@@ -750,6 +750,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mIsSoldout != null) {
             showAddToCartButton();
         }
+
+        // try to clear TagFlowLayout; delay is to ensure that it runs after restore state
+        // consider forking com.zhy:flowlayout-lib to fix TagFlowLayout bugs
+        new Handler().postDelayed(() -> {
+            if (isViewAttached() && mSizesFlowLayout != null &&
+                    (mProductSizes == null || mProductSizes.isEmpty())) {
+                mSizesFlowLayout.setAdapter(createTagAdapter(null));
+            }
+        }, 1);
     }
 
     @Override
@@ -1139,8 +1148,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductImagesRv.setLayoutManager(null);
         mProductImagesRv.setAdapter(null);
         mOtherImagesRv.setAdapter(null);
-//      not setting this to null may cause leak, but the library doesn't support setting this to null
-//      mSizesFlowLayout.setAdapter(null);
+        mSizesFlowLayout.setAdapter(createTagAdapter(null));
         mSizesFlowLayout.setOnSelectListener(null);
         mProductDescriptionText.setWebViewClient(null);
         mReturnPolicyText.setWebViewClient(null);
@@ -1360,26 +1368,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             mHasSizes = true;
 
-            TagAdapter mSizesAdapter = new TagAdapter<Pair<String, String>>(mProductSizes) {
-
-                @SuppressWarnings("ConstantConditions")
-                @Override
-                public View getView(FlowLayout parent, int position, Pair<String, String> data) {
-                    TextView tv = (TextView) mActivity.getLayoutInflater()
-                            .inflate(R.layout.sizes_chips_layout,
-                                    parent,
-                                    false);
-                    tv.setText(data.first);
-                    float size = tv.getContext().getResources().getDimension(R.dimen.text_size_body);
-                    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-                    if (mSkuVariants.get(position).isSoldOut()) {
-                        tv.setBackground(getDrawable(R.drawable.bg_chips_soldout));
-                        tv.setTextColor(getColor(R.color.bg_chips_soldout_text));
-                    }
-
-                    return tv;
-                }
-            };
+            TagAdapter mSizesAdapter = createTagAdapter(mProductSizes);
 
             mIsSoldOutCombined = true;
             for (SaleItemDetails response : mSkuVariants) {
@@ -1546,6 +1535,32 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
         mPresenter.loadProductDetails(saleId, seoIdentifierId);
         onLoadProductDetails = this::setupProductDetails;
+    }
+
+    private TagAdapter<Pair<String, String>> createTagAdapter(List<Pair<String, String>> dataSource) {
+        if (dataSource == null) {
+            dataSource = new ArrayList<>();
+        }
+        return new TagAdapter<Pair<String, String>>(dataSource) {
+
+            @SuppressWarnings("ConstantConditions")
+            @Override
+            public View getView(FlowLayout parent, int position, Pair<String, String> data) {
+                TextView tv = (TextView) mActivity.getLayoutInflater()
+                        .inflate(R.layout.sizes_chips_layout,
+                                parent,
+                                false);
+                tv.setText(data.first);
+                float size = tv.getContext().getResources().getDimension(R.dimen.text_size_body);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+                if (mSkuVariants.get(position).isSoldOut()) {
+                    tv.setBackground(getDrawable(R.drawable.bg_chips_soldout));
+                    tv.setTextColor(getColor(R.color.bg_chips_soldout_text));
+                }
+
+                return tv;
+            }
+        };
     }
 
     private void setupDelayedProgressBar() {
