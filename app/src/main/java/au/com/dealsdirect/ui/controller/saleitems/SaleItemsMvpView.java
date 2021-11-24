@@ -42,8 +42,6 @@ public interface SaleItemsMvpView extends MvpView {
 
     Map<String, GetCategoryTreeResponse> getCategoryMap();
 
-    boolean isFromCategories();
-
     void toggleTabSelection(int tabPos, boolean isTabActive);
 
     void toggleTabSelection();
