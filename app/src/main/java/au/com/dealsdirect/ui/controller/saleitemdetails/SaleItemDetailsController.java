@@ -899,10 +899,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
-        SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(
-                new ArrayList<>(),
-                saleDetailsImageListener());
-        mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
+        SaleItemDetailsImagePageIndicatorAdapter saleItemImagesIndicatorAdapter = new SaleItemDetailsImagePageIndicatorAdapter();
+        mOtherImagesRv.setAdapter(saleItemImagesIndicatorAdapter);
         mOtherImagesRv.setVisibility(View.INVISIBLE);
 
         mProductImagesRvLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
@@ -1186,8 +1184,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mProductImagesRv.getAdapter() instanceof SaleItemDetailsImageAdapter) {
             ((SaleItemDetailsImageAdapter) mProductImagesRv.getAdapter()).replaceData(qualitySaleImages);
         }
-        if (mOtherImagesRv.getAdapter() instanceof SaleItemDetailsImageAdapter) {
-            ((SaleItemDetailsImageAdapter) mOtherImagesRv.getAdapter()).replaceData(qualitySaleImages);
+        if (mOtherImagesRv.getAdapter() instanceof SaleItemDetailsImagePageIndicatorAdapter) {
+            final SaleItemDetailsImagePageIndicatorAdapter adapter = (SaleItemDetailsImagePageIndicatorAdapter) mOtherImagesRv.getAdapter();
+            adapter.setActivePosition(0);
+            adapter.replaceData(qualitySaleImages);
         }
     }
 
@@ -2307,19 +2307,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void updateCarouselPageIndicator(int newPosition) {
-        int oldPosition = mCarouselPosition;
+        final int oldPosition = mCarouselPosition;
         mCarouselPosition = newPosition;
 
-        SaleItemDetailsImageAdapter.ViewHolder vhOld = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(oldPosition);
-        if (vhOld != null && vhOld.image != null) {
-            vhOld.image.setImageResource(R.drawable.circle_indicator_inactive);
+        if (mOtherImagesRv.getAdapter() instanceof SaleItemDetailsImagePageIndicatorAdapter) {
+            final SaleItemDetailsImagePageIndicatorAdapter adapter = (SaleItemDetailsImagePageIndicatorAdapter) mOtherImagesRv.getAdapter();
+            adapter.setActivePosition(newPosition);
+            adapter.notifyItemChanged(oldPosition);
+            adapter.notifyItemChanged(newPosition);
         }
-
-        SaleItemDetailsImageAdapter.ViewHolder vhNew = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(newPosition);
-        if (vhNew != null) {
-            vhNew.image.setImageResource(R.drawable.circle_indicator_active);
-        }
-
     }
 
     private void onSelectTag(int index) {
