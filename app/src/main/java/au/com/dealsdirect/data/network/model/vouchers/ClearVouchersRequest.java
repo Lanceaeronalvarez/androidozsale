@@ -1,19 +1,24 @@
 package au.com.dealsdirect.data.network.model.vouchers;
 
-/**
- * Created by Admin on 3/6/17.
- */
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import au.com.dealsdirect.data.network.model.checkout.ApiDeliveryDetails;
+
 public class ClearVouchersRequest {
+    @SerializedName("deliveryDetails")
+    @Expose
+    private final ApiDeliveryDetails deliveryDetails;
+    @SerializedName("imageSize")
+    @Expose
+    private final int imageSize;
+    @SerializedName("languageID")
+    @Expose
+    private final String languageId;
 
-    private String postcode;
-
-    private int imageSize;
-
-    private String languageID;
-
-    public ClearVouchersRequest(String postcode, int imageSize, String languageID) {
-        this.postcode = postcode;
+    public ClearVouchersRequest(String postcode, String pickupPoint, int imageSize, String languageId) {
+        this.deliveryDetails = new ApiDeliveryDetails(postcode, pickupPoint);
         this.imageSize = imageSize;
-        this.languageID = languageID;
+        this.languageId = languageId;
     }
 }

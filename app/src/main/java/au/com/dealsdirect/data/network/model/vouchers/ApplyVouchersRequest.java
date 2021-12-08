@@ -1,25 +1,30 @@
 package au.com.dealsdirect.data.network.model.vouchers;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
-/**
- * dp Created by Admin on 1/16/17.
- */
+import au.com.dealsdirect.data.network.model.checkout.ApiDeliveryDetails;
 
 public class ApplyVouchersRequest {
+    @SerializedName("vouchers")
+    @Expose
+    private final List<String> vouchers;
+    @SerializedName("imageSize")
+    @Expose
+    private final int imageSize;
+    @SerializedName("languageID")
+    @Expose
+    private final String languageId;
+    @SerializedName("deliveryDetails")
+    @Expose
+    private final ApiDeliveryDetails deliveryDetails;
 
-    private List<String> vouchers;
-
-    private int imageSize;
-
-    private String languageID;
-
-    private String postcode;
-
-    public ApplyVouchersRequest(List<String> vouchers, String postcode, int imageSize, String languageID) {
+    public ApplyVouchersRequest(List<String> vouchers, String postcode, String pickupPoint, int imageSize, String languageId) {
         this.vouchers = vouchers;
         this.imageSize = imageSize;
-        this.languageID = languageID;
-        this.postcode = postcode;
+        this.languageId = languageId;
+        this.deliveryDetails = new ApiDeliveryDetails(postcode, pickupPoint);
     }
 }

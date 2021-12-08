@@ -11,16 +11,10 @@ public final class ApiEndPoint {
     private static final String NO_AKAMAI_EXTENSION = "api.asmx/";
     private static final String AKAMAI_EXTENSION = "api.ashx/";
     private static final String ACCOUNT_ID_DELIMETER = "_ACCOUNT_ID_DELIMETER_";
-    public static final String API_LEGACY_AKAMAI = "https://www.dealsdirect.com.au/papi/public/v3.17/api.ashx/";
-    private static final String COCOSA_SERVICE = "CocosaService.asmx/";
     /* API Constants */
-    private static final String API_VERSION = "api/v1/";
     private static final String HANDLER_PREFIX = "handler.ashx/";
-    private static final String HANDLER_ASMX_PREFIX = "handler.ashx/";
     public static final String API_VCO_ICON = "https://assets.secure.checkout.visa.com/VCO/images/acc_40x30_wht01.png";
-    public static final String LEGACY_API_VERSION = "3.29";
-    public static final String LEGACY_API_VERSION_FOR_SETTINGS = "3.30";
-    public static final String LEGACY_API_VERSION_FOR_CHECKOUT = "3.30";
+    public static final String LEGACY_API_VERSION = "3.31";
 
     enum ApiService {
         LEGACY,
@@ -238,15 +232,15 @@ public final class ApiEndPoint {
 
     /*SMS VERIFICATION*/
     public static String getSmsVerificationNormalizePhone() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "NormalizePhone");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "NormalizePhone", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getSmsVerificationCodeSend() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "VerificationCodeSend");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "VerificationCodeSend", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getSmsVerificationCodeConfirm() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "VerificationCodeConfirm");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "VerificationCodeConfirm", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     /*GCM CALLS*/
@@ -264,31 +258,31 @@ public final class ApiEndPoint {
 
     /*CONFIG CALLS*/
     public static String getServerSettings() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_SETTINGS, AKAMAI_EXTENSION + "GetServerSettings");
+        return getFormattedUrl(ApiService.LEGACY, AKAMAI_EXTENSION + "GetServerSettings", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getPublicAppSettings() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_SETTINGS, AKAMAI_EXTENSION + "GetPublicAppSettings");
+        return getFormattedUrl(ApiService.LEGACY, AKAMAI_EXTENSION + "GetPublicAppSettings", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getAppSettings() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_SETTINGS, AKAMAI_EXTENSION + "GetAppSettings");
+        return getFormattedUrl(ApiService.LEGACY, AKAMAI_EXTENSION + "GetAppSettings", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getAppSettingsSection() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_SETTINGS, AKAMAI_EXTENSION + "GetAppSettingsSection");
+        return getFormattedUrl(ApiService.LEGACY, AKAMAI_EXTENSION + "GetAppSettingsSection", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getPublicAppSettingsSection() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_SETTINGS, AKAMAI_EXTENSION + "GetPublicAppSettingsSection");
+        return getFormattedUrl(ApiService.LEGACY, AKAMAI_EXTENSION + "GetPublicAppSettingsSection", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getConsentData() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_SETTINGS, NO_AKAMAI_EXTENSION + "GetConsentData");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetConsentData", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String saveConsentData() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_SETTINGS, NO_AKAMAI_EXTENSION + "SaveConsentData");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "SaveConsentData", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String saveReceiveSales() {
@@ -296,7 +290,7 @@ public final class ApiEndPoint {
     }
 
     public static String getPublicPaymentToken() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "GetPublicPaymentToken");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetPublicPaymentToken", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getUserLanguages() {
@@ -350,7 +344,7 @@ public final class ApiEndPoint {
 
     /* Voucher Controller */
     public static String addVoucherByKey() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "AddVoucherByKey");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "AddVoucherByKey", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String addAndApplyVoucher() {
@@ -450,7 +444,7 @@ public final class ApiEndPoint {
     }
 
     public static String applyDeliveryAddress() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "ApplyDeliveryAddress");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "ApplyDeliveryAddress", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     /* Orders Controller*/
@@ -496,35 +490,35 @@ public final class ApiEndPoint {
 
     /* Checkout Endpoints*/
     public static String getCurrentOrder() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "GetCurrentOrder");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetCurrentOrder", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getUserPaymentMethods() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "GetUserPaymentMethods");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetUserPaymentMethods", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String createPaymentMethod() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "CreatePaymentMethod");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreatePaymentMethod", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getPaymentToken() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "GetPaymentToken");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetPaymentToken", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String decreaseOrderItem() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "DecreaseOrderItem");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "DecreaseOrderItem", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String increaseOrderItem() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "IncreaseOrderItem");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "IncreaseOrderItem", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String applyVouchers() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "ApplyVouchers");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "ApplyVouchers", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String clearVouchers() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "ClearVouchers");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "ClearVouchers", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String clearOrder() {
@@ -532,32 +526,32 @@ public final class ApiEndPoint {
     }
 
     public static String createPaymentTransaction() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "CreatePaymentTransaction");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreatePaymentTransaction", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String createPaymentTransactionForGPay() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "CreatePaymentTransaction");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreatePaymentTransaction", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String removeUserPaymentMethod() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "RemoveUserPaymentMethod");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "RemoveUserPaymentMethod", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getDeliveryServicePackageDetails() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "GetDeliveryServicePackageDetails");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetDeliveryServicePackageDetails", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String setDeliveryOption() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "SetDeliveryOption");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "SetDeliveryOption", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     /* Legalities Endpoint*/
     public static String getLegalitiesText() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_SETTINGS, NO_AKAMAI_EXTENSION + "GetTemplateText");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetTemplateText", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getTemplateTexts() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_SETTINGS, NO_AKAMAI_EXTENSION + "GetTemplateTexts");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetTemplateTexts", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     /* Login Controller */
@@ -641,45 +635,45 @@ public final class ApiEndPoint {
 
     /* Masterpass */
     public static String masterpassPayment() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "MasterPassPayment");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "MasterPassPayment", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String masterpassPostTransaction() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "MasterPassPostTransaction");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "MasterPassPostTransaction", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     /* 3DS */
     public static String getPaymentMethodNonce() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_SETTINGS, NO_AKAMAI_EXTENSION + "GetPaymentMethodNonce");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetPaymentMethodNonce", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     /* Ourpay */
     public static String getPaymentPlans() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "GetPaymentPlans");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetPaymentPlans", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getScheduledPlans() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "GetScheduledPayments");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetScheduledPayments", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getPastPayments() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "GetPastPayments");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetPastPayments", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getDeliveryService() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "GetDeliveryServicePackageByCustomer");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetDeliveryServicePackageByCustomer", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String processOurpayInstallment() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "ProcessOurpayInstallment");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "ProcessOurpayInstallment", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String createAfterpayOrder() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "CreateAfterpayOrder");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateAfterpayOrder", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String callAfterPayCreatePayment() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "AfterPayCreatePayment");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "AfterPayCreatePayment", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String callGetAfterpayData() {
@@ -761,7 +755,7 @@ public final class ApiEndPoint {
     }
 
     public static String saveAgeRestrictedConsentData() {
-        return getFormattedUrlForCustomLegacyVersion(LEGACY_API_VERSION_FOR_CHECKOUT, NO_AKAMAI_EXTENSION + "SaveAgeRestrictedConsentData");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "SaveAgeRestrictedConsentData", ApiUrlVersion.emptyVersion.apiVersion());
     }
 
     public static String getNZCommissionTemplateText() {

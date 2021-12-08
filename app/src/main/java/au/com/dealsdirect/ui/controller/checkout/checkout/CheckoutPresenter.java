@@ -69,7 +69,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     private void fetchCartDetails(String postcode) {
         getCompositeDisposable().add(getDataManager()
-                .callGetCurrentOrder(new GetCurrentOrder.RequestValue(postcode, getDataManager().getLanguageId()))
+                .callGetCurrentOrder(new GetCurrentOrder.RequestValue(postcode, null, getDataManager().getLanguageId()))
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetCurrentOrder.ResponseValue>() {
@@ -173,7 +173,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     @Override
     public void fetchAdjustItemQuantity(String url, String itemID, String postcode, ProductQuantityLayout view) {
         getCompositeDisposable().add(getDataManager()
-                .callAdjustQuantityOrderItem(url, new AdjustOrderItem.RequestValue(itemID, postcode, getDataManager().getLanguageId()))
+                .callAdjustQuantityOrderItem(url, new AdjustOrderItem.RequestValue(itemID, postcode, null, getDataManager().getLanguageId()))
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(new Consumer<GetCurrentOrder.ResponseValue>() {

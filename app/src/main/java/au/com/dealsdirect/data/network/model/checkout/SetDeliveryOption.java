@@ -1,14 +1,9 @@
 package au.com.dealsdirect.data.network.model.checkout;
 
-/**
- * Created by smartwave on 29/05/2018.
- */
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class SetDeliveryOption {
-
     @SerializedName("optionParameters")
     @Expose
     private OptionParameters optionParameters;
@@ -58,7 +53,6 @@ public class SetDeliveryOption {
     }
 
     public static class OptionParameters {
-
         @SerializedName("deliveryAddressID")
         @Expose
         private String deliveryAddressID;

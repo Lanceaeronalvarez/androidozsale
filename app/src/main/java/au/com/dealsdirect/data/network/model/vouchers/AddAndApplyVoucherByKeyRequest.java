@@ -3,26 +3,27 @@ package au.com.dealsdirect.data.network.model.vouchers;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by smartwave on 19/01/2017.
- */
+import au.com.dealsdirect.data.network.model.checkout.ApiDeliveryDetails;
 
 public class AddAndApplyVoucherByKeyRequest {
 
     @SerializedName("languageID")
     @Expose
-    private String languageId;
+    private final String languageId;
+    @SerializedName("key")
+    @Expose
+    private final String key;
+    @SerializedName("imageSize")
+    @Expose
+    private final int imageSize;
+    @SerializedName("deliveryDetails")
+    @Expose
+    private final ApiDeliveryDetails deliveryDetails;
 
-    private String key;
-
-    private int imageSize;
-
-    private String postcode;
-
-    public AddAndApplyVoucherByKeyRequest(String key, String postcode, int imageSize, String languageId) {
+    public AddAndApplyVoucherByKeyRequest(String key, String postcode, String pickupPoint, int imageSize, String languageId) {
         this.key = key;
         this.imageSize = imageSize;
         this.languageId = languageId;
-        this.postcode = postcode;
+        this.deliveryDetails = new ApiDeliveryDetails(postcode, pickupPoint);
     }
 }
