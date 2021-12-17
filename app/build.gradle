@@ -677,7 +677,7 @@ dependencies {
 
     //VISA CHECKOUT
     implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
-    implementation(group: 'com.visa.checkout', name: 'visacheckout-android-sdk', version: '6.6.1', ext: 'aar')
+    implementation 'com.visa.checkout:visacheckout-android-sdk-6.6.1@aar'
 
     implementation 'com.squareup.okio:okio:1.15.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
