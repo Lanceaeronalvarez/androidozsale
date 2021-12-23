@@ -101,6 +101,9 @@ import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
+import au.com.dealsdirect.data.network.model.lpay.ConfirmLPayTransactionRequest;
+import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderRequest;
+import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderResponse;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
 import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
@@ -1372,6 +1375,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<JSONObject> callConfirmLPayTransaction(ConfirmLPayTransactionRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callConfirmLPayTransaction())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getJSONObjectObservable(); //TODO: replace with response object CreateLPayOrderResponse
+    }
+
+    @Override
     public Observable<JSONObject> callAfterPayCreatePayment(AfterPayCreatePaymentRequest request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.callAfterPayCreatePayment())
                 .addHeaders(mApiHeader.get())
@@ -1387,6 +1399,15 @@ public class AppApiHelper implements ApiHelper {
                 .addPathParameter("amount", price)
                 .build()
                 .getObjectObservable(GetAfterpayDataResponse.class);
+    }
+
+    @Override
+    public Observable<CreateLPayOrderResponse> callCreateLPayOrder(CreateLPayOrderRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callCreateLPayOrder())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getObjectObservable(CreateLPayOrderResponse.class);
     }
 
     @Override

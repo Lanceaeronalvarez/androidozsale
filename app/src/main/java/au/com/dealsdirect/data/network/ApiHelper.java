@@ -96,6 +96,9 @@ import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
+import au.com.dealsdirect.data.network.model.lpay.ConfirmLPayTransactionRequest;
+import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderRequest;
+import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderResponse;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
 import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
@@ -454,6 +457,12 @@ public interface ApiHelper {
     Observable<JSONObject> callAfterPayCreatePayment(AfterPayCreatePaymentRequest request);
 
     Observable<GetAfterpayDataResponse> callGetAfterpayData(String price);
+
+    // LPAY
+
+    Observable<CreateLPayOrderResponse> callCreateLPayOrder(CreateLPayOrderRequest request);
+
+    Observable<JSONObject> callConfirmLPayTransaction(ConfirmLPayTransactionRequest request);
 
     // DEEPLINK
     Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request);

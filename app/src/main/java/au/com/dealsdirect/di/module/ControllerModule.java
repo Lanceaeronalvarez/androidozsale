@@ -101,6 +101,9 @@ import au.com.dealsdirect.ui.controller.legalities.LegalitiesPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpPresenter;
 import au.com.dealsdirect.ui.controller.login.LoginMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginPresenter;
+import au.com.dealsdirect.ui.controller.lpay.LPayMvpPresenter;
+import au.com.dealsdirect.ui.controller.lpay.LPayMvpView;
+import au.com.dealsdirect.ui.controller.lpay.LPayPresenter;
 import au.com.dealsdirect.ui.controller.main.MainMvpPresenter;
 import au.com.dealsdirect.ui.controller.main.MainMvpView;
 import au.com.dealsdirect.ui.controller.main.MainPresenter;
@@ -465,6 +468,11 @@ public class ControllerModule {
 
     @Provides
     AfterpayMvpPresenter<AfterpayMvpView> provideAfterpayMvpPresenter(AfterpayPresenter<AfterpayMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    LPayMvpPresenter<LPayMvpView> provideLPayMvpPresenter(LPayPresenter<LPayMvpView> presenter) {
         return presenter;
     }
 

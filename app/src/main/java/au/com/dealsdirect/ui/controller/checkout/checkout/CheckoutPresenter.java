@@ -34,8 +34,10 @@ import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
+import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -320,6 +322,9 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             case AppConstants.AFTERPAY:
                 commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.AFTERPAY.getValue());
                 break;
+            case AppConstants.LPAY:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.LPAY.getValue());
+                break;
             case AppConstants.REGULAR:
                 commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.REGULAR.getValue());
                 break;
@@ -359,6 +364,40 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         DataCollector.logEvent(Events.InitiateCheckout, parameters);
 
         getDataManager().setHasActiveCheckoutSession(true);
+    }
+
+    @Override
+    public void logCommonCheckoutEvent(Context context, int operation) {
+        CommonCheckoutRequest request = new CommonCheckoutRequest();
+        request.setEventType(EventTypeId.EVENT_CHECKOUT);
+        request.setErrorDescription("");
+        request.setResult(1);
+        request.setGuestCheckout(false);
+        request.setOperation(operation);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, context);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
+
+        parameters.put(DataCollector.EventParameters.COMMON_CHECKOUT_REQUEST, request);
+
+        DataCollector.logEvent(Events.CommonCheckoutEvent, parameters);
+    }
+
+    @Override
+    public void logFailedTransaction(Context context, String errorMessage) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                PaymentInfo.TYPE_LPAY);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.IS_NEW_USER,
+                getIsNewUser());
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, false);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, context);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME,
+                AfterpayViewController.class.getSimpleName());
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.FAILED_TRANSACTION_MESSAGE,
+                errorMessage);
+        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.FailedTransaction, parameters);
     }
 
     @Override
@@ -446,6 +485,15 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
                     mappedValues.getAfterpay().getDescription());
         } else {
             getMvpView().hideAfterpayPanel();
+        }
+
+        if (getDataManager().isLPayEnabled() &&
+                mappedValues != null &&
+                mappedValues.getAvailablePaymentOptions() != null &&
+                mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.LATITUDEPAY)) {
+            getMvpView().showLPayPanel();
+        } else {
+            getMvpView().hideLPayPanel();
         }
     }
 

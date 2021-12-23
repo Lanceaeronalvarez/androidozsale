@@ -33,6 +33,7 @@ import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.login.PasswordVerificationController;
+import au.com.dealsdirect.ui.controller.lpay.LPayViewController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.notification.NotificationController;
@@ -57,12 +58,6 @@ import au.com.dealsdirect.ui.controller.webviewcontroller.WebViewController;
 import au.com.dealsdirect.ui.sample.SampleController;
 import dagger.Component;
 
-//import au.com.dealsdirect.ui.controller.contact.ContactController;
-
-/*
- * Created by Ayi on 05/06/2017.
- */
-
 @PerController
 @Component(dependencies = ActivityComponent.class, modules = ControllerModule.class)
 public interface ControllerComponent {
@@ -84,7 +79,7 @@ public interface ControllerComponent {
     void inject(CheckoutController controller);
 
     void inject(SaleItemDetailsController controller);
-    
+
     void inject(SaleCategoriesController controller);
 
     void inject(SaleItemsController controller);
@@ -104,7 +99,7 @@ public interface ControllerComponent {
     void inject(CountryController controller);
 
     void inject(OrdersController controller);
-    
+
     void inject(OrderDetailsController controller);
 
     void inject(ViewContactHistoryController controller);
@@ -156,7 +151,7 @@ public interface ControllerComponent {
     void inject(PasswordVerificationController controller);
 
     void inject(CheckoutHostController controller);
-    
+
     void inject(NotificationController controller);
 
     void inject(InformationMenuController controller);
@@ -166,6 +161,8 @@ public interface ControllerComponent {
     void inject(WebViewController controller);
 
     void inject(AfterpayViewController controller);
+
+    void inject(LPayViewController controller);
 
     void inject(FloatingImageViewerController controller);
 

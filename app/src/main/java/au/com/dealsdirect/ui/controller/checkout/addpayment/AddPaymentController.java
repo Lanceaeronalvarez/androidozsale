@@ -138,6 +138,8 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     View mLineView;
     @BindView(R.id.partial_checkout_afterpay_panel_holder)
     View mAfterpayPanel;
+    @BindView(R.id.partial_checkout_lpay_panel_holder)
+    View mLPayPanel;
 
     // Stripe
     @BindView(R.id.stripe_form_layout)
@@ -238,6 +240,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
 
         mLineView.setVisibility(View.GONE);
         mAfterpayPanel.setVisibility(View.GONE);
+        mLPayPanel.setVisibility(View.GONE);
 
         mVcoButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
                 View.GONE);

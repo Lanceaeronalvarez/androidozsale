@@ -107,6 +107,20 @@ public final class CommonUtils {
         return progressDialog;
     }
 
+    public static ProgressDialog showLoadingDialogLPay(Context context) {
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.show();
+        if (progressDialog.getWindow() != null) {
+            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            progressDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
+        progressDialog.setContentView(R.layout.lpay_loading_indicator_layout);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+        return progressDialog;
+    }
+
     public static Dialog showLoadingDialog(Context context, String message, boolean cancelable) {
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

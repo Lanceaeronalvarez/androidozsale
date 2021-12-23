@@ -109,6 +109,9 @@ import au.com.dealsdirect.data.network.model.login.LoginFacebook;
 import au.com.dealsdirect.data.network.model.login.LoginTicket;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.network.model.login.Logout;
+import au.com.dealsdirect.data.network.model.lpay.ConfirmLPayTransactionRequest;
+import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderRequest;
+import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderResponse;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
 import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
@@ -838,6 +841,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<CreateLPayOrderResponse> callCreateLPayOrder(CreateLPayOrderRequest request) {
+        return mApiHelper.callCreateLPayOrder(request);
+    }
+
+    @Override
+    public Observable<JSONObject> callConfirmLPayTransaction(ConfirmLPayTransactionRequest request) {
+        return mApiHelper.callConfirmLPayTransaction(request);
+    }
+
+    @Override
     public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request) {
         return mApiHelper.callGetDeepLinkData(request);
     }
@@ -1171,6 +1184,16 @@ public class AppDataManager implements DataManager {
     @Override
     public String getAfterpayTermsLink() {
         return mPreferencesHelper.getAfterpayTermsLink();
+    }
+
+    @Override
+    public void setLPayEnabled(boolean enabled) {
+        mPreferencesHelper.setLPayEnabled(enabled);
+    }
+
+    @Override
+    public boolean isLPayEnabled() {
+        return mPreferencesHelper.isLPayEnabled();
     }
 
     @Override

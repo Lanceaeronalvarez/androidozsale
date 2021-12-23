@@ -158,6 +158,20 @@ public abstract class BaseController
     }
 
     @Override
+    public void showLPayLoading() {
+        if (mActivity != null) {
+            mActivity.showLPayLoading();
+        }
+    }
+
+    @Override
+    public void hideLPayLoading() {
+        if (mActivity != null) {
+            mActivity.hideLPayLoading();
+        }
+    }
+
+    @Override
     public void showLoadingDelayed(int delay) {
         if (mActivity != null) {
             mActivity.showLoadingDelayed(delay);

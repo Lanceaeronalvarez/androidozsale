@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.checkout.checkout;
 
 import android.content.Context;
 
-import au.com.dealsdirect.data.network.model.checkout.GetCurrentOrder;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.ui.base.MvpPresenter;
@@ -34,6 +33,10 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
                              int numItems,
                              double price,
                              String selectedPaymentType);
+
+    void logCommonCheckoutEvent(Context context, int operation);
+
+    void logFailedTransaction(Context context, String errorMessage);
 
     void updateCartValues(CheckoutDetailsMapper mappedValues);
 

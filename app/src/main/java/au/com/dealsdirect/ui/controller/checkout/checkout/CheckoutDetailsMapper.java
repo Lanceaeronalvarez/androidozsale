@@ -278,6 +278,7 @@ public class CheckoutDetailsMapper {
         public static final PaymentOption VISACHECKOUT = new PaymentOption("VisaCheckout");
         public static final PaymentOption IPAY88PAYMENTS = new PaymentOption("IPay88Payments");
         public static final PaymentOption STRIPE = new PaymentOption("Stripe");
+        public static final PaymentOption LATITUDEPAY = new PaymentOption("LatitudePay");
 
         private static final HashMap<String, PaymentOption> paymentOptions =
                 new HashMap<String, PaymentOption>() {{
@@ -290,6 +291,7 @@ public class CheckoutDetailsMapper {
                     put("VisaCheckoutCyberSource".toLowerCase(), VISACHECKOUT);
                     put("IPay88Payments".toLowerCase(), IPAY88PAYMENTS);
                     put("Stripe".toLowerCase(), STRIPE);
+                    put("LatitudePay".toLowerCase(), LATITUDEPAY);
                 }};
 
         private String value;

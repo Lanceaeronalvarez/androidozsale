@@ -165,6 +165,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String AFTERPAY_LIGHTBOX_IMG_URL = "app_afterpay_lightboximgurl";
     private static final String AFTERPAY_TERMS_LINK = "app_afterpay_terms_link";
 
+    //LPay
+    private static final String IS_LPAY_ENABLED = "IS_LPAY_ENABLED";
+
     //ReCAPTCHA
     private static final String RECAPTCHA_SITE_KEY = "RECAPTCHA_SITE_KEY";
 
@@ -461,6 +464,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
         return Prefs.getString(AFTERPAY_TERMS_LINK, "");
     }
 
+    @Override
+    public void setLPayEnabled(boolean enabled) {
+        Prefs.putBoolean(IS_LPAY_ENABLED, enabled);
+    }
+
+    @Override
+    public boolean isLPayEnabled() {
+        return Prefs.getBoolean(IS_LPAY_ENABLED, false);
+    }
 
     @Override
     public void setIsAmexEnabled(boolean val) {
