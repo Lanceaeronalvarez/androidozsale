@@ -72,6 +72,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -568,6 +569,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private SaleItemDetailsHorizontalScrollingItemsHelper youMayAlsoLikeHelper = null;
     private SaleItemDetailsHorizontalScrollingItemsHelper recentlyViewedHelper = null;
 
+    private final Set<String> productListItemsToUpdate = new HashSet<>();
+
     private final Map<String, String> rrpTextCache = new HashMap<>();
     private final Map<String, String> pricingTextCache = new HashMap<>();
     private OnLoadProductDetails onLoadProductDetails = null;
@@ -592,18 +595,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     final private HorizontalScrollingItemsAdapter.WishlistListener horizontalItemsWishlistListener = new HorizontalScrollingItemsAdapter.WishlistListener() {
         @Override
         public void addToWishlist(SaleItemProduct item) {
+            final String productId = item.getId();
             SaleItemDetailsMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
-                logWishlistEvent(mProductId, true);
+                logWishlistEvent(productId, true);
             };
             mPresenter.addProductToWishlist(item.getId(), item.getSeoIdentifier(), getMasterProductId(item), delayedCallback);
+            productListItemsToUpdate.add(productId);
         }
 
         @Override
         public void removeFromWishlist(SaleItemProduct item) {
+            final String productId = item.getId();
             SaleItemDetailsMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
-                logWishlistEvent(mProductId, false);
+                logWishlistEvent(productId, false);
             };
             mPresenter.removeProductFromWishlist(item.getId(), delayedCallback);
+            productListItemsToUpdate.add(productId);
         }
 
         @Override
@@ -743,6 +750,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mIsSoldout != null) {
             showAddToCartButton();
         }
+
+        // try to clear TagFlowLayout; delay is to ensure that it runs after restore state
+        // consider forking com.zhy:flowlayout-lib to fix TagFlowLayout bugs
+        new Handler().postDelayed(() -> {
+            if (isViewAttached() && mSizesFlowLayout != null &&
+                    (mProductSizes == null || mProductSizes.isEmpty())) {
+                mSizesFlowLayout.setAdapter(createTagAdapter(null));
+            }
+        }, 1);
     }
 
     @Override
@@ -892,10 +908,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         mOtherImagesRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
-        SaleItemDetailsImageAdapter mSaleItemImagesIndicatorAdapter = new SaleItemDetailsImageAdapter(
-                new ArrayList<>(),
-                saleDetailsImageListener());
-        mOtherImagesRv.setAdapter(mSaleItemImagesIndicatorAdapter);
+        SaleItemDetailsImagePageIndicatorAdapter saleItemImagesIndicatorAdapter = new SaleItemDetailsImagePageIndicatorAdapter();
+        mOtherImagesRv.setAdapter(saleItemImagesIndicatorAdapter);
         mOtherImagesRv.setVisibility(View.INVISIBLE);
 
         mProductImagesRvLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
@@ -1134,8 +1148,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mProductImagesRv.setLayoutManager(null);
         mProductImagesRv.setAdapter(null);
         mOtherImagesRv.setAdapter(null);
-//      not setting this to null may cause leak, but the library doesn't support setting this to null
-//      mSizesFlowLayout.setAdapter(null);
+        mSizesFlowLayout.setAdapter(createTagAdapter(null));
         mSizesFlowLayout.setOnSelectListener(null);
         mProductDescriptionText.setWebViewClient(null);
         mReturnPolicyText.setWebViewClient(null);
@@ -1179,8 +1192,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mProductImagesRv.getAdapter() instanceof SaleItemDetailsImageAdapter) {
             ((SaleItemDetailsImageAdapter) mProductImagesRv.getAdapter()).replaceData(qualitySaleImages);
         }
-        if (mOtherImagesRv.getAdapter() instanceof SaleItemDetailsImageAdapter) {
-            ((SaleItemDetailsImageAdapter) mOtherImagesRv.getAdapter()).replaceData(qualitySaleImages);
+        if (mOtherImagesRv.getAdapter() instanceof SaleItemDetailsImagePageIndicatorAdapter) {
+            final SaleItemDetailsImagePageIndicatorAdapter adapter = (SaleItemDetailsImagePageIndicatorAdapter) mOtherImagesRv.getAdapter();
+            adapter.setActivePosition(0);
+            adapter.replaceData(qualitySaleImages);
         }
     }
 
@@ -1353,26 +1368,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             mHasSizes = true;
 
-            TagAdapter mSizesAdapter = new TagAdapter<Pair<String, String>>(mProductSizes) {
-
-                @SuppressWarnings("ConstantConditions")
-                @Override
-                public View getView(FlowLayout parent, int position, Pair<String, String> data) {
-                    TextView tv = (TextView) mActivity.getLayoutInflater()
-                            .inflate(R.layout.sizes_chips_layout,
-                                    parent,
-                                    false);
-                    tv.setText(data.first);
-                    float size = tv.getContext().getResources().getDimension(R.dimen.text_size_body);
-                    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-                    if (mSkuVariants.get(position).isSoldOut()) {
-                        tv.setBackground(getDrawable(R.drawable.bg_chips_soldout));
-                        tv.setTextColor(getColor(R.color.bg_chips_soldout_text));
-                    }
-
-                    return tv;
-                }
-            };
+            TagAdapter mSizesAdapter = createTagAdapter(mProductSizes);
 
             mIsSoldOutCombined = true;
             for (SaleItemDetails response : mSkuVariants) {
@@ -1539,6 +1535,32 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
         mPresenter.loadProductDetails(saleId, seoIdentifierId);
         onLoadProductDetails = this::setupProductDetails;
+    }
+
+    private TagAdapter<Pair<String, String>> createTagAdapter(List<Pair<String, String>> dataSource) {
+        if (dataSource == null) {
+            dataSource = new ArrayList<>();
+        }
+        return new TagAdapter<Pair<String, String>>(dataSource) {
+
+            @SuppressWarnings("ConstantConditions")
+            @Override
+            public View getView(FlowLayout parent, int position, Pair<String, String> data) {
+                TextView tv = (TextView) mActivity.getLayoutInflater()
+                        .inflate(R.layout.sizes_chips_layout,
+                                parent,
+                                false);
+                tv.setText(data.first);
+                float size = tv.getContext().getResources().getDimension(R.dimen.text_size_body);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+                if (mSkuVariants.get(position).isSoldOut()) {
+                    tv.setBackground(getDrawable(R.drawable.bg_chips_soldout));
+                    tv.setTextColor(getColor(R.color.bg_chips_soldout_text));
+                }
+
+                return tv;
+            }
+        };
     }
 
     private void setupDelayedProgressBar() {
@@ -2217,6 +2239,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mPresenter.removeProductFromWishlist(mProductId, delayedCallback);
         }
         updateLikeButtonImage(isLiked);
+        productListItemsToUpdate.add(mProductId);
     }
 
     private void updateLikeButtonImage(boolean isLiked) {
@@ -2299,19 +2322,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void updateCarouselPageIndicator(int newPosition) {
-        int oldPosition = mCarouselPosition;
+        final int oldPosition = mCarouselPosition;
         mCarouselPosition = newPosition;
 
-        SaleItemDetailsImageAdapter.ViewHolder vhOld = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(oldPosition);
-        if (vhOld != null && vhOld.image != null) {
-            vhOld.image.setImageResource(R.drawable.circle_indicator_inactive);
+        if (mOtherImagesRv.getAdapter() instanceof SaleItemDetailsImagePageIndicatorAdapter) {
+            final SaleItemDetailsImagePageIndicatorAdapter adapter = (SaleItemDetailsImagePageIndicatorAdapter) mOtherImagesRv.getAdapter();
+            adapter.setActivePosition(newPosition);
+            adapter.notifyItemChanged(oldPosition);
+            adapter.notifyItemChanged(newPosition);
         }
-
-        SaleItemDetailsImageAdapter.ViewHolder vhNew = (SaleItemDetailsImageAdapter.ViewHolder) mOtherImagesRv.findViewHolderForLayoutPosition(newPosition);
-        if (vhNew != null) {
-            vhNew.image.setImageResource(R.drawable.circle_indicator_active);
-        }
-
     }
 
     private void onSelectTag(int index) {
@@ -2659,6 +2678,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             return "";
         }
+    }
+
+    public Set<String> getProductListItemsToUpdate() {
+        return productListItemsToUpdate;
     }
 
     private static String getPricingInfo(String rrpText, String pricingText) {

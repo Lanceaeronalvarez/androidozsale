@@ -116,11 +116,6 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
 
-
-/**
- * dp Created by Admin on 6/6/17.
- */
-
 public class CheckoutController extends VisaCheckoutController implements CheckoutMvpView, FetchTokenHandler, CheckoutListener {
     public static final String CARD_PAYPAL = "Paypal";
     public static final String CARD_MASTERPASS = "Masterpass";
@@ -555,15 +550,16 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         if (mappedValues != null) {
             mOurpay = ourpay;
-            PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
+            final PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
 
             if (ourpay != null && ourpay.isCanUse()) {
 
                 if (((MainActivity) getActivity()).getMainController().isCheckoutPageVisible()) {
                     Log.d("ourpay", "checkout controller is visible");
-                    boolean isPaymentInvalid = paymentMethod == null ? false : (paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS) ||
-                            paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) ||
-                            paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT);
+                    final boolean isPaymentInvalid = paymentMethod != null &&
+                            ((paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS) ||
+                                    paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) ||
+                                    paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT));
                     OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, isPaymentInvalid);
                     PaymentInfo.setOurpay(ourpay);
 
@@ -578,7 +574,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
                     mButtonOurpay = mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                     if (mButtonOurpay != null) {
-                        isStripe = paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE);
+                        isStripe = paymentMethod != null && paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE);
                         mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick(isStripe));
                     }
 

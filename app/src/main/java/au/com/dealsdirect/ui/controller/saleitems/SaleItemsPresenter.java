@@ -32,10 +32,7 @@ import io.reactivex.disposables.Disposable;
 public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresenter<V>
         implements SaleItemsMvpPresenter<V> {
 
-    private static final String SEARCH_QUERY_TAG = "search_query";
     private Disposable mPreviousGetSaleItemsRequest = null;
-
-    String mSaleId = "";
 
     @Inject
     public SaleItemsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
@@ -44,21 +41,11 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void loadWishlistAll() {
-        doApiCallForResponse(getDataManager().callGetWishlistAll(), new AppApiCallback() {
-            @Override
-            public void onSuccess(List<?> list) {
-                getMvpView().showWishlist((List<SaleItemProduct>) list);
-            }
-        });
-    }
-
-    @Override
     public void loadWishlistPaginated(int limit, int offset) {
         doApiCallForResponse(getDataManager().callGetWishlistPaginated(limit, offset), new AppApiCallback() {
             @Override
             public void onSuccess(List<?> list) {
-                getMvpView().showWishlist((List<SaleItemProduct>) list);
+                getMvpView().showWishlist((List<SaleItemProduct>) list, offset);
             }
         });
     }
@@ -166,10 +153,11 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
+        final int pageNumber = getSaleItemsRequest.getPageNumber();
         getDataManager().pruneCachedResponse(getSaleItemsRequest);
         GetSaleItemsResponse saleItemsResponse = getDataManager().getCachedResponse(getSaleItemsRequest, GetSaleItemsResponse.class);
         if (saleItemsResponse != null) {
-            getMvpView().showSaleItems(saleItemsResponse, !getSaleItemsRequest.hasFilters(), true);
+            getMvpView().showSaleItems(saleItemsResponse, pageNumber, !getSaleItemsRequest.hasFilters(), true);
         }
 
         ParamaterizedCachableRequest loadSortingFacetsRequest = new ParamaterizedCachableRequest("loadSortingFacets");
@@ -191,9 +179,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
             public void onSuccess(Object response) {
                 super.onSuccess(response);
                 clearPreviousGetSaleItemsRequest();
-                Pair pair = (Pair) response;
+                final Pair pair = (Pair) response;
                 getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) pair.second);
-                getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, !getSaleItemsRequest.hasFilters(), false);
+                getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, pageNumber, !getSaleItemsRequest.hasFilters(), false);
                 getDataManager().setCachedResponse(getSaleItemsRequest, (GetSaleItemsResponse) pair.first);
                 getDataManager().setCachedResponse(loadSortingFacetsRequest, new ListOfSortingResponses((List<SortingResponse>) pair.second));
             }

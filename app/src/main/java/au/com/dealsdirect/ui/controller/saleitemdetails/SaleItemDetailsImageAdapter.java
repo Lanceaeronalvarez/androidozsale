@@ -24,10 +24,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 
-/**
- * dp Created by Admin on 6/25/17.c
- */
-
 public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<String> mData;

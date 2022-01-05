@@ -22,15 +22,13 @@ public interface SaleItemsMvpView extends MvpView {
 
     void onLoadSortingFacetsFinished(List<SortingResponse> responseList);
 
-    void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, boolean forFacetCorrection, boolean isFromCache);
+    void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, int pageNumber, boolean forFacetCorrection, boolean isFromCache);
 
-    void showWishlist(List<SaleItemProduct> wishlist);
+    void showWishlist(List<SaleItemProduct> wishlist, int offset);
 
     void updateWishlistWithAddition(String productId);
 
     void updateWishlistWithRemoval(String productId);
-
-    void refresh();
 
     void showSaleBannerDetails(GetSaleBannerDetailsResponse response);
 
@@ -43,8 +41,6 @@ public interface SaleItemsMvpView extends MvpView {
     void enableSaleItemsScroll(boolean val);
 
     Map<String, GetCategoryTreeResponse> getCategoryMap();
-
-    boolean isFromCategories();
 
     void toggleTabSelection(int tabPos, boolean isTabActive);
 

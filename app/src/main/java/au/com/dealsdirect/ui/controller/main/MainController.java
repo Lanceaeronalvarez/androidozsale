@@ -69,7 +69,6 @@ public class MainController extends BaseController implements MainMvpView {
 
     private static final int VIEWPAGER_SIZE = 5;
 
-    private static final String KEY_CURRENT_INDEX = "KEY_CURRENT_INDEX";
     private static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";
 
     private int wishlistCount = 0;
@@ -103,7 +102,6 @@ public class MainController extends BaseController implements MainMvpView {
 
     private int previousPagerPosition = 0;
 
-    public int mSavedIndex;
     private boolean mHasSavedStateInstance;
     public static boolean mIsInitialSavedInstanceLoad;
 
@@ -192,14 +190,6 @@ public class MainController extends BaseController implements MainMvpView {
         }
 
         setUp(view);
-
-        int currentTab = mHasSavedStateInstance ? mSavedIndex : SHOP_INDEX;
-        mBottomNavigationView.setCurrentItem(currentTab);
-
-        mHomeViewPager.setCurrentItem(currentTab, false);
-
-
-        CommonControllerChangeListener.addToRouter(getRouter());
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -453,14 +443,12 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_CURRENT_INDEX, mHomeViewPager.getCurrentItem());
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mSavedIndex = savedInstanceState.getInt(KEY_CURRENT_INDEX);
         mHasSavedStateInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
         mIsInitialSavedInstanceLoad = savedInstanceState.getBoolean(KEY_HAS_SAVED_INSTANCE);
     }

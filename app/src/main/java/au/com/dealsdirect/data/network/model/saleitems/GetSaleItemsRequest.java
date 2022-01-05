@@ -20,7 +20,9 @@ public class GetSaleItemsRequest implements CachableRequest {
 
     @Expose
     @SerializedName("pn")
-    private String pageNumber;
+    private String pageNumberString;
+
+    transient private int pageNumber;
 
     @Expose
     @SerializedName("ps")
@@ -48,12 +50,13 @@ public class GetSaleItemsRequest implements CachableRequest {
         this.query = query;
     }
 
-    public String getPageNumber() {
+    public int getPageNumber() {
         return pageNumber;
     }
 
-    public void setPageNumber(String pageNumber) {
+    public void setPageNumber(int pageNumber) {
         this.pageNumber = pageNumber;
+        pageNumberString = Integer.toString(pageNumber);
     }
 
     public String getPageSize() {
