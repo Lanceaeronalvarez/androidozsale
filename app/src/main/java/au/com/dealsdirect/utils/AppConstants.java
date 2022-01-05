@@ -65,6 +65,7 @@ public final class AppConstants {
     public static final String PAYPALCREDIT = "PAYPALCREDIT";
     public static final String PAYPAL = "PAYPAL";
     public static final String AFTERPAY = "AFTERPAY";
+    public static final String LPAY = "LPAY";
     public static final String UNKNOWN = "UNKNOWN";
     public static final String VISA = "VISA";
     public static final String MASTERCARD = "MASTERCARD";

@@ -283,6 +283,16 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
+    public void showLPayPanel() {
+        mCheckoutDetailView.showLPayPanel();
+    }
+
+    @Override
+    public void hideLPayPanel() {
+        mCheckoutDetailView.hideLPayPanel();
+    }
+
+    @Override
     public void storeCartDetails(CheckoutDetailsMapper value) {
         mCheckoutDetailView.storeCartDetails(value);
     }

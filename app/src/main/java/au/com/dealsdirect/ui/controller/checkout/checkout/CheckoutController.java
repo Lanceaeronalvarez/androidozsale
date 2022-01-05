@@ -64,10 +64,9 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.AgeRestrictionOperationType;
-import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
+import au.com.dealsdirect.service.datacollection.enums.CheckoutUserActivityOperationType;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
@@ -84,6 +83,8 @@ import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptions
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
+import au.com.dealsdirect.ui.controller.lpay.LPayViewController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
@@ -220,6 +221,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     ImageButton mAfterpayInfoButton;
     @BindView(R.id.partial_checkout_button_afterpay)
     RelativeLayout mAfterpayButton;
+    @BindView(R.id.partial_checkout_lpay_panel_holder)
+    ViewGroup mLPayHolder;
+    @BindView(R.id.partial_checkout_button_lpay)
+    View mLPayButton;
+    @BindView(R.id.partial_checkout_button_lpay_logo)
+    ImageView mLPayButtonLogoImageView;
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
     LinearLayout mOurpayHolder;
     @Nullable
@@ -457,6 +464,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mVcoButton.setOnClickListener(action -> {
             onVisaCheckoutButtonClicked();
         });
+
+        final boolean isGenoaPay = Settings.getSelectedCountry().countryId.equalsIgnoreCase("NZ");
+        final int padding = (int) mActivity.getResources().getDimension(isGenoaPay ? R.dimen.genoa_button_logo_margin : R.dimen.lpay_button_logo_margin);
+        mLPayButton.setBackgroundResource(isGenoaPay ? R.drawable.bg_genoapay_button : R.drawable.bg_lpay_button);
+        mLPayButtonLogoImageView.setImageResource(isGenoaPay ? R.drawable.genoapay_logo_white : R.drawable.lpay_logo_white);
+        mLPayButtonLogoImageView.setPadding(padding, padding, padding, padding);
 
         setupAgeRestriction();
 
@@ -1045,6 +1058,16 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         mAfterpayHolder.setVisibility(View.GONE);
     }
 
+    @Override
+    public void showLPayPanel() {
+        mLPayHolder.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLPayPanel() {
+        mLPayHolder.setVisibility(View.GONE);
+    }
+
     private String getSelectedDeliveryOption() {
         if (mSelectedDeliveryOption != null &&
                 mSelectedDeliveryOption.getDeliveryOptions() != null &&
@@ -1315,6 +1338,57 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
         AfterpayViewController controller = new AfterpayViewController(bundle);
 
+        controller.setEventListener(new AfterpayViewController.EventListener() {
+            @Override
+            public void onError(String errorMessage) {
+                mPresenter.logFailedTransaction(mActivity, errorMessage);
+            }
+        });
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .popChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new FadeChangeHandler());
+
+        if (mActivity.getMainController().getPopUpHostRouter() != null) {
+            mActivity.getMainController().getPopUpHostRouter().setRoot(routerTransaction);
+        } else {
+            getDisplayRouter().pushController(routerTransaction);
+        }
+    }
+
+    private void onLPayButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_LPAY, mItemList.size(),
+                mValue.getSummary().getTotal(), AppConstants.LPAY);
+
+        mPresenter.logCommonCheckoutEvent(mActivity, CheckoutUserActivityOperationType.LPAY_BUTTON_CLICK.getValue());
+
+        if (!commonPaymentAbilityDetermination()) {
+            return;
+        }
+
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .build();
+
+        LPayViewController controller = new LPayViewController(bundle);
+        controller.setGenoaPay(Settings.getSelectedCountry().countryId.equalsIgnoreCase("NZ"));
+
+        controller.setEventListener(new LPayViewController.EventListener() {
+            @Override
+            public void onCreateOrder() {
+                mPresenter.logCommonCheckoutEvent(mActivity, CheckoutUserActivityOperationType.LPAY_BUTTON_CREATE_ORDER.getValue());
+            }
+
+            @Override
+            public void onCreateCharge() {
+                mPresenter.logCommonCheckoutEvent(mActivity, CheckoutUserActivityOperationType.LPAY_BUTTON_CREATE_CHARGE.getValue());
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                mPresenter.logFailedTransaction(mActivity, errorMessage);
+            }
+        });
+
         RouterTransaction routerTransaction = RouterTransaction.with(controller)
                 .popChangeHandler(new FadeChangeHandler())
                 .pushChangeHandler(new FadeChangeHandler());
@@ -1567,6 +1641,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> onAfterpayButtonClick()));
 
+        mClickListeners.add(RxView.clicks(mLPayButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onLPayButtonClick()));
+
         mChangeClickListeners = new CompositeDisposable();
         mChangeClickListeners.add(RxView.clicks(mAddressContainerLayout)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
@@ -1792,7 +1871,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                         birthday = calendar;
                         saveAgeRestrictionData();
 
-                        logCommonCheckoutEvent(isAgeValid() ? AgeRestrictionOperationType.VALID.getValue() : AgeRestrictionOperationType.NOTVALID.getValue());
+                        mPresenter.logCommonCheckoutEvent(mActivity, isAgeValid() ? AgeRestrictionOperationType.VALID.getValue() : AgeRestrictionOperationType.NOTVALID.getValue());
 
                         mAgeRestrictionNotice.setVisibility(isAgeValid() ? View.GONE : View.VISIBLE);
                     },
@@ -1801,7 +1880,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     cal.get(Calendar.DAY_OF_MONTH));
 
             datePickerDialog.show();
-            logCommonCheckoutEvent(AgeRestrictionOperationType.OPEN.getValue());
+            mPresenter.logCommonCheckoutEvent(mActivity, AgeRestrictionOperationType.OPEN.getValue());
         });
     }
 
@@ -1841,23 +1920,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         final String dateString = dateFormat.format(birthday.getTime());
         final String postcode = mDeliveryAddress != null ? mDeliveryAddress.getPostcode() : null;
         mPresenter.saveAgeRestrictionData(dateString, postcode);
-    }
-
-    private void logCommonCheckoutEvent(int operation) {
-        CommonCheckoutRequest request = new CommonCheckoutRequest();
-        request.setEventType(EventTypeId.EVENT_CHECKOUT);
-        request.setErrorDescription("");
-        request.setResult(1);
-        request.setGuestCheckout(false);
-        request.setOperation(operation);
-
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
-
-        parameters.put(DataCollector.EventParameters.COMMON_CHECKOUT_REQUEST, request);
-
-        DataCollector.logEvent(Events.CommonCheckoutEvent, parameters);
     }
 }
 

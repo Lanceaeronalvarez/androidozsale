@@ -30,7 +30,7 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView> extends BasePres
     @Override
     public void applyVouchers(String postcode, int imageSize, List<String> voucherIds) {
         getMvpView().showLoading();
-        ApplyVouchersRequest request = new ApplyVouchersRequest(voucherIds, postcode, imageSize, getDataManager().getLanguageId());
+        ApplyVouchersRequest request = new ApplyVouchersRequest(voucherIds, postcode, null, imageSize, getDataManager().getLanguageId());
         doApiCallForResponse(getDataManager().callGetApplyVouchers(request), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
@@ -49,7 +49,7 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView> extends BasePres
     @Override
     public void clearVouchers(String postcode, int imageSize) {
         getMvpView().showLoading();
-        ClearVouchersRequest request = new ClearVouchersRequest(postcode, imageSize, getDataManager().getLanguageId());
+        ClearVouchersRequest request = new ClearVouchersRequest(postcode, null, imageSize, getDataManager().getLanguageId());
         doApiCallForResponse(getDataManager().callGetClearVouchers(request), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
@@ -62,7 +62,7 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView> extends BasePres
     @Override
     public void addAndApplyVoucherByKey(String postcode, int imageSize, String key) {
         getMvpView().showLoading();
-        AddAndApplyVoucherByKeyRequest request = new AddAndApplyVoucherByKeyRequest(key, postcode, imageSize, getDataManager().getLanguageId());
+        AddAndApplyVoucherByKeyRequest request = new AddAndApplyVoucherByKeyRequest(key, postcode, null, imageSize, getDataManager().getLanguageId());
         doApiCallForResponse(getDataManager().callGetAddAndApplyVoucherByKey(request), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {

@@ -4,8 +4,8 @@ OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 flavorName=ooRC
 buildTypeAssemble=OoRCRelease
 defaultCountry=Australia
-expectedVersionName="5.3.1"
-expectedVersionCode="385"
+expectedVersionName="5.4.0"
+expectedVersionCode="388"
 
 print_green(){
     printf "\e[1;32m$1\e[0m"
@@ -205,7 +205,7 @@ fi
 
 #Get Legacy Version after Main Activity launch
 print_blue "\nCHECKING LEGACY API VERSION"
-expectedLegacyVersion="3.29"
+expectedLegacyVersion="3.31"
 currentLegacyVersion=$(./gradlew -q getLegacyVersion -PflavorName=$flavorName -PbuildTypeAssemble=$buildTypeAssemble)
 if [ $expectedLegacyVersion = "$currentLegacyVersion" ]; then
 print_green "\nexpected: $expectedLegacyVersion and current: $currentLegacyVersion is the same\n"

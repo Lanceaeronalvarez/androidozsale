@@ -420,6 +420,15 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribe(mAppSettingsSectionAcceptAfterpayCallback, mAppSettingsSectionThrowableCallback));
     }
 
+    @Override
+    public void callGetPublicAppSettingsSectionsLPay(Context context) {
+        getCompositeDisposable().add(getDataManager()
+                .callGetPublicAppSettingsSections(getDataManager().getCountryId(), "LPay")
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(mAppSettingsSectionAcceptLPayCallback, mAppSettingsSectionThrowableCallback));
+    }
+
     private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptAfterpayCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
         @Override
         public void accept(@NonNull GetAppSettingsSection.ResponseValue responseValue) throws Exception {
@@ -442,6 +451,23 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
             getDataManager().setAfterpayLightboxImgUrl(lightboxImageUrl);
             getDataManager().setAfterpayTermsLink(termsLink);
+        }
+    };
+
+    private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptLPayCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
+        @Override
+        public void accept(@NonNull GetAppSettingsSection.ResponseValue responseValue) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            if (responseValue.d == null || responseValue.d.getValue() == null || responseValue.d.getValue().getlPay() == null) {
+                return;
+            }
+
+            boolean isEnabled = responseValue.d.getValue().getlPay().isEnabled();
+
+            getDataManager().setLPayEnabled(isEnabled);
         }
     };
 
@@ -1361,12 +1387,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 super.onSuccess(list);
 
                 if (list.size() > 0) {
-                    getDataManager().setSupplierOriginalPriceInfoTemplateTextType1(((TemplateTextResponse)list.get(0)).getText());
-                    SupplierOriginalPriceInfoHelper.setContent1(((TemplateTextResponse)list.get(0)).getText());
+                    getDataManager().setSupplierOriginalPriceInfoTemplateTextType1(((TemplateTextResponse) list.get(0)).getText());
+                    SupplierOriginalPriceInfoHelper.setContent1(((TemplateTextResponse) list.get(0)).getText());
                 }
                 if (list.size() > 1) {
-                    getDataManager().setSupplierOriginalPriceInfoTemplateTextType2(((TemplateTextResponse)list.get(1)).getText());
-                    SupplierOriginalPriceInfoHelper.setContent2(((TemplateTextResponse)list.get(1)).getText());
+                    getDataManager().setSupplierOriginalPriceInfoTemplateTextType2(((TemplateTextResponse) list.get(1)).getText());
+                    SupplierOriginalPriceInfoHelper.setContent2(((TemplateTextResponse) list.get(1)).getText());
                 }
             }
 

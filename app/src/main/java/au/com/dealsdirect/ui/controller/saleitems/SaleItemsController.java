@@ -1851,10 +1851,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             GateKeeper.Destination destination;
             if (isForShop) {
                 destination = GateKeeper.Destination.SEARCH_FILTER_FOR_SHOP;
-                mSearchFilterMvpView = mActivity.getShopSearchFilterController();
             } else {
                 destination = GateKeeper.Destination.SEARCH_FILTER_FOR_CATEGORY;
-                mSearchFilterMvpView = mActivity.getSearchFilterController();
             }
 
             if (mSearchFilterMvpView == null) {

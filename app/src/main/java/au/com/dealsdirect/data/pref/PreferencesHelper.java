@@ -91,6 +91,10 @@ public interface PreferencesHelper {
 
     String getAfterpayTermsLink();
 
+    void setLPayEnabled(boolean enabled);
+
+    boolean isLPayEnabled();
+
     void setIsAmexEnabled(boolean val);
 
     boolean isAmexEnabled();

@@ -3,8 +3,8 @@ OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 
 flavorName=mysaleRC
 buildTypeAssemble=MysaleRCRelease
-expectedVersionName="5.3.1"
-expectedVersionCode="385"
+expectedVersionName="5.4.0"
+expectedVersionCode="388"
 SPACE=" "
 philippines="Philippines"
 thailand="Thailand"
@@ -211,7 +211,7 @@ print_blue "\n\n\n Launched main activity\n"
 
 #Get Legacy Version after Main Activity launch
 print_blue "\nCHECKING LEGACY API VERSION"
-expectedLegacyVersion="3.29"
+expectedLegacyVersion="3.31"
 currentLegacyVersion=$(./gradlew -q getLegacyVersion -PflavorName=$flavorName -PbuildTypeAssemble=$buildTypeAssemble)
 if [ $expectedLegacyVersion = "$currentLegacyVersion" ]; then
 print_green "\nexpected: $expectedLegacyVersion and current: $currentLegacyVersion is the same\n"

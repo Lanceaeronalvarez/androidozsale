@@ -738,6 +738,11 @@
     <string name="afterpay_panel_description_normal">%d installments of %s%.2f with\u0020\u0020\u0020</string>
     <string name="afterpay_failed_transaction">Your order could not be completed, and you have not been charged. Please try again.</string>
 
+    <!--LPPAY-->
+    <string name="lpay">Latitude Pay</string>
+    <string name="genoapay">Genoa Pay</string>
+    <string name="lpay_failed_transaction">Your order could not be completed, and you have not been charged. Please try again.</string>
+
     <string name="regex_currency">[^\\s\\\\]+\\d+(\\.\\d{2})?</string>
 
     <string name="dialog_cancel_order_body_text">You are about to cancel this order. Are you sure you would like to cancel this order?</string>

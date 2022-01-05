@@ -55,6 +55,10 @@ public interface CheckoutMvpView extends MvpView {
 
     void hideAfterpayPanel();
 
+    void showLPayPanel();
+
+    void hideLPayPanel();
+
     void storeCartDetails(CheckoutDetailsMapper mappedValues);
 
     void triggerLoginTicket();
