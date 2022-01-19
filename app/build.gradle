@@ -673,8 +673,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:19.0.0'
     implementation 'com.google.firebase:firebase-messaging:20.3.0'
 
-    implementation 'com.loopj.android:android-async-http:1.4.9'
-
     //VISA CHECKOUT
     implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
     implementation 'com.visa.checkout:visacheckout-android-sdk-6.6.1@aar'
