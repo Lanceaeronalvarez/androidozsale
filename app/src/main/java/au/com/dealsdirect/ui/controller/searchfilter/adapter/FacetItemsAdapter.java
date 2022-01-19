@@ -197,8 +197,10 @@ public class FacetItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         }
 
-        mSearchItemsList.remove(chipToRemove);
-        mPresenter.onFacetItemClicked(mSearchItemsList, chipToRemove, false);
+        if (chipToRemove != null) {
+            mSearchItemsList.remove(chipToRemove);
+            mPresenter.onFacetItemClicked(mSearchItemsList, chipToRemove, false);
+        }
     }
 
     public void replaceData(List<?> data) {
