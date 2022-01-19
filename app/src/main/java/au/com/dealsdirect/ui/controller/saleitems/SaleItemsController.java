@@ -2292,6 +2292,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void enableSaleItemsScroll(boolean val) {
+        if (mCollapsingToolbar == null) {
+            return;
+        }
         AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) mCollapsingToolbar.getLayoutParams();
         layoutParams.setScrollFlags(val ? SCROLL_FLAG_SCROLL | SCROLL_FLAG_ENTER_ALWAYS : 0);
         mCollapsingToolbar.setLayoutParams(layoutParams);
