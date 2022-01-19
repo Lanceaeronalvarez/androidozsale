@@ -2389,9 +2389,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void resetViewBasedOnSourceMode() {
-        if (!isViewBound()) {
-            return;
-        }
+        if (!isViewAttached() || !isViewBound()) return;
 
         switch (mSourceMode) {
             case NORMAL:
