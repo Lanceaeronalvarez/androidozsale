@@ -206,17 +206,17 @@ public class StringUtils {
     }
 
     public static SpannableStringBuilder applySpanToRange(SpannableStringBuilder source,
-                                        Object what,
-                                        Range<Integer> range,
-                                        int flags) {
+                                                          Object what,
+                                                          Range<Integer> range,
+                                                          int flags) {
         source.setSpan(what, range.getLower(), range.getUpper(), flags);
         return source;
     }
 
     public static SpannableStringBuilder applySpanToRanges(SpannableStringBuilder source,
-                                         Object what,
-                                         List<Range<Integer>> ranges,
-                                         int flags) {
+                                                           Object what,
+                                                           List<Range<Integer>> ranges,
+                                                           int flags) {
         for (int i = 0; i < ranges.size(); i++) {
             applySpanToRange(source, what, ranges.get(i), flags);
         }
@@ -224,24 +224,27 @@ public class StringUtils {
     }
 
     public static SpannableStringBuilder applySpanToSubstringsMatching(SpannableStringBuilder source,
-                                                     Object what,
-                                                     char delimiter,
-                                                     String regex,
-                                                     int flags) {
+                                                                       Object what,
+                                                                       char delimiter,
+                                                                       String regex,
+                                                                       int flags) {
         return applySpanToRanges(source, what, rangesOfSubstringsMatching(source.toString(), delimiter, regex), flags);
     }
 
     public static SpannableStringBuilder applySpanToSubstringsMatching(SpannableStringBuilder source,
-                                                     Object what,
-                                                     String regex,
-                                                     int flags) {
+                                                                       Object what,
+                                                                       String regex,
+                                                                       int flags) {
         return applySpanToRanges(source, what, rangesOfSubstringsMatching(source.toString(), regex), flags);
     }
 
     public interface CSSStyle {
         String getBodyFontName();
+
         String getBodyFontColor();
+
         String getBoldFontName();
+
         String getBoldFontColor();
     }
 
@@ -307,7 +310,7 @@ public class StringUtils {
     }
 
     public static String addQueryParameter(String url, String key, String value, boolean includeWhenValueNull) {
-        if (key == null || key.isEmpty() || (value == null && !includeWhenValueNull)){
+        if (key == null || key.isEmpty() || (value == null && !includeWhenValueNull)) {
             return url;
         }
 
@@ -320,11 +323,24 @@ public class StringUtils {
 
         try {
             output += URLEncoder.encode(key, null) + "=" + URLEncoder.encode(value, null);
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e("StringUtils", "addQueryParameter exception: " + e.getMessage());
             return url;
         }
 
         return output;
+    }
+
+    public static String addEscapeCharactersForRegex(String source) {
+        final String regexReservedCharacters = ".^$*+?()[{\\|^-]\\";
+        final StringBuilder output = new StringBuilder();
+        for (int i = 0; i < source.length(); i++) {
+            final char character = source.charAt(i);
+            if (regexReservedCharacters.contains(Character.toString(character))) {
+                output.append('\\');
+            }
+            output.append(character);
+        }
+        return output.toString();
     }
 }
