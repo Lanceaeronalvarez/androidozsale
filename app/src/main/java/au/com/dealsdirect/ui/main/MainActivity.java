@@ -1744,6 +1744,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             return;
         }
 
+        initializeStripeObject();
+        initializeStripePaymentConfiguration();
+
         try {
             final PaymentMethodCreateParams paymentMethodCreateParams =
                     PaymentMethodCreateParams.createFromGooglePay(
