@@ -668,10 +668,11 @@ dependencies {
     implementation 'com.newrelic.agent.android:android-agent:6.2.1'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:17.5.1'
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
-    implementation 'com.google.firebase:firebase-analytics:19.0.0'
-    implementation 'com.google.firebase:firebase-messaging:20.3.0'
+    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-core:20.1.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.8'
 
     //VISA CHECKOUT
     implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
@@ -1093,5 +1094,3 @@ task printRecaptcha {
             }
     }
 }
-
-apply plugin: 'com.google.gms.google-services'
