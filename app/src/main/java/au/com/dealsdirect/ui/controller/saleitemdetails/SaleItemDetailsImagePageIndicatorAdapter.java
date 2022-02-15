@@ -8,9 +8,6 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import au.com.dealsdirect.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,33 +15,13 @@ import io.reactivex.disposables.Disposable;
 
 public class SaleItemDetailsImagePageIndicatorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<String> mData;
+    private int numberOfPages = 0;
 
     private int activePosition = -1;
 
-    public void replaceData(List<String> data) {
-        if (shouldUpdateData(mData, data)) {
-            mData = data;
-            notifyDataSetChanged();
-        }
-    }
-
-    private boolean shouldUpdateData(List<String> currentData, List<String> newData) {
-        if (currentData.size() == 0) {
-            return true;
-        }
-
-        if (currentData.size() != newData.size()) {
-            return true;
-        }
-
-        for (int i = 0; i < currentData.size(); i++) {
-            if (!currentData.get(i).equals(newData.get(i))) {
-                return true;
-            }
-        }
-
-        return false;
+    public void setNumberOfPages(int numberOfPages) {
+        this.numberOfPages = numberOfPages;
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -65,11 +42,11 @@ public class SaleItemDetailsImagePageIndicatorAdapter extends RecyclerView.Adapt
     }
 
     public SaleItemDetailsImagePageIndicatorAdapter() {
-        this.mData = new ArrayList<>();
+        this.numberOfPages = 0;
     }
 
-    public SaleItemDetailsImagePageIndicatorAdapter(List<String> data) {
-        this.mData = data;
+    public SaleItemDetailsImagePageIndicatorAdapter(int numberOfPages) {
+        this.numberOfPages = numberOfPages;
     }
 
 
@@ -84,7 +61,7 @@ public class SaleItemDetailsImagePageIndicatorAdapter extends RecyclerView.Adapt
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolder vh = (ViewHolder) holder;
         if (activePosition != position) {
             vh.image.setImageResource(R.drawable.circle_indicator_inactive);
@@ -94,23 +71,8 @@ public class SaleItemDetailsImagePageIndicatorAdapter extends RecyclerView.Adapt
     }
 
     @Override
-    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-    }
-
-    @Override
-    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
-    }
-
-    @Override
     public int getItemCount() {
-        return mData != null ? mData.size() : 0;
+        return numberOfPages;
     }
 
     public int getActivePosition() {
@@ -118,6 +80,13 @@ public class SaleItemDetailsImagePageIndicatorAdapter extends RecyclerView.Adapt
     }
 
     public void setActivePosition(int activePosition) {
+        final int oldPosition = this.activePosition;
         this.activePosition = activePosition;
+        if (oldPosition >= 0 && oldPosition < getItemCount()) {
+            notifyItemChanged(oldPosition);
+        }
+        if (activePosition >= 0 && activePosition < getItemCount()) {
+            notifyItemChanged(activePosition);
+        }
     }
 }

@@ -41,7 +41,13 @@ public class AppWishlistHelper implements WishlistHelper {
         if (wishlist == null) {
             this.wishlist.clear();
         } else {
-            this.wishlist = new ArrayList<>(wishlist);
+            this.wishlist = new ArrayList<>(wishlist.size());
+            for (int i = 0; i < wishlist.size(); i++) {
+                final WishlistObject item = wishlist.get(i);
+                if (isWishlistObjectValid(item)) {
+                    this.wishlist.add(item);
+                }
+            }
         }
         updateWishlistCount();
     }
@@ -53,6 +59,9 @@ public class AppWishlistHelper implements WishlistHelper {
 
     @Override
     public void addToWishlist(WishlistObject object, WishlistChangeDelayedCallback delayedCallback) {
+        if (!isWishlistObjectValid(object)) {
+            return;
+        }
         wishlist.add(object);
         updateWishlistCount();
         addOrCancelDelayedCallback(object.getProductId(), delayedCallback);
@@ -63,7 +72,10 @@ public class AppWishlistHelper implements WishlistHelper {
     public void removeFromWishlist(String productId, WishlistChangeDelayedCallback delayedCallback) {
         int i = 0;
         while (i < wishlist.size()) {
-            if (wishlist.get(i).getProductId().equals(productId)) {
+            final WishlistObject item = wishlist.get(i);
+            if (item != null &&
+                    item.getProductId() != null &&
+                    item.getProductId().equals(productId)) {
                 wishlist.remove(i);
             } else {
                 i++;
@@ -103,7 +115,10 @@ public class AppWishlistHelper implements WishlistHelper {
     @Override
     public boolean isProductInWishlist(String productId) {
         for (int i = 0; i < wishlist.size(); i++) {
-            if (wishlist.get(i).getProductId().equals(productId)) {
+            final WishlistObject item = wishlist.get(i);
+            if (item != null &&
+                    item.getProductId() != null &&
+                    item.getProductId().equals(productId)) {
                 return true;
             }
         }
@@ -131,5 +146,9 @@ public class AppWishlistHelper implements WishlistHelper {
             oldCount = wishlist.size();
             wishlistChangeListener.wishlistCountChanged(wishlist.size());
         }
+    }
+
+    private boolean isWishlistObjectValid(WishlistObject item) {
+        return item.getProductId() != null && !item.getProductId().isEmpty();
     }
 }

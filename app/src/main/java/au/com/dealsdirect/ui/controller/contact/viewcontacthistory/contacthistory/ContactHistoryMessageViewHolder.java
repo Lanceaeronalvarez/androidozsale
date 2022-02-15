@@ -117,7 +117,11 @@ public class ContactHistoryMessageViewHolder extends RecyclerView.ViewHolder {
 
             escalateContainer.setBackground(background);
             escalateContainer.setVisibility(View.VISIBLE);
-            escalateContainer.setOnClickListener(v -> onClickEscalateListener.onClick());
+            escalateContainer.setOnClickListener(v -> {
+                if (onClickEscalateListener != null) {
+                    onClickEscalateListener.onClick();
+                }
+            });
             escalateTextView.setText(escalate.getText());
             escalateTextView.setTextColor(textColor);
         } else {

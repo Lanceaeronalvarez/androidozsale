@@ -59,8 +59,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -84,8 +84,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -105,8 +105,8 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -131,8 +131,8 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -152,8 +152,8 @@ android {
         }
 
         ooRC {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -177,8 +177,8 @@ android {
         }
 
         ooTest {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -198,8 +198,8 @@ android {
         }
 
         topbuyRC {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -223,8 +223,8 @@ android {
         }
 
         topbuyTest {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -244,8 +244,8 @@ android {
         }
 
         ozsaleRC {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -270,8 +270,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "au.com.ozsale.test"
 
             ext.appName = "OZSALE Test"
@@ -295,8 +295,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -321,8 +321,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "sg.com.singsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -342,8 +342,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -368,8 +368,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "nz.co.nzsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -390,8 +390,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -415,8 +415,8 @@ android {
         }
 
         mysaleTest {
-            versionCode 388
-            versionName "5.4.0"
+            versionCode 394
+            versionName "5.4.1"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -668,12 +668,11 @@ dependencies {
     implementation 'com.newrelic.agent.android:android-agent:6.2.1'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:17.5.1'
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
-    implementation 'com.google.firebase:firebase-analytics:19.0.0'
-    implementation 'com.google.firebase:firebase-messaging:20.3.0'
-
-    implementation 'com.loopj.android:android-async-http:1.4.9'
+    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-core:20.1.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.8'
 
     //VISA CHECKOUT
     implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
@@ -1095,5 +1094,3 @@ task printRecaptcha {
             }
     }
 }
-
-apply plugin: 'com.google.gms.google-services'

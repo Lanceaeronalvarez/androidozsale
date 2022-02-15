@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.utils.StringUtils;
 
 public class BrandNames {
     public static final int UNLIMITED_RESULTS = -1;
@@ -75,7 +76,8 @@ public class BrandNames {
     }
 
     public List<String> getBrandNamesMatchingString(String string, boolean caseInsensitive, int maxResults) {
-        final String prefix = caseInsensitive ? string.toLowerCase() : string;
+        final String prefix = StringUtils
+                .addEscapeCharactersForRegex(caseInsensitive ? string.toLowerCase() : string);
         final Pattern pattern = Pattern.compile("^(" + prefix + ")+");
         final List<String> results = new LinkedList<>();
         for (int i = string.length(); i <= longestWordLength; i++) {

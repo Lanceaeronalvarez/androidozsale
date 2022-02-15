@@ -188,7 +188,7 @@ public class ViewContactHistoryController extends BaseController implements View
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
-        mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO)));
+        mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber));
     }
 
     @SuppressLint("SetTextI18n")
@@ -310,7 +310,7 @@ public class ViewContactHistoryController extends BaseController implements View
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     mActivity.getString(R.string.message_submitted));
-            mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO)));
+            mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber));
             mContactHistoryMessageField.setText("");
         } else {
             CustomAlertDialog.showCustomAlertDialog(
@@ -328,7 +328,7 @@ public class ViewContactHistoryController extends BaseController implements View
         mImageAdapter.notifyDataSetChanged();
 
         mImageRecyclerView.setVisibility(View.GONE);
-        mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO)));
+        mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber));
     }
 
     @Override
@@ -356,7 +356,7 @@ public class ViewContactHistoryController extends BaseController implements View
     private void setupMessagesAdapter(Escalate escalate, List<String> actions) {
         if (contactHistoryAdapter != null) {
             if (actions.contains(ESCALATE_ACTION_KEY)) {
-                contactHistoryAdapter.setEscalateAction(() -> mPresenter.escalateContact(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO))));
+                contactHistoryAdapter.setEscalateAction(() -> mPresenter.escalateContact(createContactHistoryRequest(mContactNumber)));
             } else {
                 contactHistoryAdapter.setEscalateAction(null);
             }
@@ -556,6 +556,6 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @Override
     public void escalateContactResult(boolean result) {
-        mPresenter.loadContactHistory(createContactHistoryRequest(getArgs().getInt(KEY_CONTACT_NO)));
+        mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber));
     }
 }

@@ -1302,8 +1302,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private GetBannerRequest createDeepLinkBannerRequest(String saleCategoryId, int bannerOffset, int bannerLimit) {
 
-        final int lastVisiblePos = mLayoutManager.findLastVisibleItemPosition();
-        final GetBannerResponse.Banner lastVisibleBanner = mBannersAdapter != null ? mBannersAdapter.getItem(lastVisiblePos) : null;
+        final int lastVisiblePos = mLayoutManager == null ? -1 : mLayoutManager.findLastVisibleItemPosition();
+        final GetBannerResponse.Banner lastVisibleBanner = mBannersAdapter != null && lastVisiblePos >= 0 ? mBannersAdapter.getItem(lastVisiblePos) : null;
         bannerGroupType = lastVisibleBanner != null ? lastVisibleBanner.getGroup().getType() : "";
 
         GetBannerRequest getBannerRequest = new GetBannerRequest();

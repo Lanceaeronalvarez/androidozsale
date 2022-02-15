@@ -1191,11 +1191,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         final List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
         if (mProductImagesRv.getAdapter() instanceof SaleItemDetailsImageAdapter) {
             ((SaleItemDetailsImageAdapter) mProductImagesRv.getAdapter()).replaceData(qualitySaleImages);
+            mProductImagesRv.scrollToPosition(0);
         }
         if (mOtherImagesRv.getAdapter() instanceof SaleItemDetailsImagePageIndicatorAdapter) {
             final SaleItemDetailsImagePageIndicatorAdapter adapter = (SaleItemDetailsImagePageIndicatorAdapter) mOtherImagesRv.getAdapter();
             adapter.setActivePosition(0);
-            adapter.replaceData(qualitySaleImages);
+            adapter.setNumberOfPages(qualitySaleImages.size());
         }
     }
 
@@ -1788,8 +1789,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showFreeShipping(String deliveryType, String deliveryThreshold) {
-        if (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) ||
-                deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT)) {
+        if (deliveryType != null &&
+                (deliveryType.equalsIgnoreCase(AppConstants.THRESHOLD_RESTRICT) ||
+                        deliveryType.equalsIgnoreCase(AppConstants.ORDER_PRICE_RESTRICT))) {
 
             mFreeDeliveryImageView.setOnClickListener(v -> {
                 mActivity.showFreeShippingDialog(deliveryThreshold, mActivity.getShippingTemplateText(),
@@ -2328,8 +2330,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mOtherImagesRv.getAdapter() instanceof SaleItemDetailsImagePageIndicatorAdapter) {
             final SaleItemDetailsImagePageIndicatorAdapter adapter = (SaleItemDetailsImagePageIndicatorAdapter) mOtherImagesRv.getAdapter();
             adapter.setActivePosition(newPosition);
-            adapter.notifyItemChanged(oldPosition);
-            adapter.notifyItemChanged(newPosition);
         }
     }
 

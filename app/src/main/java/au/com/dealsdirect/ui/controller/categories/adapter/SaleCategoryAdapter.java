@@ -85,8 +85,12 @@ public class SaleCategoryAdapter extends RecyclerView.Adapter<SaleCategoryAdapte
         holder.setup(activeStates.get(item.getId()));
 
         holder.itemView.setOnClickListener(view -> {
-            String id = mData.get(holder.getAdapterPosition()).getId();
-            Boolean isActive = activeStates.get(id);
+            final int currentPosition = holder.getBindingAdapterPosition();
+            if (currentPosition > mData.size()) {
+                return;
+            }
+            final String id = mData.get(currentPosition).getId();
+            final Boolean isActive = activeStates.get(id);
             if (isActive == null || !isActive) {
                 activeStates.put(id, true);
                 holder.setup(true);

@@ -1,7 +1,4 @@
 package au.com.dealsdirect.service.fcm;
-/*
- * Created by CodeineBot on 1/26/17.
- */
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -10,15 +7,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.provider.Settings;
+
 import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mysale.genie.utility.Prefs;
 
 import org.json.JSONObject;
@@ -200,24 +195,19 @@ public class GNotification {
             AppLogger.d(TAG + "regId " + regId);
             if (regId.isEmpty()) {
 
-                FirebaseInstanceId.getInstance().getInstanceId()
-                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                if (!task.isSuccessful()) {
-                                    return;
-                                }
+                FirebaseMessaging.getInstance().getToken()
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                return;
+                            }
 
-                                // Get new Instance ID token
-                                if (task.getResult() != null) {
-                                    String token = task.getResult().getToken();
+                            // Get new Instance ID token
+                            if (task.getResult() != null) {
+                                String token = task.getResult();
 
-                                    storeRegistrationId(context, token);
+                                storeRegistrationId(context, token);
 
-                                    callRegisterSubscriber(context, token, true);
-
-                                }
-
+                                callRegisterSubscriber(context, token, true);
 
                             }
                         });

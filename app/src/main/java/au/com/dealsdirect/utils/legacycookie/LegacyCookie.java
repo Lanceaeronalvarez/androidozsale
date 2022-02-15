@@ -3,29 +3,16 @@ package au.com.dealsdirect.utils.legacycookie;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Log;
-
-import com.franmontiel.persistentcookiejar.cache.CookieCache;
-import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
-import com.loopj.android.http.SerializableCookie;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.utils.AppLogger;
-import au.com.dealsdirect.utils.CookieUtils;
-import au.com.dealsdirect.utils.DateUtils;
-import au.com.dealsdirect.utils.GdprUtils;
 import okhttp3.Cookie;
-
-import static au.com.dealsdirect.service.datacollection.registerservices.GenieEventService.getDataManager;
 
 /**
  * Created by MTC on 4/10/19.
@@ -34,7 +21,7 @@ import static au.com.dealsdirect.service.datacollection.registerservices.GenieEv
 public class LegacyCookie {
 
     static ConcurrentHashMap<String, SerializableCookie> cookies =
-            new ConcurrentHashMap<String, com.loopj.android.http.SerializableCookie>();
+            new ConcurrentHashMap<String, SerializableCookie>();
 
     public static boolean hasConsentSaved = false;
     private static SharedPreferences cookiePrefs;
@@ -49,7 +36,7 @@ public class LegacyCookie {
             for (String name : cookieNames) {
                 String encodedCookie = cookiePrefs.getString("cookie_" + name, null);
                 if (encodedCookie != null) {
-                    com.loopj.android.http.SerializableCookie decodedCookie = decodeCookie(encodedCookie);
+                    SerializableCookie decodedCookie = decodeCookie(encodedCookie);
                     if (decodedCookie != null) {
                         cookies.put(name, decodedCookie);
                     }
@@ -58,13 +45,13 @@ public class LegacyCookie {
         }
     }
 
-    private static com.loopj.android.http.SerializableCookie decodeCookie(String cookieString) {
+    private static SerializableCookie decodeCookie(String cookieString) {
         byte[] bytes = hexStringToByteArray(cookieString);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-        com.loopj.android.http.SerializableCookie cookie = null;
+        SerializableCookie cookie = null;
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            cookie = (com.loopj.android.http.SerializableCookie) objectInputStream.readObject();
+            cookie = (SerializableCookie) objectInputStream.readObject();
         } catch (IOException e) {
             AppLogger.d("cookie", "IOException in decodeCookie", e);
         } catch (ClassNotFoundException e) {
@@ -83,7 +70,7 @@ public class LegacyCookie {
 
         int prevMode = -1;
 
-        for (com.loopj.android.http.SerializableCookie cookie : cookies.values()) {
+        for (SerializableCookie cookie : cookies.values()) {
 
             hasConsentCookie = cookie.getCookie().getName().contains("cs") &&
                     cookie.getCookie().getValue().equals(Integer.toString(consentMode)) ||
@@ -147,7 +134,7 @@ public class LegacyCookie {
         // Clear cookies from persistent store
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
 
-        for (com.loopj.android.http.SerializableCookie cookie : cookies.values()) {
+        for (SerializableCookie cookie : cookies.values()) {
             String name = cookie.getCookie().getName();
             String domain = cookie.getCookie().getDomain();
             prefsWriter.remove("cookie_" + name);
