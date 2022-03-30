@@ -1785,6 +1785,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void setIsAfterpayDetailsVisible(boolean visible) {
         shouldAfterpayDetailsBeVisible = visible;
         mAfterpayHolder.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if(mActivity.getResources().getBoolean(R.bool.is_afterpay_disabled_client_override)) {
+            mAfterpayHolder.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -27,4 +27,6 @@
     <bool name="is_pull_to_refresh_enabled">false</bool>
 
     <bool name="price_block_is_three_lines">false</bool>
+
+    <bool name="is_afterpay_disabled_client_override">true</bool>
 </resources>
