@@ -3,8 +3,8 @@ OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 
 flavorName=mysaleRC
 buildTypeAssemble=MysaleRCRelease
-expectedVersionName="5.4.0"
-expectedVersionCode="388"
+expectedVersionName="5.4.1"
+expectedVersionCode="394"
 SPACE=" "
 philippines="Philippines"
 thailand="Thailand"
@@ -113,7 +113,7 @@ fi
 
 # Checking App name
 print_blue "\n\nCHECKING APP NAME"
-expectedAppName="Mysale"
+expectedAppName="MYSALE"
 currentAppName=$(./gradlew -q printAppName -PflavorName=$flavorName)
 if [[ $expectedAppName = "$currentAppName" ]]; then
 print_green "\nexpected: $expectedAppName and current: $currentAppName is the same\n"
