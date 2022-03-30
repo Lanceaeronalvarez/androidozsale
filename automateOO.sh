@@ -4,8 +4,8 @@ OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 flavorName=ooRC
 buildTypeAssemble=OoRCRelease
 defaultCountry=Australia
-expectedVersionName="5.4.0"
-expectedVersionCode="388"
+expectedVersionName="5.4.1"
+expectedVersionCode="394"
 
 print_green(){
     printf "\e[1;32m$1\e[0m"
