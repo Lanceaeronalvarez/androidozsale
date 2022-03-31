@@ -5,8 +5,8 @@ OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 flavorName=ozsaleRC
 buildTypeAssemble=OzsaleRCRelease
 defaultCountry=Australia
-expectedVersionName="5.4.1"
-expectedVersionCode="394"
+expectedVersionName="5.4.2"
+expectedVersionCode="395"
 
 print_green(){
     printf "\e[1;32m$1\e[0m"
