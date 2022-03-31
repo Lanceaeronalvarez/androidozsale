@@ -1036,6 +1036,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showAfterpayPanel(boolean isAvailable, String description) {
+        if(mActivity.getResources().getBoolean(R.bool.is_afterpay_disabled_client_override)) {
+            mAfterpayHolder.setVisibility(View.GONE);
+            return;
+        }
+
         mAfterpayHolder.setVisibility(View.VISIBLE);
         SpannableStringBuilder spannableString = new SpannableStringBuilder(description);
         StringUtils.applySpanToSubstringsMatching(
