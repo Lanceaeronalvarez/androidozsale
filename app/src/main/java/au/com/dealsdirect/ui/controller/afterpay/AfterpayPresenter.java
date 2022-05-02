@@ -133,7 +133,11 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
 
     @Override
     public String getRedirectUrlPrefix() {
-        // redirect url does not need to be a valid url
-        return "https://www.afterpay_redirect_url.com/placholder";
+        String url = Settings.getSelectedCountry().genieRoot;
+        if (url.charAt(url.length() - 1) != '/') {
+            url += "/";
+        }
+        url += "checkout.aspx?cid=10";
+        return url;
     }
 }

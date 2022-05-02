@@ -197,7 +197,7 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
             public void onPageFinished(WebView view, String url) {
                 String scriptInit = String
                         .format(mActivity.getResources().getString(R.string.afterpay_javascript_initialize),
-                                mPresenter.getCountryIso());
+                                mPresenter.getCountryIso().toUpperCase());
                 String scriptRedirect = String
                         .format(mActivity.getResources().getString(R.string.afterpay_javascript_redirect), token);
                 view.evaluateJavascript(scriptInit + scriptRedirect, value -> {
@@ -220,7 +220,7 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (!url.contains(mPresenter.getRedirectUrlPrefix())) {
-                    return true;
+                    return false;
                 }
 
 
@@ -239,18 +239,19 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
                                 logError(url);
                                 showError("Unexpected error");
                             }
-                            break;
+                            return true;
                         case "failure":
                             logError(mOrderToken == null ? "No order token" : mOrderToken);
                             showError();
-                            break;
+                            return true;
                         default:
-                            dismissSelf();
-                            break;
+                            logError(url);
+                            showError("Unexpected error");
+                            return true;
 
                     }
                 }
-                return true;
+                return false;
             }
         };
     }
