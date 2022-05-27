@@ -16,6 +16,7 @@ public class PaymentInfo {
     public static final String VISA_CHECKOUT_BRAINTREE = "visacheckoutbraintree";
     public static final String TYPE_STRIPE = "stripe";
     public static final String TYPE_GPAY = "stripegooglepay";
+    public static final String TYPE_KLARNA = "klarna";
 
     private static boolean sThreeDSecureRequired = false;
     private static String sPaymentType = "";

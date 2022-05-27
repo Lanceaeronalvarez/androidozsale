@@ -6,6 +6,7 @@ import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
 import com.mysale.genie.utility.config.api.GetAppSettingsSection;
 import com.mysale.genie.utility.config.api.GetServerSettings;
 import com.mysale.genie.utility.config.model.getpublicpaymenttoken.GetPublicPaymentToken;
+import com.rx2androidnetworking.Rx2ANRequest;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.json.JSONObject;
@@ -53,6 +54,10 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderResponse;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
@@ -397,11 +402,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.getAppSettingsSection())
-                .addHeaders(mApiHeader.get())
-                .addQueryParameter(new GetAppSettingsSection.RequestValue(countryId))
-                .build()
+    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId, String sectionName) {
+        Rx2ANRequest.GetRequestBuilder request = Rx2AndroidNetworking.get(ApiEndPoint.getAppSettingsSection())
+                .addHeaders(mApiHeader.get());
+        if (sectionName != null) {
+            request = request.addQueryParameter(new GetAppSettingsSection.RequestValue(countryId, sectionName));
+        } else {
+            request = request.addQueryParameter(new GetAppSettingsSection.RequestValue(countryId));
+        }
+        return request.build()
                 .getObjectObservable(GetAppSettingsSection.ResponseValue.class);
     }
 
@@ -1579,6 +1588,24 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
                 .build()
                 .getStringObservable();
+    }
+
+    @Override
+    public Observable<KlarnaCreateSessionResponse> callCreateKlarnaSession(KlarnaCreateSessionRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callCreateKlarnaSession())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
+                .build()
+                .getObjectObservable(KlarnaCreateSessionResponse.class);
+    }
+
+    @Override
+    public Observable<KlarnaCreateOrderResponse> callCreateKlarnaOrder(KlarnaCreateOrderRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callCreateKlarnaOrder())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
+                .build()
+                .getObjectObservable(KlarnaCreateOrderResponse.class);
     }
 }
 

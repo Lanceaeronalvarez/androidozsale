@@ -94,5 +94,7 @@ public interface TemplateTextsHelper {
 
         String getPleaseConfirmAgeRestrictedText();
 
+        String getKlarnaDescription();
+
     }
 }

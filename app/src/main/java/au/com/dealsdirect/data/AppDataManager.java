@@ -63,6 +63,10 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderResponse;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -323,8 +327,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId) {
-        return mApiHelper.callGetAppSettingsSection(countryId);
+    public Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId, String sectionName) {
+        return mApiHelper.callGetAppSettingsSection(countryId, sectionName);
     }
 
     @Override
@@ -985,6 +989,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<String> callSaveAgeRestrictedConsentData(SaveAgeRestrictedConsentDataRequest request) {
         return mApiHelper.callSaveAgeRestrictedConsentData(request);
+    }
+
+    @Override
+    public Observable<KlarnaCreateSessionResponse> callCreateKlarnaSession(KlarnaCreateSessionRequest request) {
+        return mApiHelper.callCreateKlarnaSession(request);
+    }
+
+    @Override
+    public Observable<KlarnaCreateOrderResponse> callCreateKlarnaOrder(KlarnaCreateOrderRequest request) {
+        return mApiHelper.callCreateKlarnaOrder(request);
     }
 
     @Override
@@ -1986,5 +2000,15 @@ public class AppDataManager implements DataManager {
     @Override
     public String getBuyBoxTemplateTextBottomText() {
         return mPreferencesHelper.getBuyBoxTemplateTextBottomText();
+    }
+
+    @Override
+    public void setKlarnaEnabled(boolean enabled) {
+        mPreferencesHelper.setKlarnaEnabled(enabled);
+    }
+
+    @Override
+    public boolean isKlarnaEnabled() {
+        return mPreferencesHelper.isKlarnaEnabled();
     }
 }

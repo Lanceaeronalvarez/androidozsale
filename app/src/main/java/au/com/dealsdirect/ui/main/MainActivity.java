@@ -53,6 +53,10 @@ import com.google.android.gms.wallet.PaymentDataRequest;
 import com.google.android.gms.wallet.PaymentsClient;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
+import com.klarna.mobile.sdk.api.KlarnaLoggingLevel;
+import com.klarna.mobile.sdk.api.KlarnaMobileSDKCommon;
+import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
+import com.klarna.mobile.sdk.payments.KlarnaPaymentsSDK;
 import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
@@ -252,6 +256,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 new Wallet.WalletOptions.Builder()
                         .setEnvironment(BuildConfig.IS_TEST ? WalletConstants.ENVIRONMENT_TEST : WalletConstants.ENVIRONMENT_PRODUCTION)
                         .build());
+
+        if (BuildConfig.IS_TEST) {
+            KlarnaMobileSDKCommon.setLoggingLevel(KlarnaLoggingLevel.Verbose);
+        } else {
+            KlarnaMobileSDKCommon.setLoggingLevel(KlarnaLoggingLevel.Off);
+        }
+
         setUp();
     }
 
@@ -1052,6 +1063,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             callPublicSettings();
         } else {
             mPresenter.callGetAppSettingsSection(this);
+            mPresenter.callGetAppSettingsSectionsPayments(this);
         }
         mPresenter.callGetPublicAppSettingsSectionsAfterpay(this);
         mPresenter.callGetPublicAppSettingsSectionsLPay(this);
@@ -1211,6 +1223,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.callGetUserCurrent();
         //On success, must get new braintree token
         mPresenter.fetchBTAuthorization();
+        mPresenter.callGetAppSettingsSectionsPayments(this);
         refreshWishlist();
     }
 

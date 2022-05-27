@@ -164,6 +164,9 @@ public class GetTemplateTextsResponse {
         @SerializedName("_PleaseConfirmAgeRestrictedText")
         @Expose
         private String pleaseConfirmAgeRestrictedText;
+        @SerializedName("_KlarnaDescription")
+        @Expose
+        private String klarnaDescription;
 
 
         public String getCheckoutMyPayPayExceedLimit() {
@@ -372,6 +375,10 @@ public class GetTemplateTextsResponse {
 
         public String getPleaseConfirmAgeRestrictedText() {
             return pleaseConfirmAgeRestrictedText;
+        }
+
+        public String getKlarnaDescription() {
+            return klarnaDescription;
         }
     }
 }

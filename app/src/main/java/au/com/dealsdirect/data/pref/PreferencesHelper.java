@@ -365,4 +365,8 @@ public interface PreferencesHelper {
     void setBuyBoxTemplateTextButtonText(String bottomText);
 
     String getBuyBoxTemplateTextBottomText();
+
+    void setKlarnaEnabled(boolean enabled);
+
+    boolean isKlarnaEnabled();
 }

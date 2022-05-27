@@ -22,6 +22,10 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrent
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderResponse;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionResponse;
 import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
@@ -495,6 +499,16 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         } else {
             getMvpView().hideLPayPanel();
         }
+
+        if (getDataManager().isKlarnaEnabled() &&
+                mappedValues.getAvailablePaymentOptions() != null &&
+                mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.KLARNA) &&
+                getDataManager().isKlarnaEnabled()
+        ) {
+            getMvpView().showKlarnaPanel(getDataManager().getTemplateTextsRepository().getKlarnaDescription());
+        } else {
+            getMvpView().hideKlarnaPanel();
+        }
     }
 
     private boolean isShipmentAvailable(List<Shipment> shipments) {
@@ -583,6 +597,11 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     @Override
     public boolean isStripeEnabled() {
         return getDataManager().isStripeEnabled();
+    }
+
+    @Override
+    public boolean isKlarnaEnabled() {
+        return getDataManager().isKlarnaEnabled();
     }
 
     @Override

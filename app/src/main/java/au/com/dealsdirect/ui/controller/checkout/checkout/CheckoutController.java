@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -64,6 +66,9 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderResponse;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionResponse;
+import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.AgeRestrictionOperationType;
 import au.com.dealsdirect.service.datacollection.enums.CheckoutUserActivityOperationType;
@@ -82,6 +87,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostMvpVie
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
+import au.com.dealsdirect.ui.controller.klarna.KlarnaViewController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.lpay.LPayViewController;
 import au.com.dealsdirect.ui.controller.main.Settings;
@@ -95,6 +101,7 @@ import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
+import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -229,6 +236,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     ImageView mLPayButtonLogoImageView;
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
     LinearLayout mOurpayHolder;
+    @BindView(R.id.partial_checkout_klarna_container)
+    ViewGroup mKlarnaContainer;
+    @BindView(R.id.partial_checkout_klarna_description)
+    WebView mKlarnaDescriptionView;
+    @BindView(R.id.partial_checkout_button_klarna)
+    View mKlarnaButton;
     @Nullable
     @BindView(R.id.controller_checkout_orders_label)
     TextView mOrdersLabel;
@@ -1071,6 +1084,100 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Override
     public void hideLPayPanel() {
         mLPayHolder.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showKlarnaPanel(String description) {
+        if (description == null || description.isEmpty()) {
+            mKlarnaDescriptionView.setVisibility(View.GONE);
+        } else {
+            mKlarnaDescriptionView.setVisibility(View.VISIBLE);
+            mKlarnaDescriptionView.setWebViewClient(new WebViewClient() {
+
+                @SuppressWarnings("deprecation")
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    if (!url.contains("about:blank")) {
+                        ActivityLaunchUtil.launchActivity(mActivity, url);
+                    }
+                    return true;
+                }
+
+            });
+            String mHtmlHeader = StringUtils.applyStyleToCSS(new StringUtils.CSSStyle() {
+                @Override
+                public String getBodyFontName() {
+                    return StringUtils.typeFaceFamilyFromFilename(
+                            mActivity.getResources().getString(R.string.font_app_regular));
+                }
+
+                @Override
+                public String getBodyFontColor() {
+                    String hex = Integer.toHexString(
+                            mActivity.getResources().getColor(R.color.text_extra_dark));
+                    if (hex.length() > 6) {
+                        hex = hex.substring(2);
+                    }
+                    return "#" + hex;
+                }
+
+                @Override
+                public String getBoldFontName() {
+                    return StringUtils.typeFaceFamilyFromFilename(
+                            mActivity.getResources().getString(R.string.font_app_regular));
+                }
+
+                @Override
+                public String getBoldFontColor() {
+                    String hex = Integer.toHexString(
+                            mActivity.getResources().getColor(R.color.text_extra_dark));
+                    if (hex.length() > 6) {
+                        hex = hex.substring(2);
+                    }
+                    return "#" + hex;
+                }
+            }, mActivity.getResources()
+                    .getString(R.string.base_html_template_header));
+
+            String mHtmlFooter = mActivity.getResources()
+                    .getString(R.string.base_html_template_footer);
+            mKlarnaDescriptionView.loadDataWithBaseURL(null, mHtmlHeader + description + mHtmlFooter,
+                    "text/html", "UTF-8", null);
+            mKlarnaDescriptionView.setBackgroundColor(R.color.transparent);
+        }
+
+        mKlarnaButton.setOnClickListener(v -> onKlarnaButtonClick());
+
+        mKlarnaContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideKlarnaPanel() {
+        mKlarnaContainer.setVisibility(View.GONE);
+    }
+
+    private void onKlarnaButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_KLARNA, mItemList.size(),
+                mValue.getSummary().getTotal(), AppConstants.KLARNA);
+
+        if (!commonPaymentAbilityDetermination()) {
+            return;
+        }
+
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .build();
+
+        KlarnaViewController controller = new KlarnaViewController(bundle);
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .popChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new FadeChangeHandler());
+
+        if (mActivity.getMainController().getPopUpHostRouter() != null) {
+            mActivity.getMainController().getPopUpHostRouter().setRoot(routerTransaction);
+        } else {
+            getDisplayRouter().pushController(routerTransaction);
+        }
     }
 
     private String getSelectedDeliveryOption() {

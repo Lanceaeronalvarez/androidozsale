@@ -662,6 +662,7 @@
     <string name="welcome_to_my_returns">welcome to my returns!</string>
     <string name="app_uri_header">market://details?id="</string>
     <string name="app_playstore_uri_header">market://details?id="</string>
+    <string name="app_uri_scheme">https</string>
     <string name="back">Back</string>
     <string name="enter_address_details">ENTER ADDRESS DETAILS</string>
     <string name="enter_promo_code_caps">ENTER CODE</string>

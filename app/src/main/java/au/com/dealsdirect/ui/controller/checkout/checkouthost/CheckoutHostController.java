@@ -30,6 +30,8 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderResponse;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionResponse;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -290,6 +292,16 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     public void hideLPayPanel() {
         mCheckoutDetailView.hideLPayPanel();
+    }
+
+    @Override
+    public void showKlarnaPanel(String description) {
+        mCheckoutDetailView.showKlarnaPanel(description);
+    }
+
+    @Override
+    public void hideKlarnaPanel() {
+        mCheckoutDetailView.hideKlarnaPanel();
     }
 
     @Override

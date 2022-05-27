@@ -204,6 +204,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String BUYBOX_SELLER_TEMPLATE = "BUYBOX_SELLER_TEMPLATE";
     private static final String BUYBOX_BUTTON_TEXT = "BUYBOX_BOTTOM_TEXT";
 
+    private static final String KLARNA_ENABLED = "KLARNA_ENABLED";
+
     private Context mContext;
 
     @Inject
@@ -1212,5 +1214,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public String getBuyBoxTemplateTextBottomText() {
         return Prefs.getString(BUYBOX_BUTTON_TEXT, "");
+    }
+
+    @Override
+    public void setKlarnaEnabled(boolean enabled) {
+        Prefs.putBoolean(KLARNA_ENABLED, enabled);
+    }
+
+    @Override
+    public boolean isKlarnaEnabled() {
+        return Prefs.getBoolean(KLARNA_ENABLED, false);
     }
 }

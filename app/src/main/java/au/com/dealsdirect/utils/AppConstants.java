@@ -71,6 +71,7 @@ public final class AppConstants {
     public static final String MASTERCARD = "MASTERCARD";
     public static final String STRIPE = "stripe";
     public static final String GPAY = "google pay";
+    public static final String KLARNA = "klarna";
     public static final String BRAINTREE = "braintree";
     public static final String USE_STRIPE_SDK = "use_stripe_sdk";
     public static final String BASKET_CHANGED = "basket_changed";
