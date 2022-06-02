@@ -111,6 +111,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
     public static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
 
+    public static final String KEY_OURPAY_UNAVAILABLE_MESSAGE = "_OurPayUnavailableMessage";
+
     /* June 22, 2018 - GDPR Template Text Keys */
     public static final String KEY_CONSENT_CONTINUE_TEXT = "_consentContinueText";
     public static final String KEY_CONSENT_WITH_REGISTRATION_TERMS_TEXT = "_consentWithTCText";
@@ -169,6 +171,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
             KEY_OURPAY_OPS_TNC_HEADER,
             KEY_OURPAY_OPS_TNC_BODY,
+            KEY_OURPAY_UNAVAILABLE_MESSAGE,
             KEY_PERSONALISATION_VALIDATION, //10
             KEY_CONSENT_CONTINUE_TEXT,
             KEY_CONSENT_WITH_REGISTRATION_TERMS_TEXT,

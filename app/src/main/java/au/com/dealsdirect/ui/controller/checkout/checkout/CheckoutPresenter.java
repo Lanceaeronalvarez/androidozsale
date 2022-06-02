@@ -22,10 +22,6 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrent
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderRequest;
-import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderResponse;
-import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionRequest;
-import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionResponse;
 import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
@@ -252,6 +248,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             /* default */
             ourpay.setDescription(getCurrentOrderOurpay.getSummary().getDescription());
             ourpay.setCanUse(getCurrentOrderOurpay.getSettings().getIsOurPayEnabled());
+            ourpay.setMode(getCurrentOrderOurpay.getSettings().getOurpayMode());
             ourpay.setErrorCode(getCurrentOrderOurpay.getReasonCode());
             ourpay.setTermsAndConditionsCheckboxState(getCurrentOrderOurpay.getSettings().getTermsAndConditions());
             ourpay.setMinAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMinAmountThreshold().doubleValue());

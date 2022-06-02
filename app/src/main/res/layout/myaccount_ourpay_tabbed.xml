@@ -8,36 +8,35 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/myAccountOurpayTabbedHeader"
         android:layout_width="match_parent"
-        android:layout_height="152dp">
-
-        <ImageView
-            android:id="@+id/headerBackground"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/myaccount_ourpay_header_bg" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/myaccount_ourpay_header_bg"
+        android:padding="@dimen/padding_default">
 
         <ImageView
             android:id="@+id/headerLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/ourpay_header_logo_horizontal_margin"
-            android:layout_marginTop="@dimen/ourpay_header_logo_horizontal_margin"
-            android:layout_marginEnd="@dimen/ourpay_header_logo_gap"
             android:contentDescription="@null"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_myaccount_ourpay_logo" />
-
+        <TextView
+            android:id="@+id/myaccount_ourpay_unavailable_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default"
+            android:text="@string/myaccount_ourpay_unavailable_message"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headerLogo" />
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/ourpay_header_details_margin"
             android:layout_marginTop="@dimen/ourpay_header_details_margin"
             android:layout_marginEnd="@dimen/ourpay_header_details_margin"
@@ -47,7 +46,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/headerLogo">
+            app:layout_constraintTop_toBottomOf="@+id/myaccount_ourpay_unavailable_notice">
 
             <FrameLayout
                 android:layout_width="0dp"

@@ -330,10 +330,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/padding_default"
-            android:paddingTop="@dimen/padding_default"
-            android:paddingRight="@dimen/padding_default" />
+            android:orientation="vertical" />
 
 
     </LinearLayout>

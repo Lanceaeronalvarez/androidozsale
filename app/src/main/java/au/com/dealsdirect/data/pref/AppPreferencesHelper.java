@@ -103,6 +103,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
     private static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
 
+    public static final String KEY_OURPAY_UNAVAILABLE_MESSAGE = "_OurPayUnavailableMessage";
+
     private static final String SEARCH_MAX_PRICE = "app_search_max_price";
     private static final String ACCESS_ANONYMOUS_ENABLED = "app_anonymous_enabled";
     private static final String FB_SECRET = "fb_secret";
@@ -684,6 +686,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
         Prefs.putString(MYPAY_TC, value.getOurPayTC_text());
         Prefs.putString(MYPAY_TC_VALIDATION_FAILED, value.getOurPayTCValidationFailed());
         Prefs.putString(MYPAY_PAYMENT_SCHEDULE, value.getPaymentSchedule());
+
+        Prefs.putString(KEY_OURPAY_UNAVAILABLE_MESSAGE, value.getOurpayUnavailableMessage());
     }
 
     @Override

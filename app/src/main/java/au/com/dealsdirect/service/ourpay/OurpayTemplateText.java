@@ -72,6 +72,8 @@ public class OurpayTemplateText {
     public static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
     public static final String KEY_OPS_TNC_FULL_TEXT = "OurPayTermsAndConditions_Text";
 
+    public static final String KEY_OURPAY_UNAVAILABLE_MESSAGE = "_OurPayUnavailableMessage";
+
 
     public static String getTemplateText(Activity activity, Ourpay ourpay){
         try {

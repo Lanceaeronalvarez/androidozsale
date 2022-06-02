@@ -863,4 +863,6 @@
     <string name="price_block_bottom_text_alternate_prefix">Suppliers RRP or ORP</string>
 
     <string name="product_details_seller_text">Sold and delivered by</string>
+
+    <string name="myaccount_ourpay_unavailable_message">Unfortunately, Ourpay is no longer available. We apologise for any inconvenience, please choose from one of the other payment options. Existing Ourpay payments agreements remain unchanged.</string>
 </resources>

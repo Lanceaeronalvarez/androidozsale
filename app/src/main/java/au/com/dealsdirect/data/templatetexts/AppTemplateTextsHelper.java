@@ -243,6 +243,11 @@ public class AppTemplateTextsHelper implements TemplateTextsHelper {
         public String getKlarnaDescription() {
             return source.getKlarnaDescription();
         }
+
+        @Override
+        public String getOurpayUnavailableText() {
+            return source.getOurpayUnavailableMessage();
+        }
     }
 
 

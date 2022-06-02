@@ -96,5 +96,6 @@ public interface TemplateTextsHelper {
 
         String getKlarnaDescription();
 
+        String getOurpayUnavailableText();
     }
 }

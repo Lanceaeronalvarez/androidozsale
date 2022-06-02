@@ -106,6 +106,7 @@ import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
+import au.com.dealsdirect.ui.controller.checkout.ourpay.BottomSheetOurpayOffloadDialog;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
@@ -1592,6 +1593,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         bottomSheetFragment.setTitle(title);
         bottomSheetFragment.setDescription(description);
+
+        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
+    }
+
+    public void showOffloadOurpayDialog(View.OnClickListener onCloseButtonClickListener,
+                                        View.OnClickListener onKlarnaButtonClickListener,
+                                        View.OnClickListener onOtherPaymentsButtonClickListener) {
+        BottomSheetOurpayOffloadDialog bottomSheetFragment = new BottomSheetOurpayOffloadDialog();
+
+        bottomSheetFragment.setOnCloseButtonClickListener(onCloseButtonClickListener);
+        bottomSheetFragment.setOnKlarnaButtonClickListener(onKlarnaButtonClickListener);
+        bottomSheetFragment.setIsKlarnaVisible(onKlarnaButtonClickListener != null);
+        bottomSheetFragment.setOnOtherPaymentsButtonClickListener(onOtherPaymentsButtonClickListener);
 
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
     }

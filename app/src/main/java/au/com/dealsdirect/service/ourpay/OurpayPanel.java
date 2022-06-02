@@ -21,7 +21,6 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
-import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.PriceUtils;
@@ -39,12 +38,13 @@ public class OurpayPanel {
     Router mRouter;
     OurpayGraph mOurpayGraph = new OurpayGraph();
 
+    private String unavailableNoticeText = null;
+
     public View getCartAmountHeader() {
         return mCartAmountHeader;
     }
 
     View mCartAmountHeader;
-
 
     public enum TermsAndConditionStates {
         DISABLED,
@@ -69,100 +69,116 @@ public class OurpayPanel {
     }
 
     public View generatePanel(Ourpay ourpay, OurpayCallback callback) {
-        if (0 != (ourpay.getState() & OurpayState.PRECART)) {
-
-            if (0 != (ourpay.getState() & OurpayState.ERROR)) {
-                mHolderInBorder.addView(getTemplateText(ourpay.getDetails()));
-
-            } else {
-
-                View header = getPanelHeader(ourpay);
-                mHolderInBorder.addView(header);
-
-                LinearLayout headerHolder = (LinearLayout) header.findViewById(R.id.linearLayout_header);
-
-                String templateTexts = ourpay.getDescription();
-                final View templateView = getTemplateText(templateTexts);
-                headerHolder.addView(templateView, headerHolder.getChildCount() - 1);
-
-                if (!templateTexts.equals("")) templateView.setVisibility(View.GONE);
-                templateView.setTag(templateTexts);
-
-                final View panelRows = getPanelRows(ourpay.getPlannedTransactions(), false);
-                mHolderInBorder.addView(panelRows);
-
-                templateView.setVisibility(View.GONE);
-                panelRows.setVisibility(View.GONE);
-
-                header.setOnClickListener(view -> {
-                    panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-                    if (!templateView.getTag().equals("")) {
-                        templateView.setVisibility(templateView.getVisibility() == View.GONE ?
-                                View.VISIBLE : View.GONE);
-                    }
-                    if (callback != null)
-                        callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
-                });
+        if (ourpay.getMode() != Ourpay.OurpayMode.NORMAL) {
+            switch (ourpay.getMode()) {
+                case NOBUTTON:
+                    setupNoMargins(mPanelHolder);
+                    mPanelHolder.addView(getUnavailableNoticeLabel(unavailableNoticeText));
+                    break;
+                case SHOWPOPUP:
+                    setupMargins(mPanelHolder);
+                    mPanelHolder.addView(getButton2());
+                    break;
+                default:
+                    break;
             }
-        } else if (0 != (ourpay.getState() & OurpayState.ONCART)) {
+        } else  {
+            setupMargins(mPanelHolder);
+            if (0 != (ourpay.getState() & OurpayState.PRECART)) {
 
-            if (0 != (ourpay.getState() & OurpayState.ERROR)) {
+                if (0 != (ourpay.getState() & OurpayState.ERROR)) {
+                    mHolderInBorder.addView(getTemplateText(ourpay.getDetails()));
 
-                mHolderInBorder.addView(getTemplateText(
-                        OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)));
-                mPanelHolder.addView(getCartAmountHeader(""), 0);
-            } else {
+                } else {
 
-                mPanelHolder.addView(getButton(), 0);
-                mPanelHolder.addView(getTemplateText(ourpay.getDescription()), 1);
-                if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                    mPanelHolder.addView(getTermsAndConditions(ourpay), 2);
+                    View header = getPanelHeader(ourpay);
+                    mHolderInBorder.addView(header);
+
+                    LinearLayout headerHolder = (LinearLayout) header.findViewById(R.id.linearLayout_header);
+
+                    String templateTexts = ourpay.getDescription();
+                    final View templateView = getTemplateText(templateTexts);
+                    headerHolder.addView(templateView, headerHolder.getChildCount() - 1);
+
+                    if (!templateTexts.equals("")) templateView.setVisibility(View.GONE);
+                    templateView.setTag(templateTexts);
+
+                    final View panelRows = getPanelRows(ourpay.getPlannedTransactions(), false);
+                    mHolderInBorder.addView(panelRows);
+
+                    templateView.setVisibility(View.GONE);
+                    panelRows.setVisibility(View.GONE);
+
+                    header.setOnClickListener(view -> {
+                        panelRows.setVisibility(panelRows.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                        if (!templateView.getTag().equals("")) {
+                            templateView.setVisibility(templateView.getVisibility() == View.GONE ?
+                                    View.VISIBLE : View.GONE);
+                        }
+                        if (callback != null)
+                            callback.onHeaderClick(panelRows.getVisibility() == View.VISIBLE);
+                    });
+                }
+            } else if (0 != (ourpay.getState() & OurpayState.ONCART)) {
+
+                if (0 != (ourpay.getState() & OurpayState.ERROR)) {
+
+                    mHolderInBorder.addView(getTemplateText(
+                            OurpayTemplateText.getTemplateText(mBaseActivity, ourpay)));
+                    mPanelHolder.addView(getCartAmountHeader(""), 0);
+                } else {
+
+                    mPanelHolder.addView(getButton(), 0);
+                    mPanelHolder.addView(getTemplateText(ourpay.getDescription()), 1);
+                    if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
+                        mPanelHolder.addView(getTermsAndConditions(ourpay), 2);
+                    }
+
+                    mPanelHolder.addView(getOrderScheduleView(), 3);
+
+                    View panelRows = getPanelRows(ourpay.getPlannedTransactions(), false);
+                    View panelTotalRow = getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getTotalAmount()));
+                    mPanelHolder.addView(getCartAmountHeader(PriceUtils.getPriceStringValue(ourpay.getInitialAmount())), 0);
+                    mHolderInBorder.addView(panelRows);
+                    mHolderInBorder.addView(panelTotalRow);
+
+                    panelRows.setVisibility(View.VISIBLE);
+                    panelTotalRow.setVisibility(View.VISIBLE);
+                }
+            } else if (0 != (ourpay.getState() & OurpayState.POSTCART)) {
+
+                String templateText = OurpayTemplateText.getTemplateText(mBaseActivity, ourpay);
+                if (!templateText.isEmpty()) {
+                    TextView tv = (TextView) getTemplateText(templateText);
+                    tv.setGravity(Gravity.CENTER_HORIZONTAL);
+                    mPanelHolder.addView(tv, 0);
+                }
+                mHolderInBorder.addView(getSuccessHeaderRow());
+                mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions(), true));
+                mHolderInBorder.addView(getPanelRemainingRow(PriceUtils.getPriceStringValue(ourpay.getInitialAmount())));
+
+                if (!mBaseActivity.getResources().getBoolean(R.bool.is_ozsale_app)) {
+                    mPanelHolder.addView(getThankYouFooter());
                 }
 
-                mPanelHolder.addView(getOrderScheduleView(),3);
+            } else if (0 != (ourpay.getState() & OurpayState.ADDPAYMENT)) {
+
+                mPanelHolder.addView(getTemplateText(ourpay.getDescription()), 0);
+                if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
+                    mPanelHolder.addView(getTermsAndConditions(ourpay), 1);
+                }
+                mPanelHolder.addView(getButton(), 2);
+
+                mPanelHolder.addView(getOrderScheduleView(), 3);
 
                 View panelRows = getPanelRows(ourpay.getPlannedTransactions(), false);
                 View panelTotalRow = getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getTotalAmount()));
-                mPanelHolder.addView(getCartAmountHeader(PriceUtils.getPriceStringValue(ourpay.getInitialAmount())), 0);
                 mHolderInBorder.addView(panelRows);
                 mHolderInBorder.addView(panelTotalRow);
 
                 panelRows.setVisibility(View.VISIBLE);
                 panelTotalRow.setVisibility(View.VISIBLE);
             }
-        } else if (0 != (ourpay.getState() & OurpayState.POSTCART)) {
-
-            String templateText = OurpayTemplateText.getTemplateText(mBaseActivity, ourpay);
-            if (!templateText.isEmpty()) {
-                TextView tv = (TextView) getTemplateText(templateText);
-                tv.setGravity(Gravity.CENTER_HORIZONTAL);
-                mPanelHolder.addView(tv, 0);
-            }
-            mHolderInBorder.addView(getSuccessHeaderRow());
-            mHolderInBorder.addView(getPanelRows(ourpay.getPlannedTransactions(), true));
-            mHolderInBorder.addView(getPanelRemainingRow(PriceUtils.getPriceStringValue(ourpay.getInitialAmount())));
-
-            if (!mBaseActivity.getResources().getBoolean(R.bool.is_ozsale_app)) {
-                mPanelHolder.addView(getThankYouFooter());
-            }
-
-        } else if (0 != (ourpay.getState() & OurpayState.ADDPAYMENT)) {
-
-            mPanelHolder.addView(getTemplateText(ourpay.getDescription()), 0);
-            if (ourpay.getTermsAndConditionsCheckboxState() != 0) {
-                mPanelHolder.addView(getTermsAndConditions(ourpay), 1);
-            }
-            mPanelHolder.addView(getButton(), 2);
-
-            mPanelHolder.addView(getOrderScheduleView(),3);
-
-            View panelRows = getPanelRows(ourpay.getPlannedTransactions(), false);
-            View panelTotalRow = getPanelTotalRow(PriceUtils.getPriceStringValue(ourpay.getTotalAmount()));
-            mHolderInBorder.addView(panelRows);
-            mHolderInBorder.addView(panelTotalRow);
-
-            panelRows.setVisibility(View.VISIBLE);
-            panelTotalRow.setVisibility(View.VISIBLE);
         }
 
         return mPanelHolder;
@@ -229,6 +245,24 @@ public class OurpayPanel {
         return view;
     }
 
+    private View getButton2() {
+        View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_button_2, null, false);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                (int) mBaseActivity.getResources().getDimension(R.dimen.button_height_regular));
+        view.setLayoutParams(layoutParams);
+
+        return view;
+    }
+
+    private View getUnavailableNoticeLabel(String content) {
+        View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_unavailable_notice, null, false);
+
+        TextView textView = view.findViewById(R.id.ourpay_unavailable_label);
+        textView.setText(content);
+
+        return view;
+    }
+
     private View getTermsAndConditions(Ourpay ourpay) {
         View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_terms_and_conditions, null, false);
 
@@ -286,8 +320,8 @@ public class OurpayPanel {
         return view;
     }
 
-    private View getOrderScheduleView(){
-        View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_order_schedule,null,false);
+    private View getOrderScheduleView() {
+        View view = mBaseActivity.getLayoutInflater().inflate(R.layout.ourpay_order_schedule, null, false);
         return view;
     }
 
@@ -297,5 +331,31 @@ public class OurpayPanel {
 
     public void setIsGraphVisible(boolean isVisible) {
 //        mOurpayGraph.setIsGraphVisible(isVisible);
+    }
+
+    public String getUnavailableNoticeText() {
+        return unavailableNoticeText;
+    }
+
+    public void setUnavailableNoticeText(String unavailableNoticeText) {
+        this.unavailableNoticeText = unavailableNoticeText;
+    }
+
+    private void setupMargins(View view) {
+        int margin = (int)view.getContext().getResources().getDimension(R.dimen.padding_default);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(margin, margin, margin, 0);
+        view.setLayoutParams(layoutParams);
+    }
+
+    private void setupNoMargins(View view) {
+        int margin = (int)view.getContext().getResources().getDimension(R.dimen.padding_default);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, margin, 0, 0);
+        view.setLayoutParams(layoutParams);
     }
 }

@@ -8,27 +8,33 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ourpay_header_height_for_empty_view">
+        android:layout_height="wrap_content"
+        android:background="@drawable/myaccount_ourpay_header_bg"
+        android:padding="@dimen/padding_default">
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/myaccount_ourpay_header_bg" />
-
-        <ImageView
+            android:id="@+id/myaccount_ourpay_header_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_myaccount_ourpay_logo" />
+
+        <TextView
+            android:id="@+id/myaccount_ourpay_unavailable_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default"
+            android:text="@string/myaccount_ourpay_unavailable_message"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myaccount_ourpay_header_logo" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView

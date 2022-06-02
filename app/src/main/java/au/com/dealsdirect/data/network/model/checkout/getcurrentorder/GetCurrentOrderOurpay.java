@@ -321,6 +321,9 @@ public class GetCurrentOrderOurpay {
         @SerializedName("TermsAndConditions")
         @Expose
         private int termsAndConditions;
+        @SerializedName(value = "OurpayMode", alternate = {"Oorpaymode", "OorPaymode", "OorPayMode"})
+        @Expose
+        private int ourpayMode;
 
         public Boolean getIsOurPayEnabled() {
             return isOurPayEnabled;
@@ -346,6 +349,13 @@ public class GetCurrentOrderOurpay {
             this.termsAndConditions = termsAndConditions;
         }
 
+        public int getOurpayMode() {
+            return ourpayMode;
+        }
+
+        public void setOurpayMode(int ourpayMode) {
+            this.ourpayMode = ourpayMode;
+        }
     }
 
     public static class PlannedTransaction {
