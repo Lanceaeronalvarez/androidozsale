@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -82,6 +84,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostMvpVie
 import au.com.dealsdirect.ui.controller.checkout.deliveryoptions.DeliveryOptionsController;
 import au.com.dealsdirect.ui.controller.checkout.paymentselect.PaymentSelectController;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
+import au.com.dealsdirect.ui.controller.klarna.KlarnaViewController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.lpay.LPayViewController;
 import au.com.dealsdirect.ui.controller.main.Settings;
@@ -95,6 +98,7 @@ import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.ui.main.FetchTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
+import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -116,6 +120,7 @@ import static android.graphics.Typeface.BOLD;
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
+import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.getTemplateText;
 
 public class CheckoutController extends VisaCheckoutController implements CheckoutMvpView, FetchTokenHandler, CheckoutListener {
     public static final String CARD_PAYPAL = "Paypal";
@@ -229,6 +234,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     ImageView mLPayButtonLogoImageView;
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
     LinearLayout mOurpayHolder;
+    @BindView(R.id.partial_checkout_klarna_container)
+    ViewGroup mKlarnaContainer;
+    @BindView(R.id.partial_checkout_klarna_description)
+    WebView mKlarnaDescriptionView;
+    @BindView(R.id.partial_checkout_button_klarna)
+    View mKlarnaButton;
     @Nullable
     @BindView(R.id.controller_checkout_orders_label)
     TextView mOrdersLabel;
@@ -577,6 +588,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     PaymentInfo.setOurpay(ourpay);
 
                     ourpayPanel = new OurpayPanel(mActivity, getRouter());
+                    ourpayPanel.setUnavailableNoticeText(mPresenter.getTemplateTextsRepository().getOurpayUnavailableText());
                     mOurpayHolder.removeAllViews();
                     mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay, isRowVisible -> {
                         if (isRowVisible) {
@@ -588,7 +600,11 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                     mButtonOurpay = mOurpayHolder.findViewById(R.id.rl_button_ourpay);
                     if (mButtonOurpay != null) {
                         isStripe = paymentMethod != null && paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE);
-                        mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick(isStripe));
+                        if (ourpay.getMode() == Ourpay.OurpayMode.NORMAL) {
+                            mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick(isStripe));
+                        } else {
+                            mButtonOurpay.setOnClickListener(view -> onOffloadOurpayButtonClick());
+                        }
                     }
 
 
@@ -1036,7 +1052,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
     @Override
     public void showAfterpayPanel(boolean isAvailable, String description) {
-        if(mActivity.getResources().getBoolean(R.bool.is_afterpay_disabled_client_override)) {
+        if (mActivity.getResources().getBoolean(R.bool.is_afterpay_disabled_client_override)) {
             mAfterpayHolder.setVisibility(View.GONE);
             return;
         }
@@ -1071,6 +1087,102 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Override
     public void hideLPayPanel() {
         mLPayHolder.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showKlarnaPanel(String description) {
+        if (description == null || description.isEmpty()) {
+            mKlarnaDescriptionView.setVisibility(View.GONE);
+        } else {
+            mKlarnaDescriptionView.setVisibility(View.VISIBLE);
+            mKlarnaDescriptionView.setWebViewClient(new WebViewClient() {
+
+                @SuppressWarnings("deprecation")
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    if (!url.contains("about:blank")) {
+                        ActivityLaunchUtil.launchActivity(mActivity, url);
+                    }
+                    return true;
+                }
+
+            });
+            String mHtmlHeader = StringUtils.applyStyleToCSS(new StringUtils.CSSStyle() {
+                @Override
+                public String getBodyFontName() {
+                    return StringUtils.typeFaceFamilyFromFilename(
+                            mActivity.getResources().getString(R.string.font_app_regular));
+                }
+
+                @Override
+                public String getBodyFontColor() {
+                    String hex = Integer.toHexString(
+                            mActivity.getResources().getColor(R.color.text_extra_dark));
+                    if (hex.length() > 6) {
+                        hex = hex.substring(2);
+                    }
+                    return "#" + hex;
+                }
+
+                @Override
+                public String getBoldFontName() {
+                    return StringUtils.typeFaceFamilyFromFilename(
+                            mActivity.getResources().getString(R.string.font_app_regular));
+                }
+
+                @Override
+                public String getBoldFontColor() {
+                    String hex = Integer.toHexString(
+                            mActivity.getResources().getColor(R.color.text_extra_dark));
+                    if (hex.length() > 6) {
+                        hex = hex.substring(2);
+                    }
+                    return "#" + hex;
+                }
+            }, mActivity.getResources()
+                    .getString(R.string.base_html_template_header));
+
+            String mHtmlFooter = mActivity.getResources()
+                    .getString(R.string.base_html_template_footer);
+            mKlarnaDescriptionView.loadDataWithBaseURL(null, mHtmlHeader + description + mHtmlFooter,
+                    "text/html", "UTF-8", null);
+            mKlarnaDescriptionView.setBackgroundColor(mActivity.getResources().getColor(R.color.transparent));
+        }
+
+        mKlarnaButton.setOnClickListener(v -> onKlarnaButtonClick());
+
+        mKlarnaButton.setVisibility(View.VISIBLE);
+        mKlarnaContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideKlarnaPanel() {
+        mKlarnaButton.setVisibility(View.GONE);
+        mKlarnaContainer.setVisibility(View.GONE);
+    }
+
+    private void onKlarnaButtonClick() {
+        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_KLARNA, mItemList.size(),
+                mValue.getSummary().getTotal(), AppConstants.KLARNA);
+
+        if (!commonPaymentAbilityDetermination()) {
+            return;
+        }
+
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .build();
+
+        KlarnaViewController controller = new KlarnaViewController(bundle);
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .popChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new FadeChangeHandler());
+
+        if (mActivity.getMainController().getPopUpHostRouter() != null) {
+            mActivity.getMainController().getPopUpHostRouter().setRoot(routerTransaction);
+        } else {
+            getDisplayRouter().pushController(routerTransaction);
+        }
     }
 
     private String getSelectedDeliveryOption() {
@@ -1451,6 +1563,50 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 }
             }
         }
+    }
+
+    private void onOffloadOurpayButtonClick() {
+        mActivity.showOffloadOurpayDialog(null,
+                mKlarnaButton.getVisibility() == View.VISIBLE ?
+                        v -> onKlarnaButtonClick() : null,
+                v -> scrollToTopOfPayment());
+    }
+
+    private void scrollToTopOfPayment() {
+        View topPayButton = getTopPayButton();
+
+        if (topPayButton == null) {
+            return;
+        }
+
+        int[] payButtonLocation = new int[2];
+        int[] scrollViewLocation = new int[2];
+
+        topPayButton.getLocationOnScreen(payButtonLocation);
+        mNestedScrollView.getLocationOnScreen(scrollViewLocation);
+
+        final int scrollBy = payButtonLocation[1] - scrollViewLocation[1];
+
+        mNestedScrollView.scrollBy(0, scrollBy);
+    }
+
+    private View getTopPayButton() {
+        List<View> buttons = new ArrayList<View>(){{
+            add(mGPayButton);
+            add(mPayButton);
+            add(mPaypalButton);
+            add(mVcoButton);
+            add(mAfterpayButton);
+            add(mKlarnaButton);
+            add(mLPayButton);
+        }};
+
+        for (View button : buttons) {
+            if (button != null && button.getVisibility() == View.VISIBLE) {
+                return button;
+            }
+        }
+        return null;
     }
 
     private boolean isAddressValid() {

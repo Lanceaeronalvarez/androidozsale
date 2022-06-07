@@ -29,6 +29,7 @@ import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerC
 import au.com.dealsdirect.ui.controller.forgotpassword.ForgotPasswordController;
 import au.com.dealsdirect.ui.controller.information.InformationMenuController;
 import au.com.dealsdirect.ui.controller.invite.InviteSendController;
+import au.com.dealsdirect.ui.controller.klarna.KlarnaViewController;
 import au.com.dealsdirect.ui.controller.language.LanguageController;
 import au.com.dealsdirect.ui.controller.legalities.LegalitiesController;
 import au.com.dealsdirect.ui.controller.login.LoginController;
@@ -167,4 +168,6 @@ public interface ControllerComponent {
     void inject(FloatingImageViewerController controller);
 
     void inject(ReturnsPolicyViewController controller);
+
+    void inject(KlarnaViewController klarnaViewController);
 }

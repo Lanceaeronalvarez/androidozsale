@@ -691,6 +691,14 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "ConfirmLPayTransaction");
     }
 
+    public static String callCreateKlarnaSession() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION  + "CreateKlarnaSession");
+    }
+
+    public static String callCreateKlarnaOrder() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION  + "CreateKlarnaOrder");
+    }
+
     /*VISA CHECKOUT*/
     public static String visaCheckoutLogin() {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "LoginVisa");

@@ -111,6 +111,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_OURPAY_OPS_TNC_HEADER = "_OurPaySelectTermsAndConditionsHeader";
     public static final String KEY_OURPAY_OPS_TNC_BODY = "_OurPaySelectTermsAndConditionsBody";
 
+    public static final String KEY_OURPAY_UNAVAILABLE_MESSAGE = "_OurPayUnavailableMessage";
+
     /* June 22, 2018 - GDPR Template Text Keys */
     public static final String KEY_CONSENT_CONTINUE_TEXT = "_consentContinueText";
     public static final String KEY_CONSENT_WITH_REGISTRATION_TERMS_TEXT = "_consentWithTCText";
@@ -144,6 +146,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     static final String KEY_AGE_RESTRICTED_TEXT = "_AgeRestrictedText";
     static final String KEY_PLEASE_CONFIRM_AGE_RESTRICTED_TEXT = "_PleaseConfirmAgeRestrictedText";
 
+    static final String KEY_KLARNA_DESCRIPTION_TEXT = "_KlarnaDescription";
+
     private static String[] templateTextsKeys = {
             KEY_CHECKOUT_MYPAY_PAY_EXCEED_LIMIT, //0
             KEY_CHECKOUT_MYPAY_PAY_INVALID_PAYMENT_METHOD, //1
@@ -167,6 +171,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_OURPAY_OPS_INFO_REMAINING_BEFORE_PURCHASE_FREE_DELIVERY,
             KEY_OURPAY_OPS_TNC_HEADER,
             KEY_OURPAY_OPS_TNC_BODY,
+            KEY_OURPAY_UNAVAILABLE_MESSAGE,
             KEY_PERSONALISATION_VALIDATION, //10
             KEY_CONSENT_CONTINUE_TEXT,
             KEY_CONSENT_WITH_REGISTRATION_TERMS_TEXT,
@@ -187,7 +192,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_CALCULATE,
             KEY_IMPOSSIBLE_TO_DELIVER_AT_LOCATION_MESSAGE,
             KEY_AGE_RESTRICTED_TEXT,
-            KEY_PLEASE_CONFIRM_AGE_RESTRICTED_TEXT
+            KEY_PLEASE_CONFIRM_AGE_RESTRICTED_TEXT,
+            KEY_KLARNA_DESCRIPTION_TEXT
     };
 
 
@@ -396,7 +402,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void callGetAppSettingsSection(Context context) {
         getCompositeDisposable().add(getDataManager()
-                .callGetAppSettingsSection(getDataManager().getCountryId())
+                .callGetAppSettingsSection(getDataManager().getCountryId(), null)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(mAppSettingsSectionAcceptCallback, mAppSettingsSectionThrowableCallback));
@@ -419,6 +425,33 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(mAppSettingsSectionAcceptAfterpayCallback, mAppSettingsSectionThrowableCallback));
     }
+
+    @Override
+    public void callGetAppSettingsSectionsPayments(Context context) {
+        getCompositeDisposable().add(getDataManager()
+                .callGetAppSettingsSection(getDataManager().getCountryId(), "Payments")
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(mAppSettingsSectionAcceptPaymentsCallback, mAppSettingsSectionThrowableCallback));
+    }
+
+    private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptPaymentsCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
+        @Override
+        public void accept(GetAppSettingsSection.ResponseValue responseValue) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+            GetAppSettingsSection.ResponseValue.Value value = responseValue.d.getValue();
+            if (value == null) {
+                return;
+            }
+            GetAppSettingsSection.ResponseValue.Payments payments = value.getPayments();
+            if (payments == null) {
+                return;
+            }
+            getDataManager().setKlarnaEnabled(payments.getKlarna().isEnabled());
+        }
+    };
 
     @Override
     public void callGetPublicAppSettingsSectionsLPay(Context context) {

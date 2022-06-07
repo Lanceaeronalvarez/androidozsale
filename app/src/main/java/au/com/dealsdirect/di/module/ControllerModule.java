@@ -92,6 +92,9 @@ import au.com.dealsdirect.ui.controller.information.InformationMenuPresenter;
 import au.com.dealsdirect.ui.controller.invite.InviteMvpPresenter;
 import au.com.dealsdirect.ui.controller.invite.InviteMvpView;
 import au.com.dealsdirect.ui.controller.invite.InvitePresenter;
+import au.com.dealsdirect.ui.controller.klarna.KlarnaMvpPresenter;
+import au.com.dealsdirect.ui.controller.klarna.KlarnaMvpView;
+import au.com.dealsdirect.ui.controller.klarna.KlarnaPresenter;
 import au.com.dealsdirect.ui.controller.language.LanguageMvpPresenter;
 import au.com.dealsdirect.ui.controller.language.LanguageMvpView;
 import au.com.dealsdirect.ui.controller.language.LanguagePresenter;
@@ -473,6 +476,11 @@ public class ControllerModule {
 
     @Provides
     LPayMvpPresenter<LPayMvpView> provideLPayMvpPresenter(LPayPresenter<LPayMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    KlarnaMvpPresenter<KlarnaMvpView> provideKlarnaMvpPresenter(KlarnaPresenter<KlarnaMvpView> presenter) {
         return presenter;
     }
 

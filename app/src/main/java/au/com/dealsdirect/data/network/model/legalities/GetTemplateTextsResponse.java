@@ -103,6 +103,9 @@ public class GetTemplateTextsResponse {
         @SerializedName("_PleaseFillPersonalization")
         @Expose
         private String personalisationValidation;
+        @SerializedName("_OurPayUnavailableMessage")
+        @Expose
+        private String ourpayUnavailableMessage;
 
         @SerializedName("_consentContinueText")
         @Expose
@@ -164,6 +167,9 @@ public class GetTemplateTextsResponse {
         @SerializedName("_PleaseConfirmAgeRestrictedText")
         @Expose
         private String pleaseConfirmAgeRestrictedText;
+        @SerializedName("_KlarnaDescription")
+        @Expose
+        private String klarnaDescription;
 
 
         public String getCheckoutMyPayPayExceedLimit() {
@@ -236,6 +242,14 @@ public class GetTemplateTextsResponse {
 
         public void setOurPayTCValidationFailed(String ourPayTCValidationFailed) {
             this.ourPayTCValidationFailed = ourPayTCValidationFailed;
+        }
+
+        public String getOurpayUnavailableMessage() {
+            return ourpayUnavailableMessage;
+        }
+
+        public void setOurpayUnavailableMessage(String ourpayUnavailableMessage) {
+            this.ourpayUnavailableMessage = ourpayUnavailableMessage;
         }
 
         public String getPaymentSchedule() {
@@ -372,6 +386,10 @@ public class GetTemplateTextsResponse {
 
         public String getPleaseConfirmAgeRestrictedText() {
             return pleaseConfirmAgeRestrictedText;
+        }
+
+        public String getKlarnaDescription() {
+            return klarnaDescription;
         }
     }
 }

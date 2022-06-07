@@ -3,8 +3,8 @@
 buildscript {
     repositories {
         google()
-        jcenter()
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
@@ -22,11 +22,11 @@ buildscript {
 allprojects {
     repositories {
         google()
+        mavenCentral()
         jcenter()
         maven { url 'https://jitpack.io' }
         maven { url 'https://maven.google.com' }
-        maven { url 'https://dl.bintray.com/guardian/android' }
-        mavenCentral()
+        maven { url 'https://x.klarnacdn.net/mobile-sdk/' }
     }
 }
 
@@ -88,5 +88,5 @@ ext {
     stickyHeadersVersion = '0.4.3@aar'
 
     //transactiontoolarge logger
-    tooLargeToolVersion = '0.1.3'
+    tooLargeToolVersion = '0.3.0'
 }

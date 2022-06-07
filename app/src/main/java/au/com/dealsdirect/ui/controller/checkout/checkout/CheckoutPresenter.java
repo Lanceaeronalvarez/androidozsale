@@ -248,6 +248,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             /* default */
             ourpay.setDescription(getCurrentOrderOurpay.getSummary().getDescription());
             ourpay.setCanUse(getCurrentOrderOurpay.getSettings().getIsOurPayEnabled());
+            ourpay.setMode(getCurrentOrderOurpay.getSettings().getOurpayMode());
             ourpay.setErrorCode(getCurrentOrderOurpay.getReasonCode());
             ourpay.setTermsAndConditionsCheckboxState(getCurrentOrderOurpay.getSettings().getTermsAndConditions());
             ourpay.setMinAmount(getCurrentOrderOurpay.getPayment().getPaymentConditions().getMinAmountThreshold().doubleValue());
@@ -495,6 +496,16 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
         } else {
             getMvpView().hideLPayPanel();
         }
+
+        if (getDataManager().isKlarnaEnabled() &&
+                mappedValues.getAvailablePaymentOptions() != null &&
+                mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.KLARNA) &&
+                getDataManager().isKlarnaEnabled()
+        ) {
+            getMvpView().showKlarnaPanel(getDataManager().getTemplateTextsRepository().getKlarnaDescription());
+        } else {
+            getMvpView().hideKlarnaPanel();
+        }
     }
 
     private boolean isShipmentAvailable(List<Shipment> shipments) {
@@ -583,6 +594,11 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     @Override
     public boolean isStripeEnabled() {
         return getDataManager().isStripeEnabled();
+    }
+
+    @Override
+    public boolean isKlarnaEnabled() {
+        return getDataManager().isKlarnaEnabled();
     }
 
     @Override

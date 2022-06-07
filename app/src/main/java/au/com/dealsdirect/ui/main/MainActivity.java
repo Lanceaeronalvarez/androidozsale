@@ -53,6 +53,10 @@ import com.google.android.gms.wallet.PaymentDataRequest;
 import com.google.android.gms.wallet.PaymentsClient;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
+import com.klarna.mobile.sdk.api.KlarnaLoggingLevel;
+import com.klarna.mobile.sdk.api.KlarnaMobileSDKCommon;
+import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
+import com.klarna.mobile.sdk.payments.KlarnaPaymentsSDK;
 import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
@@ -102,6 +106,7 @@ import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
+import au.com.dealsdirect.ui.controller.checkout.ourpay.BottomSheetOurpayOffloadDialog;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
@@ -252,6 +257,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 new Wallet.WalletOptions.Builder()
                         .setEnvironment(BuildConfig.IS_TEST ? WalletConstants.ENVIRONMENT_TEST : WalletConstants.ENVIRONMENT_PRODUCTION)
                         .build());
+
+        if (BuildConfig.IS_TEST) {
+            KlarnaMobileSDKCommon.setLoggingLevel(KlarnaLoggingLevel.Verbose);
+        } else {
+            KlarnaMobileSDKCommon.setLoggingLevel(KlarnaLoggingLevel.Off);
+        }
+
         setUp();
     }
 
@@ -1052,6 +1064,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             callPublicSettings();
         } else {
             mPresenter.callGetAppSettingsSection(this);
+            mPresenter.callGetAppSettingsSectionsPayments(this);
         }
         mPresenter.callGetPublicAppSettingsSectionsAfterpay(this);
         mPresenter.callGetPublicAppSettingsSectionsLPay(this);
@@ -1211,6 +1224,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.callGetUserCurrent();
         //On success, must get new braintree token
         mPresenter.fetchBTAuthorization();
+        mPresenter.callGetAppSettingsSectionsPayments(this);
         refreshWishlist();
     }
 
@@ -1579,6 +1593,19 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         bottomSheetFragment.setTitle(title);
         bottomSheetFragment.setDescription(description);
+
+        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
+    }
+
+    public void showOffloadOurpayDialog(View.OnClickListener onCloseButtonClickListener,
+                                        View.OnClickListener onKlarnaButtonClickListener,
+                                        View.OnClickListener onOtherPaymentsButtonClickListener) {
+        BottomSheetOurpayOffloadDialog bottomSheetFragment = new BottomSheetOurpayOffloadDialog();
+
+        bottomSheetFragment.setOnCloseButtonClickListener(onCloseButtonClickListener);
+        bottomSheetFragment.setOnKlarnaButtonClickListener(onKlarnaButtonClickListener);
+        bottomSheetFragment.setIsKlarnaVisible(onKlarnaButtonClickListener != null);
+        bottomSheetFragment.setOnOtherPaymentsButtonClickListener(onOtherPaymentsButtonClickListener);
 
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);
     }

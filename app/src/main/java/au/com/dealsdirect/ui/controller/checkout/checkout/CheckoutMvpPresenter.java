@@ -3,6 +3,8 @@ package au.com.dealsdirect.ui.controller.checkout.checkout;
 import android.content.Context;
 
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionRequest;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
@@ -61,6 +63,8 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
     void setStripePaymentMethodId(String paymentMethodId);
 
     boolean isStripeEnabled();
+
+    boolean isKlarnaEnabled();
 
     String getStripePublicKey();
 

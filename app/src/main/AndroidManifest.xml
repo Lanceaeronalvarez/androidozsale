@@ -65,7 +65,13 @@
                 <data
                     android:host="@string/app_uri_hostname"
                     android:pathPrefix=""
-                    android:scheme="https"
+                    android:scheme="@string/app_uri_scheme"
+                    tools:ignore="AppLinkUrlError" />
+
+                <data
+                    android:host="@string/app_uri_klarna"
+                    android:pathPrefix=""
+                    android:scheme="@string/app_uri_scheme"
                     tools:ignore="AppLinkUrlError" />
 
                 <!--&lt;!&ndash; Email Smart Banners &ndash;&gt;-->

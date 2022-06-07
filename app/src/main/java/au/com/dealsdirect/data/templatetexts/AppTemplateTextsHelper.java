@@ -238,6 +238,16 @@ public class AppTemplateTextsHelper implements TemplateTextsHelper {
         public String getPleaseConfirmAgeRestrictedText() {
             return source.getPleaseConfirmAgeRestrictedText();
         }
+
+        @Override
+        public String getKlarnaDescription() {
+            return source.getKlarnaDescription();
+        }
+
+        @Override
+        public String getOurpayUnavailableText() {
+            return source.getOurpayUnavailableMessage();
+        }
     }
 
 

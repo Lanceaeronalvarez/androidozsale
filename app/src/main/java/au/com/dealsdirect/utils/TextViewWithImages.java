@@ -31,7 +31,7 @@ public class TextViewWithImages extends TextView {
     }
     @Override
     public void setText(CharSequence text, BufferType type) {
-        Spannable s = getTextWithImages(getContext(), text);
+        Spannable s = getTextWithImages(getContext(), text != null ? text : "");
         super.setText(s, BufferType.SPANNABLE);
     }
 

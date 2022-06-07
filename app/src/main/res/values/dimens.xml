@@ -43,6 +43,7 @@
     <!--General Radius-->
     <dimen name="corner_radius_default">5dp</dimen>
     <dimen name="corner_radius_medium">15dp</dimen>
+    <dimen name="corner_radius_extra_rounded">24dp</dimen>
 
     <!-- EditText -->
     <dimen name="edit_text_height">44dp</dimen>
@@ -56,6 +57,7 @@
     <dimen name="button_drawable_height">20dp</dimen>
     <dimen name="button_text_padding">10dp</dimen>
     <dimen name="button_elevation">2.5dp</dimen>
+    <dimen name="button_extra_rounded_height">48dp</dimen>
 
     <dimen name="item_image_height">270dp</dimen>
     <dimen name="item_list_row_height">40dp</dimen>

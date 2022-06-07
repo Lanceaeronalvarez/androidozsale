@@ -662,6 +662,7 @@
     <string name="welcome_to_my_returns">welcome to my returns!</string>
     <string name="app_uri_header">market://details?id="</string>
     <string name="app_playstore_uri_header">market://details?id="</string>
+    <string name="app_uri_scheme">https</string>
     <string name="back">Back</string>
     <string name="enter_address_details">ENTER ADDRESS DETAILS</string>
     <string name="enter_promo_code_caps">ENTER CODE</string>
@@ -862,4 +863,6 @@
     <string name="price_block_bottom_text_alternate_prefix">Suppliers RRP or ORP</string>
 
     <string name="product_details_seller_text">Sold and delivered by</string>
+
+    <string name="myaccount_ourpay_unavailable_message">Unfortunately, Ourpay is no longer available. We apologise for any inconvenience, please choose from one of the other payment options. Existing Ourpay payments agreements remain unchanged.</string>
 </resources>

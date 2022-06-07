@@ -50,6 +50,10 @@ import au.com.dealsdirect.data.network.model.checkout.GetUserPaymentMethods;
 import au.com.dealsdirect.data.network.model.checkout.RemoveUserPaymentMethod;
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderResponse;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionRequest;
+import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionResponse;
 import au.com.dealsdirect.data.network.model.contacthistory.GetContactHistoryRequest;
 import au.com.dealsdirect.data.network.model.contacthistory.TicketSatisfactionResponse;
 import au.com.dealsdirect.data.network.model.contactitem.GetContactsResponse;
@@ -215,7 +219,7 @@ public interface ApiHelper {
 
     Observable<GetAppSettings.ResponseValue> callGetAppSettings(String countryId);
 
-    Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId);
+    Observable<GetAppSettingsSection.ResponseValue> callGetAppSettingsSection(String countryId, String sectionName);
 
     Observable<GetAppSettingsSection.ResponseValue> callGetPublicAppSettingsSections(String countryId);
 
@@ -504,5 +508,8 @@ public interface ApiHelper {
 
     Observable<String> callSaveAgeRestrictedConsentData(SaveAgeRestrictedConsentDataRequest request);
 
+    // klarna
+    Observable<KlarnaCreateSessionResponse> callCreateKlarnaSession(KlarnaCreateSessionRequest request);
 
+    Observable<KlarnaCreateOrderResponse> callCreateKlarnaOrder(KlarnaCreateOrderRequest request);
 }

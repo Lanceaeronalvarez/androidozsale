@@ -59,8 +59,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -78,14 +78,15 @@ android {
             resValue "string", "fb_page_id", "153472458025053"
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
             resValue "string", "app_uri_hostname", "www.buyinvite.com.au"
+            resValue "string", "app_uri_klarna", "www.buyinvite.com.au.klarna"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         buyinviteTest {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -99,14 +100,15 @@ android {
             resValue "string", "fb_page_id", "153472458025053"
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
             resValue "string", "app_uri_hostname", "www.buyinvite.com.au"
+            resValue "string", "app_uri_klarna", "www.buyinvite.com.au.klarna"
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         dealsDirectRC {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -124,6 +126,7 @@ android {
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
             resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
+            resValue "string", "app_uri_klarna", "www.dealsdirect.com.au.klarna"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -131,8 +134,8 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -146,14 +149,15 @@ android {
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
             resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
+            resValue "string", "app_uri_klarna", "www.dealsdirect.com.au.klarna"
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ooRC {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -171,14 +175,15 @@ android {
             resValue "string", "fb_page_id", "10357598833"
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "app_uri_hostname", "www.oo.com.au"
+            resValue "string", "app_uri_klarna", "www.oo.com.au.klarna"
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ooTest {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -192,14 +197,15 @@ android {
             resValue "string", "fb_page_id", "10357598833"
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
             resValue "string", "app_uri_hostname", "www.oo.com.au"
+            resValue "string", "app_uri_klarna", "www.oo.com.au.klarna"
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         topbuyRC {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -217,14 +223,15 @@ android {
             resValue "string", "fb_page_id", "47143367223"
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
             resValue "string", "app_uri_hostname", "www.topbuy.com.au"
+            resValue "string", "app_uri_klarna", "www.topbuy.com.au.klarna"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         topbuyTest {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -237,15 +244,16 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "47143367223"
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
-            resValue "string", "app_uri_hostname", "www.dealsdirect.com.au"
+            resValue "string", "app_uri_hostname", "www.topbuy.com.au"
+            resValue "string", "app_uri_klarna", "www.topbuy.com.au.klarna"
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         ozsaleRC {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -263,6 +271,7 @@ android {
             resValue "string", "fb_page_id", "160420993982663"
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
             resValue "string", "app_uri_hostname", "www.ozsale.com.au"
+            resValue "string", "app_uri_klarna", "www.ozsale.com.au.klarna"
 
             ext.newRelicAppToken = "AA81128f803ab5bdb52bb2d4f6b19d29f0bb62bca1"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -270,8 +279,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "au.com.ozsale.test"
 
             ext.appName = "OZSALE Test"
@@ -288,6 +297,7 @@ android {
             resValue "string", "fb_page_id", "160420993982663"
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
             resValue "string", "app_uri_hostname", "www.ozsale.com.au"
+            resValue "string", "app_uri_klarna", "www.ozsale.com.au.klarna"
 
             ext.newRelicAppToken = "AA81128f803ab5bdb52bb2d4f6b19d29f0bb62bca1"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -295,8 +305,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -314,6 +324,7 @@ android {
             resValue "string", "fb_page_id", "181383195228374"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524844978"
             resValue "string", "app_uri_hostname", "www.singsale.com.sg"
+            resValue "string", "app_uri_klarna", "www.singsale.com.sg.klarna"
 
             ext.newRelicAppToken = "AA7859bf063d467b13d1118979fb839dec128eb88a"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -321,8 +332,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "sg.com.singsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -336,14 +347,15 @@ android {
             resValue "string", "fb_page_id", "181383195228374"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524844978"
             resValue "string", "app_uri_hostname", "www.singsale.com.sg"
+            resValue "string", "app_uri_klarna", "www.singsale.com.sg.klarna"
 
             ext.newRelicAppToken = "AA7859bf063d467b13d1118979fb839dec128eb88a"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         nzsaleRC {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -361,6 +373,7 @@ android {
             resValue "string", "fb_page_id", "293974924171"
             resValue "string", "twitter_user_id", "twitter://user?user_id=61630958"
             resValue "string", "app_uri_hostname", "www.nzsale.co.nz"
+            resValue "string", "app_uri_klarna", "www.nzsale.co.nz.klarna"
 
             ext.newRelicAppToken = "AAfebece95884f3f5bc6acaacb76d02440c0f7eb85"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -368,8 +381,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "nz.co.nzsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -383,6 +396,7 @@ android {
             resValue "string", "fb_page_id", "293974924171"
             resValue "string", "twitter_user_id", "twitter://user?user_id=61630958"
             resValue "string", "app_uri_hostname", "www.nzsale.co.nz"
+            resValue "string", "app_uri_klarna", "www.nzsale.co.nz.klarna"
 
             ext.newRelicAppToken = "AAfebece95884f3f5bc6acaacb76d02440c0f7eb85"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -390,8 +404,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -409,14 +423,15 @@ android {
             resValue "string", "fb_page_id", "161478120632146"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524892602"
             resValue "string", "app_uri_hostname", "www.mysale.ph"
+            resValue "string", "app_uri_klarna", "www.mysale.ph.klarna"
 
             ext.newRelicAppToken = "AAfb90a146f4b17ba00df83492608b2d7057e99e16"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
         }
 
         mysaleTest {
-            versionCode 396
-            versionName "5.4.3"
+            versionCode 399
+            versionName "5.5.0"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -430,6 +445,7 @@ android {
             resValue "string", "fb_page_id", "161478120632146"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524892602"
             resValue "string", "app_uri_hostname", "www.mysale.ph"
+            resValue "string", "app_uri_klarna", "www.mysale.ph.klarna"
 
             ext.newRelicAppToken = "AAfb90a146f4b17ba00df83492608b2d7057e99e16"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -540,6 +556,9 @@ android {
 
 repositories {
     flatDir { dirs 'libs' }
+    maven {
+        url 'https://x.klarnacdn.net/mobile-sdk/'
+    }
 }
 
 dependencies {
@@ -694,6 +713,10 @@ dependencies {
 
     // guava
     implementation "com.google.guava:guava:$rootProject.guavaVersion"
+
+    // klarna
+    implementation 'com.klarna.mobile:sdk:2.1.0'
+//    implementation 'com.klarna.checkout:sdk:1.6.15'
 
     implementation project(path: ':genie-utility')
     implementation project(path: ':genie-animation')

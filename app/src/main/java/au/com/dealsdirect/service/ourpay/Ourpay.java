@@ -2,12 +2,15 @@ package au.com.dealsdirect.service.ourpay;
 
 import com.braintreepayments.api.models.PaymentMethodNonce;
 
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.PhoneVerification;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.PhoneVerification;
 
 
 /*
@@ -15,6 +18,35 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrent
  */
 
 public class Ourpay {
+
+    public enum OurpayMode {
+        UNAVAILABLE(0),
+        NORMAL(1),
+        NOBUTTON(2),
+        SHOWPOPUP(3);
+
+        private int mode;
+
+        private OurpayMode(int mode) {
+            this.mode = mode;
+        }
+
+        public int getModeNumber() {
+            return mode;
+        }
+
+        private static final Map<Integer, OurpayMode> lookup = new HashMap<Integer, OurpayMode>();
+
+        static {
+            for (OurpayMode s : EnumSet.allOf(OurpayMode.class)) {
+                lookup.put(s.getModeNumber(), s);
+            }
+        }
+
+        public static OurpayMode get(int modeNumber) {
+            return lookup.get(modeNumber);
+        }
+    }
 
     private boolean mCanUse = false;
     private Double mInitialAmount = null;
@@ -28,6 +60,7 @@ public class Ourpay {
     private List<GetCurrentOrderOurpay.PlannedTransaction> mPlannedTransactions;
     private int mTermsAndConditionsCheckboxState = 0;
     private int mState = 0;
+    public OurpayMode mMode = OurpayMode.UNAVAILABLE;
     private PaymentMethodNonce mPaymentMethodNonce;
     private String mTermsAndConditionsText = "";
     private PhoneVerification mOurpayPhoneVerification;
@@ -41,8 +74,9 @@ public class Ourpay {
 
     }
 
+    @Deprecated
     public boolean isCanUse() {
-        return mCanUse;
+        return mMode != OurpayMode.UNAVAILABLE;
     }
 
     public Double getInitialAmount() {
@@ -111,6 +145,19 @@ public class Ourpay {
 
     public void setErrorCode(String errorCode) {
         mErrorCode = errorCode;
+    }
+
+    public OurpayMode getMode() {
+        return mMode;
+    }
+
+    public void setMode(OurpayMode mode) {
+        this.mMode = mMode;
+    }
+
+    public void setMode(int mode) {
+        OurpayMode m = OurpayMode.get(mode);
+        this.mMode = m != null ? m : OurpayMode.UNAVAILABLE;
     }
 
     public void setTransactionCount(int transactionCount) {
