@@ -70,12 +70,15 @@ public class AppWishlistHelper implements WishlistHelper {
 
     @Override
     public void removeFromWishlist(String productId, WishlistChangeDelayedCallback delayedCallback) {
+        if (productId == null || productId.isEmpty()) {
+            return;
+        }
+
         int i = 0;
         while (i < wishlist.size()) {
             final WishlistObject item = wishlist.get(i);
-            if (item != null &&
-                    item.getProductId() != null &&
-                    item.getProductId().equals(productId)) {
+            final String otherProductId = item != null ? item.getProductId() : null;
+            if (productId.equals(otherProductId)) {
                 wishlist.remove(i);
             } else {
                 i++;
@@ -114,11 +117,13 @@ public class AppWishlistHelper implements WishlistHelper {
 
     @Override
     public boolean isProductInWishlist(String productId) {
+        if (productId == null || productId.isEmpty()) {
+            return false;
+        }
         for (int i = 0; i < wishlist.size(); i++) {
             final WishlistObject item = wishlist.get(i);
-            if (item != null &&
-                    item.getProductId() != null &&
-                    item.getProductId().equals(productId)) {
+            final String otherProductId = item != null ? item.getProductId() : null;
+            if (productId.equals(otherProductId)) {
                 return true;
             }
         }
