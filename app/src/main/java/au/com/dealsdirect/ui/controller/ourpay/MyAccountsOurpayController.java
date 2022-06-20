@@ -600,7 +600,8 @@ public class MyAccountsOurpayController extends BaseController
                 .setOnClickListener(v -> openInfoPage());
         mEmptyView.findViewById(R.id.myAccountsOurpayTermsAndConditionsButton)
                 .setOnClickListener(v -> openTermsAndConditionsPage());
-        unavailableNotice.findViewById(R.id.myaccount_ourpay_unavailable_notice);
+
+        unavailableNotice = mView.findViewById(R.id.myaccount_ourpay_unavailable_notice);
         unavailableNotice.setVisibility(mActivity.getResources().getBoolean(R.bool.is_myaccount_ourpay_unavailable_notice_visible) ? View.VISIBLE : View.INVISIBLE);
     }
 
@@ -622,7 +623,7 @@ public class MyAccountsOurpayController extends BaseController
         for (int i = 0; i < 3; i += 1) {
             fetchDataForIndex(i);
         }
-        unavailableNotice.findViewById(R.id.myaccount_ourpay_unavailable_notice);
+        unavailableNotice = mView.findViewById(R.id.myaccount_ourpay_unavailable_notice);
         unavailableNotice.setVisibility(mActivity.getResources().getBoolean(R.bool.is_myaccount_ourpay_unavailable_notice_visible) ? View.VISIBLE : View.INVISIBLE);
     }
 
