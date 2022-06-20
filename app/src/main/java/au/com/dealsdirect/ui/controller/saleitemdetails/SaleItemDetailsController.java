@@ -1785,7 +1785,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public void setIsAfterpayDetailsVisible(boolean visible) {
         shouldAfterpayDetailsBeVisible = visible;
         mAfterpayHolder.setVisibility(visible ? View.VISIBLE : View.GONE);
-        if(mActivity.getResources().getBoolean(R.bool.is_afterpay_disabled_client_override)) {
+        if (mActivity.getResources().getBoolean(R.bool.is_afterpay_disabled_client_override)) {
             mAfterpayHolder.setVisibility(View.GONE);
         }
     }
@@ -1849,8 +1849,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
         mYouMayAlsoLikeContainer.setVisibility(View.VISIBLE);
 
-        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(mActivity.getSupplierOriginalPriceInfoHelper() != null);
-        adapter.setYouMayAlsoLikeList(mYouMayAlsoLikeList);
+        final List<SaleItemProduct> dataSource = new ArrayList<>(mYouMayAlsoLikeList);
+        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(dataSource, mActivity.getSupplierOriginalPriceInfoHelper() != null);
         adapter.setOnItemTappedListener(new HorizontalScrollingItemsAdapter.OnItemTappedListener() {
             @Override
             public void onItemTapped(SaleItemProduct item, int position, int size) {
@@ -1893,23 +1893,20 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mRecommendedList = recommendedItemsResponseList;
 
-        HorizontalScrollingItemsAdapter adapter = null;
-        if (!recommendedItemsResponseList.isEmpty()) {
-            adapter = new HorizontalScrollingItemsAdapter(mActivity.getSupplierOriginalPriceInfoHelper() != null);
-            adapter.setRecommendedList(recommendedItemsResponseList);
-            adapter.setOnItemTappedListener(new HorizontalScrollingItemsAdapter.OnItemTappedListener() {
-                @Override
-                public void onItemTapped(SaleItemProduct item, int position, int size) {
-                    SaleItemDetailsController.this.onItemTapped((RecommendedItemsResponse) item, position, size);
-                }
+        final List<SaleItemProduct> dataSource = new ArrayList<>(mRecommendedList);
+        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(dataSource, mActivity.getSupplierOriginalPriceInfoHelper() != null);
+        adapter.setOnItemTappedListener(new HorizontalScrollingItemsAdapter.OnItemTappedListener() {
+            @Override
+            public void onItemTapped(SaleItemProduct item, int position, int size) {
+                SaleItemDetailsController.this.onItemTapped((RecommendedItemsResponse) item, position, size);
+            }
 
-                @Override
-                public void onPriceInfoTapped(SaleItemProduct item) {
-                    onPriceInfoClicked(item);
-                }
-            });
-            adapter.setWishlistListener(horizontalItemsWishlistListener);
-        }
+            @Override
+            public void onPriceInfoTapped(SaleItemProduct item) {
+                onPriceInfoClicked(item);
+            }
+        });
+        adapter.setWishlistListener(horizontalItemsWishlistListener);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
 
@@ -1939,24 +1936,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mRecentlyViewedContainer.setVisibility(View.VISIBLE);
 
-        HorizontalScrollingItemsAdapter adapter = null;
-        if (!response.isEmpty()) {
-            adapter = new HorizontalScrollingItemsAdapter(mActivity.getSupplierOriginalPriceInfoHelper() != null);
-            adapter.setRecentlyViewedList(response);
-            adapter.setShouldRepeatCellsToFillWidth(false);
-            adapter.setOnItemTappedListener(new HorizontalScrollingItemsAdapter.OnItemTappedListener() {
-                @Override
-                public void onItemTapped(SaleItemProduct item, int position, int size) {
-                    SaleItemDetailsController.this.onItemTapped((RecentlyViewedItemResponse) item, position, size);
-                }
+        final List<SaleItemProduct> dataSource = new ArrayList<>(response);
+        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(dataSource, mActivity.getSupplierOriginalPriceInfoHelper() != null);
+        adapter.setShouldRepeatCellsToFillWidth(false);
+        adapter.setOnItemTappedListener(new HorizontalScrollingItemsAdapter.OnItemTappedListener() {
+            @Override
+            public void onItemTapped(SaleItemProduct item, int position, int size) {
+                SaleItemDetailsController.this.onItemTapped((RecentlyViewedItemResponse) item, position, size);
+            }
 
-                @Override
-                public void onPriceInfoTapped(SaleItemProduct item) {
-                    onPriceInfoClicked(item);
-                }
-            });
-            adapter.setWishlistListener(horizontalItemsWishlistListener);
-        }
+            @Override
+            public void onPriceInfoTapped(SaleItemProduct item) {
+                onPriceInfoClicked(item);
+            }
+        });
+        adapter.setWishlistListener(horizontalItemsWishlistListener);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
 

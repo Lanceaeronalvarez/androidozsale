@@ -118,10 +118,14 @@ public class SaleItemViewHolder extends RecyclerView.ViewHolder {
     public void setupViewHolder(SaleItemProduct product, String imageUrl, boolean isProductInWishlist) {
         name.setText(product.getName());
 
-        ImageUtils.loadImageWithPlaceholder(imageUrl,
-                image,
-                ContextCompat.getDrawable(itemView.getContext(), R.drawable.bg_skeleton_stretch),
-                null);
+        if (imageUrl == null) {
+            image.setImageDrawable(null);
+        } else {
+            ImageUtils.loadImageWithPlaceholder(imageUrl,
+                    image,
+                    ContextCompat.getDrawable(itemView.getContext(), R.drawable.bg_skeleton_stretch),
+                    null);
+        }
 
         image.setTransitionName(itemView.getContext().getResources().getString(R.string.transition_sale_image_indexed, getAdapterPosition()));
 
