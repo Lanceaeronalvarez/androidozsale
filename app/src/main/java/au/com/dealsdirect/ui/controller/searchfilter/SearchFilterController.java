@@ -692,6 +692,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void updateFacetItemToFilters(Set<SearchChipModel> selectedChips, SearchChipModel chipChanged, boolean isAdded) {
+        if (!isViewAttached() || !isAttached()) {
+            return;
+        }
         mPresenter.requestUpdate(
                 mCategoryKeys,
                 selectedChips,
@@ -707,6 +710,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void onResetPriceRange() {
+        if (!isViewAttached() || !isAttached()) {
+            return;
+        }
         mHasSeekbarReset = true;
         if (mSeekbar == null) {
             return;
@@ -725,12 +731,18 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void replaceCategoryTree(List<GetCategoryTreeResponse> categoryTree) {
+        if (!isViewAttached() || !isAttached()) {
+            return;
+        }
         mSubCategoriesAdapter.replaceData(categoryTree);
         mSubCategoriesAdapter.setSelectedCategories(mCategoryKeys);
     }
 
     @Override
     public void replaceSearchChipModels(Set<SearchChipModel> chipModels) {
+        if (!isViewAttached() || !isAttached()) {
+            return;
+        }
         mFacetItemsAdapter.setSearchItemsList(chipModels);
         mSearchItemsList = chipModels;
         boolean doesSliderExist = false;
@@ -759,6 +771,9 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void onCategoryClicked(GetCategoryTreeResponse category) {
+        if (!isViewAttached() || !isAttached()) {
+            return;
+        }
 
         checkParentSelection(category);
 
@@ -954,7 +969,7 @@ public class SearchFilterController extends BaseController implements SearchFilt
 
     @Override
     public void setRepository(SearchFilterMvpRepository repository) {
-        if (repository != null) {
+        if (repository != null && mPresenter != null) {
             mPresenter.setRepository(repository);
         }
     }
