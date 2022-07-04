@@ -173,6 +173,7 @@
         <item>@string/account_orders</item>
         <item>@string/account_payments</item>
         <item>@string/account_returns</item>
+        <item>@string/account_returns_policy</item>
         <item>@string/account_vouchers</item>
         <item>@string/account_invite_friend</item>
         <item>@string/account_ourpay</item>

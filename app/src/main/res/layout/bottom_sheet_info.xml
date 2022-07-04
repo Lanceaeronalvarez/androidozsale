@@ -24,6 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
+        android:id="@+id/bottom_sheet_info_content_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"
@@ -37,8 +38,8 @@
             fontPath="@string/font_app_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginBottom="@dimen/margin_medium"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small"
             android:lineSpacingExtra="@dimen/margin_tiny"
             android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tempus sem quis turpis pellentesque pulvinar. Quisque luctus erat metus, et feugiat risus bibendum in. Donec in nibh lectus. Morbi rhoncus sapien id mollis blandit. Etiam odio justo, vestibulum at arcu sit amet, posuere pretium arcu. Nunc faucibus felis et urna pharetra molestie. Fusce ipsum est, posuere vel mi eu, luctus auctor odio. Cras sit amet erat lorem.\n\nVestibulum pulvinar imperdiet tellus sed vulputate. Vestibulum ac magna turpis. Aenean orci dui, interdum quis rutrum quis, luctus eu lorem. Nulla id nulla in quam pellentesque sodales. Suspendisse gravida iaculis dapibus. Phasellus ut felis interdum leo porttitor fermentum. Vestibulum finibus, sem quis consectetur bibendum, lorem velit pharetra eros, ac porta nisi sapien eu ligula. Pellentesque semper lectus id nisl vehicula, at consequat lectus commodo. Donec scelerisque vel magna eget dapibus."
             android:textColor="@color/text_medium"
@@ -53,6 +54,7 @@
         android:layout_margin="@dimen/padding_default"
         android:text="Button"
         android:textSize="@dimen/text_size_headline2"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_info_content_scrollview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
