@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemViewHolder;
 
@@ -30,13 +27,14 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
     public OnItemTappedListener onItemTappedListener = null;
     public WishlistListener wishlistListener = null;
 
-    List<SaleItemProduct> mDatasource = null;
+    private final List<SaleItemProduct> mDatasource;
 
     private boolean shouldRepeatCellsToFillWidth = true;
 
     private final boolean isSupplierOriginalPriceInfoEnabled;
 
-    public HorizontalScrollingItemsAdapter(boolean isSupplierOriginalPriceInfoEnabled) {
+    public HorizontalScrollingItemsAdapter(List<SaleItemProduct> dataSource, boolean isSupplierOriginalPriceInfoEnabled) {
+        mDatasource = new ArrayList<>(dataSource);
         this.isSupplierOriginalPriceInfoEnabled = isSupplierOriginalPriceInfoEnabled;
     }
 
@@ -53,7 +51,8 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
         final int virtualPosition = position % mDatasource.size();
         final SaleItemProduct saleItemProduct = mDatasource.get(virtualPosition);
 
-        final String imgUrl = saleItemProduct.getImages().get(0);
+        final List<String> imgUrls = saleItemProduct.getImages();
+        final String imgUrl = imgUrls == null || imgUrls.isEmpty() ? null : imgUrls.get(0);
 
         final boolean isProductInWishlist;
         if (wishlistListener != null) {
@@ -80,7 +79,7 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
 
     @Override
     public int getItemCount() {
-        return (mDatasource != null && !mDatasource.isEmpty()) ?
+        return !mDatasource.isEmpty() ?
                 mDatasource.size() + getEdgeBufferSize() * 2 : 0;
     }
 
@@ -94,27 +93,6 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
 
     public List<SaleItemProduct> getDatasource() {
         return mDatasource;
-    }
-
-    public void setRecentlyViewedList(List<RecentlyViewedItemResponse> mRecentlyViewedList) {
-        this.mDatasource = new ArrayList<>(mRecentlyViewedList);
-        if (recyclerView != null && !recyclerView.isComputingLayout()) {
-            notifyDataSetChanged();
-        }
-    }
-
-    public void setYouMayAlsoLikeList(List<GetYouMayAlsoLikeResponse> youMayAlsoLikeList) {
-        this.mDatasource = new ArrayList<>(youMayAlsoLikeList);
-        if (recyclerView != null && !recyclerView.isComputingLayout()) {
-            notifyDataSetChanged();
-        }
-    }
-
-    public void setRecommendedList(List<RecommendedItemsResponse> mRecommendedList) {
-        this.mDatasource = new ArrayList<>(mRecommendedList);
-        if (recyclerView != null && !recyclerView.isComputingLayout()) {
-            notifyDataSetChanged();
-        }
     }
 
     public void setupDimensions(int width, int height) {
@@ -232,6 +210,7 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
 
     public interface OnItemTappedListener {
         void onItemTapped(SaleItemProduct item, int position, int size);
+
         void onPriceInfoTapped(SaleItemProduct item);
     }
 

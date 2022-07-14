@@ -576,6 +576,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private boolean mHasLoadedAllItems = false;
     private boolean mInitialLoad = false;
     private boolean mHasSavedInstance = false;
+    private boolean shouldReload = false;
 
     private boolean willOpenSaleDetails = false;
 
@@ -884,6 +885,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
+        shouldReload = true;
+
         if (savedInstanceState.getBoolean(BundleKeys.SALEITEMS_IS_WISHLIST, false)) {
             setSourceMode(SourceMode.WISHLIST);
         } else {
@@ -959,8 +962,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public void onViewDidAppear(Controller previousController) {
         super.onViewDidAppear(previousController);
 
-        if (mSourceType != SourceType.DEEPLINK &&
-                !(previousController instanceof SaleItemDetailsController) || mSourceType == SourceType.SELLER) {
+        if (shouldReload ||
+                (mSourceType != SourceType.DEEPLINK &&
+                !(previousController instanceof SaleItemDetailsController) || mSourceType == SourceType.SELLER)) {
+            shouldReload = false;
             resetViewBasedOnSourceMode();
             switch (mSourceMode) {
                 case NORMAL:
@@ -1872,7 +1877,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 GateKeeper.setRoot(mSearchFilterRouter, destination, RouterTransaction.with(searchFilterController));
             }
 
-            mSearchFilterMvpView.setRepository(SaleItemsController.this);
+            mSearchFilterMvpView.setRepository(this);
             mSearchFilterMvpView.replaceSearchChipModels(mChipFilters);
         }
         showCollapsingToolbar();
@@ -2389,7 +2394,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void resetViewBasedOnSourceMode() {
-        if (!isViewAttached() || !isViewBound()) return;
+        if (!isViewAttached() || !isViewBound() ||
+                mSaleItemsToolbarField == null ||
+                mTabLayout == null ||
+                mSaleItemsBackIcon == null ||
+                mBrandBubblesRecyclerView == null ||
+                mPresenter == null) {
+            return;
+        }
 
         switch (mSourceMode) {
             case NORMAL:
