@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.details;
 
-import android.util.Log;
+import com.androidnetworking.error.ANError;
+
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 
@@ -10,7 +12,6 @@ import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSa
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
-import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -49,14 +50,26 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
         userDetailsRequest.setLanguageID(getDataManager().getLanguageId());
         doApiCallForResponse(getDataManager().getSaveUserDetailsApiCall(userDetailsRequest), new AppApiCallback() {
             @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                if (!getMvpView().isViewAttached()) {
+                    return;
+                }
+                if (t instanceof ANError) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(((ANError) t).getErrorBody());
+                        getMvpView().onError(jsonObject.getString("detail"));
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+
+            @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
-                if (((SetUserDetailsResponse) response).getSetUserDetailsResponseValue().isResult()) {
-                    getMvpView().saveUserDetailsSuccess();
-                } else {
-                    getMvpView().saveUserDetailsFailed(((SetUserDetailsResponse) response).getSetUserDetailsResponseValue().getMessage());
-                }
+                getMvpView().saveUserDetailsSuccess();
+
             }
         });
     }
@@ -66,12 +79,12 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
         SaveReceiveSalesRequest request = new SaveReceiveSalesRequest(getDataManager().getCountryId(), getDataManager().getLanguageId(), receiveInvitations);
         getMvpView().showLoading();
         doApiCallForResponse(getDataManager().callSaveReceiveSales(request), new AppApiCallback() {
-                @Override
-                public void onSuccess(Object response) {
-                    super.onSuccess(response);
-                    getMvpView().onSaveReceiveSales((SaveReceiveSalesResponse) response);
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        getMvpView().onSaveReceiveSales((SaveReceiveSalesResponse) response);
+                    }
                 }
-            }
         );
     }
 

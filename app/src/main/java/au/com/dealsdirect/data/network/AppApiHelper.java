@@ -1036,12 +1036,12 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<SetUserDetailsResponse> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.saveUserDetails())
+    public Observable<String> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
+        return Rx2AndroidNetworking.put(ApiEndPoint.saveUserDetails())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(setUserDetailsRequest))
                 .build()
-                .getObjectObservable(SetUserDetailsResponse.class);
+                .getStringObservable();
     }
 
     @Override

@@ -583,11 +583,11 @@ public final class ApiEndPoint {
     }
 
     public static String saveUserDetails() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "SetUserDetails");
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/details", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String loadUserDetails() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetUserDetails");
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/details", ApiUrlVersion.v1.apiVersion());
     }
 
     /* Summary */

@@ -2,8 +2,6 @@ package au.com.dealsdirect.ui.controller.details;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +12,14 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,13 +35,8 @@ import au.com.dealsdirect.ui.custom.toggleswitch.BaseToggleSwitch;
 import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.DateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-/**
- * Created by Paul on 6/20/17.
- */
 
 public class DetailsController extends BasePullToRefreshController implements DetailsMvpView {
 
@@ -89,18 +87,12 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.register_emails_text)
     TextView mPromotionEmailsText;
 
-    private Calendar mCalendar;
+    private Date dateOfBirth = null;
     private DatePickerDialog.OnDateSetListener onDateSetListener;
     private BaseToggleSwitch.OnToggleSwitchChangeListener mOnToggleSwitchListener;
-//    private ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback mDragDismissCallback
-//            = new ElasticHorizontalDragDismissFrameLayout.ElasticHorizontalDragDismissCallback() {
-//        @Override
-//        public void onDragDismissed() {
-//            super.onDragDismissed();
-//            getRouter().popController(DetailsController.this);
-//        }
-//    };
 
+    private final SimpleDateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private final SimpleDateFormat uiDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public DetailsController(Bundle args) {
         super(args);
@@ -169,25 +161,28 @@ public class DetailsController extends BasePullToRefreshController implements De
             mGenderSpinner.setAdapter(customSpinnerAdapter);
         }
 
-        mCalendar = Calendar.getInstance();
-
         onDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                mCalendar.set(Calendar.YEAR, year);
-                mCalendar.set(Calendar.MONTH, monthOfYear);
-                mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                mDateOfBirthText.setText(DateUtils.getDateStringFromCalendar(mCalendar));
+                final Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                dateOfBirth = calendar.getTime();
+                updateDateOfBirthField();
             }
         };
 
         mDateOfBirthText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Calendar calender = Calendar.getInstance();
+                if (dateOfBirth != null) {
+                    calender.setTime(dateOfBirth);
+                }
                 new DatePickerDialog(mActivity, R.style.DatePickerTheme, onDateSetListener,
-                        mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
-                        mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        calender.get(Calendar.YEAR), calender.get(Calendar.MONTH),
+                        calender.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
@@ -204,7 +199,7 @@ public class DetailsController extends BasePullToRefreshController implements De
     @Override
     public void loadDetails(GetUserDetailsResponse userDetailsResponse) {
 //        LinkedTreeMap details = (LinkedTreeMap) userDetailsResponse.getResponse().getScheduledPlan();
-        GetUserDetailsResponse.Value value = userDetailsResponse.getResponse().getValue();
+        GetUserDetailsResponse value = userDetailsResponse;
         mFirstNameText.setText(value.getForename());
         mLastNameText.setText(value.getSurname());
         mEmailAddressText.setText(value.getEmail());
@@ -217,12 +212,12 @@ public class DetailsController extends BasePullToRefreshController implements De
         }
 
 
-        if (value.getDateOfBirth() != null) {
-            String day = value.getDateOfBirth().getDay().toString();
-            String year = value.getDateOfBirth().getYear().toString();
-            String month = DateUtils.months[value.getDateOfBirth().getMonth() - 1];
-            mDateOfBirthText.setText(month + " " + day + ", " + year);
+        try {
+            dateOfBirth = serverDateFormat.parse(value.getDateOfBirth());
+        } catch (Exception e) {
+            dateOfBirth = null;
         }
+        updateDateOfBirthField();
 
         int genderItem = 0;
         if (!value.getGender()) {
@@ -275,7 +270,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         String firstname = mFirstNameText.getText().toString();
         String lastname = mLastNameText.getText().toString();
         boolean gender = getBoolean(R.bool.is_gender_enabled) && mGenderSpinner.getSelectedItem().toString().equals("Male");
-        String dateofbirth = mDateOfBirthText.getText().toString();
+        String dateofbirth = dateOfBirth == null ? null : serverDateFormat.format(dateOfBirth);
         String email = mEmailAddressText.getText().toString();
         String password = mPasswordText.getText().toString();
         String newpassword = mNewPasswordText.getText().toString();
@@ -306,6 +301,10 @@ public class DetailsController extends BasePullToRefreshController implements De
 
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
         mPresenter.loadUser(setUserDetailsRequest);
+    }
+
+    private void updateDateOfBirthField() {
+        mDateOfBirthText.setText(dateOfBirth == null ? null : uiDateFormat.format(dateOfBirth));
     }
 
     public SetUserDetailsRequest createUserDetailRequest(String userName, String firstName, String lastName,
