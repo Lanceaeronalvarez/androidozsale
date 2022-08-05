@@ -185,7 +185,6 @@ public class MainController extends BaseController implements MainMvpView {
 //        ADD "NEW" Badge to categories
 
         if (mPresenter.isInitialLaunch()) {
-            showNewTagOnCategory(true);
             mPresenter.setInitialLaunchFalse();
         }
 
@@ -666,7 +665,7 @@ public class MainController extends BaseController implements MainMvpView {
 
         String text;
         if (count == 0) {
-            text = mPresenter.hasWishlistBeenAccessed() ? "" : "NEW";
+            text = "";
         } else {
             text = Integer.toString(count);
         }
