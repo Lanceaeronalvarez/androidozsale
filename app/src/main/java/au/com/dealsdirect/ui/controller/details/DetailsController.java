@@ -34,6 +34,7 @@ import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.userdetails.UpdateUserEmailSubscriptionRequest;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
+import au.com.dealsdirect.ui.controller.account.AccountDeletionConfirmationDialog;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -96,12 +97,17 @@ public class DetailsController extends BasePullToRefreshController implements De
     private final Map<String, RadioButton> emailSubscriptionPreferencesRadioButtonsMap = new HashMap<>();
     private final Map<Integer, String> emailSubscriptionPreferencesRadioButtonsIdMap = new HashMap<>();
 
+    @BindView(R.id.controller_account_deletion_button)
+    View mAccountDeletionButton;
+
+
     private Date dateOfBirth = null;
     private DatePickerDialog.OnDateSetListener onDateSetListener;
 
     private final SimpleDateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private final SimpleDateFormat uiDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+    private String userDetailsId = null;
     private GetUserDetailsResponse currentUserDetails = null;
 
     private String emailSubscriptionPreference = null;
@@ -183,6 +189,11 @@ public class DetailsController extends BasePullToRefreshController implements De
                     calender.get(Calendar.DAY_OF_MONTH)).show();
         });
 
+        mAccountDeletionButton.setVisibility(View.GONE);
+        mAccountDeletionButton.setOnClickListener(v -> accountDeletionButtonPressed());
+
+        userDetailsId = null;
+
         if (emailSubscriptionPreferencesRadioGroup.getChildCount() > 0) {
             for (int i = 0; i < emailSubscriptionPreferencesRadioGroup.getChildCount(); i++) {
                 final RadioButton radioButton = (RadioButton) emailSubscriptionPreferencesRadioGroup.getChildAt(i);
@@ -223,6 +234,8 @@ public class DetailsController extends BasePullToRefreshController implements De
             mGenderSpinner.setSelection(genderItem);
         }
 
+        userDetailsId = userDetailsResponse.getID();
+        mAccountDeletionButton.setVisibility(userDetailsId != null && !userDetailsId.isEmpty() ? View.VISIBLE : View.GONE);
         emailSubscriptionPreference = userDetailsResponse.getReceiveInvitations() ?
                 userDetailsResponse.getMemberPreference() : UNSUBSCRIBE_PREFERENCE_KEY;
         emailSubscriptionPreferenceDate = getDateFromServerDateString(userDetailsResponse.getPreferenceDate());
@@ -387,6 +400,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         super.onRefreshStart();
 
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
+        userDetailsId = null;
         mPresenter.loadUser(setUserDetailsRequest);
     }
 
@@ -409,6 +423,18 @@ public class DetailsController extends BasePullToRefreshController implements De
         userDetailsRequest.setConfirmPassword(confirmPassword);
 
         return userDetailsRequest;
+    }
+
+    private void accountDeletionButtonPressed() {
+        if (userDetailsId != null) { // button should not be visible when null?
+            mActivity.showAccountDeletionConfirmationDialog(result -> {
+                if (result == AccountDeletionConfirmationDialog.Result.CONFIRMED) {
+                    mPresenter.accountDeletion(userDetailsId);
+                    mActivity.callLogout(null);
+                    getRouter().popCurrentController();
+                }
+            });
+        }
     }
 
     private boolean isThereAnyChangesInUserDetails() {

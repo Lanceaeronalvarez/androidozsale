@@ -79,6 +79,31 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
     }
 
     @Override
+    public void accountDeletion(String userDetailsId) {
+        doApiCallForResponse(getDataManager().callAccountDeletion(userDetailsId), new AppApiCallback() {
+            @Override
+            public void onSuccess() {
+                super.onSuccess();
+            }
+
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+            }
+
+            @Override
+            public void onSuccess(List<?> response) {
+                super.onSuccess(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+            }
+        });
+    }
+
+    @Override
     public void saveReceiveSales(boolean receiveInvitations) {
         SaveReceiveSalesRequest request = new SaveReceiveSalesRequest(getDataManager().getCountryId(), getDataManager().getLanguageId(), receiveInvitations);
         getMvpView().showLoading();

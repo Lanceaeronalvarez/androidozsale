@@ -55,8 +55,6 @@ import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
 import com.klarna.mobile.sdk.api.KlarnaLoggingLevel;
 import com.klarna.mobile.sdk.api.KlarnaMobileSDKCommon;
-import com.klarna.mobile.sdk.api.payments.KlarnaPaymentsSDKError;
-import com.klarna.mobile.sdk.payments.KlarnaPaymentsSDK;
 import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.profiler.ProfilerInterface;
 import com.mysale.genie.utility.RxBus;
@@ -79,6 +77,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -99,6 +98,7 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BaseController.CommonControllerChangeListener;
 import au.com.dealsdirect.ui.controller.account.AccountController;
+import au.com.dealsdirect.ui.controller.account.AccountDeletionConfirmationDialog;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
@@ -130,6 +130,7 @@ import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BraintreeUtils;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.DelayedMethodExecutionManager;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
@@ -178,7 +179,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private SearchFilterController mSearchFilterController;
     private SearchFilterController mShopSearchFilterController;
 
-    private AuthHandler mAuthHandler;
+    private final Set<AuthHandler> loginAuthHandlers = new HashSet<>();
+    private final Set<AuthHandler> logoutAuthHandlers = new HashSet<>();
 
     private boolean mIsShowingStrictConsentUI = false;
     private boolean isTemplateTextsStored = false;
@@ -472,9 +474,29 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         || router == getMainController().getAccountRouter());
     }
 
+    public void addAuthHandler(AuthHandler handler, boolean isLogin) {
+        final Set<AuthHandler> authHandlers = isLogin ? loginAuthHandlers : logoutAuthHandlers;
+        authHandlers.add(handler);
+    }
+
+    private void resolveAuthHandlers(boolean isSuccess, boolean isLogin) {
+        final Set<AuthHandler> authHandlers = isLogin ? loginAuthHandlers : logoutAuthHandlers;
+        for (AuthHandler authHandler : authHandlers) {
+            if (isSuccess) {
+                authHandler.success();
+            } else {
+                authHandler.error();
+            }
+        }
+        authHandlers.clear();
+    }
+
     @Override
     public void showLoginController(Router router, AuthHandler handler) {
-        mAuthHandler = handler;
+        if (handler != null) {
+            loginAuthHandlers.add(handler);
+        }
+
         //any router can show login controller
         final Controller currentController = getCurrentController(router);
 
@@ -490,7 +512,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void showLoginController(AuthHandler handler) {
-        mAuthHandler = handler;
+        if (handler != null) {
+            loginAuthHandlers.add(handler);
+        }
     }
 
     @Override
@@ -972,7 +996,38 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     public void callLogout(AuthHandler handler) {
-        mPresenter.callLogout(handler);
+        if (handler != null) {
+            logoutAuthHandlers.add(handler);
+        }
+        mPresenter.callLogout(new AuthHandler() {
+            @Override
+            public void success() {
+                CartUtil.setValueToCart(0);
+                getMainController().removeBasketItemCount();
+                mPresenter.setActiveCheckoutSessionFalse();
+
+                //reset routers with unique user info
+                getMainController().resetCheckoutRouter();
+                getMainController().getRouter().popToRoot();
+                getMainController().showShopController();
+                callPublicSettings();
+                refreshBannersFromLogout();
+                refreshWishlist();
+
+                String[] array = getResources().getStringArray(R.array.gdpr_countries);
+                List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));
+                if (mGdprCountriesArray.contains(Settings.getSelectedCountry().countryName.toLowerCase()) && mPresenter.shouldShowStrictConsent()) {
+                    callAppConsent();
+                }
+
+                resolveAuthHandlers(true, false);
+            }
+
+            @Override
+            public void error() {
+                resolveAuthHandlers(false, false);
+            }
+        });
     }
 
     public boolean isAuthorized() {
@@ -1192,12 +1247,18 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 break;
         }
 
-        if (mAuthHandler != null) {
+        if (!loginAuthHandlers.isEmpty()) {
 
             // Required api calls on successful auth
-            loginSuccessMethods();
+            //On success, must call AppSettings
+            mPresenter.callGetAppSettings();
+            mPresenter.callGetUserCurrent();
+            //On success, must get new braintree token
+            mPresenter.fetchBTAuthorization();
+            mPresenter.callGetAppSettingsSectionsPayments(this);
+            refreshWishlist();
 
-            mAuthHandler.success();
+            resolveAuthHandlers(true, true);
         }
 
         String successMessage = getString(R.string.login_successfully);
@@ -1218,22 +1279,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void loginSuccessMethods() {
-        //On success, must call AppSettings
-        mPresenter.callGetAppSettings();
-        mPresenter.callGetUserCurrent();
-        //On success, must get new braintree token
-        mPresenter.fetchBTAuthorization();
-        mPresenter.callGetAppSettingsSectionsPayments(this);
-        refreshWishlist();
-    }
-
-    @Override
     public void loginErrorHandler(String message) {
 
-        if (mAuthHandler != null) {
-            mAuthHandler.error();
-        }
+        resolveAuthHandlers(false, true);
 
         if (message != null && !message.isEmpty()) {
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, message);
@@ -1817,6 +1865,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         bottomSheetFragment.setWebViewContent(content);
 
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_WEBVIEW_DIALOG_TAG);
+    }
+
+    public void showAccountDeletionConfirmationDialog(AccountDeletionConfirmationDialog.DismissListener dismissListener) {
+        final AccountDeletionConfirmationDialog dialogFragment = new AccountDeletionConfirmationDialog();
+
+        dialogFragment.setDismissListener(dismissListener);
+
+        dialogFragment.show(getSupportFragmentManager(), "AccountDeletionConfirmation");
     }
 
     public SupplierOriginalPriceInfoHelper getSupplierOriginalPriceInfoHelper() {

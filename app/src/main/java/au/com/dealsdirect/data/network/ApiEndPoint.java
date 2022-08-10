@@ -582,12 +582,18 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "Signup");
     }
 
+    /* User Details */
+
     public static String saveUserDetails() {
         return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/details", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String loadUserDetails() {
         return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/details", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String accountDeletion() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/customers/{customer_id}/account:deactivate", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String upddateEmailSubscription() {
@@ -700,11 +706,11 @@ public final class ApiEndPoint {
     }
 
     public static String callCreateKlarnaSession() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION  + "CreateKlarnaSession");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateKlarnaSession");
     }
 
     public static String callCreateKlarnaOrder() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION  + "CreateKlarnaOrder");
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateKlarnaOrder");
     }
 
     /*VISA CHECKOUT*/

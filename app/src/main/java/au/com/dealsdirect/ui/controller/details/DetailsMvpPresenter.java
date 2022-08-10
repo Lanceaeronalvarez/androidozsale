@@ -15,6 +15,8 @@ public interface DetailsMvpPresenter<V extends MvpView> extends GdprMvpPresenter
 
     void sendUserDetails(SetUserDetailsRequest userDetailsRequest);
 
+    void accountDeletion(String userDetailsId);
+
     void saveReceiveSales(boolean receiveInvitations);
 
     void updateEmailSubscriptionPreference(UpdateUserEmailSubscriptionRequest request);

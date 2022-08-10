@@ -1071,6 +1071,15 @@ public class AppApiHelper implements ApiHelper {
                 .getObjectObservable(GetEmailSubscriptionTemplatesResponse.class);
     }
 
+    @Override
+    public Observable<String> callAccountDeletion(String userDetailsId) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.accountDeletion())
+                .addHeaders(mApiHeader.get())
+                .addPathParameter("customer_id", userDetailsId)
+                .build()
+                .getStringObservable();
+    }
+
     public Observable<GetUserVoucherResponse> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getUserVouchers())
                 .addHeaders(mApiHeader.get())

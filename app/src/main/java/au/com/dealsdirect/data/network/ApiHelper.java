@@ -271,9 +271,13 @@ public interface ApiHelper {
 
     Observable<String> callDeleteUserDeliveryAddress(DeleteUserAddress.RequestValues requestValues, String addressID);
 
+    // USER DETAILS
+
     Observable<String> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
 
     Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest);
+
+    Observable<String> callAccountDeletion(String userDetailsId);
 
     Observable<String> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request);
 

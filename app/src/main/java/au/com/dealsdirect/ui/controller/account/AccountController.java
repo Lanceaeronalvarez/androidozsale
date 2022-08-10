@@ -117,6 +117,20 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     private boolean mHasSavedInstance = false;
 
+    private Boolean userDetailsLoggedOut = null;
+    private final AuthHandler userDetailsLogoutAuthHandler = new AuthHandler() {
+        @Override
+        public void success() {
+            setupLoginButton(false);
+            userDetailsLoggedOut = true;
+        }
+
+        @Override
+        public void error() {
+
+        }
+    };
+
     public static AccountController newInstance() {
         return new AccountController(
                 new BundleBuilder(new Bundle())
@@ -352,6 +366,8 @@ public class AccountController extends BaseController implements AccountMvpView,
         mAccountItemAdapter.setSelectedPosition(mAccountItemsMap.get(getResources().getString(R.string.account_details)));
 
         logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.DETAILS_MENU);
+
+        mActivity.addAuthHandler(userDetailsLogoutAuthHandler, false);
     }
 
     @Override
@@ -595,9 +611,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                 mPresenter.onAttach(mvpView);
                 mActivity.callGCMRegisterSubscriber();
 
-                if (mRightToolbarButton != null) {
-                    mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_out));
-                }
+                setupLoginButton(true);
 
                 mActivity.getMainController().resetCheckoutRouter();
                 if (mPresenter.isTablet()) {
@@ -624,24 +638,7 @@ public class AccountController extends BaseController implements AccountMvpView,
             @Override
             public void success() {
                 mPresenter.loadAccountItems(mAccountItems);
-                CartUtil.setValueToCart(0);
-                mActivity.getMainController().removeBasketItemCount();
-                mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_in));
-                mPresenter.setActiveCheckoutSessionFalse();
-
-                //reset routers with unique user info
-                mActivity.getMainController().resetCheckoutRouter();
-                mActivity.getMainController().getRouter().popToRoot();
-                mActivity.getMainController().showShopController();
-                mActivity.callPublicSettings();
-                mActivity.refreshBannersFromLogout();
-                mActivity.refreshWishlist();
-
-                String[] array = mActivity.getResources().getStringArray(R.array.gdpr_countries);
-                List<String> mGdprCountriesArray = new ArrayList<String>(Arrays.asList(array));
-                if (mGdprCountriesArray.contains(Settings.getSelectedCountry().countryName.toLowerCase()) && mPresenter.shouldShowStrictConsent()) {
-                    mActivity.callAppConsent();
-                }
+                setupLoginButton(false);
 
                 if (showDialog) {
                     CustomAlertDialog.showCustomAlertDialog(mActivity,
@@ -664,11 +661,12 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void initLoginDrawable() {
-        if (mPresenter.isAuthorized()) {
-            mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_out));
-
+        if (userDetailsLoggedOut == null) {
+            setupLoginButton(mPresenter.isAuthorized());
         } else {
-            mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_in));
+            if (userDetailsLoggedOut) {
+                setupLoginButton(false);
+            }
         }
 
         mRightToolbarButton.setVisibility(View.VISIBLE);
@@ -705,7 +703,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mIsLoginSuccessful = true;
                     mPresenter.onAttach(AccountController.this);
                     mActivity.callGCMRegisterSubscriber();
-                    mRightToolbarButton.setText(mActivity.getResources().getString(R.string.log_out));
+                    setupLoginButton(true);
                     mActivity.getMainController().resetShopRouter();
                     mActivity.getMainController().resetCategoriesRouter();
                     mActivity.getMainController().resetAccountRouter();
@@ -718,6 +716,12 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mIsLoginSuccessful = false;
                 }
             });
+        }
+    }
+
+    private void setupLoginButton(boolean isLoggedIn) {
+        if (mRightToolbarButton != null) {
+            mRightToolbarButton.setText(isLoggedIn ? mActivity.getResources().getString(R.string.log_out) : mActivity.getResources().getString(R.string.log_in));
         }
     }
 

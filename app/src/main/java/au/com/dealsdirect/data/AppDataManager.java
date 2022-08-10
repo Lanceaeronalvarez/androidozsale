@@ -171,7 +171,6 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetEmailSubscriptionTemplatesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
-import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.UpdateUserEmailSubscriptionRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
@@ -453,6 +452,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
         return mApiHelper.getLoadUserDetailsApiCall(setUserDetailsRequest);
+    }
+
+    @Override
+    public Observable<String> callAccountDeletion(String userDetailsId) {
+        return mApiHelper.callAccountDeletion(userDetailsId);
     }
 
     @Override
