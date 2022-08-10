@@ -62,6 +62,7 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ExpiryDateEditText;
 import au.com.dealsdirect.utils.IntrospectionUtils;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -646,5 +647,20 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             //TODO: should call Flow for addPaymentMethod
             return;
         }
+    }
+
+    @OnClick(R.id.stripe_card_form_card_number_container)
+    public void onCardNumberContainerClick() {
+        KeyboardUtils.showSoftInput(mStripeCardNumber, mActivity);
+    }
+
+    @OnClick(R.id.stripe_card_form_cvv_container)
+    public void onCvvContainerClick() {
+        KeyboardUtils.showSoftInput(mStripeCVV, mActivity);
+    }
+
+    @OnClick(R.id.stripe_card_form_expiration_container)
+    public void onExpirationContainerClick() {
+        KeyboardUtils.showSoftInput(mStripeExpiryDate, mActivity);
     }
 }

@@ -7,7 +7,9 @@
     android:background="@color/bt_white"
     android:orientation="vertical">
 
-    <LinearLayout style="@style/bt_field_container">
+    <LinearLayout
+        android:id="@+id/stripe_card_form_card_number_container"
+        style="@style/bt_field_container">
 
         <TextView
             android:layout_width="100dp"
@@ -45,7 +47,9 @@
         android:layout_marginLeft="@dimen/bt_margin"
         android:background="@color/bt_black_12" />
 
-    <LinearLayout style="@style/bt_field_container">
+    <LinearLayout
+        android:id="@+id/stripe_card_form_cvv_container"
+        style="@style/bt_field_container">
 
         <TextView
             android:layout_width="100dp"
@@ -80,6 +84,7 @@
         android:background="@color/bt_black_12" />
 
     <LinearLayout
+        android:id="@+id/stripe_card_form_expiration_container"
         style="@style/bt_field_container"
         tools:ignore="RtlCompat">
 

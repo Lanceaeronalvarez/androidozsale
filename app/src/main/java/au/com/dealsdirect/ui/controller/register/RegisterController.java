@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bluelinelabs.conductor.Controller;
@@ -42,6 +43,7 @@ import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -78,16 +80,16 @@ public class RegisterController extends VisaCheckoutController implements Regist
     TextView mToolBarTitle;
 
     @BindView(R.id.controller_register_forename_field)
-    TextView mRegisterForenameField;
+    EditText mRegisterForenameField;
 
     @BindView(R.id.controller_register_surname_field)
-    TextView mRegisterSurnameField;
+    EditText mRegisterSurnameField;
 
     @BindView(R.id.controller_register_email_field)
-    TextView mRegisterEmailField;
+    EditText mRegisterEmailField;
 
     @BindView(R.id.controller_register_password_field)
-    TextView mRegisterPasswordField;
+    EditText mRegisterPasswordField;
 
     @BindView(R.id.controller_register_terms_conditions_check)
     CheckBox mTermsCheck;
@@ -478,5 +480,25 @@ public class RegisterController extends VisaCheckoutController implements Regist
                 getRouter().setBackstack(backStack, null);
             }
         }
+    }
+
+    @OnClick(R.id.controller_register_email_entry_container)
+    public void onEmailEntryContainerClick() {
+        KeyboardUtils.showSoftInput(mRegisterEmailField, mActivity);
+    }
+
+    @OnClick(R.id.controller_register_forename_entry_container)
+    public void onForenameEntryContainerClick() {
+        KeyboardUtils.showSoftInput(mRegisterForenameField, mActivity);
+    }
+
+    @OnClick(R.id.controller_register_surname_entry_container)
+    public void onSurnameEntryContainerClick() {
+        KeyboardUtils.showSoftInput(mRegisterSurnameField, mActivity);
+    }
+
+    @OnClick(R.id.controller_register_password_entry_container)
+    public void onPasswordEntryContainerClick() {
+        KeyboardUtils.showSoftInput(mRegisterPasswordField, mActivity);
     }
 }

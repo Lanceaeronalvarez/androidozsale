@@ -34,6 +34,7 @@ import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -301,5 +302,15 @@ public class LoginController extends BaseController implements LoginMvpView {
                 bundle,
                 new HorizontalChangeHandler(false),
                 new HorizontalChangeHandler());
+    }
+
+    @OnClick(R.id.controller_login_email_container)
+    public void onClickEmailContainer() {
+        KeyboardUtils.showSoftInput(mEmailEditText, mActivity);
+    }
+
+    @OnClick(R.id.controller_login_password_container)
+    public void onClickPasswordContainer() {
+        KeyboardUtils.showSoftInput(mPasswordEditText, mActivity);
     }
 }

@@ -42,6 +42,7 @@
                     android:textSize="@dimen/text_size_caption2" />
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_firstname_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -78,6 +79,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_lastname_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -114,6 +116,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_birthday_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -132,7 +135,6 @@
                         android:textSize="@dimen/text_size_caption1" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/controller_details_firstname_wrapper"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
@@ -184,6 +186,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_emailaddress_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -220,6 +223,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_password_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -256,6 +260,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_new_password_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -292,6 +297,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_confirm_password_cotainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"

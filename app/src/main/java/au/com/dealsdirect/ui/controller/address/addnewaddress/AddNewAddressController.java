@@ -31,6 +31,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -155,6 +156,8 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 if (infoList.getValidate() != null && infoList.getValidate().equalsIgnoreCase("*")) {
                     textViewLabel.setText(textViewLabel.getText() + "*");
                 }
+
+                dynamicView.setOnClickListener(v -> KeyboardUtils.showSoftInput(editTextValue, mActivity));
                 break;
             case "select":
                 TextView spinnerLabel = dynamicView.findViewById(R.id.row_add_address_label);
@@ -172,6 +175,13 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 if (infoList.getValidate().equalsIgnoreCase("*")) {
                     spinnerLabel.setText(spinnerLabel.getText());
                 }
+
+                dynamicView.setOnClickListener(v -> {
+                    mActivity.hideKeyboard();
+                    signatureOnDeliverySpinner.setFocusable(true);
+                    signatureOnDeliverySpinner.setFocusableInTouchMode(true);
+                    signatureOnDeliverySpinner.requestFocus();
+                });
                 break;
 
             default:

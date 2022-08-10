@@ -54,6 +54,7 @@
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_register_forename_entry_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
@@ -89,6 +90,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_register_surname_entry_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -124,6 +126,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_register_email_entry_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -159,6 +162,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_register_password_entry_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"

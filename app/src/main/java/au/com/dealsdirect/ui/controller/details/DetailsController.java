@@ -35,6 +35,7 @@ import au.com.dealsdirect.ui.custom.toggleswitch.BaseToggleSwitch;
 import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -322,5 +323,40 @@ public class DetailsController extends BasePullToRefreshController implements De
         userDetailsRequest.setConfirmPassword(confirmPassword);
 
         return userDetailsRequest;
+    }
+
+    @OnClick(R.id.controller_details_text_firstname_container)
+    public void onFirstNameContainerClick() {
+        KeyboardUtils.showSoftInput(mFirstNameText, mActivity);
+    }
+
+    @OnClick(R.id.controller_details_text_lastname_container)
+    public void onLastNameContainerClick() {
+        KeyboardUtils.showSoftInput(mLastNameText, mActivity);
+    }
+
+    @OnClick(R.id.controller_details_text_birthday_container)
+    public void onBirthdayContainerClick() {
+        KeyboardUtils.showSoftInput(mDateOfBirthText, mActivity);
+    }
+
+    @OnClick(R.id.controller_details_text_emailaddress_container)
+    public void onEmailContainerClick() {
+        KeyboardUtils.showSoftInput(mEmailAddressText, mActivity);
+    }
+
+    @OnClick(R.id.controller_details_text_password_container)
+    public void onPasswordContainerClick() {
+        KeyboardUtils.showSoftInput(mPasswordText, mActivity);
+    }
+
+    @OnClick(R.id.controller_details_text_new_password_container)
+    public void onNewPasswordContainerClick() {
+        KeyboardUtils.showSoftInput(mNewPasswordText, mActivity);
+    }
+
+    @OnClick(R.id.controller_details_text_confirm_password_cotainer)
+    public void onConfirmPasswordContainerClick() {
+        KeyboardUtils.showSoftInput(mConfirmPasswordText, mActivity);
     }
 }
