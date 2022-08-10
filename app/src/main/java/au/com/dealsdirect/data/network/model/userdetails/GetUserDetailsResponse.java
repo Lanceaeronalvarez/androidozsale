@@ -38,6 +38,12 @@ public class GetUserDetailsResponse {
     @SerializedName("date_of_birth")
     @Expose
     private String dateOfBirth;
+    @SerializedName("member_preference")
+    @Expose
+    private String memberPreference;
+    @SerializedName("preference_date")
+    @Expose
+    private String preferenceDate;
 
     public String getID() {
         return id;
@@ -125,5 +131,21 @@ public class GetUserDetailsResponse {
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getMemberPreference() {
+        return memberPreference;
+    }
+
+    public void setMemberPreference(String memberPreference) {
+        this.memberPreference = memberPreference;
+    }
+
+    public String getPreferenceDate() {
+        return preferenceDate;
+    }
+
+    public void setPreferenceDate(String preferenceDate) {
+        this.preferenceDate = preferenceDate;
     }
 }

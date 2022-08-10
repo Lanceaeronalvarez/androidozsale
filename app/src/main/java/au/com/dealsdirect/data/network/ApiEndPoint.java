@@ -590,6 +590,14 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/details", ApiUrlVersion.v1.apiVersion());
     }
 
+    public static String upddateEmailSubscription() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/notifications/email/subscription", ApiUrlVersion.v1.apiVersion());
+    }
+
+    public static String getEmailSubscriptionTemplates() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/notifications/email/subscription/templates", ApiUrlVersion.v1.apiVersion());
+    }
+
     /* Summary */
     public static String getSummaryMenu() {
         return getFormattedUrl(ApiService.GENIE, "menu");

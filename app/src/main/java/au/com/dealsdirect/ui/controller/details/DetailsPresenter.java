@@ -4,14 +4,18 @@ import com.androidnetworking.error.ANError;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesRequest;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
+import au.com.dealsdirect.data.network.model.userdetails.GetEmailSubscriptionTemplatesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.network.model.userdetails.UpdateUserEmailSubscriptionRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -83,6 +87,55 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
                         getMvpView().onSaveReceiveSales((SaveReceiveSalesResponse) response);
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void updateEmailSubscriptionPreference(UpdateUserEmailSubscriptionRequest request) {
+        doApiCallForResponse(getDataManager().callUpdateUserEmailSubscription(request), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        getMvpView().onUpdateEmailSubscriptionPreference();
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        super.onSuccess();
+                        getMvpView().onUpdateEmailSubscriptionPreference();
+                    }
+
+                    @Override
+                    public void onSuccess(List<?> response) {
+                        super.onSuccess(response);
+                        getMvpView().onUpdateEmailSubscriptionPreference();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void getEmailSubscriptionTemplates() {
+        doApiCallForResponse(getDataManager().getEmailSubscriptionTemplates(), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        if (response instanceof GetEmailSubscriptionTemplatesResponse) {
+                            getMvpView().onGetEmailSubscriptionTemplates((GetEmailSubscriptionTemplatesResponse) response);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                        getMvpView().onGetEmailSubscriptionTemplates(null);
                     }
                 }
         );

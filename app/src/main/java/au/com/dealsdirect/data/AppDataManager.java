@@ -168,9 +168,11 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
+import au.com.dealsdirect.data.network.model.userdetails.GetEmailSubscriptionTemplatesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsResponse;
+import au.com.dealsdirect.data.network.model.userdetails.UpdateUserEmailSubscriptionRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyRequest;
@@ -451,6 +453,16 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
         return mApiHelper.getLoadUserDetailsApiCall(setUserDetailsRequest);
+    }
+
+    @Override
+    public Observable<String> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request) {
+        return mApiHelper.callUpdateUserEmailSubscription(request);
+    }
+
+    @Override
+    public Observable<GetEmailSubscriptionTemplatesResponse> getEmailSubscriptionTemplates() {
+        return mApiHelper.getEmailSubscriptionTemplates();
     }
 
     @Override
