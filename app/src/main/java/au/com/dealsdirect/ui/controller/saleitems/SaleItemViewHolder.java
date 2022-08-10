@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
+import au.com.dealsdirect.ui.controller.priceblock.SaleItemProductAlternatePriceBlockHelper;
 import au.com.dealsdirect.ui.controller.priceblock.SaleItemProductPriceBlockHelper;
 import au.com.dealsdirect.utils.ImageUtils;
 import butterknife.BindView;
@@ -62,7 +63,9 @@ public class SaleItemViewHolder extends RecyclerView.ViewHolder {
 
     private SaleItemProductPriceBlockHelper priceBlockHelper = null;
 
-    public SaleItemViewHolder(View view, Pair<Integer, Integer> pair, boolean isSupplierOriginalPriceInfoEnabled) {
+    boolean useAlternatePriceBlockHelper = false;
+
+    public SaleItemViewHolder(View view, Pair<Integer, Integer> pair, boolean isSupplierOriginalPriceInfoEnabled, boolean useAlternatePriceBlockHelper) {
         super(view);
         ButterKnife.bind(this, view);
 
@@ -72,6 +75,7 @@ public class SaleItemViewHolder extends RecyclerView.ViewHolder {
         layout.setLayoutParams(params);
 
         this.isSupplierOriginalPriceInfoEnabled = isSupplierOriginalPriceInfoEnabled;
+        this.useAlternatePriceBlockHelper = useAlternatePriceBlockHelper;
     }
 
     private boolean isLiked = true;
@@ -136,12 +140,31 @@ public class SaleItemViewHolder extends RecyclerView.ViewHolder {
 
         setLiked(isProductInWishlist);
 
-        if (priceBlockHelper == null) {
-            priceBlockHelper = new SaleItemProductPriceBlockHelper(priceBlockContainer);
+        if (priceBlockHelper == null ||
+                (useAlternatePriceBlockHelper && (priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper)) ||
+                (!useAlternatePriceBlockHelper && !(priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper))) {
+            priceBlockHelper = useAlternatePriceBlockHelper ?
+                    new SaleItemProductAlternatePriceBlockHelper(priceBlockContainer) :
+                    new SaleItemProductPriceBlockHelper(priceBlockContainer);
         }
         priceBlockHelper.setup(product, isSupplierOriginalPriceInfoEnabled);
         priceBlockHelper.setFreeDeliveryTextViewText(null);
         priceBlockHelper.setPriceInfoOnClickListener(priceInfoOnClickListener);
+    }
+
+    public boolean isUseAlternatePriceBlockHelper() {
+        return useAlternatePriceBlockHelper;
+    }
+
+    public void setUseAlternatePriceBlockHelper(boolean useAlternatePriceBlockHelper) {
+        this.useAlternatePriceBlockHelper = useAlternatePriceBlockHelper;
+        if (priceBlockHelper != null &&
+                ((useAlternatePriceBlockHelper && (priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper)) ||
+                        (!useAlternatePriceBlockHelper && !(priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper)))) {
+            priceBlockHelper = useAlternatePriceBlockHelper ?
+                    new SaleItemProductAlternatePriceBlockHelper(priceBlockContainer) :
+                    new SaleItemProductPriceBlockHelper(priceBlockContainer);
+        }
     }
 
     public void setLikeButtonOnClickListener(View.OnClickListener onClickListener) {

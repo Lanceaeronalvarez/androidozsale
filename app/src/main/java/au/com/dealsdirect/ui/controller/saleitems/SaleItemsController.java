@@ -456,6 +456,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private static final String CATEGORY_FILTER_TYPE = "Category";
     private static final String KEY_SEARCH_TEXT = "KEY_SEARCH_TEXT";
     private static final String SHOP_KEY_SEARCH_TEXT = "SHOP_KEY_SEARCH_TEXT";
+    private static final int ALTERNATE_PRICE_BLOCK_MODE_NUMBER = 2;
 
     private String mSaleId = "";
     private String mTitle = "";
@@ -1190,6 +1191,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mColumnCount,
                 true,
                 mActivity.getSupplierOriginalPriceInfoHelper() != null,
+                mPresenter.getPriceBlockMode() == ALTERNATE_PRICE_BLOCK_MODE_NUMBER,
                 this::logWishlistEvent, saleItemAdapterHelper);
 
         mPaginateCallbacks = new Paginate.Callbacks() {
@@ -1358,6 +1360,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mColumnCount,
                 true,
                 mActivity.getSupplierOriginalPriceInfoHelper() != null,
+                mPresenter.getPriceBlockMode() == ALTERNATE_PRICE_BLOCK_MODE_NUMBER,
                 this::logWishlistEvent, saleItemAdapterHelper);
 
         CustomGridLayoutManager gridLayoutManager = new CustomGridLayoutManager(mActivity, mSaleItemsAdapter.getColumnCount());

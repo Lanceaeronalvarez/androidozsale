@@ -2011,4 +2011,14 @@ public class AppDataManager implements DataManager {
     public boolean isKlarnaEnabled() {
         return mPreferencesHelper.isKlarnaEnabled();
     }
+
+    @Override
+    public void setProductPagePriceBlockMode(int mode) {
+        mPreferencesHelper.setProductPagePriceBlockMode(mode);
+    }
+
+    @Override
+    public int getProductPagePriceBlockMode() {
+        return mPreferencesHelper.getProductPagePriceBlockMode();
+    }
 }

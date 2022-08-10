@@ -23,19 +23,19 @@ public class SaleItemProductPriceBlockHelper {
     final String PRICE_INFO_IMAGE_PLACEHOLDER = "asdf ";
     final String PRICE_INFO_IMAGE_SPACER = " ";
 
-    private final ViewGroup priceBlockViewGroup;
-    private final ViewGroup topTextContainer;
-    private final TextView topLeftTextView;
-    private final TextView topRightTextView;
-    private final TextView leftTextView;
-    private final TextView rightTextView;
-    private final View priceBlockBorder;
-    private final ViewGroup bottomTextContainer;
-    private final TextView bottomTextView;
-    private final TextView freeDeliveryTextView;
+    protected final ViewGroup priceBlockViewGroup;
+    protected final ViewGroup topTextContainer;
+    protected final TextView topLeftTextView;
+    protected final TextView topRightTextView;
+    protected final TextView leftTextView;
+    protected final TextView rightTextView;
+    protected final View priceBlockBorder;
+    protected final ViewGroup bottomTextContainer;
+    protected final TextView bottomTextView;
+    protected final TextView freeDeliveryTextView;
 
-    private View.OnClickListener onPriceInfoClickListener = null;
-    private ImageSpan priceInfoImageSpan = null;
+    protected View.OnClickListener onPriceInfoClickListener = null;
+    protected ImageSpan priceInfoImageSpan = null;
 
     public SaleItemProductPriceBlockHelper(ViewGroup view) {
         priceBlockViewGroup = view.findViewById(R.id.price_block);
@@ -159,7 +159,7 @@ public class SaleItemProductPriceBlockHelper {
 
             bottomText.append(bottomPriceText, new StrikethroughSpan(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-            clearPriceInfoImageSpacn();
+            clearPriceInfoImageSpan();
             bottomTextView.setText(bottomText);
             setupPriceInfo();
 
@@ -190,7 +190,7 @@ public class SaleItemProductPriceBlockHelper {
         bottomTextContainer.setOnClickListener(onClickListener);
     }
 
-    private void setupPriceInfo() {
+    protected void setupPriceInfo() {
         setupPriceInfo(onPriceInfoClickListener);
     }
 
@@ -202,7 +202,7 @@ public class SaleItemProductPriceBlockHelper {
         return priceInfoImageSpan != null;
     }
 
-    private void clearPriceInfoImageSpacn() {
+    protected void clearPriceInfoImageSpan() {
         priceInfoImageSpan = null;
     }
 
@@ -225,7 +225,7 @@ public class SaleItemProductPriceBlockHelper {
             bottomText.removeSpan(priceInfoImageSpan);
             bottomText.delete(bottomText.length() - PRICE_INFO_IMAGE_PLACEHOLDER.length(), bottomText.length());
             bottomText.delete(bottomText.length() - PRICE_INFO_IMAGE_SPACER.length(), bottomText.length());
-            clearPriceInfoImageSpacn();
+            clearPriceInfoImageSpan();
             bottomTextView.setText(bottomText);
         }
     }
@@ -243,7 +243,7 @@ public class SaleItemProductPriceBlockHelper {
         bottomTextContainer.getLayoutParams().height = getBottomTextViewHeight(context, isMinimized, isSupplierOriginalPriceInfoEnabled);
     }
 
-    private boolean shouldShowPriceRangeText(SaleItemProduct product) {
+    protected boolean shouldShowPriceRangeText(SaleItemProduct product) {
         final boolean hasPriceRangeText = product.getPriceRangeText() != null;
         if (product instanceof SaleItemDetails) {
             final List<SaleItemDetails> skuVariants = ((SaleItemDetails) product).getSkuVariants();
