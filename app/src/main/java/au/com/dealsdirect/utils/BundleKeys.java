@@ -121,7 +121,7 @@ public class BundleKeys {
     //legalities
     public static final String TEMPLATE_KEY = "TEMPLATE_KEY";
     public static final String TEMPLATE_KEY_ABOUT_US = "aboutus";
-    public static final String TEMPLATE_KEY_PRIVACY = "PrivacyPolicy_Text";
+    public static final String TEMPLATE_KEY_PRIVACY = "mobilePrivacyPolicy_Text";
     public static final String TEMPLATE_KEY_TNC = "TermsAndConditions_Text";
     public static final String TEMPLATE_KEY_OURPAY_TNC = "_OurPayTermsAndConditionsBody";
     public static final String LEGALITIES_TITLE = "LEGALITIES_TITLE";
