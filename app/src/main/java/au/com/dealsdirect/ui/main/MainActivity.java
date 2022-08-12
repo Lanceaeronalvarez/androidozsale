@@ -479,6 +479,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         authHandlers.add(handler);
     }
 
+    public void cancelAuthHandlers() {
+        loginAuthHandlers.clear();
+        logoutAuthHandlers.clear();
+    }
+
     private void resolveAuthHandlers(boolean isSuccess, boolean isLogin) {
         final Set<AuthHandler> authHandlers = isLogin ? loginAuthHandlers : logoutAuthHandlers;
         for (AuthHandler authHandler : authHandlers) {

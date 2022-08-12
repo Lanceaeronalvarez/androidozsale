@@ -3,8 +3,6 @@ package au.com.dealsdirect.ui.controller.register;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.bluelinelabs.conductor.Controller;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
@@ -23,9 +23,7 @@ import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
 import com.google.gson.Gson;
 import com.visa.checkout.VisaCheckoutSdk;
-import com.visa.checkout.VisaPaymentSummary;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.inject.Inject;
@@ -37,10 +35,12 @@ import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
+import au.com.dealsdirect.ui.controller.login.LoginController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.BackChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.KeyboardUtils;
@@ -141,7 +141,6 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     private String mRegisterMethod = NO_ACTION;
     private boolean isRegisterSuccess = false;
-    private boolean hasClearedBackstack = false;
 
     public static RegisterController newInstance() {
 
@@ -173,6 +172,16 @@ public class RegisterController extends VisaCheckoutController implements Regist
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+    }
+
+    @Override
+    public void refreshContents() {
+        super.refreshContents();
+        if (mPresenter.isTablet()) {
+            mActivity.getMainController().setNavigationBarEnabled(false);
+        } else {
+            mActivity.getMainController().hideBottomNav();
+        }
     }
 
     @Override
@@ -285,16 +294,23 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public boolean handleBack() {
-        if (hasClearedBackstack) {
-            mActivity.getMainController().goToPreviousContainerFromLogin(mActivity.isAuthorized());
+        if (!isRegisterSuccess) {
+            mActivity.cancelAuthHandlers();
         }
+
+        if (mPresenter.isTablet()) {
+            mActivity.getMainController().setNavigationBarEnabled(true);
+        } else {
+            mActivity.getMainController().showBottomNav();
+        }
+        mActivity.getMainController().goToPreviousContainerFromLogin(mActivity.isAuthorized());
 
         return super.handleBack();
     }
 
     @OnClick(R.id.partial_toolbar_right_view)
     void onCloseIconClick() {
-        clearBackstack();
+        hideKeyboard();
         mActivity.onBackPressed();
     }
 
@@ -306,7 +322,10 @@ public class RegisterController extends VisaCheckoutController implements Regist
     @OnClick(R.id.controller_register_back_icon)
     void onBackIconClick() {
         hideKeyboard();
-        mActivity.onBackPressed();
+        getRouter().replaceTopController(RouterTransaction.with(LoginController.newInstance())
+                .pushChangeHandler(new BackChangeHandler())
+                .popChangeHandler(new VerticalChangeHandler()));
+
     }
 
     @OnClick(R.id.controller_register_login_text)
@@ -344,7 +363,6 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public void showLoginSuccessful(String loginTicket, boolean isFacebookLogin) {
-        clearBackstack();
         isRegisterSuccess = true;
         mPresenter.setIsNewUser(true);
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.BACK, AppConstants.AUTH_FLAG.REGISTER);
@@ -369,7 +387,6 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
     @Override
     public void showLoginVisaSuccess(String loginTicket) {
-        clearBackstack();
         isRegisterSuccess = true;
         mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
     }
@@ -454,31 +471,6 @@ public class RegisterController extends VisaCheckoutController implements Regist
                     mRegisterPasswordField.getText().toString(),
                     tncAccepted,
                     emailsAccepted);
-        }
-    }
-
-    private void clearBackstack() {
-        if (!hasClearedBackstack) {
-            hasClearedBackstack = true;
-            ArrayList<RouterTransaction> backStack = new ArrayList<>(getRouter().getBackstack());
-            int index = -1;
-            for (int i = 0; i < backStack.size(); i++) {
-                Controller controller = backStack.get(i).controller();
-                if (controller == this) {
-                    index = i - 1;
-                    break;
-                }
-            }
-            if (index >= 0) {
-                // Removes previous controller
-                backStack.remove(index);
-                // Removes self
-                backStack.remove(index);
-                // Adds self with different popChangeHandler
-                backStack.add(RouterTransaction.with(this)
-                        .popChangeHandler(new VerticalChangeHandler()));
-                getRouter().setBackstack(backStack, null);
-            }
         }
     }
 

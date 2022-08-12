@@ -617,6 +617,8 @@ public class AccountController extends BaseController implements AccountMvpView,
                 if (mPresenter.isTablet()) {
                     mActivity.getMainController().resetAccountRouter();
                 }
+
+                userDetailsLoggedOut = null;
             }
 
             @Override
@@ -661,12 +663,10 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     @Override
     public void initLoginDrawable() {
-        if (userDetailsLoggedOut == null) {
+        if (userDetailsLoggedOut == null || !userDetailsLoggedOut) {
             setupLoginButton(mPresenter.isAuthorized());
         } else {
-            if (userDetailsLoggedOut) {
-                setupLoginButton(false);
-            }
+            setupLoginButton(false);
         }
 
         mRightToolbarButton.setVisibility(View.VISIBLE);
@@ -709,6 +709,8 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mActivity.getMainController().resetAccountRouter();
                     mActivity.getMainController().resetWishlistRouter();
                     mActivity.getMainController().resetCheckoutRouter();
+
+                    userDetailsLoggedOut = null;
                 }
 
                 @Override
