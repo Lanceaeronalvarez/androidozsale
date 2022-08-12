@@ -854,6 +854,17 @@
         <item>@string/returns_policy_faq_content_8</item>
     </string-array>
 
+    <string-array name="returns_policy_faq_has_button">
+        <item>false</item>
+        <item>false</item>
+        <item>false</item>
+        <item>true</item>
+        <item>false</item>
+        <item>false</item>
+        <item>false</item>
+        <item>false</item>
+    </string-array>
+
     <string name="go_to_my_returns">Go to My Returns</string>
 
     <string name="contact_escalate_message">Need to escalate?</string>
