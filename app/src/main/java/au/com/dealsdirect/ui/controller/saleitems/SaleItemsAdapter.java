@@ -34,10 +34,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final SaleItemAdapterHelper helper;
     private final boolean isPriceInfoClickable;
     private final boolean isSupplierOriginalPriceInfoEnabled;
-
     private Pair<Integer, Integer> mComputedPair;
 
     private final SaleItemsMvpPresenter.WishlistDelayedCallback delayedCallbackForWishlist;
+
+    private boolean useAlternatePriceBlockHelper = false;
 
     public SaleItemsAdapter(
             Context context,
@@ -45,6 +46,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int minColumn,
             boolean isPriceInfoClilckable,
             boolean isSupplierOriginalPriceInfoEnabled,
+            boolean useAlternatePriceBlockHelper,
             SaleItemsMvpPresenter.WishlistDelayedCallback delayedCallbackForWishlist,
             SaleItemAdapterHelper listener) {
 
@@ -52,6 +54,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.mMinColumn = minColumn;
         this.isSupplierOriginalPriceInfoEnabled = isSupplierOriginalPriceInfoEnabled;
         this.isPriceInfoClickable = isPriceInfoClilckable;
+        this.useAlternatePriceBlockHelper = useAlternatePriceBlockHelper;
         this.delayedCallbackForWishlist = delayedCallbackForWishlist;
         this.helper = listener;
 
@@ -105,7 +108,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.viewholder_sale_item, parent, false);
-            return new SaleItemViewHolder(view, mComputedPair, isSupplierOriginalPriceInfoEnabled);
+            return new SaleItemViewHolder(view, mComputedPair, isSupplierOriginalPriceInfoEnabled, useAlternatePriceBlockHelper);
         }
     }
 

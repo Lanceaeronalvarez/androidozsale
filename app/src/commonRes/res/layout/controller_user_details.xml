@@ -42,6 +42,7 @@
                     android:textSize="@dimen/text_size_caption2" />
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_firstname_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
@@ -78,6 +79,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_lastname_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -114,6 +116,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_birthday_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -132,7 +135,6 @@
                         android:textSize="@dimen/text_size_caption1" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/controller_details_firstname_wrapper"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.65"
@@ -184,6 +186,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_emailaddress_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -220,6 +223,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_password_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -256,6 +260,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_new_password_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -292,6 +297,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/controller_details_text_confirm_password_cotainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
@@ -327,32 +333,51 @@
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/controller_details_consent_switch_layout"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:id="@+id/controller_details_promo_emails_container"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:padding="@dimen/padding_default">
 
-                    <au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch
-                        android:id="@+id/register_emails_toggle"
+                    <TextView
+                        android:id="@+id/controller_details_promo_emails_header"
+                        fontPath="@string/font_app_semibold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:textToggleLeft="Yes"
-                        app:textToggleRight="No" />
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:text="Please choose how many emails or unsubscribe below"
+                        android:textColor="@color/text_medium"
+                        android:textSize="@dimen/text_size_caption1" />
 
-                    <TextView
-                        android:id="@+id/register_emails_text"
+                    <RadioGroup
+                        android:id="@+id/controller_details_promo_emails_radio_group"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:gravity="center_vertical"
-                        android:textSize="@dimen/text_size_caption1"
-                        tools:text="I agree to receive promotional emails" />
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/controller_details_promo_emails_header"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="-6dp"
+                        android:layout_marginTop="@dimen/margin_medium">
 
-                </LinearLayout>
+                        <include layout="@layout/controller_user_details_radio_button" />
 
+                        <include layout="@layout/controller_user_details_radio_button" />
 
+                        <include layout="@layout/controller_user_details_radio_button" />
+                    </RadioGroup>
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/controller_account_deletion_button"
+                    style="@style/DDButtonStyleTransparent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_height_regular"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="@dimen/padding_default"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:text="Request Account Deletion"
+                    android:textSize="@dimen/text_size_caption1" />
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
@@ -367,4 +392,4 @@
             android:textSize="@dimen/text_size_headline2" />
     </RelativeLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout><!--</au.com.dealsdirect.widget.ElasticHorizontalDragDismissFrameLayout>-->
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

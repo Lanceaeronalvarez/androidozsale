@@ -1,6 +1,7 @@
 package au.com.dealsdirect.ui.controller.details;
 
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
+import au.com.dealsdirect.data.network.model.userdetails.UpdateUserEmailSubscriptionRequest;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.gdpr.GdprMvpPresenter;
@@ -14,5 +15,11 @@ public interface DetailsMvpPresenter<V extends MvpView> extends GdprMvpPresenter
 
     void sendUserDetails(SetUserDetailsRequest userDetailsRequest);
 
+    void accountDeletion(String userDetailsId);
+
     void saveReceiveSales(boolean receiveInvitations);
+
+    void updateEmailSubscriptionPreference(UpdateUserEmailSubscriptionRequest request);
+
+    void getEmailSubscriptionTemplates();
 }

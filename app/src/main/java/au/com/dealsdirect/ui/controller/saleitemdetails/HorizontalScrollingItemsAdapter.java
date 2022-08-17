@@ -43,7 +43,7 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
     public SaleItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.viewholder_sale_item, parent, false);
-        return new SaleItemViewHolder(view, new Pair<>(cellWidth, cellHeight), isSupplierOriginalPriceInfoEnabled);
+        return new SaleItemViewHolder(view, new Pair<>(cellWidth, cellHeight), isSupplierOriginalPriceInfoEnabled, false);
     }
 
     @Override

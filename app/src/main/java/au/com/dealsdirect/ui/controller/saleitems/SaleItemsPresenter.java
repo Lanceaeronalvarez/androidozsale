@@ -319,4 +319,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     public void setSupplierOriginaPriceInfoTimeAgreed(long timestamp) {
         getDataManager().setIsSupplierOriginalPriceInfoSaleListTimeAgreed(timestamp);
     }
+
+    @Override
+    public int getPriceBlockMode() {
+        return getDataManager().getProductPagePriceBlockMode();
+    }
 }

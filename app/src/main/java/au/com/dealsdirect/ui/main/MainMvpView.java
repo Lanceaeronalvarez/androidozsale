@@ -41,8 +41,6 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void loginErrorHandler(String message);
 
-    void loginSuccessMethods();
-
     void logLoginTicket();
 
     void callLoginTicket(boolean isGdprCountry);

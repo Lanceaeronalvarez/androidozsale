@@ -168,9 +168,10 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
+import au.com.dealsdirect.data.network.model.userdetails.GetEmailSubscriptionTemplatesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
-import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsResponse;
+import au.com.dealsdirect.data.network.model.userdetails.UpdateUserEmailSubscriptionRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyRequest;
@@ -444,13 +445,28 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<SetUserDetailsResponse> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
+    public Observable<String> getSaveUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
         return mApiHelper.getSaveUserDetailsApiCall(setUserDetailsRequest);
     }
 
     @Override
     public Observable<GetUserDetailsResponse> getLoadUserDetailsApiCall(SetUserDetailsRequest setUserDetailsRequest) {
         return mApiHelper.getLoadUserDetailsApiCall(setUserDetailsRequest);
+    }
+
+    @Override
+    public Observable<String> callAccountDeletion(String userDetailsId) {
+        return mApiHelper.callAccountDeletion(userDetailsId);
+    }
+
+    @Override
+    public Observable<String> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request) {
+        return mApiHelper.callUpdateUserEmailSubscription(request);
+    }
+
+    @Override
+    public Observable<GetEmailSubscriptionTemplatesResponse> getEmailSubscriptionTemplates() {
+        return mApiHelper.getEmailSubscriptionTemplates();
     }
 
     @Override
@@ -2010,5 +2026,15 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean isKlarnaEnabled() {
         return mPreferencesHelper.isKlarnaEnabled();
+    }
+
+    @Override
+    public void setProductPagePriceBlockMode(int mode) {
+        mPreferencesHelper.setProductPagePriceBlockMode(mode);
+    }
+
+    @Override
+    public int getProductPagePriceBlockMode() {
+        return mPreferencesHelper.getProductPagePriceBlockMode();
     }
 }

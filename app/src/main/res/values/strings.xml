@@ -854,6 +854,17 @@
         <item>@string/returns_policy_faq_content_8</item>
     </string-array>
 
+    <string-array name="returns_policy_faq_has_button">
+        <item>false</item>
+        <item>false</item>
+        <item>false</item>
+        <item>true</item>
+        <item>false</item>
+        <item>false</item>
+        <item>false</item>
+        <item>false</item>
+    </string-array>
+
     <string name="go_to_my_returns">Go to My Returns</string>
 
     <string name="contact_escalate_message">Need to escalate?</string>
@@ -865,4 +876,6 @@
     <string name="product_details_seller_text">Sold and delivered by</string>
 
     <string name="myaccount_ourpay_unavailable_message">Unfortunately, Ourpay is no longer available. We apologise for any inconvenience, please choose from one of the other payment options. Existing Ourpay payments agreements remain unchanged.</string>
+
+    <string name="account_deletion_confirmation_text">Are you sure you want to delete all data associated with your account?\n\nIt may take up to 28 days to completely remove all the data associated with your account.</string>
 </resources>

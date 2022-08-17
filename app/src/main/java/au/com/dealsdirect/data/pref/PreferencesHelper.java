@@ -369,4 +369,8 @@ public interface PreferencesHelper {
     void setKlarnaEnabled(boolean enabled);
 
     boolean isKlarnaEnabled();
+
+    void setProductPagePriceBlockMode(int mode);
+
+    int getProductPagePriceBlockMode();
 }

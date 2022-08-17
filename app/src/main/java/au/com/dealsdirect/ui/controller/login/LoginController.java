@@ -5,9 +5,6 @@ package au.com.dealsdirect.ui.controller.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
 
@@ -34,6 +36,7 @@ import au.com.dealsdirect.ui.controller.register.RegisterController;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -85,7 +88,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     private String mLoginMethod = NO_ACTION;
     private boolean isLoginSuccess = false;
-    private boolean mWillShowRegistration = false;
 
     private CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
@@ -119,12 +121,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void onDetach(View view) {
-        if (mPresenter.isTablet()) {
-            mActivity.getMainController().setNavigationBarEnabled(true);
-        } else if (!mWillShowRegistration) {
-            mActivity.getMainController().showBottomNav();
-        }
-
         super.onDetach(view);
     }
 
@@ -193,14 +189,6 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     protected void onDestroyView(@NonNull View view) {
-        if (!mWillShowRegistration) {
-            HashMap<String, Object> parameters = new HashMap<>();
-            parameters.put(DataCollector.EventParameters.METHOD, mLoginMethod);
-            parameters.put(DataCollector.EventParameters.RESULT, isLoginSuccess);
-            parameters.put(DataCollector.EventParameters.SCREEN_NAME, LoginController.class.getSimpleName());
-            parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-            DataCollector.logEvent(Events.Login, parameters);
-        }
         mPresenter.onDetach();
         super.onDestroyView(view);
     }
@@ -223,16 +211,33 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public boolean handleBack() {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.METHOD, mLoginMethod);
+        parameters.put(DataCollector.EventParameters.RESULT, isLoginSuccess);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, LoginController.class.getSimpleName());
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        DataCollector.logEvent(Events.Login, parameters);
+
+        if (mPresenter.isTablet()) {
+            mActivity.getMainController().setNavigationBarEnabled(true);
+        } else {
+            mActivity.getMainController().showBottomNav();
+        }
+
         mActivity.getMainController().goToPreviousContainerFromLogin(mActivity.isAuthorized());
 
         if (mPresenter.isTablet() && getBoolean(R.bool.master_detail_enabled)) {
             return true;
         }
 
+        if (!isLoginSuccess) {
+            mActivity.cancelAuthHandlers();
+        }
+
+
         hideKeyboard();
 
         return super.handleBack();
-
     }
 
     @Override
@@ -243,10 +248,9 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public void showRegistration() {
-        mWillShowRegistration = true;
-        getRouter().pushController(RouterTransaction.with(RegisterController.newInstance())
+        getRouter().replaceTopController(RouterTransaction.with(RegisterController.newInstance())
                 .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
+                .popChangeHandler(new VerticalChangeHandler()));
     }
 
     @Override
@@ -301,5 +305,15 @@ public class LoginController extends BaseController implements LoginMvpView {
                 bundle,
                 new HorizontalChangeHandler(false),
                 new HorizontalChangeHandler());
+    }
+
+    @OnClick(R.id.controller_login_email_container)
+    public void onClickEmailContainer() {
+        KeyboardUtils.showSoftInput(mEmailEditText, mActivity);
+    }
+
+    @OnClick(R.id.controller_login_password_container)
+    public void onClickPasswordContainer() {
+        KeyboardUtils.showSoftInput(mPasswordEditText, mActivity);
     }
 }

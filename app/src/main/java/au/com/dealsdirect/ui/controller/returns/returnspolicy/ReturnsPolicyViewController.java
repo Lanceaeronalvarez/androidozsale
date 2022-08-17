@@ -135,13 +135,17 @@ public class ReturnsPolicyViewController extends BaseController implements Retur
 
         TypedArray faqItemTitleIds = mActivity.getResources().obtainTypedArray(R.array.returns_policy_faq_titles);
         TypedArray faqItemContentIds = mActivity.getResources().obtainTypedArray(R.array.returns_policy_faq_content);
+        TypedArray faqItemHasButton = mActivity.getResources().obtainTypedArray(R.array.returns_policy_faq_has_button);
 
         for (int i = 0; i < faqItemTitleIds.length() && i < faqItemContentIds.length(); i++) {
             final String title = mActivity.getString(faqItemTitleIds.getResourceId(i, 0));
             final String content = mActivity.getString(faqItemContentIds.getResourceId(i, 0));
-            final FaqItem faqItem = new FaqItem(title, mActivity.getDrawable(R.drawable.ic_gray_chevron), () -> showFaq(title, content));
+            final boolean hasButton = Boolean.parseBoolean(faqItemHasButton.getString(i));
+            final FaqItem faqItem = new FaqItem(title, mActivity.getDrawable(R.drawable.ic_gray_chevron), () -> showFaq(title, content, hasButton));
             items.add(faqItem);
         }
+
+        faqItemHasButton.recycle();
 
         mAdapter = new ReturnsPolicyRecyclerViewAdapter(items);
 
@@ -158,12 +162,16 @@ public class ReturnsPolicyViewController extends BaseController implements Retur
         getRouter().popCurrentController();
     }
 
-    private void showFaq(String title, String content) {
+    private void showFaq(String title, String content, boolean hasButton) {
         BottomSheetInfoDialog bottomSheetFragment = new BottomSheetInfoDialog();
 
         bottomSheetFragment.setTitle(title);
         bottomSheetFragment.setDescription(content);
-        bottomSheetFragment.setupButton(mActivity.getString(R.string.go_to_my_returns), this::gotoMyReturns);
+        if (hasButton) {
+            bottomSheetFragment.setupButton(mActivity.getString(R.string.go_to_my_returns), this::gotoMyReturns);
+        } else {
+            bottomSheetFragment.setupButton(null, null);
+        }
         bottomSheetFragment.setDismissOnButtonClick(true);
 
         bottomSheetFragment.show(mActivity.getSupportFragmentManager(), ActionConstants.ORDER_BOTTOM_DIALOG_TAG);

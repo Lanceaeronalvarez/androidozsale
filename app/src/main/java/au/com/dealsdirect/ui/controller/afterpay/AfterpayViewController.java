@@ -7,11 +7,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
@@ -24,6 +29,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.StringUtils;
@@ -84,6 +90,7 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
 
     @Override
     protected void setUp(View view) {
+        CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView, true);
         hideAfterpayWebView();
         hideProgressIndicator();
     }
@@ -103,12 +110,13 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
         if (mWebView.getUrl() == null || mWebView.getUrl().equals("about:blank")) {
             mInitiliazeToken = token;
             mWebView.getSettings().setJavaScriptEnabled(true);
+            mWebView.getSettings().setDomStorageEnabled(true);
             mWebView.setWebChromeClient(new WebChromeClient());
             mWebView.setWebViewClient(getWebViewClientForInitialize(token));
             String source = StringUtils.loadAssetTextAsString(mActivity, "js_loader.html");
             assert source != null;
             source = source.replace("JS_ADDRESS_GOES_HERE", mPresenter.getAfterpayScriptUri());
-            mWebView.loadDataWithBaseURL(null, source, "text/html", "UTF-8", null);
+            mWebView.loadDataWithBaseURL(Settings.getSelectedCountry().genieRoot, source, "text/html", "UTF-8", null);
         }
 
         mWebView.setVisibility(View.VISIBLE);
@@ -204,8 +212,24 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
                 });
             }
 
+            @Nullable
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                if (request.getUrl().getSchemeSpecificPart().startsWith("//<domain>/")) {
+                    request.getRequestHeaders().put("Access-Control-Allow-Origin", "*");
+                }
+                return super.shouldInterceptRequest(view, request);
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+            }
+
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                String url = request.getUrl().toString();
                 // prevents a redirect loop and sets up to catch Afterpay redirect url
                 view.setWebViewClient(getWebViewClientForRedirectCatch());
 
@@ -217,8 +241,18 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
 
     private WebViewClient getWebViewClientForRedirectCatch() {
         return new WebViewClient() {
+            @Nullable
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                if (request.getUrl().getSchemeSpecificPart().startsWith("//<domain>/")) {
+                    request.getRequestHeaders().put("Access-Control-Allow-Origin", "*");
+                }
+                return super.shouldInterceptRequest(view, request);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                String url = request.getUrl().toString();
                 if (!url.contains(mPresenter.getRedirectUrlPrefix())) {
                     return false;
                 }

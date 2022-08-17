@@ -208,6 +208,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String KLARNA_ENABLED = "KLARNA_ENABLED";
 
+    private static final String PRODUCT_PAGE_PRICE_BLOCK_MODE = "PRODUCT_PAGE_PRICE_BLOCK_MODE";
+
     private Context mContext;
 
     @Inject
@@ -1228,5 +1230,15 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean isKlarnaEnabled() {
         return Prefs.getBoolean(KLARNA_ENABLED, false);
+    }
+
+    @Override
+    public void setProductPagePriceBlockMode(int mode) {
+        Prefs.putInt(PRODUCT_PAGE_PRICE_BLOCK_MODE, mode);
+    }
+
+    @Override
+    public int getProductPagePriceBlockMode() {
+        return Prefs.getInt(PRODUCT_PAGE_PRICE_BLOCK_MODE, 1);
     }
 }

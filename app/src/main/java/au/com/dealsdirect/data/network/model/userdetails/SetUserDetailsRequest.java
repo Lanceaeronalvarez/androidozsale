@@ -12,19 +12,19 @@ public class SetUserDetailsRequest {
     @SerializedName("password")
     @Expose
     private String password;
-    @SerializedName("dateBirth")
+    @SerializedName("date_of_birth")
     @Expose
     private String dateBirth;
-    @SerializedName("confirmPassword")
+    @SerializedName("confirm_password")
     @Expose
     private String confirmPassword;
     @SerializedName("email")
     @Expose
     private String email;
-    @SerializedName("surname")
+    @SerializedName("last_name")
     @Expose
     private String surname;
-    @SerializedName("firstname")
+    @SerializedName("first_name")
     @Expose
     private String firstname;
     @SerializedName("gender")
@@ -33,7 +33,7 @@ public class SetUserDetailsRequest {
     @SerializedName("userName")
     @Expose
     private String userName;
-    @SerializedName("newPassword")
+    @SerializedName("new_password")
     @Expose
     private String newPassword;
     @SerializedName("languageID")
