@@ -18,27 +18,9 @@ API_TOKEN = '156e897ec909d04276fe681aef03572370ac089e'
 BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661'
 
 # You can list more emails here
-  live_emails = '"
-  ruz@apacsale.com,
-  jc@mysale.com,
-  chindee@smartwave.ph,
-  michael@smartwave.ph
-"'
-
-# You can list more emails here
-  test_emails = '"
-  gavin@mysale.com
-  jc@mysale.com,
-  ruz@apacsale.com,
-  jc@mysale.com,
-  chindee@smartwave.ph,
-  michael@smartwave.ph
-"'
-
-# You can list more emails here
   dev_emails = '"
-  chindee@smartwave.ph,
-  ruz@smartwave.ph,
+  alvin@smartwave.ph,
+  lindz@smartwave.ph,
   cle@smartwave.ph,
   earl@smartwave.ph
 "'
@@ -79,8 +61,8 @@ lane :dd_build do |options|
 
 end
 
-# Uploads the app to Fabric
-desc "Distribut app using Firebase app distribution"
+# Uploads the app to Firebase
+desc "Distribute app using Firebase app distribution"
 def uploadToFirebase(app_name, emails, apk_name, app_path, app_flavor, app_notes_path, app_id)
 projectDir = app_path + '/app/build/outputs/apk/' + app_flavor + '/release/'
   puts "Uploading to firebase"
@@ -100,7 +82,7 @@ projectDir = app_path + '/app/build/outputs/apk/' + app_flavor + '/release/'
                 app: app_id,
                 testers: emails,
                 release_notes_file: app_notes_path,
-                firebase_cli_token: “1//0e4LvdZZE-1jXCgYIARAAGA4SNwF-L9IrpPdBdEY7adbkDRHHzFnSj928s8VpzbUtAckCFjtawWZNhQi4o7B8jmbV4f3oCPpJ2D0”,
+                firebase_cli_token: “1//0ez8F4bPVFydVCgYIARAAGA4SNwF-L9IrIR2DhOwTmnpZoD1oC56GGkEsa92Kob0aOCOCWnBz6LUOwtLY6j2wahBEKSlO_V2i7RQ”,
                 apk_path: projectDir + apk_name
               )
     rescue Exception => e
