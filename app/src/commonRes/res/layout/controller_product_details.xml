@@ -129,74 +129,7 @@
                                 android:paddingBottom="@dimen/margin_extra_small"
                                 android:visibility="gone" />
 
-                            <RelativeLayout
-                                android:id="@+id/product_details_sizes_container"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/margin_small"
-                                android:background="@color/white"
-                                android:paddingLeft="@dimen/margin_small"
-                                android:paddingRight="@dimen/margin_small"
-                                android:paddingBottom="@dimen/margin_small"
-                                android:visibility="gone">
-
-                                <RelativeLayout
-                                    android:id="@+id/sizeLabel"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-
-                                    <TextView
-                                        fontPath="@string/font_app_semibold"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:paddingTop="@dimen/margin_extra_small"
-                                        android:paddingBottom="@dimen/margin_extra_small"
-                                        android:text="@string/size"
-                                        android:textAllCaps="true"
-                                        android:textColor="@color/text_medium"
-                                        android:textSize="@dimen/text_size_caption1" />
-
-                                    <ImageView
-                                        android:id="@+id/question_mark"
-                                        android:layout_width="15dp"
-                                        android:layout_height="15dp"
-                                        android:layout_alignParentRight="true"
-                                        android:visibility="invisible" />
-
-                                    <TextView
-                                        fontPath="@string/font_app_black"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerVertical="true"
-                                        android:layout_toLeftOf="@id/question_mark"
-                                        android:paddingRight="@dimen/margin_extra_small"
-                                        android:text="size guide"
-                                        android:textSize="@dimen/text_size_caption1"
-                                        android:visibility="invisible" />
-
-                                </RelativeLayout>
-
-                                <com.zhy.view.flowlayout.TagFlowLayout
-                                    android:id="@+id/product_details_size_list"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/sizeLabel"
-                                    android:layout_marginTop="@dimen/margin_extra_small"
-                                    app:max_select="1" />
-
-                                <TextView
-                                    android:id="@+id/product_details_size_notice"
-                                    fontPath="@string/font_app_semibold"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@id/product_details_size_list"
-                                    android:text="@string/please_select_size"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/red"
-                                    android:textSize="@dimen/text_size_caption1"
-                                    android:visibility="gone" />
-
-                            </RelativeLayout>
+                            <include layout="@layout/partial_product_details_sizes_container" />
 
                             <au.com.dealsdirect.ui.custom.PersonalisationLayout
                                 android:id="@+id/product_details_personalisation_layout"

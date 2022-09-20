@@ -30,8 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_extra_small"
-                android:text="@string/select_size"
-                android:textAllCaps="true"
+                android:text="@string/choose_size"
                 android:textColor="@color/text_medium"
                 android:textSize="@dimen/text_size_caption1" />
 
