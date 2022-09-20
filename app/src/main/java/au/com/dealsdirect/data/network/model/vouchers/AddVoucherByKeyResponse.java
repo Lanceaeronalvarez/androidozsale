@@ -5,6 +5,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mysale.genie.utility.LegacyBaseResponseValue;
 
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+
 public class AddVoucherByKeyResponse {
 
     public Response d;
@@ -20,7 +22,7 @@ public class AddVoucherByKeyResponse {
         }
     }
 
-    public Response getResponseValue() {
+    public Response getD() {
         return d;
     }
 }

@@ -19,4 +19,5 @@ public interface AddVouchersMvpPresenter<V extends AddVouchersMvpView> extends M
 
     void addAndApplyVoucherByKey(String postcode, int imageSize, String key);
 
+    void removeVoucherByKey(String postcode, int imageSize, String key);
 }

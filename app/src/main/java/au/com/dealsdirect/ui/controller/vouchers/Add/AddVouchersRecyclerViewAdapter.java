@@ -1,18 +1,17 @@
 package au.com.dealsdirect.ui.controller.vouchers.Add;
 
-import android.content.Context;
-import android.os.Build;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.DecimalFormat;
-import java.util.HashMap;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,143 +21,82 @@ import au.com.dealsdirect.utils.PriceUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Paul on 6/30/17.
- */
+public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<AddVouchersRecyclerViewAdapter.AddVouchersViewHolder> {
 
-public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final List<Voucher> mVoucherList;
+    private final Set<String> appliedVouchers;
 
-    private HashMap<Integer, String> voucherColorStateCollection = new HashMap<>();
-    private AddVouchersMvpView mView;
-    private List<Voucher> mVoucherList;
-    private Context context;
-    HashMap<Integer, Boolean> mVoucherOptionIndicator = new HashMap<>();
+    private final VoucherClickListener voucherClickListener;
 
     public AddVouchersRecyclerViewAdapter(
             List<Voucher> voucherList,
-            AddVouchersMvpView view,
-            Context context) {
+            Set<String> appliedVouchers,
+            VoucherClickListener voucherClickListener) {
 
-        mVoucherList = voucherList;
-        this.context = context;
-        this.mView = view;
-
-        for (int i = 0; i <= mVoucherList.size(); i++) {
-            mVoucherOptionIndicator.put(i, false);
-        }
+        mVoucherList = new ArrayList<>(voucherList);
+        this.appliedVouchers = new HashSet<>(appliedVouchers);
+        this.voucherClickListener = voucherClickListener;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AddVouchersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_add_vouchers, parent, false);
-        AddVouchersViewHolder vh = new AddVouchersViewHolder(v);
-        return vh;
+        return new AddVouchersViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        AddVouchersViewHolder vh = (AddVouchersViewHolder) holder;
-        String ticketState = "red";
+    public void onBindViewHolder(AddVouchersViewHolder vh, int position) {
+        final Voucher voucher = mVoucherList.get(position);
+        final String description = voucher.getDescription();
+        final Float voucherAmount = findVoucherAmountFromDescription(voucher.getDescription());
 
-        Voucher voucher = mVoucherList.get(position);
-        String description = voucher.getDescription();
-        Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(description);
-
-        //noinspection ResultOfMethodCallIgnored
-        m.find();
-        Double doubleValue = Double.valueOf(m.group(1));
-        Float voucherAmount = Float.parseFloat(m.group(1));
-        DecimalFormat df = new DecimalFormat("0.00");
-        df.setMaximumFractionDigits(2);
-
-        String formattedVoucherValue = df.format(voucherAmount);
+        vh.mVoucherItemLayout.setSelected(appliedVouchers.contains(voucher.getId()));
 
         vh.mVoucherItemExpiresOnText.setVisibility(View.INVISIBLE);
-
-        String finalDescription = "";
-        if (!description.isEmpty()) {
-            String[] splitString = description.split(" ");
-            for (int i = 0; i < splitString.length; i++) {
-                if (i != 0) {
-                    finalDescription = finalDescription + " " + splitString[i];
-                }
+        vh.mVoucherItemDescText.setText(getDescriptionExcludingFirstWord(description));
+        vh.mVoucherItemCostText.setText(PriceUtils.getPriceStringValue(voucherAmount, true));
+        vh.mVoucherItemLayout.setOnClickListener(view -> {
+            final int index = vh.getBindingAdapterPosition();
+            if (index == RecyclerView.NO_POSITION) {
+                return;
             }
-        }
-
-        vh.mVoucherItemDescText.setText(finalDescription);
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            int voucherValue = doubleValue.intValue();
-
-            if (0 <= voucherValue && voucherValue < 10) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_red));
-                ticketState = "red";
-            } else if (10 <= voucherValue && voucherValue < 15) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_blue));
-                ticketState = "blue";
-            } else if (15 <= voucherValue && voucherValue < 20) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_yellow));
-                ticketState = "yellow";
-            } else if (20 <= voucherValue && voucherValue < 25) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_green));
-                ticketState = "green";
-            } else if (25 <= voucherValue && voucherValue < 50) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_violet));
-                ticketState = "violet";
-            } else if (50 <= voucherValue && voucherValue < 125) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_aqua));
-                ticketState = "aqua";
-            } else if (125 <= voucherValue && voucherValue < 500) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_orange));
-                ticketState = "orange";
-            } else if (500 <= voucherValue && voucherValue <= 1000) {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_darkblue));
-                ticketState = "darkblue";
+            final String voucherId = mVoucherList.get(index).getId();
+            boolean isClicked = appliedVouchers.contains(voucherId);
+            if (isClicked) {
+                appliedVouchers.remove(voucherId);
+                vh.mVoucherItemLayout.setSelected(false);
             } else {
-//                vh.mVoucherItemLayout.setBackground(context.getResources().getDrawable(R.drawable.bg_voucher_blue));
-                ticketState = "blue";
+                appliedVouchers.add(voucherId);
+                vh.mVoucherItemLayout.setSelected(true);
             }
-        }
 
-        voucherColorStateCollection.put(position, ticketState);
-        vh.mVoucherItemCostText.setText(PriceUtils.getVoucherStringValue(formattedVoucherValue));
-
-        vh.mVoucherItemLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                boolean isClicked =  mVoucherOptionIndicator.get(position);
-                if(isClicked){
-                    mVoucherOptionIndicator.put(position, false);
-                    vh.mVoucherItemLayout.setSelected(false);
-                }else{
-                    mVoucherOptionIndicator.put(position, true);
-                    vh.mVoucherItemLayout.setSelected(true);
-                }
-
-                mView.onVoucherItemClicked(
-                        voucher.getID(),
-                        voucherColorStateCollection.get(position),
-                        vh.mVoucherItemLayout,
-                        position);
+            if (voucherClickListener != null) {
+                voucherClickListener.onClick(index);
             }
         });
     }
 
-
-    public void insert(int position, Voucher voucher) {
-        mVoucherList.add(position, voucher);
-        notifyItemInserted(position);
+    private Float findVoucherAmountFromDescription(String description) {
+        final Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(description);
+        if (m.find()) {
+            final String found = m.group(1);
+            return found != null ? Float.parseFloat(found) : 0f;
+        } else {
+            return 0f;
+        }
     }
 
-    public void remove(Voucher data) {
-        int position = mVoucherList.indexOf(data);
-        mVoucherList.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    public void replace(List<Voucher> vouchers) {
-        mVoucherList = vouchers;
-        notifyDataSetChanged();
+    private String getDescriptionExcludingFirstWord(String sourceString) {
+        StringBuilder description = new StringBuilder();
+        if (!sourceString.isEmpty()) {
+            String[] splitString = sourceString.split(" ");
+            // i = 1 to exclude the first word
+            for (int i = 1; i < splitString.length; i++) {
+                final String s = splitString[i];
+                description.append(" ").append(s);
+            }
+        }
+        return description.toString();
     }
 
     @Override
@@ -166,9 +104,7 @@ public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         return mVoucherList.size();
     }
 
-
     public static class AddVouchersViewHolder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.row_layout_add_vouchers)
         public LinearLayout mVoucherItemLayout;
 
@@ -185,4 +121,7 @@ public class AddVouchersRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         }
     }
 
+    public interface VoucherClickListener {
+        void onClick(int position);
+    }
 }

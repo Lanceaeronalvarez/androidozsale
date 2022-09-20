@@ -6,12 +6,15 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.checkout.ApiDeliveryDetails;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -72,4 +75,19 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView> extends BasePres
         });
     }
 
+    @Override
+    public void removeVoucherByKey(String postcode, int imageSize, String key) {
+        ApiDeliveryDetails deliveryDetails = null;
+        if (postcode != null && !postcode.isEmpty()) {
+            deliveryDetails = new ApiDeliveryDetails(postcode, null);
+        }
+        RemoveVoucherByKeyRequest request = new RemoveVoucherByKeyRequest(key, imageSize, deliveryDetails);
+        doApiCallForResponse(getDataManager().callGetRemoveVoucherByKey(request), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                getMvpView().onRemoveVoucherByKey((RemoveVoucherByKeyResponse) response);
+            }
+        });
+    }
 }

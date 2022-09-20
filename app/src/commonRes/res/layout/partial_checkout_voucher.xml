@@ -63,32 +63,6 @@
 
     </LinearLayout>
 
-    <!--set visibility to gone. will not be needing as of design. might be used in the future though.. jpaseneta 08/10/2018-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:padding="@dimen/padding_default"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/promo_code"
-            android:textColor="@color/row_checkout_text_light_color"
-            android:textSize="@dimen/text_size_body" />
-
-        <TextView
-            android:id="@+id/partial_checkout_voucher_promo_code_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/text_size_caption1"
-            tools:text="H27AEJALS" />
-    </LinearLayout>
-
     <View
         style="@style/horizontalBorderView"
         android:layout_width="match_parent"

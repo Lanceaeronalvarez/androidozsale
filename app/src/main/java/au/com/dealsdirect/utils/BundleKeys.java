@@ -113,11 +113,6 @@ public class BundleKeys {
     public static final String KEY_ESTIMATED_DELIVERY = "EstimatedDelivery";
     public static final String KEY_IS_OURPAY_USED = "IsOurpayUsed";
 
-    //add vouchers
-    public static final String VOUCHERS="Vouchers";
-    public static final String IS_VOUCHER_ADDED = "IS_VOUCHER_ADDED_KEY";
-    public static final String IS_CART_NO_DISCOUNT = "IS_NO_DISCOUNT";
-
     //legalities
     public static final String TEMPLATE_KEY = "TEMPLATE_KEY";
     public static final String TEMPLATE_KEY_ABOUT_US = "aboutus";

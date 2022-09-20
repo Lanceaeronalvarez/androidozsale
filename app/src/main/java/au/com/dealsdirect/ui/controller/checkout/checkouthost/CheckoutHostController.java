@@ -28,10 +28,8 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOp
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderResponse;
-import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionResponse;
+import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -342,11 +340,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     public boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
         return mCheckoutDetailView.setIsPaymentMethodChanged(isPaymentMethodChanged);
-    }
-
-    @Override
-    public void showPromoCodeApplied(String promoCode, boolean isPromoCodeApplied) {
-        mCheckoutDetailView.showPromoCodeApplied(promoCode, isPromoCodeApplied);
     }
 
     @Override

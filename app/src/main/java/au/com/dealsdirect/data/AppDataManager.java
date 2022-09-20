@@ -183,6 +183,8 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
@@ -547,6 +549,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<AddAndApplyVoucherByKeyResponse> callGetAddAndApplyVoucherByKey(AddAndApplyVoucherByKeyRequest addAndApplyVoucherByKeyRequest) {
         return mApiHelper.callGetAddAndApplyVoucherByKey(addAndApplyVoucherByKeyRequest);
+    }
+
+    @Override
+    public Observable<RemoveVoucherByKeyResponse> callGetRemoveVoucherByKey(RemoveVoucherByKeyRequest request) {
+        return mApiHelper.callGetRemoveVoucherByKey(request);
     }
 
     @Override

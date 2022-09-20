@@ -285,10 +285,10 @@
     <string name="apply_promo_code">Apply Promo Code</string>
     <string name="my_voucher">my voucher</string>
     <string name="promo_code">promo code</string>
-    <string name="enter_voucher_code">enter voucher code</string>
-    <string name="no_voucher_selected">no voucher selected</string>
+    <string name="enter_voucher_code">Enter voucher code</string>
+    <string name="no_voucher_selected">No Voucher Selected</string>
     <string name="voucher_code_added">Voucher code added</string>
-    <string name="voucher_is_applied">voucher is applied</string>
+    <string name="voucher_is_applied">Voucher is applied</string>
     <string name="promo_code_applied">Promo code applied</string>
     <string name="unable_to_apply_voucher">Unable to apply voucher</string>
     <string name="add_new_voucher">add new voucher</string>
@@ -302,6 +302,7 @@
     <string name="create_contact_empty_message_error">Please enter a message</string>
     <string name="apply_vouchers">Apply Vouchers</string>
     <string name="add_voucher">Add Voucher</string>
+    <string name="voucher_clear">Clear Vouchers</string>
 
 
     <!--INVITE-->

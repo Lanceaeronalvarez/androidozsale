@@ -10,18 +10,11 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOp
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateOrderResponse;
-import au.com.dealsdirect.data.network.model.checkout.klarna.KlarnaCreateSessionResponse;
-import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
+import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
-
-/**
- * dp Created by Admin on 6/6/17.
- */
 
 public interface CheckoutMvpView extends MvpView {
 
@@ -80,8 +73,6 @@ public interface CheckoutMvpView extends MvpView {
     boolean isOurPaySelectDeliveryMethod();
 
     boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged);
-
-    void showPromoCodeApplied(String promoCode, boolean isPromoCodeApplied);
 
     Router getDisplayRouter();
 

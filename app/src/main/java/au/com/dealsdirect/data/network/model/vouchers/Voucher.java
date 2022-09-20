@@ -12,12 +12,40 @@ public class Voucher {
     @SerializedName("Description")
     @Expose
     private String description;
-
-    public String getID() {
-        return id;
-    }
+    @SerializedName("DiscountLeft")
+    @Expose
+    private Double discountLeft;
+    @SerializedName("DiscountLeftString")
+    @Expose
+    private String discountLeftString;
+    @SerializedName("Expired")
+    @Expose
+    private String expired;
+    @SerializedName("IsApplied")
+    @Expose
+    private boolean isApplied;
 
     public String getDescription() {
         return description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Double getDiscountLeft() {
+        return discountLeft;
+    }
+
+    public String getDiscountLeftString() {
+        return discountLeftString;
+    }
+
+    public String getExpired() {
+        return expired;
+    }
+
+    public boolean isApplied() {
+        return isApplied;
     }
 }
