@@ -376,7 +376,7 @@
                     android:layout_margin="@dimen/padding_default"
                     android:paddingLeft="@dimen/padding_default"
                     android:paddingRight="@dimen/padding_default"
-                    android:text="Request Account Deletion"
+                    android:text="Request Account and Data Deletion"
                     android:textSize="@dimen/text_size_caption1" />
             </LinearLayout>
 
