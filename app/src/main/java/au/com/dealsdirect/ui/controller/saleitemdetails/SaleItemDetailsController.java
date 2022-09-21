@@ -1066,6 +1066,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mShippingPostcodeNotAvailable.setVisibility(View.GONE);
         mShippingPreviewPrice.setText(null);
         mShippingPreviewPrice.setVisibility(View.GONE);
+
+        mSizesContainer.setVisibility(View.GONE);
+        mSizeGuideLinkView.setVisibility(View.GONE);
     }
 
     private void gotoProductListWithSearchQuery(String searchKey) {
