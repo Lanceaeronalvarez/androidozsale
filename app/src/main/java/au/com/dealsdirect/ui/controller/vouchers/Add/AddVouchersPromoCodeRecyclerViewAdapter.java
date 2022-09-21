@@ -32,7 +32,7 @@ public class AddVouchersPromoCodeRecyclerViewAdapter extends RecyclerView.Adapte
     public PromoCodeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         PromoCodeViewHolder holder = new PromoCodeViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.viewholder_promo_code_view, parent, false));
-        holder.closeButton.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onClick(holder.getBindingAdapterPosition());
             }
