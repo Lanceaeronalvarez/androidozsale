@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 /**
@@ -22,6 +23,5 @@ public interface AddVouchersMvpView extends MvpView {
 
     void onAddAndAppliedVoucher(AddAndApplyVoucherByKeyResponse response);
 
-    void onVoucherItemClicked(String voucherId, String voucherState, LinearLayout holder, int
-            position);
+    void onRemoveVoucherByKey(RemoveVoucherByKeyResponse response);
 }

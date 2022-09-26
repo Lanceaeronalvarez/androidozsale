@@ -1,5 +1,10 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import static android.graphics.Typeface.BOLD;
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
+import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
+import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -64,8 +69,8 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOp
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.AgeRestrictionOperationType;
 import au.com.dealsdirect.service.datacollection.enums.CheckoutUserActivityOperationType;
@@ -115,12 +120,6 @@ import butterknife.OnClick;
 import butterknife.Optional;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-
-import static android.graphics.Typeface.BOLD;
-import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
-import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
-import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.getTemplateText;
 
 public class CheckoutController extends VisaCheckoutController implements CheckoutMvpView, FetchTokenHandler, CheckoutListener {
     public static final String CARD_PAYPAL = "Paypal";
@@ -174,9 +173,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     ViewGroup mVoucherValueContainer;
     @BindView(R.id.partial_checkout_voucher_value_text_view)
     TextView mVoucherValueTextView;
-    @Nullable
-    @BindView(R.id.partial_checkout_voucher_promo_code_text_view)
-    TextView mVoucherPromoCodeTextView;
 
     @BindView(R.id.partial_checkout_address_container)
     ViewGroup mAddressLayout;
@@ -290,15 +286,14 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     private DeliveryServicePackageDetail mDeliveryServicePackageDetail;
 
     private List<MappedShipment> mItemList = new ArrayList<>();
-    private ArrayList<PaymentMethod> mPaymentList = new ArrayList<>();
+    private List<PaymentMethod> mPaymentList = new ArrayList<>();
     private DeliveryAddress mDeliveryAddress = null;
-    private ArrayList<DecorationInfoList> mDecorationInfoList = new ArrayList<>();
-    private ArrayList<Voucher> mVouchers = new ArrayList<>();
+    private List<DecorationInfoList> mDecorationInfoList = new ArrayList<>();
+    private List<Voucher> mVouchers = new ArrayList<>();
     private CheckoutOrderAdapter mAdapter;
     private Ourpay mOurpay;
 
     private boolean mIsCartLoading = false;
-    private boolean mIsVoucherAdded = false;
     private boolean mIsPaymentMethodChanged = false;
     private String mAddressPhoneNumber;
     private Double mDiscountValue;
@@ -368,20 +363,12 @@ public class CheckoutController extends VisaCheckoutController implements Checko
 
 
     private void changeVoucher() {
+        AddVouchersController addVouchersController = new AddVouchersController(new Bundle());
+        addVouchersController.setVouchers(mVouchers);
+        addVouchersController.setAppliedPromoCodes(mValue.getPromoCodeList());
+        addVouchersController.setCartDetailsListener(mappedValues -> mPresenter.updateCartValues(mappedValues));
 
-        boolean isNoDiscount = true;
-        if (mDiscountValue != 0) {
-            isNoDiscount = false;
-        }
-
-
-        Bundle bundle = new BundleBuilder(new Bundle())
-                .putString(BundleKeys.VOUCHERS, new Gson().toJson(mVouchers))
-                .putBoolean(BundleKeys.IS_VOUCHER_ADDED, mIsVoucherAdded)
-                .putBoolean(BundleKeys.IS_CART_NO_DISCOUNT, isNoDiscount)
-                .build();
-
-        getRouter().pushController(RouterTransaction.with(new AddVouchersController(bundle))
+        getRouter().pushController(RouterTransaction.with(addVouchersController)
                 .pushChangeHandler(new HorizontalChangeHandler(false))
                 .popChangeHandler(new HorizontalChangeHandler()));
 
@@ -1024,12 +1011,10 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
 
         if (summary.getDiscount() > 0) {
-            mIsVoucherAdded = true;
             mVoucherValueContainer.setVisibility(View.VISIBLE);
             mVoucherValueTextView.setVisibility(View.VISIBLE);
             mVoucherValueTextView.setText(PriceUtils.getPriceStringValue(summary.getDiscount()) + " " + getString(R.string.voucher));
         } else {
-            mIsVoucherAdded = false;
             mVoucherValueTextView.setVisibility(View.GONE);
             mVoucherValueContainer.setVisibility(View.GONE);
         }
@@ -1260,12 +1245,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     @Override
     public boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
         return mIsPaymentMethodChanged = isPaymentMethodChanged;
-    }
-
-    @Override
-    public void showPromoCodeApplied(String promoCode, boolean isPromoCodeApplied) {
-        mVoucherPromoCodeTextView.setText(promoCode);
-        mVoucherPromoCodeTextView.setVisibility(isPromoCodeApplied ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -1591,7 +1570,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     private View getTopPayButton() {
-        List<View> buttons = new ArrayList<View>(){{
+        List<View> buttons = new ArrayList<View>() {{
             add(mGPayButton);
             add(mPayButton);
             add(mPaypalButton);
@@ -1750,7 +1729,9 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         unregisterClickListeners();
         registerClickListeners();
 
-        if (!mIsCartLoading && !(previousController instanceof ViewAddressController) &&
+        if (!mIsCartLoading &&
+                !(previousController instanceof ViewAddressController) &&
+                !(previousController instanceof AddVouchersController) &&
                 (previousController != null || mPresenter.checkIsLoggedIn())) {
             loadCart();
         }

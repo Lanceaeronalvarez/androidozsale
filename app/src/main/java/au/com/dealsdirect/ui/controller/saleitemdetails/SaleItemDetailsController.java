@@ -377,6 +377,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ViewGroup mSizesContainer;
     @BindView(R.id.product_details_size_list)
     TagFlowLayout mSizesFlowLayout;
+    @BindView(R.id.size_guide_link_container)
+    View mSizeGuideLinkView;
     @BindView(R.id.product_details_size_notice)
     TextView mSizesNotSelectedNotice;
     @BindView(R.id.product_details_personalisation_layout)
@@ -1064,6 +1066,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mShippingPostcodeNotAvailable.setVisibility(View.GONE);
         mShippingPreviewPrice.setText(null);
         mShippingPreviewPrice.setVisibility(View.GONE);
+
+        mSizesContainer.setVisibility(View.GONE);
+        mSizeGuideLinkView.setVisibility(View.GONE);
     }
 
     private void gotoProductListWithSearchQuery(String searchKey) {
@@ -1333,6 +1338,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         mSizeGuideLink = getSizeGuideLink(saleDetail.getDescription());
+
+        setupSizeGuideLink();
 
         mProductDescriptionText.getSettings()
                 .setJavaScriptEnabled(true);
@@ -2089,7 +2096,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         final String[] extensions = new String[]{
-                "pdf", "html", "jpg", "jpeg", "png", "webp"
+                "pdf", "html", "jpg", "jpeg", "png", "webp",
+                "PDF", "HTML", "JPG", "JPEG", "PNG", "WEBP"
         };
 
         for (String extension : extensions) {
@@ -2720,6 +2728,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (currentBottomPopupView.getAdapter() instanceof BottomPopupWebViewContentAdapter) {
             final BottomPopupWebViewContentAdapter adapter = (BottomPopupWebViewContentAdapter) currentBottomPopupView.getAdapter();
             adapter.setWebViewContent(pricingInfoText);
+        }
+    }
+
+    private void setupSizeGuideLink() {
+        if (mSizeGuideLink == null || mSizeGuideLink.isEmpty()) {
+            mSizeGuideLinkView.setVisibility(View.GONE);
+            mSizeGuideLinkView.setOnClickListener(null);
+        } else {
+            mSizeGuideLinkView.setVisibility(View.VISIBLE);
+            mSizeGuideLinkView.setOnClickListener(v -> {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mSizeGuideLink));
+                startActivity(browserIntent);
+            });
         }
     }
 }

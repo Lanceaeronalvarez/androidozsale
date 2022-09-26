@@ -1,9 +1,7 @@
 package au.com.dealsdirect.ui.controller.vouchers.Add;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,91 +14,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.reflect.TypeToken;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
-import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.vouchers.AddAndApplyVoucherByKeyResponse;
-import au.com.dealsdirect.data.network.model.vouchers.AddVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ApplyVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
-import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.JsonUtils;
 import butterknife.BindView;
 
-
-/**
- * Created by Paul on 6/27/17.
- */
-
 public class AddVouchersController extends BaseController implements AddVouchersMvpView {
-
-    private static final String testVouchersString = "[{\n" +
-            "\t\t\t\t\"ID\": \"ba41e1d8-0a3d-4868-81ba-2f139f0827fa\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"7f6c29b4-4a94-4336-81f3-179fe040179d\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"e1475fb6-b29d-41e1-b802-1fdaad9817f2\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"6aa0efed-fe82-43bb-884c-448b1229aab8\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"7a1c12e2-e7b3-4a14-9b74-9e0c9a756e3e\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"36aefc78-f96d-497e-aa35-f79fb40e12e6\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"0bba976f-395e-4746-9b64-5773509f4465\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"7265376a-50b6-448a-857b-667c2a338919\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"8d7e79b9-1055-480e-b4b2-8e491992afd3\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"abdb13ea-54b9-4f87-9e6e-9549fc24f8b3\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"e27536b2-fe19-41e4-97df-b12692441547\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"8587ba3f-bdfd-4c7e-b2a8-b37a7be2ca2e\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"3fba8bb7-879a-487c-82b0-c3773cf83d13\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"04c0b80d-a9f2-413b-b995-e240b5ae1cbf\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"59498f7e-d914-4298-8807-94a406db2784\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"0fb6a831-76e5-41f9-aade-a48125f9c214\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}, {\n" +
-            "\t\t\t\t\"ID\": \"308050ca-ddce-451a-a74e-a49360a0cc0e\",\n" +
-            "\t\t\t\t\"Description\": \"$20.0000 (Ozsale.com.au)\"\n" +
-            "\t\t\t}]";
 
     @Inject
     AddVouchersMvpPresenter<AddVouchersMvpView> mPresenter;
@@ -115,13 +48,13 @@ public class AddVouchersController extends BaseController implements AddVouchers
     View mArrowImage;
 
     @BindView(R.id.controller_button_add_voucher)
-    Button mAddVoucherButton;
+    Button mAddPromoCodeButton;
 
     @BindView(R.id.container_voucher_list)
     LinearLayout mVoucherListContainerLayout;
 
     @BindView(R.id.controller_recycler_view_promo_vouchers)
-    RecyclerView mRecyclerView;
+    RecyclerView voucherRecyclerView;
 
     @BindView(R.id.controller_edit_text_voucher)
     TextView mPromoCodeText;
@@ -138,29 +71,26 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @BindView(R.id.controller_add_voucher_select_text)
     TextView mSelectTextView;
 
-    List<String> voucherIds = new LinkedList<>();
-    List<String> tempVoucherIds = new LinkedList<>();
+    @BindView(R.id.promo_code_container)
+    RecyclerView promoCodeContainer;
 
-    int listSize = 0;
-    private String mTempVoucherPromoKey;
+    private final List<Voucher> vouchers = new ArrayList<>();
+    private final Set<String> appliedVouchers = new HashSet<>();
 
-    private ArrayList<Voucher> mVouchers = new ArrayList<>();
-    SharedPreferences mSharedPreference;
+    private final List<Value.PromoCode> appliedPromoCodes = new ArrayList<>();
 
-    HashMap<Integer, Boolean> voucherOptionIndicator = new HashMap<>();
+    private String postcode = null;
 
-    private AddVouchersRecyclerViewAdapter mAdapter;
-    private boolean mIsVoucherAdded = false;
-    private boolean mIsNoDiscountApplied = false;
+    private CheckoutDetailsMapper mappedCheckoutDetails = null;
+    private NewCartDetailsListener cartDetailsListener = null;
 
-    private CheckoutMvpView mCheckoutMvpView;
+    private boolean isVouchersApplyButtonEnabled = true;
+    private boolean isVouchersClearButtonEnabled = true;
+    private boolean isPromoCodeAddButtonEnabled = true;
+    private boolean isPromoCodeDeleteButtonEnabled = true;
 
     public AddVouchersController(Bundle args) {
         super(args);
-        mVouchers = JsonUtils.convertStringToObject(args.getString(BundleKeys.VOUCHERS, ""), new TypeToken<ArrayList<Voucher>>() {
-        }.getType());
-        mIsVoucherAdded = args.getBoolean(BundleKeys.IS_VOUCHER_ADDED);
-        mIsNoDiscountApplied = args.getBoolean(BundleKeys.IS_CART_NO_DISCOUNT);
     }
 
     @Override
@@ -168,91 +98,57 @@ public class AddVouchersController extends BaseController implements AddVouchers
         View view = inflater.inflate(R.layout.controller_add_vouchers, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(CheckoutController.class.getName());
         return view;
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-
-        mSharedPreference = mActivity.getSharedPreferences("Voucher_Preference", Context.MODE_PRIVATE);
-        Set<String> voucherSet = mSharedPreference.getStringSet("VOUCHER_SET", null);
-        if (voucherSet != null && !mIsNoDiscountApplied) {
-            voucherIds.addAll(voucherSet);
-        } else {
-            SharedPreferences.Editor editor = mSharedPreference.edit();
-            voucherIds.clear();
-            tempVoucherIds.clear();
-            Set<String> emptySet = new HashSet<String>();
-            editor.putStringSet("VOUCHER_SET", emptySet);
-            editor.apply();
-        }
-
-        if (mVouchers != null) {
-            listSize = mVouchers.size();
-        }
-        setVouchersHashMap();
         setUp(view);
     }
 
     @Override
     protected void setUp(View view) {
-
-
         mTitleText.setText(getString(R.string.add_new_voucher));
         mFilterView.setVisibility(View.INVISIBLE);
-        mArrowImage.setOnClickListener(action -> {
-            mActivity.onBackPressed();
-        });
+        mArrowImage.setOnClickListener(action -> mActivity.onBackPressed());
 
-        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);
-
-        if (!mIsVoucherAdded) {
+        if (appliedVouchers.isEmpty()) {
             mButtonClear.setVisibility(View.GONE);
         } else {
             mButtonClear.setVisibility(View.VISIBLE);
             mButtonClear.setOnClickListener(view1 -> clearAppliedVouchers());
         }
 
-        mButtonApply.setOnClickListener(view2 -> {
-            if (voucherIds.size() != 0 && tempVoucherIds.size() != 0) {
-                mPresenter.applyVouchers(null, 100, voucherIds);
+        mButtonApply.setOnClickListener(view2 -> applyVouchers());
 
-            } else {
-                CustomAlertDialog.showCustomAlertDialog(
-                        mActivity,
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        getApplicationContext().getString(R.string.no_voucher_selected));
-            }
-        });
+        mVoucherListContainerLayout.setVisibility(vouchers.isEmpty() ? View.GONE : View.VISIBLE);
+        voucherRecyclerView.setVisibility(vouchers.isEmpty() ? View.GONE : View.VISIBLE);
+        mSelectTextView.setVisibility(vouchers.isEmpty() ? View.GONE : View.VISIBLE);
+        mPlaceholderLayout.setVisibility(vouchers.isEmpty() ? View.VISIBLE : View.GONE);
+        mButtonApply.setVisibility(vouchers.isEmpty() ? View.GONE : View.VISIBLE);
 
-        mVoucherListContainerLayout.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
-        mRecyclerView.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
-        mSelectTextView.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
-        mPlaceholderLayout.setVisibility((mVouchers.isEmpty() && !BuildConfig.APP_NAME.equalsIgnoreCase("dealsdirect")) ? View.VISIBLE : View.GONE);
-        mButtonApply.setVisibility(mVouchers.isEmpty() ? View.GONE : View.VISIBLE);
+        voucherRecyclerView.setAdapter(new AddVouchersRecyclerViewAdapter(
+                vouchers,
+                appliedVouchers,
+                position -> {
+                    final String voucherId = vouchers.get(position).getId();
+                    final boolean isApplied = appliedVouchers.contains(voucherId);
+                    if (isApplied) {
+                        appliedVouchers.remove(voucherId);
+                    } else {
+                        appliedVouchers.add(voucherId);
+                    }
+                }));
+        voucherRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
 
-        mAdapter = new AddVouchersRecyclerViewAdapter(mVouchers, this, mActivity);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
+        mAddPromoCodeButton.setOnClickListener(action -> applyPromoCode());
 
-        mAddVoucherButton.setOnClickListener(action -> {
-            if (!mPromoCodeText.getText().toString().isEmpty()) {
-                mPresenter.addAndApplyVoucherByKey(null, 100, mPromoCodeText.getText().toString());
-                mTempVoucherPromoKey = mPromoCodeText.getText().toString();
-                mPromoCodeText.clearFocus();
-                hideKeyboard();
-
-            } else {
-
-                CustomAlertDialog
-                        .showCustomAlertDialog(
-                                mActivity,
-                                CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                                mActivity.getString(R.string.please_input_promo_code));
-            }
-        });
+        promoCodeContainer.setLayoutManager(new LinearLayoutManager(promoCodeContainer.getContext(), RecyclerView.VERTICAL, false));
+        AddVouchersPromoCodeRecyclerViewAdapter adapter = new AddVouchersPromoCodeRecyclerViewAdapter(
+                appliedPromoCodes,
+                getDeletePromoCodeButtonListener());
+        promoCodeContainer.setAdapter(adapter);
     }
 
 
@@ -264,81 +160,43 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @Override
     public void onVouchersApplied(ApplyVouchersResponse applyVouchersResponseBody) {
-
-        String responseMessage = applyVouchersResponseBody.getD().getMessage();
-        boolean responseResult = applyVouchersResponseBody.getD().getResult();
-        boolean responseIsAuthenticated = applyVouchersResponseBody.getD().isAuthenticated();
+        final String responseMessage = applyVouchersResponseBody.getD().getMessage();
+        final boolean responseResult = applyVouchersResponseBody.getD().getResult();
+        final boolean responseIsAuthenticated = applyVouchersResponseBody.getD().isAuthenticated();
 
         if (responseMessage.isEmpty() && responseResult && responseIsAuthenticated) {
-
-            String successResponse = "voucher applied";
-            if (voucherIds.size() > 1) {
-                successResponse = "vouchers applied";
-            }
+            mappedCheckoutDetails = new CheckoutDetailsMapper(applyVouchersResponseBody.getD().value);
+            informNewCartDetailsListener();
 
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                    successResponse
+                    "Vouchers Applied"
             );
 
-            SharedPreferences.Editor editor = mSharedPreference.edit();
-            Set<String> voucherSet = new HashSet<String>();
-            voucherSet.addAll(voucherIds);
-            editor.putStringSet("VOUCHER_SET", voucherSet);
-            editor.apply();
-
             mActivity.onBackPressed();
-
-
         } else {
-
-            if (responseMessage.isEmpty()) {
-                CustomAlertDialog.showCustomAlertDialog(
-                        mActivity,
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        mActivity.getString(R.string.unable_to_apply_voucher)
-                );
-
-            } else {
-                CustomAlertDialog.showCustomAlertDialog(
-                        mActivity,
-                        CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                        responseMessage
-                );
-            }
-
-//            mActivity.getSupportFragmentManager().popBackStack();
-            mActivity.onBackPressed();
-            voucherIds.clear();
-            tempVoucherIds.clear();
+            setAllButtonsEnabled(true);
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    responseMessage.isEmpty() ? mActivity.getString(R.string.unable_to_apply_voucher) : responseMessage
+            );
         }
-    }
-
-    public void showAddedVoucherItem(AddVoucherByKeyResponse.Response addVoucherResponse) {
-
     }
 
     @Override
     public void onVouchersCleared(ClearVouchersResponse clearVouchersResponse) {
-        String responseMessage = "cleared voucher";
-        if (voucherIds.size() > 1) {
-            responseMessage = "cleared vouchers";
+        if (clearVouchersResponse.getD().getResult()) {
+            mappedCheckoutDetails = new CheckoutDetailsMapper(clearVouchersResponse.getD().getValue());
+            informNewCartDetailsListener();
         }
 
-        mCheckoutMvpView.showPromoCodeApplied("", false);
         CustomAlertDialog.showCustomAlertDialog(
                 mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                responseMessage
+                "Cleared Vouchers"
         );
-
-        SharedPreferences.Editor editor = mSharedPreference.edit();
-        voucherIds.clear();
-        tempVoucherIds.clear();
-        Set<String> voucherSet = new HashSet<String>();
-        editor.putStringSet("VOUCHER_SET", voucherSet);
-        editor.apply();
 
         mActivity.onBackPressed();
 
@@ -346,75 +204,170 @@ public class AddVouchersController extends BaseController implements AddVouchers
 
     @Override
     public void onApplyVouchersError() {
-        voucherIds.clear();
-        mActivity.onBackPressed();
+        setAllButtonsEnabled(true);
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity,
+                CustomAlertDialog.CustomDialogIconState.POSITIVE,
+                mActivity.getString(R.string.unable_to_apply_voucher)
+        );
     }
 
     @Override
     public void onAddAndAppliedVoucher(AddAndApplyVoucherByKeyResponse response) {
+        if (response.getD().getResult()) {
+            mappedCheckoutDetails = new CheckoutDetailsMapper(response.getD().getValue());
+            informNewCartDetailsListener();
 
-        if (response.getValue().getResult()) {
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     mActivity.getString(R.string.promo_code_applied)
             );
 
-            mCheckoutMvpView.showPromoCodeApplied(mTempVoucherPromoKey, true);
-            voucherIds.add(mTempVoucherPromoKey);
-            tempVoucherIds.add(mTempVoucherPromoKey);
-
-            SharedPreferences.Editor editor = mSharedPreference.edit();
-            Set<String> voucherSet = new HashSet<String>();
-            voucherSet.addAll(voucherIds);
-            editor.putStringSet("VOUCHER_SET", voucherSet);
-            editor.apply();
-
-
             mActivity.onBackPressed();
         } else {
-
+            setAllButtonsEnabled(true);
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
-                    response.getValue().getMessage());
-        }
-    }
-
-
-    public void setVouchersHashMap() {
-
-        Log.d(this.getClass().getSimpleName(), "voucher size = " + listSize);
-
-        for (int i = 0; i <= listSize; i++) {
-            voucherOptionIndicator.put(i, false);
+                    response.getD().getMessage());
         }
     }
 
     @Override
-    public void onVoucherItemClicked(String voucherId, String voucherState, LinearLayout holder, int position) {
+    public void onRemoveVoucherByKey(RemoveVoucherByKeyResponse response) {
+        setAllButtonsEnabled(true);
+        if (response.d.getResult()) {
+            mappedCheckoutDetails = new CheckoutDetailsMapper(response.getD().getValue());
+            informNewCartDetailsListener();
+        } else {
+            final String message = response.d.getMessage();
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    message
+            );
+        }
+    }
 
-        if (voucherOptionIndicator.get(position) != null) {
+    private void setAllButtonsEnabled(boolean enabled) {
+        isVouchersApplyButtonEnabled = enabled;
+        isVouchersClearButtonEnabled = enabled;
+        isPromoCodeAddButtonEnabled = enabled;
+        isPromoCodeDeleteButtonEnabled = enabled;
+    }
 
-            boolean isClicked = voucherOptionIndicator.get(position);
+    private void applyPromoCode() {
+        if (!isPromoCodeAddButtonEnabled) {
+            return;
+        }
+        if (!mPromoCodeText.getText().toString().isEmpty()) {
+            mPresenter.addAndApplyVoucherByKey(postcode, 100, mPromoCodeText.getText().toString());
+            mPromoCodeText.clearFocus();
+            hideKeyboard();
+            setAllButtonsEnabled(false);
+        } else {
+            CustomAlertDialog
+                    .showCustomAlertDialog(
+                            mActivity,
+                            CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                            mActivity.getString(R.string.please_input_promo_code));
+        }
+    }
 
-            if (isClicked) {
-                voucherIds.remove(voucherId);
-                tempVoucherIds.add(voucherId);
-
-                voucherOptionIndicator.put(position, false);
-
-            } else {
-
-                voucherIds.add(voucherId);
-                tempVoucherIds.add(voucherId);
-
-                voucherOptionIndicator.put(position, true);
+    private AddVouchersPromoCodeRecyclerViewAdapter.PromoCodeDeleteButtonListener getDeletePromoCodeButtonListener() {
+        return position -> {
+            if (!isPromoCodeDeleteButtonEnabled) {
+                return;
             }
+            final String key = appliedPromoCodes.get(position).getCode();
+            appliedPromoCodes.remove(position);
+            if (promoCodeContainer.getAdapter() != null) {
+                promoCodeContainer.getAdapter().notifyItemRemoved(position);
+            }
+            mPresenter.removeVoucherByKey(postcode, 100, key);
+            setAllButtonsEnabled(false);
+        };
+    }
+
+    private void applyVouchers() {
+        if (!isVouchersApplyButtonEnabled) {
+            return;
+        }
+        if (!appliedVouchers.isEmpty()) {
+            mPresenter.applyVouchers(postcode, 100, new ArrayList<>(appliedVouchers));
+            setAllButtonsEnabled(false);
+        } else {
+            CustomAlertDialog.showCustomAlertDialog(
+                    mActivity,
+                    CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                    mActivity.getResources().getString(R.string.no_voucher_selected));
         }
     }
 
     private void clearAppliedVouchers() {
-        mPresenter.clearVouchers(null, 100);
+        if (!isVouchersClearButtonEnabled) {
+            return;
+        }
+        mPresenter.clearVouchers(postcode, 100);
+        setAllButtonsEnabled(false);
+    }
+
+    public List<Voucher> getVouchers() {
+        return new ArrayList<>(vouchers);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setVouchers(List<Voucher> vouchers) {
+        this.vouchers.clear();
+        this.vouchers.addAll(vouchers);
+        resetAppliedVouchers();
+        if (voucherRecyclerView != null && voucherRecyclerView.getAdapter() != null) {
+            voucherRecyclerView.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    private void resetAppliedVouchers() {
+        appliedVouchers.clear();
+        for (Voucher voucher : vouchers) {
+            if (voucher.isApplied()) {
+                appliedVouchers.add(voucher.getId());
+            }
+        }
+    }
+
+    public List<Value.PromoCode> getAppliedPromoCodes() {
+        return new ArrayList<>(appliedPromoCodes);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setAppliedPromoCodes(List<Value.PromoCode> appliedPromoCodes) {
+        this.appliedPromoCodes.clear();
+        this.appliedPromoCodes.addAll(appliedPromoCodes);
+        if (promoCodeContainer != null && promoCodeContainer.getAdapter() != null) {
+            promoCodeContainer.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
+    private void informNewCartDetailsListener() {
+        if (cartDetailsListener != null) {
+            cartDetailsListener.onNewCartDetailsReceived(mappedCheckoutDetails);
+        }
+    }
+
+    public void setCartDetailsListener(NewCartDetailsListener cartDetailsListener) {
+        this.cartDetailsListener = cartDetailsListener;
+    }
+
+    public interface NewCartDetailsListener {
+        void onNewCartDetailsReceived(CheckoutDetailsMapper mappedValues);
     }
 }

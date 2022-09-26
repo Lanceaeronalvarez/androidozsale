@@ -1,7 +1,4 @@
 package au.com.dealsdirect.data.network.model.checkout.getcurrentorder;
-/*
- * Created by CodeineBot on 1/6/17.
- */
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
+import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 
 public class Value {
 
@@ -60,6 +58,9 @@ public class Value {
     @SerializedName(value = "OurPaySelect", alternate = {"ourPaySelect"})
     @Expose
     private GetOurPaySelect ourPaySelect;
+    @SerializedName("PromoCodeList")
+    @Expose
+    private List<PromoCode> promoCodeList;
 
     public boolean isEmpty() {
         return isEmpty;
@@ -161,6 +162,14 @@ public class Value {
         this.afterpay = afterpay;
     }
 
+    public List<PromoCode> getPromoCodeList() {
+        return promoCodeList;
+    }
+
+    public void setPromoCodeList(List<PromoCode> promoCodeList) {
+        this.promoCodeList = promoCodeList;
+    }
+
     public static class GetCurrentOrderAfterpay {
         /*
            "isAvailable" is an indicator if Afterpay is available for the price of the cart.
@@ -224,6 +233,42 @@ public class Value {
 
         public void setName(String name) {
             this.name = name;
+        }
+    }
+
+    public static class PromoCode {
+        @SerializedName("ID")
+        @Expose
+        private String id;
+        @SerializedName("Code")
+        @Expose
+        private String code;
+        @SerializedName("Amount")
+        @Expose
+        private float amount;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public float getAmount() {
+            return amount;
+        }
+
+        public void setAmount(float amount) {
+            this.amount = amount;
         }
     }
 }

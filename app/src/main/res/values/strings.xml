@@ -47,7 +47,6 @@
     <string name="font_raleway_thin_italic">fonts/raleway/Raleway-ThinItalic.ttf</string>
 
     <string name="return_policy">Return Policy</string>
-    <string name="select_size">Select size</string>
 
     <string name="base_html_template_header" formatted="false">
         <![CDATA["<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
@@ -227,6 +226,7 @@
     <string name="add_new_address_bottom_button">ADD</string>
     <string name="color">Color:&#160;</string>
     <string name="size">Size:&#160;</string>
+    <string name="choose_size">Choose Size:</string>
     <string name="my_current_delivery_address">my current delivery address</string>
     <string name="add_new_address">add new address</string>
     <string name="change">change</string>
@@ -285,10 +285,10 @@
     <string name="apply_promo_code">Apply Promo Code</string>
     <string name="my_voucher">my voucher</string>
     <string name="promo_code">promo code</string>
-    <string name="enter_voucher_code">enter voucher code</string>
-    <string name="no_voucher_selected">no voucher selected</string>
+    <string name="enter_voucher_code">Enter voucher code</string>
+    <string name="no_voucher_selected">No Voucher Selected</string>
     <string name="voucher_code_added">Voucher code added</string>
-    <string name="voucher_is_applied">voucher is applied</string>
+    <string name="voucher_is_applied">Voucher is applied</string>
     <string name="promo_code_applied">Promo code applied</string>
     <string name="unable_to_apply_voucher">Unable to apply voucher</string>
     <string name="add_new_voucher">add new voucher</string>
@@ -302,6 +302,7 @@
     <string name="create_contact_empty_message_error">Please enter a message</string>
     <string name="apply_vouchers">Apply Vouchers</string>
     <string name="add_voucher">Add Voucher</string>
+    <string name="voucher_clear">Clear Vouchers</string>
 
 
     <!--INVITE-->
@@ -329,7 +330,6 @@
     <string name="search_tag">Search</string>
     <string name="sale_items_from_category">SaleItemFromCategory</string>
     <string name="bottom_nav_sale_top_from_sale_items">BottomNavSaleTapFromSaleItems</string>
-    <string name="choose_your_size">Choose your size:</string>
     <string name="about">About</string>
     <string name="pricing">Pricing</string>
     <string name="estimated_delivery">Estimated Delivery</string>
@@ -581,6 +581,7 @@
     <string name="please_refer_to_our_return_policy">Please refer to our Return Policy</string>
     <string name="measurements">Measurements</string>
     <string name="size_guide">Size Guide</string>
+    <string name="size_guide_link"><u>Size Guide</u></string>
     <string name="about_atom">About Atom</string>
     <string name="a_full_range_of_compression_wear_where_technology_is_at_the_heart_of_atom_pro_compression_born_out_of_the_desire_to_find_a_effective_great_looking_comfortable_range_that_enables_you_to_perform_at_your_best_for_extended_periods_of_time">A full range of compression wear. Where technology is at the heart of ATOM Pro Compression. Born out of the desire to find a effective, great looking, comfortable range that enables you to perform at your best for extended periods of time.</string>
     <string name="_100_rayon_mykonos_embroidered_off_shoulder_top_white_elasticated_top_and_bottom_the_clothing_at_morrisday_is_true_to_standard_austrailian_sizing">�  100% Rayon\n\n�  Mykonos Embroidered Off Shoulder Top (White)\n\n�  Elasticated top and bottom\n\n�  The clothing at Morrisday is true to standard Austrailian sizing</string>
@@ -877,5 +878,5 @@
 
     <string name="myaccount_ourpay_unavailable_message">Unfortunately, Ourpay is no longer available. We apologise for any inconvenience, please choose from one of the other payment options. Existing Ourpay payments agreements remain unchanged.</string>
 
-    <string name="account_deletion_confirmation_text">Are you sure you want to delete all data associated with your account?\n\nIt may take up to 28 days to completely remove all the data associated with your account.</string>
+    <string name="account_deletion_confirmation_text">Are you sure you want to delete your account and all data associated with it?\n\nIt may take up to 28 days to completely remove all the data associated with your account.</string>
 </resources>

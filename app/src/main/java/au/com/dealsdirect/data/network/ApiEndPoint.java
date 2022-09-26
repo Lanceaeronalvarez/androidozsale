@@ -354,6 +354,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "AddAndApplyVoucherByKey");
     }
 
+    public static String removeVoucherByKey() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "RemoveVoucherByKey");
+    }
+
     public static String getUserVouchers() {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetUserVouchers");
     }

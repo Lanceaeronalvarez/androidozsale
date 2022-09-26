@@ -30,8 +30,8 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value.GetOurPaySelect;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Voucher;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
+import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
 
@@ -217,6 +217,10 @@ public class CheckoutDetailsMapper {
 
     public Value.GetCurrentOrderAfterpay getAfterpay() {
         return sourceValue.getAfterpay();
+    }
+
+    public List<Value.PromoCode> getPromoCodeList() {
+        return sourceValue.getPromoCodeList();
     }
 
     public List<Item> getItems() {

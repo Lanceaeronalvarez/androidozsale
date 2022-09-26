@@ -164,10 +164,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.activity_main_frame)
     ViewGroup mContainer;
 
-    @BindView(R.id.bottomSheetLayout)
-    View bottomSheetDialog;
-
-
     private BraintreeFragment mBraintreeFragment;
     private FetchTokenHandler mFetchTokenHandler;
 

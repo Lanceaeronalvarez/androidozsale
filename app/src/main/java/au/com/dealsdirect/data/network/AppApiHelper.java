@@ -176,6 +176,8 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
+import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyRequest;
+import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
 import au.com.dealsdirect.data.wishlist.CallAddToWishlistRequest;
 import au.com.dealsdirect.utils.AppConstants;
@@ -1131,6 +1133,15 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(addAndApplyVoucherByKeyRequest, true))
                 .build()
                 .getObjectObservable(AddAndApplyVoucherByKeyResponse.class);
+    }
+
+    @Override
+    public Observable<RemoveVoucherByKeyResponse> callGetRemoveVoucherByKey(RemoveVoucherByKeyRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.removeVoucherByKey())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
+                .build()
+                .getObjectObservable(RemoveVoucherByKeyResponse.class);
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mysale.genie.utility.LegacyBaseResponseValue;
 
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+
 /**
  * Created by Admin on 3/6/17.
  */
@@ -16,14 +18,14 @@ public class ClearVouchersResponse {
 
         @SerializedName("Value")
         @Expose
-        private Object value;
-        public Object getValue() {
+        private Value value;
+        public Value getValue() {
             return value;
         }
 
     }
 
-    private Response getValue() {
+    public Response getD() {
         return d;
     }
 }
