@@ -52,6 +52,9 @@ public class Value {
     @SerializedName(value = "Afterpay", alternate = {"afterpay", "AfterPay"})
     @Expose
     private GetCurrentOrderAfterpay afterpay;
+    @SerializedName(value = "Openpay", alternate = {"openpay"})
+    @Expose
+    private GetCurrentOrderOpenpay openpay;
     @SerializedName(value = "OurPay", alternate = {"ourPay"})
     @Expose
     private GetCurrentOrderOurpay ourpay;
@@ -158,6 +161,10 @@ public class Value {
         return afterpay;
     }
 
+    public GetCurrentOrderOpenpay getOpenpay() {
+        return openpay;
+    }
+
     public void setAfterpay(GetCurrentOrderAfterpay afterpay) {
         this.afterpay = afterpay;
     }
@@ -171,12 +178,42 @@ public class Value {
     }
 
     public static class GetCurrentOrderAfterpay {
-        /*
-           "isAvailable" is an indicator if Afterpay is available for the price of the cart.
+        @SerializedName(value = "IsAvailable", alternate = {"isAvailable"})
+        @Expose
+        private boolean isAvailable;
+        @SerializedName(value = "IsAvailableMobileApp", alternate = "isAvailableMobileApp")
+        @Expose
+        private boolean isAvailableMobileApp;
+        @SerializedName(value = "Description", alternate = {"description"})
+        @Expose
+        private String description;
 
-           "isAvailableMobileApp" dictates if Afterpay is visible and accessible at all for the user.
-         */
+        public boolean isAvailable() {
+            return isAvailable;
+        }
 
+        public void setAvailable(boolean available) {
+            isAvailable = available;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public boolean isAvailableMobileApp() {
+            return isAvailableMobileApp;
+        }
+
+        public void setAvailableMobileApp(boolean availableMobileApp) {
+            isAvailableMobileApp = availableMobileApp;
+        }
+    }
+
+    public static class GetCurrentOrderOpenpay {
         @SerializedName(value = "IsAvailable", alternate = {"isAvailable"})
         @Expose
         private boolean isAvailable;

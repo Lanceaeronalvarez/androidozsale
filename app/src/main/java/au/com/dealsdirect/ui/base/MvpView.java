@@ -51,5 +51,10 @@ public interface MvpView {
 
     void hideLPayLoading();
 
+    void showOpenpayLoading();
+
+    void hideOpenpayLoading();
+
+
     void showLoadingDelayed(int delay);
 }

@@ -111,6 +111,9 @@ import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderRequest;
 import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderResponse;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
+import au.com.dealsdirect.data.network.model.openpay.CreateOpenpayOrderRequest;
+import au.com.dealsdirect.data.network.model.openpay.CreateOpenpayOrderResponse;
+import au.com.dealsdirect.data.network.model.openpay.OpenpayCapturePaymentRequest;
 import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
@@ -1422,15 +1425,6 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<JSONObject> callConfirmLPayTransaction(ConfirmLPayTransactionRequest request) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.callConfirmLPayTransaction())
-                .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
-                .build()
-                .getJSONObjectObservable(); //TODO: replace with response object CreateLPayOrderResponse
-    }
-
-    @Override
     public Observable<JSONObject> callAfterPayCreatePayment(AfterPayCreatePaymentRequest request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.callAfterPayCreatePayment())
                 .addHeaders(mApiHeader.get())
@@ -1449,12 +1443,39 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<JSONObject> callConfirmLPayTransaction(ConfirmLPayTransactionRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callConfirmLPayTransaction())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getJSONObjectObservable(); //TODO: replace with response object CreateLPayOrderResponse
+    }
+
+    @Override
     public Observable<CreateLPayOrderResponse> callCreateLPayOrder(CreateLPayOrderRequest request) {
         return Rx2AndroidNetworking.post(ApiEndPoint.callCreateLPayOrder())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
                 .getObjectObservable(CreateLPayOrderResponse.class);
+    }
+
+    @Override
+    public Observable<CreateOpenpayOrderResponse> callCreateOpenpayOrder(CreateOpenpayOrderRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callCreateOpenpayOrder())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getObjectObservable(CreateOpenpayOrderResponse.class);
+    }
+
+    @Override
+    public Observable<JSONObject> callOpenpayCapturePayment(OpenpayCapturePaymentRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callOpenpayCapturePayment())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
+                .build()
+                .getJSONObjectObservable();
     }
 
     @Override

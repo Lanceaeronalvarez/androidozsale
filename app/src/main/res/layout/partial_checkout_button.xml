@@ -29,7 +29,7 @@
                 android:paddingLeft="-3dp"
                 android:paddingRight="-3dp"
                 android:paddingBottom="8dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <include
                     android:id="@+id/partial_checkout_button_g_pay"
@@ -45,7 +45,7 @@
                 android:gravity="center"
                 android:text="@string/pay"
                 android:textSize="@dimen/text_size_headline2"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <RelativeLayout
                 android:id="@+id/partial_checkout_button_paypal"
@@ -55,7 +55,7 @@
                 android:background="@drawable/bg_paypal_button"
                 android:clickable="true"
                 android:elevation="1.5dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
                 android:background="@drawable/bg_paypal_credit_button"
                 android:clickable="true"
                 android:elevation="1.5dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -148,14 +148,12 @@
 
         </LinearLayout>
 
-
         <View
             android:id="@+id/partial_checkout_line_above_afterpay"
             style="@style/horizontalBorderView"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_small" />
-
 
         <LinearLayout
             android:id="@+id/partial_checkout_afterpay_panel_holder"
@@ -220,12 +218,11 @@
                 android:id="@+id/partial_checkout_button_afterpay"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_regular"
-                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_afterpay_button"
                 android:clickable="true"
                 android:elevation="1.5dp"
                 android:padding="6dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -247,13 +244,13 @@
             android:paddingLeft="@dimen/padding_default"
             android:paddingTop="@dimen/padding_default"
             android:paddingRight="@dimen/padding_default"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:layout_marginBottom="@dimen/margin_medium">
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:background="@color/transparent">
 
                 <WebView
                     android:id="@+id/partial_checkout_klarna_description"
@@ -266,7 +263,6 @@
                     android:background="@color/transparent"
                     android:gravity="center"
                     android:textColor="@color/black"
-
                     tools:ignore="WebViewLayout" />
             </RelativeLayout>
 
@@ -274,7 +270,6 @@
                 android:id="@+id/partial_checkout_button_klarna"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_regular"
-                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_klarna_button"
                 android:clickable="true"
                 android:elevation="1.5dp"
@@ -298,15 +293,13 @@
             android:layout_marginBottom="10dp"
             android:orientation="vertical"
             android:paddingLeft="@dimen/padding_default"
-            android:paddingTop="@dimen/padding_default"
             android:paddingRight="@dimen/padding_default"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <RelativeLayout
                 android:id="@+id/partial_checkout_button_lpay"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height_regular"
-                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_lpay_button"
                 android:clickable="true"
                 android:elevation="1.5dp"
@@ -325,13 +318,45 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/partial_checkout_openpay_panel_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_tiny"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/partial_checkout_button_openpay"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_regular"
+                android:background="@drawable/bg_openpay_button"
+                android:clickable="true"
+                android:elevation="1.5dp"
+                android:padding="6dp"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/partial_checkout_button_openpay_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingTop="@dimen/openpay_button_logo_margin_top"
+                    android:paddingBottom="@dimen/openpay_button_logo_margin_bottom"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_openpay_dark_logo" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/partial_checkout_ourpay_panel_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical" />
-
 
     </LinearLayout>
 </RelativeLayout>

@@ -118,6 +118,9 @@ import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderRequest;
 import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderResponse;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
+import au.com.dealsdirect.data.network.model.openpay.CreateOpenpayOrderRequest;
+import au.com.dealsdirect.data.network.model.openpay.CreateOpenpayOrderResponse;
+import au.com.dealsdirect.data.network.model.openpay.OpenpayCapturePaymentRequest;
 import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
@@ -878,6 +881,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<CreateOpenpayOrderResponse> callCreateOpenpayOrder(CreateOpenpayOrderRequest request) {
+        return mApiHelper.callCreateOpenpayOrder(request);
+    }
+
+    @Override
+    public Observable<JSONObject> callOpenpayCapturePayment(OpenpayCapturePaymentRequest request) {
+        return mApiHelper.callOpenpayCapturePayment(request);
+    }
+
+    @Override
     public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request) {
         return mApiHelper.callGetDeepLinkData(request);
     }
@@ -1231,6 +1244,16 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean isLPayEnabled() {
         return mPreferencesHelper.isLPayEnabled();
+    }
+
+    @Override
+    public void setOpenpayEnabled(boolean enabled) {
+        mPreferencesHelper.setOpenpayEnabled(enabled);
+    }
+
+    @Override
+    public boolean isOpenpayEnabled() {
+        return mPreferencesHelper.isOpenpayEnabled();
     }
 
     @Override

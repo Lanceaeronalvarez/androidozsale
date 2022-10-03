@@ -464,6 +464,15 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribe(mAppSettingsSectionAcceptLPayCallback, mAppSettingsSectionThrowableCallback));
     }
 
+    @Override
+    public void callGetPublicAppSettingsSectionsOpenpay(Context context) {
+        getCompositeDisposable().add(getDataManager()
+                .callGetPublicAppSettingsSections(getDataManager().getCountryId(), "Openpay")
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(mAppSettingsSectionAcceptOpenpayCallback, mAppSettingsSectionThrowableCallback));
+    }
+
     private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptAfterpayCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
         @Override
         public void accept(@NonNull GetAppSettingsSection.ResponseValue responseValue) throws Exception {
@@ -503,6 +512,23 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             boolean isEnabled = responseValue.d.getValue().getlPay().isEnabled();
 
             getDataManager().setLPayEnabled(isEnabled);
+        }
+    };
+
+    private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptOpenpayCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
+        @Override
+        public void accept(@NonNull GetAppSettingsSection.ResponseValue responseValue) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            if (responseValue.d == null || responseValue.d.getValue() == null || responseValue.d.getValue().getOpenpay() == null) {
+                return;
+            }
+
+            boolean isEnabled = responseValue.d.getValue().getOpenpay().isEnabled();
+
+            getDataManager().setOpenpayEnabled(isEnabled);
         }
     };
 

@@ -147,7 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
 
     @Override
     public void showLPayLoading() {
-        hideAfterpayLoading();
+        hideLPayLoading();
         if (!isFinishing() || !isDestroyed()) {
             mProgressDialog = CommonUtils.showLoadingDialogLPay(this);
         }
@@ -155,6 +155,21 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
 
     @Override
     public void hideLPayLoading() {
+        if (mProgressDialog != null && mProgressDialog.isShowing() && (!isFinishing() || !isDestroyed())) {
+            mProgressDialog.cancel();
+        }
+    }
+
+    @Override
+    public void showOpenpayLoading() {
+        hideOpenpayLoading();
+        if (!isFinishing() || !isDestroyed()) {
+            mProgressDialog = CommonUtils.showLoadingDialogOpenpay(this);
+        }
+    }
+
+    @Override
+    public void hideOpenpayLoading() {
         if (mProgressDialog != null && mProgressDialog.isShowing() && (!isFinishing() || !isDestroyed())) {
             mProgressDialog.cancel();
         }
