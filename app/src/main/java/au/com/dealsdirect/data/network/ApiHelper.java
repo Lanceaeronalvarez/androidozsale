@@ -105,6 +105,9 @@ import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderRequest;
 import au.com.dealsdirect.data.network.model.lpay.CreateLPayOrderResponse;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPaymentRequest;
 import au.com.dealsdirect.data.network.model.masterpass.MasterPassPostTransactionRequest;
+import au.com.dealsdirect.data.network.model.openpay.CreateOpenpayOrderRequest;
+import au.com.dealsdirect.data.network.model.openpay.CreateOpenpayOrderResponse;
+import au.com.dealsdirect.data.network.model.openpay.OpenpayCapturePaymentRequest;
 import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
@@ -480,6 +483,13 @@ public interface ApiHelper {
     Observable<CreateLPayOrderResponse> callCreateLPayOrder(CreateLPayOrderRequest request);
 
     Observable<JSONObject> callConfirmLPayTransaction(ConfirmLPayTransactionRequest request);
+
+    // OPENPAY
+
+    Observable<CreateOpenpayOrderResponse> callCreateOpenpayOrder(CreateOpenpayOrderRequest request);
+
+    Observable<JSONObject> callOpenpayCapturePayment(OpenpayCapturePaymentRequest request);
+
 
     // DEEPLINK
     Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request);

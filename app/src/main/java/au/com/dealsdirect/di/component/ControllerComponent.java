@@ -38,6 +38,7 @@ import au.com.dealsdirect.ui.controller.lpay.LPayViewController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.notification.NotificationController;
+import au.com.dealsdirect.ui.controller.openpay.OpenpayViewController;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.controller.orders.orders.OrdersController;
 import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayController;
@@ -164,6 +165,8 @@ public interface ControllerComponent {
     void inject(AfterpayViewController controller);
 
     void inject(LPayViewController controller);
+
+    void inject(OpenpayViewController controller);
 
     void inject(FloatingImageViewerController controller);
 

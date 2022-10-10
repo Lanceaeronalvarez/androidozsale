@@ -223,6 +223,10 @@ public class CheckoutDetailsMapper {
         return sourceValue.getPromoCodeList();
     }
 
+    public Value.GetCurrentOrderOpenpay getOpenpay() {
+        return sourceValue.getOpenpay();
+    }
+
     public List<Item> getItems() {
         return sourceValue.getItems();
     }
@@ -283,6 +287,7 @@ public class CheckoutDetailsMapper {
         public static final PaymentOption IPAY88PAYMENTS = new PaymentOption("IPay88Payments");
         public static final PaymentOption STRIPE = new PaymentOption("Stripe");
         public static final PaymentOption LATITUDEPAY = new PaymentOption("LatitudePay");
+        public static final PaymentOption OPENPAY = new PaymentOption("Openpay");
         public static final PaymentOption KLARNA = new PaymentOption("Klarna");
 
         private static final HashMap<String, PaymentOption> paymentOptions =
@@ -297,6 +302,7 @@ public class CheckoutDetailsMapper {
                     put("IPay88Payments".toLowerCase(), IPAY88PAYMENTS);
                     put("Stripe".toLowerCase(), STRIPE);
                     put("LatitudePay".toLowerCase(), LATITUDEPAY);
+                    put("Openpay".toLowerCase(), OPENPAY);
                     put("Klarna".toLowerCase(), KLARNA);
                 }};
 

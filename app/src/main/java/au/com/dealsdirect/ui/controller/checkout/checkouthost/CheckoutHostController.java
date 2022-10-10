@@ -293,6 +293,16 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
+    public void showOpenpayPanel() {
+        mCheckoutDetailView.showOpenpayPanel();
+    }
+
+    @Override
+    public void hideOpenpayPanel() {
+        mCheckoutDetailView.hideOpenpayPanel();
+    }
+
+    @Override
     public void showKlarnaPanel(String description) {
         mCheckoutDetailView.showKlarnaPanel(description);
     }

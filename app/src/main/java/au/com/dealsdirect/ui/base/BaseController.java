@@ -172,6 +172,20 @@ public abstract class BaseController
     }
 
     @Override
+    public void showOpenpayLoading() {
+        if (mActivity != null) {
+            mActivity.showOpenpayLoading();
+        }
+    }
+
+    @Override
+    public void hideOpenpayLoading() {
+        if (mActivity != null) {
+            mActivity.hideOpenpayLoading();
+        }
+    }
+
+    @Override
     public void showLoadingDelayed(int delay) {
         if (mActivity != null) {
             mActivity.showLoadingDelayed(delay);
