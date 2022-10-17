@@ -4,8 +4,8 @@ OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 flavorName=topbuyRC
 buildTypeAssemble=TopbuyRCRelease
 defaultCountry=Australia
-expectedVersionName="6.1.0"
-expectedVersionCode="420"
+expectedVersionName="6.2.0"
+expectedVersionCode="422"
 
 print_green(){
     printf "\e[1;32m$1\e[0m"
