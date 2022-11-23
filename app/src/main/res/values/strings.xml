@@ -83,6 +83,10 @@
                         padding-left:0px;
                     }
 
+                    ol {
+                        padding-left:24px;
+                    }
+
                     b {
                         font-family: __BOLD_FONT_NAME__;
                         color: __BOLD_FONT_COLOR__;
@@ -135,6 +139,92 @@
         <body>"]]>
     </string>
 
+    <string name="gc_tnc_content" formatted="false">
+        <![CDATA["<b>{APPNAME} GIFT CARD TERMS AND CONDITIONS</b>
+        <ol>
+            <li>
+                <b>Introduction</b><br />
+                These terms and conditions (<b>Terms</b>) apply when you buy and/or use our gift cards (<b>Gift Card</b>).
+                <ol type="a">
+                    <li>You agree to be bound by these Terms which form a binding contractual agreement between you and us, {appname} Pty. Limited ABN 11 118 610 987 (<b>{appname}</b>, <b>our</b>, <b>we</b> or <b>us</b>).</li>
+                    <li>If you are using our website (<b>Website</b>) to access any of our Gift Cards you are also bound by our Website Terms and Conditions available on our Website.</li>
+                    <li>We may change these Terms at any time without prior notice to you by updating this page of the Website. The version of these Terms that was current at the time you activated your gift card will apply to your use of your Gift Card and you agree to be bound by such Terms. We encourage you to check these latest version of these terms each time you activate a Gift Card.</li>
+                </ol>
+            </li>
+            <li>
+                <b>Activating your gift card</b><br />
+                Before you can redeem your Gift Card, you need to activate and register your Gift Card on our Website in accordance with the instructions set out on the Gift Card or otherwise communicated to you.
+            </li>
+            <li>
+                <b>Account and guest checkout</b>
+                <ol type="a">
+                    <li>Gift Cards are valid online on our Website and are redeemable at our Website checkout.</li>
+                    <li>You may redeem the full amount of your Gift Card as a guest of the Website, or you may redeem your Gift Card in part or in full with an {appname} account (<b>Account</b>). You can sign-up, register and receive an Account through the Website.</li>
+                    <li>You must have an Account:
+                        <ol type="a">
+                            <li>to view the remaining credit of your Gift Card; and</li>
+                            <li>to use the remaining credit of your Gift Card for your next purchase at {appname}.</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <b>Gift card RULES</b>
+                <ol type="a">
+                    <li>Gift Cards are obligation and commitment free. You do not have to use your Gift Card.</li>
+                    <li>Gift Cards are valid for 3 years from the date of purchase, in accordance with the Australian Consumer Law.</li>
+                    <li>Gift Cards can be used for all goods and services on our Website, excluding alcohol.</li>
+                    <li>Gift Cards are not legal tender, account cards, credit or debit cards or securities. They are not reloadable and cannot be exchanged or redeemed for cash, a discount or anything else other than the goods and services we sell on our Website.</li>
+                </ol>
+            </li>
+            <li>
+                <b>Complaints</b><br />
+                If you have any issues with your use of Gift Cards, please contact us at <a href="mailto:pr@mysale.com">pr@mysale.com</a>.<br />
+                However, you must not commence court proceedings relating to any dispute arising from, or in connection with, these Terms without first meeting with us to seek (in good faith) to resolve that dispute (unless you are seeking urgent interlocutory relief or the dispute relates to compliance with this clause).
+            </li>
+            <li>
+                <b>Third party terms and conditions</b>
+                <ol type="a">
+                    <li>You acknowledge and agree that third party terms & conditions (<b>Third Party Terms</b>) may apply.</li>
+                    <li>You agree to any Third Party Terms applicable to any third party goods and services, and {appname} will not be liable for any loss or damage suffered by you in connection with such Third Party Terms.</li>
+                </ol>
+            </li>
+            <li>
+                <b>Privacy</b><br />
+                You agree to be bound by our Privacy Policy, which can be found on our Website.
+            </li>
+            <li>
+                <b>Liability</b><br />
+                To the maximum extent permitted by applicable law, {appname} excludes all liability to any person for loss or damage of any kind, however arising whether in contract, tort (including negligence), statute, equity, indemnity or otherwise, arising from or relating in any way to the use of our Gift Cards or the Website.
+            </li>
+            <li>
+                <b>Interpretation</b>
+                <ol type="a">
+                    <li>(<b>Governing law</b>) This agreement is governed by the law applying in New South Wales, Australia.</li>
+                    <li>(<b>Jurisdiction</b>) Each party irrevocably submits to the exclusive jurisdiction of the courts of New South Wales, Australia and courts of appeal from them in respect of any proceedings arising out of or in connection with this agreement. Each party irrevocably waives any objection to the venue of any legal process on the basis that the process has been brought in an inconvenient forum.</li>
+                    <li>(<b>Amendments</b>) These Terms may only be amended by {appname} in accordance with the Terms.</li>
+                    <li>(<b>Waiver</b>) No party to these Terms may rely on the words or conduct of any other party as a waiver of any right unless the waiver is in writing and signed by the party granting the waiver.</li>
+                    <li>(<b>Further acts</b>) Each party must promptly do all further acts and execute and deliver all further documents required by law or reasonably requested by another party to give effect to these Terms.</li>
+                    <li>(<b>Assignment</b>) A party cannot assign, novate or otherwise transfer any of its rights or obligations under these Terms without the prior written consent of the other party.</li>
+                    <li>(<b>Entire Agreement</b>) These Terms embody the entire agreement between the parties and supersede any prior negotiation, conduct, arrangement, understanding or agreement, express or implied, in relation to the subject matter of the Terms.</li>
+                    <li>(<b>Interpretation</b>) In these Terms, the following rules of interpretation apply:
+                        <ol type="i">
+                            <li>(<b>singular and plural</b>) words in the singular includes the plural (and vice versa);</li>
+                            <li>(<b>gender</b>) words indicating a gender includes the corresponding words of any other gender;</li>
+                            <li>(<b>defined terms</b>) if a word or phrase is given a defined meaning, any other part of speech or grammatical form of that word or phrase has a corresponding meaning;</li>
+                            <li>(<b>person</b>) a reference to <b>"person"</b> or <b>"you"</b> includes an individual, the estate of an individual, a corporation, an authority, an association, consortium or joint venture (whether incorporated or unincorporated), a partnership, a trust and any other entity;</li>
+                            <li>(<b>party</b>) a reference to a party includes that party's executors, administrators, successors and permitted assigns, including persons taking by way of novation and, in the case of a trustee, includes any substituted or additional trustee;</li>
+                            <li>(<b>these Terms</b>) a reference to a party, clause, paragraph, schedule, exhibit, attachment or annexure is a reference to a party, clause, paragraph, schedule, exhibit, attachment or annexure to or of these Terms, and a reference to these Terms includes all schedules, exhibits, attachments and annexures to it;</li>
+                            <li>(<b>document</b>) a reference to a document (including these Terms) is to that document as varied, novated, ratified or replaced from time to time;</li>
+                            <li>(<b>headings</b>) headings and words in bold type are for convenience only and do not affect interpretation;</li>
+                            <li>(<b>includes</b>) the word <b>"includes"</b> and similar words in any form is not a word of limitation; and</li>
+                            <li>(<b>adverse interpretation</b>) no provision of this agreement will be interpreted adversely to a party because that party was responsible for the preparation of this agreement or that provision.</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+        </ol>"]]>
+    </string>
 
     <string name="base_html_template_footer" formatted="false">
         <![CDATA["</body></html>"]]>
@@ -447,6 +537,7 @@
     <string name="account_tutorial">Tutorial</string>
     <string name="account_logout">Logout</string>
     <string name="account_information">Information</string>
+    <string name="account_gc_tnc">Gift Card\nTerms &amp; Conditions</string>
     <string name="personalise">Personalise</string>
     <string name="please_fill_up_personalisation_details">Please fill up personalisation details</string>
     <string name="max_characters">Max characters:&#160;</string>

@@ -27,7 +27,7 @@ public abstract class BasePullToRefreshController extends BaseController impleme
 
     protected enum ToolBarType {
 
-        LOGO, ARROW, LOGIN, TITLE;
+        LOGO, ARROW, LOGIN, TITLE, TWOLINES;
 
         int getLayout() {
             switch (this) {
@@ -37,6 +37,8 @@ public abstract class BasePullToRefreshController extends BaseController impleme
                     return R.layout.partial_toolbar_login;
                 case TITLE:
                     return R.layout.partial_toolbar_title;
+                case TWOLINES:
+                    return R.layout.partial_toolbar_two_lines;
                 default:
                     return R.layout.partial_toolbar_arrow;
             }

@@ -1,13 +1,15 @@
 package au.com.dealsdirect.ui.controller.legalities;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import javax.inject.Inject;
 
@@ -36,26 +38,50 @@ public class LegalitiesController extends BasePullToRefreshController implements
     @BindView(R.id.partial_toolbar_title)
     TextView mTitleText;
 
+    @Nullable
+    @BindView(R.id.partial_toolbar_subtitle)
+    TextView mSubtitleText;
+
+
     private String key;
 
-    private String title;
+    private int stringResource;
 
-    public LegalitiesController(String  key, String title) {
+    private String title;
+    private String subtitle;
+
+    public LegalitiesController(String key, String title) {
         this(new BundleBuilder(new Bundle())
-                .putString(BundleKeys.TEMPLATE_KEY,key)
+                .putString(BundleKeys.TEMPLATE_KEY, key)
+                .putString(BundleKeys.LEGALITIES_TITLE, title)
+                .build());
+    }
+
+    public LegalitiesController(int stringResource, String title) {
+        this(new BundleBuilder(new Bundle())
+                .putInt(BundleKeys.STRING_RESOURCE, stringResource)
                 .putString(BundleKeys.LEGALITIES_TITLE, title)
                 .build());
     }
 
     public LegalitiesController(Bundle args) {
         super(args);
-        key = args.getString(BundleKeys.TEMPLATE_KEY);
+        key = args.getString(BundleKeys.TEMPLATE_KEY, null);
+        stringResource = args.getInt(BundleKeys.STRING_RESOURCE, -1);
         title = args.getString(BundleKeys.LEGALITIES_TITLE);
+        if (title != null && title.contains("\n")) {
+            String[] titles = title.split("\n");
+            title = titles[0];
+            subtitle = titles[1];
+        } else {
+            subtitle = null;
+        }
     }
 
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        View view = super.inflateView(inflater, container, ToolBarType.ARROW);
+        ToolBarType toolBarType = subtitle != null ? ToolBarType.TWOLINES : ToolBarType.ARROW;
+        View view = super.inflateView(inflater, container, toolBarType);
 
         setToolBarVisible(getResource().getBoolean(R.bool.legalities_toolbar_visibility));
         fillContent(inflater.inflate(R.layout.controller_legalities, container, false));
@@ -69,7 +95,7 @@ public class LegalitiesController extends BasePullToRefreshController implements
     public void onRefreshStart() {
         super.onRefreshStart();
         mWebView.setVisibility(View.GONE);
-        mPresenter.loadText(key);
+        loadContent();
     }
 
     @Override
@@ -81,8 +107,11 @@ public class LegalitiesController extends BasePullToRefreshController implements
     @Override
     protected void setUp(View view) {
         mTitleText.setText(title);
+        if (mSubtitleText != null) {
+            mSubtitleText.setText(subtitle);
+        }
         mFilterButton.setVisibility(View.INVISIBLE);
-        mPresenter.loadText(key);
+        loadContent();
 
         mWebView.getSettings().setTextZoom(100);
     }
@@ -98,7 +127,7 @@ public class LegalitiesController extends BasePullToRefreshController implements
         String header = mActivity.getResources().getString(R.string.base_html_template_header);
         String footer = mActivity.getResources().getString(R.string.base_html_template_footer);
 
-        mWebView.loadDataWithBaseURL(null,header + value + footer,
+        mWebView.loadDataWithBaseURL(null, header + value + footer,
                 "text/html", "UTF-8", null);
         mWebView.setVisibility(View.VISIBLE);
     }
@@ -106,5 +135,17 @@ public class LegalitiesController extends BasePullToRefreshController implements
     @OnClick(R.id.partial_toolbar_left_view)
     public void backPress() {
         mActivity.onBackPressed();
+    }
+
+    private void loadContent() {
+        if (key != null) {
+            mPresenter.loadText(key);
+        } else if (stringResource >= 0) {
+            String appname = mActivity.getResources().getString(R.string.app_name);
+            String text = mActivity.getResources().getString(stringResource)
+                    .replaceAll("\\{appname\\}", appname)
+                    .replaceAll("\\{APPNAME\\}", appname.toUpperCase());
+            displayFetchedText(text);
+        }
     }
 }

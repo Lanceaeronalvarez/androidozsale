@@ -28,7 +28,8 @@ public enum AccountOption {
     NOTIFICATIONS(R.string.account_notification, false),
     TUTORIAL(R.string.account_tutorial, false),
     LOGOUT(R.string.account_logout, false),
-    INFORMATION(R.string.account_information, false);
+    INFORMATION(R.string.account_information, false),
+    GCTERMSANDCONDITIONS(R.string.account_gc_tnc, false);
 
     private static final  Map<Integer, AccountOption> ENUM_MAP;
 
