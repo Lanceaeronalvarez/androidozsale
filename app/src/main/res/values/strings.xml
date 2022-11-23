@@ -900,7 +900,7 @@
         <item>@string/returns_policy_step_title_4</item>
     </string-array>
 
-    <string name="returns_policy_step_description_1">You can request for a return within 30 days of receiving your order. Log in and go to My Returns. Select the item(s) you wish to return and indicate the reason for returning. Any attached photos, videos or additional comments in the form will be useful.\n\n</string>
+    <string name="returns_policy_step_description_1">You can request for a return within 14 days of receiving your order. Log in and go to My Returns. Select the item(s) you wish to return and indicate the reason for returning. Any attached photos, videos or additional comments in the form will be useful.\n\n</string>
     <string name="returns_policy_step_description_2">Your return request will be reviewed within 1 - 3 working days. Once approved, you will receive an email with your unique Return Authorisation Number (RAN) and the return instructions.</string>
     <string name="returns_policy_step_description_3">Follow the instructions. It is important you send your return to the address on the return email only, as sometimes your return will go directly back to the third-party Seller\'s warehouse. Attach the return label to your parcel and pass it to the delivery service within 7 calendar days. Make sure the RAN is visible on the parcel.</string>
     <string name="returns_policy_step_description_4">Once your return has been received at the warehouse address provided, you will receive an email to confirm this. Your refunds or store credits will be processed within 3 - 5 working days.</string>
@@ -933,12 +933,51 @@
     </string-array>
 
     <string name="returns_policy_faq_content_1">A free return will be provided if your received item(s) is damaged, faulty, or incorrect according to your order or item description. For Change of Mind returns, you will have to pay for the return charges. Please note, some of the items you purchase will be sent from our third-party Sellers warehouse directly to you, therefore, they will be required to be sent back to their own warehouse, which could be overseas. You will be required to pay for this for all change of mind returns. Please refer to the question ‘What is a Change of Mind return?’ to know if your return is to be lodged as ‘Change of Mind’.</string>
-    <string name="returns_policy_faq_content_2">A ‘Change of Mind’ return is to be lodged for item(s) delivered to you according to your order with no defects. This would include items that have the correct size, colour and product description according to your order.\n\nWe accept most items back for Change of Mind returns. However, we have additional considerations. Please refer to the question ‘What can I return as Change of Mind?’ for more details.</string>
-    <string name="returns_policy_faq_content_3">A ‘Change of Mind’ return is to be lodged for item(s) delivered to you according to your order with no defects. This would include items that have the correct size, colour and product description according to your order.\n\nWe accept most items back if you change your mind, however we do have the following considerations.\n\n\t• Returned items must be unused and be in a fine and resalable condition. All original packaging and tags (where applicable) must be intact. Any instruction manuals, guides, add-ons or free gifts must also be returned.\n\t• Items bought from Clearance sales or Warehouse Sales are non-returnable and non-refundable due to Change of Mind\n\t• Intimate apparel, swimwear, earrings, health &amp; beauty products are non-returnable and non-refundable. These items are deemed not resellable in the interest of hygiene.\n\t• The following items are also non-returnable and non-refundable:\n\t\t◦ Perishable products, liquor, food and beverages\n\t\t◦ Household essentials and general cleaning products\n\t\t◦ CDs, DVDs or any other products containing digital content\n\t\t◦ Customized or personalized products\n\t\t◦ Oversized or heavy items\n\nOnce your return is approved, you will receive an email on how to return your items. It is important your return is sent to the correct address provided in your return email, as not all returns will go to the same warehouse (if you have purchased from different third-party Sellers). You will be requested to pay for the delivery charges of your return parcel, this may include the cost to return overseas. Once we have received your returned item(s), store credits will be deposited into your account and can be used within the next 6 months.</string>
-    <string name="returns_policy_faq_content_4">Look out for our email, which will indicate the return guidelines and your unique Return Authorisation Number (RAN). Depending on the items you wish to return, they should be returned either to our warehouse or directly to our suppliers.\n\nFor all returns except Change of Mind returns, please use our return delivery services, free of charge. Fill up the simple online form, print out the return label (which should indicate clearly your unique RAN), stick it to the return parcel, and pass it to the delivery service within 7 calendar days.\n\nFor Change of Mind returns, you may be requested to arrange for your own preferred delivery service within 7 calendar days. Please ensure your unique RAN is visible on the parcel.\n\nIf you still have not received the return guidelines and your unique RAN a few days after your request is approved, please contact our Customer Team via My Returns on the website.</string>
-    <string name="returns_policy_faq_content_5">For all returns except Change of Mind returns, once we have received your returned item(s), we will proceed with the refund back to your original payment method within 3 – 5 working days. Depending on the issuer or payment method, it may take an additional few working days for the refunded amount to appear on your statement.\n\nFor Change of Mind returns, store credits will be deposited into your account and can be used within the next 6 months.</string>
+    <string name="returns_policy_faq_content_2">A ‘Change of Mind’ return is to be lodged for item(s) delivered to you according to your order with no defects. This would include items that have the correct size, colour and product description according to your order.
+        \n\nWe accept most items back for Change of Mind returns. However, we have additional considerations. Please refer to the question ‘What can I return as Change of Mind?’ for more details.</string>
+    <string name="returns_policy_faq_content_3">A ‘Change of Mind’ return is to be lodged for item(s) delivered to you according to your order with no defects. This would include items that have the correct size, colour and product description according to your order.
+        \n\nWe accept most items back if you change your mind, however we do have the following considerations.
+            \n\t\t• Returned items must be unused and be in a fine and resalable condition. All original packaging and tags (where applicable) must be intact. Any instruction manuals, guides, add-ons or free gifts must also be returned.
+            \n\t\t• Items bought from Clearance sales or Warehouse Sales are non-returnable and non-refundable due to Change of Mind
+            \n\t\t• The following items are non-returnable and non-refundable:
+                \n\t\t\t\t○ Toilet paper, paper towel, tissues and serviettes
+                \n\t\t\t\t○ Medicinal (pain relief)
+                \n\t\t\t\t○ Cleaning (Examples: anti-bacterial wipes, sprays and cleaners, disposable gloves)
+                \n\t\t\t\t○ Feminine hygiene and incontinence
+                \n\t\t\t\t○ Baby wipes
+                \n\t\t\t\t○ Hand sanitisers
+                \n\t\t\t\t○ Disposable and reusable face masks
+                \n\t\t\t\t○ Cosmetics &amp; beauty products (if hygiene seal is broken)
+                \n\t\t\t\t○ Pharmaceutical/health products
+                \n\t\t\t\t○ Perishable goods, liquor, food and beverages
+                \n\t\t\t\t○ Personal care items
+                \n\t\t\t\t○ Hosiery, underwear &amp; socks
+                \n\t\t\t\t○ Swimwear
+                \n\t\t\t\t○ Pierced jewellery
+                \n\t\t\t\t○ Mattresses, pillows, mattress and pillow protectors
+                \n\t\t\t\t○ Gift cards, phone recharge or third party gift cards
+                \n\t\t\t\t○ Media - books and unsealed CDs, DVDs &amp; video games
+                \n\t\t\t\t○ Adult toys/sexual health products
+                \n\t\t\t\t○ Assembled furniture
+                \n\t\t\t\t○ Digital goods (download codes etc.)
+                \n\t\t\t\t○ Personalised/made to order goods
+                \n\t\t\t\t○ Earphones/headphones (if package has been opened)
+                \n\t\t\t\t○ Large/bulky appliances
+                \n\t\t\t\t○ Any merchandise where the GST has been claimed under the Tourist Refund Scheme, unless proof of repayment of the GST upon return to Australia is provided
+                \n\nOnce your return is approved, you will receive an email on how to return your items. It is important your return is sent to the correct address provided in your return email, as not all returns will go to the same warehouse (if you have purchased from different third-party Sellers). You will be requested to pay for the delivery charges of your return parcel, this may include the cost to return overseas. Once we have received your returned item(s), store credits will be deposited into your account and can be used within the next 6 months.</string>
+    <string name="returns_policy_faq_content_4">Look out for our email, which will indicate the return guidelines and your unique Return Authorisation Number (RAN). Depending on the items you wish to return, they should be returned either to our warehouse or directly to our suppliers.
+        \n\nFor all returns except Change of Mind returns, please use our return delivery services, free of charge. Fill up the simple online form, print out the return label (which should indicate clearly your unique RAN), stick it to the return parcel, and pass it to the delivery service within 7 calendar days.
+        \n\nFor Change of Mind returns, you may be requested to arrange for your own preferred delivery service within 7 calendar days. Please ensure your unique RAN is visible on the parcel.
+        \n\nIf you still have not received the return guidelines and your unique RAN a few days after your request is approved, please contact our Customer Team via My Returns on the website.</string>
+    <string name="returns_policy_faq_content_5">For all returns except Change of Mind returns, once we have received your returned item(s), we will proceed with the refund back to your original payment method within 3 - 5 working days. Depending on the issuer or payment method, it may take an additional few working days for the refunded amount to appear on your statement.
+        \n\nFor Change of Mind returns, store credits will be deposited into your account and can be used within the next 6 months.</string>
     <string name="returns_policy_faq_content_6">Yes, while such cases are not common, we do come across them occasionally. Please contact our Customer Team for further discussion via My Returns on the website.</string>
-    <string name="returns_policy_faq_content_7">Change of mind:\nWhen you return an item for \“Change of Mind\” you will be refunded the amount paid for the item returned, less the original delivery price.\nThis will be refunded in the form of a credit to your customer account.\n\nFaulty/Damaged/Incorrect returns:\nWhen you return an item that is damaged, incorrect, or faulty, then you will be refunded the full amount paid for that item and delivery price for that item, via your original payment method.\nPlease note, depending on the payment method, the refund may take 5–7 days to process.</string>
+    <string name="returns_policy_faq_content_7">Change of mind:
+        \nWhen you return an item for “Change of Mind” you will be refunded the amount paid for the item returned, less the original delivery price.
+        \nThis will be refunded in the form of a credit to your customer account.
+        \n\nFaulty/Damaged/Incorrect returns:
+        \nWhen you return an item that is damaged, incorrect, or faulty, then you will be refunded the full amount paid for that item and delivery price for that item, via your original payment method.
+        \nPlease note, depending on the payment method, the refund may take 5-7 days to process.</string>
     <string name="returns_policy_faq_content_8">Unfortunately, our Sellers and us don’t have the necessary facilities to accept any walk-in returns. All returns must be posted. Returns need to be sent to the address provided in your return’s approval email. As we are also a Marketplace you may be returning to our third-party Sellers warehouse directly, whilst most returns are sent locally, in some instance you may even be required to send your return overseas.</string>
 
     <string-array name="returns_policy_faq_content">
