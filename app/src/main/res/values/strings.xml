@@ -968,10 +968,10 @@
     <string name="returns_policy_faq_content_4">Look out for our email, which will indicate the return guidelines and your unique Return Authorisation Number (RAN). Depending on the items you wish to return, they should be returned either to our warehouse or directly to our suppliers.
         \n\nFor all returns except Change of Mind returns, please use our return delivery services, free of charge. Fill up the simple online form, print out the return label (which should indicate clearly your unique RAN), stick it to the return parcel, and pass it to the delivery service within 7 calendar days.
         \n\nFor Change of Mind returns, you may be requested to arrange for your own preferred delivery service within 7 calendar days. Please ensure your unique RAN is visible on the parcel.
-        \n\nIf you still have not received the return guidelines and your unique RAN a few days after your request is approved, please contact our Customer Team via My Returns on the website.</string>
+        \n\nIf you still have not received the return guidelines and your unique RAN a few days after your request is approved, please contact our Customer Team via My Returns.</string>
     <string name="returns_policy_faq_content_5">For all returns except Change of Mind returns, once we have received your returned item(s), we will proceed with the refund back to your original payment method within 3 - 5 working days. Depending on the issuer or payment method, it may take an additional few working days for the refunded amount to appear on your statement.
         \n\nFor Change of Mind returns, store credits will be deposited into your account and can be used within the next 6 months.</string>
-    <string name="returns_policy_faq_content_6">Yes, while such cases are not common, we do come across them occasionally. Please contact our Customer Team for further discussion via My Returns on the website.</string>
+    <string name="returns_policy_faq_content_6">Yes, while such cases are not common, we do come across them occasionally. Please contact our Customer Team for further discussion via My Returns.</string>
     <string name="returns_policy_faq_content_7">Change of mind:
         \nWhen you return an item for “Change of Mind” you will be refunded the amount paid for the item returned, less the original delivery price.
         \nThis will be refunded in the form of a credit to your customer account.
@@ -997,7 +997,7 @@
         <item>false</item>
         <item>true</item>
         <item>false</item>
-        <item>false</item>
+        <item>true</item>
         <item>false</item>
         <item>false</item>
     </string-array>
