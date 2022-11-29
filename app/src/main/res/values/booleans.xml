@@ -31,4 +31,6 @@
     <bool name="is_afterpay_disabled_client_override">false</bool>
 
     <bool name="is_myaccount_ourpay_unavailable_notice_visible">true</bool>
+
+    <bool name="is_gift_card_terms_and_conditions_visible">true</bool>
 </resources>

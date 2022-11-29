@@ -83,7 +83,12 @@ public class InformationMenuController extends BaseController implements Informa
         mAboutUsContainer.setOnClickListener(v -> showLegalities(BundleKeys.TEMPLATE_KEY_ABOUT_US, AccountOption.ABOUTUS));
         mTermsAndConditionsContainer.setOnClickListener(v -> showLegalities(BundleKeys.TEMPLATE_KEY_TNC, AccountOption.TERMSANDCONDITIONS));
         mPrivacyPolicyContainer.setOnClickListener(v -> showLegalities(BundleKeys.TEMPLATE_KEY_PRIVACY, AccountOption.PRIVACYPOLICY));
-        mGiftCardTermsAndConditionsContainer.setOnClickListener(v -> showLegalities(R.string.gc_tnc_content, AccountOption.GCTERMSANDCONDITIONS));
+        if (mActivity.getResources().getBoolean(R.bool.is_gift_card_terms_and_conditions_visible)) {
+            mGiftCardTermsAndConditionsContainer.setVisibility(View.VISIBLE);
+            mGiftCardTermsAndConditionsContainer.setOnClickListener(v -> showLegalities(R.string.gc_tnc_content, AccountOption.GCTERMSANDCONDITIONS));
+        } else {
+            mGiftCardTermsAndConditionsContainer.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.partial_toolbar_left_view)

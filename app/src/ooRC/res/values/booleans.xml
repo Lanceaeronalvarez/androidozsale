@@ -18,4 +18,5 @@
     <bool name="is_category_all_enabled">false</bool>
     <bool name="is_sale_countdown_timer_enabled">true</bool>
 
+    <bool name="is_gift_card_terms_and_conditions_visible">false</bool>
 </resources>
