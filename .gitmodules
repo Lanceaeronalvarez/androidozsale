@@ -7,3 +7,6 @@
 [submodule "card.io-Android-source"]
 	path = card.io-Android-source
 	url = https://github.com/GADORZA06/card.io-Android-source.git
+[submodule "RecyclerViewPager"]
+	path = RecyclerViewPager
+	url = https://github.com/swph-mobile/RecyclerViewPager
