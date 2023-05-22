@@ -326,9 +326,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             case AppConstants.LPAY:
                 commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.LPAY.getValue());
                 break;
-            case AppConstants.OPENPAY:
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.OPENPAY.getValue());
-                break;
             case AppConstants.REGULAR:
                 commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.REGULAR.getValue());
                 break;
@@ -498,15 +495,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
             getMvpView().showLPayPanel();
         } else {
             getMvpView().hideLPayPanel();
-        }
-
-        if (getDataManager().isOpenpayEnabled() &&
-                mappedValues != null &&
-                mappedValues.getOpenpay() != null &&
-                mappedValues.getOpenpay().isAvailableMobileApp()) {
-            getMvpView().showOpenpayPanel();
-        } else {
-            getMvpView().hideOpenpayPanel();
         }
 
         if (getDataManager().isKlarnaEnabled() &&

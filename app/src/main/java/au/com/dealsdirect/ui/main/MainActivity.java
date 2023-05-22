@@ -1124,7 +1124,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
         mPresenter.callGetPublicAppSettingsSectionsAfterpay(this);
         mPresenter.callGetPublicAppSettingsSectionsLPay(this);
-        mPresenter.callGetPublicAppSettingsSectionsOpenpay(this);
         mPresenter.callGetAccountData();
         refreshWishlist();
 

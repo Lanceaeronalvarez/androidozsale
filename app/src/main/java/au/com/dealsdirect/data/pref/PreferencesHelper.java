@@ -95,10 +95,6 @@ public interface PreferencesHelper {
 
     boolean isLPayEnabled();
 
-    void setOpenpayEnabled(boolean enabled);
-
-    boolean isOpenpayEnabled();
-
     void setIsAmexEnabled(boolean val);
 
     boolean isAmexEnabled();

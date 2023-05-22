@@ -838,10 +838,6 @@
     <string name="genoapay">Genoa Pay</string>
     <string name="lpay_failed_transaction">@string/generic_failed_transaction_message</string>
 
-    <!--OPENPAY-->
-    <string name="openpay">Openpay</string>
-    <string name="openpay_failed_transaction">@string/generic_failed_transaction_message</string>
-
     <string name="regex_currency">[^\\s\\\\]+\\d+(\\.\\d{2})?</string>
 
     <string name="dialog_cancel_order_body_text">You are about to cancel this order. Are you sure you would like to cancel this order?</string>

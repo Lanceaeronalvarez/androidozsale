@@ -116,9 +116,6 @@ import au.com.dealsdirect.ui.controller.masterpass.MasterpassPresenter;
 import au.com.dealsdirect.ui.controller.notification.NotificationMvpPresenter;
 import au.com.dealsdirect.ui.controller.notification.NotificationMvpView;
 import au.com.dealsdirect.ui.controller.notification.NotificationPresenter;
-import au.com.dealsdirect.ui.controller.openpay.OpenpayMvpPresenter;
-import au.com.dealsdirect.ui.controller.openpay.OpenpayMvpView;
-import au.com.dealsdirect.ui.controller.openpay.OpenpayPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpPresenter;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsMvpView;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsPresenter;
@@ -484,11 +481,6 @@ public class ControllerModule {
 
     @Provides
     KlarnaMvpPresenter<KlarnaMvpView> provideKlarnaMvpPresenter(KlarnaPresenter<KlarnaMvpView> presenter) {
-        return presenter;
-    }
-
-    @Provides
-    OpenpayMvpPresenter<OpenpayMvpView> provideOpenpayMvpPresenter(OpenpayPresenter<OpenpayMvpView> presenter) {
         return presenter;
     }
 

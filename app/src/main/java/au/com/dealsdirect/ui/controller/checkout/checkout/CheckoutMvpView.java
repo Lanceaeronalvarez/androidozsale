@@ -54,10 +54,6 @@ public interface CheckoutMvpView extends MvpView {
 
     void hideLPayPanel();
 
-    void showOpenpayPanel();
-
-    void hideOpenpayPanel();
-
     void showKlarnaPanel(String description);
 
     void hideKlarnaPanel();
