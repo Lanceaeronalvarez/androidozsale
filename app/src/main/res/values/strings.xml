@@ -143,7 +143,7 @@
         <![CDATA["<b>{APPNAME} GIFT CARD TERMS AND CONDITIONS</b>
         <ol>
             <li>
-                <b>Introduction</b><br />
+                <b>INTRODUCTION</b><br />
                 These terms and conditions (<b>Terms</b>) apply when you buy and/or use our gift cards (<b>Gift Card</b>).
                 <ol type="a">
                     <li>You agree to be bound by these Terms which form a binding contractual agreement between you and us, {appname} Pty. Limited ABN 11 118 610 987 (<b>{appname}</b>, <b>our</b>, <b>we</b> or <b>us</b>).</li>
@@ -152,53 +152,45 @@
                 </ol>
             </li>
             <li>
-                <b>Activating your gift card</b><br />
-                Before you can redeem your Gift Card, you need to activate and register your Gift Card on our Website in accordance with the instructions set out on the Gift Card or otherwise communicated to you.
-            </li>
-            <li>
-                <b>Account and guest checkout</b>
+                <b>CHECKOUT PROCESS AND REQUIREMENTS</b>
                 <ol type="a">
                     <li>Gift Cards are valid online on our Website and are redeemable at our Website checkout.</li>
-                    <li>You may redeem the full amount of your Gift Card as a guest of the Website, or you may redeem your Gift Card in part or in full with an {appname} account (<b>Account</b>). You can sign-up, register and receive an Account through the Website.</li>
-                    <li>You must have an Account:
-                        <ol type="a">
-                            <li>to view the remaining credit of your Gift Card; and</li>
-                            <li>to use the remaining credit of your Gift Card for your next purchase at {appname}.</li>
-                        </ol>
-                    </li>
+                    <li>You must have an {APPNAME} Account to use your {APPNAME} gift card online.</li>
+                    <li>Only one gift card can be used per transaction, but any remaining credit can be used on your next transaction.</li>
                 </ol>
             </li>
             <li>
-                <b>Gift card RULES</b>
+                <b>GIFT CARD RULES</b>
                 <ol type="a">
-                    <li>Gift Cards are obligation and commitment free. You do not have to use your Gift Card.</li>
+                    <li>Gift Cards are obligation and commitment free. You do not have to use your {APPNAME} Gift Card.</li>
                     <li>Gift Cards are valid for 3 years from the date of purchase, in accordance with the Australian Consumer Law.</li>
-                    <li>Gift Cards can be used for all goods and services on our Website, excluding alcohol.</li>
+                    <li>Only one gift card can be used per transaction.</li>
+                    <li>Gift Cards can not be used to purchase alcohol, knives or any product that requires age verification and can not be used towards the cost of shipping.</li>
                     <li>Gift Cards are not legal tender, account cards, credit or debit cards or securities. They are not reloadable and cannot be exchanged or redeemed for cash, a discount or anything else other than the goods and services we sell on our Website.</li>
                 </ol>
             </li>
             <li>
-                <b>Complaints</b><br />
+                <b>COMPLAINTS</b><br />
                 If you have any issues with your use of Gift Cards, please contact us at <a href="mailto:pr@mysale.com">pr@mysale.com</a>.<br />
                 However, you must not commence court proceedings relating to any dispute arising from, or in connection with, these Terms without first meeting with us to seek (in good faith) to resolve that dispute (unless you are seeking urgent interlocutory relief or the dispute relates to compliance with this clause).
             </li>
             <li>
-                <b>Third party terms and conditions</b>
+                <b>THIRD PARTY TERMS AND CONDITIONS</b>
                 <ol type="a">
                     <li>You acknowledge and agree that third party terms & conditions (<b>Third Party Terms</b>) may apply.</li>
                     <li>You agree to any Third Party Terms applicable to any third party goods and services, and {appname} will not be liable for any loss or damage suffered by you in connection with such Third Party Terms.</li>
                 </ol>
             </li>
             <li>
-                <b>Privacy</b><br />
+                <b>PRIVACY</b><br />
                 You agree to be bound by our Privacy Policy, which can be found on our Website.
             </li>
             <li>
-                <b>Liability</b><br />
+                <b>LIABILITY</b><br />
                 To the maximum extent permitted by applicable law, {appname} excludes all liability to any person for loss or damage of any kind, however arising whether in contract, tort (including negligence), statute, equity, indemnity or otherwise, arising from or relating in any way to the use of our Gift Cards or the Website.
             </li>
             <li>
-                <b>Interpretation</b>
+                <b>INTERPRETATION</b>
                 <ol type="a">
                     <li>(<b>Governing law</b>) This agreement is governed by the law applying in New South Wales, Australia.</li>
                     <li>(<b>Jurisdiction</b>) Each party irrevocably submits to the exclusive jurisdiction of the courts of New South Wales, Australia and courts of appeal from them in respect of any proceedings arising out of or in connection with this agreement. Each party irrevocably waives any objection to the venue of any legal process on the basis that the process has been brought in an inconvenient forum.</li>
