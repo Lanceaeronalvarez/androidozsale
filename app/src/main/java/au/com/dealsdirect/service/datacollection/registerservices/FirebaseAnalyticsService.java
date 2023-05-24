@@ -156,7 +156,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(FirebaseAnalytics.Param.ITEM_LIST,
+                        bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_ID,
                                 String.valueOf(parameters.get(EventParameters.ITEM_LIST)));
                         bundle.putString(EventParameters.LOAD_TIME,
                                 String.valueOf(parameters.get(EventParameters.MILLISECONDS)));
@@ -277,7 +277,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                     public void LogDataEvents(HashMap<String, Object> parameters) {
 
                         Bundle bundle = new Bundle();
-                        bundle.putString(FirebaseAnalytics.Param.CHECKOUT_OPTION,
+                        bundle.putString(FirebaseAnalytics.Param.PAYMENT_TYPE,
                                 String.valueOf(parameters.get(EventParameters.PAYMENT_METHOD_TYPE)));
                         bundle.putString(EventParameters.PURCHASE_NEW_USER,
                                 String.valueOf(parameters.get(EventParameters.IS_NEW_USER)));
@@ -565,7 +565,7 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
     private static void purchase(Context context, Bundle bundle, String screenName) {
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         firebaseAnalytics.setCurrentScreen((Activity) context, screenName, screenName);
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
 
         mDataManager.setLastRedirection(EventParameters.LastRedirection.PAY);
         checkoutJourney(context, EventParameters.EventProgress.END.getValue(), screenName);

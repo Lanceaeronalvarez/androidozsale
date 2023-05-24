@@ -91,7 +91,8 @@
 
         <activity
             android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="${applicationId}.braintree" />
@@ -118,14 +119,16 @@
             android:resource="@color/bg_fcm_notif" />
 
         <service
-            android:name=".service.fcm.FirebaseBroadcastReceiver">
+            android:name=".service.fcm.FirebaseBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <service
-            android:name=".service.fcm.FirebaseInstanceID">
+            android:name=".service.fcm.FirebaseInstanceID"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

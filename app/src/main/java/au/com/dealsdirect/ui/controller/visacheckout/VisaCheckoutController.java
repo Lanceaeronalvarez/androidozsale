@@ -2,27 +2,21 @@ package au.com.dealsdirect.ui.controller.visacheckout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 
-import com.braintreepayments.api.VisaCheckout;
-import com.braintreepayments.api.interfaces.BraintreeResponseListener;
+import androidx.annotation.NonNull;
+
 import com.braintreepayments.api.models.BraintreeRequestCodes;
-import com.braintreepayments.api.models.VisaCheckoutNonce;
-import com.visa.checkout.CheckoutButton;
 import com.visa.checkout.ManualCheckoutSession;
 import com.visa.checkout.Profile;
 import com.visa.checkout.PurchaseInfo;
 import com.visa.checkout.VisaCheckoutSdk;
 import com.visa.checkout.VisaCheckoutSdkInitListener;
 import com.visa.checkout.VisaPaymentSummary;
-import com.visa.checkout.widget.VisaCheckoutButton;
-
-import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
@@ -35,14 +29,7 @@ import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
-import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppLogger;
-import au.com.dealsdirect.utils.ViewUtils;
-
-
-/**
- * Created by smartwave on 05/04/2018.
- */
 
 public abstract class VisaCheckoutController extends BaseController implements VisaCheckoutMvpView {
 
@@ -130,18 +117,12 @@ public abstract class VisaCheckoutController extends BaseController implements V
     public void onSetupVisaCheckoutBraintree(String paymentToken, String paymentType, boolean isFromCheckout) {
         initializeBrainTree(paymentToken, paymentType);
 
-        if (mActivity.getBraintreeFragment() != null) {
-            VisaCheckout.createProfileBuilder(mActivity.getBraintreeFragment(), new BraintreeResponseListener<Profile.ProfileBuilder>() {
-                @Override
-                public void onResponse(Profile.ProfileBuilder profileBuilder) {
-
-                    // On success of fetching of profile builder, initialize visa sdk
-                    initSdk(profileBuilder.build());
-
-                    profileBuilder.setDisplayName(mActivity.getResources().getString(R.string.app_name));
-                    mProfile = profileBuilder.build();
-                }
-            });
+        if (mActivity.getBraintreeClient() != null) {
+            mActivity.getBraintreeClient().getVisaCheckoutHandler().createProfile(
+                    mActivity.getResources().getString(R.string.app_name), profile -> {
+                        initSdk(profile);
+                        mProfile = profile;
+                    });
         }
     }
 
@@ -156,19 +137,12 @@ public abstract class VisaCheckoutController extends BaseController implements V
     public void initializeVisaCheckoutButton(PurchaseInfo.PurchaseInfoBuilder purchaseInfoBuilder,
                                              boolean fromCheckout) {
 
-        if (mProfile == null && mActivity.getBraintreeFragment() != null) {
-            VisaCheckout.createProfileBuilder(mActivity.getBraintreeFragment(), new BraintreeResponseListener<Profile.ProfileBuilder>() {
-                @Override
-                public void onResponse(Profile.ProfileBuilder profileBuilder) {
-
-                    // On success of fetching of profile builder, initialize visa sdk
-                    initSdk(profileBuilder.build());
-
-                    profileBuilder.setDisplayName(mActivity.getResources().getString(R.string.app_name));
-                    mProfile = profileBuilder.build();
-
-                }
-            });
+        if (mProfile == null && mActivity.getBraintreeClient() != null) {
+            mActivity.getBraintreeClient().getVisaCheckoutHandler().createProfile(
+                    mActivity.getResources().getString(R.string.app_name), profile -> {
+                        initSdk(profile);
+                        mProfile = profile;
+                    });
         }
 
         VisaCheckoutSdk.initManualCheckoutSession(mActivity, mProfile, purchaseInfoBuilder.build(),
@@ -186,12 +160,14 @@ public abstract class VisaCheckoutController extends BaseController implements V
 
                     @Override
                     public void onResult(VisaPaymentSummary visaPaymentSummary) {
-                        switch(visaPaymentSummary.getStatusName()) {
+                        switch (visaPaymentSummary.getStatusName()) {
                             case VisaPaymentSummary.PAYMENT_CANCEL:
                                 // The customer canceled the Visa Checkout flow
                                 break;
                             case VisaPaymentSummary.PAYMENT_SUCCESS:
-                                VisaCheckout.tokenize(mActivity.getBraintreeFragment(), visaPaymentSummary);
+                                if (mActivity.getBraintreeClient() != null) {
+                                    mActivity.getBraintreeClient().getVisaCheckoutHandler().tokenize(visaPaymentSummary);
+                                }
                                 break;
                             case VisaPaymentSummary.PAYMENT_ERROR:
                                 break;
@@ -208,8 +184,8 @@ public abstract class VisaCheckoutController extends BaseController implements V
     }
 
     @Override
-    public void doAuthenticateLoginWithVisaCheckoutBraintree(VisaCheckoutNonce visaCheckoutNonce) {
-        mVcoPresenter.authenticateLoginWithVisaCheckoutBraintree(visaCheckoutNonce);
+    public void doAuthenticateLoginWithVisaCheckoutBraintree(String firstname, String lastName, String email, String callId, String paymentNonce) {
+        mVcoPresenter.authenticateLoginWithVisaCheckoutBraintree(firstname, lastName, email, callId, paymentNonce);
     }
 
     @Override

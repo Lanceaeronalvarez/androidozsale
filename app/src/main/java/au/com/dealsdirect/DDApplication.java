@@ -8,8 +8,6 @@ import android.content.Context;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.interceptors.HttpLoggingInterceptor;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 
 import java.io.File;
 
@@ -32,8 +30,6 @@ import timber.log.Timber;
 
 public class DDApplication extends Application {
 
-    public static RefWatcher refWatcher;
-
     @Inject
     DataManager mDataManager;
 
@@ -50,9 +46,6 @@ public class DDApplication extends Application {
 
         //Remove legacy cache and database
         removeLegacyData();
-
-        //Initialize Leak Canary
-        refWatcher = LeakCanary.install(this);
 
         //Initialize Application Component
         mApplicationComponent = DaggerApplicationComponent.builder()

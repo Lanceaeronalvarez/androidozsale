@@ -1,14 +1,9 @@
 package au.com.dealsdirect.ui.base;
 
-import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.visa.checkout.Profile;
 import com.visa.checkout.PurchaseInfo;
 
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
-
-/**
- * Created by smartwave on 07/02/2018.
- */
 
 public interface VisaCheckoutMvpView extends MvpView {
 
@@ -21,7 +16,7 @@ public interface VisaCheckoutMvpView extends MvpView {
 
     void onStartVisaCheckoutIntent(PurchaseInfo purchaseInfo);
 
-    void doAuthenticateLoginWithVisaCheckoutBraintree(VisaCheckoutNonce visaCheckoutNonce);
+    void doAuthenticateLoginWithVisaCheckoutBraintree(String firstname, String lastName, String email, String callId, String paymentNonce);
 
     void initializeVisaCheckoutButton(PurchaseInfo.PurchaseInfoBuilder purchaseInfoBuilder, boolean fromCheckout);
 
