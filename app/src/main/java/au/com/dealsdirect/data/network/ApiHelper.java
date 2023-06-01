@@ -311,7 +311,7 @@ public interface ApiHelper {
 
     Observable<GetVouchersResponse> callGetVouchers(GetUserVouchersRequest getUserVouchersRequest);
 
-    Observable<GetUserVoucherResponse> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest);
+    Observable<List<GetUserVoucherResponse.Response>> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest);
 
     Observable<ClearVouchersResponse> callGetClearVouchers(ClearVouchersRequest clearVouchersRequest);
 

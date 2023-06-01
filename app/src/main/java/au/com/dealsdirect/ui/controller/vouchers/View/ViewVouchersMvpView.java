@@ -14,6 +14,6 @@ import au.com.dealsdirect.ui.base.MvpView;
 
 public interface ViewVouchersMvpView extends MvpView {
 
-    void updateVoucherList(Pair<List<GetUserVoucherResponse.Voucher>,GetVouchersResponse> pair);
+    void updateVoucherList(List<GetUserVoucherResponse.Response> getUserVoucherResponses);
 
 }

@@ -522,7 +522,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<GetUserVoucherResponse> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest) {
+    public Observable<List<GetUserVoucherResponse.Response>> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest) {
         return mApiHelper.callGetUserVouchers(getUserVouchersRequest);
     }
 

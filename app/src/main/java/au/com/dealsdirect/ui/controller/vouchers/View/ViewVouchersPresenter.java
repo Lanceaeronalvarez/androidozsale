@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.vouchers.View;
 
+import android.annotation.SuppressLint;
+
 import androidx.core.util.Pair;
 
 import java.net.SocketTimeoutException;
@@ -9,6 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetUserVouchersRequest;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
@@ -32,44 +35,28 @@ public class ViewVouchersPresenter<V extends ViewVouchersMvpView> extends BasePr
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void loadMyVouchers() {
         if (getDataManager().isAuthorized()) {
             GetUserVouchersRequest getUserVouchersRequest =
                     new GetUserVouchersRequest(getDataManager().getLanguageId());
 
-            Observable.zip(wrapObservable(getDataManager().callGetUserVouchers(getUserVouchersRequest)),
-                    wrapObservable(getDataManager().callGetVouchers(getUserVouchersRequest)),
-                    new BiFunction<GetUserVoucherResponse, GetVouchersResponse, Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse>>() {
-                        @Override
-                        public Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> apply(@NonNull GetUserVoucherResponse getUserVoucherResponse, @NonNull GetVouchersResponse getVouchersResponse) throws Exception {
-                            return new Pair<>(getUserVoucherResponse.d.getList(), getVouchersResponse);
-                        }
-                    })
-                    .observeOn(getSchedulerProvider().ui())
-                    .subscribe(action -> {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+            doApiCallForResponse(getDataManager().callGetUserVouchers(getUserVouchersRequest), new AppApiCallback() {
+                @Override
+                public void onSuccess(List<?> response) {
+                    super.onSuccess(response);
 
-                        getMvpView().hideNoNetworkLayout();
-                        getMvpView().hideLoading();
+                    if (!isViewAttached()) {
+                        return;
+                    }
 
-                        getMvpView().updateVoucherList(action);
-                    }, throwable -> {
-                        if (!isViewAttached()) {
-                            return;
-                        }
+                    getMvpView().hideNoNetworkLayout();
+                    getMvpView().hideLoading();
 
-                        getMvpView().hideLoading();
-
-                        if (throwable.getCause() instanceof SocketTimeoutException || throwable.getCause() instanceof UnknownHostException) {
-                            getMvpView().showNoNetworkLayout();
-                        }
-
-                        getMvpView().onError(throwable.getMessage());
-
-                    });
+                    getMvpView().updateVoucherList((List<GetUserVoucherResponse.Response>) response);
+                }
+            });
         }
 
     }

@@ -359,7 +359,7 @@ public final class ApiEndPoint {
     }
 
     public static String getUserVouchers() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "GetUserVouchers");
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/vouchers", ApiUrlVersion.v1.apiVersion());
     }
 
     public static String getVouchers() {

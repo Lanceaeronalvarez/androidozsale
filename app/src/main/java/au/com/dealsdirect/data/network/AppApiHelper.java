@@ -1082,12 +1082,12 @@ public class AppApiHelper implements ApiHelper {
                 .getStringObservable();
     }
 
-    public Observable<GetUserVoucherResponse> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest) {
+    public Observable<List<GetUserVoucherResponse.Response>> callGetUserVouchers(GetUserVouchersRequest getUserVouchersRequest) {
         return Rx2AndroidNetworking.post(ApiEndPoint.getUserVouchers())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(getUserVouchersRequest))
                 .build()
-                .getObjectObservable(GetUserVoucherResponse.class);
+                .getObjectListObservable(GetUserVoucherResponse.Response.class);
     }
 
     @Override
