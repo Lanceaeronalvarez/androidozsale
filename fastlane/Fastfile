@@ -21,8 +21,9 @@ BUILD_SECRET = 'e048a220b52f841eef5e6862bc43a56a5a51841da934f1e0b76a5019c630c661
   dev_emails = '"
   alvin@smartwave.ph,
   lindz@smartwave.ph,
-  cle@smartwave.ph,
-  earl@smartwave.ph
+  earl@smartwave.ph,
+  lance@smartwave.ph,
+  ruz@smartwave.ph
 "'
 
 default_platform :android

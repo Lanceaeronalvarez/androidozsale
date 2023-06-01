@@ -1,17 +1,10 @@
 package au.com.dealsdirect.ui.base;
 
-import android.view.View;
-
-import com.braintreepayments.api.models.VisaCheckoutNonce;
 import com.visa.checkout.VisaPaymentSummary;
 
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
 
-/**
- * Created by smartwave on 07/02/2018.
- */
-
-public interface VisaCheckoutMvpPresenter<V extends VisaCheckoutMvpView> extends MvpPresenter<V>{
+public interface VisaCheckoutMvpPresenter<V extends VisaCheckoutMvpView> extends MvpPresenter<V> {
 
     void setupVisaCheckout(boolean isFromCheckout);
 
@@ -21,7 +14,7 @@ public interface VisaCheckoutMvpPresenter<V extends VisaCheckoutMvpView> extends
 
     void authenticateLoginWithVisaCheckoutNative(VisaPaymentSummary visaPaymentSummary);
 
-    void authenticateLoginWithVisaCheckoutBraintree(VisaCheckoutNonce visaCheckoutNonce);
+    void authenticateLoginWithVisaCheckoutBraintree(String firstname, String lastName, String email, String callId, String paymentNonce);
 
     void executeLoginVisa(LoginVisa.RequestValue.Data requestData, String password);
 

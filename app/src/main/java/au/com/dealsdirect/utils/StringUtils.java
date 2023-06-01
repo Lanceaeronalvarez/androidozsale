@@ -322,7 +322,7 @@ public class StringUtils {
         }
 
         try {
-            output += URLEncoder.encode(key, null) + "=" + URLEncoder.encode(value, null);
+            output += URLEncoder.encode(key, (String) null) + "=" + URLEncoder.encode(value, (String) null);
         } catch (Exception e) {
             Log.e("StringUtils", "addQueryParameter exception: " + e.getMessage());
             return url;

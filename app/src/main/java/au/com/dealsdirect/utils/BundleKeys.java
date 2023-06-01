@@ -120,6 +120,7 @@ public class BundleKeys {
     public static final String TEMPLATE_KEY_TNC = "TermsAndConditions_Text";
     public static final String TEMPLATE_KEY_OURPAY_TNC = "_OurPayTermsAndConditionsBody";
     public static final String LEGALITIES_TITLE = "LEGALITIES_TITLE";
+    public static final String STRING_RESOURCE = "STRING_RESOURCE";
 
     //Tutorial
     public static final String FROM_MY_ACCOUNTS = "FROM_MY_ACCOUNTS";

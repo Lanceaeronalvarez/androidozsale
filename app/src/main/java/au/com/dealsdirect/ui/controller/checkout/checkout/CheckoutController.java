@@ -94,7 +94,6 @@ import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.lpay.LPayViewController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
-import au.com.dealsdirect.ui.controller.openpay.OpenpayViewController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
@@ -229,10 +228,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     View mLPayButton;
     @BindView(R.id.partial_checkout_button_lpay_logo)
     ImageView mLPayButtonLogoImageView;
-    @BindView(R.id.partial_checkout_openpay_panel_holder)
-    ViewGroup mOpenpayHolder;
-    @BindView(R.id.partial_checkout_button_openpay)
-    View mOpenpayButton;
     @BindView(R.id.partial_checkout_ourpay_panel_holder)
     LinearLayout mOurpayHolder;
     @BindView(R.id.partial_checkout_klarna_container)
@@ -479,7 +474,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         hideAfterpayPanel();
         hideKlarnaPanel();
         hideLPayPanel();
-        hideOpenpayPanel();
 
         setupAgeRestriction();
 
@@ -1087,16 +1081,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
-    public void showOpenpayPanel() {
-        mOpenpayHolder.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideOpenpayPanel() {
-        mOpenpayHolder.setVisibility(View.GONE);
-    }
-
-    @Override
     public void showKlarnaPanel(String description) {
         if (description == null || description.isEmpty()) {
             mKlarnaDescriptionView.setVisibility(View.GONE);
@@ -1518,37 +1502,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         }
     }
 
-    private void onOpenpayButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_OPENPAY, mItemList.size(),
-                mValue.getSummary().getTotal(), AppConstants.OPENPAY);
-
-        if (!commonPaymentAbilityDetermination()) {
-            return;
-        }
-
-        Bundle bundle = new BundleBuilder(new Bundle())
-                .build();
-
-        OpenpayViewController controller = new OpenpayViewController(bundle);
-
-        controller.setEventListener(new OpenpayViewController.EventListener() {
-            @Override
-            public void onError(String errorMessage) {
-                mPresenter.logFailedTransaction(mActivity, errorMessage);
-            }
-        });
-
-        RouterTransaction routerTransaction = RouterTransaction.with(controller)
-                .popChangeHandler(new FadeChangeHandler())
-                .pushChangeHandler(new FadeChangeHandler());
-
-        if (mActivity.getMainController().getPopUpHostRouter() != null) {
-            mActivity.getMainController().getPopUpHostRouter().setRoot(routerTransaction);
-        } else {
-            getDisplayRouter().pushController(routerTransaction);
-        }
-    }
-
     private void onOurpayButtonClick(boolean isStripeOption) {
         mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.OURPAY);
@@ -1629,7 +1582,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             add(mAfterpayButton);
             add(mKlarnaButton);
             add(mLPayButton);
-            add(mOpenpayButton);
         }};
 
         for (View button : buttons) {
@@ -1839,11 +1791,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> onLPayButtonClick()));
-
-        mClickListeners.add(RxView.clicks(mOpenpayButton)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(action -> onOpenpayButtonClick()));
 
         mChangeClickListeners = new CompositeDisposable();
         mChangeClickListeners.add(RxView.clicks(mAddressContainerLayout)

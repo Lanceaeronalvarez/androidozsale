@@ -59,8 +59,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -85,8 +85,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -107,8 +107,8 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -134,8 +134,8 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -156,8 +156,8 @@ android {
         }
 
         ooRC {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -182,8 +182,8 @@ android {
         }
 
         ooTest {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -204,8 +204,8 @@ android {
         }
 
         topbuyRC {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -230,8 +230,8 @@ android {
         }
 
         topbuyTest {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -252,8 +252,8 @@ android {
         }
 
         ozsaleRC {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -279,8 +279,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "au.com.ozsale.test"
 
             ext.appName = "OZSALE Test"
@@ -305,8 +305,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -332,8 +332,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "sg.com.singsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -354,8 +354,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -381,8 +381,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "nz.co.nzsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -404,8 +404,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -430,8 +430,8 @@ android {
         }
 
         mysaleTest {
-            versionCode 422
-            versionName "6.2.0"
+            versionCode 425
+            versionName "7.0.0"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -564,18 +564,18 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.databinding:databinding-runtime:7.0.0'
-    implementation 'androidx.databinding:databinding-adapters:7.0.0'
+    implementation 'androidx.databinding:databinding-runtime:8.0.1'
+    implementation 'androidx.databinding:databinding-adapters:8.0.1'
 
     // android support libraries
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // font
     implementation "io.github.inflationx:calligraphy3:$rootProject.calligraphyVersion"
@@ -625,12 +625,8 @@ dependencies {
     // paginate
     implementation "com.github.markomilos:paginate:$rootProject.paginateVersion"
 
-    // leak canary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakCanaryVersion"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakCanaryVersion"
-
     // recycler view pager
-    implementation "com.github.lsjwzh.RecyclerViewPager:lib:$rootProject.recyclerViewPagerVersion"
+//    implementation "com.github.lsjwzh.RecyclerViewPager:lib:$rootProject.recyclerViewPagerVersion"
     // advanced recyclerview
     implementation('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar')
     // flow layout
@@ -689,27 +685,27 @@ dependencies {
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:29.1.0')
     implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-core:20.1.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.8'
+    implementation 'com.google.firebase:firebase-core:21.1.1'
+    implementation 'com.google.firebase:firebase-messaging:23.1.2'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.7'
 
     //VISA CHECKOUT
     implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
     implementation 'com.visa.checkout:visacheckout-android-sdk-6.6.1@aar'
 
-    implementation 'com.squareup.okio:okio:1.15.0'
+    implementation 'com.squareup.okio:okio:2.2.2'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
 
-    implementation 'com.google.android.gms:play-services-ads:20.2.0'
+    implementation 'com.google.android.gms:play-services-ads:22.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // reCAPTCHA
-    implementation 'com.google.android.gms:play-services-safetynet:17.0.1'
+    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
 
-    implementation 'com.stripe:stripe-android:16.9.0'
+    implementation 'com.stripe:stripe-android:20.23.1'
 
-    implementation 'com.google.android.gms:play-services-wallet:18.1.3'
+    implementation 'com.google.android.gms:play-services-wallet:19.1.0'
 
     // guava
     implementation "com.google.guava:guava:$rootProject.guavaVersion"
@@ -724,6 +720,7 @@ dependencies {
     implementation project(path: ':genie-profiler')
     implementation project(path: ':CardForm')
     implementation project(path: ':ptr-lib')
+    implementation project(path: ':lib')
 
 
 }

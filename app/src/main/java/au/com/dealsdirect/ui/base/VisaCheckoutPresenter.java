@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.base;
 
-import com.braintreepayments.api.models.VisaCheckoutNonce;
+import static au.com.dealsdirect.ui.base.VisaCheckoutMvpView.VISA_CHECKOUT_LOGIN;
+import static au.com.dealsdirect.ui.base.VisaCheckoutMvpView.VISA_CHECKOUT_PAY;
+
 import com.visa.checkout.Profile;
 import com.visa.checkout.PurchaseInfo;
 import com.visa.checkout.VisaPaymentSummary;
@@ -17,12 +19,6 @@ import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
-import static au.com.dealsdirect.ui.base.VisaCheckoutMvpView.VISA_CHECKOUT_LOGIN;
-import static au.com.dealsdirect.ui.base.VisaCheckoutMvpView.VISA_CHECKOUT_PAY;
-
-/**
- * Created by smartwave on 13/02/2018.
- */
 
 public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePresenter<V> implements VisaCheckoutMvpPresenter<V> {
 
@@ -72,7 +68,7 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
     @Override
     public void loginWithVisaCheckout() {
         getMvpView().setVisaCheckoutActionType(VISA_CHECKOUT_LOGIN);
-        switch (getDataManager().getVisaCheckoutProviderType()){
+        switch (getDataManager().getVisaCheckoutProviderType()) {
             case CYBERSOURCE:
                 getMvpView().onStartVisaCheckoutIntent(new PurchaseInfo.PurchaseInfoBuilder(new BigDecimal("0.00"),
                         getDataManager().getCurrency()).build());
@@ -87,7 +83,7 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
     @Override
     public void payWithVisaCheckout(Double cartTotal) {
         getMvpView().setVisaCheckoutActionType(VISA_CHECKOUT_PAY);
-        switch (getDataManager().getVisaCheckoutProviderType()){
+        switch (getDataManager().getVisaCheckoutProviderType()) {
             case CYBERSOURCE:
                 PaymentInfo.setPaymentType(PaymentInfo.VISA_CHECKOUT_CYBERSOURCE);
                 getMvpView().onStartVisaCheckoutIntent(new PurchaseInfo.PurchaseInfoBuilder(new BigDecimal(cartTotal),
@@ -113,13 +109,13 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
     }
 
     @Override
-    public void authenticateLoginWithVisaCheckoutBraintree(VisaCheckoutNonce visaCheckoutNonce) {
+    public void authenticateLoginWithVisaCheckoutBraintree(String firstname, String lastName, String email, String callId, String paymentNonce) {
         LoginVisa.RequestValue.Data requestData = new LoginVisa.RequestValue.Data();
-        requestData.setFirstName(visaCheckoutNonce.getUserData().getUserFirstName());
-        requestData.setLastName(visaCheckoutNonce.getUserData().getUserLastName());
-        requestData.setEmail(visaCheckoutNonce.getUserData().getUserEmail());
-        requestData.setCallID(visaCheckoutNonce.getCallId());
-        requestData.setPaymentNonce(visaCheckoutNonce.getNonce());
+        requestData.setFirstName(firstname);
+        requestData.setLastName(lastName);
+        requestData.setEmail(email);
+        requestData.setCallID(callId);
+        requestData.setPaymentNonce(paymentNonce);
         requestData.setLoginVisaType(getDataManager().getVisaCheckoutProviderType());
 
         executeLoginVisa(requestData, "");

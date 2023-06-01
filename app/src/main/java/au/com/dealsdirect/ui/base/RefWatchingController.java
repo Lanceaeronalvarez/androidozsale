@@ -22,7 +22,6 @@ public abstract class RefWatchingController extends ButterKnifeController {
         super.onDestroy();
 
         if (hasExited) {
-            DDApplication.refWatcher.watch(this);
         }
     }
 
@@ -32,7 +31,6 @@ public abstract class RefWatchingController extends ButterKnifeController {
 
         hasExited = !changeType.isEnter;
         if (isDestroyed()) {
-            DDApplication.refWatcher.watch(this);
         }
     }
 }

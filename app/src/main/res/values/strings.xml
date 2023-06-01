@@ -83,6 +83,10 @@
                         padding-left:0px;
                     }
 
+                    ol {
+                        padding-left:24px;
+                    }
+
                     b {
                         font-family: __BOLD_FONT_NAME__;
                         color: __BOLD_FONT_COLOR__;
@@ -135,6 +139,84 @@
         <body>"]]>
     </string>
 
+    <string name="gc_tnc_content" formatted="false">
+        <![CDATA["<b>{APPNAME} GIFT CARD TERMS AND CONDITIONS</b>
+        <ol>
+            <li>
+                <b>INTRODUCTION</b><br />
+                These terms and conditions (<b>Terms</b>) apply when you buy and/or use our gift cards (<b>Gift Card</b>).
+                <ol type="a">
+                    <li>You agree to be bound by these Terms which form a binding contractual agreement between you and us, {appname} Pty. Limited ABN 11 118 610 987 (<b>{appname}</b>, <b>our</b>, <b>we</b> or <b>us</b>).</li>
+                    <li>If you are using our website (<b>Website</b>) to access any of our Gift Cards you are also bound by our Website Terms and Conditions available on our Website.</li>
+                    <li>We may change these Terms at any time without prior notice to you by updating this page of the Website. The version of these Terms that was current at the time you activated your gift card will apply to your use of your Gift Card and you agree to be bound by such Terms. We encourage you to check these latest version of these terms each time you activate a Gift Card.</li>
+                </ol>
+            </li>
+            <li>
+                <b>CHECKOUT PROCESS AND REQUIREMENTS</b>
+                <ol type="a">
+                    <li>Gift Cards are valid online on our Website and are redeemable at our Website checkout.</li>
+                    <li>You must have an {APPNAME} Account to use your {APPNAME} gift card online.</li>
+                    <li>Only one gift card can be used per transaction, but any remaining credit can be used on your next transaction.</li>
+                </ol>
+            </li>
+            <li>
+                <b>GIFT CARD RULES</b>
+                <ol type="a">
+                    <li>Gift Cards are obligation and commitment free. You do not have to use your {APPNAME} Gift Card.</li>
+                    <li>Gift Cards are valid for 3 years from the date of purchase, in accordance with the Australian Consumer Law.</li>
+                    <li>Only one gift card can be used per transaction.</li>
+                    <li>Gift Cards can not be used to purchase alcohol, knives or any product that requires age verification and can not be used towards the cost of shipping.</li>
+                    <li>Gift Cards are not legal tender, account cards, credit or debit cards or securities. They are not reloadable and cannot be exchanged or redeemed for cash, a discount or anything else other than the goods and services we sell on our Website.</li>
+                </ol>
+            </li>
+            <li>
+                <b>COMPLAINTS</b><br />
+                If you have any issues with your use of Gift Cards, please contact us at <a href="mailto:pr@mysale.com">pr@mysale.com</a>.<br />
+                However, you must not commence court proceedings relating to any dispute arising from, or in connection with, these Terms without first meeting with us to seek (in good faith) to resolve that dispute (unless you are seeking urgent interlocutory relief or the dispute relates to compliance with this clause).
+            </li>
+            <li>
+                <b>THIRD PARTY TERMS AND CONDITIONS</b>
+                <ol type="a">
+                    <li>You acknowledge and agree that third party terms & conditions (<b>Third Party Terms</b>) may apply.</li>
+                    <li>You agree to any Third Party Terms applicable to any third party goods and services, and {appname} will not be liable for any loss or damage suffered by you in connection with such Third Party Terms.</li>
+                </ol>
+            </li>
+            <li>
+                <b>PRIVACY</b><br />
+                You agree to be bound by our Privacy Policy, which can be found on our Website.
+            </li>
+            <li>
+                <b>LIABILITY</b><br />
+                To the maximum extent permitted by applicable law, {appname} excludes all liability to any person for loss or damage of any kind, however arising whether in contract, tort (including negligence), statute, equity, indemnity or otherwise, arising from or relating in any way to the use of our Gift Cards or the Website.
+            </li>
+            <li>
+                <b>INTERPRETATION</b>
+                <ol type="a">
+                    <li>(<b>Governing law</b>) This agreement is governed by the law applying in New South Wales, Australia.</li>
+                    <li>(<b>Jurisdiction</b>) Each party irrevocably submits to the exclusive jurisdiction of the courts of New South Wales, Australia and courts of appeal from them in respect of any proceedings arising out of or in connection with this agreement. Each party irrevocably waives any objection to the venue of any legal process on the basis that the process has been brought in an inconvenient forum.</li>
+                    <li>(<b>Amendments</b>) These Terms may only be amended by {appname} in accordance with the Terms.</li>
+                    <li>(<b>Waiver</b>) No party to these Terms may rely on the words or conduct of any other party as a waiver of any right unless the waiver is in writing and signed by the party granting the waiver.</li>
+                    <li>(<b>Further acts</b>) Each party must promptly do all further acts and execute and deliver all further documents required by law or reasonably requested by another party to give effect to these Terms.</li>
+                    <li>(<b>Assignment</b>) A party cannot assign, novate or otherwise transfer any of its rights or obligations under these Terms without the prior written consent of the other party.</li>
+                    <li>(<b>Entire Agreement</b>) These Terms embody the entire agreement between the parties and supersede any prior negotiation, conduct, arrangement, understanding or agreement, express or implied, in relation to the subject matter of the Terms.</li>
+                    <li>(<b>Interpretation</b>) In these Terms, the following rules of interpretation apply:
+                        <ol type="i">
+                            <li>(<b>singular and plural</b>) words in the singular includes the plural (and vice versa);</li>
+                            <li>(<b>gender</b>) words indicating a gender includes the corresponding words of any other gender;</li>
+                            <li>(<b>defined terms</b>) if a word or phrase is given a defined meaning, any other part of speech or grammatical form of that word or phrase has a corresponding meaning;</li>
+                            <li>(<b>person</b>) a reference to <b>"person"</b> or <b>"you"</b> includes an individual, the estate of an individual, a corporation, an authority, an association, consortium or joint venture (whether incorporated or unincorporated), a partnership, a trust and any other entity;</li>
+                            <li>(<b>party</b>) a reference to a party includes that party's executors, administrators, successors and permitted assigns, including persons taking by way of novation and, in the case of a trustee, includes any substituted or additional trustee;</li>
+                            <li>(<b>these Terms</b>) a reference to a party, clause, paragraph, schedule, exhibit, attachment or annexure is a reference to a party, clause, paragraph, schedule, exhibit, attachment or annexure to or of these Terms, and a reference to these Terms includes all schedules, exhibits, attachments and annexures to it;</li>
+                            <li>(<b>document</b>) a reference to a document (including these Terms) is to that document as varied, novated, ratified or replaced from time to time;</li>
+                            <li>(<b>headings</b>) headings and words in bold type are for convenience only and do not affect interpretation;</li>
+                            <li>(<b>includes</b>) the word <b>"includes"</b> and similar words in any form is not a word of limitation; and</li>
+                            <li>(<b>adverse interpretation</b>) no provision of this agreement will be interpreted adversely to a party because that party was responsible for the preparation of this agreement or that provision.</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+        </ol>"]]>
+    </string>
 
     <string name="base_html_template_footer" formatted="false">
         <![CDATA["</body></html>"]]>
@@ -447,6 +529,7 @@
     <string name="account_tutorial">Tutorial</string>
     <string name="account_logout">Logout</string>
     <string name="account_information">Information</string>
+    <string name="account_gc_tnc">Gift Card\nTerms &amp; Conditions</string>
     <string name="personalise">Personalise</string>
     <string name="please_fill_up_personalisation_details">Please fill up personalisation details</string>
     <string name="max_characters">Max characters:&#160;</string>
@@ -747,10 +830,6 @@
     <string name="genoapay">Genoa Pay</string>
     <string name="lpay_failed_transaction">@string/generic_failed_transaction_message</string>
 
-    <!--OPENPAY-->
-    <string name="openpay">Openpay</string>
-    <string name="openpay_failed_transaction">@string/generic_failed_transaction_message</string>
-
     <string name="regex_currency">[^\\s\\\\]+\\d+(\\.\\d{2})?</string>
 
     <string name="dialog_cancel_order_body_text">You are about to cancel this order. Are you sure you would like to cancel this order?</string>
@@ -809,7 +888,7 @@
         <item>@string/returns_policy_step_title_4</item>
     </string-array>
 
-    <string name="returns_policy_step_description_1">You can request for a return within 30 days of receiving your order. Log in and go to My Returns. Select the item(s) you wish to return and indicate the reason for returning. Any attached photos, videos or additional comments in the form will be useful.\n\n</string>
+    <string name="returns_policy_step_description_1">You can request for a return within 14 days of receiving your order. Log in and go to My Returns. Select the item(s) you wish to return and indicate the reason for returning. Any attached photos, videos or additional comments in the form will be useful.\n\n</string>
     <string name="returns_policy_step_description_2">Your return request will be reviewed within 1 - 3 working days. Once approved, you will receive an email with your unique Return Authorisation Number (RAN) and the return instructions.</string>
     <string name="returns_policy_step_description_3">Follow the instructions. It is important you send your return to the address on the return email only, as sometimes your return will go directly back to the third-party Seller\'s warehouse. Attach the return label to your parcel and pass it to the delivery service within 7 calendar days. Make sure the RAN is visible on the parcel.</string>
     <string name="returns_policy_step_description_4">Once your return has been received at the warehouse address provided, you will receive an email to confirm this. Your refunds or store credits will be processed within 3 - 5 working days.</string>
@@ -842,12 +921,51 @@
     </string-array>
 
     <string name="returns_policy_faq_content_1">A free return will be provided if your received item(s) is damaged, faulty, or incorrect according to your order or item description. For Change of Mind returns, you will have to pay for the return charges. Please note, some of the items you purchase will be sent from our third-party Sellers warehouse directly to you, therefore, they will be required to be sent back to their own warehouse, which could be overseas. You will be required to pay for this for all change of mind returns. Please refer to the question ‘What is a Change of Mind return?’ to know if your return is to be lodged as ‘Change of Mind’.</string>
-    <string name="returns_policy_faq_content_2">A ‘Change of Mind’ return is to be lodged for item(s) delivered to you according to your order with no defects. This would include items that have the correct size, colour and product description according to your order.\n\nWe accept most items back for Change of Mind returns. However, we have additional considerations. Please refer to the question ‘What can I return as Change of Mind?’ for more details.</string>
-    <string name="returns_policy_faq_content_3">A ‘Change of Mind’ return is to be lodged for item(s) delivered to you according to your order with no defects. This would include items that have the correct size, colour and product description according to your order.\n\nWe accept most items back if you change your mind, however we do have the following considerations.\n\n\t• Returned items must be unused and be in a fine and resalable condition. All original packaging and tags (where applicable) must be intact. Any instruction manuals, guides, add-ons or free gifts must also be returned.\n\t• Items bought from Clearance sales or Warehouse Sales are non-returnable and non-refundable due to Change of Mind\n\t• Intimate apparel, swimwear, earrings, health &amp; beauty products are non-returnable and non-refundable. These items are deemed not resellable in the interest of hygiene.\n\t• The following items are also non-returnable and non-refundable:\n\t\t◦ Perishable products, liquor, food and beverages\n\t\t◦ Household essentials and general cleaning products\n\t\t◦ CDs, DVDs or any other products containing digital content\n\t\t◦ Customized or personalized products\n\t\t◦ Oversized or heavy items\n\nOnce your return is approved, you will receive an email on how to return your items. It is important your return is sent to the correct address provided in your return email, as not all returns will go to the same warehouse (if you have purchased from different third-party Sellers). You will be requested to pay for the delivery charges of your return parcel, this may include the cost to return overseas. Once we have received your returned item(s), store credits will be deposited into your account and can be used within the next 6 months.</string>
-    <string name="returns_policy_faq_content_4">Look out for our email, which will indicate the return guidelines and your unique Return Authorisation Number (RAN). Depending on the items you wish to return, they should be returned either to our warehouse or directly to our suppliers.\n\nFor all returns except Change of Mind returns, please use our return delivery services, free of charge. Fill up the simple online form, print out the return label (which should indicate clearly your unique RAN), stick it to the return parcel, and pass it to the delivery service within 7 calendar days.\n\nFor Change of Mind returns, you may be requested to arrange for your own preferred delivery service within 7 calendar days. Please ensure your unique RAN is visible on the parcel.\n\nIf you still have not received the return guidelines and your unique RAN a few days after your request is approved, please contact our Customer Team via My Returns on the website.</string>
-    <string name="returns_policy_faq_content_5">For all returns except Change of Mind returns, once we have received your returned item(s), we will proceed with the refund back to your original payment method within 3 – 5 working days. Depending on the issuer or payment method, it may take an additional few working days for the refunded amount to appear on your statement.\n\nFor Change of Mind returns, store credits will be deposited into your account and can be used within the next 6 months.</string>
-    <string name="returns_policy_faq_content_6">Yes, while such cases are not common, we do come across them occasionally. Please contact our Customer Team for further discussion via My Returns on the website.</string>
-    <string name="returns_policy_faq_content_7">Change of mind:\nWhen you return an item for \“Change of Mind\” you will be refunded the amount paid for the item returned, less the original delivery price.\nThis will be refunded in the form of a credit to your customer account.\n\nFaulty/Damaged/Incorrect returns:\nWhen you return an item that is damaged, incorrect, or faulty, then you will be refunded the full amount paid for that item and delivery price for that item, via your original payment method.\nPlease note, depending on the payment method, the refund may take 5–7 days to process.</string>
+    <string name="returns_policy_faq_content_2">A ‘Change of Mind’ return is to be lodged for item(s) delivered to you according to your order with no defects. This would include items that have the correct size, colour and product description according to your order.
+        \n\nWe accept most items back for Change of Mind returns. However, we have additional considerations. Please refer to the question ‘What can I return as Change of Mind?’ for more details.</string>
+    <string name="returns_policy_faq_content_3">A ‘Change of Mind’ return is to be lodged for item(s) delivered to you according to your order with no defects. This would include items that have the correct size, colour and product description according to your order.
+        \n\nWe accept most items back if you change your mind, however we do have the following considerations.
+            \n\t\t• Returned items must be unused and be in a fine and resalable condition. All original packaging and tags (where applicable) must be intact. Any instruction manuals, guides, add-ons or free gifts must also be returned.
+            \n\t\t• Items bought from Clearance sales or Warehouse Sales are non-returnable and non-refundable due to Change of Mind
+            \n\t\t• The following items are non-returnable and non-refundable:
+                \n\t\t\t\t○ Toilet paper, paper towel, tissues and serviettes
+                \n\t\t\t\t○ Medicinal (pain relief)
+                \n\t\t\t\t○ Cleaning (Examples: anti-bacterial wipes, sprays and cleaners, disposable gloves)
+                \n\t\t\t\t○ Feminine hygiene and incontinence
+                \n\t\t\t\t○ Baby wipes
+                \n\t\t\t\t○ Hand sanitisers
+                \n\t\t\t\t○ Disposable and reusable face masks
+                \n\t\t\t\t○ Cosmetics &amp; beauty products (if hygiene seal is broken)
+                \n\t\t\t\t○ Pharmaceutical/health products
+                \n\t\t\t\t○ Perishable goods, liquor, food and beverages
+                \n\t\t\t\t○ Personal care items
+                \n\t\t\t\t○ Hosiery, underwear &amp; socks
+                \n\t\t\t\t○ Swimwear
+                \n\t\t\t\t○ Pierced jewellery
+                \n\t\t\t\t○ Mattresses, pillows, mattress and pillow protectors
+                \n\t\t\t\t○ Gift cards, phone recharge or third party gift cards
+                \n\t\t\t\t○ Media - books and unsealed CDs, DVDs &amp; video games
+                \n\t\t\t\t○ Adult toys/sexual health products
+                \n\t\t\t\t○ Assembled furniture
+                \n\t\t\t\t○ Digital goods (download codes etc.)
+                \n\t\t\t\t○ Personalised/made to order goods
+                \n\t\t\t\t○ Earphones/headphones (if package has been opened)
+                \n\t\t\t\t○ Large/bulky appliances
+                \n\t\t\t\t○ Any merchandise where the GST has been claimed under the Tourist Refund Scheme, unless proof of repayment of the GST upon return to Australia is provided
+                \n\nOnce your return is approved, you will receive an email on how to return your items. It is important your return is sent to the correct address provided in your return email, as not all returns will go to the same warehouse (if you have purchased from different third-party Sellers). You will be requested to pay for the delivery charges of your return parcel, this may include the cost to return overseas. Once we have received your returned item(s), store credits will be deposited into your account and can be used within the next 6 months.</string>
+    <string name="returns_policy_faq_content_4">Look out for our email, which will indicate the return guidelines and your unique Return Authorisation Number (RAN). Depending on the items you wish to return, they should be returned either to our warehouse or directly to our suppliers.
+        \n\nFor all returns except Change of Mind returns, please use our return delivery services, free of charge. Fill up the simple online form, print out the return label (which should indicate clearly your unique RAN), stick it to the return parcel, and pass it to the delivery service within 7 calendar days.
+        \n\nFor Change of Mind returns, you may be requested to arrange for your own preferred delivery service within 7 calendar days. Please ensure your unique RAN is visible on the parcel.
+        \n\nIf you still have not received the return guidelines and your unique RAN a few days after your request is approved, please contact our Customer Team via My Returns.</string>
+    <string name="returns_policy_faq_content_5">For all returns except Change of Mind returns, once we have received your returned item(s), we will proceed with the refund back to your original payment method within 3 - 5 working days. Depending on the issuer or payment method, it may take an additional few working days for the refunded amount to appear on your statement.
+        \n\nFor Change of Mind returns, store credits will be deposited into your account and can be used within the next 6 months.</string>
+    <string name="returns_policy_faq_content_6">Yes, while such cases are not common, we do come across them occasionally. Please contact our Customer Team for further discussion via My Returns.</string>
+    <string name="returns_policy_faq_content_7">Change of mind:
+        \nWhen you return an item for “Change of Mind” you will be refunded the amount paid for the item returned, less the original delivery price.
+        \nThis will be refunded in the form of a credit to your customer account.
+        \n\nFaulty/Damaged/Incorrect returns:
+        \nWhen you return an item that is damaged, incorrect, or faulty, then you will be refunded the full amount paid for that item and delivery price for that item, via your original payment method.
+        \nPlease note, depending on the payment method, the refund may take 5-7 days to process.</string>
     <string name="returns_policy_faq_content_8">Unfortunately, our Sellers and us don’t have the necessary facilities to accept any walk-in returns. All returns must be posted. Returns need to be sent to the address provided in your return’s approval email. As we are also a Marketplace you may be returning to our third-party Sellers warehouse directly, whilst most returns are sent locally, in some instance you may even be required to send your return overseas.</string>
 
     <string-array name="returns_policy_faq_content">
@@ -867,7 +985,7 @@
         <item>false</item>
         <item>true</item>
         <item>false</item>
-        <item>false</item>
+        <item>true</item>
         <item>false</item>
         <item>false</item>
     </string-array>

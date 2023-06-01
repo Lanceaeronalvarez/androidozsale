@@ -48,6 +48,8 @@ public class InformationMenuController extends BaseController implements Informa
     ViewGroup mTermsAndConditionsContainer;
     @BindView(R.id.controller_information_privacy_policy)
     ViewGroup mPrivacyPolicyContainer;
+    @BindView(R.id.controller_information_gc_tnc)
+    ViewGroup mGiftCardTermsAndConditionsContainer;
 
     public static InformationMenuController newInstance() {
         return new InformationMenuController(
@@ -81,6 +83,12 @@ public class InformationMenuController extends BaseController implements Informa
         mAboutUsContainer.setOnClickListener(v -> showLegalities(BundleKeys.TEMPLATE_KEY_ABOUT_US, AccountOption.ABOUTUS));
         mTermsAndConditionsContainer.setOnClickListener(v -> showLegalities(BundleKeys.TEMPLATE_KEY_TNC, AccountOption.TERMSANDCONDITIONS));
         mPrivacyPolicyContainer.setOnClickListener(v -> showLegalities(BundleKeys.TEMPLATE_KEY_PRIVACY, AccountOption.PRIVACYPOLICY));
+        if (mActivity.getResources().getBoolean(R.bool.is_gift_card_terms_and_conditions_visible)) {
+            mGiftCardTermsAndConditionsContainer.setVisibility(View.VISIBLE);
+            mGiftCardTermsAndConditionsContainer.setOnClickListener(v -> showLegalities(R.string.gc_tnc_content, AccountOption.GCTERMSANDCONDITIONS));
+        } else {
+            mGiftCardTermsAndConditionsContainer.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.partial_toolbar_left_view)
@@ -99,6 +107,24 @@ public class InformationMenuController extends BaseController implements Informa
                 new HorizontalChangeHandler(false),
                 new HorizontalChangeHandler());
 
+        logNavigation(option);
+    }
+
+    private void showLegalities(int stringResource, AccountOption option) {
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .putInt(BundleKeys.STRING_RESOURCE, stringResource)
+                .putString(BundleKeys.LEGALITIES_TITLE, mActivity.getResources().getString(option.getTitleResourceId()))
+                .build();
+        GateKeeper.push(getRouter(),
+                GateKeeper.Destination.LEGALITIES,
+                bundle,
+                new HorizontalChangeHandler(false),
+                new HorizontalChangeHandler());
+
+        logNavigation(option);
+    }
+
+    private void logNavigation(AccountOption option) {
         switch (option) {
             case ABOUTUS:
                 logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.ABOUT_US);
@@ -108,6 +134,9 @@ public class InformationMenuController extends BaseController implements Informa
                 break;
             case PRIVACYPOLICY:
                 logMenuSelectFeatureUsageEvent(FeatureUsageEventType.Navigations.PRIVACY_POLICY);
+                break;
+            case GCTERMSANDCONDITIONS:
+                logMenuSelectFeatureUsageEvent(FeatureUsageEventType.GiftCards.TERMS_AND_CONDITIONS);
                 break;
             default:
                 break;

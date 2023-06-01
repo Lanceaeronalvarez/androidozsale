@@ -170,9 +170,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     //LPay
     private static final String IS_LPAY_ENABLED = "IS_LPAY_ENABLED";
 
-    //Openpay
-    private static final String IS_OPENPAY_ENABLED = "IS_OPENPAY_ENABLED";
-
     //ReCAPTCHA
     private static final String RECAPTCHA_SITE_KEY = "RECAPTCHA_SITE_KEY";
 
@@ -481,16 +478,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean isLPayEnabled() {
         return Prefs.getBoolean(IS_LPAY_ENABLED, false);
-    }
-
-    @Override
-    public void setOpenpayEnabled(boolean enabled) {
-        Prefs.putBoolean(IS_OPENPAY_ENABLED, enabled);
-    }
-
-    @Override
-    public boolean isOpenpayEnabled() {
-        return Prefs.getBoolean(IS_OPENPAY_ENABLED, false);
     }
 
     @Override

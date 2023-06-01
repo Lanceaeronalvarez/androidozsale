@@ -148,12 +148,14 @@
 
         </LinearLayout>
 
+
         <View
             android:id="@+id/partial_checkout_line_above_afterpay"
             style="@style/horizontalBorderView"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_small" />
+
 
         <LinearLayout
             android:id="@+id/partial_checkout_afterpay_panel_holder"
@@ -263,6 +265,7 @@
                     android:background="@color/transparent"
                     android:gravity="center"
                     android:textColor="@color/black"
+
                     tools:ignore="WebViewLayout" />
             </RelativeLayout>
 
@@ -318,45 +321,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/partial_checkout_openpay_panel_holder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_tiny"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/padding_default"
-            android:paddingRight="@dimen/padding_default"
-            android:visibility="visible">
-
-            <RelativeLayout
-                android:id="@+id/partial_checkout_button_openpay"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height_regular"
-                android:background="@drawable/bg_openpay_button"
-                android:clickable="true"
-                android:elevation="1.5dp"
-                android:padding="6dp"
-                android:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/partial_checkout_button_openpay_logo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:paddingTop="@dimen/openpay_button_logo_margin_top"
-                    android:paddingBottom="@dimen/openpay_button_logo_margin_bottom"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_openpay_dark_logo" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/partial_checkout_ourpay_panel_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical" />
+
 
     </LinearLayout>
 </RelativeLayout>

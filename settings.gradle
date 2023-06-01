@@ -1,5 +1,5 @@
 buildscript {
-    include ':app', ':genie-utility', ':genie-animation', ':genie-views', ':genie-profiler', ':CardForm', ':card.io'
+    include ':app', ':genie-utility', ':genie-animation', ':genie-views', ':genie-profiler', ':CardForm', ':card.io', ':RecyclerViewPager', ':lib', ':tablayoutsupport'
     include ':ptr-lib'
     project(':genie-utility').projectDir = new File('sw_o_android.genieandroid/genie-utility')
     project(':genie-animation').projectDir = new File('sw_o_android.genieandroid/genie-animation')
@@ -7,6 +7,9 @@ buildscript {
     project(':genie-profiler').projectDir = new File('sw_o_android.genieandroid/genie-profiler')
     project(':CardForm').projectDir = new File('android-card-form/CardForm')
 //    project(':card.io').projectDir = new File('card.io-Android-source/card.io')
+    project(':RecyclerViewPager').projectDir = new File('RecyclerViewPager/app')
+    project(':lib').projectDir = new File('RecyclerViewPager/lib')
+    project(':tablayoutsupport').projectDir = new File('RecyclerViewPager/tablayoutsupport')
 }
 
 plugins {

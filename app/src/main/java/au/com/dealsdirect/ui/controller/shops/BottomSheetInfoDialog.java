@@ -1,22 +1,23 @@
 package au.com.dealsdirect.ui.controller.shops;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import au.com.dealsdirect.R;
 
-/**
- * Created by MTC on 2020-03-31.
- */
 public class BottomSheetInfoDialog extends BottomSheetDialogFragment {
 
     private String title = "";
@@ -27,6 +28,9 @@ public class BottomSheetInfoDialog extends BottomSheetDialogFragment {
 
     private int layoutId = R.layout.bottom_sheet_info;
 
+    private ScrollView contentScrollview = null;
+    private BottomSheetBehavior<View> behavior = null;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,12 +38,22 @@ public class BottomSheetInfoDialog extends BottomSheetDialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(layoutId, container, false);
+    public void onStart() {
+        super.onStart();
+        if (getView() != null) {
+            behavior = BottomSheetBehavior.from((View) getView().getParent());
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(layoutId, null);
 
         final TextView textViewDescription = v.findViewById(R.id.bottom_sheet_info_description);
         final TextView textViewTitle = v.findViewById(R.id.bottom_sheet_info_title);
         final Button button = v.findViewById(R.id.bottom_sheet_info_button);
+        contentScrollview = v.findViewById(R.id.bottom_sheet_info_content_scrollview);
 
         textViewDescription.setText(getDescription());
         textViewTitle.setText(getTitle());
@@ -60,6 +74,15 @@ public class BottomSheetInfoDialog extends BottomSheetDialogFragment {
                 });
             }
         }
+
+        if (contentScrollview != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                contentScrollview.setOnScrollChangeListener((v12, scrollX, scrollY, oldScrollX, oldScrollY) -> onScrollChanged(scrollY));
+            } else {
+                contentScrollview.getViewTreeObserver().addOnScrollChangedListener(() -> BottomSheetInfoDialog.this.onScrollChanged(contentScrollview.getScrollY()));
+            }
+        }
+
 
         return v;
     }
@@ -111,5 +134,12 @@ public class BottomSheetInfoDialog extends BottomSheetDialogFragment {
 
     public interface OnButtonClickListener {
         void onClick();
+    }
+
+    private void onScrollChanged(int scrollY) {
+        if (behavior == null) {
+            return;
+        }
+        behavior.setDraggable(scrollY <= 0);
     }
 }

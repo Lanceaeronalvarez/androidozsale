@@ -6,8 +6,6 @@ package au.com.dealsdirect.ui.main;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
-import com.braintreepayments.api.BraintreeFragment;
-import com.braintreepayments.cardform.view.CardForm;
 import com.mysale.genie.utility.config.model.getappsettingssection.Android;
 import com.visa.checkout.VisaPaymentSummary;
 
@@ -17,11 +15,10 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
-import au.com.dealsdirect.data.wishlist.WishlistChangeListener;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.utils.AppConstants;
 
-public interface MainMvpView extends MvpView, BrainTreeListeners {
+public interface MainMvpView extends MvpView {
 
 
     FetchTokenHandler getFetchTokenHandler();
@@ -58,7 +55,7 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
 
     void setPaymentMethodSelected(PaymentMethod paymentMethodSelected);
 
-    BraintreeFragment getBraintreeFragment();
+    BraintreeClient getBraintreeClient();
 
     boolean isBraintreeInitialized();
 
@@ -90,8 +87,6 @@ public interface MainMvpView extends MvpView, BrainTreeListeners {
     PaymentMethod getPaymentMethodSelected();
 
     boolean getIsMyPayEnabled();
-
-    void onPurchase(CardForm cardForm);
 
     void startPaypalPayment();
 

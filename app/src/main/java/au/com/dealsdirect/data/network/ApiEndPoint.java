@@ -709,14 +709,6 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "ConfirmLPayTransaction");
     }
 
-    public static String callCreateOpenpayOrder() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateOpenpayOrder");
-    }
-
-    public static String callOpenpayCapturePayment() {
-        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "OpenpayCapturePayment");
-    }
-
     public static String callCreateKlarnaSession() {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateKlarnaSession");
     }

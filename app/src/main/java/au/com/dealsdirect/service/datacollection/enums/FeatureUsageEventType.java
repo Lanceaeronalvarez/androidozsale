@@ -137,4 +137,8 @@ public class FeatureUsageEventType {
         public static final int SHOW_CODES = 1074;
         public static final int CLICK_ON_A_CODE = 1075;
     }
+
+    public static class GiftCards {
+        public static final int TERMS_AND_CONDITIONS = 1222;
+    }
 }
