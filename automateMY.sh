@@ -3,8 +3,8 @@ OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 
 flavorName=mysaleRC
 buildTypeAssemble=MysaleRCRelease
-expectedVersionName="6.2.0"
-expectedVersionCode="422"
+expectedVersionName="7.0.0"
+expectedVersionCode="425"
 SPACE=" "
 philippines="Philippines"
 thailand="Thailand"
@@ -33,7 +33,7 @@ print_yellow "\n\nSTARTING AUTOMATION"
 
 # Getting Compile SDK Version
 print_blue "\n\nCHECKING COMPILE SDK"
-expectedCompileSDK="30"
+expectedCompileSDK="33"
 currentCompileSDK=$(./gradlew -q printCompileSdkVersion -PflavorName=$flavorName)
 if [ $expectedCompileSDK = "$currentCompileSDK" ]; then
 print_green "\nexpected: $expectedCompileSDK and current: $currentCompileSDK is the same\n"
@@ -53,7 +53,7 @@ fi
 
 # Checking target sdk version
 print_blue "\n\nCHECKING TARGET SDK"
-expectedTargetSDK="30"
+expectedTargetSDK="33"
 currentTargetSDK=$(./gradlew -q printTargetSdkVersion -PflavorName=$flavorName)
 if [ $expectedTargetSDK = "$currentTargetSDK" ]; then
 print_green "\nexpected: $expectedTargetSDK and current: $currentTargetSDK is the same\n"
@@ -63,7 +63,7 @@ fi
 
 # Checking Build tools version
 print_blue "\n\nCHECKING BUILD TOOLS VERSION"
-expectedBuildToolsVersion="30.0.2"
+expectedBuildToolsVersion="33.0.2"
 currentBuildToolsVersion=$(./gradlew -q printBuildToolsVersion -PflavorName=$flavorName)
 if [ $expectedBuildToolsVersion = "$currentBuildToolsVersion" ]; then
 print_green "\nexpected: $expectedBuildToolsVersion and current: $currentBuildToolsVersion is the same\n"
