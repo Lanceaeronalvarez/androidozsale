@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -440,13 +441,18 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     public void getImageFromDirectory(boolean uploadImage) {
         shouldUploadImage = uploadImage;
 
-        if (ActivityCompat.checkSelfPermission(mActivity,
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ActivityCompat.checkSelfPermission(mActivity,
+                Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(mActivity,
+                    new String[]{
+                            Manifest.permission.READ_MEDIA_IMAGES},
+                    1);
+        } else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && ActivityCompat.checkSelfPermission(mActivity,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     AppConstants.REQUEST_CODE_PERMISSION);
-        } else {
-
+        }else {
             Intent cameraIntent = new Intent(Intent.ACTION_PICK);
             cameraIntent.setType("image/*");
             if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
