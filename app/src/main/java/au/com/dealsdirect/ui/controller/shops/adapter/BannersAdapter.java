@@ -195,7 +195,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             if (!bannerResponses.isEmpty()) {
                 GetBannerResponse.Group bannerGroup = bannerResponses.get(bannerResponses.size() - 1);
-                mOffset = bannerGroup.getBanners().size();
+                if (!mLastGroupType.equals(bannerGroup.getType())) {
+                    mOffset = 0;
+                }
+                mOffset += bannerGroup.getBanners().size();
                 mLastGroupType = bannerGroup.getType();
                 notifyItemRangeInserted(
                         getPositionOfNormalBanners() + previousCount,

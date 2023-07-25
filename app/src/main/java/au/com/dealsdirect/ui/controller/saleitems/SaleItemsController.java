@@ -971,9 +971,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             switch (mSourceMode) {
                 case NORMAL:
                     if (mSaleId != null && !mSaleId.isEmpty()) {
-                        if (mSaleName == null || mSaleName.isEmpty()) {
-                            mPresenter.loadSaleBannerDetails(mSaleId);
-                        }
+                        mPresenter.loadSaleBannerDetails(mSaleId);
                     } else {
                         showBrandBubbles();
                     }
@@ -1160,14 +1158,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @Override
     protected void setUp(View view) {
 
-        if (mEndDate == null || mEndDate.isEmpty() || !DateUtils.isWithin48Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
-            mSaleItemsRemainingTimeText.setVisibility(View.GONE);
-            mSaleEndsInText.setVisibility(View.GONE);
-        } else {
-            mSaleItemsRemainingTimeText.setVisibility(View.VISIBLE);
-            mSaleEndsInText.setVisibility(View.VISIBLE);
-            setupSaleRemainingTime(mEndDate);
-        }
+        mSaleItemsRemainingTimeText.setVisibility(View.GONE);
+        mSaleEndsInText.setVisibility(View.GONE);
 
         mColumnView.setVisibility(isGridViewEnabled() ? View.VISIBLE : View.INVISIBLE);
         mColumnCount = mPresenter.getColumnCount();
@@ -1206,9 +1198,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             } else {
                                 mIsLoadingProgress = true;
                                 if (mSaleId != null && !mSaleId.isEmpty()) {
-                                    if (mSaleName == null || mSaleName.isEmpty()) {
-                                        mPresenter.loadSaleBannerDetails(mSaleId);
-                                    }
+                                    mPresenter.loadSaleBannerDetails(mSaleId);
                                 }
                                 searchOperationType = null;
                                 mGenieCategory = null;
@@ -1385,11 +1375,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void setupSaleRemainingTime(String endDate) {
-        mCountDownTimer = new CountDownTimer(DateUtils.getRemainingTimeInMillis(endDate), DateUtils.DATE_UTIL_MILLIS_TO_SEC) {
+        if (mSaleItemsRemainingTimeText != null) {
+            mSaleItemsRemainingTimeText.setText(DateUtils.getRemainingTimeInHours(DateUtils.getRemainingTimeInMillis(endDate)));
+        }
+        mCountDownTimer = new CountDownTimer(DateUtils.getRemainingTimeInMillis(endDate), (long) Math.floor(DateUtils.DATE_UTIL_MILLIS_TO_SEC)) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (mSaleItemsRemainingTimeText != null) {
-                    mSaleItemsRemainingTimeText.setText(DateUtils.getRemainingTimeInWeeks(millisUntilFinished));
+                    mSaleItemsRemainingTimeText.setText(DateUtils.getRemainingTimeInHours(millisUntilFinished));
                 }
             }
 
@@ -1741,9 +1734,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             case NORMAL:
                 setupSearchFilters();
                 if (mSaleId != null && !mSaleId.isEmpty()) {
-                    if (mSaleName == null || mSaleName.isEmpty()) {
-                        mPresenter.loadSaleBannerDetails(mSaleId);
-                    }
+                    mPresenter.loadSaleBannerDetails(mSaleId);
                 }
                 searchOperationType = null;
                 mGenieCategory = null;
@@ -1782,9 +1773,22 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (response != null &&
                 response.getSaleName() != null &&
                 !response.getSaleName().isEmpty()) {
-            mSaleName = response.getSaleName();
-            mTitle = mSaleName;
+            if (mSaleName == null || mSaleName.isEmpty()) {
+                mSaleName = response.getSaleName();
+            }
+            if (mTitle == null || mTitle.isEmpty()) {
+                mTitle = mSaleName;
+            }
             determineToolbarTitle();
+            mEndDate = response.getEndDate();
+            if (mEndDate == null || mEndDate.isEmpty() || !DateUtils.isWithin99Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+                mSaleItemsRemainingTimeText.setVisibility(View.GONE);
+                mSaleEndsInText.setVisibility(View.GONE);
+            } else {
+                mSaleItemsRemainingTimeText.setVisibility(View.VISIBLE);
+                mSaleEndsInText.setVisibility(View.VISIBLE);
+                setupSaleRemainingTime(mEndDate);
+            }
         }
     }
 
@@ -2357,9 +2361,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mGenieMaxPrice = maxPrice;
         mGenieSizesCount = sizeList.size();
         if (mSaleId != null && !mSaleId.isEmpty()) {
-            if (mSaleName == null || mSaleName.isEmpty()) {
-                mPresenter.loadSaleBannerDetails(mSaleId);
-            }
+            mPresenter.loadSaleBannerDetails(mSaleId);
         }
         itemsContainerHelper.clearItems();
         this.searchOperationType = searchOperationType;
