@@ -69,11 +69,13 @@ android {
             ext.appName = "buyinvite"
             ext.facebookAppId = "391019637656000"
             ext.facebookAppSecret = "1dea9436118690813bcc315ecfc28705"
+            ext.facebookClientToken = "d5f7ea8f1814ead7a465009de837b890"
 
             resValue "string", "app_name", ext.appName
             def facebookAppId = "391019637656000"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "facebook_client_token", ext.facebookClientToken
             resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "153472458025053"
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
@@ -96,6 +98,7 @@ android {
             def facebookAppId = "391019637656000"
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "1dea9436118690813bcc315ecfc28705"
+            resValue "string", "facebook_client_token", "d5f7ea8f1814ead7a465009de837b890"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "153472458025053"
             resValue "string", "twitter_user_id", "twitter://user?user_id=36309423"
@@ -117,11 +120,13 @@ android {
             ext.appName = "DealsDirect"
             ext.facebookAppId = "1650094968544406"
             ext.facebookAppSecret = "94da0f48bd2ffea25981e52c56f9260a"
+            ext.facebookClientToken = "d5f7ea8f1814ead7a465009de837b890"
 
             resValue "string", "app_name", ext.appName
             def facebookAppId = "1650094968544406"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "facebook_client_token", ext.facebookClientToken
             resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
@@ -145,6 +150,7 @@ android {
             def facebookAppId = "1658400667713836"
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "38e0530d1a0339d117b5474f0731f2af"
+            resValue "string", "facebook_client_token", "d5f7ea8f1814ead7a465009de837b890"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "257280167216"
             resValue "string", "twitter_user_id", "twitter://user?user_id=37405859"
@@ -166,11 +172,13 @@ android {
             ext.appName = "OO"
             ext.facebookAppId = "1654976038100746"
             ext.facebookAppSecret = "f372b6a78ffbb38215f796d1a8838bb2"
+            ext.facebookClientToken = "d5f7ea8f1814ead7a465009de837b890"
 
             resValue "string", "app_name", ext.appName
             def facebookAppId = "1654976038100746"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "facebook_client_token", ext.facebookClientToken
             resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "10357598833"
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
@@ -193,6 +201,7 @@ android {
             def facebookAppId = "600738863393881"
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "576ebf7aba3f1488605eb8d8886911f6"
+            resValue "string", "facebook_client_token", "d5f7ea8f1814ead7a465009de837b890"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "10357598833"
             resValue "string", "twitter_user_id", "twitter://user?user_id=14730691"
@@ -214,11 +223,13 @@ android {
             ext.appName = "TopBuy"
             ext.facebookAppId = "1544909069170785"
             ext.facebookAppSecret = "fb7a6db2221738ebe78810dff07e1223"
+            ext.facebookClientToken = "cf2a2da0be692da07658cfc095e2b1ee"
 
             resValue "string", "app_name", ext.appName
             def facebookAppId = "1544909069170785"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "facebook_client_token", ext.facebookClientToken
             resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "47143367223"
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
@@ -241,6 +252,7 @@ android {
             def facebookAppId = "1544909372504088"
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "c1c38e066ad13cc4987929e3c2f73770"
+            resValue "string", "facebook_client_token", "cf2a2da0be692da07658cfc095e2b1ee"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "47143367223"
             resValue "string", "twitter_user_id", "twitter://user?user_id=20105193"
@@ -262,11 +274,13 @@ android {
             ext.appName = "OZSALE"
             ext.facebookAppId = "421544284547550"
             ext.facebookAppSecret = "f08401cb63ac18241e51e2184d8cd80a"
+            ext.facebookClientToken = "cf2a2da0be692da07658cfc095e2b1ee"
 
             resValue "string", "app_name", ext.appName
             def facebookAppId = "421544284547550"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "facebook_client_token", ext.facebookClientToken
             resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "160420993982663"
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
@@ -286,6 +300,7 @@ android {
             ext.appName = "OZSALE Test"
             ext.facebookAppId = "437865102935987"
             ext.facebookAppSecret = "5c6326d03e5d2ba866ecada5b206b6d6"
+            ext.facebookClientToken = "cf2a2da0be692da07658cfc095e2b1ee"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
             buildConfigField "boolean", "IS_TEST", "true"
@@ -293,6 +308,7 @@ android {
             resValue "string", "app_name", ext.appName
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "facebook_client_token", ext.facebookClientToken
             resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "160420993982663"
             resValue "string", "twitter_user_id", "twitter://user?user_id=25256714"
@@ -315,11 +331,13 @@ android {
             ext.appName = "SINGSALE"
             ext.facebookAppId = "213701285425668"
             ext.facebookAppSecret = "586750a24521ba339ff775ff2d729eb8"
+            ext.facebookClientToken = "0eb39d9137e988f8afb399387598d356"
 
             resValue "string", "app_name", ext.appName
             def facebookAppId = "213701285425668"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "facebook_client_token", ext.facebookClientToken
             resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "181383195228374"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524844978"
@@ -343,6 +361,7 @@ android {
             def facebookAppId = "213701285425668"
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "586750a24521ba339ff775ff2d729eb8"
+            resValue "string", "facebook_client_token", "0eb39d9137e988f8afb399387598d356"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "181383195228374"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524844978"
@@ -364,11 +383,13 @@ android {
             ext.appName = "NZSALE"
             ext.facebookAppId = "122094841270614"
             ext.facebookAppSecret = "c427c4000b760c98c818350619930764"
+            ext.facebookClientToken = "3afb4e0406bc0e0bfcb5d87f79c8bafd"
 
             resValue "string", "app_name", ext.appName
             def facebookAppId = "122094841270614"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "facebook_client_token", ext.facebookClientToken
             resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "293974924171"
             resValue "string", "twitter_user_id", "twitter://user?user_id=61630958"
@@ -392,6 +413,7 @@ android {
             def facebookAppId = "122094841270614"
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "c427c4000b760c98c818350619930764"
+            resValue "string", "facebook_client_token", "3afb4e0406bc0e0bfcb5d87f79c8bafd"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "293974924171"
             resValue "string", "twitter_user_id", "twitter://user?user_id=61630958"
@@ -414,11 +436,13 @@ android {
             ext.appName = "MYSALE"
             ext.facebookAppId = "485479254797079"
             ext.facebookAppSecret = "fee7b274d99b23eca0c283d48b2f453a"
+            ext.facebookClientToken = "f31b297c05bb3c86769aec298e9ca36e"
 
             resValue "string", "app_name", ext.appName
             def facebookAppId = "485479254797079"
             resValue "string", "facebook_app_id", ext.facebookAppId
             resValue "string", "facebook_app_secret", ext.facebookAppSecret
+            resValue "string", "facebook_client_token", ext.facebookClientToken
             resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "161478120632146"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524892602"
@@ -441,6 +465,7 @@ android {
             def facebookAppId = "485479254797079"
             resValue "string", "facebook_app_id", facebookAppId
             resValue "string", "facebook_app_secret", "fee7b274d99b23eca0c283d48b2f453a"
+            resValue "string", "facebook_client_token", "f31b297c05bb3c86769aec298e9ca36e"
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "161478120632146"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524892602"

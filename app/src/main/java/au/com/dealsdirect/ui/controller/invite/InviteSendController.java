@@ -285,7 +285,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                     ShareLinkContent content =
                             new ShareLinkContent.Builder()
                                     .setContentUrl(Uri.parse(invitationLink))
-                                    .setImageUrl(Uri.parse(bannerImageUrl))
+                                    //.setImageUrl(Uri.parse(bannerImageUrl)) - was deprecated in Graph API 2.9
                                     .build();
                     ShareDialog shareDialog = new ShareDialog(mActivity);
                     shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
