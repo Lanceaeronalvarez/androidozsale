@@ -141,20 +141,20 @@ public class ViewVouchersController extends BaseController implements ViewVouche
     }
 
     @Override
-    public void updateVoucherList(Pair<List<GetUserVoucherResponse.Voucher>, GetVouchersResponse> pair) {
+    public void updateVoucherList(List<GetUserVoucherResponse.Response> getUserVoucherResponses) {
         hideLoading();
         HashMap<String, GetUserVoucherResponse.Status> statusAssociatedString = getStatusAssociatedString();
-        if (pair.first != null && pair.first.size() != 0) {
+        if (getUserVoucherResponses != null && getUserVoucherResponses.size() != 0) {
             mRootLayout.setVisibility(View.VISIBLE);
             mNoVouchersLayout.setVisibility(View.GONE);
             mUnusedVouchersRecyclerViewPager.getLayoutManager().scrollToPosition(0);
 
-            List<GetUserVoucherResponse.Voucher> usedVouchers = new ArrayList<>();
-            List<GetUserVoucherResponse.Voucher> currentVouchers = new ArrayList<>();
+            List<GetUserVoucherResponse.Response> usedVouchers = new ArrayList<>();
+            List<GetUserVoucherResponse.Response> currentVouchers = new ArrayList<>();
 
-            for (int i = 0; i < pair.first.size(); i++) {
+            for (int i = 0; i < getUserVoucherResponses.size(); i++) {
 
-                String statusString = pair.first.get(i).getStatus();
+                String statusString = getUserVoucherResponses.get(i).getStatus();
                 GetUserVoucherResponse.Status status = statusAssociatedString.get(statusString);
                 if (status == null) {
                     status = GetUserVoucherResponse.Status.NORMAL;
@@ -162,10 +162,10 @@ public class ViewVouchersController extends BaseController implements ViewVouche
                 switch (status) {
                     case ALREADY_SPENT:
                     case EXPIRED:
-                        usedVouchers.add(pair.first.get(i));
+                        usedVouchers.add(getUserVoucherResponses.get(i));
                         break;
                     default:
-                        currentVouchers.add(pair.first.get(i));
+                        currentVouchers.add(getUserVoucherResponses.get(i));
                 }
             }
 

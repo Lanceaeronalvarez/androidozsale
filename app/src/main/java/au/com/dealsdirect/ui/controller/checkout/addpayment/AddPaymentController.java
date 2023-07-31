@@ -142,6 +142,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     @BindView(R.id.partial_checkout_lpay_panel_holder)
     View mLPayPanel;
 
+    @BindView(R.id.partial_checkout_button_klarna)
+    RelativeLayout mKlarnaButton;
+    @BindView(R.id.partial_checkout_button_g_pay_container)
+    RelativeLayout mGPayButton;
+
     // Stripe
     @BindView(R.id.stripe_form_layout)
     LinearLayout mStripeLayout;
@@ -242,6 +247,10 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mLineView.setVisibility(View.GONE);
         mAfterpayPanel.setVisibility(View.GONE);
         mLPayPanel.setVisibility(View.GONE);
+        mKlarnaButton.setVisibility(View.GONE);
+        mGPayButton.setVisibility(View.GONE);
+        mPayButton.setText("Add");
+        mPayButton.setBackground(getResources().getDrawable(R.drawable.bg_button_login));
 
         mVcoButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
                 View.GONE);

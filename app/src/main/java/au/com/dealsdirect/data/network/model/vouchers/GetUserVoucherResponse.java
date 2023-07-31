@@ -33,27 +33,7 @@ public class GetUserVoucherResponse {
 
     public Response d;
 
-    public static class Response extends LegacyBaseResponseValue {
-
-        @SerializedName("List")
-        @Expose
-        public ArrayList<Voucher> list;
-
-        public ArrayList<Voucher> getList() {
-            return list;
-        }
-
-        public void setList(ArrayList<Voucher> list) {
-            this.list = list;
-        }
-
-    }
-
-    public Response getValue() {
-        return d;
-    }
-
-    public static class Voucher {
+    public static class Response {
 
         @SerializedName(value = "Fullname", alternate = "fullname")
         @Expose
@@ -128,6 +108,10 @@ public class GetUserVoucherResponse {
         public String getStatus() {
             return status;
         }
-
     }
+
+    public Response getValue() {
+        return d;
+    }
+
 }

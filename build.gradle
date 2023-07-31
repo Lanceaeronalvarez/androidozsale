@@ -80,7 +80,7 @@ ext {
     recyclerViewPagerVersion = 'v1.1.1'
 
     braintreeVersion = '3.18.1'
-    facebookVersion = '5.15.3'
+    facebookVersion = '16.0.0'
 
     gcmVersion = '17.0.0'
     crystalRangeSeekbarVersion = '1.1.3'

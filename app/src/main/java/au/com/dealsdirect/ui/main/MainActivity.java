@@ -26,6 +26,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
+import com.facebook.FacebookSdk;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -284,6 +285,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mPresenter.onAttach(this);
         mPresenter.pruneCachedResponses();
         refreshWishlist();
+
+        if (!FacebookSdk.isInitialized()) {
+            FacebookSdk.sdkInitialize(this);
+        }
     }
 
     @Override

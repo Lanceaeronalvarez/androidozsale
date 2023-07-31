@@ -89,7 +89,7 @@ public class LoginController extends BaseController implements LoginMvpView {
     private String mLoginMethod = NO_ACTION;
     private boolean isLoginSuccess = false;
 
-    private CallbackManager mCallbackManager = CallbackManager.Factory.create();
+    private CallbackManager mCallbackManager;
 
     public static LoginController newInstance() {
         return new LoginController(

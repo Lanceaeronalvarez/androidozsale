@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import au.com.dealsdirect.R;
+import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 
 import static au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse.Status;
-import static au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse.Voucher;
 
 /**
  * Created by Paul on 6/27/17.
@@ -23,12 +23,12 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
     private static final float GRAYED_OUT_ALPHA = 0.28f;
 
     private HashMap<Integer, String> voucherColorStateCollection = new HashMap<>();
-    private List<Voucher> vouchersList;
+    private List<GetUserVoucherResponse.Response> vouchersList;
     private Context mContext;
     private static final float UNUSED_VOUCHER_OVERLAY = 0.21f;
     private HashMap<String, Status> statusAssociatedString;
 
-    public ViewVouchersRecyclerViewAdapter(List<Voucher> vouchersList,
+    public ViewVouchersRecyclerViewAdapter(List<GetUserVoucherResponse.Response> vouchersList,
                                            HashMap<String, Status> statusAssociatedString,
                                            Context context) {
         this.vouchersList = vouchersList;
@@ -47,7 +47,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
 
     @Override
     public void onBindViewHolder(ViewVouchersViewHolder holder, int position) {
-        Voucher voucher = vouchersList.get(position);
+        GetUserVoucherResponse.Response voucher = vouchersList.get(position);
 
         holder.mVoucherName.setText(voucher.getFullname());
 
@@ -99,7 +99,7 @@ public class ViewVouchersRecyclerViewAdapter extends RecyclerView.Adapter<ViewVo
         holder.mVouchersLayout.setBackground(mContext.getResources().getDrawable(R.drawable.bg_voucher_item));
     }
 
-    public void replace(List<Voucher> vouchersList) {
+    public void replace(List<GetUserVoucherResponse.Response> vouchersList) {
         this.vouchersList = vouchersList;
         notifyDataSetChanged();
     }

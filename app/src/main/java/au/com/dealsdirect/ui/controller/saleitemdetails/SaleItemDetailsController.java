@@ -1100,7 +1100,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void setupSaleRemainingTime(String endDate) {
-        mCountDownTimer = new CountDownTimer(DateUtils.getRemainingTimeInMillis(endDate), DateUtils.DATE_UTIL_MILLIS_TO_SEC) {
+        mCountDownTimer = new CountDownTimer(DateUtils.getRemainingTimeInMillis(endDate), (long) Math.floor(DateUtils.DATE_UTIL_MILLIS_TO_SEC)) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (isViewAttached() && mTimerTextView != null) {

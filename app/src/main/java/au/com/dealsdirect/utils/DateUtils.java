@@ -24,15 +24,15 @@ public class DateUtils {
 
     public static final String GMT_FORMAT_NO_MILLISECONDS = "yyyy-MM-dd'T'HH:mm:ss";
 
-    public static final int DATE_UTIL_MILLIS_TO_SEC = 1000;
+    public static final double DATE_UTIL_MILLIS_TO_SEC = 1000;
 
-    public static final int DATE_UTIL_MILLIS_TO_MIN = 60000;
+    public static final double DATE_UTIL_MILLIS_TO_MIN = 60000;
 
-    public static final int DATE_UTIL_MILLIS_TO_HOUR = 3600000;
+    public static final double DATE_UTIL_MILLIS_TO_HOUR = 3600000;
 
-    public static final int DATE_UTIL_MILLIS_TO_DAY = 86400000;
+    public static final double DATE_UTIL_MILLIS_TO_DAY = 86400000;
 
-    public static final int DATE_UTIL_MILLIS_TO_WEEK = 604800000;
+    public static final double DATE_UTIL_MILLIS_TO_WEEK = 604800000;
 
     public static String convertStartEndDateToString(String startString, String endString) {
         @SuppressLint("SimpleDateFormat")
@@ -333,33 +333,49 @@ public class DateUtils {
     }
 
     public static class TimeDivision {
+        private final long seconds;
+        private final long minutes;
         private final long hours;
         private final long days;
         private final long weeks;
 
         public TimeDivision(long remainingDiffInMilliSeconds) {
-            //get hours
-            long hours = remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR;
+            this.seconds = (long) Math.floor(remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_SEC);
+            this.minutes = (long) Math.floor(remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_MIN);
+            this.hours = (long) Math.floor(remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR);
+            this.days = (long) Math.floor(remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_DAY);
+            this.weeks = (long) Math.floor(remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_WEEK);
+        }
 
-            //get days
-            long days;
-            days = hours / 24L;
-            hours -= days * 24L;
+        public long getSeconds() {
+            return seconds - minutes * 60L;
+        }
 
-            //get weeks
-            long weeks = days / 7L;
-            days -= weeks * 7L;
+        public long getTotalSeconds() {
+            return seconds;
+        }
 
-            this.hours = hours;
-            this.days = days;
-            this.weeks = weeks;
+        public long getMinutes() {
+            return minutes - hours * 60L;
+        }
+
+        public long getTotalMinutes() {
+            return minutes;
         }
 
         public long getHours() {
+            return hours - days * 24L;
+        }
+
+        public long getTotalHours() {
             return hours;
         }
 
         public long getDays() {
+            return days - weeks * 7L;
+        }
+
+        public long getTotalDays() {
             return days;
         }
 
@@ -370,14 +386,20 @@ public class DateUtils {
 
     public static boolean isLessThanADay(long remainingDiffInMilliSeconds) {
         //get hours
-        long hours = remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR;
+        long hours = (long) Math.floor(remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR);
         return hours < 24;
     }
 
     public static boolean isWithin48Hours(long remainingDiffInMilliSeconds) {
         //get hours
-        long hours = remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR;
+        long hours = (long) Math.floor(remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR);
         return hours <= 48 && remainingDiffInMilliSeconds > 0;
+    }
+
+    public static boolean isWithin99Hours(long remainingDiffInMilliSeconds) {
+        //get hours
+        long hours = (long) Math.floor(remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR);
+        return hours <= 99 && remainingDiffInMilliSeconds > 0;
     }
 
     public static String getRemainingTimeValue(long remainingDiffInMilliSeconds) {
@@ -409,15 +431,25 @@ public class DateUtils {
         }
     }
 
+    public static String getRemainingTimeInHours(long remainingTimeInMilliSeconds) {
+        final TimeDivision timeDivision = new TimeDivision(remainingTimeInMilliSeconds);
+        if (timeDivision.getTotalHours() > 0) {
+            return timeDivision.getTotalHours() + "hrs " + String.format("%02dmins", timeDivision.getMinutes());
+        } else if (timeDivision.getTotalMinutes() > 0){
+            return timeDivision.getTotalMinutes() + "mins " + timeDivision.getSeconds() + "s";
+        } else {
+            return timeDivision.getTotalSeconds() + "s";
+        }
+    }
+
     public static long getRemainingTimeInMillis(String endDate) {
-        TimeZone timeZone = TimeZone.getDefault();
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
         SimpleDateFormat sdf = new SimpleDateFormat(AppConstants.API_DATE_FORMAT, Locale.ENGLISH);
         sdf.setTimeZone(timeZone);
-        Date date = new Date();
+        Calendar cal = Calendar.getInstance(timeZone);
 
         try {
-            long remainingDiffInMilliSeconds = sdf.parse(endDate).getTime() - date.getTime();
-            return remainingDiffInMilliSeconds;
+            return sdf.parse(endDate).getTime() - cal.getTimeInMillis();
         } catch (ParseException | NullPointerException e) {
             return 0;
         }
