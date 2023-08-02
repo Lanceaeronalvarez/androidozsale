@@ -4,8 +4,8 @@ OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
 flavorName=singsaleRC
 buildTypeAssemble=SingsaleRCRelease
 defaultCountry=Singapore
-expectedVersionName="7.0.0"
-expectedVersionCode="425"
+expectedVersionName="7.1.0"
+expectedVersionCode="428"
 
 print_green(){
     printf "\e[1;32m$1\e[0m"
