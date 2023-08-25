@@ -139,18 +139,7 @@ public class Settings {
                                     buyinviteAURoot,
                                     buyinviteAURoot,
                                     "AUD",
-                                    buyinviteAURoot),
-
-                            new Country("New Zealand",
-                                    "BN",
-                                    "461308FD-59C6-4BE1-A3D0-FCA74BCD338F",
-                                    "NZ$",
-                                    "buyinvite.co.nz",
-                                    "EN",
-                                    buyinviteNZRoot,
-                                    buyinviteNZRoot,
-                                    "NZD",
-                                    buyinviteNZRoot)});
+                                    buyinviteAURoot)});
 
         } else if (BuildConfig.FLAVOR.equals("buyinviteTest")) {
             populatePackageWithCountries(
@@ -164,18 +153,7 @@ public class Settings {
                                     "https://www.ba.mysaledev.com/",
                                     "https://www.ba.mysaledev.com/",
                                     "AUD",
-                                    "https://www.ba.mysaledev.com/"),
-
-                            new Country("New Zealand",
-                                    "BN",
-                                    "461308FD-59C6-4BE1-A3D0-FCA74BCD338F",
-                                    "NZ$",
-                                    "buyinvite.co.nz",
-                                    "EN",
-                                    "https://www.bn.mysaledev.com/",
-                                    "https://www.bn.mysaledev.com/",
-                                    "NZD",
-                                    "https://www.bn.mysaledev.com/")});
+                                    "https://www.ba.mysaledev.com/")});
         } else if (BuildConfig.FLAVOR.equals("ozsaleRC")) {
             populatePackageWithCountries(
                     new Country[]{
