@@ -122,10 +122,15 @@ public class GetContactHistoryResponse {
             linkAttachments = new LinkedList<>();
 
             for (Attachment attachment : attachments) {
-                if (attachment.isImage()) {
-                    imageAttachments.add(attachment);
-                } else {
-                    linkAttachments.add(attachment);
+                if (attachment.getType() != null &&
+                        !attachment.getType().isEmpty() &&
+                        attachment.getUrl() != null &&
+                        !attachment.getUrl().isEmpty()) {
+                    if (attachment.isImage()) {
+                        imageAttachments.add(attachment);
+                    } else {
+                        linkAttachments.add(attachment);
+                    }
                 }
             }
         }
@@ -150,6 +155,9 @@ public class GetContactHistoryResponse {
             }
 
             public boolean isImage() {
+                if (type == null || type.isEmpty()) {
+                    return false;
+                }
                 return type.toLowerCase().contains(ATTACHMENT_TYPE_IMAGE);
             }
         }
