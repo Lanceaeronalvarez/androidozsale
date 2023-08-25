@@ -1827,7 +1827,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mSearchFilterMvpView != null) {
             mSearchFilterMvpView.closeFacets();
         }
-        mSaleItemsRecyclerView.smoothScrollToPosition(position);
+
+        if (position >= 0 && position < mSaleItemsAdapter.getItemCount()) {
+            mSaleItemsRecyclerView.smoothScrollToPosition(position);
+        }
 
         SaleItemDetailsController.Parameters.FromProductList parameters = new SaleItemDetailsController.Parameters.FromProductList(
                 mSaleId, product, position, imagePlaceholderDrawable, imageUrl, mSalesOrigin, mEndDate);

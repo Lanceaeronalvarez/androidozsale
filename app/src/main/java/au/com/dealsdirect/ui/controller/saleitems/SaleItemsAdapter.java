@@ -24,7 +24,6 @@ import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 
 public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int SCREEN_TRANSITION_DELAY = 2000;
     private List<SaleItemProduct> mData;
     private int mColumnCount;
     private static final int FOOTER_VIEW = 1;
@@ -125,7 +124,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 saleItemViewHolder.setupViewHolderSkeleton(false);
                 final String imageUrl = product.getImages().isEmpty() ? "" : (product.getImages().size() < 4 ? product.getImages().get(0) : product.getImages().get(1));
                 saleItemViewHolder.setupViewHolder(product, imageUrl, helper.isProductInWishlist(product));
-                setupViewHolderWithPriceBlockClicks(saleItemViewHolder, imageUrl, product);
+                setupViewHolderWithPriceBlockClicks(saleItemViewHolder, imageUrl, product, position);
             }
         } else if (holder instanceof SaleItemFooterViewHolder) {
             final SaleItemFooterViewHolder footerViewHolder = (SaleItemFooterViewHolder) holder;
@@ -137,26 +136,29 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @SuppressLint("CheckResult")
-    public void setupViewHolderWithPriceBlockClicks(SaleItemViewHolder viewHolder, String imageUrl, SaleItemProduct product) {
+    public void setupViewHolderWithPriceBlockClicks(SaleItemViewHolder viewHolder, String imageUrl, SaleItemProduct product, final int index) {
         final String urlHigherRes = ImageUtils.removeResolutionModifierInImageUrl(imageUrl);
 
-        RxView.clicks(viewHolder.itemView)
-                .throttleFirst(SCREEN_TRANSITION_DELAY, TimeUnit.MILLISECONDS)
-                .subscribe(action -> {
-                    int[] originalPos = new int[2];
-                    viewHolder.itemView.getLocationOnScreen(originalPos);
+        viewHolder.itemView.setOnClickListener(v -> {
+            int[] originalPos = new int[2];
+            viewHolder.itemView.getLocationOnScreen(originalPos);
 
-                    helper.onItemClicked(
-                            viewHolder.getBindingAdapterPosition(),
-                            viewHolder.image.getDrawable(),
-                            urlHigherRes,
-                            product,
-                            originalPos[0],
-                            originalPos[1],
-                            viewHolder.itemView.getWidth(),
-                            viewHolder.itemView.getHeight()
-                    );
-                });
+            int pos = viewHolder.getBindingAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION) {
+                pos = index;
+            }
+
+            helper.onItemClicked(
+                    pos,
+                    viewHolder.image.getDrawable(),
+                    urlHigherRes,
+                    product,
+                    originalPos[0],
+                    originalPos[1],
+                    viewHolder.itemView.getWidth(),
+                    viewHolder.itemView.getHeight()
+            );
+        });
 
         viewHolder.setLikeButtonOnClickListener(v -> {
             viewHolder.setLiked(!viewHolder.isLiked());
