@@ -196,7 +196,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
         if (getResources().getBoolean(R.bool.is_ozsale_app)) {
             if (mLeftButton != null) {
                 mLeftButton.setVisibility(View.VISIBLE);
-                mLeftButton.setText(getResources().getString(R.string.log_in));
+                mLeftButton.setText(getResources().getString(R.string.myaccount_log_in));
             }
         }
 

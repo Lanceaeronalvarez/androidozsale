@@ -232,7 +232,7 @@
     <string name="join_now">Join Now</string>
     <string name="register_title">@string/join_now</string>
     <string name="already_a_member">Already a member?</string>
-    <string name="log_in">Log In</string>
+    <string name="myaccount_log_in">Log In</string>
     <string name="save">save</string>
     <string name="forgot_password_guide">To reset your account password, enter the email address and
         we will send you the instruction
@@ -738,7 +738,7 @@
     <string name="customers_also_bought">customers also bought</string>
     <string name="reviews">reviews</string>
     <string name="see_more">see more</string>
-    <string name="log_out">Log Out</string>
+    <string name="myaccount_log_out">Log Out</string>
     <string name="welcome_to_my_vouchers">welcome to my vouchers!</string>
     <string name="you_do_not_currently_have_any_vouchers">you do not currently have any vouchers</string>
     <string name="you_have_not_added_any_orders_for_return">you have not added any orders for return.</string>

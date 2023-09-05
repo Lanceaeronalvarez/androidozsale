@@ -116,7 +116,7 @@
                 fontPath="@string/font_app_semibold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/log_in"
+                android:text="@string/myaccount_log_in"
                 android:textSize="@dimen/text_size_headline3" />
 
             <RelativeLayout
