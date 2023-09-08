@@ -3,14 +3,11 @@
     <base-config>
         <trust-anchors>
             <certificates src="system" />
-            <certificates src="user" />
         </trust-anchors>
+        <debug-override>
+            <trust-anchors>
+                <certificates src="user" />
+            </trust-anchors>
+        </debug-override>
     </base-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">oz.mysaledev.com</domain>
-        <domain includeSubdomains="true">api.mysaledev.com</domain>
-        <domain includeSubdomains="true">phd1api.mysalecx-dev.com</domain>
-        <domain includeSubdomains="true">c1.mysalec.com</domain>
-        <domain includeSubdomains="true">gui-as-pre.mysalegenie-dev.com</domain>
-    </domain-config>
 </network-security-config>

@@ -27,7 +27,6 @@ import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandab
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +64,6 @@ import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -723,7 +721,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     private void setupLoginButton(boolean isLoggedIn) {
         if (mRightToolbarButton != null) {
-            mRightToolbarButton.setText(isLoggedIn ? mActivity.getResources().getString(R.string.log_out) : mActivity.getResources().getString(R.string.log_in));
+            mRightToolbarButton.setText(isLoggedIn ? mActivity.getResources().getString(R.string.myaccount_log_out) : mActivity.getResources().getString(R.string.myaccount_log_in));
         }
     }
 

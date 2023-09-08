@@ -1,0 +1,31 @@
+PROJECT_DIR=$(dirname $(dirname "$0"))/
+OUTPUT_DIR="$PROJECT_DIR"apkbuilds/
+
+error=0
+
+flag_error() {
+     if [ $error -eq 0 ]; then
+          if [ $1 -ne 0 ]; then               
+              error=1
+          fi
+     fi
+}
+
+print_green(){
+    printf "\e[1;32m$1\e[0m"
+}
+
+print_blue(){
+    printf "\e[1;34m$1\e[0m"
+}
+
+print_red(){
+    printf "\e[1;31m$1\e[0m"
+}
+
+print_yellow(){
+    printf "\e[1;33m$1\e[0m"
+}
+
+expectedVersionName="7.1.1"
+expectedVersionCode="430"

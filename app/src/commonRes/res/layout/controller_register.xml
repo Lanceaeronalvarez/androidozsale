@@ -360,7 +360,7 @@
                             android:clickable="true"
                             android:paddingEnd="0dp"
                             android:paddingStart="@dimen/margin_extra_small"
-                            android:text="@string/log_in"
+                            android:text="@string/myaccount_log_in"
                             android:textAllCaps="true"
                             android:textColor="@color/bg_button_default"
                             android:textSize="@dimen/text_size_caption1"

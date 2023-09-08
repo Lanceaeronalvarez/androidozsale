@@ -19,7 +19,7 @@
     <string name="error">error</string>
     <string name="dummy_text">dummy text</string>
 
-    <string name="log_in">Log In</string>
+    <string name="myaccount_log_in">Log In</string>
     <string name="login">Login</string>
     <string name="login_title">Login</string>
     <string name="sign_up">Sign Up</string>
