@@ -1,37 +1,20 @@
-PROJECT_DIR='/Users/nicolluisyumang/Desktop/AndroidDealsDirect/'
-OUTPUT_DIR='/Users/nicolluisyumang/Desktop/'
+source $(dirname $0)/common_var.txt
 
 flavorName=dealsDirectRC
 buildTypeAssemble=DealsDirectRCRelease
 defaultCountry=Australia
-expectedVersionName="7.1.0"
-expectedVersionCode="428"
-
-print_green(){
-    printf "\e[1;32m$1\e[0m"
-}
-
-print_blue(){
-    printf "\e[1;34m$1\e[0m"
-}
-
-print_red(){
-    printf "\e[1;31m$1\e[0m"
-}
-
-print_yellow(){
-    printf "\e[1;33m$1\e[0m"
-}
 
 print_yellow "\n\nSTARTING AUTOMATION"
 
 #Start Clean Process
 print_green "\n\n\nClean app...\n"
 ./gradlew clean
+flag_error $?
 
 # Install APK on device / emulator
 print_blue "installing Release build...\n"
 ./gradlew installdealsDirectRCRelease
+flag_error $?
 print_blue "\n\n\n Done Installing\n"
 
 #Launch Main Activity
@@ -46,6 +29,7 @@ if [ $expectedCompileSDK = "$currentCompileSDK" ]; then
 print_green "\nexpected: $expectedCompileSDK and current: $currentCompileSDK is the same\n"
 else
 print_red "\nexpected: $expectedCompileSDK and current: $currentCompileSDK is not the same\n"
+flag_error 1
 fi
 
 # Checking min sdk version
@@ -56,6 +40,7 @@ if [ $expectedMinSDK = "$currentMinSDK" ]; then
 print_green "\nexpected: $expectedMinSDK and current: $currentMinSDK is the same\n"
 else
 print_red "\nexpected: $expectedMinSDK and current: $currentMinSDK is not the same\n"
+flag_error 1
 fi
 
 # Checking target sdk version
@@ -66,6 +51,7 @@ if [ $expectedTargetSDK = "$currentTargetSDK" ]; then
 print_green "\nexpected: $expectedTargetSDK and current: $currentTargetSDK is the same\n"
 else
 print_red "\nexpected: $expectedTargetSDK and current: $currentTargetSDK is not the same\n"
+flag_error 1
 fi
 
 # Checking Build tools version
@@ -76,6 +62,7 @@ if [ $expectedBuildToolsVersion = "$currentBuildToolsVersion" ]; then
 print_green "\nexpected: $expectedBuildToolsVersion and current: $currentBuildToolsVersion is the same\n"
 else
 print_red "\nexpected: $expectedBuildToolsVersion and current: $currentBuildToolsVersion is not the same\n"
+flag_error 1
 fi
 
 # Checking Support library
@@ -86,6 +73,7 @@ if [ $expectedSupportLibrary = "$currentSupportLibrary" ]; then
 print_green "\nexpected: $expectedSupportLibrary and current: $currentSupportLibrary is the same\n"
 else
 print_red "\nexpected: $expectedSupportLibrary and current: $currentSupportLibrary is not the same\n"
+flag_error 1
 fi
 
 #Checking Version Name
@@ -95,6 +83,7 @@ if [ $expectedVersionName = "$currentVersionName" ]; then
 print_green "\nexpected: $expectedVersionName and current: $currentVersionName is the same\n"
 else
 print_red "\nexpected: $expectedVersionName and current: $currentVersionName is not the same\n"
+flag_error 1
 fi
 
 # Checking Version Code
@@ -104,6 +93,7 @@ if [ $expectedVersionCode = "$currentVersionCode" ]; then
 print_green "\nexpected: $expectedVersionCode and current: $currentVersionCode is the same\n"
 else
 print_red "\nexpected: $expectedVersionCode and current: $currentVersionCode is not the same\n"
+flag_error 1
 fi
 
 # Check Application Id
@@ -114,6 +104,7 @@ if [ $expectedAppId = "$currentAppId" ]; then
 print_green "\nexpected: $expectedAppId and current: $currentAppId is the same\n"
 else
 print_red "\nexpected: $expectedAppId and current: $currentAppId is not the same\n"
+flag_error 1
 fi
 
 # Checking App name
@@ -124,6 +115,7 @@ if [[ $expectedAppName = "$currentAppName" ]]; then
 print_green "\nexpected: $expectedAppName and current: $currentAppName is the same\n"
 else
 print_red "\nexpected: $expectedAppName and current: $currentAppName is not the same\n"
+flag_error 1
 fi
 
 # Checking Facebook app Id
@@ -134,6 +126,7 @@ if [[ $currentFbAppId -eq $expectedFbAppId ]]; then
 print_green "\nexpected: $expectedFbAppId and current: $currentFbAppId is the same\n"
 else
 print_red "\nexpected: $expectedFbAppId and current: $currentFbAppId is not the same\n"
+flag_error 1
 fi
 
 # Checking Facebook app secret
@@ -144,6 +137,7 @@ if [ $expectedFacebookAppSecret = "$currentFacebookAppSecret" ]; then
 print_green "\nexpected: $expectedFacebookAppSecret and current: $currentFacebookAppSecret is the same\n"
 else
 print_red "\nexpected: $expectedFacebookAppSecret and current: $currentFacebookAppSecret is not the same\n"
+flag_error 1
 fi
 
 # Checking New Relic app token
@@ -154,6 +148,7 @@ if [ $expectedNewRelicToken = "$currentNewRelicToken" ]; then
 print_green "\nexpected: $expectedNewRelicToken and current: $currentNewRelicToken is the same\n"
 else
 print_red "\nexpected: $expectedNewRelicToken and current: $currentNewRelicToken is not the same\n"
+flag_error 1
 fi
 
 # Check Build Type
@@ -169,6 +164,7 @@ if [ $expectedAdmobId = "$currentAdmobId" ]; then
 print_green "\nexpected: $expectedAdmobId and current: $currentAdmobId is the same\n"
 else
 print_red "\nexpected: $expectedAdmobId and current: $currentAdmobId is not the same\n"
+flag_error 1
 fi
 
 # Check Admob banners id
@@ -179,6 +175,7 @@ if [ $expectedAdmobBanners = "$currentAdmobBanners" ]; then
 print_green "\nexpected: $expectedAdmobBanners and current: $currentAdmobBanners is the same\n"
 else
 print_red "\nexpected: $expectedAdmobBanners and current: $currentAdmobBanners is not the same\n"
+flag_error 1
 fi
 
 # Check Admob products id
@@ -189,6 +186,7 @@ if [ $expectedAdmobProducts = "$currentAdmobProducts" ]; then
 print_green "\nexpected: $expectedAdmobProducts and current: $currentAdmobProducts is the same\n"
 else
 print_red "\nexpected: $expectedAdmobProducts and current: $currentAdmobProducts is not the same\n"
+flag_error 1
 fi
 
 # Check Admob account id
@@ -199,6 +197,7 @@ if [ $expectedAdmobAccount = "$currentAdmobAccount" ]; then
 print_green "\nexpected: $expectedAdmobAccount and current: $currentAdmobAccount is the same\n"
 else
 print_red "\nexpected: $expectedAdmobAccount and current: $currentAdmobAccount is not the same\n"
+flag_error 1
 fi
 
 #Get Legacy Version after Main Activity launch
@@ -209,6 +208,7 @@ if [ $expectedLegacyVersion = "$currentLegacyVersion" ]; then
 print_green "\nexpected: $expectedLegacyVersion and current: $currentLegacyVersion is the same\n"
 else
 print_red "\nexpected: $expectedLegacyVersion and current: $currentLegacyVersion is not the same\n"
+flag_error 1
 fi
 
 #Check country id
@@ -219,6 +219,7 @@ if [ $expectedCountryId = "$currentCountryId" ]; then
 print_green "\nexpected: $expectedCountryId and current: $currentCountryId is the same\n"
 else
 print_red "\nexpected: $expectedCountryId and current: $currentCountryId is not the same\n"
+flag_error 1
 fi
 
 #Check account id
@@ -229,6 +230,7 @@ if [ $expectedAccountId = "$currentAccountId" ]; then
 print_green "\nexpected: $expectedAccountId and current: $currentAccountId is the same\n"
 else
 print_red "\nexpected: $expectedAccountId and current: $currentAccountId is not the same\n"
+flag_error 1
 fi
 
 #Check genie api root
@@ -239,6 +241,7 @@ if [ $expectedGenieRoot = "$currentGenieRoot" ]; then
 print_green "\nexpected: $expectedGenieRoot and current: $currentGenieRoot is the same\n"
 else
 print_red "\nexpected: $expectedGenieRoot and current: $currentGenieRoot is not the same\n"
+flag_error 1
 fi
 
 #Check currency code
@@ -249,6 +252,7 @@ if [ $expectedCurrencyCode = "$currenctCurrencyCode" ]; then
 print_green "\nexpected: $expectedCurrencyCode and current: $currenctCurrencyCode is the same\n"
 else
 print_red "\nexpected: $expectedCurrencyCode and current: $currenctCurrencyCode is not the same\n"
+flag_error 1
 fi
 
 # Check recaptcha
@@ -259,10 +263,18 @@ if [ $expectedRecaptchaKey = "$currentRecaptchaKey" ]; then
 print_green "\nexpected: $expectedRecaptchaKey and current: $currentRecaptchaKey is the same\n"
 else
 print_red "\nexpected: $expectedRecaptchaKey and current: $currentRecaptchaKey is not the same\n"
+flag_error 1
 fi
 
 #Copy APK to output folder
-cp "$PROJECT_DIR"app/build/outputs/apk/"$flavorName"/release/app-"$flavorName"-release.apk $OUTPUT_DIR
+cp "$PROJECT_DIR"app/build/outputs/apk/"$flavorName"/release/app-"$flavorName"-release.apk "$OUTPUT_DIR"
+flag_error $?
 print_blue "\n\n\n Finished Copying APK to output directory\n"
 
+if [ $error -eq 0 ]; then
 print_yellow "\n\nFINISHED AUTOMATION\n"
+else
+print_yellow "\n\nFINISHED AUTOMATION WITH ERROR(S)\n"
+fi
+
+exit $error
