@@ -76,7 +76,7 @@ public interface CheckoutMvpView extends MvpView {
 
     Router getDisplayRouter();
 
-    void initializeVisaCheckout();
+//    void initializeVisaCheckout();
 
     void setIsShipmentAvailable(boolean isShipmentAvailable);
 

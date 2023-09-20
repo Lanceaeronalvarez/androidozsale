@@ -29,12 +29,57 @@ public class CreatePaymentTransaction {
             private String deviceData;
             private String provider;
 
-            public Request(String paymentType, String paymentNonce, String paymentToken, String deviceData, String provider) {
+            private String selectedPaymentOption;
+
+            public Request(){
+            }
+
+            public String getPaymentType() {
+                return paymentType;
+            }
+
+            public void setPaymentType(String paymentType) {
                 this.paymentType = paymentType;
+            }
+
+            public String getPaymentNonce() {
+                return paymentNonce;
+            }
+
+            public void setPaymentNonce(String paymentNonce) {
                 this.paymentNonce = paymentNonce;
+            }
+
+            public String getPaymentToken() {
+                return paymentToken;
+            }
+
+            public void setPaymentToken(String paymentToken) {
                 this.paymentToken = paymentToken;
+            }
+
+            public String getDeviceData() {
+                return deviceData;
+            }
+
+            public void setDeviceData(String deviceData) {
                 this.deviceData = deviceData;
+            }
+
+            public String getProvider() {
+                return provider;
+            }
+
+            public void setProvider(String provider) {
                 this.provider = provider;
+            }
+
+            public String getSelectedPaymentOption() {
+                return selectedPaymentOption;
+            }
+
+            public void setSelectedPaymentOption(String selectedPaymentOption) {
+                this.selectedPaymentOption = selectedPaymentOption;
             }
         }
     }

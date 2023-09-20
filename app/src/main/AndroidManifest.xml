@@ -100,12 +100,7 @@
                     tools:ignore="AppLinkUrlError" />
 
             </intent-filter>
-        </activity>
 
-        <activity
-            android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
-            android:launchMode="singleTask"
-            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="${applicationId}.braintree" />
@@ -114,7 +109,6 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-
 
         <!-- [START gcm_service] -->
         <meta-data

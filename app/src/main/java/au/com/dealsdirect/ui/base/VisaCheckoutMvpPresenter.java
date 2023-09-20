@@ -5,7 +5,7 @@ import com.visa.checkout.VisaPaymentSummary;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
 
 public interface VisaCheckoutMvpPresenter<V extends VisaCheckoutMvpView> extends MvpPresenter<V> {
-
+/*
     void setupVisaCheckout(boolean isFromCheckout);
 
     void loginWithVisaCheckout();
@@ -23,4 +23,6 @@ public interface VisaCheckoutMvpPresenter<V extends VisaCheckoutMvpView> extends
     boolean isVisaCheckoutEnabled();
 
     void initializeBraintree();
+
+ */
 }

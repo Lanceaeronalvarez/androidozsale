@@ -584,6 +584,13 @@ repositories {
     maven {
         url 'https://x.klarnacdn.net/mobile-sdk/'
     }
+    maven {
+        url "https://cardinalcommerceprod.jfrog.io/artifactory/android"
+        credentials {
+            username 'braintree_team_sdk'
+            password 'AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp'
+        }
+    }
 }
 
 dependencies {
@@ -671,7 +678,9 @@ dependencies {
     implementation "com.shawnlin:number-picker:$rootProject.numberPickerVersion"
 
     // braintree
-    implementation "com.braintreepayments.api:braintree:$rootProject.braintreeVersion"
+    implementation "com.braintreepayments.api:card:$rootProject.braintreeVersion"
+    implementation "com.braintreepayments.api:three-d-secure:$rootProject.braintreeVersion"
+    implementation "com.braintreepayments.api:paypal:$rootProject.braintreeVersion"
     implementation "com.braintreepayments.api:data-collector:$rootProject.braintreeVersion"
 
     // facebook

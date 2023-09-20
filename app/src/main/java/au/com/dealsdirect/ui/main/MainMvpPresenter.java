@@ -48,7 +48,7 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void callGetPublicPaymentToken();
 
-    void fetchBTAuthorization();
+    void fetchBraintreeClientToken();
 
     void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce, String paymentToken, String provider);
 

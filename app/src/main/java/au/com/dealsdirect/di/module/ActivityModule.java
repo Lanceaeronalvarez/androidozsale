@@ -5,8 +5,6 @@ import android.content.Context;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.braintreepayments.api.BraintreeFragment;
-import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.profiler.ProfilerInterface;
 
@@ -79,15 +77,5 @@ public class ActivityModule {
     @PerActivity
     ProfilerInterface provideProfiler() {
         return new Profiler();
-    }
-
-    @Provides
-    @Singleton
-    BraintreeFragment provideBrainTreeFragment(AppCompatActivity activity, String authorization) {
-        try {
-            return BraintreeFragment.newInstance(activity, authorization);
-        } catch (InvalidArgumentException e) {
-            return null;
-        }
     }
 }

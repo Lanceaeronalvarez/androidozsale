@@ -82,11 +82,11 @@ public class LoginPresenterTest {
         doReturn(Observable.just(loginResponse))
                 .when(mMockDataManager).callLoginViaEmail(requestCaptor.capture());
 
-        mPresenter.loginViaEmail(userName, password);
+        mPresenter.loginViaEmail(null, userName, password);
         mTestScheduler.triggerActions();
 
         verify(mMockDataManager).acknowledgeAuth(loginResponse.getTicket());
-        verify(mMockLoginView).showLoginSuccessful(loginResponse.getTicket());
+        verify(mMockLoginView).showLoginSuccessful(loginResponse.getTicket(), false);
     }
 
     @Test
