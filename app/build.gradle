@@ -59,8 +59,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -87,8 +87,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -110,8 +110,8 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -139,8 +139,8 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -162,8 +162,8 @@ android {
         }
 
         ooRC {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "au.com.oo"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -190,8 +190,8 @@ android {
         }
 
         ooTest {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "au.com.oo.test"
 
             buildConfigField "String", "APP_NAME", "\"oo\""
@@ -213,8 +213,8 @@ android {
         }
 
         topbuyRC {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "au.com.topbuy"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -241,8 +241,8 @@ android {
         }
 
         topbuyTest {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "au.com.topbuy.test"
 
             buildConfigField "String", "APP_NAME", "\"topbuy\""
@@ -264,8 +264,8 @@ android {
         }
 
         ozsaleRC {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -293,8 +293,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "au.com.ozsale.test"
 
             ext.appName = "OZSALE Test"
@@ -321,8 +321,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -350,8 +350,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "sg.com.singsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -373,8 +373,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -402,8 +402,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "nz.co.nzsaleTest"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -426,8 +426,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -454,8 +454,8 @@ android {
         }
 
         mysaleTest {
-            versionCode 430
-            versionName "7.1.1"
+            versionCode 432
+            versionName "8.0.0"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -584,17 +584,24 @@ repositories {
     maven {
         url 'https://x.klarnacdn.net/mobile-sdk/'
     }
+    maven {
+        url "https://cardinalcommerceprod.jfrog.io/artifactory/android"
+        credentials {
+            username 'braintree_team_sdk'
+            password 'AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp'
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.databinding:databinding-runtime:8.0.1'
-    implementation 'androidx.databinding:databinding-adapters:8.0.1'
+    implementation 'androidx.databinding:databinding-runtime:8.1.1'
+    implementation 'androidx.databinding:databinding-adapters:8.1.1'
 
     // android support libraries
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
@@ -671,7 +678,9 @@ dependencies {
     implementation "com.shawnlin:number-picker:$rootProject.numberPickerVersion"
 
     // braintree
-    implementation "com.braintreepayments.api:braintree:$rootProject.braintreeVersion"
+    implementation "com.braintreepayments.api:card:$rootProject.braintreeVersion"
+    implementation "com.braintreepayments.api:three-d-secure:$rootProject.braintreeVersion"
+    implementation "com.braintreepayments.api:paypal:$rootProject.braintreeVersion"
     implementation "com.braintreepayments.api:data-collector:$rootProject.braintreeVersion"
 
     // facebook
@@ -710,7 +719,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-messaging:23.2.1'
-    implementation 'com.google.firebase:firebase-crashlytics:18.4.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.4.1'
 
     //VISA CHECKOUT
     implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
@@ -720,7 +729,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
 
-    implementation 'com.google.android.gms:play-services-ads:22.0.0'
+    implementation 'com.google.android.gms:play-services-ads:22.4.0'
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // reCAPTCHA
@@ -728,7 +737,7 @@ dependencies {
 
     implementation 'com.stripe:stripe-android:20.23.1'
 
-    implementation 'com.google.android.gms:play-services-wallet:19.1.0'
+    implementation 'com.google.android.gms:play-services-wallet:19.2.1'
 
     // guava
     implementation "com.google.guava:guava:$rootProject.guavaVersion"

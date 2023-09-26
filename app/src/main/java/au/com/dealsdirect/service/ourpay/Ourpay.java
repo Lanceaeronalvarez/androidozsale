@@ -1,6 +1,6 @@
 package au.com.dealsdirect.service.ourpay;
 
-import com.braintreepayments.api.models.PaymentMethodNonce;
+//import com.braintreepayments.api.models.PaymentMethodNonce;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -61,7 +61,7 @@ public class Ourpay {
     private int mTermsAndConditionsCheckboxState = 0;
     private int mState = 0;
     public OurpayMode mMode = OurpayMode.UNAVAILABLE;
-    private PaymentMethodNonce mPaymentMethodNonce;
+//    private PaymentMethodNonce mPaymentMethodNonce;
     private String mTermsAndConditionsText = "";
     private PhoneVerification mOurpayPhoneVerification;
     private String mDescription = "";
@@ -184,13 +184,13 @@ public class Ourpay {
         mState = state;
     }
 
-    public PaymentMethodNonce getPaymentMethodNonce() {
-        return mPaymentMethodNonce;
-    }
+//    public PaymentMethodNonce getPaymentMethodNonce() {
+//        return mPaymentMethodNonce;
+//    }
 
-    public void setPaymentMethodNonce(PaymentMethodNonce paymentMethodNonce) {
-        mPaymentMethodNonce = paymentMethodNonce;
-    }
+//    public void setPaymentMethodNonce(PaymentMethodNonce paymentMethodNonce) {
+//        mPaymentMethodNonce = paymentMethodNonce;
+//    }
 
     public String getTermsAndConditionsText() {
         return mTermsAndConditionsText;

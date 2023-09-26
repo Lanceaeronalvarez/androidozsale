@@ -347,10 +347,10 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         return mCheckoutDetailRouter;
     }
 
-    @Override
-    public void initializeVisaCheckout() {
-
-    }
+//    @Override
+//    public void initializeVisaCheckout() {
+//
+//    }
 
     private void showNoCartItemsLayout() {
         mNoCartItemsLayout.setVisibility(View.VISIBLE);

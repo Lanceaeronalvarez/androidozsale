@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
+import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.main.Settings;
@@ -32,12 +33,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-
-/**
- * Created by smartwave on 12/02/2018.
- */
-
-public class PasswordVerificationController extends VisaCheckoutController implements PasswordVerificationMvpView {
+// NOTE: Needs VCO to work, so it's disabled for now
+public class PasswordVerificationController extends BaseController implements PasswordVerificationMvpView {
 
     public static PasswordVerificationController newInstance() {
         return new PasswordVerificationController(
@@ -78,7 +75,7 @@ public class PasswordVerificationController extends VisaCheckoutController imple
         View view = inflater.inflate(R.layout.controller_password_verification, container, false);
 
         getControllerComponent().inject(this);
-        mVcoPresenter.onAttach(this);
+//        mVcoPresenter.onAttach(this);
         return view;
     }
 
@@ -113,7 +110,7 @@ public class PasswordVerificationController extends VisaCheckoutController imple
                     }
 
                     hideKeyboard();
-                    performPasswordVerification();
+//                    performPasswordVerification();
 
                 });
     }
@@ -124,15 +121,15 @@ public class PasswordVerificationController extends VisaCheckoutController imple
         mSubmitButtonClickListener.dispose();
     }
 
-    private void performPasswordVerification() {
-        AppLogger.d("VC_performPasswordVerification", "verifying password");
-        mVcoPresenter.executeLoginVisa(mRequestData, mPassword.getText().toString());
-    }
+//    private void performPasswordVerification() {
+//        AppLogger.d("VC_performPasswordVerification", "verifying password");
+//        mVcoPresenter.executeLoginVisa(mRequestData, mPassword.getText().toString());
+//    }
 
-    @Override
-    public void showLoginVisaSuccess(String loginTicket) {
-        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.LOGIN);
-    }
+//    @Override
+//    public void showLoginVisaSuccess(String loginTicket) {
+//        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.LOGIN);
+//    }
 
     @OnClick(R.id.partial_toolbar_left_view)
     void backPressed(){

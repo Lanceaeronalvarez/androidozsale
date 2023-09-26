@@ -18,11 +18,11 @@ import androidx.annotation.Nullable;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
-import com.braintreepayments.api.models.BraintreeRequestCodes;
+//import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
 import com.google.gson.Gson;
-import com.visa.checkout.VisaCheckoutSdk;
+//import com.visa.checkout.VisaCheckoutSdk;
 
 import java.util.HashMap;
 
@@ -33,6 +33,7 @@ import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
+import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginController;
@@ -57,7 +58,7 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
  * Created by Ayi on 05/06/2017.
  */
 
-public class RegisterController extends VisaCheckoutController implements RegisterMvpView {
+public class RegisterController extends BaseController implements RegisterMvpView {
 
     private static final boolean SHOULD_SHOW_LEGALITIES = false;
 
@@ -160,9 +161,9 @@ public class RegisterController extends VisaCheckoutController implements Regist
 
         getControllerComponent().inject(this);
         registerForActivityResult(CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode());
-        registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
+//        registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
         mCallbackManager = CallbackManager.Factory.create();
-        mVcoPresenter.onAttach(this);
+//        mVcoPresenter.onAttach(this);
         mPresenter.onAttach(this);
 
         return view;
@@ -190,8 +191,9 @@ public class RegisterController extends VisaCheckoutController implements Regist
         //mPresenter.loadSample(new SampleRequest());
 
         mToolBarTitle.setText(getResources().getString(R.string.register_title));
-        mVcoButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
-                View.GONE);
+//        mVcoButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
+//                View.GONE);
+        mVcoButton.setVisibility(View.GONE);
 
         if (getResources().getBoolean(R.bool.is_ozsale_app)) {
             if (mLeftButton != null) {
@@ -207,9 +209,9 @@ public class RegisterController extends VisaCheckoutController implements Regist
         }
         mSignUpButton.setOnClickListener(v -> onSignUpClicked());
 
-        if (mVcoPresenter.isVisaCheckoutEnabled()) {
-            mVcoPresenter.setupVisaCheckout(false);
-        }
+//        if (mVcoPresenter.isVisaCheckoutEnabled()) {
+//            mVcoPresenter.setupVisaCheckout(false);
+//        }
 
         if (mLegalitiesContainer != null && SHOULD_SHOW_LEGALITIES) {
             mAboutUsTextView.setOnClickListener(v -> onLegalitiesClicked(BundleKeys.TEMPLATE_KEY_ABOUT_US, getString(R.string.account_about_us)));
@@ -242,15 +244,15 @@ public class RegisterController extends VisaCheckoutController implements Regist
             mEmailsToggle.setCheckedTogglePosition(0);
         }
 
-        mVcoButton.setOnClickListener(action -> {
+        /*mVcoButton.setOnClickListener(action -> {
             onVisaCheckoutButtonClicked();
-        });
+        });*/
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        if (requestCode == BraintreeRequestCodes.VISA_CHECKOUT) {
+        /*if (requestCode == BraintreeRequestCodes.VISA_CHECKOUT) {
             AppLogger.d("VC_onActivityResult", "Result got back from Visa Checkout SDK");
             String msg = "";
 
@@ -268,7 +270,7 @@ public class RegisterController extends VisaCheckoutController implements Regist
                 AppLogger.d("VC_onActivityResult", msg);
                 onError(msg);
             }
-        }
+        }*/
 
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
@@ -374,49 +376,49 @@ public class RegisterController extends VisaCheckoutController implements Regist
         mSignUpButton.setEnabled(true);
     }
 
-    @Override
-    public void showPasswordVerification(LoginVisa.RequestValue.Data requestData, boolean isAccountExists, String accountEmail) {
-        BundleBuilder bundleBuilder = new BundleBuilder(new Bundle());
-        bundleBuilder.putBoolean(BundleKeys.KEY_ACCOUNT_EXISTS, isAccountExists);
-        bundleBuilder.putString(BundleKeys.KEY_ACCOUNT_EMAIL, accountEmail);
-        bundleBuilder.putString(BundleKeys.KEY_LOGIN_VISA_REQUEST_DATA, new Gson().toJson(requestData));
+//    @Override
+//    public void showPasswordVerification(LoginVisa.RequestValue.Data requestData, boolean isAccountExists, String accountEmail) {
+//        BundleBuilder bundleBuilder = new BundleBuilder(new Bundle());
+//        bundleBuilder.putBoolean(BundleKeys.KEY_ACCOUNT_EXISTS, isAccountExists);
+//        bundleBuilder.putString(BundleKeys.KEY_ACCOUNT_EMAIL, accountEmail);
+//        bundleBuilder.putString(BundleKeys.KEY_LOGIN_VISA_REQUEST_DATA, new Gson().toJson(requestData));
+//
+//        GateKeeper.push(getRouter(), GateKeeper.Destination.PASSWORD_VERIFICATION, bundleBuilder.build(), new HorizontalChangeHandler(), new HorizontalChangeHandler());
+//    }
 
-        GateKeeper.push(getRouter(), GateKeeper.Destination.PASSWORD_VERIFICATION, bundleBuilder.build(), new HorizontalChangeHandler(), new HorizontalChangeHandler());
-    }
 
+//    @Override
+//    public void showLoginVisaSuccess(String loginTicket) {
+//        isRegisterSuccess = true;
+//        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
+//    }
 
-    @Override
-    public void showLoginVisaSuccess(String loginTicket) {
-        isRegisterSuccess = true;
-        mActivity.loginSuccessHandler(getRouter(), AppConstants.POP_FLAG.ROOT, AppConstants.AUTH_FLAG.REGISTER);
-    }
-
-    @Override
-    public void onVisaCheckoutButtonClicked() {
-        mRegisterMethod = VCO;
-
-        if (isProcessingVco) {
-            isProcessingVco = false;
-        }
-
-        if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
-                (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {
-
-            String templateTextError = mPresenter.getGdprTemplateTexts(
-                    AppPreferencesHelper.CONSENT_WITH_REGISTRATION_TERMS_WARNING);
-
-            if (templateTextError == null || templateTextError.equals("")) {
-                onError(R.string.please_accept_terms_and_conditions);
-            } else {
-                onError(templateTextError);
-            }
-
-        } else if (mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == -1) {
-            onError(R.string.please_select_an_option_for_promotional_emails);
-        } else {
-            mVcoPresenter.loginWithVisaCheckout();
-        }
-    }
+//    @Override
+//    public void onVisaCheckoutButtonClicked() {
+//        mRegisterMethod = VCO;
+//
+//        if (isProcessingVco) {
+//            isProcessingVco = false;
+//        }
+//
+//        if ((mTermsCheck != null && !mTermsCheck.isChecked()) ||
+//                (mTermsToggle != null && mTermsToggle.getCheckedTogglePosition() != 0)) {
+//
+//            String templateTextError = mPresenter.getGdprTemplateTexts(
+//                    AppPreferencesHelper.CONSENT_WITH_REGISTRATION_TERMS_WARNING);
+//
+//            if (templateTextError == null || templateTextError.equals("")) {
+//                onError(R.string.please_accept_terms_and_conditions);
+//            } else {
+//                onError(templateTextError);
+//            }
+//
+//        } else if (mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == -1) {
+//            onError(R.string.please_select_an_option_for_promotional_emails);
+//        } else {
+//            mVcoPresenter.loginWithVisaCheckout();
+//        }
+//    }
 
     private void onLegalitiesClicked(String key, String title) {
         Bundle bundle = new BundleBuilder(new Bundle())

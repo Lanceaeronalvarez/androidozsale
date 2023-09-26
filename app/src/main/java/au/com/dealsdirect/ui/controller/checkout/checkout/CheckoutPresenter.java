@@ -470,7 +470,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
             getMvpView().showSummaryDetails(mappedValues.getSummary());
 
-            getMvpView().initializeVisaCheckout();
+//            getMvpView().initializeVisaCheckout();
 
             getMvpView().showCartDetails(mappedValues.getMappedShipments());
         } else {
@@ -578,7 +578,8 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Override
     public boolean isVcoEnabled() {
-        return getDataManager().getIsVisaCheckoutEnabled();
+        //return getDataManager().getIsVisaCheckoutEnabled();
+        return false; // VCO not available with Braintree 4
     }
 
     @Override

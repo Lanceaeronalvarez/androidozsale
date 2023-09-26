@@ -24,7 +24,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.braintreepayments.api.models.BraintreeRequestCodes;
+//import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.braintreepayments.cardform.OnCardFormScanListener;
 import com.braintreepayments.cardform.OnCardFormSubmitListener;
 import com.braintreepayments.cardform.utils.CardType;
@@ -34,7 +34,7 @@ import com.mysale.genie.utility.RxBus;
 import com.stripe.android.model.CardBrand;
 import com.stripe.android.view.CardNumberEditText;
 import com.stripe.android.view.CvcEditText;
-import com.visa.checkout.VisaCheckoutSdk;
+//import com.visa.checkout.VisaCheckoutSdk;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -49,15 +49,14 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BaseActivity;
+import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
-import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
-import au.com.dealsdirect.ui.main.FetchTokenHandler;
-import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ExpiryDateEditText;
@@ -73,7 +72,7 @@ import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetails
  * Created by smartwave on 29/06/2017.
  */
 
-public class AddPaymentController extends VisaCheckoutController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
+public class AddPaymentController extends BaseController implements AddPaymentMvpView, OnCardFormSubmitListener, CardEditText.OnCardTypeChangedListener, OnCardFormScanListener {
 
     public static abstract class Parameters {
         private Parameters() {
@@ -220,7 +219,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         View view = inflater.inflate(R.layout.controller_add_payment, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mVcoPresenter.onAttach(this);
+//        mVcoPresenter.onAttach(this);
 
         mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(CheckoutController.class.getName());
         return view;
@@ -252,13 +251,14 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mPayButton.setText("Add");
         mPayButton.setBackground(getResources().getDrawable(R.drawable.bg_button_login));
 
-        mVcoButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
-                View.GONE);
+//        mVcoButton.setVisibility(mVcoPresenter.isVisaCheckoutEnabled() ? View.VISIBLE :
+//                View.GONE);
+        mVcoButton.setVisibility(View.GONE);
 
         if (mActivity.isBraintreeInitialized()) {
             showPaymentButtons();
         } else {
-            mActivity.fetchAuthorization(new FetchTokenHandler() {
+            mActivity.fetchBraintreeAuthorization(new FetchBraintreeClientTokenHandler() {
                 @Override
                 public void onSuccess() {
                     showPaymentButtons();
@@ -275,9 +275,9 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         mAddButton.setVisibility(isFromCart ? View.GONE : View.VISIBLE);
 
         if (isFromCart) {
-            if (mVcoPresenter.isVisaCheckoutEnabled()) {
-                mVcoPresenter.setupVisaCheckout(true);
-            }
+//            if (mVcoPresenter.isVisaCheckoutEnabled()) {
+//                mVcoPresenter.setupVisaCheckout(true);
+//            }
 
             mMasterpassButton.setOnClickListener(action -> {
                 onMasterpassButtonClick();
@@ -338,7 +338,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
         if (mActivity.isBraintreeInitialized()) {
             showPaymentButtons();
         } else {
-            mActivity.fetchAuthorization(new FetchTokenHandler() {
+            mActivity.fetchBraintreeAuthorization(new FetchBraintreeClientTokenHandler() {
                 @Override
                 public void onSuccess() {
                     showPaymentButtons();
@@ -363,12 +363,12 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             mPaypalCreditButton.setVisibility(View.GONE);
         }
 
-        mVcoButton.setOnClickListener(action -> {
-            if (isProcessingVco) {
-                isProcessingVco = false;
-            }
-            onVisaCheckoutButtonClicked();
-        });
+//        mVcoButton.setOnClickListener(action -> {
+//            if (isProcessingVco) {
+//                isProcessingVco = false;
+//            }
+//            onVisaCheckoutButtonClicked();
+//        });
 
 
         mStripeCardNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, CardBrand.Unknown.getIcon(), 0);
@@ -462,11 +462,11 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 mMasterpassButton.setVisibility(View.GONE);
             }
 
-            if (paymentOptions.contains(PaymentOption.VISACHECKOUT) && mVcoPresenter.isVisaCheckoutEnabled()) {
-                mVcoButton.setVisibility(View.VISIBLE);
-            } else {
+//            if (paymentOptions.contains(PaymentOption.VISACHECKOUT) && mVcoPresenter.isVisaCheckoutEnabled()) {
+//                mVcoButton.setVisibility(View.VISIBLE);
+//            } else {
                 mVcoButton.setVisibility(View.GONE);
-            }
+//            }
         }
     }
 
@@ -622,7 +622,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == BraintreeRequestCodes.VISA_CHECKOUT) {
+        /*if (requestCode == BraintreeRequestCodes.VISA_CHECKOUT) {
             showLoading();
             AppLogger.d("VC_onActivityResult", "Result got back from Visa Checkout SDK");
             String msg = "";
@@ -642,10 +642,10 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
                 AppLogger.d("VC_onActivityResult", msg);
                 onError(msg);
             }
-        }
+        }*/
     }
 
-    @Override
+    /*@Override
     public void onVisaCheckoutButtonClicked() {
         if (isProcessingVco) {
             isProcessingVco = false;
@@ -656,7 +656,7 @@ public class AddPaymentController extends VisaCheckoutController implements AddP
             //TODO: should call Flow for addPaymentMethod
             return;
         }
-    }
+    }*/
 
     @OnClick(R.id.stripe_card_form_card_number_container)
     public void onCardNumberContainerClick() {

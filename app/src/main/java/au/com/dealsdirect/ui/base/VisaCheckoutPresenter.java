@@ -1,7 +1,7 @@
 package au.com.dealsdirect.ui.base;
 
-import static au.com.dealsdirect.ui.base.VisaCheckoutMvpView.VISA_CHECKOUT_LOGIN;
-import static au.com.dealsdirect.ui.base.VisaCheckoutMvpView.VISA_CHECKOUT_PAY;
+//import static au.com.dealsdirect.ui.base.VisaCheckoutMvpView.VISA_CHECKOUT_LOGIN;
+//import static au.com.dealsdirect.ui.base.VisaCheckoutMvpView.VISA_CHECKOUT_PAY;
 
 import com.visa.checkout.Profile;
 import com.visa.checkout.PurchaseInfo;
@@ -29,12 +29,11 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
     public VisaCheckoutPresenter(DataManager dataManager, SchedulerProvider schedulerProvider, CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
-
+/*
     @Override
     public void setupVisaCheckout(boolean isFromCheckout) {
         setupVisaCheckoutBraintree(isFromCheckout);
     }
-
 
     private void setupVisaCheckoutNative() {
         Profile profile = new Profile.ProfileBuilder(
@@ -186,4 +185,6 @@ public class VisaCheckoutPresenter<V extends VisaCheckoutMvpView> extends BasePr
         }
         getMvpView().initializeBrainTree(paymentToken, paymentType);
     }
+
+ */
 }

@@ -6,7 +6,7 @@ import com.visa.checkout.PurchaseInfo;
 import au.com.dealsdirect.data.network.model.login.LoginVisa;
 
 public interface VisaCheckoutMvpView extends MvpView {
-
+/*
     int VISA_CHECKOUT_LOGIN = 0;
     int VISA_CHECKOUT_PAY = 1;
 
@@ -28,5 +28,5 @@ public interface VisaCheckoutMvpView extends MvpView {
 
     void setVisaCheckoutActionType(int visaCheckoutActionType);
 
-    void initializeBrainTree(String token, String paymentType);
+    void initializeBrainTree(String token, String paymentType);*/
 }

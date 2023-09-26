@@ -1,10 +1,6 @@
-package au.com.dealsdirect.utils;
+package au.com.dealsdirect.service.braintree;
 
-/**
- * Created by pauldesilva on 4/17/18.
- */
-
-public class BraintreeUtils {
+public class BraintreeClientHelperConstants {
     public static final String SDK_DEV_ERROR= "sdk.exit.developer-error";
     public static final String SDK_CONFIG_ERROR= "sdk.exit.configuration-exception";
     public static final String SDK_SERVER_ERROR= "sdk.exit.server-error";

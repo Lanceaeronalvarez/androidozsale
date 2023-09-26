@@ -51,7 +51,6 @@ import com.stripe.android.Stripe;
 import com.stripe.android.model.CardParams;
 import com.stripe.android.model.PaymentIntent;
 import com.stripe.android.model.PaymentMethodCreateParams;
-import com.visa.checkout.VisaPaymentSummary;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,6 +73,8 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrent
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
+import au.com.dealsdirect.service.braintree.BraintreeClientHelper;
+import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.event.FirebaseEventServiceInterface;
 import au.com.dealsdirect.service.event.GenieEventServiceInterface;
@@ -106,7 +107,6 @@ import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.BottomSheetInfoDialog;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
-import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.BottomSheetInfoWebViewDialog;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.SupplierOriginalPriceInfoHelper;
@@ -145,8 +145,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @BindView(R.id.activity_main_frame)
     ViewGroup mContainer;
 
-    private BraintreeClient mBraintreeClient;
-    private FetchTokenHandler mFetchTokenHandler;
+    private BraintreeClientHelper mBraintreeClientHelper;
+    private FetchBraintreeClientTokenHandler mFetchBraintreeClientTokenHandler;
 
     private MainController mMainController;
     private CategoriesMvpView mCategoriesView;
@@ -289,6 +289,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         if (!FacebookSdk.isInitialized()) {
             FacebookSdk.sdkInitialize(this);
         }
+        if (mBraintreeClientHelper != null) {
+            mBraintreeClientHelper.activityOnResume();
+        }
     }
 
     @Override
@@ -316,6 +319,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Call router for callbacks after going out the app and back inside
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (mBraintreeClientHelper != null) {
+            mBraintreeClientHelper.activityOnActivityResult(requestCode, resultCode, data);
+        }
 
         if (requestCode == LOAD_PAYMENT_DATA_REQUEST_CODE) {
             switch (resultCode) {
@@ -507,28 +514,39 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void callCreatePaymentTransaction(String type, String nonce, String token) {
 
+        if (PaymentInfo.getPaymentType().equals(PaymentInfo.TYPE_BRAINTREE) && !mBraintreeClientHelper.isInitialized()) {
+            mBraintreeClientHelper.setCurrencyCode(Settings.getSelectedCountry().currencyCode);
+            final String authorization = PaymentInfo.getAuthorization();
+            if (authorization == null || authorization.isEmpty()) {
+                mPresenter.callGetPaymentMethodNonce(token);
+                return;
+            } else {
+                mBraintreeClientHelper.initialize(this, PaymentInfo.getAuthorization());
+            }
+        }
+
         //3DS Check
         if (PaymentInfo.isThreeDSecureRequired() && !PaymentInfo.isThreeDSecureCalled()) {
             mPresenter.callGetPaymentMethodNonce(token);
             return;
         }
 
-        BraintreeClient.BraintreeClientCollectDeviceDataHandler handler = deviceData -> mPresenter.createPaymentTransaction(
-                deviceData, type, nonce, token, AppConstants.BRAINTREE);
+        BraintreeClientHelper.CollectDeviceDataHandler handler = deviceData -> mPresenter.createPaymentTransaction(
+                deviceData, type, nonce, token, PaymentInfo.getProvider());
 
         //Kount Check
-        mBraintreeClient.collectDeviceData(mPresenter.getKountMerchantId(), handler);
+        mBraintreeClientHelper.collectDeviceData(handler);
     }
 
-    @Override
+    /*@Override
     public void callCreatePaymentTransactionVco(VisaPaymentSummary visaPaymentSummary) {
 
-        BraintreeClient.BraintreeClientCollectDeviceDataHandler handler = deviceData -> mPresenter.createPaymentTransactionVco(visaPaymentSummary);
+        BraintreeClientHelper.CollectDeviceDataHandler handler = deviceData -> mPresenter.createPaymentTransactionVco(visaPaymentSummary);
 
         //Kount Check
-        mBraintreeClient.collectDeviceData(mPresenter.getKountMerchantId(), handler);
+        mBraintreeClientHelper.collectDeviceData(mPresenter.getKountMerchantId(), handler);
 
-    }
+    }*/
 
     @Override
     public void callCreatePaymentTransactionStripe(String paymentType, String paymentMethodId) {
@@ -659,16 +677,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         getMainController().showWishlistItemCount(count);
     }
 
-    //Call only here api for adding payment method
-    @Override
-    public void callCreatePaymentMethod(String type, String nonce) {
-        BraintreeClient.BraintreeClientCollectDeviceDataHandler handler = deviceData -> mPresenter.createPaymentMethod(
-                deviceData, nonce, type);
-
-        //Kount Check
-        mBraintreeClient.collectDeviceData(mPresenter.getKountMerchantId(), handler);
-    }
-
     @Override
     public void showCreatePaymentMethodSuccess(PaymentMethod lastPaymentMethod) {
 
@@ -705,14 +713,27 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         showLoadingDialog(getResources().getString(R.string.loading), false);
         PaymentInfo.setThreeDSecureCalled(true);
         mPresenter.setLastCartRedirection(EventParameters.LastRedirection.THREEDSECURE_OTP);
-        mBraintreeClient.ThreeDSecurePerformVerification(nonce, Double.toString(PaymentInfo.getCartCost()));
+        mBraintreeClientHelper.threeDSecurePerformVerification(
+                nonce,
+                Double.toString(PaymentInfo.getCartCost()),
+                new BraintreeClientHelper.ThreeDSecureVerificationHandler() {
+            @Override
+            public void onGettingNonce(String nonce) {
+                callCreatePaymentTransaction(PaymentInfo.getPaymentType(), nonce, PaymentInfo.getPaymentMethod().getToken());
+            }
+
+            @Override
+            public void onError(Exception error) {
+
+            }
+        });
     }
 
     @Override
     public void performResetWithAuthFetch() {
 
         performBraintreeReset();
-        fetchAuthorization(null);
+        fetchBraintreeAuthorization(null);
     }
 
     @Override
@@ -722,25 +743,17 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         PaymentInfo.setAuthorization(null);
         PaymentInfo.setPaymentType(null);
 
-        if (mBraintreeClient != null &&
-                mBraintreeClient.getFragment().isResumed() &&
-                getSupportFragmentManager().findFragmentByTag(mBraintreeClient.getFragment().getTag()) != null) {
-            getSupportFragmentManager().beginTransaction().remove(mBraintreeClient.getFragment()).commit();
-            mBraintreeClient.reset();
+        if (mBraintreeClientHelper != null) {
+            mBraintreeClientHelper.reset();
         }
     }
 
     @Override
-    public FetchTokenHandler getFetchTokenHandler() {
-        return mFetchTokenHandler;
-    }
-
-    @Override
-    public void fetchAuthorization(FetchTokenHandler handler) {
+    public void fetchBraintreeAuthorization(FetchBraintreeClientTokenHandler handler) {
         if (!PaymentInfo.isTokenFetching()) {
-            mFetchTokenHandler = handler;
+            mFetchBraintreeClientTokenHandler = handler;
             //Don't proceed to call if not logged in
-            mPresenter.fetchBTAuthorization();
+            mPresenter.fetchBraintreeClientToken();
             PaymentInfo.setIsTokenFetching(true);
         }
     }
@@ -752,77 +765,36 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void onAuthorizationFetched(String authorizationToken, String paymentType) {
+    public void onBraintreeAuthorizationFetchSuccess(String authorizationToken, String paymentType) {
         PaymentInfo.setAuthorization(authorizationToken);
         PaymentInfo.setPaymentType(paymentType);
 
-        if (mBraintreeClient == null) {
-            mBraintreeClient = new BraintreeClient();
+        if (mBraintreeClientHelper == null) {
+            mBraintreeClientHelper = new BraintreeClientHelper();
         }
 
-        mBraintreeClient.initialize(this, PaymentInfo.getAuthorization());
-        mBraintreeClient.setListener(new BraintreeClient.BraintreeClientListener() {
-            @Override
-            public void hideLoading() {
-                MainActivity.this.hideLoading();
-            }
+        mBraintreeClientHelper.setCurrencyCode(Settings.getSelectedCountry().currencyCode);
+        mBraintreeClientHelper.initialize(this, authorizationToken);
 
-            @Override
-            public void performResetWithAuthFetch() {
-                MainActivity.this.performResetWithAuthFetch();
-            }
+        if (mFetchBraintreeClientTokenHandler != null) {
+            mFetchBraintreeClientTokenHandler.onSuccess();
+        }
+    }
 
-            @Override
-            public void onPaymentNonceCreated(String paymentMethodNonce, VisaCheckoutNonceDetails visaCheckoutNonceDetails) {
-                Router currentRouter = getMainController().getCurrentRouter();
-                Controller currentController;
-
-                if (mPresenter.isTablet()) {
-                    currentController = !isAuthorized() ? getCurrentController(getMainController().getPopUpHostRouter()) :
-                            getMainController().getCurrentControllerOnRouter(currentRouter);
-                } else {
-                    currentController = getMainController().getCurrentControllerOnRouter(currentRouter);
-                }
-
-                if (currentController instanceof PopUpHostController) {
-                    currentController = getCurrentController(
-                            ((PopUpHostController) currentController).getPopUpHostChildRouter());
-                } else if (currentController instanceof CheckoutHostController) {
-                    currentController = getCurrentController(
-                            ((CheckoutHostController) currentController).getCheckoutDetailRouter());
-                }
-
-
-                if (currentController instanceof VisaCheckoutController && visaCheckoutNonceDetails.isVisaCheckoutNonce()) {
-                    switch (getVisaCheckoutActionType()) {
-                        case VisaCheckoutController.VISA_CHECKOUT_LOGIN:
-                            ((VisaCheckoutController) currentController).doAuthenticateLoginWithVisaCheckoutBraintree(
-                                    visaCheckoutNonceDetails.getFirstname(),
-                                    visaCheckoutNonceDetails.getLastname(),
-                                    visaCheckoutNonceDetails.getEmail(),
-                                    visaCheckoutNonceDetails.getCallId(),
-                                    paymentMethodNonce);
-                            break;
-                        case VisaCheckoutController.VISA_CHECKOUT_PAY:
-                            callCreatePaymentTransaction(PaymentInfo.VISA_CHECKOUT_BRAINTREE, paymentMethodNonce, "");
-                            break;
-                    }
-                } else if (currentController instanceof CheckoutController || PaymentInfo.isThreeDSecureCalled()) {
-                    callCreatePaymentTransaction(PaymentInfo.getPaymentType(), paymentMethodNonce, "");
-                } else {
-                    callCreatePaymentMethod(PaymentInfo.getPaymentType(), paymentMethodNonce);
-                }
-            }
-        });
+    @Override
+    public void onBraintreeAuthorizationFetchFail() {
+        if (mFetchBraintreeClientTokenHandler != null) {
+            mFetchBraintreeClientTokenHandler.onFailure();
+        }
     }
 
     public void startPaypalPayment() {
 //        PayPal.authorizeAccount(mBraintreeFragment);
-        mBraintreeClient.getPaymentHandler().startPaypalPayment();
+        mBraintreeClientHelper.getPaymentHandler().startPaypalPayment();
     }
 
     public void startPaypalCreditPayment(String totalCost) {
-        mBraintreeClient.getPaymentHandler().startPaypalCreditPayment(totalCost);
+        mBraintreeClientHelper.getPaymentHandler().startPaypalCreditPayment(totalCost);
     }
 
     @Override
@@ -872,23 +844,23 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         PaymentInfo.setPaymentMethod(paymentMethodSelected);
     }
 
-    public BraintreeClient getBraintreeClient() {
-        return mBraintreeClient;
+    public BraintreeClientHelper getBraintreeClient() {
+        return mBraintreeClientHelper;
     }
 
     public boolean isBraintreeInitialized() {
-        return mBraintreeClient != null && mBraintreeClient.isInitialized();
+        return mBraintreeClientHelper != null && mBraintreeClientHelper.isInitialized();
     }
 
-    @Override
-    public void setVisaCheckoutActionType(int visaCheckoutActionType) {
-        mVisaCheckoutActionType = visaCheckoutActionType;
-    }
+//    @Override
+//    public void setVisaCheckoutActionType(int visaCheckoutActionType) {
+//        mVisaCheckoutActionType = visaCheckoutActionType;
+//    }
 
-    @Override
-    public int getVisaCheckoutActionType() {
-        return mVisaCheckoutActionType;
-    }
+//    @Override
+//    public int getVisaCheckoutActionType() {
+//        return mVisaCheckoutActionType;
+//    }
 
     @Override
     public void logLoginTicket() {
@@ -1171,7 +1143,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             mPresenter.callGetAppSettings();
             mPresenter.callGetUserCurrent();
             //On success, must get new braintree token
-            mPresenter.fetchBTAuthorization();
+            mPresenter.fetchBraintreeClientToken();
             mPresenter.callGetAppSettingsSectionsPayments(this);
             refreshWishlist();
 

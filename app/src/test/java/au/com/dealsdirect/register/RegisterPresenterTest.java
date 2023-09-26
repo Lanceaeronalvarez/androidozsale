@@ -75,11 +75,11 @@ public class RegisterPresenterTest {
         RegisterUserResponse registerUserResponse = gson.fromJson(mMockRegisterUserResponseSuccess,RegisterUserResponse.class);
 
         doReturn(Observable.just(registerUserResponse)).when(mMockDataManager).callRegister(any(RegisterUserRequest.class));
-        mPresenter.registerUser("", "", "", "", true);
+        mPresenter.registerUser(null, "", "", "", "", true, true);
         testScheduler.triggerActions();
 
         verify(mMockDataManager).acknowledgeAuth(registerUserResponse.getTicket());
-        verify(mMvpView).showLoginSuccessful(registerUserResponse.getTicket());
+        verify(mMvpView).showLoginSuccessful(registerUserResponse.getTicket(), false);
     }
 
     @Test
@@ -87,9 +87,9 @@ public class RegisterPresenterTest {
         RegisterUserResponse registerUserResponse = gson.fromJson(mMockRegisterUserResponseFailure, RegisterUserResponse.class);
 
         doReturn(Observable.just(registerUserResponse)).when(mMockDataManager).callRegister(any(RegisterUserRequest.class));
-        mPresenter.registerUser("", "", "", "", true);
+        mPresenter.registerUser(null, "", "", "", "", true, true);
         testScheduler.triggerActions();
 
-        verify(mMvpView).showLoginError(registerUserResponse.getMessage());
+        verify(mMvpView).showLoginError(registerUserResponse.getMessage(), false);
     }
 }

@@ -34,7 +34,6 @@ import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.auth.AuthHandler;
-import au.com.dealsdirect.data.network.ApiCallback;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.accountdata.AccountData;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentIntentStripe;
@@ -72,10 +71,8 @@ import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.DeepLinkUrlType;
 import au.com.dealsdirect.utils.GdprUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
-import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import okhttp3.Cookie;
 
@@ -196,7 +193,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             KEY_KLARNA_DESCRIPTION_TEXT
     };
 
-
     @Inject
     public MainPresenter(DataManager dataManager,
                          SchedulerProvider schedulerProvider,
@@ -219,13 +215,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
             getDataManager().setWishlistChangeListener(null);
         }
         super.onDetach();
-    }
-
-    @Override
-    public Disposable doApiCallForResponse(Observable observable, ApiCallback callback) {
-        return super.doApiCallForResponse(observable, callback);
-
-//        checkConsentCookie();
     }
 
     @Override
@@ -721,16 +710,19 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     }
 
     @Override
-    public void fetchBTAuthorization() {
+    public void fetchBraintreeClientToken() {
         if (!getDataManager().isAuthorized()) return;
 
-        getCompositeDisposable().add(getDataManager()
-                .callGetPaymentToken(new GetPaymentToken.RequestValue(getDataManager().getLanguageId(), getDataManager().getCountryId()))
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<GetPaymentToken.ResponseValue>() {
+        final GetPaymentToken.RequestValue request = new GetPaymentToken.RequestValue(
+                getDataManager().getLanguageId(),
+                getDataManager().getCountryId());
+
+        doApiCallForResponse(
+                getDataManager().callGetPaymentToken(request),
+                new AppApiCallback() {
                     @Override
-                    public void accept(@NonNull GetPaymentToken.ResponseValue responseValue) throws Exception {
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
 
                         PaymentInfo.setIsTokenFetching(false);
 
@@ -740,23 +732,22 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         getMvpView().hideLoading();
 
+                        final GetPaymentToken.ResponseValue responseValue = (GetPaymentToken.ResponseValue) response;
                         if (responseValue.isResult() && responseValue.isAuthenticated()) {
 
                             getDataManager().setCurrentPaymentToken(responseValue.getPaymentToken());
                             getDataManager().setCurrentPaymentType(responseValue.getPaymentType());
 
-                            getMvpView().onAuthorizationFetched(responseValue.getPaymentToken(), responseValue.getPaymentType());
-
-                            if (getMvpView().getFetchTokenHandler() != null)
-                                getMvpView().getFetchTokenHandler().onSuccess();
+                            getMvpView().onBraintreeAuthorizationFetchSuccess(responseValue.getPaymentToken(), responseValue.getPaymentType());
                         } else {
-                            if (getMvpView().getFetchTokenHandler() != null)
-                                getMvpView().getFetchTokenHandler().onFailure();
+                            getMvpView().onBraintreeAuthorizationFetchFail();
                         }
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+
                         PaymentInfo.setIsTokenFetching(false);
 
                         if (!isViewAttached()) {
@@ -765,20 +756,17 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                         getMvpView().hideLoading();
 
-                        if (getMvpView().getFetchTokenHandler() != null)
-                            getMvpView().getFetchTokenHandler().onFailure();
-
-                        getMvpView().onError(throwable.getMessage());
+                        getMvpView().onBraintreeAuthorizationFetchFail();
+                        getMvpView().onError(t.getMessage());
 
                         // handle load accounts error here
-                        if (throwable instanceof ANError) {
-                            ANError anError = (ANError) throwable;
+                        if (t instanceof ANError) {
+                            ANError anError = (ANError) t;
                             handleApiError(anError);
                         }
                     }
-                })
+                }
         );
-
     }
 
     @Override
@@ -987,7 +975,18 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         String languageId = getDataManager().getLanguageId();
         String countryId = getDataManager().getCountryId();
         CreatePaymentTransaction.RequestValue.Request requestValue =
-                new CreatePaymentTransaction.RequestValue.Request(paymentType, paymentNonce, paymentToken, deviceData, provider);
+                new CreatePaymentTransaction.RequestValue.Request();
+        requestValue.setPaymentType(paymentType);
+        requestValue.setPaymentNonce(paymentNonce);
+        if (provider.equals(AppConstants.BRAINTREE)) {
+            requestValue.setProvider("");
+            requestValue.setSelectedPaymentOption(AppConstants.BRAINTREE);
+            requestValue.setPaymentToken("");
+        } else {
+            requestValue.setProvider(provider);
+            requestValue.setPaymentToken(paymentToken);
+        }
+        requestValue.setDeviceData(deviceData);
         getCompositeDisposable().add(getDataManager()
                 .callCreatePaymentTransaction(new CreatePaymentTransaction.RequestValue(requestValue, countryId, languageId))
                 .subscribeOn(getSchedulerProvider().io())

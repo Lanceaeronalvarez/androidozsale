@@ -5,7 +5,6 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -42,13 +41,12 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.braintreepayments.api.models.BraintreeRequestCodes;
+//import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.utility.RxBus;
 import com.stripe.android.model.CardBrand;
-import com.visa.checkout.VisaCheckoutSdk;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -79,6 +77,7 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
+import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
@@ -95,17 +94,15 @@ import au.com.dealsdirect.ui.controller.lpay.LPayViewController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
-import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
-import au.com.dealsdirect.ui.main.FetchTokenHandler;
+import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CommonUtils;
@@ -121,7 +118,7 @@ import butterknife.Optional;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class CheckoutController extends VisaCheckoutController implements CheckoutMvpView, FetchTokenHandler, CheckoutListener {
+public class CheckoutController extends BaseController implements CheckoutMvpView, CheckoutListener {
     public static final String CARD_PAYPAL = "Paypal";
     public static final String CARD_MASTERPASS = "Masterpass";
     public static final String CARD_VISA_CHECKOUT = "VisaCheckoutBraintree";
@@ -391,7 +388,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         View view = inflater.inflate(R.layout.controller_checkout, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mVcoPresenter.onAttach(this);
+//        mVcoPresenter.onAttach(this);
 
         return view;
     }
@@ -448,20 +445,20 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         }
 
-        if (!mActivity.isBraintreeInitialized() && mActivity.isAuthorized()) {
-            mVcoPresenter.initializeBraintree();
-        }
+//        if (!mActivity.isBraintreeInitialized() && mActivity.isAuthorized()) {
+//            mVcoPresenter.initializeBraintree();
+//        }
+//
+//        if (mVcoPresenter.isVisaCheckoutEnabled() && mActivity.isAuthorized()) {
+//            if (!mActivity.isBraintreeInitialized()) {
+//                mVcoPresenter.initializeBraintree();
+//            }
+//            mVcoPresenter.setupVisaCheckout(true);
+//        }
 
-        if (mVcoPresenter.isVisaCheckoutEnabled() && mActivity.isAuthorized()) {
-            if (!mActivity.isBraintreeInitialized()) {
-                mVcoPresenter.initializeBraintree();
-            }
-            mVcoPresenter.setupVisaCheckout(true);
-        }
-
-        mVcoButton.setOnClickListener(action -> {
-            onVisaCheckoutButtonClicked();
-        });
+//        mVcoButton.setOnClickListener(action -> {
+//            onVisaCheckoutButtonClicked();
+//        });
 
         final boolean isGenoaPay = Settings.getSelectedCountry().countryId.equalsIgnoreCase("NZ");
         final int padding = (int) mActivity.getResources().getDimension(isGenoaPay ? R.dimen.genoa_button_logo_margin : R.dimen.lpay_button_logo_margin);
@@ -496,7 +493,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == BraintreeRequestCodes.VISA_CHECKOUT) {
+        /*if (requestCode == BraintreeRequestCodes.VISA_CHECKOUT) {
             showLoading();
             AppLogger.d("VC_onActivityResult", "Result got back from Visa Checkout SDK");
             String msg = "";
@@ -527,7 +524,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                 AppLogger.d("VC_onActivityResult", msg);
                 onError(msg);
             }
-        }
+        }*/
     }
 
     @Override
@@ -538,7 +535,18 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             RxBus.instance().post(IntrospectionUtils.EVENT_CHECKOUT_SCREEN);
 
             if (!mActivity.isBraintreeInitialized()) {
-                mActivity.fetchAuthorization(this);
+                mActivity.fetchBraintreeAuthorization(new FetchBraintreeClientTokenHandler() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        if (!isAttached()) return;
+                        hidePaymentButtons();
+                    }
+                });
             }
 
             if (!isCartLoading()) {
@@ -1258,14 +1266,14 @@ public class CheckoutController extends VisaCheckoutController implements Checko
         return getRouter();
     }
 
-    @Override
-    public void initializeVisaCheckout() {
-        if (mVcoPresenter != null && isViewAttached()) {
-            if (mVcoPresenter.isVisaCheckoutEnabled()) {
-                mVcoPresenter.setupVisaCheckout(true);
-            }
-        }
-    }
+//    @Override
+//    public void initializeVisaCheckout() {
+//        if (mVcoPresenter != null && isViewAttached()) {
+//            if (mVcoPresenter.isVisaCheckoutEnabled()) {
+//                mVcoPresenter.setupVisaCheckout(true);
+//            }
+//        }
+//    }
 
     private void showShippingUnavailableMessage() {
         mActivity.showErrorMessage(mPresenter.getTemplateTextsRepository().getImpossibleToDeliverAtLocationMessage());
@@ -1302,6 +1310,7 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             showAddPaymentMethodController();
         } else if (mActivity.getPaymentMethodSelected().getProviderType() != null &&
                 mActivity.getPaymentMethodSelected().getProviderType().equalsIgnoreCase(AppConstants.STRIPE)) {
+            PaymentInfo.setProvider(PaymentInfo.TYPE_STRIPE);
             if (mPresenter.isStripeEnabled() && mPresenter.getStripePublicKey() != null) {
                 mActivity.callCreatePaymentTransactionStripe(AppConstants.STRIPE,
                         mActivity.getPaymentMethodSelected().getToken());
@@ -1312,16 +1321,26 @@ public class CheckoutController extends VisaCheckoutController implements Checko
                         mActivity.getResources().getString(R.string.stripe_error_occured));
             }
         } else {
+            PaymentInfo.setThreeDSecureCalled(false);
+            PaymentInfo.setProvider(PaymentInfo.TYPE_BRAINTREE);
+            PaymentInfo.setFabricPaymentType(PaymentInfo.isThreeDSecureRequired() ?
+                    DataCollector.EventParameters.PaymentOption.THREEDS.getValue() :
+                    DataCollector.EventParameters.PaymentOption.REGULAR.getValue());
+            PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
             if (mActivity.isBraintreeInitialized()) {
-                if (mActivity.getPaymentMethodSelected() == null) {
-                    showAddPaymentMethodController();
-                } else {
-                    PaymentInfo.setFabricPaymentType(PaymentInfo.isThreeDSecureRequired() ?
-                            DataCollector.EventParameters.PaymentOption.THREEDS.getValue() :
-                            DataCollector.EventParameters.PaymentOption.REGULAR.getValue());
-                    PaymentInfo.setPaymentType(PaymentInfo.TYPE_BRAINTREE);
-                    mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
-                }
+                mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+            } else {
+                mActivity.fetchBraintreeAuthorization(new FetchBraintreeClientTokenHandler() {
+                    @Override
+                    public void onSuccess() {
+                        mActivity.callCreatePaymentTransaction(PaymentInfo.getPaymentType(), "", PaymentInfo.getPaymentMethod().getToken());
+                    }
+
+                    @Override
+                    public void onFailure() {
+
+                    }
+                });
             }
         }
 
@@ -1707,18 +1726,6 @@ public class CheckoutController extends VisaCheckoutController implements Checko
     }
 
     @Override
-    public void onSuccess() {
-        if (!isAttached()) return;
-        //loadCartContent(); //Do we have to reload cart on bt token fetch?
-    }
-
-    @Override
-    public void onFailure() {
-        if (!isAttached()) return;
-        hidePaymentButtons();
-    }
-
-    @Override
     public void refreshContents() {
         super.refreshContents();
         if (!mIsCartLoading) {
@@ -1889,30 +1896,30 @@ public class CheckoutController extends VisaCheckoutController implements Checko
             mOurpayHolder.removeAllViews();
     }
 
-    @Override
-    public void onVisaCheckoutButtonClicked() {
-
-        if (isProcessingVco) {
-            isProcessingVco = false;
-        }
-
-        double total = mValue == null ? 0.0 : mValue.getSummary().getTotal();
-
-        mPresenter.logInitiateCheckout(
-                mActivity,
-                PaymentInfo.VISA_CHECKOUT_BRAINTREE,
-                mItemList.size(),
-                total,
-                AppConstants.VCO);
-
-        if (!commonPaymentAbilityDetermination()) {
-            return;
-        }
-
-        getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.VISACHECKOUT);
-        PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.VCO.getValue());
-        mVcoPresenter.payWithVisaCheckout(mValue.getSummary().getTotal());
-    }
+//    @Override
+//    public void onVisaCheckoutButtonClicked() {
+//
+//        if (isProcessingVco) {
+//            isProcessingVco = false;
+//        }
+//
+//        double total = mValue == null ? 0.0 : mValue.getSummary().getTotal();
+//
+//        mPresenter.logInitiateCheckout(
+//                mActivity,
+//                PaymentInfo.VISA_CHECKOUT_BRAINTREE,
+//                mItemList.size(),
+//                total,
+//                AppConstants.VCO);
+//
+//        if (!commonPaymentAbilityDetermination()) {
+//            return;
+//        }
+//
+//        getPresenter().setLastCartRedirection(DataCollector.EventParameters.LastRedirection.VISACHECKOUT);
+//        PaymentInfo.setFabricPaymentType(DataCollector.EventParameters.PaymentOption.VCO.getValue());
+//        mVcoPresenter.payWithVisaCheckout(mValue.getSummary().getTotal());
+//    }
 
     private void selectStandardDeliveryOption() {
         for (DeliveryOption option : mDeliveryOptions) {

@@ -10,7 +10,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 
-import com.braintreepayments.api.models.BraintreeRequestCodes;
+//import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.visa.checkout.ManualCheckoutSession;
 import com.visa.checkout.Profile;
 import com.visa.checkout.PurchaseInfo;
@@ -39,7 +39,7 @@ public abstract class VisaCheckoutController extends BaseController implements V
 
     @Inject
     protected VisaCheckoutMvpPresenter<VisaCheckoutMvpView> mVcoPresenter;
-
+/*
     protected Button mVcoButton;
 
     private ControllerComponent mControllerComponent;
@@ -66,7 +66,7 @@ public abstract class VisaCheckoutController extends BaseController implements V
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
-        registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
+        //registerForActivityResult(BraintreeRequestCodes.VISA_CHECKOUT);
         mVcoButton = (Button) view.findViewById(R.id.button_visa_checkout);
     }
 
@@ -131,7 +131,7 @@ public abstract class VisaCheckoutController extends BaseController implements V
         Intent intent = VisaCheckoutSdk.getCheckoutIntent(mActivity, purchaseInfo);
 
         // Call result in inherited base class
-        startActivityForResult(intent, BraintreeRequestCodes.VISA_CHECKOUT);
+        //startActivityForResult(intent, BraintreeRequestCodes.VISA_CHECKOUT);
     }
 
     public void initializeVisaCheckoutButton(PurchaseInfo.PurchaseInfoBuilder purchaseInfoBuilder,
@@ -212,4 +212,6 @@ public abstract class VisaCheckoutController extends BaseController implements V
     public void initializeBrainTree(String token, String paymentType) {
         mActivity.onAuthorizationFetched(token, paymentType);
     }
+
+ */
 }

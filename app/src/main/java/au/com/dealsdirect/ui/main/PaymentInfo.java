@@ -6,6 +6,7 @@ package au.com.dealsdirect.ui.main;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 
+// TODO: Refactor this static container class out
 public class PaymentInfo {
 
     public static final String TYPE_MYPAY = "mypay";
