@@ -352,7 +352,7 @@ android {
         singsaleTest {
             versionCode 432
             versionName "8.0.0"
-            applicationId "sg.com.singsaleTest"
+            applicationId "sg.com.singsale.test"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
             buildConfigField "boolean", "IS_TEST", "true"
@@ -404,7 +404,7 @@ android {
         nzsaleTest {
             versionCode 432
             versionName "8.0.0"
-            applicationId "nz.co.nzsaleTest"
+            applicationId "nz.co.nzsale.test"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
             buildConfigField "boolean", "IS_TEST", "true"

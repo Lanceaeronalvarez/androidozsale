@@ -174,7 +174,7 @@ lane :firebase_deploy_ozsale_rc do
 
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'ozsale' emails:" + dev_emails + " apk_name:" + 'app-ozSaleRC-release.apk' + " build_variant:" + 'ozsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'ozsaleRC' + " app_notes_path:" + app_dir + '/fastlane/OzsaleReleaseNotes' +
-  " app_id:" + '1:211462705866:android:c4f2b9eb127b6973'
+  " app_id:" + '1:474505652333:android:c4f2b9eb127b6973'
 end
 
 lane :firebase_deploy_ozsale_test do
@@ -183,7 +183,7 @@ lane :firebase_deploy_ozsale_test do
 
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'ozsale test' emails:" + dev_emails + " apk_name:" + 'app-ozSaleTest-release.apk' + " build_variant:" + 'ozsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'ozsaleTest' + " app_notes_path:" + app_dir + '/fastlane/OzsaleReleaseNotes' +
-  " app_id:" + '1:211462705866:android:105c1b4cebd5f295'
+  " app_id:" + '1:474505652333:android:b460575a448c85532f3764'
 end
 
 lane :firebase_deploy_singsale_rc do
@@ -192,7 +192,7 @@ lane :firebase_deploy_singsale_rc do
 
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'singsale' emails:" + dev_emails + " apk_name:" + 'app-singsaleRC-release.apk' + " build_variant:" + 'singsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'singsaleRC' + " app_notes_path:" + app_dir + '/fastlane/SingsaleReleaseNotes' +
-  " app_id:" + '1:390674118206:android:49eddd6c1c298210'
+  " app_id:" + '1:585965744255:android:659b13c36e72749ff9cf4a'
 end
 
 lane :firebase_deploy_singsale_test do
@@ -201,7 +201,7 @@ lane :firebase_deploy_singsale_test do
 
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'singsale test' emails:" + dev_emails + " apk_name:" + 'app-singsaleTest-release.apk' + " build_variant:" + 'singsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'singsaleTest' + " app_notes_path:" + app_dir + '/fastlane/SingsaleReleaseNotes' +
-  " app_id:" + '1:390674118206:android:94b3627773b56ddd'
+  " app_id:" + '1:585965744255:android:78c759a174e82617f9cf4a'
 end
 
 lane :firebase_deploy_nzsale_rc do
@@ -210,7 +210,7 @@ lane :firebase_deploy_nzsale_rc do
 
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'nzsale' emails:" + dev_emails + " apk_name:" + 'app-nzsaleRC-release.apk' + " build_variant:" + 'nzsaleRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'nzsaleRC' + " app_notes_path:" + app_dir + '/fastlane/NzsaleReleaseNotes' +
-  " app_id:" + '1:118822854515:android:9605bf6aef24e3fe'
+  " app_id:" + '1:686246480880:android:e234e69b0746405852eb35'
 end
 
 lane :firebase_deploy_nzsale_test do
@@ -219,7 +219,7 @@ lane :firebase_deploy_nzsale_test do
 
   #Change apk_name and app_name for other flavors
   sh "fastlane dd_build app_name:'nzsale test' emails:" + dev_emails + " apk_name:" + 'app-nzsaleTest-release.apk' + " build_variant:" + 'nzsaleTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'nzsaleTest' + " app_notes_path:" + app_dir + '/fastlane/NzsaleReleaseNotes' +
-  " app_id:" + '1:118822854515:android:ef23b033ff685bed'
+  " app_id:" + '1:686246480880:android:069fecc21db7b29652eb35'
 end
 
 lane :firebase_deploy_mysale_rc do
