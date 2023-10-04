@@ -271,7 +271,7 @@ public class KlarnaViewController extends BaseController implements KlarnaMvpVie
 
     private void showAlertDialog(String message) {
         new AlertDialog.Builder(mActivity)
-                .setTitle(mActivity.getResources().getString(R.string.afterpay))
+                .setTitle(mActivity.getResources().getString(R.string.klarna))
                 .setMessage(message)
                 .setPositiveButton("OK", null)
                 .setOnDismissListener(dialog -> dismissSelf())

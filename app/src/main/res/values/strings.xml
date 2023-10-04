@@ -825,6 +825,9 @@
     <string name="afterpay_panel_description_normal">%d installments of %s%.2f with\u0020\u0020\u0020</string>
     <string name="afterpay_failed_transaction">@string/generic_failed_transaction_message</string>
 
+    <!--KLARNA-->
+    <string name="klarna">Klarna</string>
+
     <!--LPPAY-->
     <string name="lpay">Latitude Pay</string>
     <string name="genoapay">Genoa Pay</string>
