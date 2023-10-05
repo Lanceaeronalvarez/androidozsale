@@ -1,9 +1,11 @@
 package au.com.dealsdirect.ui.controller.checkout.deliveryoptions;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,8 @@ import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,13 +34,10 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-/**
- * Created by smartwave on 30/05/2018.
- */
 
 public class DeliveryOptionsController extends BaseController implements DeliveryOptionsMvpView {
 
@@ -92,6 +93,15 @@ public class DeliveryOptionsController extends BaseController implements Deliver
         mToolbarTitleTextView.setText(getString(R.string.deliver_options_title));
         mToolbarRightButton.setVisibility(View.INVISIBLE);
 
+        final ArrayList<DeliveryOption> deliveryOptions = new ArrayList<>();
+        for (DeliveryOption option : mDeliveryOptions) {
+            if (!(option.getPostServiceId() != null && option.getPostServiceId().equals("OURPAYSELECT")) ||
+                    isSelectAvailableAfterDecommission()) {
+                deliveryOptions.add(option);
+            }
+        }
+        mDeliveryOptions = deliveryOptions;
+
         mAdapter = new DeliveryOptionsAdapter(
                 mActivity,
                 mRecyclerView,
@@ -122,12 +132,20 @@ public class DeliveryOptionsController extends BaseController implements Deliver
 
     @Override
     public void showTermsAndConditionsController() {
-        GateKeeper.push(getRouter(),GateKeeper.Destination.LEGALITIES,
+        GateKeeper.push(getRouter(), GateKeeper.Destination.LEGALITIES,
                 new BundleBuilder(new Bundle())
                         .putString(BundleKeys.TEMPLATE_KEY, OurpayTemplateText.KEY_OPS_TNC_FULL_TEXT)
                         .putString(BundleKeys.LEGALITIES_TITLE, getString(R.string.my_basket))
                         .build(),
                 new VerticalChangeHandler(false),
                 new VerticalChangeHandler());
+    }
+
+    private boolean isSelectAvailableAfterDecommission() {
+        final Date currentDate = new Date();
+        return mDeliveryServicePackageDetail != null &&
+                mDeliveryServicePackageDetail.getPurchased() &&
+                mDeliveryServicePackageDetail.getRemainingCount() > 0 &&
+                currentDate.before(DateUtils.dateFromServerDateString(mDeliveryServicePackageDetail.getExpiryDate()));
     }
 }
