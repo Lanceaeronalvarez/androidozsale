@@ -37,7 +37,7 @@ public class FirebaseBroadcastReceiver extends FirebaseMessagingService {
     }
 
     public void createNotification(String notificationMessage, Context context) {
-        final int NOTIFY_ID = 0;
+        final int NOTIFY_ID = 12345;
         String GENERAL_CHANNEL_ID = "GENERAL_CHANNEL_01";
         String appName = getResources().getString(R.string.app_name);
         String title = (notificationTitle == null || notificationTitle.isEmpty()) ? getResources().getString(R.string.app_name) :
@@ -49,7 +49,7 @@ public class FirebaseBroadcastReceiver extends FirebaseMessagingService {
         intent.putExtra(GNotification.FCM_INTENT_LAUNCHED, true);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
         if (notificationManager == null) {
             notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
