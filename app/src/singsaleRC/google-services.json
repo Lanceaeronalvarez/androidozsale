@@ -8,7 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:390674118206:android:49eddd6c1c298210",
+        "mobilesdk_app_id": "1:585965744255:android:659b13c36e72749ff9cf4a",
         "android_client_info": {
           "package_name": "sg.com.singsale"
         }
@@ -37,9 +37,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:390674118206:android:94b3627773b56ddd",
+        "mobilesdk_app_id": "1:585965744255:android:78c759a174e82617f9cf4a",
         "android_client_info": {
-          "package_name": "sg.com.singsaleTest"
+          "package_name": "sg.com.singsale.test"
         }
       },
       "oauth_client": [

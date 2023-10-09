@@ -825,6 +825,9 @@
     <string name="afterpay_panel_description_normal">%d installments of %s%.2f with\u0020\u0020\u0020</string>
     <string name="afterpay_failed_transaction">@string/generic_failed_transaction_message</string>
 
+    <!--KLARNA-->
+    <string name="klarna">Klarna</string>
+
     <!--LPPAY-->
     <string name="lpay">Latitude Pay</string>
     <string name="genoapay">Genoa Pay</string>
@@ -952,13 +955,13 @@
                 \n\t\t\t\t○ Earphones/headphones (if package has been opened)
                 \n\t\t\t\t○ Large/bulky appliances
                 \n\t\t\t\t○ Any merchandise where the GST has been claimed under the Tourist Refund Scheme, unless proof of repayment of the GST upon return to Australia is provided
-                \n\nOnce your return is approved, you will receive an email on how to return your items. It is important your return is sent to the correct address provided in your return email, as not all returns will go to the same warehouse (if you have purchased from different third-party Sellers). You will be requested to pay for the delivery charges of your return parcel, this may include the cost to return overseas. Once we have received your returned item(s), store credits will be deposited into your account and can be used within the next 6 months.</string>
+                \n\nOnce your return is approved, you will receive an email on how to return your items. It is important your return is sent to the correct address provided in your return email, as not all returns will go to the same warehouse (if you have purchased from different third-party Sellers). You will be requested to pay for the delivery charges of your return parcel, this may include the cost to return overseas. Once we have received your returned item(s), store credits will be deposited into your account and can be used within the next 12 months.</string>
     <string name="returns_policy_faq_content_4">Look out for our email, which will indicate the return guidelines and your unique Return Authorisation Number (RAN). Depending on the items you wish to return, they should be returned either to our warehouse or directly to our suppliers.
         \n\nFor all returns except Change of Mind returns, please use our return delivery services, free of charge. Fill up the simple online form, print out the return label (which should indicate clearly your unique RAN), stick it to the return parcel, and pass it to the delivery service within 7 calendar days.
         \n\nFor Change of Mind returns, you may be requested to arrange for your own preferred delivery service within 7 calendar days. Please ensure your unique RAN is visible on the parcel.
         \n\nIf you still have not received the return guidelines and your unique RAN a few days after your request is approved, please contact our Customer Team via My Returns.</string>
     <string name="returns_policy_faq_content_5">For all returns except Change of Mind returns, once we have received your returned item(s), we will proceed with the refund back to your original payment method within 3 - 5 working days. Depending on the issuer or payment method, it may take an additional few working days for the refunded amount to appear on your statement.
-        \n\nFor Change of Mind returns, store credits will be deposited into your account and can be used within the next 6 months.</string>
+        \n\nFor Change of Mind returns, store credits will be deposited into your account and can be used within the next 12 months.</string>
     <string name="returns_policy_faq_content_6">Yes, while such cases are not common, we do come across them occasionally. Please contact our Customer Team for further discussion via My Returns.</string>
     <string name="returns_policy_faq_content_7">Change of mind:
         \nWhen you return an item for “Change of Mind” you will be refunded the amount paid for the item returned, less the original delivery price.

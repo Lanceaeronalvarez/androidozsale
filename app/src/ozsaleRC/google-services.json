@@ -8,7 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:211462705866:android:c4f2b9eb127b6973",
+        "mobilesdk_app_id": "1:474505652333:android:c4f2b9eb127b6973",
         "android_client_info": {
           "package_name": "au.com.ozsale"
         }
@@ -38,7 +38,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:211462705866:android:105c1b4cebd5f295",
+        "mobilesdk_app_id": "1:474505652333:android:b460575a448c85532f3764",
         "android_client_info": {
           "package_name": "au.com.ozsale.test"
         }

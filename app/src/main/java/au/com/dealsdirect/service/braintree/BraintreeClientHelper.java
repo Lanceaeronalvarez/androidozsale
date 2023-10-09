@@ -41,6 +41,9 @@ public class BraintreeClientHelper {
     private final PaymentHandler paymentHandler = new PaymentHandler(this);
 
     public void activityOnResume() {
+        if (!isInitialized()) {
+            return;
+        }
         final BrowserSwitchResult browserSwitchResult = mBraintreeClient.deliverBrowserSwitchResult(activity);
         if (browserSwitchResult != null) {
             switch (browserSwitchResult.getRequestCode()) {

@@ -8,7 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:118822854515:android:9605bf6aef24e3fe",
+        "mobilesdk_app_id": "1:686246480880:android:e234e69b0746405852eb35",
         "android_client_info": {
           "package_name": "nz.co.nzsale"
         }
@@ -38,9 +38,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:118822854515:android:ef23b033ff685bed",
+        "mobilesdk_app_id": "1:686246480880:android:069fecc21db7b29652eb35",
         "android_client_info": {
-          "package_name": "nz.co.nzsaleTest"
+          "package_name": "nz.co.nzsale.test"
         }
       },
       "oauth_client": [
