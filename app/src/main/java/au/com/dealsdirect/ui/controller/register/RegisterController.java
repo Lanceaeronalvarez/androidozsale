@@ -373,7 +373,9 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @Override
     public void showLoginError(String message, boolean isFacebookLogin) {
         mActivity.loginErrorHandler(message);
-        mSignUpButton.setEnabled(true);
+        if (isViewAttached() && isAttached() && mSignUpButton != null) {
+            mSignUpButton.setEnabled(true);
+        }
     }
 
 //    @Override
