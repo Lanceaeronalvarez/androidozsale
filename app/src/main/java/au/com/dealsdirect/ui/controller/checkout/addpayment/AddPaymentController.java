@@ -255,35 +255,8 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 //                View.GONE);
         mVcoButton.setVisibility(View.GONE);
 
-        if (mActivity.isBraintreeInitialized()) {
-            showPaymentButtons();
-        } else {
-            mActivity.fetchBraintreeAuthorization(new FetchBraintreeClientTokenHandler() {
-                @Override
-                public void onSuccess() {
-                    showPaymentButtons();
-                }
-
-                @Override
-                public void onFailure() {
-                    hidePaymentButtons();
-                }
-            });
-        }
-
         mCheckoutButtons.setVisibility(isFromCart ? View.VISIBLE : View.GONE);
         mAddButton.setVisibility(isFromCart ? View.GONE : View.VISIBLE);
-
-        if (isFromCart) {
-//            if (mVcoPresenter.isVisaCheckoutEnabled()) {
-//                mVcoPresenter.setupVisaCheckout(true);
-//            }
-
-            mMasterpassButton.setOnClickListener(action -> {
-                onMasterpassButtonClick();
-                mCheckoutMvpView.setIsPaymentMethodChanged(true);
-            });
-        }
 
         mStripeLayout.setVisibility(View.VISIBLE);
 
@@ -338,6 +311,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         if (mActivity.isBraintreeInitialized()) {
             showPaymentButtons();
         } else {
+            hidePaymentButtons();
             mActivity.fetchBraintreeAuthorization(new FetchBraintreeClientTokenHandler() {
                 @Override
                 public void onSuccess() {

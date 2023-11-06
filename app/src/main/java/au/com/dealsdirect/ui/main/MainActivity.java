@@ -789,11 +789,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void startPaypalPayment() {
-//        PayPal.authorizeAccount(mBraintreeFragment);
+        if (!isBraintreeInitialized()) {
+            return;
+        }
         mBraintreeClientHelper.getPaymentHandler().startPaypalPayment();
     }
 
     public void startPaypalCreditPayment(String totalCost) {
+        if (!isBraintreeInitialized()) {
+            return;
+        }
         mBraintreeClientHelper.getPaymentHandler().startPaypalCreditPayment(totalCost);
     }
 
