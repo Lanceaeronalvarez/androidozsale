@@ -32,6 +32,9 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
 
     @Override
     public void loadOrderDetails(int orderNumber) {
+        if (!isViewAttached()) {
+            return;
+        }
         getMvpView().showLoading();
 
 
@@ -40,6 +43,9 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
             public void onSuccess(Object response) {
                 GetOrdersResponse.Order responseValue = (GetOrdersResponse.Order) response;
 
+                if (!isViewAttached()) {
+                    return;
+                }
                 getMvpView().showOrderDetails(responseValue);
             }
         });
@@ -47,6 +53,9 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
 
     @Override
     public void showTrackingWeb(String link) {
+        if (!isViewAttached()) {
+            return;
+        }
         getMvpView().showOrderTrackingWeb(link);
     }
 
@@ -58,6 +67,9 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
                     @Override
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
+                        if (!isViewAttached()) {
+                            return;
+                        }
                         getMvpView().onReceivedSet(receivedRequest.getInvoiceNumber());
                     }
                 });
@@ -71,6 +83,9 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
                     @Override
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
+                        if (!isViewAttached()) {
+                            return;
+                        }
                         getMvpView().onReceivedSet(receivedRequest.getInvoiceNumber());
                     }
                 });
@@ -89,19 +104,27 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
+                if (!isViewAttached()) {
+                    return;
+                }
                 getMvpView().orderSatisfactionReceived(receivedRequest.getInvoiceNumber(), response instanceof OrderReceivedSatisfactionResponse && ((OrderReceivedSatisfactionResponse) response).getHasRating());
-
             }
         });
     }
 
     @Override
     public void cancelInvoiceItem(CancelInvoiceItemRequest request) {
+        if (!isViewAttached()) {
+            return;
+        }
         getMvpView().showLoadingDelayed(SHOW_LOADING_DELAY);
         doApiCallForResponse(getDataManager().callCancelInvoiceItem(request), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
+                if (!isViewAttached()) {
+                    return;
+                }
                 getMvpView().hideLoading();
                 getMvpView().showOrderDetails((GetOrdersResponse.Order) response);
             }
@@ -114,6 +137,9 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
+                if (!isViewAttached()) {
+                    return;
+                }
                 getMvpView().addressChanged();
             }
         });

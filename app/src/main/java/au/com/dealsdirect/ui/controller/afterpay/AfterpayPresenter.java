@@ -29,6 +29,9 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
 
     @Override
     public void createAfterpayOrder() {
+        if (!isViewAttached()) {
+            return;
+        }
         CreateAfterpayOrderRequest request = new CreateAfterpayOrderRequest();
         request.setCountryId(getDataManager().getCountryId());
         request.setLanguageId(getDataManager().getLanguageId());
@@ -42,9 +45,12 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(response -> {
-
-                    getMvpView().hideProgressIndicator();
                     mIsBusy = false;
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+                    getMvpView().hideProgressIndicator();
 
                     if (response.d.getValue().isSuccess()) {
                         getMvpView().showAfterpayWebView(response.d.getValue().getToken());
@@ -52,9 +58,12 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
                         getMvpView().showError(response.d.getValue().getError());
                     }
                 }, throwable -> {
-
-                    getMvpView().hideProgressIndicator();
                     mIsBusy = false;
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+                    getMvpView().hideProgressIndicator();
 
                     Log.e(CheckoutPresenter.class.toString(), throwable.toString());
                     getMvpView().showError(null);
@@ -64,6 +73,9 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
 
     @Override
     public void payWithAfterpay(String token) {
+        if (!isViewAttached()) {
+            return;
+        }
         AfterPayCreatePaymentRequest request = new AfterPayCreatePaymentRequest();
         request.setCountryId(getDataManager().getCountryId());
         request.setLanguageId(getDataManager().getLanguageId());
@@ -77,13 +89,13 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(response -> {
+                    mIsBusy = false;
 
                     if (!isViewAttached()) {
                         return;
                     }
 
                     getMvpView().hideProgressIndicator();
-                    mIsBusy = false;
 
                     try {
                         JSONObject jsonResponse = ((JSONObject) response).getJSONObject("d");
@@ -106,9 +118,12 @@ public class AfterpayPresenter<V extends AfterpayMvpView> extends BasePresenter<
                     }
 
                 }, throwable -> {
-
-                    getMvpView().hideProgressIndicator();
                     mIsBusy = false;
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+                    getMvpView().hideProgressIndicator();
 
                     Log.e(CheckoutPresenter.class.toString(), throwable.toString());
                     getMvpView().showError(null);

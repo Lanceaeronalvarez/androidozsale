@@ -44,7 +44,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
         getDataManager().pruneCachedResponse(request);
         GetBannerResponse response = getDataManager().getCachedResponse(request, GetBannerResponse.class);
-        if (response != null) {
+        if (response != null && isViewAttached()) {
             getMvpView().showShopBanners(response, request.getCategory(), true);
         }
 
@@ -54,13 +54,20 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
                         GetBannerResponse getBannerResponse = (GetBannerResponse) response;
-                        getMvpView().showShopBanners(getBannerResponse, request.getCategory(), false);
                         getDataManager().setCachedResponse(request, getBannerResponse);
+
+                        if (!isViewAttached()) {
+                            return;
+                        }
+                        getMvpView().showShopBanners(getBannerResponse, request.getCategory(), false);
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
                         super.onFailure(t);
+                        if (!isViewAttached()) {
+                            return;
+                        }
                         getMvpView().unBindPaginate();
                     }
                 });
@@ -70,7 +77,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     public void loadSlidingBanners(GetBannerRequest request) {
         getDataManager().pruneCachedResponse(request);
         GetBannerResponse response = getDataManager().getCachedResponse(request, GetBannerResponse.class);
-        if (response != null) {
+        if (response != null && isViewAttached()) {
             getMvpView().showSlidingBanners(response);
         }
 
@@ -80,13 +87,20 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
                         GetBannerResponse getBannerResponse = (GetBannerResponse) response;
-                        getMvpView().showSlidingBanners(getBannerResponse);
                         getDataManager().setCachedResponse(request, getBannerResponse);
+
+                        if (!isViewAttached()) {
+                            return;
+                        }
+                        getMvpView().showSlidingBanners(getBannerResponse);
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
                         super.onFailure(t);
+                        if (!isViewAttached()) {
+                            return;
+                        }
                         getMvpView().showSlidingBanners(null);
                     }
                 });
@@ -96,7 +110,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     public void loadSponsoredBanners(GetBannerRequest request) {
         getDataManager().pruneCachedResponse(request);
         GetBannerResponse response = getDataManager().getCachedResponse(request, GetBannerResponse.class);
-        if (response != null) {
+        if (response != null && isViewAttached()) {
             getMvpView().showSlidingBanners(response);
         }
 
@@ -106,13 +120,20 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
                         GetBannerResponse getBannerResponse = (GetBannerResponse) response;
-                        getMvpView().showSponsoredBanners(getBannerResponse);
                         getDataManager().setCachedResponse(request, getBannerResponse);
+
+                        if (!isViewAttached()) {
+                            return;
+                        }
+                        getMvpView().showSponsoredBanners(getBannerResponse);
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
                         super.onFailure(t);
+                        if (!isViewAttached()) {
+                            return;
+                        }
                         getMvpView().showSponsoredBanners(null);
                     }
                 });
@@ -125,12 +146,18 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                     @Override
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
+                        if (!isViewAttached()) {
+                            return;
+                        }
                         getMvpView().showCategoryBanners((GetBannerResponse) response);
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
                         super.onFailure(t);
+                        if (!isViewAttached()) {
+                            return;
+                        }
                         getMvpView().showCategoryBanners(null);
                     }
                 });
@@ -149,7 +176,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
             @Override
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);
-                if (response != null) {
+                if (response != null && isViewAttached()) {
                     getMvpView().storeCategories((List<GetCategoryTreeResponse>) response);
                 }
             }
@@ -162,7 +189,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
             @Override
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);
-                if (response != null) {
+                if (response != null && isViewAttached()) {
                     getMvpView().showTopBrands((List<GetTopBrandsResponse>) response);
                 }
             }

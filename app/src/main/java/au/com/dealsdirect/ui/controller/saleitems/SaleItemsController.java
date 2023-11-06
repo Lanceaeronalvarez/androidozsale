@@ -1135,6 +1135,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @Override
     public void onDetach(View view) {
+        mPresenter.onDetach();
         if (mAppBar != null) {
             mAppBar.removeOnOffsetChangedListener(this);
         }

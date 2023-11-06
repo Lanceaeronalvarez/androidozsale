@@ -119,6 +119,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                     public void onSuccess(Object o) {
                         super.onSuccess(o);
 
+                        if (!isViewAttached()) {
+                            return;
+                        }
                         if (o instanceof GetAfterpayDataResponse) {
                             GetAfterpayDataResponse response = (GetAfterpayDataResponse) o;
                             if (response.getApplicabilityStatus().toLowerCase().contains("ok") &&
@@ -142,6 +145,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                     @Override
                     public void onSuccess(List<?> o) {
                         super.onSuccess(o);
+                        if (!isViewAttached()) {
+                            return;
+                        }
                         if (o instanceof PromoInfoResponse) {
                             PromoInfoResponse response = (PromoInfoResponse) o;
                             getMvpView().setDynamicDiscount(response.getPercentOffText());
@@ -170,6 +176,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
     @Override
     public void addToCart(AddToCartRequest requestValues) {
+        if (!isViewAttached()) {
+            return;
+        }
         getMvpView().showLoading();
 
         doApiCallForResponse(getDataManager()
@@ -178,6 +187,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(Object response) {
                 super.onSuccess(response);
 
+                if (!isViewAttached()) {
+                    return;
+                }
                 getMvpView().showAddToCartResponse(new CheckoutDetailsMapper((AddToCartResponse.Response) response));
                 getDataManager().setHasActiveCheckoutSession(false);
             }
@@ -186,6 +198,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onFailure(Throwable throwable) {
                 super.onFailure(throwable);
 
+                if (!isViewAttached()) {
+                    return;
+                }
                 getMvpView().hideLoading();
                 getMvpView().onError(throwable.getMessage());
                 getMvpView().showAddToCartResponseFailed();
@@ -208,6 +223,10 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
     @Override
     public void generateOurpay(SaleItemDetails value, OurpayDataResponse ourpayDataResponse) {
+        if (!isViewAttached()) {
+            return;
+        }
+
         Ourpay ourpay = new Ourpay();
 
         try {
@@ -261,6 +280,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 super.onSuccess(o);
 
                 CartUtil.setValueToCart(((BasketQuantityResponse) o).getItemQuantity());
+                if (!isViewAttached()) {
+                    return;
+                }
                 getMvpView().onCallGetBasketItemsQuantity();
             }
 
@@ -268,13 +290,16 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onFailure(Throwable throwable) {
                 super.onFailure(throwable);
 
-                getMvpView().onError(throwable.getMessage());
-
                 // handle load accounts error here
                 if (throwable instanceof ANError) {
                     ANError anError = (ANError) throwable;
                     handleApiError(anError);
                 }
+
+                if (!isViewAttached()) {
+                    return;
+                }
+                getMvpView().onError(throwable.getMessage());
             }
         });
     }
@@ -289,19 +314,23 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
         doApiCallForResponse(getDataManager().callDynamicDiscount(skuId), new AppApiCallback() {
             @Override
             public void onSuccess(Object o) {
-                if (o != null) getMvpView().setDynamicDiscount((String) o);
+                if (o != null && isViewAttached()) getMvpView().setDynamicDiscount((String) o);
             }
 
             @Override
             public void onFailure(Throwable throwable) {
                 AppLogger.d(throwable.getMessage());
-                getMvpView().setDynamicDiscount(null);
 
                 // handle load accounts error here
                 if (throwable instanceof ANError) {
                     ANError anError = (ANError) throwable;
                     handleApiError(anError);
                 }
+
+                if (!isViewAttached()) {
+                    return;
+                }
+                getMvpView().setDynamicDiscount(null);
             }
         });
     }
@@ -403,7 +432,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(List<?> object) {
                 super.onSuccess(object);
 
-                if (object != null && object.size() != 0) {
+                if (object != null && object.size() != 0 && isViewAttached()) {
                     List<RecommendedItemsResponse> responseList = (List<RecommendedItemsResponse>) object;
                     getMvpView().showRecommendedItems(responseList);
                 }
@@ -414,13 +443,16 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onFailure(Throwable throwable) {
                 super.onFailure(throwable);
 
-                getMvpView().onError(throwable.getMessage());
-
                 // handle load accounts error here
                 if (throwable instanceof ANError) {
                     ANError anError = (ANError) throwable;
                     handleApiError(anError);
                 }
+
+                if (!isViewAttached()) {
+                    return;
+                }
+                getMvpView().onError(throwable.getMessage());
             }
         });
     }
@@ -432,7 +464,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);
 
-                if (response != null && response.size() != 0) {
+                if (response != null && response.size() != 0 && isViewAttached()) {
                     getMvpView().showYouMayAlsoLike((List<GetYouMayAlsoLikeResponse>) response);
                 }
 
@@ -442,13 +474,16 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onFailure(Throwable throwable) {
                 super.onFailure(throwable);
 
-                getMvpView().hideLoading();
-
                 // handle load accounts error here
                 if (throwable instanceof ANError) {
                     ANError anError = (ANError) throwable;
                     handleApiError(anError);
                 }
+
+                if (!isViewAttached()) {
+                    return;
+                }
+                getMvpView().hideLoading();
             }
         });
     }
@@ -460,6 +495,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(List<?> object) {
                 super.onSuccess(object);
 
+                if (!isViewAttached()) {
+                    return;
+                }
                 List<RecentlyViewedItemResponse> response = (List<RecentlyViewedItemResponse>) object;
                 getMvpView().showRecentlyViewedItems(response);
 
@@ -469,13 +507,16 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onFailure(Throwable throwable) {
                 super.onFailure(throwable);
 
-                getMvpView().onError(throwable.getMessage());
-
                 // handle load accounts error here
                 if (throwable instanceof ANError) {
                     ANError anError = (ANError) throwable;
                     handleApiError(anError);
                 }
+
+                if (!isViewAttached()) {
+                    return;
+                }
+                getMvpView().onError(throwable.getMessage());
             }
         });
     }
@@ -493,19 +534,25 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onFailure(Throwable throwable) {
                 super.onFailure(throwable);
 
-                getMvpView().onError(throwable.getMessage());
-
                 // handle load accounts error here
                 if (throwable instanceof ANError) {
                     ANError anError = (ANError) throwable;
                     handleApiError(anError);
                 }
+
+                if (!isViewAttached()) {
+                    return;
+                }
+                getMvpView().onError(throwable.getMessage());
             }
         });
     }
 
     @Override
     public void loadDefaultPostcode() {
+        if (!isViewAttached()) {
+            return;
+        }
         final String postcode = getDataManager().getDefaultPostcode();
         if (postcode != null && !postcode.isEmpty()) {
             getMvpView().showDefaultPostcode(postcode);
@@ -517,6 +564,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(Object object) {
                 super.onSuccess(object);
 
+                if (!isViewAttached()) {
+                    return;
+                }
                 if (object instanceof GetPostcodeDefaultResponse) {
                     getMvpView().showDefaultPostcode(((GetPostcodeDefaultResponse) object).getPostcode());
                     setDefaultPostcode(((GetPostcodeDefaultResponse) object).getPostcode());
@@ -529,6 +579,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onFailure(Throwable throwable) {
                 super.onFailure(throwable);
 
+                if (!isViewAttached()) {
+                    return;
+                }
                 getMvpView().showDefaultPostcode(null);
             }
         });
@@ -546,6 +599,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onSuccess(Object object) {
                 super.onSuccess(object);
 
+                if (!isViewAttached()) {
+                    return;
+                }
                 if (object instanceof GetPostcodeShippingPriceResponse) {
                     getMvpView().showPreviewShippingPrice((GetPostcodeShippingPriceResponse) object, postcode, operation);
                 } else {
@@ -557,6 +613,9 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             public void onFailure(Throwable throwable) {
                 super.onFailure(throwable);
 
+                if (!isViewAttached()) {
+                    return;
+                }
                 getMvpView().showPreviewShippingPrice(null, postcode, operation);
             }
         });

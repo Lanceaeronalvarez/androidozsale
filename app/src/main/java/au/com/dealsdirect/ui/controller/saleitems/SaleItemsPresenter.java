@@ -108,7 +108,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                         }
                     });
         });
-        getMvpView().updateWishlistWithAddition(productId);
+        if (isViewAttached()) {
+            getMvpView().updateWishlistWithAddition(productId);
+        }
     }
 
     @Override
@@ -128,7 +130,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                                 }
                             });
                 });
-        getMvpView().updateWishlistWithRemoval(productId);
+        if (isViewAttached()) {
+            getMvpView().updateWishlistWithRemoval(productId);
+        }
     }
 
     @Override
@@ -136,7 +140,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         ParamaterizedCachableRequest request = new ParamaterizedCachableRequest("loadSaleBannerDetails", saleId);
         getDataManager().pruneCachedResponse(request);
         GetSaleBannerDetailsResponse getSaleBannerDetailsResponse = getDataManager().getCachedResponse(request, GetSaleBannerDetailsResponse.class);
-        if (getSaleBannerDetailsResponse != null) {
+        if (getSaleBannerDetailsResponse != null && isViewAttached()) {
             getMvpView().showSaleBannerDetails(getSaleBannerDetailsResponse);
         }
 
@@ -156,14 +160,14 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         final int pageNumber = getSaleItemsRequest.getPageNumber();
         getDataManager().pruneCachedResponse(getSaleItemsRequest);
         GetSaleItemsResponse saleItemsResponse = getDataManager().getCachedResponse(getSaleItemsRequest, GetSaleItemsResponse.class);
-        if (saleItemsResponse != null) {
+        if (saleItemsResponse != null && isViewAttached()) {
             getMvpView().showSaleItems(saleItemsResponse, pageNumber, !getSaleItemsRequest.hasFilters(), true);
         }
 
         ParamaterizedCachableRequest loadSortingFacetsRequest = new ParamaterizedCachableRequest("loadSortingFacets");
         getDataManager().pruneCachedResponse(loadSortingFacetsRequest);
         ListOfSortingResponses listOfSortingResponses = getDataManager().getCachedResponse(loadSortingFacetsRequest, ListOfSortingResponses.class);
-        if (listOfSortingResponses != null) {
+        if (listOfSortingResponses != null && isViewAttached()) {
             getMvpView().onLoadSortingFacetsFinished(listOfSortingResponses.getResponses());
         }
 
@@ -239,7 +243,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         ParamaterizedCachableRequest request = new ParamaterizedCachableRequest("loadSortingFacets");
         getDataManager().pruneCachedResponse(request);
         ListOfSortingResponses listOfSortingResponses = getDataManager().getCachedResponse(request, ListOfSortingResponses.class);
-        if (listOfSortingResponses != null) {
+        if (listOfSortingResponses != null && isViewAttached()) {
             getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) listOfSortingResponses.getResponses());
         }
 
@@ -303,7 +307,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
             BrandNames output = new BrandNames(response);
             final Handler mainHandler = new Handler(Looper.getMainLooper());
             mainHandler.post(() -> {
-                if (getMvpView() != null) {
+                if (isViewAttached()) {
                     getMvpView().storeBrandNames(output);
                 }
             });
