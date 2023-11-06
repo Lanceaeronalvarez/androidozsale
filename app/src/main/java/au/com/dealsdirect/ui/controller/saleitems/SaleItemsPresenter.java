@@ -16,6 +16,7 @@ import au.com.dealsdirect.data.cachedresponses.ListOfSortingResponses;
 import au.com.dealsdirect.data.cachedresponses.ParamaterizedCachableRequest;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -288,7 +289,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadBrandBubbles() {
-        doApiCallForResponse(getDataManager().callGetCategories(),
+        doApiCallForResponse(getDataManager().callGetCategories(new GetCategoryTreeRequest()),
                 new AppApiCallback() {
                     @Override
                     public void onSuccess(List<?> list) {

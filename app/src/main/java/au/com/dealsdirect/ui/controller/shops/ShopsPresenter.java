@@ -13,6 +13,7 @@ import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -172,7 +173,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
 
     @Override
     public void loadCategoryTree() {
-        doApiCallForResponse(getDataManager().callGetCategories(), new AppApiCallback() {
+        doApiCallForResponse(getDataManager().callGetCategories(new GetCategoryTreeRequest()), new AppApiCallback() {
             @Override
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);

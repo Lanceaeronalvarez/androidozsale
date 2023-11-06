@@ -30,6 +30,7 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
@@ -191,7 +192,7 @@ public interface ApiHelper {
 
     Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request);
 
-    Observable<List<GetCategoryTreeResponse>> callGetCategories();
+    Observable<List<GetCategoryTreeResponse>> callGetCategories(GetCategoryTreeRequest request);
 
     Observable<List<GetTopBrandsResponse>> callGetTopBrands();
 

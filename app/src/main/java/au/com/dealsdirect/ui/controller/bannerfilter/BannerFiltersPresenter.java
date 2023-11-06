@@ -8,6 +8,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.cachedresponses.CachableRequest;
 import au.com.dealsdirect.data.cachedresponses.CachableResponse;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -45,7 +46,7 @@ public class BannerFiltersPresenter<V extends BannerFiltersMvpView> extends Base
             getMvpView().showCategories(response.getTreeResponses());
         }
         doApiCallForResponse(getDataManager()
-                .callGetCategories(), new AppApiCallback() {
+                .callGetCategories(new GetCategoryTreeRequest()), new AppApiCallback() {
             @Override
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);
