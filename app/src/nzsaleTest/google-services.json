@@ -1,9 +1,9 @@
 {
   "project_info": {
-    "project_number": "118822854515",
-    "firebase_url": "https://nzsale-android-firebase.firebaseio.com",
-    "project_id": "nzsale-android-firebase",
-    "storage_bucket": "nzsale-android-firebase.appspot.com"
+    "project_number": "686246480880",
+    "firebase_url": "https://nzsale-ios-firebase.firebaseio.com",
+    "project_id": "nzsale-ios-firebase",
+    "storage_bucket": "nzsale-ios-firebase.appspot.com"
   },
   "client": [
     {
@@ -15,26 +15,32 @@
       },
       "oauth_client": [
         {
-          "client_id": "118822854515-v64657qan6d3jk7q1mtiog6n0rihbvbc.apps.googleusercontent.com",
+          "client_id": "686246480880-rjpqadriuv7n3uhojhbh7dm7ttcq20b9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBV0RSwqlLQMbJwZ5Gz-526ECsmL63UggQ"
+          "current_key": "AIzaSyDHVgpWLdG395XAuYsvoG5G4rxvzy96o-g"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "118822854515-v64657qan6d3jk7q1mtiog6n0rihbvbc.apps.googleusercontent.com",
+              "client_id": "686246480880-rjpqadriuv7n3uhojhbh7dm7ttcq20b9.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "686246480880-02ctbp7ujs23igl6aiehpqfqn17g0d4a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "nz.co.Nzsaletest"
+              }
             }
           ]
         }
-      },
-      "admob_app_id": "ca-app-pub-4114338578467810~5978596822"
+      }
     },
     {
       "client_info": {
@@ -45,21 +51,28 @@
       },
       "oauth_client": [
         {
-          "client_id": "118822854515-v64657qan6d3jk7q1mtiog6n0rihbvbc.apps.googleusercontent.com",
+          "client_id": "686246480880-rjpqadriuv7n3uhojhbh7dm7ttcq20b9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBV0RSwqlLQMbJwZ5Gz-526ECsmL63UggQ"
+          "current_key": "AIzaSyDHVgpWLdG395XAuYsvoG5G4rxvzy96o-g"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "118822854515-v64657qan6d3jk7q1mtiog6n0rihbvbc.apps.googleusercontent.com",
+              "client_id": "686246480880-rjpqadriuv7n3uhojhbh7dm7ttcq20b9.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "686246480880-02ctbp7ujs23igl6aiehpqfqn17g0d4a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "nz.co.Nzsaletest"
+              }
             }
           ]
         }

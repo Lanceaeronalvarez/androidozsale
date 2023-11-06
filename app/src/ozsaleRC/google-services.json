@@ -1,9 +1,9 @@
 {
   "project_info": {
-    "project_number": "211462705866",
-    "firebase_url": "https://ozsale-android-firebase.firebaseio.com",
-    "project_id": "ozsale-android-firebase",
-    "storage_bucket": "ozsale-android-firebase.appspot.com"
+    "project_number": "474505652333",
+    "firebase_url": "https://ozsale.firebaseio.com",
+    "project_id": "ozsale",
+    "storage_bucket": "ozsale.appspot.com"
   },
   "client": [
     {
@@ -15,26 +15,32 @@
       },
       "oauth_client": [
         {
-          "client_id": "211462705866-5cuv31d0aamdhhbg4hgr46vtthanb8ob.apps.googleusercontent.com",
+          "client_id": "474505652333-mntntvttahj7388949fqtuujha7id49l.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBblSKvGUamdf0KQtB_Z3fwxFqq1fr68JA"
+          "current_key": "AIzaSyC3IlW5oAXLFXq4JTjv5J2VMkakKo223GM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "211462705866-5cuv31d0aamdhhbg4hgr46vtthanb8ob.apps.googleusercontent.com",
+              "client_id": "474505652333-mntntvttahj7388949fqtuujha7id49l.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "474505652333-11mo3qbp0bjkri207g3jfsnovkq7hth0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "au.com.ozsale-test"
+              }
             }
           ]
         }
-      },
-      "admob_app_id": "ca-app-pub-4114338578467810~8730982743"
+      }
     },
     {
       "client_info": {
@@ -45,21 +51,28 @@
       },
       "oauth_client": [
         {
-          "client_id": "211462705866-5cuv31d0aamdhhbg4hgr46vtthanb8ob.apps.googleusercontent.com",
+          "client_id": "474505652333-mntntvttahj7388949fqtuujha7id49l.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBblSKvGUamdf0KQtB_Z3fwxFqq1fr68JA"
+          "current_key": "AIzaSyC3IlW5oAXLFXq4JTjv5J2VMkakKo223GM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "211462705866-5cuv31d0aamdhhbg4hgr46vtthanb8ob.apps.googleusercontent.com",
+              "client_id": "474505652333-mntntvttahj7388949fqtuujha7id49l.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "474505652333-11mo3qbp0bjkri207g3jfsnovkq7hth0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "au.com.ozsale-test"
+              }
             }
           ]
         }
