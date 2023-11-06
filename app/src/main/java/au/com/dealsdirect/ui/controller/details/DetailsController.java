@@ -259,6 +259,9 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     public void onSaveReceiveSales(SaveReceiveSalesResponse saveReceiveSalesResponse) {
+        if (currentUserDetails == null) {
+            currentUserDetails = new GetUserDetailsResponse();
+        }
         String firstname = getFieldValue(mFirstNameText);
         String lastname = getFieldValue(mLastNameText);
         boolean gender = getFieldValueOfGender();
@@ -282,6 +285,9 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     @Override
     public void onUpdateEmailSubscriptionPreference() {
+        if (currentUserDetails == null) {
+            return;
+        }
         currentUserDetails.setMemberPreference(emailSubscriptionPreference);
         currentUserDetails.setPreferenceDate(serverDateFormat.format(emailSubscriptionPreferenceDate));
 
@@ -343,8 +349,9 @@ public class DetailsController extends BasePullToRefreshController implements De
     public void saveUserDetails() {
         hideKeyboard();
 
-        if (mPresenter.isTablet() && !mActivity.isAuthorized()
-                || getBoolean(R.bool.master_detail_enabled) && !mActivity.isAuthorized()) {
+        if (currentUserDetails == null ||
+                (mPresenter.isTablet() && !mActivity.isAuthorized()) ||
+                (getBoolean(R.bool.master_detail_enabled) && !mActivity.isAuthorized())) {
             CustomAlertDialog.showCustomAlertDialog(mActivity,
                     CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                     getString(R.string.controller_user_details_login_prompt));
@@ -438,6 +445,10 @@ public class DetailsController extends BasePullToRefreshController implements De
     }
 
     private boolean isThereAnyChangesInUserDetails() {
+        if (currentUserDetails == null) {
+            return true;
+        }
+
         String firstname = getFieldValue(mFirstNameText);
         String lastname = getFieldValue(mLastNameText);
         boolean gender = getFieldValueOfGender();
@@ -462,7 +473,8 @@ public class DetailsController extends BasePullToRefreshController implements De
     }
 
     private boolean isEmailSubscriptionPreferenceChanged() {
-        return emailSubscriptionPreferenceDate != null &&
+        return currentUserDetails != null &&
+                emailSubscriptionPreferenceDate != null &&
                 !emailSubscriptionPreferenceDate.equals(getDateFromServerDateString(currentUserDetails.getPreferenceDate()));
     }
 
