@@ -1609,8 +1609,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             return;
         }
 
-        mSaleItemsAdapter.removeData(itemsContainerHelper.indexOfItem(productId));
-        itemsContainerHelper.removeItem(productId);
+        final int indexOfItem = itemsContainerHelper.indexOfItem(productId);
+        if (indexOfItem >= 0) {
+            mSaleItemsAdapter.removeData(indexOfItem);
+            itemsContainerHelper.removeItem(productId);
+        } else {
+            mSaleItemsAdapter.replaceData(itemsContainerHelper.getItems());
+        }
 
         showPlaceholderWithAnimation(itemsContainerHelper.isEmpty());
         determineWhereToShowAds();
