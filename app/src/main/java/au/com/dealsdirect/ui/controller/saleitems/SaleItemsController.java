@@ -2734,8 +2734,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void setColumnViewEnabled(boolean enabled) {
-        mColumnView.setEnabled(enabled);
-        mColumnView.setAlpha(enabled ? 1.0f : 0.5f);
+        if (mColumnView != null) {
+            mColumnView.setEnabled(enabled);
+            mColumnView.setAlpha(enabled ? 1.0f : 0.5f);
+        }
     }
 
     @Override
