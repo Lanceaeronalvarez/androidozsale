@@ -174,7 +174,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public void loadCart() {
-        mCheckoutDetailView.loadCart();
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.loadCart();
+        }
     }
 
     @Override
@@ -184,7 +186,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public void showMyPayDetails(CheckoutDetailsMapper value, Ourpay ourpay) {
-        mCheckoutDetailView.showMyPayDetails(value, ourpay);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.showMyPayDetails(value, ourpay);
+        }
     }
 
     @Override
@@ -214,9 +218,11 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public void showAddressDetails(DeliveryAddress deliveryAddress, List<DecorationInfoList> decorationInfoList) {
-        mCheckoutDetailView.showAddressDetails(deliveryAddress, decorationInfoList);
-        mCheckoutDetailView.showCartDetailsFooter(deliveryAddress != null);
-        mCheckoutDetailView.showCartDetailsPostcode(deliveryAddress != null ? deliveryAddress.getPostcode() : null);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.showAddressDetails(deliveryAddress, decorationInfoList);
+            mCheckoutDetailView.showCartDetailsFooter(deliveryAddress != null);
+            mCheckoutDetailView.showCartDetailsPostcode(deliveryAddress != null ? deliveryAddress.getPostcode() : null);
+        }
     }
 
     @Override
@@ -244,102 +250,148 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public void showDeliveryOptions(List<DeliveryOption> deliveryOptions, DeliveryServicePackageDetail deliveryServicePackageDetail) {
-        mCheckoutDetailView.showDeliveryOptions(deliveryOptions, deliveryServicePackageDetail);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.showDeliveryOptions(deliveryOptions, deliveryServicePackageDetail);
+        }
     }
 
     @Override
     public void showPaymentDetails(PaymentMethod paymentMethod) {
-        mCheckoutDetailView.showPaymentDetails(paymentMethod);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.showPaymentDetails(paymentMethod);
+        }
     }
 
     @Override
     public void showVoucherDetails(List<Voucher> vouchers) {
-        mCheckoutDetailView.showVoucherDetails(vouchers);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.showVoucherDetails(vouchers);
+        }
     }
 
     @Override
     public void setIsShipmentAvailable(boolean isShipmentAvailable) {
-        mCheckoutDetailView.setIsShipmentAvailable(isShipmentAvailable);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.setIsShipmentAvailable(isShipmentAvailable);
+        }
     }
 
     @Override
     public void showSummaryDetails(Summary summary) {
-        mCheckoutDetailView.showSummaryDetails(summary);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.showSummaryDetails(summary);
+        }
     }
 
     @Override
     public void setPaymentList(List<PaymentMethod> paymentList) {
-        mCheckoutDetailView.setPaymentList(paymentList);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.setPaymentList(paymentList);
+        }
     }
 
     @Override
     public void showAfterpayPanel(boolean isAvailable, String description) {
-        mCheckoutDetailView.showAfterpayPanel(isAvailable, description);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.showAfterpayPanel(isAvailable, description);
+        }
     }
 
     @Override
     public void hideAfterpayPanel() {
-        mCheckoutDetailView.hideAfterpayPanel();
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.hideAfterpayPanel();
+        }
     }
 
     @Override
     public void showLPayPanel() {
-        mCheckoutDetailView.showLPayPanel();
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.showLPayPanel();
+        }
     }
 
     @Override
     public void hideLPayPanel() {
-        mCheckoutDetailView.hideLPayPanel();
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.hideLPayPanel();
+        }
     }
 
     @Override
     public void showKlarnaPanel(String description) {
-        mCheckoutDetailView.showKlarnaPanel(description);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.showKlarnaPanel(description);
+        }
     }
 
     @Override
     public void hideKlarnaPanel() {
-        mCheckoutDetailView.hideKlarnaPanel();
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.hideKlarnaPanel();
+        }
     }
 
     @Override
     public void storeCartDetails(CheckoutDetailsMapper value) {
-        mCheckoutDetailView.storeCartDetails(value);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.storeCartDetails(value);
+        }
     }
 
     @Override
     public void triggerLoginTicket() {
-        mCheckoutDetailView.triggerLoginTicket();
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.triggerLoginTicket();
+        }
     }
 
     @Override
     public void updateCheckoutBadge() {
-        mCheckoutDetailView.updateCheckoutBadge();
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.updateCheckoutBadge();
+        }
     }
 
     @Override
     public boolean isCartLoading() {
-        return mCheckoutDetailView.isCartLoading();
+        if (mCheckoutDetailView != null) {
+            return mCheckoutDetailView.isCartLoading();
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void setCartIsLoading(boolean val) {
-        mCheckoutDetailView.setCartIsLoading(val);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.setCartIsLoading(val);
+        }
     }
 
     @Override
     public CheckoutMvpPresenter getPresenter() {
-        return mCheckoutDetailView.getPresenter();
+        if (mCheckoutDetailView != null) {
+            return mCheckoutDetailView.getPresenter();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean isOurPaySelectDeliveryMethod() {
-        return mCheckoutDetailView.isOurPaySelectDeliveryMethod();
+        if (mCheckoutDetailView != null) {
+            return mCheckoutDetailView.isOurPaySelectDeliveryMethod();
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
-        return mCheckoutDetailView.setIsPaymentMethodChanged(isPaymentMethodChanged);
+    public void setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.setIsPaymentMethodChanged(isPaymentMethodChanged);
+        }
     }
 
     @Override
@@ -408,11 +460,15 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public void showAgeRestriction(boolean hasAgeRestriction) {
-        mCheckoutDetailView.showAgeRestriction(hasAgeRestriction);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.showAgeRestriction(hasAgeRestriction);
+        }
     }
 
     @Override
     public void updateCartWithValue(Value value) {
-        mCheckoutDetailView.updateCartWithValue(value);
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.updateCartWithValue(value);
+        }
     }
 }

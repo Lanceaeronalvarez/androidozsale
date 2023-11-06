@@ -1257,8 +1257,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     @Override
-    public boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
-        return mIsPaymentMethodChanged = isPaymentMethodChanged;
+    public void setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
+        mIsPaymentMethodChanged = isPaymentMethodChanged;
     }
 
     @Override
