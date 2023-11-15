@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.checkout.checkouthost;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,6 +32,8 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
+import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -40,6 +44,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -136,6 +141,21 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
         mAdapter.setShouldAddSpacerOnTop(mPresenter.isTablet());
         mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
+        mAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
+            @Override
+            public void onIncrease(String itemId, int newCount, ProductQuantityLayout view) {
+                mPresenter.fetchAdjustItemQuantity("IncreaseOrderItem", itemId, null, view);
+            }
+
+            @Override
+            public void onDecrease(String itemId, int newCount, ProductQuantityLayout view) {
+                mPresenter.fetchAdjustItemQuantity("DecreaseOrderItem", itemId, null, view);
+
+                if (newCount == 0) {
+                    logRemoveItemFromCart(view.getContext());
+                }
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
 
@@ -470,5 +490,13 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         if (mCheckoutDetailView != null) {
             mCheckoutDetailView.updateCartWithValue(value);
         }
+    }
+
+    public void logRemoveItemFromCart(Context context) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, context);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
+
+        DataCollector.logEvent(Events.RemoveFromCart, parameters);
     }
 }

@@ -66,6 +66,7 @@ import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -81,6 +82,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
+import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
 import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
@@ -1259,6 +1261,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         parameters.put(DataCollector.EventParameters.ITEM_BRAND, saleDetail.getBrandName());
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
+
+        GA4EventParams.GA4ViewItemParams ga4EventParams = new GA4EventParams.GA4ViewItemParams();
+        ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
+        GA4EventParams.Item ga4Item = new GA4EventParams.Item();
+        ga4Item.setItemName(saleDetail.getName());
+        ga4Item.setItemId(saleDetail.getProductId());
+        ga4Item.setPrice(saleDetail.getSalePrice().getValue());
+        ga4Item.setQuantity(1);
+        ga4Item.setItemBrand(saleDetail.getBrandName());
+        ga4Item.setItemCategories(saleDetail.getCategories());
+        ga4Items.add(ga4Item);
+        ga4EventParams.setItems(ga4Items);
+        ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4EventParams.setValue(saleDetail.getSalePrice().getValue());
+        parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
+
         DataCollector.logEvent(Events.CVItemDetails, parameters);
 
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
@@ -1657,6 +1675,22 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         parameters.put(DataCollector.EventParameters.ADD_TO_CART_CURRENCY,
                 Settings.getSelectedCountry().currencySign);
         parameters.put(DataCollector.EventParameters.ADD_TO_CART_SOURCE, SaleItemDetailsController.class.getSimpleName());
+
+        final Double priceNumber = Double.parseDouble(mSalePrice.substring(Settings.getSelectedCountry().currencySign.length()));
+        GA4EventParams.GA4AddToCartParams ga4EventParams = new GA4EventParams.GA4AddToCartParams();
+        ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
+        GA4EventParams.Item ga4Item = new GA4EventParams.Item();
+        ga4Item.setItemName(mSaleName);
+        ga4Item.setItemId(mProductId);
+        ga4Item.setPrice(priceNumber);
+        ga4Item.setQuantity(1);
+        ga4Item.setItemBrand(mBrandName);
+        ga4Items.add(ga4Item);
+        ga4EventParams.setItems(ga4Items);
+        ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4EventParams.setValue(priceNumber);
+        parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
+
         DataCollector.logEvent(Events.AddedToCartEvent, parameters);
 
         if (mPresenter.isProductInWishlist(mProductId)) {

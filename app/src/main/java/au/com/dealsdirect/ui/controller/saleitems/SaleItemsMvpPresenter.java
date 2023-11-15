@@ -11,12 +11,12 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     int wishlistCount();
 
-    void addToWishlist(String productId, String seoIdentifier, WishlistDelayedCallback delayedCallback);
+    void addToWishlist(String productId, String productName, String seoIdentifier, Double price, WishlistDelayedCallback delayedCallback);
 
-    void removeFromWishlist(String productId, WishlistDelayedCallback delayedCallback);
+    void removeFromWishlist(String productId, String productName, Double price, WishlistDelayedCallback delayedCallback);
 
     public interface WishlistDelayedCallback {
-        void performDelayedAction(String productId, boolean isLiked);
+        void performDelayedAction(String productId, String productName, Double price, boolean isLiked);
     }
 
     void loadSaleBannerDetails(String saleId);

@@ -27,7 +27,9 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
+import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -48,6 +50,7 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     private HashMap<DecorationInfoList, View> mViewMap = new HashMap<>();
 
     private boolean mIsFromCart = false;
+    private GA4EventParams.GA4AddShippingInfoParams ga4AddShippingInfoParams = null;
 
     @Inject
     AddNewAddressMvpPresenter<AddNewAddressMvpView> mPresenter;
@@ -198,6 +201,10 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
     @Override
     public void addNewAddressSuccessful() {
 
+        if (mIsFromCart) {
+            logAddShipmentWhileFromCart();
+        }
+
         CustomAlertDialog.showCustomAlertDialog(
                 mActivity,
                 CustomAlertDialog.CustomDialogIconState.POSITIVE,
@@ -233,5 +240,15 @@ public class AddNewAddressController extends BaseController implements AddNewAdd
                 CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                 message);
 
+    }
+
+    private void logAddShipmentWhileFromCart() {
+        GA4EventParams.GA4AddShippingInfoParams params = new GA4EventParams.GA4AddShippingInfoParams();
+        params.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4AddShippingInfoParams = params;
+    }
+
+    public GA4EventParams.GA4AddShippingInfoParams getGa4AddShippingInfoParams() {
+        return ga4AddShippingInfoParams;
     }
 }

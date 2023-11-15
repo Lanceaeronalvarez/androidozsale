@@ -48,7 +48,10 @@ public enum Events {
     FeatureUsageEvent("FeatureUsageEvent"),
     DeliveryPriceViewEvent("DeliveryPriceViewEvent"),
     SellerLinkEvent("SellerLinkEvent"),
-    CommonCheckoutEvent("CommonCheckoutEvent");
+    CommonCheckoutEvent("CommonCheckoutEvent"),
+    GA4AddPaymentInfo("GA4AddPaymentInfo"),
+    GA4AddShippingInfo("GA4AddShippingInfo"),
+    GA4SelectItem("GA4SelectItem");
 
     private String value;
 

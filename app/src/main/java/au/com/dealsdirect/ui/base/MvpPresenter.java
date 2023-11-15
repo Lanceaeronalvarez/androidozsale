@@ -23,7 +23,7 @@ public interface MvpPresenter<V extends MvpView> {
 
     boolean hasActiveCheckoutSession();
 
-    void setActiveCheckoutSessionFalse();
+    void setHasActiveCheckoutSession(boolean hasActiveSession);
 
     boolean isTablet();
 

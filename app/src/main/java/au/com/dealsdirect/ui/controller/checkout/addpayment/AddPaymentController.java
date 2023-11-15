@@ -43,6 +43,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
@@ -53,6 +54,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
@@ -166,6 +168,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     private boolean mIsOurpaySelectDeliveryMethod;
     private String mCartTotalCost;
     private CheckoutDetailsMapper mCurrentOrderValue;
+    private GA4EventParams.GA4AddPaymentInfoParams ga4AddPaymentInfoParams = null;
 
     public static AddPaymentController newInstance() {
         return new AddPaymentController(new BundleBuilder(new Bundle()).build());
@@ -645,5 +648,16 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @OnClick(R.id.stripe_card_form_expiration_container)
     public void onExpirationContainerClick() {
         KeyboardUtils.showSoftInput(mStripeExpiryDate, mActivity);
+    }
+
+    public void logAddPaymentWhileFromCart(String paymentType) {
+        GA4EventParams.GA4AddPaymentInfoParams params = new GA4EventParams.GA4AddPaymentInfoParams();
+        params.setPaymentType(paymentType);
+        params.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4AddPaymentInfoParams = params;
+    }
+
+    public GA4EventParams.GA4AddPaymentInfoParams getGa4AddPaymentInfoParams() {
+        return ga4AddPaymentInfoParams;
     }
 }

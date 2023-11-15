@@ -108,8 +108,8 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     }
 
     @Override
-    public void setActiveCheckoutSessionFalse() {
-        getDataManager().setHasActiveCheckoutSession(false);
+    public void setHasActiveCheckoutSession(boolean hasActiveSession) {
+        getDataManager().setHasActiveCheckoutSession(hasActiveSession);
     }
 
     @Override

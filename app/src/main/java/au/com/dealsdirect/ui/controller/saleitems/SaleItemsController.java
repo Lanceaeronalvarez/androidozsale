@@ -65,6 +65,7 @@ import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
+import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
@@ -80,6 +81,7 @@ import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.enums.FeatureUsageEventType;
 import au.com.dealsdirect.service.datacollection.enums.SearchOperationType;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpRepository;
@@ -712,12 +714,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         @Override
         public void addToWishlist(SaleItemProduct item, SaleItemsMvpPresenter.WishlistDelayedCallback wishlistDelayedCallback) {
-            mPresenter.addToWishlist(item.getId(), item.getSeoIdentifier(), wishlistDelayedCallback);
+            mPresenter.addToWishlist(item.getId(), item.getName(), item.getSeoIdentifier(), item.getSalePrice().getValue(), wishlistDelayedCallback);
         }
 
         @Override
         public void removeFromWishlist(SaleItemProduct item, SaleItemsMvpPresenter.WishlistDelayedCallback wishlistDelayedCallback) {
-            mPresenter.removeFromWishlist(item.getId(), wishlistDelayedCallback);
+            mPresenter.removeFromWishlist(item.getId(), item.getName(), item.getSalePrice().getValue(), wishlistDelayedCallback);
         }
 
         @Override
@@ -965,7 +967,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         if (shouldReload ||
                 (mSourceType != SourceType.DEEPLINK &&
-                !(previousController instanceof SaleItemDetailsController) || mSourceType == SourceType.SELLER)) {
+                        !(previousController instanceof SaleItemDetailsController) || mSourceType == SourceType.SELLER)) {
             shouldReload = false;
             resetViewBasedOnSourceMode();
             switch (mSourceMode) {
@@ -1499,6 +1501,24 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
             parameters.put(DataCollector.EventParameters.ITEM_LIST, categories);
             parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+
+            if (pageNumber == 0) {
+                GA4EventParams.GA4ViewItemListParams ga4EventParams = new GA4EventParams.GA4ViewItemListParams();
+                ga4EventParams.setItemListId(mSaleId == null ? "" : mSaleId);
+                ga4EventParams.setItemListName(mSaleName == null ? "" : mSaleName);
+                final ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
+                for (SaleItemProduct product : getSaleItemsResponse.products) {
+                    final GA4EventParams.Item ga4Item = new GA4EventParams.Item();
+                    ga4Item.setItemId(product.getId());
+                    ga4Item.setItemName(product.getName());
+                    ga4Item.setItemBrand(product.getBrandName());
+                    ga4Item.setItemCategories(product.getCategories());
+                    ga4Items.add(ga4Item);
+                }
+                ga4EventParams.setItems(ga4Items);
+                parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
+            }
+
             DataCollector.logEvent(Events.CVItemList, parameters);
         }
 
@@ -1621,7 +1641,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         determineWhereToShowAds();
     }
 
-    private void logWishlistEvent(String productId, boolean liked) {
+    private void logWishlistEvent(String productId, String productName, Double price, boolean liked) {
         WishlistEventRequest request = new WishlistEventRequest();
         request.setEventType(EventTypeId.EVENT_WISHLIST);
 
@@ -1637,6 +1657,17 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         parameters.put(DataCollector.EventParameters.WISHLIST_EVENT_REQUEST, request);
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+
+        GA4EventParams.GA4AddToWishlistParams ga4EventParams = new GA4EventParams.GA4AddToWishlistParams();
+        ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
+        GA4EventParams.Item ga4Item = new GA4EventParams.Item();
+        ga4Item.setItemName(productName);
+        ga4Item.setItemId(productId);
+        ga4Items.add(ga4Item);
+        ga4EventParams.setItems(ga4Items);
+        ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4EventParams.setValue(price);
+        parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
 
         DataCollector.logEvent(Events.WishlistEvent, parameters);
     }
@@ -1657,7 +1688,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         parameters.put(DataCollector.EventParameters.WISHLIST_EVENT_REQUEST, request);
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-
         DataCollector.logEvent(Events.WishlistEvent, parameters);
     }
 
@@ -1850,6 +1880,27 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
         eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
         DataCollector.logEvent(Events.clicksEvent, eventParameters);
+
+        eventParameters = new HashMap<>();
+        eventParameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        eventParameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemsController.class.getSimpleName());
+
+        GA4EventParams.GA4SelectItemParams ga4EventParams = new GA4EventParams.GA4SelectItemParams();
+        ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
+        GA4EventParams.Item ga4Item = new GA4EventParams.Item();
+        ga4Item.setItemName(product.getName());
+        ga4Item.setItemId(product.getId());
+        ga4Item.setItemBrand(product.getBrandName());
+        ga4Item.setItemCategories(product.getCategories());
+        ga4Items.add(ga4Item);
+        ga4EventParams.setItems(ga4Items);
+        ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4EventParams.setValue(product.getSalePrice().getValue());
+        ga4EventParams.setItemListId(mSaleId == null ? "" : mSaleId);
+        ga4EventParams.setItemListName(mSaleName == null ? "" : mSaleName);
+        eventParameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
+
+        DataCollector.logEvent(Events.GA4SelectItem, eventParameters);
 
         routerTransaction = routerTransaction
                 .pushChangeHandler(new ArcZoomChangeHandler(viewLeft, viewTop, viewWidth, viewHeight))

@@ -1,14 +1,15 @@
 package au.com.dealsdirect.ui.controller.checkout.paymentselect;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -22,11 +23,13 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
@@ -67,6 +70,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     private boolean mIsOurpaySelectDeliveryMethod = false;
     private String mCartTotalCost;
     private CheckoutDetailsMapper mValue;
+    private GA4EventParams.GA4AddPaymentInfoParams ga4AddPaymentInfoParams = null;
 
 
     public static PaymentSelectController newInstance() {
@@ -195,10 +199,14 @@ public class PaymentSelectController extends BaseController implements PaymentSe
             if (!mPaymentMethods.isEmpty()) {
                 showPaymentList(mPaymentMethods);
                 mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {
-                    if (mActivity.getPaymentMethodSelected() != mPaymentMethods.get(position)) {
+                    final PaymentMethod selectedPaymentMethod = mPaymentMethods.get(position);
+                    if (mActivity.getPaymentMethodSelected() != selectedPaymentMethod) {
                         mCheckoutMvpView.setIsPaymentMethodChanged(true);
                     }
-                    mActivity.setPaymentMethodSelected(mPaymentMethods.get(position));
+                    mActivity.setPaymentMethodSelected(selectedPaymentMethod);
+
+                    logAddPaymentWhileFromCart(selectedPaymentMethod.getPaymentType());
+
                     mActivity.onBackPressed();
                 }));
             }
@@ -233,5 +241,16 @@ public class PaymentSelectController extends BaseController implements PaymentSe
         getRouter().pushController(RouterTransaction.with(controller)
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    private void logAddPaymentWhileFromCart(String paymentType) {
+        GA4EventParams.GA4AddPaymentInfoParams params = new GA4EventParams.GA4AddPaymentInfoParams();
+        params.setPaymentType(paymentType);
+        params.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4AddPaymentInfoParams = params;
+    }
+
+    public GA4EventParams.GA4AddPaymentInfoParams getGa4AddPaymentInfoParams() {
+        return ga4AddPaymentInfoParams;
     }
 }

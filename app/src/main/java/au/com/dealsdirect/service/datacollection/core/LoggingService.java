@@ -487,4 +487,46 @@ public class LoggingService {
             logFeatureUsageEvent.LogDataEvents(parameters);
         }
     }
+
+    public static class LogGA4AddPaymentInfoEvent implements LoggingEventData {
+
+        private LogDataEvents logGA4AddPaymentInfoEvent;
+
+        public LogGA4AddPaymentInfoEvent(LogDataEvents logGA4AddPaymentInfoEvent) {
+            this.logGA4AddPaymentInfoEvent = logGA4AddPaymentInfoEvent;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logGA4AddPaymentInfoEvent.LogDataEvents(parameters);
+        }
+    }
+
+    public static class LogGA4AddShippingInfoEvent implements LoggingEventData {
+
+        private LogDataEvents logGA4AddShippingInfoEvent;
+
+        public LogGA4AddShippingInfoEvent(LogDataEvents logGA4AddShippingInfoEvent) {
+            this.logGA4AddShippingInfoEvent = logGA4AddShippingInfoEvent;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logGA4AddShippingInfoEvent.LogDataEvents(parameters);
+        }
+    }
+
+    public static class LogGA4SelectItemEvent implements LoggingEventData {
+
+        private LogDataEvents logGA4SelectItemEvent;
+
+        public LogGA4SelectItemEvent(LogDataEvents logGA4SelectItemEvent) {
+            this.logGA4SelectItemEvent = logGA4SelectItemEvent;
+        }
+
+        @Override
+        public void logEventData(HashMap<String, Object> parameters) {
+            logGA4SelectItemEvent.LogDataEvents(parameters);
+        }
+    }
 }

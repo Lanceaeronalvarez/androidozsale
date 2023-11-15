@@ -62,7 +62,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void addToWishlist(String productId, String seoIdentifier, WishlistDelayedCallback delayedCallback) {
+    public void addToWishlist(String productId, String productName, String seoIdentifier, Double price, WishlistDelayedCallback delayedCallback) {
         getDataManager().addToWishlist(new WishlistObject() {
             private String mProductId = productId;
             private String mSeoId = seoIdentifier;
@@ -104,7 +104,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                         public void onSuccess(Object response) {
                             super.onSuccess(response);
                             if (delayedCallback != null) {
-                                delayedCallback.performDelayedAction(productId, true);
+                                delayedCallback.performDelayedAction(productId, productName, price, true);
                             }
                         }
                     });
@@ -115,7 +115,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void removeFromWishlist(String productId, WishlistDelayedCallback delayedCallback) {
+    public void removeFromWishlist(String productId, String productName, Double price, WishlistDelayedCallback delayedCallback) {
         getDataManager().removeFromWishlist(
                 productId,
                 () -> {
@@ -126,7 +126,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                                 public void onSuccess(Object response) {
                                     super.onSuccess(response);
                                     if (delayedCallback != null) {
-                                        delayedCallback.performDelayedAction(productId, false);
+                                        delayedCallback.performDelayedAction(productId, productName, price, false);
                                     }
                                 }
                             });
