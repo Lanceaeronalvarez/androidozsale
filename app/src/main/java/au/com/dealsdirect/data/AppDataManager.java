@@ -43,6 +43,7 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.checkout.AdjustOrderItem;
 import au.com.dealsdirect.data.network.model.checkout.ApplyVouchers;
@@ -256,8 +257,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<List<GetCategoryTreeResponse>> callGetCategories() {
-        return mApiHelper.callGetCategories();
+    public Observable<List<GetCategoryTreeResponse>> callGetCategories(GetCategoryTreeRequest request) {
+        return mApiHelper.callGetCategories(request);
     }
 
     @Override

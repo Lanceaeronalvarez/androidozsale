@@ -16,6 +16,7 @@ import au.com.dealsdirect.data.cachedresponses.ListOfSortingResponses;
 import au.com.dealsdirect.data.cachedresponses.ParamaterizedCachableRequest;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
@@ -61,7 +62,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     }
 
     @Override
-    public void addToWishlist(String productId, String seoIdentifier, WishlistDelayedCallback delayedCallback) {
+    public void addToWishlist(String productId, String productName, String seoIdentifier, Double price, WishlistDelayedCallback delayedCallback) {
         getDataManager().addToWishlist(new WishlistObject() {
             private String mProductId = productId;
             private String mSeoId = seoIdentifier;
@@ -103,16 +104,18 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                         public void onSuccess(Object response) {
                             super.onSuccess(response);
                             if (delayedCallback != null) {
-                                delayedCallback.performDelayedAction(productId, true);
+                                delayedCallback.performDelayedAction(productId, productName, price, true);
                             }
                         }
                     });
         });
-        getMvpView().updateWishlistWithAddition(productId);
+        if (isViewAttached()) {
+            getMvpView().updateWishlistWithAddition(productId);
+        }
     }
 
     @Override
-    public void removeFromWishlist(String productId, WishlistDelayedCallback delayedCallback) {
+    public void removeFromWishlist(String productId, String productName, Double price, WishlistDelayedCallback delayedCallback) {
         getDataManager().removeFromWishlist(
                 productId,
                 () -> {
@@ -123,12 +126,14 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                                 public void onSuccess(Object response) {
                                     super.onSuccess(response);
                                     if (delayedCallback != null) {
-                                        delayedCallback.performDelayedAction(productId, false);
+                                        delayedCallback.performDelayedAction(productId, productName, price, false);
                                     }
                                 }
                             });
                 });
-        getMvpView().updateWishlistWithRemoval(productId);
+        if (isViewAttached()) {
+            getMvpView().updateWishlistWithRemoval(productId);
+        }
     }
 
     @Override
@@ -136,7 +141,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         ParamaterizedCachableRequest request = new ParamaterizedCachableRequest("loadSaleBannerDetails", saleId);
         getDataManager().pruneCachedResponse(request);
         GetSaleBannerDetailsResponse getSaleBannerDetailsResponse = getDataManager().getCachedResponse(request, GetSaleBannerDetailsResponse.class);
-        if (getSaleBannerDetailsResponse != null) {
+        if (getSaleBannerDetailsResponse != null && isViewAttached()) {
             getMvpView().showSaleBannerDetails(getSaleBannerDetailsResponse);
         }
 
@@ -156,14 +161,14 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         final int pageNumber = getSaleItemsRequest.getPageNumber();
         getDataManager().pruneCachedResponse(getSaleItemsRequest);
         GetSaleItemsResponse saleItemsResponse = getDataManager().getCachedResponse(getSaleItemsRequest, GetSaleItemsResponse.class);
-        if (saleItemsResponse != null) {
+        if (saleItemsResponse != null && isViewAttached()) {
             getMvpView().showSaleItems(saleItemsResponse, pageNumber, !getSaleItemsRequest.hasFilters(), true);
         }
 
         ParamaterizedCachableRequest loadSortingFacetsRequest = new ParamaterizedCachableRequest("loadSortingFacets");
         getDataManager().pruneCachedResponse(loadSortingFacetsRequest);
         ListOfSortingResponses listOfSortingResponses = getDataManager().getCachedResponse(loadSortingFacetsRequest, ListOfSortingResponses.class);
-        if (listOfSortingResponses != null) {
+        if (listOfSortingResponses != null && isViewAttached()) {
             getMvpView().onLoadSortingFacetsFinished(listOfSortingResponses.getResponses());
         }
 
@@ -239,7 +244,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         ParamaterizedCachableRequest request = new ParamaterizedCachableRequest("loadSortingFacets");
         getDataManager().pruneCachedResponse(request);
         ListOfSortingResponses listOfSortingResponses = getDataManager().getCachedResponse(request, ListOfSortingResponses.class);
-        if (listOfSortingResponses != null) {
+        if (listOfSortingResponses != null && isViewAttached()) {
             getMvpView().onLoadSortingFacetsFinished((List<SortingResponse>) listOfSortingResponses.getResponses());
         }
 
@@ -284,7 +289,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
 
     @Override
     public void loadBrandBubbles() {
-        doApiCallForResponse(getDataManager().callGetCategories(),
+        doApiCallForResponse(getDataManager().callGetCategories(new GetCategoryTreeRequest()),
                 new AppApiCallback() {
                     @Override
                     public void onSuccess(List<?> list) {
@@ -303,7 +308,7 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
             BrandNames output = new BrandNames(response);
             final Handler mainHandler = new Handler(Looper.getMainLooper());
             mainHandler.post(() -> {
-                if (getMvpView() != null) {
+                if (isViewAttached()) {
                     getMvpView().storeBrandNames(output);
                 }
             });

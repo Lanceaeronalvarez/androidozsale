@@ -1,9 +1,9 @@
 {
   "project_info": {
-    "project_number": "390674118206",
-    "firebase_url": "https://singsale-android-firebase.firebaseio.com",
-    "project_id": "singsale-android-firebase",
-    "storage_bucket": "singsale-android-firebase.appspot.com"
+    "project_number": "585965744255",
+    "firebase_url": "https://singsale-ios-firebase.firebaseio.com",
+    "project_id": "singsale-ios-firebase",
+    "storage_bucket": "singsale-ios-firebase.appspot.com"
   },
   "client": [
     {
@@ -15,21 +15,28 @@
       },
       "oauth_client": [
         {
-          "client_id": "390674118206-4up7q4rqldhph8552tccsfrenr7r1r5s.apps.googleusercontent.com",
+          "client_id": "585965744255-7fd731f87dbofirsfpf6s1i0d8jqcom1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB_ZsRuOk9XSbBnP_NXFo6rln3J1Y0FoG8"
+          "current_key": "AIzaSyCfbltck1MxAINvrgytqqG37Gg-WojVkRA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "390674118206-4up7q4rqldhph8552tccsfrenr7r1r5s.apps.googleusercontent.com",
+              "client_id": "585965744255-7fd731f87dbofirsfpf6s1i0d8jqcom1.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "585965744255-ateps9tjna79u8nac1ul7810cl3d0odb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "sg.com.Singsale-test"
+              }
             }
           ]
         }
@@ -44,21 +51,28 @@
       },
       "oauth_client": [
         {
-          "client_id": "390674118206-4up7q4rqldhph8552tccsfrenr7r1r5s.apps.googleusercontent.com",
+          "client_id": "585965744255-7fd731f87dbofirsfpf6s1i0d8jqcom1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB_ZsRuOk9XSbBnP_NXFo6rln3J1Y0FoG8"
+          "current_key": "AIzaSyCfbltck1MxAINvrgytqqG37Gg-WojVkRA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "390674118206-4up7q4rqldhph8552tccsfrenr7r1r5s.apps.googleusercontent.com",
+              "client_id": "585965744255-7fd731f87dbofirsfpf6s1i0d8jqcom1.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "585965744255-ateps9tjna79u8nac1ul7810cl3d0odb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "sg.com.Singsale-test"
+              }
             }
           ]
         }

@@ -164,7 +164,7 @@ public class ProductQuantityLayout extends LinearLayout {
         this.quantity.setEnabled(false);
     }
 
-    public interface onQuantityChangeListener<T> {
+    public interface onQuantityChangeListener {
         void onQuantityIncrease(ProductQuantityLayout view, int value);
 
         void onQuantityDecrease(ProductQuantityLayout view, int value);

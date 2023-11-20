@@ -96,7 +96,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
     public static void registerGenieEvents() {
 
         //register event user
-        DataCollector.EventRegistry.register(generateEventKey(Events.EventUser, getServiceKey()), Events.EventUser,
+        DataCollector.EventRegistry.register(generateEventKey(Events.EventUser, getServiceKey()),
                 new LoggingService.LogEventUser(new EventUser() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -105,7 +105,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         //register search event
-        DataCollector.EventRegistry.register(generateEventKey(Events.SearchEvent, getServiceKey()), Events.SearchEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.SearchEvent, getServiceKey()),
                 new LoggingService.LogSearchEvent(new SearchDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -114,7 +114,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         //register product view
-        DataCollector.EventRegistry.register(generateEventKey(Events.CVItemDetails, getServiceKey()), Events.CVItemDetails,
+        DataCollector.EventRegistry.register(generateEventKey(Events.CVItemDetails, getServiceKey()),
                 new LoggingService.LogItemDetails(new ItemDetailsDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -123,7 +123,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         //register item list
-        DataCollector.EventRegistry.register(generateEventKey(Events.CVItemList, getServiceKey()), Events.CVItemList,
+        DataCollector.EventRegistry.register(generateEventKey(Events.CVItemList, getServiceKey()),
                 new LoggingService.LogItemList(new ItemListDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -132,7 +132,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         //register sale event
-        DataCollector.EventRegistry.register(generateEventKey(Events.SaleEvent, getServiceKey()), Events.SaleEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.SaleEvent, getServiceKey()),
                 new LoggingService.LogSaleEvent(new SaleBannersDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -141,7 +141,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         //register wishlist event
-        DataCollector.EventRegistry.register(generateEventKey(Events.WishlistEvent, getServiceKey()), Events.WishlistEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.WishlistEvent, getServiceKey()),
                 new LoggingService.LogWishlistDataEvent(new WishlistDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -150,7 +150,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         //register start checkout event
-        DataCollector.EventRegistry.register(generateEventKey(Events.InitiateCheckout, getServiceKey()), Events.InitiateCheckout,
+        DataCollector.EventRegistry.register(generateEventKey(Events.InitiateCheckout, getServiceKey()),
                 new LoggingService.LogInitiateCheckout(new InitiateCheckOutEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -159,7 +159,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         //register you may also like event
-        DataCollector.EventRegistry.register(generateEventKey(Events.YouMayAlsoLikeEvent, getServiceKey()), Events.YouMayAlsoLikeEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.YouMayAlsoLikeEvent, getServiceKey()),
                 new LoggingService.LogYouMayAlsoLikeEvent(new YouMayAlsoLikeClickEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -168,7 +168,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         // register banner click event
-        DataCollector.EventRegistry.register(generateEventKey(Events.BannerClickEvent, getServiceKey()), Events.BannerClickEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.BannerClickEvent, getServiceKey()),
                 new LoggingService.LogBannerClickEvent(new BannerClickEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -179,7 +179,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         //register recommendation click event
-        DataCollector.EventRegistry.register(generateEventKey(Events.RecommendationClickEvent, getServiceKey()), Events.RecommendationClickEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.RecommendationClickEvent, getServiceKey()),
                 new LoggingService.LogRecommendationClickEvent(new RecommendationDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -188,7 +188,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         //register recently viewed event
-        DataCollector.EventRegistry.register(generateEventKey(Events.RecentlyViewed, getServiceKey()), Events.RecentlyViewed,
+        DataCollector.EventRegistry.register(generateEventKey(Events.RecentlyViewed, getServiceKey()),
                 new LoggingService.LogRecentlyViewedEvent(new RecentlyViewedDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -197,7 +197,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         //register feature usage event
-        DataCollector.EventRegistry.register(generateEventKey(Events.FeatureUsageEvent, getServiceKey()), Events.FeatureUsageEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.FeatureUsageEvent, getServiceKey()),
                 new LoggingService.LogFeatureUsageEvent(new FeatureUsageEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -205,7 +205,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                     }
                 }));
 
-        DataCollector.EventRegistry.register(generateEventKey(Events.DeliveryPriceViewEvent, getServiceKey()), Events.DeliveryPriceViewEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.DeliveryPriceViewEvent, getServiceKey()),
                 new LoggingService.LogDeliveryPriceViewEvent(new DeliveryPriceViewEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -214,7 +214,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                     }
                 }));
 
-        DataCollector.EventRegistry.register(generateEventKey(Events.SellerLinkEvent, getServiceKey()), Events.SellerLinkEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.SellerLinkEvent, getServiceKey()),
                 new LoggingService.LogSellerLinkEvent(new SellerLinkEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -224,7 +224,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
                 }));
 
         //register common checkout event
-        DataCollector.EventRegistry.register(generateEventKey(Events.CommonCheckoutEvent, getServiceKey()), Events.CommonCheckoutEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.CommonCheckoutEvent, getServiceKey()),
                 new LoggingService.LogInitiateCheckout(new InitiateCheckOutEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {

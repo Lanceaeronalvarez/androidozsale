@@ -71,6 +71,7 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransaction;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrentOrderOurpay;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsResponse;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.service.braintree.BraintreeClientHelper;
@@ -176,6 +177,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private PaymentsClient paymentsClient;
 
     private SupplierOriginalPriceInfoHelper supplierOriginalPriceInfoHelper = null;
+
+    private GA4EventParams.GA4PurchaseParams ga4PurchaseParams = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -578,7 +581,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             parameters.put(EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
             parameters.put(EventParameters.PURCHASE_CURRENCY, Settings.getSelectedCountry().currencyCode);
             parameters.put(EventParameters.PURCHASE_TRANSACTION_ID, responseValue.getD().getValue().getPaymentID());
+            if (ga4PurchaseParams != null) {
+                ga4PurchaseParams.setTransactionId(responseValue.getD().getValue().getInvoiceNo());
+                parameters.put(EventParameters.GA4_EVENT_PARAMS, ga4PurchaseParams);
+            }
             logEvent(Events.PurchaseEvent, parameters);
+
+            ga4PurchaseParams = null;
 
             if (mPresenter.doesCheckoutHaveWishlistItem()) {
                 HashMap<String, Object> wishlistParameters = new HashMap<>();
@@ -625,7 +634,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             parameters.put(EventParameters.PRICE, responseValue.getD().getValue().getOrderInfoResult().getTotal());
             parameters.put(EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
             parameters.put(EventParameters.SCREEN_NAME, MainActivity.class.getSimpleName());
+            if (ga4PurchaseParams != null) {
+                ga4PurchaseParams.setTransactionId(responseValue.getD().getValue().getInvoiceNo());
+                parameters.put(EventParameters.GA4_EVENT_PARAMS, ga4PurchaseParams);
+            }
             logEvent(Events.PurchaseEvent, parameters);
+
+            ga4PurchaseParams = null;
 
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, responseValue.getD().getMessage());
 
@@ -684,12 +699,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         Controller currentController = getMainController().getCurrentViewPagerController();
 
         if ((currentController instanceof AddPaymentController) && ((AddPaymentController) currentController).isCalledFromAccounts()) {
-            ((AddPaymentController) currentController).showAddPaymentResult(true, "");
+            ((AddPaymentController) currentController).showAddPaymentResult(true, lastPaymentMethod.getPaymentType());
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
 
             if (currentController instanceof CheckoutHostController || currentController instanceof AddPaymentController) {
                 Router router = currentController instanceof CheckoutHostController ? ((CheckoutHostController) currentController).getDisplayRouter() : getCurrentRouter();
+                if (currentController instanceof AddPaymentController) {
+                    ((AddPaymentController) currentController).logAddPaymentWhileFromCart(lastPaymentMethod.getPaymentType());
+                }
                 switch (router.getBackstackSize()) {
                     case 1:
                         ((BaseController) currentController).refreshContents();
@@ -789,11 +807,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void startPaypalPayment() {
-//        PayPal.authorizeAccount(mBraintreeFragment);
+        if (!isBraintreeInitialized()) {
+            return;
+        }
         mBraintreeClientHelper.getPaymentHandler().startPaypalPayment();
     }
 
     public void startPaypalCreditPayment(String totalCost) {
+        if (!isBraintreeInitialized()) {
+            return;
+        }
         mBraintreeClientHelper.getPaymentHandler().startPaypalCreditPayment(totalCost);
     }
 
@@ -893,7 +916,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             public void success() {
                 CartUtil.setValueToCart(0);
                 getMainController().removeBasketItemCount();
-                mPresenter.setActiveCheckoutSessionFalse();
+                mPresenter.setHasActiveCheckoutSession(false);
+                ga4PurchaseParams = null;
 
                 //reset routers with unique user info
                 getMainController().resetCheckoutRouter();
@@ -1767,5 +1791,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         }
         return supplierOriginalPriceInfoHelper;
+    }
+
+    public GA4EventParams.GA4PurchaseParams getGa4PurchaseParams() {
+        return ga4PurchaseParams;
+    }
+
+    public void setGa4PurchaseParams(GA4EventParams.GA4PurchaseParams ga4PurchaseParams) {
+        this.ga4PurchaseParams = ga4PurchaseParams;
     }
 }

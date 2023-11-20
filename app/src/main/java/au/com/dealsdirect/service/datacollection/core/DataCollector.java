@@ -113,6 +113,8 @@ public class DataCollector {
         // BANNERS
         public static final String SALE_NAME = "SaleName";
         public static final String BANNER_TYPE = "BANNER_TYPE";
+        // GA4
+        public static final String GA4_EVENT_PARAMS = "GA4_EVENT_PARAMS";
 
         public final class LoginType {
             public final static String FACEBOOK = "LoginFacebook";
@@ -162,7 +164,23 @@ public class DataCollector {
             CV_ORDERTRACK("CV_ORDERTRACK"),
             CLICKS("CLICKS"),
             ADDTOCART_JOURNEY("ADDTOCART_JOURNEY"),
-            CHECKOUT_JOURNEY("CHECKOUT_JOURNEY");
+            CHECKOUT_JOURNEY("CHECKOUT_JOURNEY"),
+            GA4_ADD_PAYMENT_INFO("add_payment_info"),
+            GA4_ADD_SHIPPING_INFO("add_shipping_info"),
+            GA4_ADD_TO_CART("add_to_cart"),
+            GA4_ADD_TO_WISHLIST("add_to_wishlist"),
+            GA4_BEGIN_CHECKOUT("begin_checkout"),
+            GA4_PURCHASE("purchase"),
+            GA4_REFUND("refund"),
+            GA4_REMOVE_FROM_CART("remove_from_cart"),
+            GA4_SELECT_ITEM("select_item"), // not implemented
+            GA4_SELECT_PROMOTION("select_promotion"), // not implemented
+            GA4_VIEW_CART("view_cart"),
+            GA4_VIEW_ITEM("view_item"),
+            GA4_VIEW_ITEM_LIST("view_item_list"),
+            GA4_VIEW_PROMOTION("view_promotion"); // not implemented
+
+
 
             private String value;
 
@@ -302,7 +320,7 @@ public class DataCollector {
 
         private static HashMap<String, LoggingService.LoggingEventData> registeredEvents = new HashMap<>();
 
-        public static void register(String eventKey, Events events, LoggingService.LoggingEventData registry) {
+        public static void register(String eventKey, LoggingService.LoggingEventData registry) {
             registeredEvents.put(eventKey, registry);
         }
 

@@ -47,7 +47,7 @@ public class FacebookEventService implements DataCollectionService {
     public static void registerFBEvents() {
 
         // register add to cart
-        DataCollector.EventRegistry.register(generateEventKey(Events.AddedToCartEvent,getServiceKey()),Events.AddedToCartEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.AddedToCartEvent,getServiceKey()),
                 new LoggingService.LogAddedToCart(new AddedToCartEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -59,7 +59,7 @@ public class FacebookEventService implements DataCollectionService {
                 }));
 
         //register purchase
-        DataCollector.EventRegistry.register(generateEventKey(Events.PurchaseEvent,getServiceKey()), Events.PurchaseEvent,
+        DataCollector.EventRegistry.register(generateEventKey(Events.PurchaseEvent,getServiceKey()),
                 new LoggingService.LogPurchase(new PurchaseDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -71,7 +71,7 @@ public class FacebookEventService implements DataCollectionService {
                 }));
 
         //register registration
-        DataCollector.EventRegistry.register(generateEventKey(Events.CompleteRegistration, getServiceKey()), Events.CompleteRegistration,
+        DataCollector.EventRegistry.register(generateEventKey(Events.CompleteRegistration, getServiceKey()),
                 new LoggingService.LogRegistration(new RegistrationDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -80,7 +80,7 @@ public class FacebookEventService implements DataCollectionService {
                 }));
 
         // register add payment info
-        DataCollector.EventRegistry.register(generateEventKey(Events.AddPaymentInfo, getServiceKey()), Events.AddPaymentInfo,
+        DataCollector.EventRegistry.register(generateEventKey(Events.AddPaymentInfo, getServiceKey()),
                 new LoggingService.LogAddPaymentInfo(new AddPaymentInfoEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -89,7 +89,7 @@ public class FacebookEventService implements DataCollectionService {
                 }));
 
         // register initiate checkout
-        DataCollector.EventRegistry.register(generateEventKey(Events.InitiateCheckout, getServiceKey()), Events.InitiateCheckout,
+        DataCollector.EventRegistry.register(generateEventKey(Events.InitiateCheckout, getServiceKey()),
                 new LoggingService.LogInitiateCheckout(new InitiateCheckOutEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {
@@ -101,7 +101,7 @@ public class FacebookEventService implements DataCollectionService {
                 }));
 
         //register item details
-        DataCollector.EventRegistry.register(generateEventKey(Events.CVItemDetails, getServiceKey()), Events.CVItemDetails,
+        DataCollector.EventRegistry.register(generateEventKey(Events.CVItemDetails, getServiceKey()),
                 new LoggingService.LogItemDetails(new ItemDetailsDataEvent() {
                     @Override
                     public void LogDataEvents(HashMap<String, Object> parameters) {

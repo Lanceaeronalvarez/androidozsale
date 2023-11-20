@@ -1,11 +1,8 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
-import android.content.Context;
-
 import com.androidnetworking.error.ANError;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,31 +19,19 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.GetCurrent
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
-import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
-import au.com.dealsdirect.service.datacollection.core.DataCollector;
-import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
-import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPhoneVerification;
 import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
-import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
-import au.com.dealsdirect.ui.main.PaymentInfo;
-import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
-
-/**
- * dp Created by Admin on 6/6/17.
- */
 
 public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<V> implements
         CheckoutMvpPresenter<V> {
@@ -305,103 +290,6 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     }
 
     @Override
-    public void logInitiateCheckout(Context context, String paymentType, int numItems, double price,
-                                    String selectedPaymentType) {
-        CommonCheckoutRequest commonCheckoutRequest = new CommonCheckoutRequest();
-        commonCheckoutRequest.setEventType(EventTypeId.EVENT_CHECKOUT);
-        commonCheckoutRequest.setErrorDescription("");
-        commonCheckoutRequest.setResult(0);
-        commonCheckoutRequest.setGuestCheckout(false);
-
-        switch (selectedPaymentType) {
-            case AppConstants.GPAY:
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.GPAY.getValue());
-                break;
-            case AppConstants.VCO:
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.VCO.getValue());
-                break;
-            case AppConstants.AFTERPAY:
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.AFTERPAY.getValue());
-                break;
-            case AppConstants.LPAY:
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.LPAY.getValue());
-                break;
-            case AppConstants.REGULAR:
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.REGULAR.getValue());
-                break;
-            case AppConstants.STRIPE:
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.STRIPE.getValue());
-                break;
-            case AppConstants.OURPAY:
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.OURPAY.getValue());
-                break;
-            case AppConstants.MASTERPASS:
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.MASTERPASS.getValue());
-                break;
-            case AppConstants.PAYPALCREDIT:
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPALCREDIT.getValue());
-                break;
-            case AppConstants.PAYPAL:
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPAL.getValue());
-                break;
-            default: // UNKNOWN
-                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.UNKNOWN.getValue());
-                break;
-        }
-
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put(DataCollector.EventParameters.APP_CONTEXT, context);
-        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
-        parameters.put(DataCollector.EventParameters.START_CHECKOUT_VALUE, price);
-        parameters.put(DataCollector.EventParameters.START_CHECKOUT_CURRENCY,
-                Settings.getSelectedCountry().currencySign);
-
-        parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE, paymentType);
-        parameters.put(DataCollector.EventParameters.NUMBER_OF_ITEMS, numItems);
-        parameters.put(DataCollector.EventParameters.PRICE, price);
-        parameters.put(DataCollector.EventParameters.COUNTRY_ID, getDataManager().getCountryId());
-        parameters.put(DataCollector.EventParameters.START_CHECKOUT_REQUEST, commonCheckoutRequest);
-
-        DataCollector.logEvent(Events.InitiateCheckout, parameters);
-
-        getDataManager().setHasActiveCheckoutSession(true);
-    }
-
-    @Override
-    public void logCommonCheckoutEvent(Context context, int operation) {
-        CommonCheckoutRequest request = new CommonCheckoutRequest();
-        request.setEventType(EventTypeId.EVENT_CHECKOUT);
-        request.setErrorDescription("");
-        request.setResult(1);
-        request.setGuestCheckout(false);
-        request.setOperation(operation);
-
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put(DataCollector.EventParameters.APP_CONTEXT, context);
-        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
-
-        parameters.put(DataCollector.EventParameters.COMMON_CHECKOUT_REQUEST, request);
-
-        DataCollector.logEvent(Events.CommonCheckoutEvent, parameters);
-    }
-
-    @Override
-    public void logFailedTransaction(Context context, String errorMessage) {
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
-                PaymentInfo.TYPE_LPAY);
-        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.IS_NEW_USER,
-                getIsNewUser());
-        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, false);
-        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, context);
-        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME,
-                AfterpayViewController.class.getSimpleName());
-        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.FAILED_TRANSACTION_MESSAGE,
-                errorMessage);
-        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.FailedTransaction, parameters);
-    }
-
-    @Override
     public boolean isMasterPassEnabled() {
         return getDataManager().isMasterpassEnabled();
     }
@@ -627,7 +515,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     @Override
     public void saveAgeRestrictionData(String date, String postcode) {
         doApiCallForResponse(getDataManager().callSaveAgeRestrictedConsentData(
-                new SaveAgeRestrictedConsentDataRequest(date, postcode, getDataManager().getCountryId())),
+                        new SaveAgeRestrictedConsentDataRequest(date, postcode, getDataManager().getCountryId())),
                 new AppApiCallback() {
                     @Override
                     public void onSuccess(Object response) {

@@ -30,16 +30,6 @@ public interface CheckoutMvpPresenter<V extends MvpView> extends MvpPresenter<V>
 
     void generateOurpay(CheckoutDetailsMapper value);
 
-    void logInitiateCheckout(Context context,
-                             String paymentType,
-                             int numItems,
-                             double price,
-                             String selectedPaymentType);
-
-    void logCommonCheckoutEvent(Context context, int operation);
-
-    void logFailedTransaction(Context context, String errorMessage);
-
     void updateCartValues(CheckoutDetailsMapper mappedValues);
 
     void setDeliveryOption(SetDeliveryOption.OptionParameters setDeliveryOptionParameters, String postcode);

@@ -37,12 +37,18 @@ public class LoginPresenter<V extends LoginMvpView> extends AuthenticationBasePr
                     String token = recaptchaTokenResponse.getTokenResult();
                     loginViewEmailWithToken(username, password, token);
                 }).addOnFailureListener(e -> {
+                    if (!isViewAttached()) {
+                        return;
+                    }
                     getMvpView().showLoginError(e.getMessage(), false);
                 });
         return true;
     }
 
     private void loginViewEmailWithToken(String username, String password, String token) {
+        if (!isViewAttached()) {
+            return;
+        }
         getMvpView().showLoginStart();
         getCompositeDisposable().add(getDataManager()
                 .callLoginViaEmail(

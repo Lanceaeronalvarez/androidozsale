@@ -6,6 +6,7 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
@@ -48,6 +49,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.utility.RxBus;
 import com.stripe.android.model.CardBrand;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,13 +67,18 @@ import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
+import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
+import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.AgeRestrictionOperationType;
 import au.com.dealsdirect.service.datacollection.enums.CheckoutUserActivityOperationType;
+import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
@@ -96,6 +103,7 @@ import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
+import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
 import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
@@ -294,6 +302,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private boolean mIsPaymentMethodChanged = false;
     private String mAddressPhoneNumber;
     private Double mDiscountValue;
+    private Double mTotalValue;
 
     private CheckoutDetailsMapper mValue;
 
@@ -441,6 +450,21 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             mRecyclerView.setVisibility(View.VISIBLE);
             mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
             mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
+            mAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
+                @Override
+                public void onIncrease(String itemId, int newCount, ProductQuantityLayout view) {
+                    mPresenter.fetchAdjustItemQuantity("IncreaseOrderItem", itemId, null, view);
+                }
+
+                @Override
+                public void onDecrease(String itemId, int newCount, ProductQuantityLayout view) {
+                    mPresenter.fetchAdjustItemQuantity("DecreaseOrderItem", itemId, null, view);
+
+                    if (newCount == 0) {
+                        logRemoveItemFromCart(view.getContext());
+                    }
+                }
+            });
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         }
@@ -933,6 +957,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void showSummaryDetails(Summary summary) {
         if (summary != null) {
+            mTotalValue = summary.getTotal();
             setupSummaryShipping(summary);
             setupSummaryVouchers(summary);
 
@@ -1161,7 +1186,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onKlarnaButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_KLARNA, mItemList.size(),
+        logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Klarna"));
+        logInitiateCheckout(mActivity, PaymentInfo.TYPE_KLARNA, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.KLARNA);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1257,8 +1283,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     @Override
-    public boolean setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
-        return mIsPaymentMethodChanged = isPaymentMethodChanged;
+    public void setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
+        mIsPaymentMethodChanged = isPaymentMethodChanged;
     }
 
     @Override
@@ -1299,7 +1325,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         String paymentLogType = AppConstants.REGULAR;
 
         if (!commonPaymentAbilityDetermination()) {
-            mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+            logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                     mValue.getSummary().getTotal(), paymentLogType);
             return;
         }
@@ -1344,12 +1370,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             }
         }
 
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+        logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), paymentLogType);
     }
 
     private void onGPayButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_GPAY, mItemList.size(),
+        logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Google Pay"));
+        logInitiateCheckout(mActivity, PaymentInfo.TYPE_GPAY, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.GPAY);
 
         MainActivity activity = (MainActivity) getActivity();
@@ -1360,7 +1387,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onPaypalButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+        logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Paypal"));
+        logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.PAYPAL);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1383,7 +1411,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onPaypalCreditButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+        logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Paypal Credit"));
+        logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.PAYPALCREDIT);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1406,7 +1435,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onMasterpassButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+        logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Masterpass"));
+        logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.MASTERPASS);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1447,7 +1477,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onAfterpayButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_AFTERPAY, mItemList.size(),
+        logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Afterpay"));
+        logInitiateCheckout(mActivity, PaymentInfo.TYPE_AFTERPAY, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.AFTERPAY);
 
         if (!commonPaymentAbilityDetermination()) {
@@ -1462,7 +1493,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         controller.setEventListener(new AfterpayViewController.EventListener() {
             @Override
             public void onError(String errorMessage) {
-                mPresenter.logFailedTransaction(mActivity, errorMessage);
+                logFailedTransaction(mActivity, errorMessage);
             }
         });
 
@@ -1478,10 +1509,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onLPayButtonClick() {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.TYPE_LPAY, mItemList.size(),
+        logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("LPay"));
+        logInitiateCheckout(mActivity, PaymentInfo.TYPE_LPAY, mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.LPAY);
 
-        mPresenter.logCommonCheckoutEvent(mActivity, CheckoutUserActivityOperationType.LPAY_BUTTON_CLICK.getValue());
+        logCommonCheckoutEvent(mActivity, CheckoutUserActivityOperationType.LPAY_BUTTON_CLICK.getValue());
 
         if (!commonPaymentAbilityDetermination()) {
             return;
@@ -1496,17 +1528,17 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         controller.setEventListener(new LPayViewController.EventListener() {
             @Override
             public void onCreateOrder() {
-                mPresenter.logCommonCheckoutEvent(mActivity, CheckoutUserActivityOperationType.LPAY_BUTTON_CREATE_ORDER.getValue());
+                logCommonCheckoutEvent(mActivity, CheckoutUserActivityOperationType.LPAY_BUTTON_CREATE_ORDER.getValue());
             }
 
             @Override
             public void onCreateCharge() {
-                mPresenter.logCommonCheckoutEvent(mActivity, CheckoutUserActivityOperationType.LPAY_BUTTON_CREATE_CHARGE.getValue());
+                logCommonCheckoutEvent(mActivity, CheckoutUserActivityOperationType.LPAY_BUTTON_CREATE_CHARGE.getValue());
             }
 
             @Override
             public void onError(String errorMessage) {
-                mPresenter.logFailedTransaction(mActivity, errorMessage);
+                logFailedTransaction(mActivity, errorMessage);
             }
         });
 
@@ -1522,7 +1554,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void onOurpayButtonClick(boolean isStripeOption) {
-        mPresenter.logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
+        logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Ourpay"));
+        logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
                 mValue.getSummary().getTotal(), AppConstants.OURPAY);
 
         RxBus.instance().post(IntrospectionUtils.EVENT_PAY);
@@ -1648,9 +1681,15 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     private void showCartItems() {
+        GA4EventParams.GA4ViewCartParams ga4EventParams = new GA4EventParams.GA4ViewCartParams();
+        prepareItemsForGA4EventParams(ga4EventParams);
+        ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4EventParams.setValue(mTotalValue);
+
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
+        parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
         DataCollector.logEvent(Events.addToCartJourneyViewCart, parameters);
 
         showPaymentButtons();
@@ -1745,6 +1784,38 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 !(previousController instanceof AddVouchersController) &&
                 (previousController != null || mPresenter.checkIsLoggedIn())) {
             loadCart();
+        }
+
+        if (previousController instanceof AddPaymentController) {
+            AddPaymentController controller = (AddPaymentController) previousController;
+            GA4EventParams.GA4AddPaymentInfoParams params = controller.getGa4AddPaymentInfoParams();
+            if (params != null) {
+                logGA4AddPaymentInfoEvent(params);
+            }
+        }
+
+        if (previousController instanceof PaymentSelectController) {
+            PaymentSelectController controller = (PaymentSelectController) previousController;
+            GA4EventParams.GA4AddPaymentInfoParams params = controller.getGa4AddPaymentInfoParams();
+            if (params != null) {
+                logGA4AddPaymentInfoEvent(params);
+            }
+        }
+
+        if (previousController instanceof AddNewAddressController) {
+            AddNewAddressController controller = (AddNewAddressController) previousController;
+            GA4EventParams.GA4AddShippingInfoParams params = controller.getGa4AddShippingInfoParams();
+            if (params != null) {
+                logGA4AddShippingInfoEvent(params);
+            }
+        }
+
+        if (previousController instanceof ViewAddressController) {
+            ViewAddressController controller = (ViewAddressController) previousController;
+            GA4EventParams.GA4AddShippingInfoParams params = controller.getGa4AddShippingInfoParams();
+            if (params != null) {
+                logGA4AddShippingInfoEvent(params);
+            }
         }
     }
 
@@ -2024,7 +2095,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                         birthday = calendar;
                         saveAgeRestrictionData();
 
-                        mPresenter.logCommonCheckoutEvent(mActivity, isAgeValid() ? AgeRestrictionOperationType.VALID.getValue() : AgeRestrictionOperationType.NOTVALID.getValue());
+                        logCommonCheckoutEvent(mActivity, isAgeValid() ? AgeRestrictionOperationType.VALID.getValue() : AgeRestrictionOperationType.NOTVALID.getValue());
 
                         mAgeRestrictionNotice.setVisibility(isAgeValid() ? View.GONE : View.VISIBLE);
                     },
@@ -2033,7 +2104,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                     cal.get(Calendar.DAY_OF_MONTH));
 
             datePickerDialog.show();
-            mPresenter.logCommonCheckoutEvent(mActivity, AgeRestrictionOperationType.OPEN.getValue());
+            logCommonCheckoutEvent(mActivity, AgeRestrictionOperationType.OPEN.getValue());
         });
     }
 
@@ -2057,7 +2128,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void updateCartWithValue(Value value) {
         CheckoutDetailsMapper mappedValues = new CheckoutDetailsMapper(value);
         mPresenter.updateCartValues(mappedValues);
-        showAgeRestriction(mappedValues.isAgeRestricted() == null ? false : mappedValues.isAgeRestricted());
+        showAgeRestriction(mappedValues.isAgeRestricted() != null && mappedValues.isAgeRestricted());
     }
 
     private boolean isAgeValid() {
@@ -2073,6 +2144,168 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         final String dateString = dateFormat.format(birthday.getTime());
         final String postcode = mDeliveryAddress != null ? mDeliveryAddress.getPostcode() : null;
         mPresenter.saveAgeRestrictionData(dateString, postcode);
+    }
+
+    private void logGA4AddPaymentInfoEvent(GA4EventParams.GA4AddPaymentInfoParams params) {
+        prepareItemsForGA4EventParams(params);
+        params.setCoupon(PriceUtils.getPriceStringValue(mDiscountValue));
+        params.setValue(mTotalValue);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, params);
+        DataCollector.logEvent(Events.GA4AddPaymentInfo, map);
+    }
+
+    private void logGA4AddShippingInfoEvent(GA4EventParams.GA4AddShippingInfoParams params) {
+        prepareItemsForGA4EventParams(params);
+        params.setCoupon(PriceUtils.getPriceStringValue(mDiscountValue));
+        params.setValue(mTotalValue);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, params);
+        DataCollector.logEvent(Events.GA4AddPaymentInfo, map);
+    }
+
+    private void prepareItemsForGA4EventParams(GA4EventParams params) {
+        final ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
+        for (MappedShipment shipment : mItemList) {
+            for (Item item : shipment.getMappedItems()) {
+                GA4EventParams.Item ga4Item = new GA4EventParams.Item();
+                ga4Item.setItemId(item.getItemID());
+                ga4Item.setItemName(item.getItem());
+                ga4Item.setPrice(item.getPrice());
+                ga4Item.setQuantity(item.getQty());
+                ga4Items.add(ga4Item);
+            }
+        }
+        params.setItems(ga4Items);
+    }
+
+    private GA4EventParams.GA4AddPaymentInfoParams createGA4AddPaymentInfoParams(String paymentType) {
+        GA4EventParams.GA4AddPaymentInfoParams params = new GA4EventParams.GA4AddPaymentInfoParams();
+        params.setPaymentType(paymentType);
+        params.setCurrency(Settings.getSelectedCountry().currencyCode);
+        return params;
+    }
+
+    public void logInitiateCheckout(Context context, String paymentType, int numItems, double price,
+                                    String selectedPaymentType) {
+        CommonCheckoutRequest commonCheckoutRequest = new CommonCheckoutRequest();
+        commonCheckoutRequest.setEventType(EventTypeId.EVENT_CHECKOUT);
+        commonCheckoutRequest.setErrorDescription("");
+        commonCheckoutRequest.setResult(0);
+        commonCheckoutRequest.setGuestCheckout(false);
+
+        switch (selectedPaymentType) {
+            case AppConstants.GPAY:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.GPAY.getValue());
+                break;
+            case AppConstants.VCO:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.VCO.getValue());
+                break;
+            case AppConstants.AFTERPAY:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.AFTERPAY.getValue());
+                break;
+            case AppConstants.LPAY:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.LPAY.getValue());
+                break;
+            case AppConstants.REGULAR:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.REGULAR.getValue());
+                break;
+            case AppConstants.STRIPE:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.STRIPE.getValue());
+                break;
+            case AppConstants.OURPAY:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.OURPAY.getValue());
+                break;
+            case AppConstants.MASTERPASS:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.MASTERPASS.getValue());
+                break;
+            case AppConstants.PAYPALCREDIT:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPALCREDIT.getValue());
+                break;
+            case AppConstants.PAYPAL:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPAL.getValue());
+                break;
+            default: // UNKNOWN
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.UNKNOWN.getValue());
+                break;
+        }
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, context);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
+        parameters.put(DataCollector.EventParameters.START_CHECKOUT_VALUE, price);
+        parameters.put(DataCollector.EventParameters.START_CHECKOUT_CURRENCY,
+                Settings.getSelectedCountry().currencySign);
+
+        parameters.put(DataCollector.EventParameters.PAYMENT_METHOD_TYPE, paymentType);
+        parameters.put(DataCollector.EventParameters.NUMBER_OF_ITEMS, numItems);
+        parameters.put(DataCollector.EventParameters.PRICE, price);
+        parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
+        parameters.put(DataCollector.EventParameters.START_CHECKOUT_REQUEST, commonCheckoutRequest);
+
+        GA4EventParams.GA4BeginCheckoutParams ga4EventParams = new GA4EventParams.GA4BeginCheckoutParams();
+        prepareItemsForGA4EventParams(ga4EventParams);
+        ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4EventParams.setValue(price);
+        ga4EventParams.setCoupon(PriceUtils.getPriceStringValue(mDiscountValue));
+        parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
+
+        DataCollector.logEvent(Events.InitiateCheckout, parameters);
+
+        GA4EventParams.GA4PurchaseParams ga4PurchaseParams = new GA4EventParams.GA4PurchaseParams();
+        prepareItemsForGA4EventParams(ga4EventParams);
+        ga4PurchaseParams.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4PurchaseParams.setValue(price);
+        ga4PurchaseParams.setCoupon(PriceUtils.getPriceStringValue(mDiscountValue));
+        mActivity.setGa4PurchaseParams(ga4PurchaseParams);
+
+        mPresenter.setHasActiveCheckoutSession(true);
+    }
+
+    public void logCommonCheckoutEvent(Context context, int operation) {
+        CommonCheckoutRequest request = new CommonCheckoutRequest();
+        request.setEventType(EventTypeId.EVENT_CHECKOUT);
+        request.setErrorDescription("");
+        request.setResult(1);
+        request.setGuestCheckout(false);
+        request.setOperation(operation);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, context);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
+
+        parameters.put(DataCollector.EventParameters.COMMON_CHECKOUT_REQUEST, request);
+
+        DataCollector.logEvent(Events.CommonCheckoutEvent, parameters);
+    }
+
+    public void logFailedTransaction(Context context, String errorMessage) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.PAYMENT_METHOD_TYPE,
+                PaymentInfo.TYPE_LPAY);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.IS_NEW_USER,
+                mPresenter.getIsNewUser());
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RESULT, false);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.APP_CONTEXT, context);
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.SCREEN_NAME,
+                AfterpayViewController.class.getSimpleName());
+        parameters.put(au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.FAILED_TRANSACTION_MESSAGE,
+                errorMessage);
+        au.com.dealsdirect.service.datacollection.core.DataCollector.logEvent(Events.FailedTransaction, parameters);
+    }
+
+    public void logRemoveItemFromCart(Context context) {
+        GA4EventParams.GA4RemoveFromCartParams ga4EventParams = new GA4EventParams.GA4RemoveFromCartParams();
+        prepareItemsForGA4EventParams(ga4EventParams);
+        ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4EventParams.setValue(mTotalValue);
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, context);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
+        parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
+
+        DataCollector.logEvent(Events.RemoveFromCart, parameters);
     }
 }
 

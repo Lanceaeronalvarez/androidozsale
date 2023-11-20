@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -34,7 +35,7 @@ public class CategoriesPresenter<V extends CategoriesMvpView> extends BasePresen
         }
 
         doApiCallForResponse(getDataManager()
-                .callGetCategories(), new AppApiCallback() {
+                .callGetCategories(new GetCategoryTreeRequest()), new AppApiCallback() {
             @Override
             public void onSuccess(List<?> response) {
                 super.onSuccess(response);

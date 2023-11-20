@@ -86,7 +86,7 @@ public class SaleCategoryAdapter extends RecyclerView.Adapter<SaleCategoryAdapte
 
         holder.itemView.setOnClickListener(view -> {
             final int currentPosition = holder.getBindingAdapterPosition();
-            if (currentPosition > mData.size()) {
+            if (currentPosition < 0 || currentPosition > mData.size()) {
                 return;
             }
             final String id = mData.get(currentPosition).getId();

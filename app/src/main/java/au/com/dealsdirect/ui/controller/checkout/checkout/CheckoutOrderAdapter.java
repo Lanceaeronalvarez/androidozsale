@@ -40,10 +40,6 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 
-/**
- * Created by smartwave on 28/06/2017.
- */
-
 public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final static int VIEW_TYPE_ITEM = 0;
@@ -54,9 +50,10 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Context mContext;
     private List<MappedShipment> mSourceData;
     private List<ItemData> mFlattenedData;
-    private CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
+    private final CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
     private static final int MAX_ITEM_QTY = 5;
-    private CheckoutListener mClickListener;
+    private final CheckoutListener mClickListener;
+    private ItemQuantityChangedListener itemQuantityChangedListener = null;
 
     private boolean shouldAddSpacerOnTop = false;
 
@@ -183,15 +180,20 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.subTotal.setText(PriceUtils.getPriceStringValue(item.getSubtotal()));
         }
 
+        final String itemId = item.id;
         holder.quantityLayout.setOnQuantityChangeListener(new ProductQuantityLayout.onQuantityChangeListener() {
             @Override
             public void onQuantityIncrease(ProductQuantityLayout view, int value) {
-                mPresenter.fetchAdjustItemQuantity("IncreaseOrderItem", item.id, null, view);
+                if (itemQuantityChangedListener != null) {
+                    itemQuantityChangedListener.onIncrease(itemId, value, view);
+                }
             }
 
             @Override
             public void onQuantityDecrease(ProductQuantityLayout view, int value) {
-                mPresenter.fetchAdjustItemQuantity("DecreaseOrderItem", item.id, null, view);
+                if (itemQuantityChangedListener != null) {
+                    itemQuantityChangedListener.onDecrease(itemId, value, view);
+                }
             }
         });
 
@@ -494,5 +496,14 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public interface EligibleProductsLinkListener {
         void onTapped(String locationFilterHash);
+    }
+
+    public interface ItemQuantityChangedListener {
+        void onIncrease(String itemId, int newCount, ProductQuantityLayout view);
+        void onDecrease(String itemId, int newCount, ProductQuantityLayout view);
+    }
+
+    public void setItemQuantityChangedListener(ItemQuantityChangedListener itemQuantityChangedListener) {
+        this.itemQuantityChangedListener = itemQuantityChangedListener;
     }
 }

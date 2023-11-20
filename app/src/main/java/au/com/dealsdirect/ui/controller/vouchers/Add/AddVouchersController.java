@@ -320,7 +320,9 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @SuppressLint("NotifyDataSetChanged")
     public void setVouchers(List<Voucher> vouchers) {
         this.vouchers.clear();
-        this.vouchers.addAll(vouchers);
+        if (vouchers != null) {
+            this.vouchers.addAll(vouchers);
+        }
         resetAppliedVouchers();
         if (voucherRecyclerView != null && voucherRecyclerView.getAdapter() != null) {
             voucherRecyclerView.getAdapter().notifyDataSetChanged();
@@ -343,7 +345,9 @@ public class AddVouchersController extends BaseController implements AddVouchers
     @SuppressLint("NotifyDataSetChanged")
     public void setAppliedPromoCodes(List<Value.PromoCode> appliedPromoCodes) {
         this.appliedPromoCodes.clear();
-        this.appliedPromoCodes.addAll(appliedPromoCodes);
+        if (appliedPromoCodes != null) {
+            this.appliedPromoCodes.addAll(appliedPromoCodes);
+        }
         if (promoCodeContainer != null && promoCodeContainer.getAdapter() != null) {
             promoCodeContainer.getAdapter().notifyDataSetChanged();
         }

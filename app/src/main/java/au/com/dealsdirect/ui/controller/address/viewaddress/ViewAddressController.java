@@ -28,8 +28,10 @@ import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.data.network.model.address.GetAddresses;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAddress;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
+import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -69,6 +71,7 @@ public class ViewAddressController extends BaseController implements ViewAddress
     boolean mCalledFromOrder = false;
     private String mOrderID = "";
     private OnAddressSelected mOnAddressSelected = null;
+    private GA4EventParams.GA4AddShippingInfoParams ga4AddShippingInfoParams = null;
 
     @Inject
     ViewAddressMvpPresenter<ViewAddressMvpView> mPresenter;
@@ -251,6 +254,9 @@ public class ViewAddressController extends BaseController implements ViewAddress
     @Override
     public void backToCheckout(Value value) {
         if (mCalledFromCart) {
+
+            logAddShipmentWhileFromCart();
+
             if (mActivity.getCheckoutController() != null) {
                 mActivity.getCheckoutController().updateCartWithValue(value);
             }
@@ -295,6 +301,16 @@ public class ViewAddressController extends BaseController implements ViewAddress
             mRecyclerViewAdapter.setOnAddressSelected(onAddressSelected);
             mRecyclerViewAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void logAddShipmentWhileFromCart() {
+        GA4EventParams.GA4AddShippingInfoParams params = new GA4EventParams.GA4AddShippingInfoParams();
+        params.setCurrency(Settings.getSelectedCountry().currencyCode);
+        ga4AddShippingInfoParams = params;
+    }
+
+    public GA4EventParams.GA4AddShippingInfoParams getGa4AddShippingInfoParams() {
+        return ga4AddShippingInfoParams;
     }
 
     public interface OnAddressSelected {
