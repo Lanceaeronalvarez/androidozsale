@@ -486,6 +486,9 @@ public class ImageUtils {
     }
 
     public static String removeResolutionModifierInImageUrl(String sourceUrl) {
+        if (sourceUrl == null || sourceUrl.isEmpty()) {
+            return sourceUrl;
+        }
         String newString = sourceUrl;
         final String[] extensions = new String[]{
                 "jpg", "jpeg", "png", "webp"
