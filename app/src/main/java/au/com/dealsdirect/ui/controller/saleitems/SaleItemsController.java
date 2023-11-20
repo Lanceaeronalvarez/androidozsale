@@ -714,12 +714,30 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         @Override
         public void addToWishlist(SaleItemProduct item, SaleItemsMvpPresenter.WishlistDelayedCallback wishlistDelayedCallback) {
-            mPresenter.addToWishlist(item.getId(), item.getName(), item.getSeoIdentifier(), item.getSalePrice().getValue(), wishlistDelayedCallback);
+            String id = null;
+            String name = null;
+            String seoId = null;
+            Double priceValue = null;
+            if (item != null) {
+                id = item.getId();
+                name = item.getName();
+                seoId = item.getSeoIdentifier();
+                priceValue = item.getSalePrice() != null ? item.getSalePrice().getValue() : null;
+            }
+            mPresenter.addToWishlist(id, name, seoId, priceValue, wishlistDelayedCallback);
         }
 
         @Override
         public void removeFromWishlist(SaleItemProduct item, SaleItemsMvpPresenter.WishlistDelayedCallback wishlistDelayedCallback) {
-            mPresenter.removeFromWishlist(item.getId(), item.getName(), item.getSalePrice().getValue(), wishlistDelayedCallback);
+            String id = null;
+            String name = null;
+            Double priceValue = null;
+            if (item != null) {
+                id = item.getId();
+                name = item.getName();
+                priceValue = item.getSalePrice() != null ? item.getSalePrice().getValue() : null;
+            }
+            mPresenter.removeFromWishlist(id, name, priceValue, wishlistDelayedCallback);
         }
 
         @Override
@@ -1895,7 +1913,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         ga4Items.add(ga4Item);
         ga4EventParams.setItems(ga4Items);
         ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
-        ga4EventParams.setValue(product.getSalePrice().getValue());
+        if (product.getSalePrice() != null) {
+            ga4EventParams.setValue(product.getSalePrice().getValue());
+        } else if (product.getPrice() != null) {
+            ga4EventParams.setValue(product.getPrice().getValue());
+        }
         ga4EventParams.setItemListId(mSaleId == null ? "" : mSaleId);
         ga4EventParams.setItemListName(mSaleName == null ? "" : mSaleName);
         eventParameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
