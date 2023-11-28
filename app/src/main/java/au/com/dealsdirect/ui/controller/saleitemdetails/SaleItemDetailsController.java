@@ -1267,7 +1267,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         GA4EventParams.Item ga4Item = new GA4EventParams.Item();
         ga4Item.setItemName(saleDetail.getName());
         ga4Item.setItemId(saleDetail.getProductId());
-        ga4Item.setPrice(saleDetail.getSalePrice().getValue());
+        if (saleDetail.getSalePrice() != null) {
+            ga4Item.setPrice(saleDetail.getSalePrice().getValue());
+        } else if (saleDetail.getPrice() != null) {
+            ga4Item.setPrice((saleDetail.getPrice().getValue()));
+        }
         ga4Item.setQuantity(1);
         ga4Item.setItemBrand(saleDetail.getBrandName());
         ga4Item.setItemCategories(saleDetail.getCategories());

@@ -370,7 +370,9 @@ public class FirebaseAnalyticsService implements FirebaseEventServiceInterface, 
                 final Object obj = parameters.get(EventParameters.WISHLIST_EVENT_REQUEST);
                 if (obj instanceof WishlistEventRequest) {
                     final WishlistEventRequest request = (WishlistEventRequest) obj;
-                    if (request.getWishlistInfo().getOperation() == 1) {
+                    if (request.getWishlistInfo() != null &&
+                            request.getWishlistInfo().getOperation() != null &&
+                            request.getWishlistInfo().getOperation() == 1) {
                         final Object eventParams = parameters.get(EventParameters.GA4_EVENT_PARAMS);
                         if (eventParams instanceof GA4EventParams) {
                             ga4AddToWishlistEvent((Context) parameters.get(EventParameters.APP_CONTEXT), (GA4EventParams) eventParams);
