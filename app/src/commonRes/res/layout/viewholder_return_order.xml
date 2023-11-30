@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/new_returns_order_row_container"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/bg_card_view_states"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/new_returns_order_row_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_view_states"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,11 +13,13 @@
         android:orientation="horizontal">
 
         <TextView
+            fontPath="@string/font_app_bold"
             android:id="@+id/new_current_orders_item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="9"
             android:padding="@dimen/padding_default"
+            android:textColor="@color/text_extra_dark"
             android:textStyle="bold"
             tools:text="Philosophy Cotton Sleeveless Plain" />
 
@@ -30,13 +32,36 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_thin"
+        android:background="@color/border_light" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_thin"
+        android:background="@color/border_regular" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/return_orders_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:layout_marginBottom="@dimen/margin_small"/>
+        android:layout_marginBottom="@dimen/margin_small" />
+
+    <TextView
+        fontPath="@string/font_app_regular"
+        android:id="@+id/return_orders_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:text="Description"
+        android:textColor="@color/text_extra_dark">
+
+    </TextView>
 
 </LinearLayout>
 

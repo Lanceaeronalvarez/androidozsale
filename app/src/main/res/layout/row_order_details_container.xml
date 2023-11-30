@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_order_row_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <RelativeLayout
+        android:id="@+id/order_details_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_default"
+        android:paddingEnd="@dimen/padding_default">
+
+        <TextView
+            android:id="@+id/sale_item_text_value"
+            fontPath="@string/font_app_semibold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_small"
+            android:text="@string/order_sharp_colon"
+            android:textColor="@color/text_extra_dark"
+            android:textSize="@dimen/text_size_caption1"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/order_details_address_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sale_item_text_value"
+            android:paddingTop="@dimen/margin_tiny"
+            android:paddingBottom="@dimen/margin_small"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/text_size_caption2"
+            tools:ignore="HardcodedText"
+            tools:text="204400890" />
+
+        <ImageView
+            android:id="@+id/orders_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/margin_huge"
+            android:paddingTop="@dimen/margin_large"
+            android:paddingBottom="@dimen/margin_large"
+            android:src="@drawable/ic_orders_ellipsis"
+            tools:ignore="ContentDescription" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_regular"
+        android:layout_marginLeft="@dimen/padding_default_half"
+        android:background="@color/background_default" />
+
+</LinearLayout>

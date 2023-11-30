@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_order_information_text_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_large"
+    android:background="@drawable/bg_row_item_orders_delivery"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_extra_small"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="@dimen/margin_extra_small"
+            android:scaleType="center"
+            android:src="@drawable/ic_blue_location"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/shipFromTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_caption1"
+            tools:text="Shipped from Legazpi City, Albay" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_extra_small"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/margin_extra_small"
+            android:paddingRight="@dimen/margin_small"
+            android:scaleType="center"
+            android:src="@drawable/ic_broken_line"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/estimatedDeliveryTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_caption1"
+            tools:text="Estimated Delivery: 18-10-18 to 23-10-18" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="@dimen/margin_extra_small"
+            android:scaleType="center"
+            android:src="@drawable/ic_blue_location"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/shipToTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_caption1"
+            tools:text="Ship to Bagtang, Daraga, Albay" />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/trackHereButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:background="@drawable/bg_row_item_track_here_button">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/trackHereButtonText"
+            android:src="@drawable/ic_adjustable_track_here"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/trackHereButtonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/margin_extra_small"
+            android:paddingTop="@dimen/margin_medium"
+            android:paddingBottom="@dimen/margin_medium"
+            android:text="@string/track_order"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+</LinearLayout>

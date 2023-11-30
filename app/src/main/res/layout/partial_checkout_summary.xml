@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/partial_checkout_summary_container"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/row_background_color"
-              android:orientation="vertical"
-              tools:ignore="MissingPrefix">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/partial_checkout_summary_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding_default"
+    android:background="@color/row_background_color"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,19 +30,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/subtotal"
-                android:textColor="@color/row_checkout_text_light_color" />
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_caption1" />
 
             <TextView
-                fontPath="@string/font_app_medium"
                 android:id="@+id/partial_checkout_summary_subtotal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_caption1"
-                android:textColor="@color/text_light"
-                android:textStyle="bold"
-                tools:text="$9"/>
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_body"
+                tools:text="$9" />
 
         </LinearLayout>
 
@@ -49,24 +53,42 @@
             android:paddingTop="@dimen/margin_extra_small">
 
             <TextView
+                android:id="@+id/partial_checkout_summary_shipping_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/shipping_fee"
-                android:textColor="@color/row_checkout_text_light_color"
-            />
+                android:text="@string/shipping_text"
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_caption1" />
 
             <TextView
-                fontPath="@string/font_app_medium"
                 android:id="@+id/partial_checkout_summary_shipping_fee"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_caption1"
-                android:textColor="@color/text_light"
-                android:textStyle="bold"
-                tools:text="$9"/>
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_body"
+                tools:text="$9" />
+
+            <RelativeLayout
+                android:id="@+id/partial_checkout_summary_shipping_with_icon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_free_shipping"
+                    android:drawablePadding="@dimen/margin_tiny"
+                    android:text="@string/free_shipping_text"
+                    android:textAllCaps="true"
+                    android:textColor="@color/checkout_item_footer_other_text_color"
+                    android:textSize="@dimen/text_size_caption2"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -75,26 +97,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp">
+            android:paddingTop="@dimen/margin_extra_small">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/voucher"
-                android:textColor="@color/row_checkout_text_light_color" />
+                android:text="@string/voucher_label"
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_caption1" />
 
             <TextView
-                fontPath="@string/font_app_medium"
                 android:id="@+id/partial_checkout_summary_voucher"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_caption1"
-                android:textColor="@color/text_light"
-                android:textStyle="bold"
-                tools:text="$9"/>
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_body"
+                tools:text="$9" />
 
         </LinearLayout>
 
@@ -110,113 +131,83 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/tax"
-                android:textColor="@color/row_checkout_text_light_color" />
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_caption1" />
 
             <TextView
-                fontPath="@string/font_app_medium"
                 android:id="@+id/partial_checkout_summary_tax"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:textSize="@dimen/text_size_caption1"
-                android:textColor="@color/text_light"
-                android:textStyle="bold"
-                tools:text="$9"/>
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_body"
+                tools:text="$9" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/partial_checkout_summary_ourpay_select_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/margin_extra_small"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/delivery_option_ourpay_logo"
+                android:layout_width="@dimen/ourpay_logo_width_summary"
+                android:layout_height="@dimen/ourpay_logo_height_summary"
+                android:layout_gravity="bottom"
+                android:scaleType="fitStart"
+                android:src="@drawable/ic_select_checkout_small" />
+
+            <TextView
+                android:id="@+id/partial_checkout_summary_ourpay_select_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textColor="@color/row_checkout_text_dark_color"
+                android:textSize="@dimen/text_size_body"
+                android:textStyle="bold"
+                tools:text="$9" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/margin_extra_small">
+
+            <TextView
+                fontPath="@string/font_app_bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/total"
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_caption1" />
+
+            <TextView
+                android:id="@+id/partial_checkout_summary_total"
+                fontPath="@string/font_app_bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_body"
+                tools:text="$27" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <View
+        style="@style/horizontalBorderView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/border_thin"
-        android:background="@color/border_regular"/>
+        android:layout_height="1dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_small"
-        android:paddingLeft="@dimen/padding_default"
-        android:paddingRight="@dimen/padding_default"
-        android:paddingTop="@dimen/margin_small">
-
-        <TextView
-            fontPath="@string/font_app_semibold"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/total"
-            android:textColor="@color/row_checkout_text_dark_color"
-            android:textSize="@dimen/text_size_headline2"/>
-
-        <TextView
-            android:id="@+id/partial_checkout_summary_total"
-            fontPath="@string/font_app_semibold"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textColor="@color/cart_text_order_price"
-            android:textSize="@dimen/text_size_headline1"
-            tools:text="$27"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/partial_checkout_summary_ourpay_select_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/margin_extra_small"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/delivery_option_ourpay_logo"
-            android:layout_width="@dimen/ourpay_logo_width_summary"
-            android:layout_height="@dimen/ourpay_logo_height_summary"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_ourpay_select_logo" />
-
-        <TextView
-            android:id="@+id/partial_checkout_summary_ourpay_select_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textColor="@color/row_checkout_text_dark_color"
-            android:textSize="@dimen/text_size_body"
-            android:textStyle="bold"
-            tools:text="$9" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/partial_checkout_summary_pay_today_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/margin_extra_small"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/pay_today"
-            android:textColor="@color/text_extra_dark" />
-
-        <TextView
-            android:id="@+id/partial_checkout_summary_pay_today_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textColor="@color/text_extra_dark"
-            android:textSize="@dimen/text_size_body"
-            tools:text="$27" />
-
-    </LinearLayout>
 
 </LinearLayout>

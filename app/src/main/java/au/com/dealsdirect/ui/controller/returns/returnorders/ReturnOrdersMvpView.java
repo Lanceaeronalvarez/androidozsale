@@ -6,11 +6,11 @@ package au.com.dealsdirect.ui.controller.returns.returnorders;
 
 import java.util.List;
 
+import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
+import au.com.dealsdirect.data.network.model.returns.returnorders.ReturnOrdersList;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface ReturnOrdersMvpView extends MvpView {
 
-    void showOrders(List<au.com.dealsdirect.data.network.model.returns.returnorders.List> getReturnOrder);
-
-    void onReturnOrderItemClicked(au.com.dealsdirect.data.network.model.returns.returnorders.List newReturnsOrder);
+    void showOrders(List<GetReturnOrders> returnOrders);
 }

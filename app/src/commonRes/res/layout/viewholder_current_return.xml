@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/view_holder_my_current_returns_row_container"
     android:layout_width="match_parent"
@@ -16,142 +15,51 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
         <TextView
-            android:id="@+id/my_current_returns_product_name"
+            android:id="@+id/my_current_returns_header_text_view"
             fontPath="@string/font_app_bold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_marginEnd="@dimen/margin_extra_small"
+            android:layout_weight="1"
             android:maxLines="2"
-            android:text="Philosophy Cotton Sleeveless Plain"
+            android:text="Invoice 123456"
             android:textColor="@color/text_dark"
             android:textSize="@dimen/text_size_caption1"
             tools:ignore="HardcodedText" />
 
-
-        <TextView
-            android:id="@+id/current_return_request_number_text_value"
-            fontPath="@string/font_app_regular"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_extra_small"
-            android:gravity="end"
-            android:layout_weight="2"
-            tools:text=""
-            android:textColor="@color/text_dark"
-            android:textSize="@dimen/text_size_caption1"
-            tools:ignore="HardcodedText" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:src="@drawable/ic_gray_chevron"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:gravity="center"/>
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageButton
+        android:id="@+id/my_current_return_item_option"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/padding_default">
+        android:layout_gravity="right"
+        android:background="#00000000"
+        android:gravity="center"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_small"
+        android:src="@drawable/ic_orders_ellipsis" />
 
-        <ImageView
-            android:id="@+id/current_return_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:scaleType="fitXY"
-            android:layout_marginRight="@dimen/margin_small"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/current_return_images"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/order_image_height"
+        android:layout_marginTop="@dimen/margin_small" />
 
-        <!-- REQUEST AND APPROVED -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <!-- LABELS -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Requested:"
-                    android:textColor="@color/text_light"
-                    android:textSize="@dimen/text_size_caption1" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Approved:"
-                    android:textColor="@color/text_light"
-                    android:textSize="@dimen/text_size_caption1" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="RAN:"
-                    android:textColor="@color/text_light"
-                    android:textSize="@dimen/text_size_caption1" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Status:"
-                    android:textColor="@color/text_light"
-                    android:textSize="@dimen/text_size_caption1" />
-            </LinearLayout>
-
-            <!-- VALUES -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/margin_extra_small">
-
-                <TextView
-                    android:id="@+id/my_order_product_delivery_from_date_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="March 1, 2013"
-                    android:textSize="@dimen/text_size_caption1"
-                    android:textColor="@color/text_dark" />
-
-                <TextView
-                    android:id="@+id/my_current_returns_product_is_approved_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="March 8, 2013"
-                    android:textSize="@dimen/text_size_caption1"
-                    android:textColor="@color/text_dark" />
-
-                <TextView
-                    android:id="@+id/my_current_return_item_RAN_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ran_value"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/text_size_caption1" />
-
-                <TextView
-                    android:id="@+id/my_current_return_item_status_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="stat_value"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/text_size_caption1" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <!--</LinearLayout>-->
+    <include
+        android:id="@+id/component_return_tracking"
+        layout="@layout/component_return_tracking"
+        android:visibility="visible" />
 
 </LinearLayout>
 

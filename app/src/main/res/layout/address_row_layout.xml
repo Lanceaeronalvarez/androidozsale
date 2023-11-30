@@ -4,70 +4,72 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_checkout_options"
-    android:clickable="true"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:paddingEnd="16dp"
-    android:paddingStart="16dp"
     tools:ignore="MissingPrefix">
 
-    <ImageView
-        android:id="@+id/home_logo"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/ic_home_delivery" />
-
-    <LinearLayout
-        android:id="@+id/view_my_addresses_row_layout"
+    <FrameLayout
+        android:id="@+id/controller_address_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_toEndOf="@id/home_logo"
-        android:orientation="vertical">
+        android:background="@drawable/bg_account_item"
+        android:padding="@dimen/padding_default">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/view_my_address_row_item_name"
+                fontPath="@string/font_app_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/row_checkout_text_light_color"
+                android:textSize="@dimen/text_size_body"
+                tools:text="@string/row_address_name_hint" />
+
+            <TextView
+                android:id="@+id/view_my_address_row_item_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/row_checkout_text_light_color"
+                android:textSize="@dimen/text_size_caption1"
+                tools:text="@string/row_address_hint" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/controller_address_container"
+        android:layout_alignBottom="@+id/controller_address_container"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8" />
 
         <TextView
-            fontPath="@string/font_app_regular"
-            android:id="@+id/view_my_address_row_item_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/address_text_selector"
-            android:textSize="@dimen/text_size_headline2"
-            tools:text="Address 1" />
-
-        <TextView
-            android:id="@+id/view_my_address_row_item_text"
-            fontPath="@string/font_app_light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/view_my_addresses_row_layout"
-            android:layout_centerVertical="true"
-            android:textColor="@color/address_text_subtitle"
+            android:id="@+id/controller_address_delete_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:gravity="center"
+            android:text="@string/delete"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_body"
-            tools:text="some address"/>
-
-
+            android:visibility="visible" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/remove_address_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/view_my_addresses_row_layout"
-        android:layout_below="@+id/view_my_addresses_row_layout"
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        android:text="@string/remove"
-        android:textColor="@color/text_highlight"
-        android:textSize="@dimen/text_size_headline3" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_below="@+id/remove_address_view"
-        android:layout_marginTop="10dp"
+        android:layout_height="@dimen/border_regular"
+        android:layout_below="@+id/controller_address_container"
         android:background="@color/border_regular" />
+
 
 </RelativeLayout>

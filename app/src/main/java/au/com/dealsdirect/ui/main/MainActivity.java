@@ -103,6 +103,7 @@ import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderSatisfactionDialog;
 import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderTrackerDialog;
+import au.com.dealsdirect.ui.controller.returns.currentreturns.BottomSheetReturnSatisfactionDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.BottomSheetSizesDialog;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.BottomSheetInfoDialog;
@@ -1518,6 +1519,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         bottomSheetFragment.setArguments(null);
         bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.ORDER_SATISFACTION_BOTTOM_DIALOG_TAG);
+    }
+
+    public void showReturnSatisfactionDialog(BottomSheetReturnSatisfactionDialog.OnResponseSelectedListener listener) {
+        BottomSheetReturnSatisfactionDialog bottomSheetFragment = new BottomSheetReturnSatisfactionDialog();
+
+        bottomSheetFragment.setListener(listener);
+
+        bottomSheetFragment.setArguments(null);
+        bottomSheetFragment.show(getSupportFragmentManager(), ActionConstants.RETURN_SATISFACTION_BOTTOM_DIALOG_TAG);
     }
 
     public void showProductDetailsSizesBottomDialog(ArrayList<Pair<String, String>> productSizes,

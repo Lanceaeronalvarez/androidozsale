@@ -75,8 +75,6 @@ import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequestOld;
-import au.com.dealsdirect.data.network.model.createcontact.CreateContactResponseOld;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
 import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
@@ -146,14 +144,12 @@ import au.com.dealsdirect.data.network.model.register.RegisterUserRequest;
 import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
 import au.com.dealsdirect.data.network.model.returns.FileSettingsResponse;
 import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequest;
-import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponseBody;
-import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturnResponseBody;
-import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailRequest;
-import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnOrderDetailResponseBody;
-import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentRequest;
-import au.com.dealsdirect.data.network.model.returns.newreturn.SetAttachmentResponse;
-import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailRequest;
-import au.com.dealsdirect.data.network.model.returns.returndetails.GetReturnDetailsResponse;
+import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRequestResponse;
+import au.com.dealsdirect.data.network.model.returns.createreturn.ReturnReceivedRequest;
+import au.com.dealsdirect.data.network.model.returns.createreturn.ReturnReceivedSatisfactionResponse;
+import au.com.dealsdirect.data.network.model.returns.currentreturn.CurrentReturn;
+import au.com.dealsdirect.data.network.model.returns.newreturn.ImageAttachment;
+import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnItem;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartResponse;
@@ -674,11 +670,6 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<CreateContactResponseOld> callCreateContactOld(CreateContactRequestOld createContactRequest) {
-        return mApiHelper.callCreateContactOld(createContactRequest);
-    }
-
-    @Override
     public Observable<String> callCreateContact(CreateContactRequest createContactRequest) {
         return mApiHelper.callCreateContact(createContactRequest);
 
@@ -700,31 +691,49 @@ public class AppDataManager implements DataManager {
 
 
     @Override
-    public Observable<CurrentReturnResponseBody> callGetCurrentReturns() {
+    public Observable<List<CurrentReturn>> callGetCurrentReturns() {
         return mApiHelper.callGetCurrentReturns();
     }
 
     @Override
-    public Observable<GetReturnOrders> callGetReturnOrders() {
+    public Observable<List<GetReturnOrders>> callGetReturnOrders() {
         return mApiHelper.callGetReturnOrders();
     }
 
     @Override
-    public Observable<GetReturnDetailsResponse> callGetReturnDetails(GetReturnDetailRequest getReturnDetailRequest) {
-        return mApiHelper.callGetReturnDetails(getReturnDetailRequest);
+    public Observable<CurrentReturn> callGetReturnDetails(String returnId) {
+        return mApiHelper.callGetReturnDetails(returnId);
+    }
+
+    @Override
+    public Observable<String> callSetContactForReturns(String returnId, int contactNumber) {
+        return mApiHelper.callSetContactForReturns(returnId, contactNumber);
+    }
+
+    @Override
+    public Observable<List<NewReturnItem>> callGetNewReturnOrderDetail(String returnId) {
+        return mApiHelper.callGetNewReturnOrderDetail(returnId);
 
     }
 
     @Override
-    public Observable<NewReturnOrderDetailResponseBody> callGetNewReturnOrderDetail(NewReturnOrderDetailRequest newReturnOrderDetailRequest) {
-        return mApiHelper.callGetNewReturnOrderDetail(newReturnOrderDetailRequest);
-
-    }
-
-    @Override
-    public Observable<CreateReturnRequestResponseBody> callCreateReturnRequest(CreateReturnRequest createReturnRequest) {
+    public Observable<CreateReturnRequestResponse> callCreateReturnRequest(CreateReturnRequest createReturnRequest) {
         return mApiHelper.callCreateReturnRequest(createReturnRequest);
+    }
 
+    @Override
+    public Observable<String> callSetReturnReceived(ReturnReceivedRequest receivedRequest) {
+        return mApiHelper.callSetReturnReceived(receivedRequest);
+    }
+
+    @Override
+    public Observable<String> callSetReturnNotReceived(ReturnReceivedRequest receivedRequest) {
+        return mApiHelper.callSetReturnNotReceived(receivedRequest);
+    }
+
+    @Override
+    public Observable<ReturnReceivedSatisfactionResponse> callGetReturnReceivedSatisfaction(ReturnReceivedRequest receivedRequest) {
+        return mApiHelper.callGetReturnReceivedSatisfaction(receivedRequest);
     }
 
     @Override
@@ -884,8 +893,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<SetAttachmentResponse> setAttachment(SetAttachmentRequest setAttachmentRequest) {
-        return mApiHelper.setAttachment(setAttachmentRequest);
+    public Observable<String> setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest) {
+        return mApiHelper.setAttachment(returnId, setAttachmentRequest);
     }
 
     @Override

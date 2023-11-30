@@ -1,68 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
     android:orientation="vertical">
 
-    <include layout="@layout/partial_filters_toolbar" />
-
     <FrameLayout
+        android:id="@+id/controller_search_filter_facets_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <View
+            android:id="@+id/controller_sale_items_opaque_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/search_gray_opaque"
+            android:clickable="true" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="false"
-                android:orientation="vertical">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/filters_facets_recyclerview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:overScrollMode="never" />
-
-            </LinearLayout>
-
+            <!--DUMMY VIEW to keep 1:2 ratio-->
             <View
-                android:layout_width="1dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@color/border_regular" />
+                android:layout_weight="1"
+                android:clickable="false" />
 
             <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:id="@+id/controller_search_filter_facets_page"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@color/white"
+                android:clickable="true">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/filters_categories_recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_small"
                     android:overScrollMode="never"
-                    android:visibility="gone" />
+                    android:visibility="invisible" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/filters_facet_items_recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_small"
                     android:overScrollMode="never" />
 
                 <RelativeLayout
                     android:id="@+id/seekbar_main_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
                     android:visibility="gone">
 
                     <TextView
@@ -72,16 +70,16 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
-                        android:text="clear"
+                        android:text="@string/clear"
                         android:textColor="@color/colorAccent"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_caption1" />
 
                     <RelativeLayout
                         android:id="@+id/bubblePriceLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/clearText"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginStart="@dimen/margin_small"
                         android:layout_marginTop="@dimen/activity_horizontal_margin"
                         android:clipChildren="false"
                         android:clipToPadding="false">
@@ -100,17 +98,17 @@
                                 android:layout_alignParentLeft="true"
                                 android:layout_gravity="center"
                                 android:background="@drawable/rectangle_bg"
-                                android:paddingBottom="10dp"
-                                android:paddingLeft="10dp"
-                                android:paddingRight="10dp"
-                                android:paddingTop="10dp"
-                                android:text="$0"
+                                android:paddingBottom="@dimen/margin_small"
+                                android:paddingLeft="@dimen/margin_small"
+                                android:paddingRight="@dimen/margin_small"
+                                android:paddingTop="@dimen/margin_small"
                                 android:textColor="#ffffff"
-                                android:textSize="14sp" />
+                                android:textSize="@dimen/text_size_caption1"
+                                tools:text="$0" />
 
                             <ImageView
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                                android:layout_width="@dimen/search_filter_imageview_width"
+                                android:layout_height="@dimen/search_filter_imageview_height"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="-5dp"
                                 android:background="@drawable/triangle_bg"
@@ -123,7 +121,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_marginEnd="10dp"
+                            android:layout_marginEnd="@dimen/margin_small"
                             android:orientation="vertical">
 
                             <TextView
@@ -133,17 +131,17 @@
                                 android:layout_gravity="center"
                                 android:background="@drawable/rectangle_bg"
                                 android:gravity="end"
-                                android:paddingBottom="10dp"
-                                android:paddingLeft="5dp"
-                                android:paddingRight="5dp"
-                                android:paddingTop="10dp"
-                                android:text="$100"
+                                android:paddingBottom="@dimen/margin_small"
+                                android:paddingLeft="@dimen/margin_extra_small"
+                                android:paddingRight="@dimen/margin_extra_small"
+                                android:paddingTop="@dimen/margin_small"
                                 android:textColor="@color/white"
-                                android:textSize="14sp" />
+                                android:textSize="@dimen/text_size_caption1"
+                                tools:text="$100" />
 
                             <ImageView
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                                android:layout_width="@dimen/search_filter_triangle_image_view_width"
+                                android:layout_height="@dimen/search_filter_triangle_image_height"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="-5dp"
                                 android:background="@drawable/triangle_bg"
@@ -156,10 +154,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/bubblePriceLayout"
-                        android:layout_marginEnd="26dp"
-                        android:layout_marginStart="16dp"
-                        app:bar_color="#d6d6d6"
-                        app:bar_highlight_color="#7c7c7c"
+                        android:layout_marginEnd="@dimen/search_filter_range_margin_end"
+                        android:layout_marginStart="@dimen/padding_default"
+                        app:bar_color="@color/search_filter_range_bar_color"
+                        app:bar_highlight_color="@color/search_filter_highlight_text"
                         app:corner_radius="10"
                         app:data_type="_integer"
                         app:left_thumb_image="@drawable/thumb_normal"
@@ -171,18 +169,10 @@
                         app:steps="5" />
                 </RelativeLayout>
 
-
             </FrameLayout>
-
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/controller_search_filter_transparent_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:visibility="gone" />
-
     </FrameLayout>
+
 </LinearLayout>

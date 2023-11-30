@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/viewholder_return_detail_row_container"
     android:layout_width="match_parent"
@@ -19,6 +18,7 @@
             android:id="@+id/viewholder_return_detail_image_view"
             android:layout_width="@dimen/return_details_image_width"
             android:layout_height="@dimen/return_details_image_height"
+            android:layout_gravity="center_vertical"
             tools:ignore="ContentDescription" />
 
 
@@ -32,21 +32,60 @@
 
 
             <TextView
-                android:id="@+id/viewholder_return_details_item_name"
+                android:id="@+id/viewholder_return_details_item_title"
                 fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_dark"
+                android:textColor="@color/text_extra_dark"
                 android:textSize="@dimen/text_size_body"
+                tools:ignore="HardcodedText"
+                tools:text="Addidas" />
+
+            <TextView
+                android:id="@+id/viewholder_return_details_item_subtitle"
+                fontPath="@string/font_app_regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:textColor="@color/text_extra_dark"
+                android:textSize="@dimen/text_size_caption1"
+                android:visibility="gone"
                 tools:ignore="HardcodedText"
                 tools:text="Philosophy Cotton Sleeveless Plain" />
 
+            <LinearLayout
+                android:id="@+id/viewholder_returns_details_size_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/viewholder_returns_details_size_identifier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Size:"
+                    android:textColor="@color/text_extra_dark"
+                    android:textSize="@dimen/text_size_caption1"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/viewholder_returns_details_size_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:fontFamily="@string/font_app_regular"
+                    android:textColor="@color/text_extra_dark"
+                    android:textSize="@dimen/text_size_body"
+                    tools:text="8" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/my_returns_details_item_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_small"
+                android:layout_marginTop="@dimen/margin_tiny"
                 android:orientation="horizontal">
 
 
@@ -55,19 +94,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Quantity:"
-                    android:textColor="@color/text_light"
-                    android:textSize="@dimen/text_size_body"
+                    android:textColor="@color/text_extra_dark"
+                    android:textSize="@dimen/text_size_caption2"
                     tools:ignore="HardcodedText" />
 
 
                 <TextView
                     android:id="@+id/viewholder_returns_details_item_count_value"
-                    fontPath="@string/font_app_regular"
+                    fontPath="@string/font_app_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_small"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/text_size_body"
+                    android:textColor="@color/text_extra_dark"
+                    android:textSize="@dimen/text_size_caption2"
                     tools:ignore="HardcodedText"
                     tools:text="1" />
 
@@ -85,48 +124,19 @@
                     android:id="@+id/viewholder_return_details_price_identifier"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_light"
-                    android:textSize="@dimen/text_size_body"
-                    android:text="Price:" />
+                    android:text="Price:"
+                    android:textColor="@color/text_extra_dark"
+                    android:textSize="@dimen/text_size_caption2" />
 
                 <TextView
                     android:id="@+id/viewholder_returns_order_item_total_cost_value"
-                    fontPath="@string/font_app_regular"
+                    fontPath="@string/font_app_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/text_size_body"
+                    android:textColor="@color/text_extra_dark"
+                    android:textSize="@dimen/text_size_caption2"
                     tools:text="123.45" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/viewholder_returns_details_size_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_tiny"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/viewholder_returns_details_size_identifier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Size:"
-                    android:textColor="@color/text_light"
-                    android:textSize="@dimen/text_size_body"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:id="@+id/viewholder_returns_details_size_value"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:fontFamily="@string/font_app_regular"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/text_size_body"
-                    tools:text="8" />
 
             </LinearLayout>
 
@@ -141,19 +151,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Subtotal:"
-                    android:textColor="@color/text_light"
-                    android:textSize="@dimen/text_size_body"
+                    android:textColor="@color/text_extra_dark"
+                    android:textSize="@dimen/text_size_caption2"
                     tools:ignore="HardcodedText" />
 
 
                 <TextView
                     android:id="@+id/viewholder_returns_details_subtotal_value"
-                    fontPath="@string/font_app_regular"
+                    fontPath="@string/font_app_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_small"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/text_size_body"
+                    android:textColor="@color/text_extra_dark"
+                    android:textSize="@dimen/text_size_caption2"
                     tools:ignore="HardcodedText"
                     tools:text="123.45" />
 
@@ -164,6 +174,10 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_thin"
+        android:background="@color/border_regular" />
 
 </LinearLayout>
 
