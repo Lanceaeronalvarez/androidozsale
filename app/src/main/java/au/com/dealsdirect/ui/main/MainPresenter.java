@@ -330,6 +330,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 getDataManager().setMobileTabletBannerColumns(value.getShop().getMobileTabletBannerColumns());
                 getDataManager().setProductPagePriceBlockMode(value.getProductPage().getPriceBlockMode() != null ?
                         value.getProductPage().getPriceBlockMode() : 0);
+                getDataManager().setHoursLeftToDisplayTimer(value.getProductPage().getHoursLeftToDisplayTimer() != null ?
+                        value.getProductPage().getHoursLeftToDisplayTimer() : 48);
 
                 if (value.getPayments().getVisaCheckout() != null) {
                     getDataManager().setIsVisaCheckoutEnabled(value.getPayments().getVisaCheckout().getVisaCheckoutEnabled());

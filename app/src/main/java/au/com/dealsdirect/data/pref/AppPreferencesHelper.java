@@ -210,6 +210,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String PRODUCT_PAGE_PRICE_BLOCK_MODE = "PRODUCT_PAGE_PRICE_BLOCK_MODE";
 
+    private static final String HOURS_LEFT_TO_DISPLAY_TIMER = "HOURS_LEFT_TO_DISPLAY_TIMER";
+
     private Context mContext;
 
     @Inject
@@ -1240,5 +1242,14 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public int getProductPagePriceBlockMode() {
         return Prefs.getInt(PRODUCT_PAGE_PRICE_BLOCK_MODE, 1);
+    }
+
+    @Override
+    public void setHoursLeftToDisplayTimer(int value) {
+        Prefs.putInt(HOURS_LEFT_TO_DISPLAY_TIMER, value);
+    }
+    @Override
+    public int getHoursLeftToDisplayTimer() {
+        return Prefs.getInt(HOURS_LEFT_TO_DISPLAY_TIMER, 48);
     }
 }

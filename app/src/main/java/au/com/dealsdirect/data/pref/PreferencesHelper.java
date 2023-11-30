@@ -373,4 +373,7 @@ public interface PreferencesHelper {
     void setProductPagePriceBlockMode(int mode);
 
     int getProductPagePriceBlockMode();
+
+    void setHoursLeftToDisplayTimer(int value);
+    int getHoursLeftToDisplayTimer();
 }

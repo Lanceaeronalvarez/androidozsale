@@ -2045,4 +2045,14 @@ public class AppDataManager implements DataManager {
     public int getProductPagePriceBlockMode() {
         return mPreferencesHelper.getProductPagePriceBlockMode();
     }
+
+    @Override
+    public void setHoursLeftToDisplayTimer(int value) {
+        mPreferencesHelper.setHoursLeftToDisplayTimer(value);
+    }
+
+    @Override
+    public int getHoursLeftToDisplayTimer() {
+        return mPreferencesHelper.getHoursLeftToDisplayTimer();
+    }
 }

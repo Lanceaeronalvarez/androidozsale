@@ -1835,7 +1835,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
             determineToolbarTitle();
             mEndDate = response.getEndDate();
-            if (mEndDate == null || mEndDate.isEmpty() || !DateUtils.isWithin99Hours(DateUtils.getRemainingTimeInMillis(mEndDate))) {
+            if (mEndDate == null || mEndDate.isEmpty() ||
+                    !DateUtils.isWithinHourDuration(
+                            DateUtils.getRemainingTimeInMillis(mEndDate), mPresenter.getHoursLeftToDisplayTimer())) {
                 mSaleItemsRemainingTimeText.setVisibility(View.GONE);
                 mSaleEndsInText.setVisibility(View.GONE);
             } else {

@@ -46,4 +46,6 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
     void setSupplierOriginaPriceInfoTimeAgreed(long timestamp);
 
     int getPriceBlockMode();
+
+    int getHoursLeftToDisplayTimer();
 }
