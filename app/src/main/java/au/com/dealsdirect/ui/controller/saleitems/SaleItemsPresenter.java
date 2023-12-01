@@ -329,4 +329,9 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     public int getPriceBlockMode() {
         return getDataManager().getProductPagePriceBlockMode();
     }
+
+    @Override
+    public int getHoursLeftToDisplayTimer() {
+        return getDataManager().getHoursLeftToDisplayTimer();
+    }
 }

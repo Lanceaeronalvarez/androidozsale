@@ -33,22 +33,22 @@
                     fontPath="@string/font_app_light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding_default_half"
                     android:layout_marginLeft="@dimen/padding_default"
-                    android:layout_marginRight="@dimen/padding_default"
                     android:layout_marginTop="@dimen/padding_default"
+                    android:layout_marginRight="@dimen/padding_default"
+                    android:layout_marginBottom="@dimen/padding_default_half"
                     android:text="@string/checkout_order_label"
                     android:textAllCaps="true"
                     android:textColor="@color/text_medium"
                     android:textSize="@dimen/text_size_caption2"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/controller_checkout_recyclerview_items"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
+                    android:background="@color/transparent"
                     android:nestedScrollingEnabled="false" />
 
             </LinearLayout>

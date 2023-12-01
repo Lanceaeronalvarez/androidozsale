@@ -9,7 +9,8 @@ import com.androidnetworking.error.ANError;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
-import au.com.dealsdirect.data.network.model.returns.returnorders.List;
+import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
+import au.com.dealsdirect.data.network.model.returns.returnorders.ReturnOrdersList;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -35,7 +36,7 @@ public class ReturnOrdersPresenter<V extends ReturnOrdersMvpView> extends BasePr
                                 return;
                             }
                             getMvpView().hideLoading();
-                            getMvpView().showOrders(getReturnOrders.getGetReturnOrdersBody().getList());
+                            getMvpView().showOrders(getReturnOrders);
 
                         }, throwable -> {
 
@@ -52,10 +53,5 @@ public class ReturnOrdersPresenter<V extends ReturnOrdersMvpView> extends BasePr
                                 handleApiError(anError);
                             }
                         }));
-    }
-
-    @Override
-    public void selectReturnOrderItem(List returnOrder) {
-        getMvpView().onReturnOrderItemClicked(returnOrder);
     }
 }

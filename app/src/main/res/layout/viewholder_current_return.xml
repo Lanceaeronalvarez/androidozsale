@@ -1,262 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/view_holder_my_current_returns_row_container"
-    android:layout_margin="5dp"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/return_card_height"
-    android:background="@drawable/bg_rectangle_background_white"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_view_states"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_default"
     tools:ignore="MissingPrefix">
 
-    <RelativeLayout
-        android:id="@+id/viewholder_current_return_content_container"
+    <LinearLayout
+        android:id="@+id/my_order_information_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <RelativeLayout
-            android:id="@+id/my_order_information_header"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/my_current_returns_header_text_view"
+            fontPath="@string/font_app_bold"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="15dp">
-
-            <TextView
-                android:id="@+id/current_return_request_number_text_identifier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Request #:"
-                android:textColor="#6c6b6b"
-                android:textSize="@dimen/text_size_body"
-                fontPath="@string/font_app_bold"
-                tools:ignore="HardcodedText"/>
-
-            <TextView
-                android:id="@+id/current_return_request_number_text_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_toEndOf="@+id/current_return_request_number_text_identifier"
-                android:layout_toRightOf="@id/current_return_request_number_text_identifier"
-                android:text="204400890"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_size_body"
-                fontPath="@string/font_app_bold"
-                tools:ignore="HardcodedText"/>
+            android:layout_marginEnd="@dimen/margin_extra_small"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:text="Invoice 123456"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size_caption1"
+            tools:ignore="HardcodedText" />
 
 
-            <TextView
-                android:id="@+id/my_current_returns_product_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/current_return_request_number_text_identifier"
-                android:layout_marginTop="20dp"
-                android:text="Philosophy Cotton Sleeveless Plain"
-                android:textColor="#878787"
-                android:textSize="@dimen/text_size_headline3"
-                android:maxLines="2"
-                fontPath="@string/font_app_bold"
-                tools:ignore="HardcodedText"/>
-
-        </RelativeLayout>
-
-
-        <View
-            android:id="@+id/return_header_divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/my_order_information_header"
-            android:background="@color/border_regular">
-
-        </View>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/current_return_items_recyclerview"
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/return_header_divider"
-            android:focusable="true"
-            android:clickable="true"
-            android:isScrollContainer="false"
-            android:nestedScrollingEnabled="false"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:layout_gravity="right"
+            android:src="@drawable/ic_gray_chevron"
+            tools:ignore="ContentDescription" />
 
-        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/my_current_return_item_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="#00000000"
+        android:gravity="center"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_small"
+        android:src="@drawable/ic_orders_ellipsis" />
 
-        <RelativeLayout
-            android:id="@+id/my_current_return_information_text_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="4dp">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/current_return_images"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/order_image_height"
+        android:layout_marginTop="@dimen/margin_small" />
 
-
-            <RelativeLayout
-                android:id="@+id/my_current_return_item_date_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp">
-
-
-                <TextView
-                    android:id="@+id/my_current_returns_product_request_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Request Date:"
-                    android:textColor="#5c5c5c"
-                    android:textSize="@dimen/text_size_caption2"
-                    fontPath="@string/font_app_medium"
-                    tools:ignore="HardcodedText"/>
-
-
-                <TextView
-                    android:id="@+id/my_order_product_delivery_from_date_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="2dp"
-                    android:text="12/08/16"
-                    android:textColor="#1b1b1b"
-                    android:textSize="@dimen/text_size_caption2"
-                    fontPath="@string/font_app_bold"
-                    tools:ignore="HardcodedText"/>
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/my_current_return_item_date_info"
-                android:background="@color/border_regular">
-
-            </View>
-
-            <RelativeLayout
-                android:id="@+id/my_current_return_item_is_approved_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/my_current_return_item_date_info"
-                android:layout_marginTop="2dp"
-                android:padding="10dp">
-
-                <TextView
-                    android:id="@+id/my_current_returns_product_is_approved_identifier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Approved Date:"
-                    android:textColor="#5c5c5c"
-                    android:textSize="@dimen/text_size_caption2"
-                    fontPath="@string/font_app_medium"
-                    tools:ignore="HardcodedText"/>
-
-
-                <TextView
-                    android:id="@+id/my_current_returns_product_is_approved_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="2dp"
-                    android:text="---"
-                    android:textColor="#1b1b1b"
-                    android:textSize="@dimen/text_size_caption2"
-                    fontPath="@string/font_app_bold"
-                    tools:ignore="HardcodedText"/>
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/my_current_return_item_is_approved_info"
-                android:background="@color/border_regular">
-
-            </View>
-
-            <RelativeLayout
-                android:id="@+id/my_current_return_item_status_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/my_current_return_item_is_approved_info"
-                android:padding="10dp"
-                android:layout_alignParentEnd="true">
-
-                <TextView
-                    android:id="@+id/my_current_return_item_status_identifier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Status:"
-                    android:textColor="#5c5c5c"
-                    android:textSize="@dimen/text_size_caption2"
-                    fontPath="@string/font_app_medium"
-                    tools:ignore="HardcodedText"/>
-
-
-                <TextView
-                    android:id="@+id/my_current_return_item_status_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="2dp"
-                    android:text="---"
-                    android:textColor="#1b1b1b"
-                    android:textSize="@dimen/text_size_caption2"
-                    fontPath="@string/font_app_bold"
-                    tools:ignore="HardcodedText"/>
-
-            </RelativeLayout>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/my_current_return_item_status_info"
-                android:background="@color/border_regular">
-
-            </View>
-
-
-            <RelativeLayout
-                android:id="@+id/my_current_return_item_RAN_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/my_current_return_item_status_info"
-                android:padding="10dp">
-
-                <TextView
-                    android:id="@+id/my_current_return_item_RAN_identifier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="RAN:"
-                    android:textColor="#5c5c5c"
-                    android:textSize="@dimen/text_size_caption2"
-                    tools:ignore="HardcodedText"/>
-
-
-                <TextView
-                    android:id="@+id/my_current_return_item_RAN_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="2dp"
-                    android:text="Pending"
-                    android:textColor="#1b1b1b"
-                    android:textSize="@dimen/text_size_caption2"
-                    fontPath="@string/font_app_bold"
-                    tools:ignore="HardcodedText"/>
-
-            </RelativeLayout>
-
-
-        </RelativeLayout>
-    </RelativeLayout>
+    <include
+        android:id="@+id/component_return_tracking"
+        layout="@layout/component_return_tracking"
+        android:visibility="visible" />
 
 </LinearLayout>
 

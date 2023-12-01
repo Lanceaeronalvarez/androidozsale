@@ -1,38 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#FFFFFF"
-    android:orientation="vertical"
-    android:paddingTop="15dp"
-    tools:ignore="MissingPrefix">
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/viewholder_subcategory_height"
+    android:layout_marginEnd="@dimen/margin_small"
+    android:layout_marginStart="@dimen/margin_extra_small"
+    android:layout_marginTop="@dimen/margin_extra_small"
+    android:background="@color/white">
 
-    <RelativeLayout
-        android:id="@+id/viewholder_facet_item_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:background="#FFFFFF"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="10dp">
+    <TextView
+        android:id="@+id/viewholder_facet_item_title"
+        fontPath="@string/font_app_regular"
+        style="@style/TextViewStyle"
+        android:layout_gravity="left|center_vertical"
+        tools:ignore="MissingPrefix"
+        tools:text="Category" />
 
-        <TextView
-            android:id="@+id/viewholder_facet_item_title"
-            fontPath="@string/font_app_semibold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_headline3"
-            android:textStyle="bold"
-            android:textColor="@color/facet_item_text_selector"
-            android:text="Category"/>
-
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/viewholder_subcategory_check"
+        android:layout_width="@dimen/viewholder_subcategory_width"
+        android:layout_height="@dimen/viewholder_subcategory_height"
+        android:layout_gravity="right|center_vertical"
+        android:visibility="gone"
+        android:src="@drawable/ic_check"/>
 
     <View
+        android:id="@+id/viewholder_subcategory_border"
         android:layout_width="match_parent"
-        android:layout_height="0.9dp"
+        android:layout_height="@dimen/border_regular"
         android:background="@color/border_regular"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="5dp"/>
-</LinearLayout>
+        android:layout_gravity="bottom"
+        android:visibility="visible" />
+
+</FrameLayout>

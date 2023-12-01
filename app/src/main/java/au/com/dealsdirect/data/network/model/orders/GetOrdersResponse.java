@@ -356,7 +356,7 @@ public class GetOrdersResponse {
                     @Expose
                     private String date;
 
-                    @SerializedName("date_dype")
+                    @SerializedName("date_type")
                     @Expose
                     private String dateType;
 

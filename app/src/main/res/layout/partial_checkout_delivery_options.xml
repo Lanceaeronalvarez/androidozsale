@@ -4,116 +4,109 @@
     android:id="@+id/delivery_option_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_small"
     android:layout_marginBottom="@dimen/margin_small"
+    android:layout_marginTop="@dimen/margin_small"
     android:clickable="true"
     android:orientation="vertical"
+    android:visibility="visible"
     tools:ignore="MissingPrefix">
 
     <TextView
         fontPath="@string/font_app_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_dark"
-        android:text="@string/delivery_method"
-        android:paddingStart="@dimen/padding_default"
+        android:layout_marginBottom="@dimen/padding_default_half"
         android:paddingEnd="@dimen/padding_default"
-        android:textSize="@dimen/text_size_caption2"
-        android:layout_marginBottom="@dimen/padding_default_half"/>
+        android:paddingStart="@dimen/padding_default"
+        android:text="@string/delivery_method"
+        android:textColor="@color/text_dark"
+        android:textSize="@dimen/text_size_caption2" />
 
-    <RelativeLayout
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_account_item"
-        android:padding="@dimen/padding_default"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="@dimen/padding_default">
 
-        <!--PRICE on the right-->
         <RelativeLayout
-            android:id="@+id/delivery_option_price"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:gravity="">
+            android:layout_weight="9"
+            android:visibility="visible"
+            android:layout_gravity="center_vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/delivery_option_ourpay_select_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/delivery_option_ourpay_logo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_select_checkout_big" />
+
+                    <TextView
+                        android:id="@+id/delivery_option_ourpay_select_description_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="2"
+                        android:textColor="@color/row_checkout_text_light_color"
+                        android:textSize="@dimen/text_size_caption2"
+                        tools:text="Subscription for 5, 12 or 25 free delivery per year" />
+
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/delivery_option_price_text_view"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/delivery_option_non_ourpay_text_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/row_checkout_text_light_color"
+                    android:textColor="@color/checkout_selected_text_color"
                     android:textSize="@dimen/text_size_body"
-                    tools:text="$9.95" />
+                    tools:text="Standard"
+                    android:textStyle="bold"
+                    android:visibility="visible"/>
+            </FrameLayout>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:src="@drawable/ic_gray_chevron" />
 
-            </LinearLayout>
 
         </RelativeLayout>
 
-        <!--Type of delivery option on the left-->
-        <FrameLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/delivery_option_price_text_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/delivery_option_price">
-
-            <RelativeLayout
-                android:id="@+id/delivery_option_ourpay_select_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/delivery_option_ourpay_logo"
-                    android:layout_width="@dimen/ourpay_logo_width"
-                    android:layout_height="@dimen/ourpay_logo_height"
-                    android:scaleType="fitStart"
-                    android:src="@drawable/ic_ourpay_select_logo" />
-
-                <TextView
-                    android:id="@+id/delivery_option_ourpay_select_description_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/delivery_option_ourpay_logo"
-                    android:maxLines="2"
-                    android:textColor="@color/row_checkout_text_light_color"
-                    android:textSize="@dimen/text_size_caption2"
-                    tools:text="Subscription for 5, 12 or 25 free delivery per year" />
+            android:textColor="@color/row_checkout_text_light_color"
+            android:textSize="@dimen/text_size_body"
+            tools:text="$9.95" />
 
 
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/delivery_option_non_ourpay_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textColor="@color/row_checkout_text_light_color"
-                android:textSize="@dimen/text_size_body"
-                android:textStyle="bold"
-                tools:text="Standard" />
-
-        </FrameLayout>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_gray_chevron" />
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/delivery_option_ourpay_select_before_purchase_description_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:textColor="@color/row_checkout_text_light_color"
-        android:textSize="@dimen/text_size_caption2"
-        android:paddingStart="@dimen/padding_default"
-        android:paddingEnd="@dimen/padding_default"
-        android:visibility="gone"
-        tools:text="After purchase you will have 3" />
+    <View
+        style="@style/horizontalBorderView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
 </LinearLayout>

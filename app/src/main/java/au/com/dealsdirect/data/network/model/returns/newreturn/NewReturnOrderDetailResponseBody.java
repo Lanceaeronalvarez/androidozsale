@@ -8,13 +8,13 @@ public class NewReturnOrderDetailResponseBody {
 
     @SerializedName("d")
     @Expose
-    private NewReturnOrderDetailResponse newReturnOrderDetailResponse;
+    private NewReturnItem newReturnOrderDetailResponse;
 
-    public NewReturnOrderDetailResponse getNewReturnOrderDetailResponse() {
+    public NewReturnItem getNewReturnOrderDetailResponse() {
         return newReturnOrderDetailResponse;
     }
 
-    public void setNewReturnOrderDetailResponse(NewReturnOrderDetailResponse newReturnOrderDetailResponse) {
+    public void setNewReturnOrderDetailResponse(NewReturnItem newReturnOrderDetailResponse) {
         this.newReturnOrderDetailResponse = newReturnOrderDetailResponse;
     }
 }

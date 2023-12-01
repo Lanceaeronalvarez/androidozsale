@@ -27,7 +27,8 @@
             android:layout_centerVertical="true"
             android:background="@drawable/bg_toolbar_button"
             android:paddingEnd="@dimen/partial_toolbar_button_padding"
-            android:src="@drawable/ic_pink_chevron" />
+            android:src="@drawable/ic_pink_chevron"
+            android:textSize="@dimen/text_size_caption1" />
 
 
         <TextView
@@ -51,7 +52,8 @@
             android:layout_centerVertical="true"
             android:padding="@dimen/partial_toolbar_button_padding"
             android:scaleType="fitCenter"
-            android:textColor="@color/toolbar_text_dark" />
+            android:textColor="@color/toolbar_text_dark"
+            android:textSize="@dimen/text_size_caption1" />
 
     </RelativeLayout>
 

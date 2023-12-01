@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/personalisation_section_header_text"
-    fontPath="@string/font_app_bold"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:text="@string/personalise"
-    android:textColor="@color/color_item_title"
-    android:textSize="@dimen/text_size_body"
-    tools:ignore="MissingPrefix" />
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/personalisation_section_header_text"
+        fontPath="@string/font_app_semibold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:padding="5dp"
+        android:text="@string/personalise"
+        android:textAllCaps="true"
+        android:textColor="@color/text_medium"
+        android:textSize="@dimen/text_size_body"
+        tools:ignore="MissingPrefix" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/personalisation_section_header_text"
+        android:background="@color/border_regular" />
+
+</RelativeLayout>

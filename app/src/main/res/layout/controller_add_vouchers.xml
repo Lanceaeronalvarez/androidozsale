@@ -1,145 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/background_default"
-    android:orientation="vertical"
+    android:clickable="true"
     tools:ignore="missingPrefix">
 
-    <include layout="@layout/partial_toolbar_arrow" />
+    <include
+        android:id="@+id/add_vouchers_toolbar"
+        layout="@layout/partial_toolbar_arrow" />
 
-    <ScrollView
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:background="@color/transparent">
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_vouchers_buttons"
+        android:layout_below="@+id/add_vouchers_toolbar"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        android:overScrollMode="never">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/add_vouchers_buttons"
+            android:layout_below="@id/add_vouchers_toolbar"
             android:orientation="vertical">
 
+            <TextView
+                fontPath="@string/font_app_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_default"
+                android:layout_marginTop="@dimen/padding_default"
+                android:layout_marginRight="@dimen/padding_default"
+                android:layout_marginBottom="@dimen/padding_default_half"
+                android:text="@string/enter_promo_code_caps"
+                android:textColor="@color/text_medium"
+                android:textSize="@dimen/text_size_caption2" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_default">
-
-                <TextView
-                    android:id="@+id/controller_text_voucher_code_title"
-                    fontPath="@string/font_app_bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Enter Promocode"
-                    android:textColor="@color/text_extra_dark" />
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/border_thin"
+                    android:background="@color/white"
                     android:orientation="horizontal"
-                    android:paddingBottom="15dp"
-                    android:paddingTop="5dp">
+                    tools:ignore="MissingPrefix">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/voucherWrapper"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:padding="@dimen/padding_default"
+                        android:text="@string/promo_code"
+                        android:textColor="@color/row_checkout_text_light_color"
+                        android:textSize="@dimen/text_size_caption1" />
+
+                    <EditText
+                        android:id="@+id/controller_edit_text_voucher"
+                        style="@style/DDEditTextStyleNoBorder"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:hint="enter"
-                        android:textColorHint="#8b8b8b"
-                        app:hintEnabled="false"
-                        app:passwordToggleEnabled="true">
-
-                        <EditText
-                            android:id="@+id/controller_edit_text_voucher"
-                            style="@style/DDEditTextStyle"
-                            fontPath="@string/font_app_heavy"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_height_regular"
-                            android:layout_marginRight="5dp"
-                            android:hint="enter promo code"
-                            android:maxLines="1"
-                            android:padding="10dp"
-                            android:textColor="#919191"
-                            android:textColorHint="#c1c1c1" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <Button
-                        android:id="@+id/controller_button_add_voucher"
-                        style="@style/DDButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/button_height_regular"
-                        android:layout_weight="1"
-                        android:padding="0dp"
-                        android:text="apply" />
-
+                        android:layout_gravity="center_vertical"
+                        android:hint="@string/enter_promo_code"
+                        android:maxLines="1"
+                        android:tag="dynamicEditText"
+                        android:textColor="@color/text_extra_dark"
+                        android:textSize="@dimen/text_size_caption1" />
                 </LinearLayout>
 
 
+                <Button
+                    android:id="@+id/controller_button_add_voucher"
+                    style="@style/DDButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_margin="@dimen/padding_default"
+                    android:text="@string/apply_promo_code"
+                    android:textSize="@dimen/text_size_headline2" />
+
+
             </LinearLayout>
+
+            <View
+                style="@style/horizontalBorderView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/border_thick" />
 
             <TextView
                 android:id="@+id/controller_add_voucher_select_text"
                 fontPath="@string/font_app_light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/select_voucher"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_extra_small"
                 android:paddingStart="@dimen/padding_default"
                 android:paddingEnd="@dimen/padding_default"
-                android:layout_marginBottom="@dimen/margin_extra_small"
-                android:layout_marginTop="@dimen/margin_small"
+                android:text="@string/select_voucher"
                 android:textColor="@color/text_medium" />
-
 
             <LinearLayout
                 android:id="@+id/container_voucher_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:id="@+id/my_vouchers_us_header_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-
-                    <TextView
-                        fontPath="@string/font_app_light"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/button_height_regular"
-                        android:text="@string/my_voucher"
-                        android:textColor="#6c6c6c"
-                        android:textSize="30sp" />
-
-                    <View
-                        android:layout_width="35dp"
-                        android:layout_height="2dp"
-                        android:background="#969595" />
-
-                </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_small">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/controller_recycler_view_promo_vouchers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="15dp"
-                    android:visibility="gone" />
+                    style="@style/RecyclerViewPagerVouchersStyle"
+                    android:nestedScrollingEnabled="false"
+                    app:rvp_singlePageFling="true"
+                    app:rvp_triggerOffset="0.1" />
+
 
             </LinearLayout>
 
-            <include layout="@layout/partial_no_voucher_placeholder_layout"/>
+            <include layout="@layout/partial_no_voucher_placeholder_layout" />
 
-            <include layout="@layout/partial_vouchers_buttons" />
+
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+    <include
+        android:id="@+id/add_vouchers_buttons"
+        layout="@layout/partial_vouchers_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

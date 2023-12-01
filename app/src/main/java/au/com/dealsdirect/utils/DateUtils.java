@@ -390,16 +390,18 @@ public class DateUtils {
         return hours < 24;
     }
 
-    public static boolean isWithin48Hours(long remainingDiffInMilliSeconds) {
+    public static boolean isWithinHourDuration(long remainingDiffInMilliSeconds, int hourDuration) {
         //get hours
         long hours = (long) Math.floor(remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR);
-        return hours <= 48 && remainingDiffInMilliSeconds > 0;
+        return hours <= hourDuration && remainingDiffInMilliSeconds > 0;
+    }
+
+    public static boolean isWithin48Hours(long remainingDiffInMilliSeconds) {
+        return isWithinHourDuration(remainingDiffInMilliSeconds, 48);
     }
 
     public static boolean isWithin99Hours(long remainingDiffInMilliSeconds) {
-        //get hours
-        long hours = (long) Math.floor(remainingDiffInMilliSeconds / DATE_UTIL_MILLIS_TO_HOUR);
-        return hours <= 99 && remainingDiffInMilliSeconds > 0;
+        return isWithinHourDuration(remainingDiffInMilliSeconds, 99);
     }
 
     public static String getRemainingTimeValue(long remainingDiffInMilliSeconds) {

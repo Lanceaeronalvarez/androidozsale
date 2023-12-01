@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_default"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
 
-    <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
-        android:id="@+id/controller_current_returns_recycler_viewpager"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/controller_current_returns_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_alignParentBottom="true"
         android:clipToPadding="false"
         android:overScrollMode="never"
-        android:paddingLeft="@dimen/margin_medium"
-        android:paddingRight="@dimen/margin_medium"
-        android:paddingTop="@dimen/margin_large"
+        android:paddingBottom="56dp"
         android:visibility="gone"
         app:rvp_flingFactor="0.15"
         app:rvp_singlePageFling="true"
@@ -24,4 +26,20 @@
         layout="@layout/partial_no_returns_placeholder_layout"
         android:visibility="gone" />
 
-</LinearLayout>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/partial_toolbar_arrow" />
+
+    <Button
+        android:id="@+id/controller_current_returns_request_button"
+        style="@style/DDButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/padding_default"
+        android:text="Request New Return"
+        android:textSize="@dimen/text_size_headline2"
+        android:visibility="gone" />
+
+</RelativeLayout>
+

@@ -58,6 +58,9 @@ public class BottomSheetInfoDialog extends BottomSheetDialogFragment {
         textViewDescription.setText(getDescription());
         textViewTitle.setText(getTitle());
 
+        textViewDescription.setVisibility(getDescription() == null ? View.GONE : View.VISIBLE);
+        textViewTitle.setVisibility(getTitle() == null ? View.GONE : View.VISIBLE);
+
         if (button != null) {
             if (shouldHideButton()) {
                 button.setVisibility(View.GONE);

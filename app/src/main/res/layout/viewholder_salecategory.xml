@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_small"
+        android:background="@color/background_default" />
+
+    <RelativeLayout
+        android:id="@+id/viewholder_salecategory_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/viewholder_salecategory_height"
+        android:background="@color/white"
+        android:paddingStart="@dimen/padding_default"
+        android:paddingTop="@dimen/padding_default_half"
+        android:paddingEnd="@dimen/padding_default"
+        android:paddingBottom="@dimen/padding_default_half">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/viewholder_salecategory_title"
+                style="@style/TextViewStyle"
+                fontPath="@string/font_app_bold"
+                android:layout_gravity="left|center_vertical"
+                android:textColor="@color/text_dark"
+                tools:ignore="MissingPrefix"
+                tools:text="Category" />
+
+            <TextView
+                android:id="@+id/viewholder_salecategory_subtitle"
+                fontPath="@string/font_app_regular"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/text_size_caption2"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:ignore="MissingPrefix"
+                tools:text="SubCategory" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/viewholder_salecategory_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_chevron_down"
+            android:layout_alignParentRight="true"
+            android:background="@color/white"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/viewholder_salecategory_border"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_regular"
+        android:layout_marginLeft="@dimen/margin_tiny"
+        android:background="@color/border_regular"
+        android:visibility="gone" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/viewholder_salecategory_items_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_default"
+        android:overScrollMode="never"/>
+
+
+    <View
+        android:id="@+id/viewholder_salecategoryitems_border"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/border_regular"
+        android:layout_marginLeft="@dimen/margin_tiny"
+        android:background="@color/border_regular"
+        android:visibility="gone" />
+
+</LinearLayout>

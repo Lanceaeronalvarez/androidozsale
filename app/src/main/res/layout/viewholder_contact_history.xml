@@ -1,98 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/my_contact_history_recycler_row_item_layout"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/activity_horizontal_margin"
-    android:clickable="true">
+    android:layout_height="wrap_content">
 
-
-    <LinearLayout
-        android:id="@+id/my_contact_history_item_container_layout"
+    <FrameLayout
+        android:id="@+id/message_container_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:clickable="true">
 
-
-        <RelativeLayout
-            android:id="@+id/my_contact_history_row_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:id="@+id/my_contact_history_row_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <ImageView
-                    android:id="@+id/contact_history_item_user_image"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_tab_contact"/>
-
-
-                <TextView
-                    android:id="@+id/my_contact_history_username_row_text_view"
-                    android:layout_toRightOf="@+id/contact_history_item_user_image"
-                    android:layout_alignRight="@+id/my_contact_history_row_subject_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="Usernametest Userlatnametest"
-                    android:textSize="16sp"
-                    android:singleLine="true"
-                    android:textColor="#7e7e7e"/>
-
-
-                <TextView
-                    android:id="@+id/my_contact_history_row_subject_text_view"
-                    android:layout_toRightOf="@+id/contact_history_item_user_image"
-                    android:layout_below="@+id/my_contact_history_row_date_stamp_text_view"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:text="Message subject"
-                    android:textColor="#d1d1d1"/>
-
-
-                <TextView
-                    android:id="@+id/my_contact_history_row_date_stamp_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:textSize="12sp"
-                    android:text=""
-                    android:textColor="#b9b9b9"/>
-
-                <TextView
-                    android:id="@+id/my_contact_history_row_time_stamp_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/my_contact_history_row_date_stamp_text_view"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:textSize="12sp"
-                    android:text=""
-                    android:textColor="#b9b9b9"/>
-            </RelativeLayout>
-
+        <LinearLayout
+            android:id="@+id/contact_history_item_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/margin_extra_small"
+            android:background="@drawable/bg_contact_history_message"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_medium">
 
             <TextView
-                android:id="@+id/my_contact_history_row_message_text_view"
+                android:id="@+id/contact_history_message_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text=""
-                android:textColor="#a4a4a4"
-                android:layout_below="@+id/my_contact_history_row_header"/>
+                android:maxEms="15"
+                android:textColor="@color/contact_history_text_selector"
+                tools:text="hi my order is missing " />
 
-        </RelativeLayout>
-    </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/contact_history_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_tiny" />
 
-</LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/contact_history_ticket_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/message_container_frame"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_large"
+        android:text="Ticket has been closed"
+        android:visibility="gone" />
+
+    <include
+        layout="@layout/footer_user_satisfaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/contact_history_ticket_status"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

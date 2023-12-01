@@ -30,4 +30,7 @@ public class ActionConstants {
     public static final String ORDER_ITEM_CANCELLED = "oi_cancelled";
 
     public static final String DELIVERY_THRESHOLD = "deliveryThreshold";
+
+    // Returns
+    public static final String RETURN_SATISFACTION_BOTTOM_DIALOG_TAG = "ReturnSatisfactionBottomDialog";
 }
