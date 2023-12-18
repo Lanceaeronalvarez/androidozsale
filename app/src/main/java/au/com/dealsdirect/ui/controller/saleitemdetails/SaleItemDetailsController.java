@@ -1176,7 +1176,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mPresenter.loadOurpayData(saleDetail);
 
         //update Afterpay
-        mPresenter.loadAfterpayData(saleDetail.getPrice().getValue());
+        if (saleDetail.getPrice() != null) {
+            mPresenter.loadAfterpayData(saleDetail.getPrice().getValue());
+        }
 
         mPresenter.loadPromoInfo(saleDetail.getSkuId());
 
@@ -1256,7 +1258,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         parameters.put(DataCollector.EventParameters.PRODUCT_VIEW_REQUEST, productViewRequest);
         parameters.put(DataCollector.EventParameters.ITEM_ID, saleDetail.getSkuId());
         parameters.put(DataCollector.EventParameters.ITEM_NAME, saleDetail.getName());
-        parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getPrice().getValue());
+        if (saleDetail.getSalePrice() != null) {
+            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getSalePrice().getValue());
+        } else if (saleDetail.getPrice() != null) {
+            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getPrice().getValue());
+        }
         parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
         parameters.put(DataCollector.EventParameters.ITEM_BRAND, saleDetail.getBrandName());
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
@@ -1461,7 +1467,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (brandName != null && !brandName.isEmpty()) {
             mToolbarItemBrandTextView.setText(brandName);
-            final String toolbarItemNameText = name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue());
+            final String toolbarItemNameText;
+            if (saleDetail.getSalePrice() != null) {
+                toolbarItemNameText = name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getSalePrice().getValue());
+            } else if (saleDetail.getPrice() != null) {
+                toolbarItemNameText = name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue());
+            } else {
+                toolbarItemNameText = name.trim();
+            }
             mToolbarItemNameTextView.setText(toolbarItemNameText);
             mProductName.setText(name.trim());
             mProductBrand.setText(Html.fromHtml("<u>" + brandName.trim() + "</u>"));
