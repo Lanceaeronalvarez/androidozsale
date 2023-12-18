@@ -827,6 +827,7 @@
 
     <!--KLARNA-->
     <string name="klarna">Klarna</string>
+    <string name="klarna_failed_transaction">@string/generic_failed_transaction_message</string>
 
     <!--LPPAY-->
     <string name="lpay">Latitude Pay</string>

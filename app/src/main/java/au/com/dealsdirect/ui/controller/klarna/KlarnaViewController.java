@@ -184,6 +184,12 @@ public class KlarnaViewController extends BaseController implements KlarnaMvpVie
         klarnaPaymentView.setVisibility(View.VISIBLE);
         final KlarnaCreateSessionResponse.Value value = response.getD().getValue();
         final String sessionToken = value.getToken();
+
+        if (sessionToken == null || sessionToken.isEmpty()) {
+            showError();
+            return;
+        }
+
         this.sessionToken = sessionToken;
         klarnaSessionModel = value.getKlarnaSessionModel();
         final String scheme = mActivity.getResources().getString(R.string.app_uri_scheme);
@@ -259,7 +265,7 @@ public class KlarnaViewController extends BaseController implements KlarnaMvpVie
 
         if (message == null || message.isEmpty()) {
             showAlertDialog(mActivity.getResources()
-                    .getString(R.string.afterpay_failed_transaction));
+                    .getString(R.string.klarna_failed_transaction));
         } else {
             showAlertDialog(message);
         }
