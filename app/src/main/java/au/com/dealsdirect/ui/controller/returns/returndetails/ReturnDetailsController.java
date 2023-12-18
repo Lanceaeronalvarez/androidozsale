@@ -178,9 +178,11 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
             final int previousSize = mImageUriArray.size();
             mImageUriArray.remove(position);
 
-            adapter.notifyItemRemoved(position);
-            if (previousSize == AppConstants.MAX_IMAGE_COUNT) {
-                adapter.notifyItemInserted(mImageUriArray.size());
+            if (adapter != null) {
+                adapter.notifyItemRemoved(position);
+                if (previousSize == AppConstants.MAX_IMAGE_COUNT) {
+                    adapter.notifyItemInserted(mImageUriArray.size());
+                }
             }
 
         }
@@ -499,7 +501,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
                             responseValue.getSubject(),
                             responseValue.getInvoiceNumber(),
                             DateUtils.getDateForContactMessages(lastItemPosition.getMessageDate()),
-                            0,
+                            null,
                             true))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
