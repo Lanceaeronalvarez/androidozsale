@@ -1016,7 +1016,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 case WISHLIST:
                     itemsContainerHelper.clearItems();
                     mPresenter.loadWishlistPaginated(18, 0);
-                    mSaleItemsRecyclerView.setLayoutAnimation(null);
+                    if (mSaleItemsRecyclerView != null) {
+                        mSaleItemsRecyclerView.setLayoutAnimation(null);
+                    }
                     break;
             }
         }
@@ -2765,6 +2767,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     public void animateSkeletonUI() {
+        if (!isViewAttached()) {
+            return;
+        }
+
         isSkeletonAnimating = true;
         setColumnViewEnabled(false);
         final LayoutAnimationController controller =
@@ -2774,7 +2780,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         for (int i = 0; i < 8; i++) {
             nullList.add(null);
         }
-        mSaleItemsRecyclerView.setLayoutAnimation(controller);
+        if (mSaleItemsRecyclerView != null) {
+            mSaleItemsRecyclerView.setLayoutAnimation(controller);
+        }
         mSaleItemsAdapter.addData(nullList, false);
         mSaleItemsRecyclerView.scheduleLayoutAnimation();
         mGridLayoutManager.setScrollEnabled(false);
