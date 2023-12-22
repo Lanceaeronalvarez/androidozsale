@@ -334,7 +334,7 @@ public class ViewContactHistoryController extends BaseController implements View
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     mActivity.getString(R.string.message_submitted));
-            mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber != null ? mContactNumber));
+            mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber != null ? mContactNumber : 0));
             mContactHistoryMessageField.setText("");
         } else {
             CustomAlertDialog.showCustomAlertDialog(
