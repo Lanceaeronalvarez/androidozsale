@@ -407,12 +407,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         super.onViewBound(view);
 
         //disable toolbar left and right buttons
-        mToolbarLeftButton.setVisibility(View.INVISIBLE);
+        mToolbarLeftButton.setVisibility(!mPresenter.isTablet() ? View.VISIBLE : View.INVISIBLE);
         mToolbarRightButton.setVisibility(View.INVISIBLE);
 
         if (mActivity != null) {
             mActivity.performResetWithAuthFetch();
         }
+
+        mToolbarLeftButton.setOnClickListener(v -> {
+            mActivity.onBackPressed();
+        });
 
         setUp(view);
     }
@@ -443,8 +447,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         }
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
-
-        mActivity.setCheckoutController(this);
 
         if (!mPresenter.isTablet() || !getBoolean(R.bool.master_detail_enabled)) {
             mRecyclerView.setVisibility(View.VISIBLE);

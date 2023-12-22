@@ -1007,4 +1007,11 @@
     <string name="myaccount_ourpay_unavailable_message">Unfortunately, Ourpay is no longer available. We apologise for any inconvenience, please choose from one of the other payment options. Existing Ourpay payments agreements remain unchanged.</string>
 
     <string name="account_deletion_confirmation_text">Are you sure you want to delete your account and all data associated with it?\n\nIt may take up to 28 days to completely remove all the data associated with your account.</string>
+
+    <string name="categories">Categories</string>
+
+    <string name="clear_underline"><u>Clear</u></string>
+
+    <string name="clear_all_underline"><u>Clear all</u></string>
+
 </resources>

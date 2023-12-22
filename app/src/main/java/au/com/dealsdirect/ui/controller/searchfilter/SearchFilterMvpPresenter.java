@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.service.datacollection.enums.SearchOperationType;
 import au.com.dealsdirect.ui.base.MvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
@@ -36,4 +37,5 @@ public interface SearchFilterMvpPresenter<V extends SearchFilterMvpView> extends
     void facetsOpened();
 
     void facetsClosed();
+    void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest);
 }

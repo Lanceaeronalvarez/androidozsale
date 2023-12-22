@@ -10,6 +10,7 @@ import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressControlle
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.categories.NewCategoriesController;
+import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
 import au.com.dealsdirect.ui.controller.categories.OldCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -48,6 +49,7 @@ import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsContr
 import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersController;
 import au.com.dealsdirect.ui.controller.returns.returnspolicy.ReturnsPolicyViewController;
 import au.com.dealsdirect.ui.controller.salecategories.SaleCategoriesController;
+import au.com.dealsdirect.ui.controller.salefilter.SaleFilterController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
@@ -170,4 +172,9 @@ public interface ControllerComponent {
     void inject(ReturnsPolicyViewController controller);
 
     void inject(KlarnaViewController klarnaViewController);
+
+    void inject(NewSaleCategoriesController controller);
+
+    void inject(SaleFilterController controller);
+
 }

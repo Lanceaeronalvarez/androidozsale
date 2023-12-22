@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.searchfilter;
 
+import androidx.core.util.Pair;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,13 +10,21 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.cachedresponses.ListOfSortingResponses;
+import au.com.dealsdirect.data.cachedresponses.ParamaterizedCachableRequest;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
+import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.service.datacollection.enums.SearchOperationType;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by smartwave on 20/07/2017.
@@ -23,6 +33,8 @@ import io.reactivex.disposables.CompositeDisposable;
 public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePresenter<V> implements SearchFilterMvpPresenter<V> {
 
     private SearchFilterMvpRepository mRepository;
+
+    private Disposable mPreviousGetSaleItemsRequest = null;
 
     @Override
     public void setRepository(SearchFilterMvpRepository repository) {
@@ -108,5 +120,52 @@ public class SearchFilterPresenter<V extends SearchFilterMvpView> extends BasePr
             mRepository.facetsClosed();
         }
     }
+    protected <T> Observable<T> wrapObservable(Observable<T> observable) {
+        return observable.subscribeOn(getSchedulerProvider().io());
+    }
+
+    @Override
+    public void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest) {
+        final int pageNumber = getSaleItemsRequest.getPageNumber();
+        getDataManager().pruneCachedResponse(getSaleItemsRequest);
+        GetSaleItemsResponse saleItemsResponse = getDataManager().getCachedResponse(getSaleItemsRequest, GetSaleItemsResponse.class);
+        if (saleItemsResponse != null) {
+            getMvpView().showSaleItems(saleItemsResponse, pageNumber, !getSaleItemsRequest.hasFilters(), true);
+        }
+
+        ParamaterizedCachableRequest loadSortingFacetsRequest = new ParamaterizedCachableRequest("loadSortingFacets");
+        getDataManager().pruneCachedResponse(loadSortingFacetsRequest);
+
+        // Cancels any previous loadSaleItems request
+        clearPreviousGetSaleItemsRequest();
+
+        Observable dualApiCall = Observable.zip(wrapObservable(getDataManager().callGetSaleItemsRequest(getSaleItemsRequest)),
+                wrapObservable(getDataManager().callSortingFacets()),
+                Pair::new);
+
+        mPreviousGetSaleItemsRequest = doApiCallForResponse(dualApiCall, new AppApiCallback() {
+            @Override
+            public void onSuccess(Object response) {
+                super.onSuccess(response);
+                final Pair pair = (Pair) response;
+                getMvpView().showSaleItems((GetSaleItemsResponse) pair.first, pageNumber, !getSaleItemsRequest.hasFilters(), false);
+                getDataManager().setCachedResponse(getSaleItemsRequest, (GetSaleItemsResponse) pair.first);
+                getDataManager().setCachedResponse(loadSortingFacetsRequest, new ListOfSortingResponses((List<SortingResponse>) pair.second));
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                clearPreviousGetSaleItemsRequest();
+            }
+        });
+    }
+
+    private void clearPreviousGetSaleItemsRequest() {
+        if (mPreviousGetSaleItemsRequest != null) {
+            getCompositeDisposable().remove(mPreviousGetSaleItemsRequest);
+            mPreviousGetSaleItemsRequest = null;
+        }
+    }
+
 
 }

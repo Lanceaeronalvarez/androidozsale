@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/viewholder_salecategory_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ourpay_thank_you_logo_height"
+        android:background="@color/white"
+        android:paddingStart="@dimen/padding_default"
+        android:paddingTop="@dimen/padding_default_half"
+        android:paddingEnd="@dimen/padding_default">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/viewholder_salecategory_title"
+                style="@style/TextViewStyle"
+                fontPath="@string/font_app_bold"
+                android:layout_gravity="left|center_vertical"
+                android:textColor="@color/black"
+                tools:ignore="MissingPrefix"
+                android:textSize="@dimen/text_size_body"
+                tools:text="Category" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/viewholder_salecategory_image_button"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_chevron_right"
+            android:layout_alignParentRight="true"
+            app:tint="@color/beige"
+            android:background="@color/white"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/dust"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -1721,8 +1721,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         //notify bottom navigation view(checkout) with success.
         CartUtil.addValueToCart(1);
         mActivity.getMainController().updateBasketItemsQuantity();
-
-        mActivity.getMainController().sendSaleItemToCheckout(cartDetailsResponse);
     }
 
     @Override
@@ -2170,7 +2168,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mActivity.showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
-                    mActivity.getMainController().resetCheckoutRouter();
                     mActivity.callGCMRegisterSubscriber();
                     mPresenter.addToCart(request);
                 }

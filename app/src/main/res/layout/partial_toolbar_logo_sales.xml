@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/toolbar_skin"
     android:contentInsetStart="0dp"
     android:contentInsetLeft="0dp"
     android:contentInsetEnd="0dp"
@@ -13,7 +12,10 @@
     app:contentInsetLeft="0dp"
     app:contentInsetRight="0dp"
     app:contentInsetStart="0dp"
-    tools:ignore="MissingPrefix">
+    android:background="@color/white"
+    tools:ignore="MissingPrefix"
+    android:id="@+id/partial_logo_toolbar">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,14 +28,15 @@
             android:layout_centerVertical="true">
 
             <ImageButton
-                android:id="@+id/partial_toolbar_hamburger"
+                android:id="@+id/partial_toolbar_checkout"
                 android:layout_width="@dimen/partial_toolbar_button_width"
                 android:layout_height="@dimen/partial_toolbar_button_height"
-                android:background="@color/toolbar_skin"
-                android:padding="8dp"
-                android:src="@drawable/ic_action_menu"
                 android:scaleType="fitCenter"
-                android:textSize="@dimen/text_size_caption1" />
+                android:padding="8dp"
+                android:background="@drawable/bg_toolbar_button"
+                android:src="@drawable/ic_new_checkout"
+                android:textSize="@dimen/text_size_caption1"
+                app:tint="@color/black" />
 
             <RelativeLayout
                 android:id="@+id/partial_toolbar_badge"
@@ -57,41 +60,16 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/partial_toolbar_logo_title_view"
-            fontPath="@string/font_app_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="@color/toolbar_text_dark"
-            android:textSize="@dimen/text_size_headline2"
-            android:visibility="gone"
-            tools:ignore="MissingPrefix"
-            tools:text="Title" />
-
-        <TextView
-            android:id="@+id/partial_toolbar_logo_title_bold_view"
-            fontPath="@string/font_app_bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="@color/toolbar_text_dark"
-            android:textSize="@dimen/text_size_headline2"
-            android:visibility="gone"
-            tools:ignore="MissingPrefix"
-            tools:text="Title" />
-
         <ImageView
             android:id="@+id/partial_toolbar_logo"
             android:layout_width="@dimen/partial_toolbar_logo_width"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:scaleType="centerInside"
-            android:layout_centerVertical="true"
             android:src="@drawable/logo_colored" />
 
         <ImageButton
-            android:id="@+id/partial_toolbar_search_button"
+            android:id="@+id/partial_toolbar_search"
             android:layout_width="@dimen/partial_toolbar_button_width"
             android:layout_height="@dimen/partial_toolbar_button_height"
             android:layout_alignParentEnd="true"
@@ -101,9 +79,9 @@
             android:paddingBottom="2dp"
             android:scaleType="fitCenter"
             android:textSize="@dimen/text_size_caption1"
-            android:src="@drawable/ic_search" />
+            android:src="@drawable/ic_search"
+            app:tint="@color/black" />
 
     </RelativeLayout>
-
 
 </androidx.appcompat.widget.Toolbar>

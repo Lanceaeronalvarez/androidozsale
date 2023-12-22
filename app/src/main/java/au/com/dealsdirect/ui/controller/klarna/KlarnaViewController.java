@@ -250,7 +250,7 @@ public class KlarnaViewController extends BaseController implements KlarnaMvpVie
             }
         } else {
             dismissSelf();
-            mActivity.getCheckoutController().getRouter()
+            mActivity.getCurrentRouter()
                     .pushController(RouterTransaction
                             .with(new PaymentSuccessController(bundleBuilder.build()))
                             .pushChangeHandler(new HorizontalChangeHandler())

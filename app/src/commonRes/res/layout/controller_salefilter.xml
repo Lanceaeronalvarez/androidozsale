@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <RelativeLayout
+        android:id="@+id/sale_filter_padding"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"/>
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/partial_toolbar_left_view"
+                fontPath="@string/font_app_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/partial_toolbar_button_height"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:padding="@dimen/margin_small"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:drawableTint="@color/black"
+                android:drawableStart="@drawable/ic_close" />
+
+            <TextView
+                android:id="@+id/partial_toolbar_title"
+                fontPath="@string/font_app_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:paddingLeft="@dimen/margin_extra_huge"
+                android:paddingRight="@dimen/margin_extra_huge"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_headline3"
+                tools:text="Filter" />
+
+            <TextView
+                android:id="@+id/partial_toolbar_right_view"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/partial_toolbar_button_height"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/margin_small"
+                android:text="@string/clear_underline"
+                android:textSize="@dimen/text_size_caption1"
+                android:textColor="@color/beige"
+                android:visibility="visible" />
+
+        </RelativeLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/beige"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/filtered_by_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filtered by"
+            fontPath="@string/font_app_bold"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_body"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"/>
+
+        <HorizontalScrollView
+            android:id="@+id/sale_filter_horizontal_view"
+            android:paddingTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/Theme.MaterialComponents.Light"/>
+
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/price_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_body"
+            android:text="Price"
+            android:paddingLeft="@dimen/margin_small"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/framelayout">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/controller_salecategory_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp"
+                android:overScrollMode="never" />
+
+            <RelativeLayout
+                android:id="@+id/seekbar_main_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="top"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:id="@+id/bubblePriceLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:clipChildren="false"
+                    android:clipToPadding="false">
+
+                    <LinearLayout
+                        android:id="@+id/movingMinPriceLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/movingMinPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_gravity="center"
+                            android:paddingBottom="@dimen/margin_small"
+                            android:paddingLeft="@dimen/margin_small"
+                            android:paddingRight="@dimen/margin_small"
+                            android:paddingTop="@dimen/margin_small"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_caption1"
+                            tools:text="$0" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/movingMaxPriceLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/movingMaxPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="end"
+                            android:paddingBottom="@dimen/margin_small"
+                            android:paddingLeft="@dimen/margin_extra_small"
+                            android:paddingRight="@dimen/margin_extra_small"
+                            android:paddingTop="@dimen/margin_small"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_caption1"
+                            tools:text="$100" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <au.com.dealsdirect.ui.custom.CustomRangeSeekbar
+                    android:id="@+id/price_facet_range_seekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bubblePriceLayout"
+                    android:layout_marginEnd="@dimen/search_filter_range_margin_end"
+                    android:layout_marginStart="@dimen/padding_default"
+                    app:bar_color="@color/beige"
+                    app:bar_highlight_color="@color/black"
+                    app:corner_radius="10"
+                    app:data_type="_integer"
+                    app:left_thumb_color="@color/black"
+                    app:left_thumb_color_pressed="@color/black"
+                    app:max_value="100"
+                    app:min_value="0"
+                    app:right_thumb_color="@color/black"
+                    app:right_thumb_color_pressed="@color/black"
+                    app:steps="5" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/sale_filter_tile_sold_out"
+                android:padding="20dp"
+                android:orientation="horizontal"
+                android:layout_below="@+id/controller_salecategory_recyclerview"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/row_category_name_sold_out"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_body"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:text="Hide Sold Out" />
+
+                <Switch
+                    android:id="@+id/row_filter_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:backgroundTint="@color/beige"
+                    android:layout_marginRight="10dp"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/framelayout">
+
+            <RelativeLayout
+                android:id="@+id/sale_filter_see_all_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/black"
+                android:gravity="center"
+                android:paddingRight="3dp"
+                android:paddingBottom="3dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/fluorescent_blue"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/sale_item_results"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:padding="10dp"
+                        android:text="See all products"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_body"
+                        fontPath="@string/font_app_bold" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

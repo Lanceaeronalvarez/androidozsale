@@ -122,19 +122,15 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     protected void setUp(View view) {
         //disable toolbar left and right buttons
-        mToolbarLeftButton.setVisibility(View.INVISIBLE);
+        mToolbarLeftButton.setVisibility(mPresenter.isTablet() ? View.VISIBLE : View.INVISIBLE);
         mToolbarRightButton.setVisibility(View.INVISIBLE);
         mTitleTextView.setText(getString(R.string.account_orders));
 
         mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
         CommonControllerChangeListener.addToRouter(mCheckoutDetailRouter);
 
-        if (!mHasSavedInstance || mActivity.getCheckoutController() == null) {
-            mCheckoutController = CheckoutController.newInstance();
-            mCheckoutDetailRouter.setRoot(RouterTransaction.with(mCheckoutController).tag(CheckoutController.class.getName()));
-        } else {
-            mCheckoutController = mActivity.getCheckoutController();
-        }
+        mCheckoutController = CheckoutController.newInstance();
+        mCheckoutDetailRouter.setRoot(RouterTransaction.with(mCheckoutController).tag(CheckoutController.class.getName()));
 
         mCheckoutDetailView = mCheckoutController;
 
@@ -159,6 +155,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
 
+        mToolbarLeftButton.setOnClickListener(v -> {
+            mActivity.onBackPressed();
+        });
     }
 
     @Override
@@ -171,10 +170,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public boolean handleBack() {
-        if (mCheckoutDetailRouter.getBackstackSize() == 1) {
-            mActivity.getMainController().showShopController();
-            return true;
-        }
 
         return super.handleBack();
 

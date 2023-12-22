@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -36,6 +39,7 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
+import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
@@ -61,11 +65,11 @@ public class MainController extends BaseController implements MainMvpView {
 
     public static final String TAG = "Home";
 
-    public static final int SHOP_INDEX = 0;
-    public static final int CATEGORY_INDEX = 1;
-    public static final int ACCOUNT_INDEX = 2;
+    public static final int SHOP_INDEX = 2;
+    public static final int CATEGORY_INDEX = 0;
+    public static final int ACCOUNT_INDEX = 4;
     public static final int WISHLIST_INDEX = 3;
-    public static final int CHECKOUT_INDEX = 4;
+    public static final int BRANDS_INDEX = 1;
 
     private static final int VIEWPAGER_SIZE = 5;
 
@@ -87,8 +91,32 @@ public class MainController extends BaseController implements MainMvpView {
     @BindView(R.id.controller_home_bottom_nav)
     AHBottomNavigation mBottomNavigationView;
 
+    @BindView(R.id.controller_main_line)
+    RelativeLayout mBeigeLine;
+
+    @BindView(R.id.controller_nav_indicator)
+    LinearLayout mNavIndicatorView;
+
     @BindView(R.id.popup_host_frame)
     ViewGroup mPopupHostContainer;
+
+    @BindView(R.id.indicator_1)
+    View mIndicator1;
+
+    @BindView(R.id.indicator_2)
+    View mIndicator2;
+
+    @BindView(R.id.indicator_3)
+    View mIndicator3;
+
+    @BindView(R.id.indicator_4)
+    View mIndicator4;
+
+    @BindView(R.id.indicator_5)
+    View mIndicator5;
+
+    @BindView(R.id.controller_home_button)
+    ImageView mHomeButton;
 
     private CheckoutMvpView mCheckoutHostController;
 
@@ -100,7 +128,7 @@ public class MainController extends BaseController implements MainMvpView {
 
     private String mChosenSubCategoryItemKey = "";
 
-    private int previousPagerPosition = 0;
+    private int previousPagerPosition = 2;
 
     private boolean mHasSavedStateInstance;
     public static boolean mIsInitialSavedInstanceLoad;
@@ -157,25 +185,47 @@ public class MainController extends BaseController implements MainMvpView {
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
         mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         mBottomNavigationView.setDefaultBackgroundColor(mActivity.getResources().getColor(R.color.bottom_nav_background));
-        mBottomNavigationView.setAccentColor(mActivity.getResources().getColor(R.color.bottom_nav_accent));
-        mBottomNavigationView.setInactiveColor(mActivity.getResources().getColor(R.color.bottom_nav_inactive));
+        mBottomNavigationView.setAccentColor(mActivity.getResources().getColor(R.color.nav_dark_blue));
+        mBottomNavigationView.setInactiveColor(mActivity.getResources().getColor(R.color.beige));
+        mBottomNavigationView.setCurrentItem(2);
+        mBottomNavigationView.getItem(1).setTitle("Brands");
+        mBottomNavigationView.getItem(2).setTitle("");
+        mBottomNavigationView.getItem(2).setColor(mActivity.getResources().getColor(R.color.nav_dark_blue));
+
+        mHomeButton.setOnClickListener(it -> {
+            mBottomNavigationView.setCurrentItem(2);
+        });
+
+        if(mPresenter.isTablet()){
+            mNavIndicatorView.setVisibility(View.GONE);
+        }
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
             switch (position) {
                 case SHOP_INDEX:
+                    hideIndicators();
+                    mIndicator3.setVisibility(View.VISIBLE);
                     showShopController();
                     return true;
                 case CATEGORY_INDEX:
+                    hideIndicators();
+                    mIndicator1.setVisibility(View.VISIBLE);
                     showCategoryController();
                     return true;
                 case ACCOUNT_INDEX:
+                    hideIndicators();
+                    mIndicator5.setVisibility(View.VISIBLE);
                     showAccountController();
                     return true;
                 case WISHLIST_INDEX:
+                    hideIndicators();
+                    mIndicator4.setVisibility(View.VISIBLE);
                     showWishlistController();
                     return true;
-                case CHECKOUT_INDEX:
-                    showCheckoutController();
+                case BRANDS_INDEX:
+                    hideIndicators();
+                    mIndicator2.setVisibility(View.VISIBLE);
+                    showBrandsController();
                     return true;
                 default:
                     return false;
@@ -216,6 +266,14 @@ public class MainController extends BaseController implements MainMvpView {
         setupViewPager();
     }
 
+    private void hideIndicators(){
+        mIndicator1.setVisibility(View.INVISIBLE);
+        mIndicator2.setVisibility(View.INVISIBLE);
+        mIndicator3.setVisibility(View.INVISIBLE);
+        mIndicator4.setVisibility(View.INVISIBLE);
+        mIndicator5.setVisibility(View.INVISIBLE);
+    }
+
     private void setupShopRouter(Router router) {
         setupShopRouter(router, false);
     }
@@ -242,35 +300,9 @@ public class MainController extends BaseController implements MainMvpView {
         if (!router.hasRootController() || willReset) {
             Controller categoryController = mActivity.getResources().getBoolean(R.bool.should_use_old_category_layout) ?
                     ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES) : ControllerFactory.getInstance(GateKeeper.Destination.SALECATEGORY);
-
             router.setRoot(RouterTransaction.with(categoryController)
                     .popChangeHandler(new HorizontalChangeHandler())
                     .pushChangeHandler(new HorizontalChangeHandler()));
-        }
-    }
-
-    private void setupCheckoutRouter(Router router) {
-        setupCheckoutRouter(router, false);
-    }
-
-    private void setupCheckoutRouter(Router router, boolean willReset) {
-        Controller controller;
-
-        if (!mHasSavedStateInstance || mActivity.getCheckoutController() == null || willReset) {
-            controller = mPresenter.isTablet() ?
-                    ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST) :
-                    ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
-        } else {
-            controller = mActivity.getCheckoutController();
-        }
-
-        if (controller instanceof CheckoutMvpView) {
-            mCheckoutHostController = (CheckoutMvpView) controller;
-        }
-
-        if (!router.hasRootController() || willReset) {
-            router.setRoot(RouterTransaction
-                    .with(controller).tag(controller.getClass().getName()));
         }
     }
 
@@ -300,6 +332,18 @@ public class MainController extends BaseController implements MainMvpView {
         }
     }
 
+    private void setupBrandsRouter(Router router) {
+        setupBrandsRouter(router, false);
+    }
+
+    private void setupBrandsRouter(Router router, boolean willReset) {
+        if (!router.hasRootController() || willReset) {
+            ShopsController shopsController = ShopsController.instanceWithBrandsOnlyFilter();
+            router.setRoot(RouterTransaction.with(shopsController)
+                            .popChangeHandler(new HorizontalChangeHandler()));
+        }
+    }
+
     public void resetShopRouter() {
         setupShopRouter(routers.get(SHOP_INDEX), true);
     }
@@ -312,12 +356,12 @@ public class MainController extends BaseController implements MainMvpView {
         setupWishlistRouter(routers.get(WISHLIST_INDEX), true);
     }
 
-    public void resetCheckoutRouter() {
-        setupCheckoutRouter(routers.get(CHECKOUT_INDEX), true);
-    }
-
     public void resetAccountRouter() {
         setupAccountRouter(routers.get(ACCOUNT_INDEX), true);
+    }
+
+    public void resetBrandsRouter() {
+        setupBrandsRouter(routers.get(BRANDS_INDEX), true);
     }
 
     private void setupRouterAtPosition(Router router, int position) {
@@ -336,8 +380,8 @@ public class MainController extends BaseController implements MainMvpView {
             case WISHLIST_INDEX:
                 setupWishlistRouter(router);
                 break;
-            case CHECKOUT_INDEX:
-                setupCheckoutRouter(router);
+            case BRANDS_INDEX:
+                setupBrandsRouter(router);
                 break;
             default:
                 return;
@@ -362,8 +406,12 @@ public class MainController extends BaseController implements MainMvpView {
         return routers.get(ACCOUNT_INDEX);
     }
 
+    public Router getBrandsRouter() {
+        return routers.get(BRANDS_INDEX);
+    }
+
     public Router getCheckoutRouter() {
-        return routers.get(CHECKOUT_INDEX);
+        return routers.get(previousPagerPosition);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -455,6 +503,9 @@ public class MainController extends BaseController implements MainMvpView {
     public void hideBottomNav() {
         if (mBottomNavigationView != null) {
             mBottomNavigationView.setVisibility(View.GONE);
+            mBeigeLine.setVisibility(View.GONE);
+            mNavIndicatorView.setVisibility(View.GONE);
+            mHomeButton.setVisibility(View.GONE);
         }
     }
 
@@ -462,6 +513,14 @@ public class MainController extends BaseController implements MainMvpView {
         if (mBottomNavigationView != null && mBottomNavigationView.getVisibility() == View.GONE) {
             mBottomNavigationView.setVisibility(View.VISIBLE);
             mBottomNavigationView.bringToFront();
+            mBeigeLine.setVisibility(View.VISIBLE);
+            mHomeButton.setVisibility(View.VISIBLE);
+            mHomeButton.bringToFront();
+            if(mPresenter.isTablet()){
+                mNavIndicatorView.setVisibility(View.GONE);
+            }else{
+                mNavIndicatorView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -526,6 +585,8 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     public void showShopController() {
         mBottomNavigationView.setCurrentItem(SHOP_INDEX, false);
+        hideIndicators();
+        mIndicator3.setVisibility(View.VISIBLE);
         if (previousPagerPosition == SHOP_INDEX) {
             Controller controller = getCurrentViewPagerController();
             if (!mIsInitialSavedInstanceLoad && !(controller instanceof ShopsController)) {
@@ -556,8 +617,17 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     public void showCategoryController() {
         mBottomNavigationView.setCurrentItem(CATEGORY_INDEX, false);
+
         if (previousPagerPosition == CATEGORY_INDEX) {
             Controller controller = getCurrentViewPagerController();
+            if (!mIsInitialSavedInstanceLoad && !(controller instanceof NewSaleCategoriesController)) {
+                Router router = routers.get(CATEGORY_INDEX);
+                if (router != null) {
+                    categoryBackStack();
+                }
+            }else{
+                categoryBackStack();
+            }
             if (controller instanceof BaseController) {
                 ((BaseController) controller).refreshContents();
             }
@@ -568,6 +638,17 @@ public class MainController extends BaseController implements MainMvpView {
         showNewTagOnCategory(false);
 
         mIsInitialSavedInstanceLoad = false;
+    }
+
+    private void categoryBackStack(){
+        Router router = routers.get(CATEGORY_INDEX);
+        if (router != null) {
+            ArrayList<RouterTransaction> backstack = new ArrayList<>();
+            mActivity.getNewSaleCategoriesController().handleBack();
+            mActivity.getNewSaleCategoriesController().handleBack();
+            backstack.add(router.getBackstack().get(0));
+            router.setBackstack(backstack, new HorizontalChangeHandler());
+        }
     }
 
     @Override
@@ -591,34 +672,6 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     @Override
-    public void showCheckoutController() {
-        mBottomNavigationView.setCurrentItem(CHECKOUT_INDEX, false);
-        if (previousPagerPosition != CHECKOUT_INDEX) {
-            setViewPagerItem(CHECKOUT_INDEX);
-        }
-
-        if (!mActivity.isAuthorized() && !mIsInitialSavedInstanceLoad) {
-            mActivity.showLoginController(routers.get(CHECKOUT_INDEX), new AuthHandler() {
-                @Override
-                public void success() {
-                    resetCheckoutRouter();
-                    setViewPagerItem(CHECKOUT_INDEX);
-                }
-
-                @Override
-                public void error() {
-
-                }
-            });
-        } else if (mActivity.isAuthorized() &&
-                mCheckoutHostController != null && !mCheckoutHostController.isCartLoading()) {
-            mCheckoutHostController.loadCart();
-        }
-
-        mIsInitialSavedInstanceLoad = false;
-    }
-
-    @Override
     public void showWishlistController() {
         mBottomNavigationView.setCurrentItem(WISHLIST_INDEX, false);
         if (previousPagerPosition == WISHLIST_INDEX) {
@@ -639,17 +692,35 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     @Override
-    public void showBasketItemCount() {
-        if (CartUtil.getCartValue() == 0) {
-            removeBasketItemCount();
+    public void showBrandsController() {
+        mBottomNavigationView.setCurrentItem(BRANDS_INDEX, false);
+        if (previousPagerPosition == BRANDS_INDEX) {
+            Controller controller = getCurrentViewPagerController();
+            if (!mIsInitialSavedInstanceLoad && !(controller instanceof ShopsController)) {
+                Router router = routers.get(BRANDS_INDEX);
+                if (router != null) {
+                    ArrayList<RouterTransaction> backstack = new ArrayList<>();
+                    backstack.add(router.getBackstack().get(0));
+                    router.setBackstack(backstack, new HorizontalChangeHandler());
+                }
+            }
+            if (controller instanceof BaseController) {
+                ((BaseController) controller).refreshContents();
+            }
         } else {
-            AHNotification notification = new AHNotification.Builder()
-                    .setText(Integer.toString(CartUtil.getCartValue()))
-                    .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.bottom_nav_badge))
-                    .setTextColor(ContextCompat.getColor(mActivity, R.color.white))
-                    .build();
-            mBottomNavigationView.setNotification(notification, CHECKOUT_INDEX);
+            setViewPagerItem(BRANDS_INDEX);
         }
+
+        mIsInitialSavedInstanceLoad = false;
+    }
+
+    @Override
+    public void showBasketItemCount() {
+        mActivity.getBrandsController().updateBasketItemsQuantity(CartUtil.getCartValue());
+        mActivity.getShopController().updateBasketItemsQuantity(CartUtil.getCartValue());
+        mActivity.getNewSaleCategoriesController().updateBasketItemsQuantity(CartUtil.getCartValue());
+        mActivity.getWishlistController().updateBasketItemsQuantity(CartUtil.getCartValue());
+        mActivity.getSaleItemsControllerFromShop().updateBasketItemsQuantity(CartUtil.getCartValue());
     }
 
     @Override
@@ -671,8 +742,8 @@ public class MainController extends BaseController implements MainMvpView {
         }
         AHNotification notification = new AHNotification.Builder()
                 .setText(text)
-                .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.bottom_nav_badge))
-                .setTextColor(ContextCompat.getColor(mActivity, R.color.white))
+                .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.fluorescent_blue))
+                .setTextColor(ContextCompat.getColor(mActivity, R.color.black))
                 .build();
         mBottomNavigationView.setNotification(notification, WISHLIST_INDEX);
 
@@ -684,7 +755,11 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public void removeBasketItemCount() {
-        mBottomNavigationView.setNotification("", CHECKOUT_INDEX);
+        mActivity.getBrandsController().updateBasketItemsQuantity(0);
+        mActivity.getShopController().updateBasketItemsQuantity(0);
+        mActivity.getNewSaleCategoriesController().updateBasketItemsQuantity(0);
+        mActivity.getWishlistController().updateBasketItemsQuantity(0);
+        mBottomNavigationView.setNotification("", BRANDS_INDEX);
     }
 
     @Override
@@ -707,7 +782,7 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public boolean isCheckoutPageVisible() {
-        return mHomeViewPager.getCurrentItem() == CHECKOUT_INDEX;
+        return mHomeViewPager.getCurrentItem() == previousPagerPosition;
     }
 
     public CheckoutHostController getCheckoutHostController() {
@@ -763,7 +838,7 @@ public class MainController extends BaseController implements MainMvpView {
         int newIndex = mHomeViewPager.getCurrentItem();
         if (!isAuthorized) {
             switch (mHomeViewPager.getCurrentItem()) {
-                case CHECKOUT_INDEX:
+                case BRANDS_INDEX:
                     newIndex = previousPagerPosition;
                     break;
                 default:
@@ -864,11 +939,6 @@ public class MainController extends BaseController implements MainMvpView {
         showShopController();
     }
 
-    public void sendSaleItemToCheckout(CheckoutDetailsMapper getCurrentOrder) {
-        mActivity.getCheckoutController().getPresenter().updateCartValues(getCurrentOrder);
-    }
-
-
     public void setNavigationBarEnabled(boolean enabled) {
         for (int i = 0; i < VIEWPAGER_SIZE; i++) {
             if (enabled) {
@@ -882,7 +952,7 @@ public class MainController extends BaseController implements MainMvpView {
     private void showNewTagOnCategory(boolean show) {
         AHNotification notification = new AHNotification.Builder()
                 .setText(show ? "NEW" : "")
-                .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.bottom_nav_badge))
+                .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.fluorescent_blue))
                 .setTextColor(ContextCompat.getColor(mActivity, R.color.white))
                 .build();
         mBottomNavigationView.setNotification(notification, CATEGORY_INDEX);
@@ -895,5 +965,13 @@ public class MainController extends BaseController implements MainMvpView {
         if (controller instanceof AccountController) {
             ((AccountController) controller).showReturnsPolicy();
         }
+    }
+
+    public void showHomePage(){
+        mBottomNavigationView.setCurrentItem(2);
+    }
+
+    public void showBrands(){
+        mBottomNavigationView.setCurrentItem(1);
     }
 }

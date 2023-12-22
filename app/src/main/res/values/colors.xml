@@ -13,6 +13,11 @@
     <color name="white_50">#80FFFFFF</color>
     <color name="black">#000000</color>
     <color name="black_50">#80000000</color>
+    <color name="beige">#C9A184</color>
+    <color name="fluorescent_blue">#0EEAFF</color>
+    <color name="alice_blue">#EFF5FF</color>
+    <color name="nav_dark_blue">#133463</color>
+    <color name="dust">#DFC2C2</color>
 
     <color name="recyclerview_overscroll">@color/colorPrimary</color>
 

@@ -257,9 +257,6 @@ public class ViewAddressController extends BaseController implements ViewAddress
 
             logAddShipmentWhileFromCart();
 
-            if (mActivity.getCheckoutController() != null) {
-                mActivity.getCheckoutController().updateCartWithValue(value);
-            }
             mActivity.onBackPressed();
         }
     }

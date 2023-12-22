@@ -89,6 +89,7 @@ import au.com.dealsdirect.ui.controller.account.AccountDeletionConfirmationDialo
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
+import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
@@ -105,6 +106,8 @@ import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderSatisfactionDialo
 import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderTrackerDialog;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.BottomSheetReturnSatisfactionDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.BottomSheetSizesDialog;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.BottomSheetInfoDialog;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -152,7 +155,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     private MainController mMainController;
     private CategoriesMvpView mCategoriesView;
-    private CheckoutController mCheckoutController;
     private ViewContactsController mContactsController;
     private AccountController mAccountController;
     private SearchFilterController mSearchFilterController;
@@ -226,7 +228,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             logEvent(Events.CVAppLaunch, parameters);
         }
-
         splashShownCallback();
         onNewIntent(getIntent());
 
@@ -451,7 +452,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         if (currentRouter.getBackstackSize() == 1) {
             if (!isMasterDetail(currentRouter)) {
                 getMainController().showBottomNav();
-                getMainController().showShopController();
+                if(currentRouter == getMainController().getCategoriesRouter()){
+                    currentRouter.handleBack();
+                }else{
+                    getMainController().showShopController();
+                }
             } else {
                 currentRouter.handleBack();
             }
@@ -602,10 +607,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             mPresenter.setIsNewUser(false);
 
             if (!mPresenter.isTablet()) {
-                getMainController().getCheckoutRouter().pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
+                getCurrentRouter().pushController(RouterTransaction.with(new PaymentSuccessController(responseValue))
                         .pushChangeHandler(new HorizontalChangeHandler())
                         .popChangeHandler(new HorizontalChangeHandler()));
-                getMainController().showCheckoutController();
 
             } else {
                 Bundle bundle = new BundleBuilder(new Bundle())
@@ -921,7 +925,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 ga4PurchaseParams = null;
 
                 //reset routers with unique user info
-                getMainController().resetCheckoutRouter();
                 getMainController().getRouter().popToRoot();
                 getMainController().showShopController();
                 callPublicSettings();
@@ -970,6 +973,50 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public ShopsController getShopController() {
         Router router = getMainController().getShopRouter();
+        for (RouterTransaction routerTransaction : router.getBackstack()) {
+            Controller controller = routerTransaction.controller();
+            if (controller instanceof ShopsController) {
+                return (ShopsController) controller;
+            }
+        }
+        return null;
+    }
+
+    public NewSaleCategoriesController getNewSaleCategoriesController() {
+        Router router = getMainController().getCategoriesRouter();
+        for (RouterTransaction routerTransaction : router.getBackstack()) {
+            Controller controller = routerTransaction.controller();
+            if (controller instanceof NewSaleCategoriesController) {
+                return (NewSaleCategoriesController) controller;
+            }
+        }
+        return null;
+    }
+
+    public SaleItemsController getWishlistController() {
+        Router router = getMainController().getWishlistRouter();
+        for (RouterTransaction routerTransaction : router.getBackstack()) {
+            Controller controller = routerTransaction.controller();
+            if (controller instanceof SaleItemsController) {
+                return (SaleItemsController) controller;
+            }
+        }
+        return null;
+    }
+
+    public SaleItemsController getSaleItemsControllerFromShop() {
+        Router router = getMainController().getShopRouter();
+        for (RouterTransaction routerTransaction : router.getBackstack()) {
+            Controller controller = routerTransaction.controller();
+            if (controller instanceof SaleItemsController) {
+                return (SaleItemsController) controller;
+            }
+        }
+        return null;
+    }
+
+    public ShopsController getBrandsController() {
+        Router router = getMainController().getBrandsRouter();
         for (RouterTransaction routerTransaction : router.getBackstack()) {
             Controller controller = routerTransaction.controller();
             if (controller instanceof ShopsController) {
@@ -1439,14 +1486,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setAppCountries(Settings.Country selectedCountry) {
         Settings.setCountry(selectedCountry);
-    }
-
-    public void setCheckoutController(CheckoutController checkoutController) {
-        mCheckoutController = checkoutController;
-    }
-
-    public CheckoutController getCheckoutController() {
-        return mCheckoutController;
     }
 
     public ViewContactsController getContactsController() {

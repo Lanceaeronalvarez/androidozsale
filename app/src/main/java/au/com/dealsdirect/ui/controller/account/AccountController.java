@@ -611,7 +611,6 @@ public class AccountController extends BaseController implements AccountMvpView,
 
                 setupLoginButton(true);
 
-                mActivity.getMainController().resetCheckoutRouter();
                 if (mPresenter.isTablet()) {
                     mActivity.getMainController().resetAccountRouter();
                 }
@@ -706,7 +705,7 @@ public class AccountController extends BaseController implements AccountMvpView,
                     mActivity.getMainController().resetCategoriesRouter();
                     mActivity.getMainController().resetAccountRouter();
                     mActivity.getMainController().resetWishlistRouter();
-                    mActivity.getMainController().resetCheckoutRouter();
+                    mActivity.getMainController().resetBrandsRouter();
 
                     userDetailsLoggedOut = null;
                 }
