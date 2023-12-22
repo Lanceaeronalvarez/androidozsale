@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.salefilter;
 
+import static au.com.dealsdirect.service.datacollection.registerservices.GenieEventService.getDataManager;
 import static au.com.dealsdirect.utils.BundleKeys.BRANDS_FACET_FILTER_TYPE;
 import static au.com.dealsdirect.utils.BundleKeys.COLOR_FACET_FILTER_TYPE;
 import static au.com.dealsdirect.utils.BundleKeys.DELIVERY_FACET_FILTER_TYPE;
@@ -168,6 +169,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     SearchFilterMvpRepository mRepository;
     private static final int DEFAULT_PRICE_THRESHOLD = 200;
 
+    boolean mShowColor = false;
 
     public SaleFilterController(Bundle build) {
     }
@@ -251,6 +253,8 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         mToolbarRightButton.setOnClickListener(it -> {
             clearFilters();
         });
+
+        mShowColor = getDataManager().isColorFilterEnabled();
 
         setUp(view);
     }
@@ -484,7 +488,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
 
     public void setRecyclerAdapter(String type, ArrayList<String> filterCountList){
         mCurrentCountList = filterCountList;
-        mFilterAdapter = new SaleFilterAdapter(mActivity, this, mfilterLevel, new ArrayList<>(), mFiltersToDisplay, type, mSelectedFilters, mCategoryTree, mShowSubCategories, mCategoryKeys, mSortingList, mShowSort, filterCountList, false, mCategoryKey, mSourceType, mShowCategory);
+        mFilterAdapter = new SaleFilterAdapter(mActivity, this, mfilterLevel, new ArrayList<>(), mFiltersToDisplay, type, mSelectedFilters, mCategoryTree, mShowSubCategories, mCategoryKeys, mSortingList, mShowSort, filterCountList, mShowColor, mCategoryKey, mSourceType, mShowCategory);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(mFilterAdapter);

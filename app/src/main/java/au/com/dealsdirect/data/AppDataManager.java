@@ -1721,6 +1721,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void setIsColorFilterEnabled(boolean isColorFilterEnabled) {
+        mPreferencesHelper.setIsColorFilterEnabled(isColorFilterEnabled);
+    }
+
+    @Override
+    public boolean isColorFilterEnabled() {
+        return mPreferencesHelper.isColorFilterEnabled();
+    }
+
+    @Override
     public void setLastColumnSelected(int columnCount) {
         mPreferencesHelper.setLastColumnSelected(columnCount);
     }
