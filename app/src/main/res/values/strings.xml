@@ -1008,6 +1008,13 @@
 
     <string name="account_deletion_confirmation_text">Are you sure you want to delete your account and all data associated with it?\n\nIt may take up to 28 days to completely remove all the data associated with your account.</string>
 
+    <string name="discover_premium_brands">Discover Premium Brands</string>
+    <string name="discover_premium_brands_details">Dive into a world of fashion, footwear, beauty &amp; more up to 80% off.</string>
+    <string name="be_the_first_to_know">Be the first to know</string>
+    <string name="be_the_first_to_know_details">Stay ahead of the savings game &amp; get first dibs!</string>
+    <string name="twenty_four_seven_deals">24/7 Deals</string>
+    <string name="twenty_four_seven_deals_details">Never miss a deal and enjoy new sales &amp; exclusive offers every day of the week!</string>
+
     <string name="categories">Categories</string>
 
     <string name="clear_underline"><u>Clear</u></string>

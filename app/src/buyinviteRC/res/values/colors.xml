@@ -151,4 +151,7 @@
 
     <color name="bg_fcm_notif">#E90F87</color>
 
+    <color name="splash_text_color">#FFFFFF</color>
+    <color name="splash_background">#E90F87</color>
+
 </resources>

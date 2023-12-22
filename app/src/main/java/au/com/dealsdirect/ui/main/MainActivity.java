@@ -228,7 +228,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             logEvent(Events.CVAppLaunch, parameters);
         }
-        splashShownCallback();
+
+        showSplashScreen();
+
         onNewIntent(getIntent());
 
         //Initialize version introspection

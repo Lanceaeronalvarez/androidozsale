@@ -308,4 +308,7 @@
     <color name="price_block_left_background">#000000</color>
     <color name="price_block_light_text">#616161</color>
     <color name="price_block_dark_text">#000000</color>
+
+    <color name="splash_highlight_color">#0EEAFF</color>
+
 </resources>

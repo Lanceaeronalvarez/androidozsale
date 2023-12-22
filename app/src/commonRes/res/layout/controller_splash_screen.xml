@@ -4,16 +4,216 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:background="@drawable/bg_splash_gradient">
+    android:background="@color/splash_background"
+    android:id="@+id/controller_splash_layout">
 
-    <ImageView
-        android:id="@+id/controller_splash_app_logo"
+    <RelativeLayout
+        android:id="@+id/controller_splash_logo_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="50dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/logo_white"/>
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/controller_splash_app_logo"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:src="@drawable/logo_splash"
+            />
+
+        <TextView
+            android:id="@+id/controller_splash_description"
+            fontPath="@string/font_app_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/controller_splash_app_logo"
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:text="The Biggest Brands On Sale, Everyday!"
+            android:textColor="@color/splash_text_color"
+            android:textSize="18dp"
+            tools:ignore="MissingPrefix"
+            android:layout_marginBottom="80dp"
+            android:layout_marginTop="10dp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/controller_splash_welcome_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/controller_splash_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome!"
+            android:textColor="@color/splash_text_color"
+            fontPath="@string/font_app_bold"
+            android:textSize="40dp"
+            tools:ignore="MissingPrefix"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="20dp"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/splash_bag"
+                    android:layout_marginRight="10dp"/>
+
+                <TextView
+                    android:background="@color/splash_highlight_color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/discover_premium_brands"
+                    android:textColor="@color/splash_text_color"
+                    fontPath="@string/font_app_bold"
+                    android:textSize="20dp"
+                    tools:ignore="MissingPrefix" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/controller_splash_description_1"
+                android:paddingTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/discover_premium_brands_details"
+                android:textColor="@color/splash_text_color"
+                android:textSize="16dp"
+                tools:ignore="MissingPrefix"
+                android:paddingStart="40dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/splash_tag"
+                    android:layout_marginRight="10dp"/>
+
+                <TextView
+                    android:background="@color/splash_highlight_color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/be_the_first_to_know"
+                    android:textColor="@color/splash_text_color"
+                    fontPath="@string/font_app_bold"
+                    android:textSize="20dp"
+                    tools:ignore="MissingPrefix" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/controller_splash_description_2"
+                android:paddingTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/be_the_first_to_know_details"
+                android:textColor="@color/splash_text_color"
+                android:textSize="16dp"
+                tools:ignore="MissingPrefix"
+                android:paddingStart="40dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/splash_clock"
+                    android:layout_marginRight="10dp"/>
+
+                <TextView
+                    android:background="@color/splash_highlight_color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/twenty_four_seven_deals"
+                    android:textColor="@color/splash_text_color"
+                    fontPath="@string/font_app_bold"
+                    android:textSize="20dp"
+                    tools:ignore="MissingPrefix" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/controller_splash_description_3"
+                android:paddingTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/twenty_four_seven_deals_details"
+                android:textColor="@color/splash_text_color"
+                android:textSize="16dp"
+                tools:ignore="MissingPrefix"
+                android:paddingStart="40dp"/>/>
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/controller_splash_continue_button"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@color/splash_text_color"
+            android:layout_marginTop="80dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/splash_highlight_color"
+                android:layout_marginRight="3dp"
+                android:layout_marginBottom="3dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textColor="@color/splash_text_color"
+                    fontPath="@string/font_app_bold"
+                    android:textSize="16dp"
+                    android:text="Continue Shopping"
+                    tools:ignore="MissingPrefix" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
 
 </RelativeLayout>
