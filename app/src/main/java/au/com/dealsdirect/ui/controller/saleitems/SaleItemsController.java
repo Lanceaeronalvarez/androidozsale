@@ -723,6 +723,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                                                             mSearchFilterMvpView.getCategoryKeys(),
                                                             0,
                                                             mChipFilters));
+                                            if(mSourceType == SourceType.SHOP_SEARCH){
+                                                  mShouldRefreshFacets = true;
+                                            }
                                         }
                                 );
                             }
@@ -1069,7 +1072,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     itemsContainerHelper.clearItems();
                     searchOperationType = null;
                     mGenieCategory = null;
-                    mSearchQuery = "";
+                    if(mSearchQuery == "" || mSearchQuery == null){
+                        mSearchQuery = "";
+                    }else{
+                        mSearchResultText.setText(mSearchQuery);
+                    }
                     mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
                     if (mHasSavedInstance) {
                         mActivity.getMainController().setSavedCurrentItem();
