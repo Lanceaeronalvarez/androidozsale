@@ -19,6 +19,9 @@ public class SetDeliveryOption {
     @SerializedName("postcode")
     @Expose
     private String postcode;
+    @SerializedName("deliveryDetails")
+    @Expose
+    private DeliveryDetails deliveryDetails;
 
     public OptionParameters getOptionParameters() {
         return optionParameters;
@@ -50,6 +53,14 @@ public class SetDeliveryOption {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
+    }
+
+    public DeliveryDetails getDeliveryDetails() {
+        return deliveryDetails;
+    }
+
+    public void setDeliveryDetails(DeliveryDetails deliveryDetails) {
+        this.deliveryDetails = deliveryDetails;
     }
 
     public static class OptionParameters {
@@ -103,6 +114,36 @@ public class SetDeliveryOption {
 
         public void setServicepackagedetailid(String servicepackagedetailid) {
             this.servicepackagedetailid = servicepackagedetailid;
+        }
+    }
+
+    public static class DeliveryDetails {
+        @SerializedName("Postcode")
+        @Expose
+        private String postcode;
+        @SerializedName("PickupPoint")
+        @Expose
+        private String pickupPoint;
+
+        public DeliveryDetails(String postcode, String pickupPoint) {
+            this.postcode = postcode;
+            this.pickupPoint = pickupPoint;
+        }
+
+        public String getPostcode() {
+            return postcode;
+        }
+
+        public void setPostcode(String postcode) {
+            this.postcode = postcode;
+        }
+
+        public String getPickupPoint() {
+            return pickupPoint;
+        }
+
+        public void setPickupPoint(String pickupPoint) {
+            this.pickupPoint = pickupPoint;
         }
     }
 }

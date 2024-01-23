@@ -2019,7 +2019,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         SetDeliveryOption.OptionParameters optionParameters
                 = new SetDeliveryOption.OptionParameters(mDeliveryAddress != null ? mDeliveryAddress.id : "", "",
-                new Gson().toJson(standardDeliveryOption), "");
+                new Gson().toJson(standardDeliveryOption), null);
 
         return optionParameters;
 
