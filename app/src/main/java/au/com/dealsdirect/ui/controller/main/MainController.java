@@ -31,18 +31,15 @@ import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
-import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
-import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -56,10 +53,6 @@ import au.com.dealsdirect.utils.DelayedMethodExecutionManager;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
-
-/**
- * dp Created by Admin on 6/6/17.
- */
 
 public class MainController extends BaseController implements MainMvpView {
 
@@ -117,8 +110,6 @@ public class MainController extends BaseController implements MainMvpView {
 
     @BindView(R.id.controller_home_button)
     ImageView mHomeButton;
-
-    private CheckoutMvpView mCheckoutHostController;
 
     private View mLastSelectedSubCategoryItem;
 
@@ -196,7 +187,7 @@ public class MainController extends BaseController implements MainMvpView {
             mBottomNavigationView.setCurrentItem(2);
         });
 
-        if(mPresenter.isTablet()){
+        if (mPresenter.isTablet()) {
             mNavIndicatorView.setVisibility(View.GONE);
         }
 
@@ -266,7 +257,7 @@ public class MainController extends BaseController implements MainMvpView {
         setupViewPager();
     }
 
-    private void hideIndicators(){
+    private void hideIndicators() {
         mIndicator1.setVisibility(View.INVISIBLE);
         mIndicator2.setVisibility(View.INVISIBLE);
         mIndicator3.setVisibility(View.INVISIBLE);
@@ -282,9 +273,6 @@ public class MainController extends BaseController implements MainMvpView {
         if (!router.hasRootController() || willReset) {
             router.setBackstack(
                     Arrays.asList(
-                            RouterTransaction.with(BannerFiltersController.newInstance())
-                                    .popChangeHandler(new HorizontalChangeHandler())
-                                    .pushChangeHandler(new HorizontalChangeHandler()),
                             RouterTransaction.with(ShopsController.newInstance()).tag(ShopsController.TAG)
                                     .popChangeHandler(new HorizontalChangeHandler())
                                     .pushChangeHandler(new HorizontalChangeHandler())),
@@ -340,7 +328,7 @@ public class MainController extends BaseController implements MainMvpView {
         if (!router.hasRootController() || willReset) {
             ShopsController shopsController = ShopsController.instanceWithBrandsOnlyFilter();
             router.setRoot(RouterTransaction.with(shopsController)
-                            .popChangeHandler(new HorizontalChangeHandler()));
+                    .popChangeHandler(new HorizontalChangeHandler()));
         }
     }
 
@@ -408,10 +396,6 @@ public class MainController extends BaseController implements MainMvpView {
 
     public Router getBrandsRouter() {
         return routers.get(BRANDS_INDEX);
-    }
-
-    public Router getCheckoutRouter() {
-        return routers.get(previousPagerPosition);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -516,9 +500,9 @@ public class MainController extends BaseController implements MainMvpView {
             mBeigeLine.setVisibility(View.VISIBLE);
             mHomeButton.setVisibility(View.VISIBLE);
             mHomeButton.bringToFront();
-            if(mPresenter.isTablet()){
+            if (mPresenter.isTablet()) {
                 mNavIndicatorView.setVisibility(View.GONE);
-            }else{
+            } else {
                 mNavIndicatorView.setVisibility(View.VISIBLE);
             }
         }
@@ -571,6 +555,8 @@ public class MainController extends BaseController implements MainMvpView {
                 super.onAnimationCancel(animation);
                 mHomeViewPager.setCurrentItem(position, false);
                 CommonUtils.fadeInView(mHomeViewPager, null);
+                final Router previousRouter = routers.get(previousPagerPosition);
+                popCheckoutController(previousRouter);
             }
 
             @Override
@@ -578,6 +564,8 @@ public class MainController extends BaseController implements MainMvpView {
                 super.onAnimationEnd(animation);
                 mHomeViewPager.setCurrentItem(position, false);
                 CommonUtils.fadeInView(mHomeViewPager, null);
+                final Router previousRouter = routers.get(previousPagerPosition);
+                popCheckoutController(previousRouter);
             }
         });
     }
@@ -609,6 +597,10 @@ public class MainController extends BaseController implements MainMvpView {
             }
         } else {
             setViewPagerItem(SHOP_INDEX);
+            Controller controller = getCurrentViewPagerController();
+            if (controller instanceof CheckoutMvpView) {
+                ((BaseController) controller).refreshContents();
+            }
         }
 
         mIsInitialSavedInstanceLoad = false;
@@ -625,7 +617,7 @@ public class MainController extends BaseController implements MainMvpView {
                 if (router != null) {
                     categoryBackStack();
                 }
-            }else{
+            } else {
                 categoryBackStack();
             }
             if (controller instanceof BaseController) {
@@ -640,7 +632,7 @@ public class MainController extends BaseController implements MainMvpView {
         mIsInitialSavedInstanceLoad = false;
     }
 
-    private void categoryBackStack(){
+    private void categoryBackStack() {
         Router router = routers.get(CATEGORY_INDEX);
         if (router != null) {
             ArrayList<RouterTransaction> backstack = new ArrayList<>();
@@ -779,18 +771,6 @@ public class MainController extends BaseController implements MainMvpView {
 
     public AHBottomNavigation getBottomNav() {
         return mBottomNavigationView;
-    }
-
-    public boolean isCheckoutPageVisible() {
-        return mHomeViewPager.getCurrentItem() == previousPagerPosition;
-    }
-
-    public CheckoutHostController getCheckoutHostController() {
-        if (mCheckoutHostController instanceof CheckoutHostController) {
-            return (CheckoutHostController) mCheckoutHostController;
-        } else {
-            return null;
-        }
     }
 
     public Controller getCurrentViewPagerController() {
@@ -967,11 +947,27 @@ public class MainController extends BaseController implements MainMvpView {
         }
     }
 
-    public void showHomePage(){
+    public void showHomePage() {
         mBottomNavigationView.setCurrentItem(2);
     }
 
-    public void showBrands(){
+    public void showBrands() {
         mBottomNavigationView.setCurrentItem(1);
+    }
+
+    private void popCheckoutController(Router router) {
+        if (router == null) {
+            return;
+        }
+
+        List<RouterTransaction> backstack = router.getBackstack();
+        for (int i = backstack.size() - 1; i > 0; i--) {
+            Controller controller = backstack.get(i).controller();
+            if (controller instanceof CheckoutMvpView) {
+                backstack = backstack.subList(0, i);
+                break;
+            }
+        }
+        router.setBackstack(backstack, null);
     }
 }

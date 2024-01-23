@@ -29,11 +29,13 @@ public class KlarnaPresenter<V extends KlarnaMvpView> extends BasePresenter<V> i
         KlarnaCreateSessionRequest request = new KlarnaCreateSessionRequest(
                 getDataManager().getCountryId(),
                 getDataManager().getLanguageId());
+        mIsBusy = true;
         doApiCallForResponse(getDataManager().callCreateKlarnaSession(request),
                 new AppApiCallback() {
                     @Override
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
+                        mIsBusy = false;
                         if (!isViewAttached()) {
                             return;
                         }
@@ -48,6 +50,7 @@ public class KlarnaPresenter<V extends KlarnaMvpView> extends BasePresenter<V> i
                     @Override
                     public void onFailure(Throwable t) {
                         super.onFailure(t);
+                        mIsBusy = false;
                         if (isViewAttached()) {
                             getMvpView().hideProgressIndicator();
                             getMvpView().hideKlarnaPaymentView();
@@ -63,11 +66,13 @@ public class KlarnaPresenter<V extends KlarnaMvpView> extends BasePresenter<V> i
                 getDataManager().getCountryId(),
                 getDataManager().getLanguageId(),
                 authorizationToken);
+        mIsBusy = true;
         doApiCallForResponse(getDataManager().callCreateKlarnaOrder(request),
                 new AppApiCallback() {
                     @Override
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
+                        mIsBusy = false;
                         if (!isViewAttached()) {
                             return;
                         }
@@ -93,6 +98,7 @@ public class KlarnaPresenter<V extends KlarnaMvpView> extends BasePresenter<V> i
                     @Override
                     public void onFailure(Throwable t) {
                         super.onFailure(t);
+                        mIsBusy = false;
                         if (isViewAttached()) {
                             getMvpView().hideProgressIndicator();
                             getMvpView().hideKlarnaPaymentView();

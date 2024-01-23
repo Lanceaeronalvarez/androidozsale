@@ -3289,8 +3289,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 @Override
                 public void success() {
                     getRouter().popCurrentController();
-                    getRouter().pushController(RouterTransaction
-                            .with(controller).tag(controller.getClass().getName()));
+                    getRouter().pushController(RouterTransaction.with(controller)
+                            .tag(controller.getClass().getName())
+                            .pushChangeHandler(new HorizontalChangeHandler())
+                            .popChangeHandler(new HorizontalChangeHandler()));
                 }
                 @Override
                 public void error() {
@@ -3298,8 +3300,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 }
             });
         } else if (mActivity.isAuthorized()) {
-            getRouter().pushController(RouterTransaction
-                    .with(controller).tag(controller.getClass().getName()));
+            getRouter().pushController(RouterTransaction.with(controller)
+                    .tag(controller.getClass().getName())
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler()));
         }
     }
 

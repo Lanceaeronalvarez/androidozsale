@@ -17,10 +17,12 @@ import android.view.ViewGroup;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -86,6 +88,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BaseController.CommonControllerChangeListener;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.account.AccountDeletionConfirmationDialog;
+import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
@@ -99,6 +102,7 @@ import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessCo
 import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsController;
 import au.com.dealsdirect.ui.controller.country.CountryController;
 import au.com.dealsdirect.ui.controller.gdpr.StrictConsentController;
+import au.com.dealsdirect.ui.controller.klarna.KlarnaViewController;
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.MainController;
 import au.com.dealsdirect.ui.controller.main.Settings;
@@ -407,7 +411,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             return;
         }
 
-        /* gen-8065_ozsale-reskin_bugfixing - dismiss keyboard when changing screen fix  */
         hideKeyboard();
 
         if (getCurrentController(getCurrentRouter()) instanceof AfterpayViewController &&
@@ -415,9 +418,17 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             return;
         }
 
+        if (getCurrentController(getCurrentRouter()) instanceof KlarnaViewController &&
+                ((KlarnaViewController) getCurrentController(getCurrentRouter())).isBusy()) {
+            return;
+        }
+
         if (mIsShowingStrictConsentUI && mRouter.getControllerWithTag(StrictConsentController.TAG)
                 instanceof StrictConsentController) {
-            mRouter.getControllerWithTag(StrictConsentController.TAG).handleBack();
+            final Controller controller = mRouter.getControllerWithTag(StrictConsentController.TAG);
+            if (controller != null) {
+                controller.handleBack();
+            }
             return;
         }
 
@@ -429,12 +440,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             getMainController().getPopUpHostRouter().handleBack();
         } else {
             Router currentRouter = getCurrentRouter();
-            Controller currentController = getMainController().getCurrentViewPagerController();
-            if (currentController instanceof BannerFiltersController) {
-                getMainController().resetShopRouter();
-            } else if (currentController instanceof ShopsController &&
-                    !((ShopsController) currentController).isFromCategories()) {
-                //exit when shops screen is visible, if not go to shops screen
+            if (getMainController().getBottomNav().getCurrentItem() == MainController.SHOP_INDEX &&
+                    currentRouter.getBackstack().size() <= 1) {
                 DialogUtils.showYesNoDialog(
                         this,
                         getString(R.string.app_name),
@@ -444,33 +451,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         (dialogInterface, i) -> finish(),
                         (dialogInterface, i) -> {
                         });
-            } else {
-                customRouterBackPress(currentRouter, currentController);
-            }
-        }
-    }
-
-    private void customRouterBackPress(Router currentRouter, Controller currentController) {
-        if (currentRouter.getBackstackSize() == 1) {
-            if (!isMasterDetail(currentRouter)) {
-                getMainController().showBottomNav();
-                if(currentRouter == getMainController().getCategoriesRouter()){
-                    currentRouter.handleBack();
-                }else{
-                    getMainController().showShopController();
-                }
+            } else if (currentRouter.getBackstack().size() <= 1) {
+                getMainController().showShopController();
             } else {
                 currentRouter.handleBack();
             }
-        } else {
-            currentRouter.handleBack();
         }
     }
 
-    private boolean isMasterDetail(Router router) {
-        return mPresenter.isTablet() && getResources().getBoolean(R.bool.master_detail_enabled) &&
-                (router == getMainController().getCheckoutRouter()
-                        || router == getMainController().getAccountRouter());
+    public void popToCheckout(Router router) {
+        popToCheckoutController(router);
     }
 
     public void addAuthHandler(AuthHandler handler, boolean isLogin) {
@@ -678,11 +668,31 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         if (errorMessage != null) {
 
             CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, errorMessage);
-            getMainController().getCheckoutRouter().popToRoot();
 
-            Controller controller = getMainController().getCurrentControllerOnRouter(getMainController().getCheckoutRouter());
-            if (controller instanceof CheckoutController) {
-                ((CheckoutController) controller).loadCart();
+            CheckoutMvpView checkoutMvpView = null;
+            Router router = getMainController().getCurrentRouter();
+            List<RouterTransaction> backstack = router.getBackstack();
+            List<RouterTransaction> newBackstack = null;
+            for (int i = backstack.size() - 2; i > 0; i--) {
+                Controller controller = backstack.get(i).controller();
+                if (controller instanceof CheckoutMvpView) {
+                    newBackstack = backstack.subList(0, i + 1);
+                    checkoutMvpView = (CheckoutMvpView) controller;
+                    break;
+                }
+            }
+            if (newBackstack != null) {
+                if (backstack.size() == newBackstack.size()) {
+
+                } else if (newBackstack.size() > 1){
+                    router.setBackstack(backstack, backstack.get(backstack.size() - 1).popChangeHandler());
+                } else {
+                    router.popToRoot();
+                }
+            }
+
+            if (checkoutMvpView != null) {
+                checkoutMvpView.loadCart();
             }
         }
     }
@@ -710,26 +720,60 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         } else {
             setPaymentMethodSelected(lastPaymentMethod);
 
-            if (currentController instanceof CheckoutHostController || currentController instanceof AddPaymentController) {
-                Router router = currentController instanceof CheckoutHostController ? ((CheckoutHostController) currentController).getDisplayRouter() : getCurrentRouter();
+            final boolean doesRouterBackstackHaveCheckoutController = doesRouterBackstackHaveCheckoutController(currentController.getRouter());
+            final Router router;
+            if (currentController instanceof CheckoutHostController || doesRouterBackstackHaveCheckoutController) {
+                router = currentController instanceof CheckoutHostController ? ((CheckoutHostController) currentController).getDisplayRouter() : getCurrentRouter();
                 if (currentController instanceof AddPaymentController) {
                     ((AddPaymentController) currentController).logAddPaymentWhileFromCart(lastPaymentMethod.getPaymentType());
                 }
-                switch (router.getBackstackSize()) {
-                    case 1:
-                        ((BaseController) currentController).refreshContents();
-                        break;
-                    case 2:
-                        router.handleBack();
-                        break;
-                    default:
-                        router.popToRoot();
-                        break;
-                }
-
+                refreshCheckoutController(router);
+                popToCheckoutController(router);
             } else {
-                currentController.getRouter().handleBack();
+                router = currentController.getRouter();
+                refreshCheckoutController(router);
+                router.handleBack();
             }
+        }
+    }
+
+    private boolean doesRouterBackstackHaveCheckoutController(Router router) {
+        List<RouterTransaction> backstack = router.getBackstack();
+        for (int i = backstack.size() - 1; i >= 0; i--) {
+            final Controller controller = backstack.get(i).controller();
+            if (controller instanceof CheckoutController) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void refreshCheckoutController(Router router) {
+        List<RouterTransaction> backstack = router.getBackstack();
+        for (int i = backstack.size() - 1; i >= 0; i--) {
+            final Controller controller = backstack.get(i).controller();
+            if (controller instanceof CheckoutMvpView) {
+                ((CheckoutMvpView) controller).loadCart();
+                break;
+            }
+        }
+    }
+
+    private void popToCheckoutController(Router router) {
+        int checkoutControllerIndex = -1;
+        List<RouterTransaction> backstack = router.getBackstack();
+        for (int i = backstack.size() - 1; i >= 0; i--) {
+            final Controller controller = backstack.get(i).controller();
+            if (controller instanceof CheckoutMvpView) {
+                checkoutControllerIndex = i;
+                break;
+            }
+        }
+        if (checkoutControllerIndex >= 0) {
+            List<RouterTransaction> newBackstack = router.getBackstack().subList(0, checkoutControllerIndex + 1);
+            router.setBackstack(newBackstack, newBackstack.get(newBackstack.size() - 1).popChangeHandler());
+        } else {
+            router.handleBack();
         }
     }
 
@@ -742,16 +786,16 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 nonce,
                 Double.toString(PaymentInfo.getCartCost()),
                 new BraintreeClientHelper.ThreeDSecureVerificationHandler() {
-            @Override
-            public void onGettingNonce(String nonce) {
-                callCreatePaymentTransaction(PaymentInfo.getPaymentType(), nonce, PaymentInfo.getPaymentMethod().getToken());
-            }
+                    @Override
+                    public void onGettingNonce(String nonce) {
+                        callCreatePaymentTransaction(PaymentInfo.getPaymentType(), nonce, PaymentInfo.getPaymentMethod().getToken());
+                    }
 
-            @Override
-            public void onError(Exception error) {
+                    @Override
+                    public void onError(Exception error) {
 
-            }
-        });
+                    }
+                });
     }
 
     @Override
@@ -955,10 +999,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public Router getCategoriesRouter() {
         return getMainController().getCategoriesRouter();
-    }
-
-    public Router getCheckoutRouter() {
-        return getMainController().getCheckoutRouter();
     }
 
     public Router getAccountsRouter() {

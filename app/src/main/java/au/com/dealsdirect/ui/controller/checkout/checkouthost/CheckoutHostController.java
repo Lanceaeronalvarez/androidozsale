@@ -84,7 +84,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     RecyclerView mRecyclerView;
 
     private Router mCheckoutDetailRouter;
-    private CheckoutController mCheckoutController;
     private CheckoutMvpView mCheckoutDetailView;
     private CheckoutOrderAdapter mAdapter;
     private List<MappedShipment> mItemList = new ArrayList<>();
@@ -129,10 +128,10 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
         CommonControllerChangeListener.addToRouter(mCheckoutDetailRouter);
 
-        mCheckoutController = CheckoutController.newInstance();
-        mCheckoutDetailRouter.setRoot(RouterTransaction.with(mCheckoutController).tag(CheckoutController.class.getName()));
+        final CheckoutController checkoutController = CheckoutController.newInstance(this);
+        mCheckoutDetailRouter.setRoot(RouterTransaction.with(checkoutController).tag(CheckoutController.class.getName()));
 
-        mCheckoutDetailView = mCheckoutController;
+        mCheckoutDetailView = checkoutController;
 
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
         mAdapter.setShouldAddSpacerOnTop(mPresenter.isTablet());
@@ -196,7 +195,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public void onOrientationChanged(Configuration newConfiguration) {
-        mCheckoutController.onOrientationChanged(newConfiguration);
+        final List<RouterTransaction> backstack = mCheckoutDetailRouter.getBackstack();
+        ((BaseController) backstack.get(0).controller()).onOrientationChanged(newConfiguration);
+        ((BaseController) backstack.get(backstack.size() - 1).controller()).onOrientationChanged(newConfiguration);
     }
 
     @Override

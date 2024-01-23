@@ -26,7 +26,7 @@
             android:layout_centerVertical="true">
 
             <ImageButton
-                android:id="@+id/partial_toolbar_hamburger"
+                android:id="@+id/partial_toolbar_cart"
                 android:layout_width="@dimen/partial_toolbar_button_width"
                 android:layout_height="@dimen/partial_toolbar_button_height"
                 android:background="@color/toolbar_skin"

@@ -40,7 +40,6 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.adapter.NewSaleCategoryAdapter;
 import au.com.dealsdirect.ui.controller.categories.listener.NewSaleCategoryClickListener;
 import au.com.dealsdirect.ui.controller.categories.listener.SubCategoryItemClickListener;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -63,7 +62,7 @@ public class NewSaleCategoriesController extends BaseController
     @BindView(R.id.controller_salecategory_recyclerview)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.partial_toolbar_hamburger)
+    @BindView(R.id.partial_toolbar_cart)
     ImageButton mShopsControllerHamburgerView;
 
     @BindView(R.id.partial_toolbar_logo)
