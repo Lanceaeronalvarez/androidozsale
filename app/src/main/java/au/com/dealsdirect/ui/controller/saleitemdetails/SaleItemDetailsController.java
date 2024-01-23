@@ -1277,6 +1277,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             ga4Item.setPrice(saleDetail.getSalePrice().getValue());
         } else if (saleDetail.getPrice() != null) {
             ga4Item.setPrice((saleDetail.getPrice().getValue()));
+        } else {
+            ga4Item.setPrice(0.0);
         }
         ga4Item.setQuantity(1);
         ga4Item.setItemBrand(saleDetail.getBrandName());
@@ -1284,7 +1286,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         ga4Items.add(ga4Item);
         ga4EventParams.setItems(ga4Items);
         ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
-        ga4EventParams.setValue(saleDetail.getSalePrice().getValue());
+        if (saleDetail.getSalePrice() != null) {
+            ga4EventParams.setValue(saleDetail.getSalePrice().getValue());
+        } else if (saleDetail.getPrice() != null) {
+            ga4EventParams.setValue((saleDetail.getPrice().getValue()));
+        } else {
+            ga4EventParams.setValue(0.0);
+        }
         parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
 
         DataCollector.logEvent(Events.CVItemDetails, parameters);
