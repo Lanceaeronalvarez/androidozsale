@@ -1680,9 +1680,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mSharedImageLocation == null) {
             mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
         }
-        animateAddToCart(() -> CustomAlertDialog.showCustomAlertDialog(
+        CustomAlertDialog.showCustomAlertDialog(
                 getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                mActivity.getString(R.string.add_to_cart_success)));
+                mActivity.getString(R.string.add_to_cart_success));
 
         RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
         HashMap<String, Object> parameters = new HashMap<>();
