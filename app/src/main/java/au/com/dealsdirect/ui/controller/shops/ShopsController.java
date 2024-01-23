@@ -432,7 +432,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void onViewDidAppear(Controller previousController) {
         super.onViewDidAppear(previousController);
-        if (!(previousController instanceof SaleItemsController)
+        if (!mIsBrandsOnly &&
+                !(previousController instanceof SaleItemsController)
                 && !(mActivity.getMainController().getCurrentViewPagerController() instanceof ShopsController)) {
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
             loadSlidingBanners();
