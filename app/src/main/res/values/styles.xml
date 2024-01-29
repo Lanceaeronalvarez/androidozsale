@@ -196,6 +196,7 @@
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background</item>
         <item name="android:statusBarColor">@color/status_bar_splash</item>
+        <!-- Removes default splash screen --> <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="MyAccountsOurpayTabLayout" parent="Widget.Design.TabLayout">
@@ -304,6 +305,13 @@
         <item name="expiration_date_dialog_divider">@color/white_12</item>
         <item name="expiration_date_scrollbar_thumb_vertical">@color/white_54</item>
         <item name="expiration_date_scrollbar_track_vertical">@color/white_12</item>
+    </style>
+
+    <style name="Colors_Widget.MaterialComponents.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/alice_blue</item>
+        <item name="chipStrokeColor">@color/beige</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
 </resources>

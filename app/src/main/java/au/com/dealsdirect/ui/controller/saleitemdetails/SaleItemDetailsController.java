@@ -1176,7 +1176,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mPresenter.loadOurpayData(saleDetail);
 
         //update Afterpay
-        mPresenter.loadAfterpayData(saleDetail.getPrice().getValue());
+        if (saleDetail.getPrice() != null) {
+            mPresenter.loadAfterpayData(saleDetail.getPrice().getValue());
+        }
 
         mPresenter.loadPromoInfo(saleDetail.getSkuId());
 
@@ -1256,7 +1258,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         parameters.put(DataCollector.EventParameters.PRODUCT_VIEW_REQUEST, productViewRequest);
         parameters.put(DataCollector.EventParameters.ITEM_ID, saleDetail.getSkuId());
         parameters.put(DataCollector.EventParameters.ITEM_NAME, saleDetail.getName());
-        parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getPrice().getValue());
+        if (saleDetail.getSalePrice() != null) {
+            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getSalePrice().getValue());
+        } else if (saleDetail.getPrice() != null) {
+            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getPrice().getValue());
+        }
         parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
         parameters.put(DataCollector.EventParameters.ITEM_BRAND, saleDetail.getBrandName());
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
@@ -1271,6 +1277,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             ga4Item.setPrice(saleDetail.getSalePrice().getValue());
         } else if (saleDetail.getPrice() != null) {
             ga4Item.setPrice((saleDetail.getPrice().getValue()));
+        } else {
+            ga4Item.setPrice(0.0);
         }
         ga4Item.setQuantity(1);
         ga4Item.setItemBrand(saleDetail.getBrandName());
@@ -1278,7 +1286,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         ga4Items.add(ga4Item);
         ga4EventParams.setItems(ga4Items);
         ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
-        ga4EventParams.setValue(saleDetail.getSalePrice().getValue());
+        if (saleDetail.getSalePrice() != null) {
+            ga4EventParams.setValue(saleDetail.getSalePrice().getValue());
+        } else if (saleDetail.getPrice() != null) {
+            ga4EventParams.setValue((saleDetail.getPrice().getValue()));
+        } else {
+            ga4EventParams.setValue(0.0);
+        }
         parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
 
         DataCollector.logEvent(Events.CVItemDetails, parameters);
@@ -1461,7 +1475,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         if (brandName != null && !brandName.isEmpty()) {
             mToolbarItemBrandTextView.setText(brandName);
-            final String toolbarItemNameText = name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue());
+            final String toolbarItemNameText;
+            if (saleDetail.getSalePrice() != null) {
+                toolbarItemNameText = name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getSalePrice().getValue());
+            } else if (saleDetail.getPrice() != null) {
+                toolbarItemNameText = name.trim() + " • " + PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue());
+            } else {
+                toolbarItemNameText = name.trim();
+            }
             mToolbarItemNameTextView.setText(toolbarItemNameText);
             mProductName.setText(name.trim());
             mProductBrand.setText(Html.fromHtml("<u>" + brandName.trim() + "</u>"));
@@ -1659,9 +1680,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mSharedImageLocation == null) {
             mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
         }
-        animateAddToCart(() -> CustomAlertDialog.showCustomAlertDialog(
+        CustomAlertDialog.showCustomAlertDialog(
                 getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                mActivity.getString(R.string.add_to_cart_success)));
+                mActivity.getString(R.string.add_to_cart_success));
 
         RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
         HashMap<String, Object> parameters = new HashMap<>();
@@ -1708,8 +1729,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         //notify bottom navigation view(checkout) with success.
         CartUtil.addValueToCart(1);
         mActivity.getMainController().updateBasketItemsQuantity();
-
-        mActivity.getMainController().sendSaleItemToCheckout(cartDetailsResponse);
     }
 
     @Override
@@ -2157,7 +2176,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mActivity.showLoginController(getRouter(), new AuthHandler() {
                 @Override
                 public void success() {
-                    mActivity.getMainController().resetCheckoutRouter();
                     mActivity.callGCMRegisterSubscriber();
                     mPresenter.addToCart(request);
                 }

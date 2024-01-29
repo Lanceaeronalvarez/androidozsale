@@ -174,6 +174,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String RECAPTCHA_SITE_KEY = "RECAPTCHA_SITE_KEY";
 
     private static final String GOOGLE_ADS = "GOOGLE_ADS";
+    private static final String COLOR_FILTER = "COLOR_FILTER";
     private static final String COLUMN_COUNT = "COLUMN_COUNT";
     private static final String LAST_TIME_STAMP = "LAST_TIME_STAMP";
     private static final String FILE_SIZE_LIMIT = "FILE_SIZE_LIMIT";
@@ -1020,6 +1021,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean isGoogleAdsEnabled() {
         return Prefs.getBoolean(GOOGLE_ADS, true);
+    }
+
+    @Override
+    public void setIsColorFilterEnabled(boolean isColorFilterEnabled) {
+        Prefs.putBoolean(COLOR_FILTER, isColorFilterEnabled);
+    }
+
+    @Override
+    public boolean isColorFilterEnabled() {
+        return Prefs.getBoolean(COLOR_FILTER, false);
     }
 
     @Override

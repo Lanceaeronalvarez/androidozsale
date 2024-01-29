@@ -511,6 +511,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
                 getDataManager().setIsGoogleAdsEnabled(Boolean.parseBoolean(value.getMobileApp().getGoogleAdEnabled()));
 
+                getDataManager().setIsColorFilterEnabled(value.getMobileApp().getMobileEnableColorFilter());
+
                 try {
                     JSONObject jsonVersion = new JSONObject(version);
 

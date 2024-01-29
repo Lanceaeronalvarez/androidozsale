@@ -31,6 +31,8 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
+import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemFacet;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.service.datacollection.enums.SearchOperationType;
@@ -981,5 +983,10 @@ public class SearchFilterController extends BaseController implements SearchFilt
             mSortingList.clear();
             mSortingList = new ArrayList<>(mSortingFacets);
         }
+    }
+
+    @Override
+    public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, int pageNumber, boolean forFacetCorrection, boolean isFromCache) {
+
     }
 }

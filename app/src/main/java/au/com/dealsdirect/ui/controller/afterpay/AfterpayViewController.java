@@ -165,7 +165,7 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
             }
         } else {
             dismissSelf();
-            mActivity.getCheckoutController().getRouter()
+            mActivity.getCurrentRouter()
                     .pushController(RouterTransaction
                             .with(new PaymentSuccessController(bundleBuilder.build()))
                             .pushChangeHandler(new HorizontalChangeHandler())

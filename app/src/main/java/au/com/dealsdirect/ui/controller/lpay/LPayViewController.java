@@ -148,7 +148,7 @@ public class LPayViewController extends BaseController implements LPayMvpView {
             }
         } else {
             dismissSelf();
-            mActivity.getCheckoutController().getRouter()
+            mActivity.getCurrentRouter()
                     .pushController(RouterTransaction
                             .with(new PaymentSuccessController(bundleBuilder.build()))
                             .pushChangeHandler(new HorizontalChangeHandler())

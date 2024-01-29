@@ -32,9 +32,9 @@ public interface MainMvpView extends MvpView {
 
     void showContactUsController();
 
-    void showCheckoutController();
-
     void showWishlistController();
+
+    void showBrandsController();
 
     void showBasketItemCount();
 

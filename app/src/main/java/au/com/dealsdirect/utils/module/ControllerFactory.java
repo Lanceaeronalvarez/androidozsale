@@ -8,6 +8,7 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.categories.NewCategoriesController;
+import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
 import au.com.dealsdirect.ui.controller.categories.OldCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
@@ -78,7 +79,7 @@ public class ControllerFactory {
             case CATEGORIES:
                 return OldCategoriesController.newInstance();
             case SALECATEGORY:
-                return NewCategoriesController.newInstance();
+                return NewSaleCategoriesController.newInstance();
             case CHECKOUT:
                 return CheckoutController.newInstance();
             case CHECKOUT_HOST:

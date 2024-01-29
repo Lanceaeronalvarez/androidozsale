@@ -331,6 +331,14 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                         .build());
     }
 
+    public static CheckoutController newInstance(CheckoutHostController checkoutHostController) {
+        CheckoutController checkoutController = new CheckoutController(
+                new BundleBuilder(new Bundle())
+                        .build());
+        checkoutController.mCheckoutHostView = checkoutHostController;
+        return checkoutController;
+    }
+
     public CheckoutController(Bundle args) {
         super(args);
     }
@@ -407,12 +415,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         super.onViewBound(view);
 
         //disable toolbar left and right buttons
-        mToolbarLeftButton.setVisibility(View.INVISIBLE);
+        mToolbarLeftButton.setVisibility(!mPresenter.isTablet() ? View.VISIBLE : View.INVISIBLE);
         mToolbarRightButton.setVisibility(View.INVISIBLE);
 
         if (mActivity != null) {
             mActivity.performResetWithAuthFetch();
         }
+
+        mToolbarLeftButton.setOnClickListener(v -> {
+            mActivity.onBackPressed();
+        });
 
         setUp(view);
     }
@@ -443,8 +455,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         }
 
         mTitleTextView.setText(R.string.checkout_page_toolbar_title);
-
-        mActivity.setCheckoutController(this);
 
         if (!mPresenter.isTablet() || !getBoolean(R.bool.master_detail_enabled)) {
             mRecyclerView.setVisibility(View.VISIBLE);
@@ -603,50 +613,42 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
             if (ourpay != null && ourpay.isCanUse()) {
 
-                if (((MainActivity) getActivity()).getMainController().isCheckoutPageVisible()) {
-                    Log.d("ourpay", "checkout controller is visible");
-                    final boolean isPaymentInvalid = paymentMethod != null &&
-                            ((paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS) ||
-                                    paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) ||
-                                    paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT));
-                    OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, isPaymentInvalid);
-                    PaymentInfo.setOurpay(ourpay);
+                final boolean isPaymentInvalid = paymentMethod != null &&
+                        ((paymentMethod.getPaymentType().equalsIgnoreCase(CARD_MASTERPASS) ||
+                                paymentMethod.getPaymentType().equalsIgnoreCase(CARD_PAYPAL)) ||
+                                paymentMethod.getPaymentType().equalsIgnoreCase(CARD_VISA_CHECKOUT));
+                OurpayStateManager.setOurpayAccordingToPaymentMethod(ourpay, isPaymentInvalid);
+                PaymentInfo.setOurpay(ourpay);
 
-                    ourpayPanel = new OurpayPanel(mActivity, getRouter());
-                    ourpayPanel.setUnavailableNoticeText(mPresenter.getTemplateTextsRepository().getOurpayUnavailableText());
-                    mOurpayHolder.removeAllViews();
-                    mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay, isRowVisible -> {
-                        if (isRowVisible) {
-                            new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
-                        }
-                    }));
-
-
-                    mButtonOurpay = mOurpayHolder.findViewById(R.id.rl_button_ourpay);
-                    if (mButtonOurpay != null) {
-                        isStripe = paymentMethod != null && paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE);
-                        if (ourpay.getMode() == Ourpay.OurpayMode.NORMAL) {
-                            mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick(isStripe));
-                        } else {
-                            mButtonOurpay.setOnClickListener(view -> onOffloadOurpayButtonClick());
-                        }
+                ourpayPanel = new OurpayPanel(mActivity, getRouter());
+                ourpayPanel.setUnavailableNoticeText(mPresenter.getTemplateTextsRepository().getOurpayUnavailableText());
+                mOurpayHolder.removeAllViews();
+                mOurpayHolder.addView(ourpayPanel.generatePanel(ourpay, isRowVisible -> {
+                    if (isRowVisible) {
+                        new Handler().postDelayed(() -> mNestedScrollView.fullScroll(View.FOCUS_DOWN), 400);
                     }
+                }));
 
 
-                    mCheckBoxOurpayTC = mOurpayHolder.findViewById(R.id.ourpay_toggle_switch_tc);
-                    if (mCheckBoxOurpayTC != null) {
-                        OurpayPanel.TermsAndConditionStates termsAndConditionStatesState = OurpayPanel.TermsAndConditionStates.values()[ourpay.getTermsAndConditionsCheckboxState()];
-                        mCheckBoxOurpayTC.setOurPayToggleSwitch(termsAndConditionStatesState);
-
+                mButtonOurpay = mOurpayHolder.findViewById(R.id.rl_button_ourpay);
+                if (mButtonOurpay != null) {
+                    isStripe = paymentMethod != null && paymentMethod.getProviderType().equalsIgnoreCase(AppConstants.STRIPE);
+                    if (ourpay.getMode() == Ourpay.OurpayMode.NORMAL) {
+                        mButtonOurpay.setOnClickListener(view -> onOurpayButtonClick(isStripe));
+                    } else {
+                        mButtonOurpay.setOnClickListener(view -> onOffloadOurpayButtonClick());
                     }
-                    if (isOurPaySelectDeliveryMethod() && mDeliveryServicePackageDetail != null) { // show ourpay select related summary
-                        mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount()));
-                    }
+                }
 
-                } else {
-                    //checkout controller not visible
-                    Log.d("ourpay", "checkout controller is not visible");
 
+                mCheckBoxOurpayTC = mOurpayHolder.findViewById(R.id.ourpay_toggle_switch_tc);
+                if (mCheckBoxOurpayTC != null) {
+                    OurpayPanel.TermsAndConditionStates termsAndConditionStatesState = OurpayPanel.TermsAndConditionStates.values()[ourpay.getTermsAndConditionsCheckboxState()];
+                    mCheckBoxOurpayTC.setOurPayToggleSwitch(termsAndConditionStatesState);
+
+                }
+                if (isOurPaySelectDeliveryMethod() && mDeliveryServicePackageDetail != null) { // show ourpay select related summary
+                    mSummaryOurpaySelectPriceTextView.setText(PriceUtils.getPriceStringValue(mDeliveryServicePackageDetail.getAmount()));
                 }
 
             } else {
@@ -692,8 +694,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void showCartDetailsOnHost(List<MappedShipment> items) {
-        if (getCheckoutHostView() != null) {
-            getCheckoutHostView().showCartDetails(items);
+        if (mCheckoutHostView != null) {
+            mCheckoutHostView.showCartDetails(items);
         }
     }
 
@@ -722,16 +724,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
     @Override
     public void showCartDetailsFooter(boolean show) {
-        if (getCheckoutHostView() != null) {
-            getCheckoutHostView().showCartDetailsFooter(show);
+        if (mCheckoutHostView != null) {
+            mCheckoutHostView.showCartDetailsFooter(show);
         }
         refreshItemList(show);
     }
 
     @Override
     public void showCartDetailsPostcode(String postcode) {
-        if (getCheckoutHostView() != null) {
-            getCheckoutHostView().showCartDetailsPostcode(postcode);
+        if (mCheckoutHostView != null) {
+            mCheckoutHostView.showCartDetailsPostcode(postcode);
         }
         if (mAdapter == null) {
             return;
@@ -777,24 +779,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             }
             displayPaymentDetails();
         }
-    }
-
-    private CheckoutHostMvpView getCheckoutHostView() {
-        if (mCheckoutHostView == null) {
-            if (getBoolean(R.bool.is_tablet) && getBoolean(R.bool.master_detail_enabled)) {
-                CheckoutHostController existingController = mActivity.getMainController().getCheckoutHostController();
-                if (!mHasSavedInstance || existingController == null) {
-                    if (mActivity.getCheckoutRouter() != null) {
-                        mCheckoutHostView = (CheckoutHostMvpView) mActivity.getCheckoutRouter()
-                                .getControllerWithTag(CheckoutHostController.class.getName());
-                    }
-                } else {
-                    mCheckoutHostView = existingController;
-                }
-            }
-        }
-
-        return mCheckoutHostView;
     }
 
     private void displayDeliveryOptionsUI(String deliveryOptionName, Double deliveryOptionPrice) {
@@ -2017,7 +2001,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         SetDeliveryOption.OptionParameters optionParameters
                 = new SetDeliveryOption.OptionParameters(mDeliveryAddress != null ? mDeliveryAddress.id : "", "",
-                new Gson().toJson(standardDeliveryOption), "");
+                new Gson().toJson(standardDeliveryOption), null);
 
         return optionParameters;
 

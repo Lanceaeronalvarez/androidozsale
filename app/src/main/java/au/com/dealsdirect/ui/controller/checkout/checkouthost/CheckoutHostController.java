@@ -84,7 +84,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     RecyclerView mRecyclerView;
 
     private Router mCheckoutDetailRouter;
-    private CheckoutController mCheckoutController;
     private CheckoutMvpView mCheckoutDetailView;
     private CheckoutOrderAdapter mAdapter;
     private List<MappedShipment> mItemList = new ArrayList<>();
@@ -122,21 +121,17 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     protected void setUp(View view) {
         //disable toolbar left and right buttons
-        mToolbarLeftButton.setVisibility(View.INVISIBLE);
+        mToolbarLeftButton.setVisibility(mPresenter.isTablet() ? View.VISIBLE : View.INVISIBLE);
         mToolbarRightButton.setVisibility(View.INVISIBLE);
         mTitleTextView.setText(getString(R.string.account_orders));
 
         mCheckoutDetailRouter = getChildRouter(mCheckoutDetailContainer);
         CommonControllerChangeListener.addToRouter(mCheckoutDetailRouter);
 
-        if (!mHasSavedInstance || mActivity.getCheckoutController() == null) {
-            mCheckoutController = CheckoutController.newInstance();
-            mCheckoutDetailRouter.setRoot(RouterTransaction.with(mCheckoutController).tag(CheckoutController.class.getName()));
-        } else {
-            mCheckoutController = mActivity.getCheckoutController();
-        }
+        final CheckoutController checkoutController = CheckoutController.newInstance(this);
+        mCheckoutDetailRouter.setRoot(RouterTransaction.with(checkoutController).tag(CheckoutController.class.getName()));
 
-        mCheckoutDetailView = mCheckoutController;
+        mCheckoutDetailView = checkoutController;
 
         mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
         mAdapter.setShouldAddSpacerOnTop(mPresenter.isTablet());
@@ -159,6 +154,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
 
+        mToolbarLeftButton.setOnClickListener(v -> {
+            mActivity.onBackPressed();
+        });
     }
 
     @Override
@@ -171,10 +169,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public boolean handleBack() {
-        if (mCheckoutDetailRouter.getBackstackSize() == 1) {
-            mActivity.getMainController().showShopController();
-            return true;
-        }
 
         return super.handleBack();
 
@@ -201,7 +195,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public void onOrientationChanged(Configuration newConfiguration) {
-        mCheckoutController.onOrientationChanged(newConfiguration);
+        final List<RouterTransaction> backstack = mCheckoutDetailRouter.getBackstack();
+        ((BaseController) backstack.get(0).controller()).onOrientationChanged(newConfiguration);
+        ((BaseController) backstack.get(backstack.size() - 1).controller()).onOrientationChanged(newConfiguration);
     }
 
     @Override

@@ -292,6 +292,10 @@ public interface PreferencesHelper {
 
     boolean isGoogleAdsEnabled();
 
+    void setIsColorFilterEnabled(boolean isColorFilterEnabled);
+
+    boolean isColorFilterEnabled();
+
     void setLastColumnSelected(int columnCount);
 
     int getLastColumnSelected();

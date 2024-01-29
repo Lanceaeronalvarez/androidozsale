@@ -91,8 +91,8 @@ public class ViewContactHistoryController extends BaseController implements View
     RecyclerView mImageRecyclerView;
 
     private String mTimeStamp;
-    private int mInvoiceNumber;
-    private int mContactNumber;
+    private Integer mInvoiceNumber;
+    private Integer mContactNumber;
     private String mContactSubject;
     private boolean mHasSavedInstance = false;
     private boolean isFromReturnDetails = false;
@@ -110,17 +110,20 @@ public class ViewContactHistoryController extends BaseController implements View
     private final ContactHistoryOnClickRatingListener contactHistoryOnClickRatingListener = new ContactHistoryOnClickRatingListener() {
         @Override
         public void onClickSmile() {
-            mPresenter.closeTicketSatisfaction(AppConstants.SMILE_ICON, Integer.toString(mContactNumber));
+            String contactNumber = mContactNumber != null ? Integer.toString(mContactNumber) : "0";
+            mPresenter.closeTicketSatisfaction(AppConstants.SMILE_ICON, contactNumber);
         }
 
         @Override
         public void onClickNeutral() {
-            mPresenter.closeTicketSatisfaction(AppConstants.NEUTRAL_ICON, Integer.toString(mContactNumber));
+            String contactNumber = mContactNumber != null ? Integer.toString(mContactNumber) : "0";
+            mPresenter.closeTicketSatisfaction(AppConstants.NEUTRAL_ICON, contactNumber);
         }
 
         @Override
         public void onClickSad() {
-            mPresenter.closeTicketSatisfaction(AppConstants.SAD_ICON, Integer.toString(mContactNumber));
+            String contactNumber = mContactNumber != null ? Integer.toString(mContactNumber) : "0";
+            mPresenter.closeTicketSatisfaction(AppConstants.SAD_ICON, contactNumber);
         }
     };
 
@@ -129,26 +132,36 @@ public class ViewContactHistoryController extends BaseController implements View
 
     public static ViewContactHistoryController newInstance(
             String contactSubject,
-            int invoiceNo,
+            Integer invoiceNo,
             String lastAnswer,
-            int contactNo,
+            Integer contactNo,
             boolean fromReturnDetails) {
 
-        return new ViewContactHistoryController(
-                new BundleBuilder(new Bundle())
-                        .putInt(KEY_CONTACT_NO, contactNo)
-                        .putInt(KEY_CONTACT_INVOICE_NO, invoiceNo)
-                        .putString(KEY_CONTACT_TIMESTAMP, lastAnswer)
-                        .putString(KEY_CONTACT_SUBJECT, contactSubject)
-                        .putBoolean(KEY_IS_FROM_RETURN_DETAILS, fromReturnDetails)
-                        .build());
+        Bundle bundle = new Bundle();
+        if (contactNo != null) {
+            bundle.putInt(KEY_CONTACT_NO, contactNo);
+        }
+        if (invoiceNo != null) {
+            bundle.putInt(KEY_CONTACT_INVOICE_NO, invoiceNo);
+        }
+        bundle.putString(KEY_CONTACT_TIMESTAMP, lastAnswer);
+        bundle.putString(KEY_CONTACT_SUBJECT, contactSubject);
+        bundle.putBoolean(KEY_IS_FROM_RETURN_DETAILS, fromReturnDetails);
+
+        return new ViewContactHistoryController(bundle);
     }
 
     public ViewContactHistoryController(Bundle args) {
         super(args);
-        mInvoiceNumber = getArgs().getInt(KEY_CONTACT_INVOICE_NO);
+        mInvoiceNumber = getArgs().getInt(KEY_CONTACT_INVOICE_NO, -1);
+        if (mInvoiceNumber == -1) {
+            mInvoiceNumber = null;
+        }
         mTimeStamp = getArgs().getString(KEY_CONTACT_TIMESTAMP);
-        mContactNumber = getArgs().getInt(KEY_CONTACT_NO);
+        mContactNumber = getArgs().getInt(KEY_CONTACT_NO, -1);
+        if (mContactNumber == -1) {
+            mContactNumber = null;
+        }
         mContactSubject = getArgs().getString(KEY_CONTACT_SUBJECT);
         isFromReturnDetails = getArgs().getBoolean(KEY_IS_FROM_RETURN_DETAILS);
     }
@@ -156,9 +169,13 @@ public class ViewContactHistoryController extends BaseController implements View
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_CONTACT_INVOICE_NO, mInvoiceNumber);
+        if (mInvoiceNumber != null) {
+            outState.putInt(KEY_CONTACT_INVOICE_NO, mInvoiceNumber);
+        }
         outState.putString(KEY_CONTACT_TIMESTAMP, mTimeStamp);
-        outState.putInt(KEY_CONTACT_NO, mContactNumber);
+        if (mContactNumber != null) {
+            outState.putInt(KEY_CONTACT_NO, mContactNumber);
+        }
         outState.putString(KEY_CONTACT_SUBJECT, mContactSubject);
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
     }
@@ -166,9 +183,15 @@ public class ViewContactHistoryController extends BaseController implements View
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mInvoiceNumber = savedInstanceState.getInt(KEY_CONTACT_INVOICE_NO);
+        mInvoiceNumber = savedInstanceState.getInt(KEY_CONTACT_INVOICE_NO, -1);
+        if (mInvoiceNumber == -1) {
+            mInvoiceNumber = null;
+        }
         mTimeStamp = savedInstanceState.getString(KEY_CONTACT_TIMESTAMP);
-        mContactNumber = savedInstanceState.getInt(KEY_CONTACT_NO);
+        mContactNumber = savedInstanceState.getInt(KEY_CONTACT_NO, -1);
+        if (mContactNumber == -1) {
+            mContactNumber = null;
+        }
         mContactSubject = savedInstanceState.getString(KEY_CONTACT_SUBJECT);
         mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
@@ -188,7 +211,7 @@ public class ViewContactHistoryController extends BaseController implements View
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
-        mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber));
+        mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber != null ? mContactNumber : 0));
     }
 
     @SuppressLint("SetTextI18n")
@@ -200,7 +223,7 @@ public class ViewContactHistoryController extends BaseController implements View
         mContactHistoryRightOption.setVisibility(View.INVISIBLE);
         mContactHistoryTitle.setText(mContactSubject);
 
-        if (mInvoiceNumber > 0) {
+        if (mInvoiceNumber != null) {
             mContactHistorySaleSubTitle.setText(Integer.toString(mInvoiceNumber));
             mContactHistorySaleSubTitle.setVisibility(View.VISIBLE);
         } else {
@@ -256,11 +279,12 @@ public class ViewContactHistoryController extends BaseController implements View
 
             SetAttachmentForContactRequest setAttachmentRequest = new SetAttachmentForContactRequest();
             setAttachmentRequest.setMessageId(mMessageId);
-            setAttachmentRequest.setNumber(mContactNumber);
+            setAttachmentRequest.setNumber(mContactNumber != null ? mContactNumber : 0);
             setAttachmentRequest.setItems(new ArrayList<>());
             mPresenter.setAttachment(setAttachmentRequest, false);
         } else {
-            mPresenter.getTicketSatisfaction(String.valueOf(mContactNumber));
+            String contactNumber = mContactNumber != null ? Integer.toString(mContactNumber) : "0";
+            mPresenter.getTicketSatisfaction(String.valueOf(contactNumber));
         }
 
 
@@ -277,7 +301,7 @@ public class ViewContactHistoryController extends BaseController implements View
         KeyboardUtils.hideSoftInput(mActivity);
 
         String replyMessage = mContactHistoryMessageField.getText().toString();
-        int contactId = mContactNumber;
+        int contactId = mContactNumber != null ? mContactNumber : 0;
 
         ReplyContactRequest replyContactRequest = new ReplyContactRequest();
         replyContactRequest.setText(replyMessage);
@@ -310,7 +334,7 @@ public class ViewContactHistoryController extends BaseController implements View
             CustomAlertDialog.showCustomAlertDialog(
                     mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE,
                     mActivity.getString(R.string.message_submitted));
-            mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber));
+            mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber != null ? mContactNumber : 0));
             mContactHistoryMessageField.setText("");
         } else {
             CustomAlertDialog.showCustomAlertDialog(
@@ -328,7 +352,7 @@ public class ViewContactHistoryController extends BaseController implements View
         mImageAdapter.notifyDataSetChanged();
 
         mImageRecyclerView.setVisibility(View.GONE);
-        mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber));
+        mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber != null ? mContactNumber : 0));
     }
 
     @Override
@@ -356,7 +380,7 @@ public class ViewContactHistoryController extends BaseController implements View
     private void setupMessagesAdapter(Escalate escalate, List<String> actions) {
         if (contactHistoryAdapter != null) {
             if (actions.contains(ESCALATE_ACTION_KEY)) {
-                contactHistoryAdapter.setEscalateAction(() -> mPresenter.escalateContact(createContactHistoryRequest(mContactNumber)));
+                contactHistoryAdapter.setEscalateAction(() -> mPresenter.escalateContact(createContactHistoryRequest(mContactNumber != null ? mContactNumber : 0)));
             } else {
                 contactHistoryAdapter.setEscalateAction(null);
             }
@@ -435,12 +459,12 @@ public class ViewContactHistoryController extends BaseController implements View
                     new String[]{
                             Manifest.permission.READ_MEDIA_IMAGES},
                     1);
-        } else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && ActivityCompat.checkSelfPermission(mActivity,
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && ActivityCompat.checkSelfPermission(mActivity,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     AppConstants.REQUEST_CODE_PERMISSION);
-        }else {
+        } else {
             Intent cameraIntent = new Intent(Intent.ACTION_PICK);
             cameraIntent.setType("image/*");
             if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -517,7 +541,7 @@ public class ViewContactHistoryController extends BaseController implements View
         if (mImageFileHashMap.size() == itemsList.size()) {
             SetAttachmentForContactRequest setAttachmentRequest = new SetAttachmentForContactRequest();
             setAttachmentRequest.setMessageId(mMessageId);
-            setAttachmentRequest.setNumber(mContactNumber);
+            setAttachmentRequest.setNumber(mContactNumber != null ? mContactNumber : 0);
             setAttachmentRequest.setItems(itemsList);
             mPresenter.setAttachment(setAttachmentRequest, true);
         }
@@ -561,6 +585,6 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @Override
     public void escalateContactResult(boolean result) {
-        mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber));
+        mPresenter.loadContactHistory(createContactHistoryRequest(mContactNumber != null ? mContactNumber : 0));
     }
 }

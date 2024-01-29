@@ -45,7 +45,7 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private String mExpressDescText;
     private String mDeliveryOptionNameText;
     private String mDeliveryAddressId;
-    private String mDeliveryServicePackageDetailId = "";
+    private String mDeliveryServicePackageDetailId = null;
     private DeliveryServicePackageDetail mDeliveryServicePackageDetail;
     private DeliveryOption mPreviousItem;
     private DeliveryOption mCurrentItem;
@@ -178,7 +178,7 @@ public class DeliveryOptionsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         mCurrentItem = item;
 
         if (!OurpayTemplateText.DeliveryOptions.OURPAYSELECT.equalsName(mCurrentItem.getDeliveryOptions().get(0))) {
-            mPresenter.setDeliveryOption(createSetDeliveryOptionRequest("", false));
+            mPresenter.setDeliveryOption(createSetDeliveryOptionRequest(null, false));
         } else {
             if (mDeliveryServicePackageDetail != null && mDeliveryServicePackageDetail.getPurchased()) {
                 mPresenter.setDeliveryOption(createSetDeliveryOptionRequest(mDeliveryServicePackageDetailId, true));
