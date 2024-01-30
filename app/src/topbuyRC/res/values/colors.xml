@@ -161,8 +161,4 @@
     <color name="bg_splash_color_start">#C30E28</color>
 
     <color name="bg_fcm_notif">#C30E28</color>
-
-    <color name="splash_text_color">#FFFFFF</color>
-    <color name="splash_background">@color/colorPrimaryDark</color>
-
 </resources>
