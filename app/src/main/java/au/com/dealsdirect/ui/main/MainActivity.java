@@ -1069,6 +1069,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void splashShownCallback() {
+        hasShownSplash = true;
         ScreenUtils.setStatusBarColor(this, R.color.status_bar);
 
         String defaultCountryId = !mPresenter.defaultCountryId().isEmpty() ? mPresenter.defaultCountryId() : mPresenter.legacyCountryId();
@@ -1505,13 +1506,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     public void showSplashScreen() {
-        // I don't think this is needed
-
-        if (mAppHasSavedInstance && !hasShownSplash) {
-            getMainController().hideBottomNav();
-            getMainController().getCurrentRouter().pushController(RouterTransaction.with(SplashScreenController.newInstance())
-                    .popChangeHandler(new VerticalChangeHandler()));
-        } else {
+        if (!mAppHasSavedInstance && !hasShownSplash) {
             String url = "";
             if (getIntent().getData() != null) {
                 url = getIntent().getData().toString();
@@ -1523,6 +1518,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 mRouter.setRoot(RouterTransaction.with(SplashScreenController.newInstance())
                         .popChangeHandler(new VerticalChangeHandler()));
             }
+        } else {
+            splashShownCallback();
         }
     }
 
