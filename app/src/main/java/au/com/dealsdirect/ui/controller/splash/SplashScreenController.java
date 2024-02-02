@@ -37,27 +37,11 @@ import butterknife.BindView;
  */
 public class SplashScreenController extends BaseController implements SplashScreenMvpView {
 
-    @BindView(R.id.controller_splash_app_logo)
-    ImageView mSplashLogoImageView;
-
-    @BindView(R.id.controller_splash_logo_layout)
-    RelativeLayout mLogoLayout;
     @BindView(R.id.controller_splash_welcome_layout)
-    LinearLayout mWelcomeLayout;
+    RelativeLayout mWelcomeLayout;
 
     @BindView(R.id.controller_splash_continue_button)
     RelativeLayout mContinueButton;
-
-    @BindView(R.id.controller_splash_description)
-    TextView mSplashDescription;
-    @BindView(R.id.controller_splash_welcome)
-    TextView mSplashWelcomeText;
-    @BindView(R.id.controller_splash_description_1)
-    TextView mSplashDescription1;
-    @BindView(R.id.controller_splash_description_2)
-    TextView mSplashDescription2;
-    @BindView(R.id.controller_splash_description_3)
-    TextView mSplashDescription3;
 
     @BindView(R.id.controller_splash_layout)
     RelativeLayout mSplashLayout;
@@ -99,8 +83,9 @@ public class SplashScreenController extends BaseController implements SplashScre
 
             mPresenter.setIsInitialLaunch(false);
             new Handler().postDelayed(() -> {
-                mLogoLayout.setVisibility(View.GONE);
+                mSplashLayout.setVisibility(View.GONE);
                 mWelcomeLayout.setVisibility(View.VISIBLE);
+
 
                 mContinueButton.setOnClickListener(v -> {
                     if (getActivity() != null)
