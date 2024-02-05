@@ -836,6 +836,14 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @Override
+    protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
+        super.onRestoreViewState(view, savedViewState);
+        mLikeButton.setVisibility(View.INVISIBLE);
+        mLikeFloatingButton.setVisibility(View.INVISIBLE);
+        loadProductDetails(mSaleId, mSeoIdentifierId);
+    }
+
+    @Override
     public void refreshContents() {
         super.refreshContents();
 
