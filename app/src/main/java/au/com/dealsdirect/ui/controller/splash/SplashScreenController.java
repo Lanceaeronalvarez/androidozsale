@@ -1,30 +1,18 @@
 package au.com.dealsdirect.ui.controller.splash;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
 
-import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.main.Settings;
-import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
-import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
@@ -32,9 +20,6 @@ import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import butterknife.BindView;
 
-/**
- * Created by Paul on 7/21/17.
- */
 public class SplashScreenController extends BaseController implements SplashScreenMvpView {
 
     @BindView(R.id.controller_splash_welcome_layout)
@@ -49,6 +34,8 @@ public class SplashScreenController extends BaseController implements SplashScre
     @Inject
     SplashScreenMvpPresenter<SplashScreenMvpView> mPresenter;
 
+    // delay is intentional. actual amount is not specified in documentation.
+    // this is meant to allow enough time to read the tagline.
     static int delayMillis = 4500;
 
     public SplashScreenController(Bundle args) {
@@ -70,7 +57,7 @@ public class SplashScreenController extends BaseController implements SplashScre
         super.onViewBound(view);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        ScreenUtils.setStatusBarColor(mActivity,R.color.status_bar_splash);
+        ScreenUtils.setStatusBarColor(mActivity, R.color.status_bar_splash);
 
         setUp(view);
     }
