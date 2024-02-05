@@ -538,7 +538,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         if (mSales.isEmpty() && (mSalesFromCache == null || mSalesFromCache.isEmpty()) && !mHasSavedInstance) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-        } else {
+        } else if (!mIsBrandsOnly) {
             shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
             loadSlidingBanners();
@@ -567,6 +567,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     private void setupBannersView() {
         int orientation = ScreenUtils.getOrientation(mActivity);
+        if (mResettableDimensionsAdapter != null &&
+                ((!(mResettableDimensionsAdapter instanceof BrandsBannersAdapter) && mIsBrandsOnly) ||
+                        (mResettableDimensionsAdapter instanceof BrandsBannersAdapter && !mIsBrandsOnly))) {
+            mResettableDimensionsAdapter = null;
+        }
         if (mResettableDimensionsAdapter == null) {
             if (mIsBrandsOnly) {
                 mBannersAdapter = null;
@@ -874,6 +879,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         if (mBannersAdapter == null) {
             setupBannersView();
         }
+        if (mBannersAdapter == null) {
+            return;
+        }
 
         HorizontalScrollingBannerAdapter adapter = null;
         List<GetBannerResponse.Banner> slidingBanners = new ArrayList<>();
@@ -901,6 +909,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void showSponsoredBanners(GetBannerResponse getBannerResponses) {
         if (mBannersAdapter == null) {
             setupBannersView();
+        }
+        if (mBannersAdapter == null) {
+            return;
         }
 
         HorizontalScrollingBannerAdapter adapter = null;
@@ -936,6 +947,9 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void showCategoryBanners(GetBannerResponse getBannerResponses) {
         if (mBannersAdapter == null) {
             setupBannersView();
+        }
+        if (mBannersAdapter == null) {
+            return;
         }
 
         HorizontalScrollingBannerAdapter adapter = null;
