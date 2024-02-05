@@ -1520,6 +1520,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             }
         } else {
             splashShownCallback();
+            if (getMainController() == null) {
+                initializeMainController();
+            } else {
+                mRouter.setRoot(RouterTransaction.with(getMainController())
+                        .popChangeHandler(new VerticalChangeHandler()));
+            }
         }
     }
 
