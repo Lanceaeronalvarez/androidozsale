@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -124,6 +125,8 @@ public class MainController extends BaseController implements MainMvpView {
     private boolean mHasSavedStateInstance;
     public static boolean mIsInitialSavedInstanceLoad;
 
+    private final Map<Integer, View> mIndicators = new HashMap<>();
+
     private boolean mShouldBottomNavigationViewEnabled = true;
 
     public static MainController newInstance() {
@@ -169,8 +172,22 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     @Override
+    protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
+        super.onRestoreViewState(view, savedViewState);
+        if (mBottomNavigationView != null) {
+            resetIndicators(mBottomNavigationView.getCurrentItem());
+        }
+    }
+
+    @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+        mIndicators.put(CATEGORY_INDEX, mIndicator1);
+        mIndicators.put(BRANDS_INDEX, mIndicator2);
+        mIndicators.put(SHOP_INDEX, mIndicator3);
+        mIndicators.put(WISHLIST_INDEX, mIndicator4);
+        mIndicators.put(ACCOUNT_INDEX, mIndicator5);
 
         AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(mActivity, R.menu.bottom_navigation_menu);
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
@@ -178,13 +195,13 @@ public class MainController extends BaseController implements MainMvpView {
         mBottomNavigationView.setDefaultBackgroundColor(mActivity.getResources().getColor(R.color.bottom_nav_background));
         mBottomNavigationView.setAccentColor(mActivity.getResources().getColor(R.color.nav_dark_blue));
         mBottomNavigationView.setInactiveColor(mActivity.getResources().getColor(R.color.beige));
-        mBottomNavigationView.setCurrentItem(2);
         mBottomNavigationView.getItem(1).setTitle("Brands");
         mBottomNavigationView.getItem(2).setTitle("");
         mBottomNavigationView.getItem(2).setColor(mActivity.getResources().getColor(R.color.nav_dark_blue));
+        mBottomNavigationView.setCurrentItem(SHOP_INDEX);
 
         mHomeButton.setOnClickListener(it -> {
-            mBottomNavigationView.setCurrentItem(2);
+            mBottomNavigationView.setCurrentItem(SHOP_INDEX);
         });
 
         if (mPresenter.isTablet()) {
@@ -192,30 +209,21 @@ public class MainController extends BaseController implements MainMvpView {
         }
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
+            resetIndicators(position);
             switch (position) {
                 case SHOP_INDEX:
-                    hideIndicators();
-                    mIndicator3.setVisibility(View.VISIBLE);
                     showShopController();
                     return true;
                 case CATEGORY_INDEX:
-                    hideIndicators();
-                    mIndicator1.setVisibility(View.VISIBLE);
                     showCategoryController();
                     return true;
                 case ACCOUNT_INDEX:
-                    hideIndicators();
-                    mIndicator5.setVisibility(View.VISIBLE);
                     showAccountController();
                     return true;
                 case WISHLIST_INDEX:
-                    hideIndicators();
-                    mIndicator4.setVisibility(View.VISIBLE);
                     showWishlistController();
                     return true;
                 case BRANDS_INDEX:
-                    hideIndicators();
-                    mIndicator2.setVisibility(View.VISIBLE);
                     showBrandsController();
                     return true;
                 default:
@@ -257,12 +265,19 @@ public class MainController extends BaseController implements MainMvpView {
         setupViewPager();
     }
 
-    private void hideIndicators() {
+    private void resetIndicators(int index) {
+        if (!isViewBound()) {
+            return;
+        }
         mIndicator1.setVisibility(View.INVISIBLE);
         mIndicator2.setVisibility(View.INVISIBLE);
         mIndicator3.setVisibility(View.INVISIBLE);
         mIndicator4.setVisibility(View.INVISIBLE);
         mIndicator5.setVisibility(View.INVISIBLE);
+        View view = mIndicators.get(index);
+        if (view != null) {
+            view.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupShopRouter(Router router) {
@@ -573,8 +588,7 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     public void showShopController() {
         mBottomNavigationView.setCurrentItem(SHOP_INDEX, false);
-        hideIndicators();
-        mIndicator3.setVisibility(View.VISIBLE);
+        resetIndicators(SHOP_INDEX);
         if (previousPagerPosition == SHOP_INDEX) {
             Controller controller = getCurrentViewPagerController();
             if (!mIsInitialSavedInstanceLoad && !(controller instanceof ShopsController)) {
