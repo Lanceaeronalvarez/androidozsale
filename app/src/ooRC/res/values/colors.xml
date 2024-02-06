@@ -183,4 +183,7 @@
     <color name="toggle_switch_positive">@color/tab_bar_icon_active</color>
 
     <color name="bg_fcm_notif">@color/white</color>
+
+    <color name="splash_text_color">#FFFFFF</color>
+    <color name="splash_background">#90BF0A</color>
 </resources>

@@ -150,4 +150,7 @@
     <color name="country_select_active">@color/text_extra_dark</color>
 
     <color name="bg_fcm_notif">#E90F87</color>
+
+    <color name="splash_text_color">#FFFFFF</color>
+    <color name="splash_background">#E90F87</color>
 </resources>

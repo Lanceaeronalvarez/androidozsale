@@ -155,4 +155,7 @@
     <color name="refunded_state_color">@color/ourpay_orange</color>
 
     <color name="bg_fcm_notif">@color/white</color>
+
+    <color name="splash_text_color">#FFFFFF</color>
+    <color name="splash_background">#F00065</color>
 </resources>

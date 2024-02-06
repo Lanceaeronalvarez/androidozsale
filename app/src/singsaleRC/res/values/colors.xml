@@ -163,4 +163,7 @@
 
     <color name="banner_discount_background_color">#121217</color>
     <color name="banner_discount_color">#F99E21</color>
+
+    <color name="splash_text_color">#000000</color>
+    <color name="splash_background">#FFFFFF</color>
 </resources>
