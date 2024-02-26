@@ -98,13 +98,13 @@ public class NewSaleCategoriesController extends BaseController
     private List<GetCategoryTreeResponse> mSubCategoriesChildren;
     private GetCategoryTreeResponse mAllSubCategory;
     private int mLevel = 0;
-    private String mCategoryName =  "";
-    private String mSubCategoryName =  "";
+    private String mCategoryName = "";
+    private String mSubCategoryName = "";
     private int mBasketQuantity = 0;
     private String allText = "All ";
 
-    private String categoryResponseId =  "";
-    private String categoryResponseKey =  "";
+    private String categoryResponseId = "";
+    private String categoryResponseKey = "";
     private QueuedShowSaleItems queuedShowSaleItems = null;
 
     public static NewSaleCategoriesController newInstance() {
@@ -136,7 +136,7 @@ public class NewSaleCategoriesController extends BaseController
         mShopsControllerSearchButton.setOnClickListener(v -> onRightButtonClick());
         mSeeAllButton.setOnClickListener(v -> {
             System.out.println("mLevel " + mLevel);
-            if(mLevel == 1){
+            if (mLevel == 1) {
                 ShopsController shopsController = ShopsController.instanceWithCategoryFilter(
                         categoryResponseId, categoryResponseKey
                 );
@@ -144,7 +144,7 @@ public class NewSaleCategoriesController extends BaseController
                         RouterTransaction.with(shopsController)
                                 .popChangeHandler(new HorizontalChangeHandler())
                                 .pushChangeHandler(new HorizontalChangeHandler()));
-            }else{
+            } else {
                 showSaleItems(mAllSubCategory.getKey(), new HashSet<>());
             }
         });
@@ -182,9 +182,7 @@ public class NewSaleCategoriesController extends BaseController
             mPresenter.callGetCategoryTree();
             mActivity.getMainController().setSavedCurrentItem();
         }
-        try{
-            updateBasketItemsQuantity(CartUtil.getCartValue());
-        }catch (Exception e){}
+        updateBasketItemsQuantity(CartUtil.getCartValue());
         updateRecyclerView();
     }
 
@@ -202,13 +200,13 @@ public class NewSaleCategoriesController extends BaseController
         List<GetCategoryTreeResponse> customNodeTypes = new ArrayList<>();
 
         for (GetCategoryTreeResponse category : mCategories) {
-            if(category.getNodeType().equals("url")){
+            if (category.getNodeType().equals("url")) {
                 urlNodeTypes.add(category);
-            }else if(category.getNodeType().equals("usual") || category.getNodeType().equals("undefined")){
+            } else if (category.getNodeType().equals("usual") || category.getNodeType().equals("undefined")) {
                 usualUndefinedNodeTypes.add(category);
-            }else if(category.getNodeType().equals("fixed")){
+            } else if (category.getNodeType().equals("fixed")) {
                 fixedNodeTypes.add(category);
-            }else{
+            } else {
                 customNodeTypes.add(category);
             }
         }
@@ -275,28 +273,28 @@ public class NewSaleCategoriesController extends BaseController
             return;
         }
 
-        mLevel +=1;
+        mLevel += 1;
 
-        if(mLevel == 1){
+        if (mLevel == 1) {
             mCategoryName = categoryName;
             mSubCategories = includeAllInChildren(getCategoryTreeResponse);
-            categoryResponseId =  getCategoryTreeResponse.getId();
-            categoryResponseKey =  getCategoryTreeResponse.getKey();
-        }else if(mLevel == 2){
+            categoryResponseId = getCategoryTreeResponse.getId();
+            categoryResponseKey = getCategoryTreeResponse.getKey();
+        } else if (mLevel == 2) {
             mSubCategoryName = categoryName;
             mSubCategoriesChildren = includeAllInChildren(getCategoryTreeResponse);
-        }else if(mLevel > 2){
+        } else if (mLevel > 2) {
             mLevel = 2;
             showSaleItems(getCategoryTreeResponse.getKey(), new HashSet<>());
         }
 
-        if(mCategoryName.contains("Today's Sales")){
+        if (mCategoryName.contains("Today's Sales")) {
             mLevel = 0;
             mActivity.getMainController().showHomePage();
-        }else if(mCategoryName.contains("Brands") && getCategoryTreeResponse.getKey() == null && getCategoryTreeResponse.getChildren() == null){
+        } else if (mCategoryName.contains("Brands") && getCategoryTreeResponse.getKey() == null && getCategoryTreeResponse.getChildren() == null) {
             mLevel = 0;
             mActivity.getMainController().showBrands();
-        }else if(getCategoryTreeResponse.getChildren() == null){
+        } else if (getCategoryTreeResponse.getChildren() == null) {
             mLevel = 0;
             ShopsController shopsController = ShopsController.instanceWithCategoryFilter(
                     getCategoryTreeResponse.getId(),
@@ -306,13 +304,14 @@ public class NewSaleCategoriesController extends BaseController
                     RouterTransaction.with(shopsController)
                             .popChangeHandler(new HorizontalChangeHandler())
                             .pushChangeHandler(new HorizontalChangeHandler()));
-        }else{
+        } else {
+            updateBasketItemsQuantity(mBasketQuantity);
             updateRecyclerView();
         }
     }
 
     @Override
-    public void onSubCategoryClicked(int position,  GetCategoryTreeResponse getCategoryTreeResponse) {
+    public void onSubCategoryClicked(int position, GetCategoryTreeResponse getCategoryTreeResponse) {
         if (!isViewAttached() || mRecyclerView == null || mCategoryAdapter == null) {
             return;
         }
@@ -428,21 +427,21 @@ public class NewSaleCategoriesController extends BaseController
 
     @Override
     public boolean handleBack() {
-        if(mLevel == 0){
+        if (mLevel == 0) {
             return true;
-        }else if(mLevel == 1){
+        } else if (mLevel == 1) {
             onLeftButtonClicked();
             return true;
-        }else if(mLevel == 2){
+        } else if (mLevel == 2) {
             onLeftButtonClicked();
             return true;
-        }else{
+        } else {
             return true;
         }
     }
 
-    void onLeftButtonClicked(){
-        if(mLevel == 0){
+    void onLeftButtonClicked() {
+        if (mLevel == 0) {
             Controller controller = mPresenter.isTablet() ?
                     ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST) :
                     ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
@@ -455,6 +454,7 @@ public class NewSaleCategoriesController extends BaseController
                         getRouter().pushController(RouterTransaction
                                 .with(controller).tag(controller.getClass().getName()));
                     }
+
                     @Override
                     public void error() {
 
@@ -464,8 +464,9 @@ public class NewSaleCategoriesController extends BaseController
                 getRouter().pushController(RouterTransaction
                         .with(controller).tag(controller.getClass().getName()));
             }
-        }else{
-            mLevel -=1;
+        } else {
+            mLevel -= 1;
+            updateBasketItemsQuantity(mBasketQuantity);
             updateRecyclerView();
         }
     }
@@ -482,18 +483,20 @@ public class NewSaleCategoriesController extends BaseController
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-    void updateRecyclerView(){
-        updateBasketItemsQuantity(mBasketQuantity);
+    void updateRecyclerView() {
+        if (!(isViewAttached() && isViewBound())) {
+            return;
+        }
         List<GetCategoryTreeResponse> mSubCategoriesUpdated = new ArrayList<>();
 
-        if(mLevel != 0){
+        if (mLevel != 0) {
             mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
             mShopsControllerHamburgerView.setImageTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.black)));
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
             mSeeAllButton.setVisibility(View.VISIBLE);
             mShopsControllerToolbarLogo.setVisibility(View.GONE);
             mShopsControllerSearchButton.setVisibility(View.GONE);
-        }else{
+        } else {
             mShopsControllerSearchButton.setVisibility(View.VISIBLE);
             mShopsControllerSearchButton.setImageTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.black)));
             mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
@@ -501,28 +504,28 @@ public class NewSaleCategoriesController extends BaseController
             mSeeAllButton.setVisibility(View.GONE);
         }
 
-        if(mLevel == 0){
+        if (mLevel == 0) {
             mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_new_checkout));
             mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mCategories, this, mCategoryMap);
-        }else if(mLevel == 1){
+        } else if (mLevel == 1) {
             mShopsControllerToolbarTextView.setText(mCategoryName);
             mSeeAllButtonText.setText(allText + mCategoryName);
-            if(!mSubCategories.isEmpty()){
+            if (!mSubCategories.isEmpty()) {
                 mAllSubCategory = mSubCategories.get(0);
                 mSubCategoriesUpdated.addAll(mSubCategories);
                 mSubCategoriesUpdated.remove(0);
-            }else{
+            } else {
                 mSeeAllButton.setVisibility(View.GONE);
             }
             mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mSubCategories, this, mCategoryMap);
-        }else if(mLevel == 2){
+        } else if (mLevel == 2) {
             mShopsControllerToolbarTextView.setText(mSubCategoryName);
             mSeeAllButtonText.setText(allText + mSubCategoryName);
-            if(!mSubCategoriesChildren.isEmpty()){
+            if (!mSubCategoriesChildren.isEmpty()) {
                 mAllSubCategory = mSubCategoriesChildren.get(0);
                 mSubCategoriesUpdated.addAll(mSubCategoriesChildren);
                 mSubCategoriesUpdated.remove(0);
-            }else{
+            } else {
                 mSeeAllButton.setVisibility(View.GONE);
             }
             mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mSubCategoriesChildren, this, mCategoryMap);
@@ -533,15 +536,18 @@ public class NewSaleCategoriesController extends BaseController
         mCategoryAdapter.notifyDataSetChanged();
     }
 
-    public void updateBasketItemsQuantity(int quantity){
+    public void updateBasketItemsQuantity(int quantity) {
+        if (!(isViewAttached() && isViewBound())) {
+            return;
+        }
         mBasketQuantity = quantity;
         if (mBasketQuantity == 0) {
             mBadge.setVisibility(View.GONE);
         } else {
-            if(mLevel == 0){
+            if (mLevel == 0) {
                 mBadge.setVisibility(View.VISIBLE);
                 mBadgeText.setText(Integer.toString(mBasketQuantity));
-            }else{
+            } else {
                 mBadge.setVisibility(View.GONE);
             }
         }
