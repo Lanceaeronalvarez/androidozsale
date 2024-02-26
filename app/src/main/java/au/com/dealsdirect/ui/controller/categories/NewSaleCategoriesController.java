@@ -428,7 +428,7 @@ public class NewSaleCategoriesController extends BaseController
     @Override
     public boolean handleBack() {
         if (mLevel == 0) {
-            return true;
+            return super.handleBack();
         } else if (mLevel == 1) {
             onLeftButtonClicked();
             return true;
@@ -440,7 +440,7 @@ public class NewSaleCategoriesController extends BaseController
         }
     }
 
-    void onLeftButtonClicked() {
+    private void onLeftButtonClicked() {
         if (mLevel == 0) {
             Controller controller = mPresenter.isTablet() ?
                     ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST) :

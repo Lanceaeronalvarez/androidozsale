@@ -63,6 +63,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
+import javax.xml.transform.Source;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
@@ -900,7 +901,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             controller.mSourceType = SourceType.DEEPLINK;
         } else if (parameters instanceof Parameters.FromCategoryDeepLink) {
             title = ((Parameters.FromCategoryDeepLink) parameters).getTitle();
-            controller.mCategoryKey = ((Parameters.FromCategoryDeepLink) parameters).getCategoryMapKey();
+            final String categoryKey = ((Parameters.FromCategoryDeepLink) parameters).getCategoryMapKey();
+            controller.mCategoryKey = categoryKey;
+            controller.mSelectedCategoryKeys.add(categoryKey);
+            controller.mCategoryKeyFromCategorySearch = categoryKey;
+            controller.mChipFilters = new HashSet<>();
             controller.mSourceType = SourceType.DEEPLINK;
         } else if (parameters instanceof Parameters.FromLocationFilterHash) {
             controller.locationFilterHash = ((Parameters.FromLocationFilterHash) parameters).getLocationFilterHash();
@@ -1058,8 +1063,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.onViewDidAppear(previousController);
 
         if (shouldReload ||
-                (mSourceType != SourceType.DEEPLINK &&
-                        !(previousController instanceof SaleItemDetailsController) || mSourceType == SourceType.SELLER)) {
+                !(previousController instanceof SaleItemDetailsController) || mSourceType == SourceType.SELLER) {
             shouldReload = false;
             resetViewBasedOnSourceMode();
             switch (mSourceMode) {

@@ -45,8 +45,6 @@ import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionSt
 import au.com.dealsdirect.data.network.model.checkout.CreatePaymentTransactionVco;
 import au.com.dealsdirect.data.network.model.checkout.GetPaymentToken;
 import au.com.dealsdirect.data.network.model.checkout.getpaymentmethodnonce.GetPaymentMethodNonceRequest;
-import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
-import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.gdpr.consentdata.GetConsentDataResponse;
 import au.com.dealsdirect.data.network.model.legalities.GetTemplateTextsRequest;
 import au.com.dealsdirect.data.network.model.legalities.TemplateTextResponse;
@@ -68,7 +66,6 @@ import au.com.dealsdirect.ui.custom.SupplierOriginalPriceInfoHelper;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
-import au.com.dealsdirect.utils.DeepLinkUrlType;
 import au.com.dealsdirect.utils.GdprUtils;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
@@ -129,13 +126,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     public static final String KEY_SHIPPING_RULES_HOVER = "_Shipping_Rules_hover";
     public static final String KEY_SHIPPING_RULES_HOVER_TITLE = "_Shipping_Rules_hover_title";
 
-    static final String KEY_DEEP_LINK_SALES = "DEEPLINK_SALES";
-    static final String KEY_DEEP_LINK_SALE_ITEMS = "DEEPLINK_SALE_ITEMS";
-    static final String KEY_DEEP_LINK_SALE_CATEGORY = "DEEPLINK_SALE_CATEGORY";
-    static final String KEY_DEEP_LINK_SALES_CATEGORY = "DEEPLINK_SALES_CATEGORY";
-
     // Estimate Delivery price by warehouse and delivery locations
-
     static final String KEY_IMPOSSIBLE_TO_DELIVER_AT_LOCATION = "_ImpossibleToDeliverAtLocation";
     static final String KEY_UNAVAILABLE = "_Unavailable";
     static final String KEY_CALCULATE = "_Calculate";
@@ -937,38 +928,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         // Facebook Events
         initFacebookAnalytics();
-
-
-    }
-
-    @Override
-    public void getDeepLinkData(String url) {
-
-        doApiCallForResponse(getDataManager().callGetDeepLinkData(new DeepLinkDataRequest(url)),
-                new AppApiCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        super.onSuccess(response);
-                        DeepLinkDataResponse deepLinkDataResponse = ((DeepLinkDataResponse) response);
-                        deepLinkData(deepLinkDataResponse);
-
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        super.onFailure(t);
-                    }
-                });
-    }
-
-    @Override
-    public void deepLinkMessageThread() {
-
-    }
-
-    @Override
-    public void deepLinkSaleItems() {
-
     }
 
     @Override
@@ -1514,85 +1473,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     public boolean getIsMyPayEnabled() {
         return getDataManager().getIsMyPayEnabled();
-    }
-
-    /* May 11, 2018 - Deep Link to Sale Category */
-    private void deepLinkSaleCategory(String categoryName, String categoryIdentifier) {
-        getMvpView().deepLinkSales(categoryName, categoryIdentifier);
-    }
-
-    /* May 11, 2018 - Deep Link to Sale Search */
-    private void deepLinkSaleSearch(String saleName, String saleIdentifier) {
-        getMvpView().deepLinkSaleItems(saleName, saleIdentifier, "");
-        /* Not yet supported */
-    }
-
-    /* May 11, 2018 - Deep Link to Category Link */
-    private void deepLinkCategoryLink(String seoFriendlyName, String encodedCategoryData) {
-        getMvpView().deepLinkCategoryLink(seoFriendlyName, encodedCategoryData);
-    }
-
-    /* May 11, 2018 - Deep Link to Product link with sale */
-    private void deepLinkProductLinkWithSale(String saleName, String encodedSaleId, String seoProductName, String encodedMasterSkuIdentifier) {
-        getMvpView().deepLinkSaleItemDetailsWithSale(saleName, encodedSaleId, seoProductName, encodedMasterSkuIdentifier);
-    }
-
-    /* May 11, 2018 - Deep Link to Product Link without sale */
-    private void deepLinkProductLinkWithoutSale(String seoProductName, String encodedSkuIdentifier) {
-        getMvpView().deepLinkSaleItemDetailsWithoutSale(seoProductName, encodedSkuIdentifier);
-    }
-
-
-    /* May 11, 2018 -  Deep Link Data from Json Object */
-    private void deepLinkData(DeepLinkDataResponse deepLinkDataResponse) {
-
-        String urlType = "";
-        if (deepLinkDataResponse.getUrlType() != null)
-            urlType = deepLinkDataResponse.getUrlType();
-
-        switch (urlType) {
-            case DeepLinkUrlType.CATEGORY_LINK: {
-                String seoFriendlyName = deepLinkDataResponse.getMeta().getSeoFriendlyCategoryName();
-                String encodedCategoryData = deepLinkDataResponse.getMeta().getCategoryIdentifier();
-                deepLinkCategoryLink(seoFriendlyName, encodedCategoryData);
-
-                break;
-            }
-            case DeepLinkUrlType.PRODUCT_LINK_WITH_SALE: {
-                String saleName = deepLinkDataResponse.getMeta().getSaleName();
-                String encodedSaleId = deepLinkDataResponse.getMeta().getEncodedSaleId();
-                String seoProductName = deepLinkDataResponse.getMeta().getSeoProductName();
-                String encodedMasterSkuIdentifier = deepLinkDataResponse.getMeta().getEncodedMasterSkuIdentifier();
-                deepLinkProductLinkWithSale(saleName, encodedSaleId, seoProductName, encodedMasterSkuIdentifier);
-
-                break;
-            }
-            case DeepLinkUrlType.PRODUCT_LINK_WITHOUT_SALE: {
-                String seoProductName = deepLinkDataResponse.getMeta().getSeoProductName();
-                String encodedSkuIdentifier = deepLinkDataResponse.getMeta().getEncodedMasterSkuIdentifier();
-                deepLinkProductLinkWithoutSale(seoProductName, encodedSkuIdentifier);
-
-                break;
-            }
-            case DeepLinkUrlType.SALE_CATEGORY: {
-                String categoryName = deepLinkDataResponse.getMeta().getCategoryName();
-                String categoryIdentifier = deepLinkDataResponse.getMeta().getCategoryIdentifier();
-                deepLinkSaleCategory(categoryName, categoryIdentifier);
-
-                break;
-            }
-            case DeepLinkUrlType.SALE_SEARCH: {
-                String saleName = deepLinkDataResponse.getMeta().getSaleName();
-                String saleIdentifier = deepLinkDataResponse.getMeta().getSaleIdentifier();
-                deepLinkSaleSearch(saleName, saleIdentifier);
-
-                break;
-            }
-            default: {
-
-                getMvpView().deepLinkDefault();
-            }
-        }
     }
 
     @Override

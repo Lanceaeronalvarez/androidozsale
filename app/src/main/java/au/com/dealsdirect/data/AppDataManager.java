@@ -75,8 +75,6 @@ import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
-import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
-import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
@@ -886,12 +884,6 @@ public class AppDataManager implements DataManager {
     public Observable<JSONObject> callConfirmLPayTransaction(ConfirmLPayTransactionRequest request) {
         return mApiHelper.callConfirmLPayTransaction(request);
     }
-
-    @Override
-    public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request) {
-        return mApiHelper.callGetDeepLinkData(request);
-    }
-
     @Override
     public Observable<String> setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest) {
         return mApiHelper.setAttachment(returnId, setAttachmentRequest);

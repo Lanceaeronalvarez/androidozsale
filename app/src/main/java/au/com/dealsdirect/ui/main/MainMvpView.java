@@ -90,22 +90,6 @@ public interface MainMvpView extends MvpView {
 
     void onClickAgreeStrictConsentUI();
 
-    // Deeplinking
-
-    void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId);
-
-    void deepLinkSales(String categoryName, String categoryId);
-
-    void deepLinkSaleItemDetailsWithoutSale(String seoIdentifier, String skuId);
-
-    void deepLinkSaleItemDetailsWithSale(String saleName, String encodedSaleId, String seoIdentifier, String skuId);
-
-    void deepLinkCategoryLink(String categoryName, String categoryIdentifier);
-
-    void deeLinkMessageThread();
-
-    void deepLinkDefault();
-
     void showIntrospectionUtils(ArrayList<Android> androidArrayList);
 
     void onGetAppSettings();

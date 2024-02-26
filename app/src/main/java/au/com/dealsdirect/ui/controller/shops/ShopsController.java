@@ -715,6 +715,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @OnClick(R.id.partial_toolbar_cart)
     void onClickCart() {
         if (!shouldShowCartButton) {
+            getRouter().handleBack();
             return;
         }
         Controller controller = mPresenter.isTablet() ?

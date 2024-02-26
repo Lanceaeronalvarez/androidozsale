@@ -67,8 +67,6 @@ import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
-import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
-import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
@@ -1484,16 +1482,6 @@ public class AppApiHelper implements ApiHelper {
                 .build()
                 .getObjectObservable(CreateLPayOrderResponse.class);
     }
-
-    @Override
-    public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest deepLinkDataRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.deepLink())
-                .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(deepLinkDataRequest))
-                .build()
-                .getObjectObservable(DeepLinkDataResponse.class);
-    }
-
     @Override
     public Observable<String> setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest) {
         return Rx2AndroidNetworking.put(ApiEndPoint.setAttachment())

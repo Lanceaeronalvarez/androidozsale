@@ -314,21 +314,28 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         public static final class FromDeepLink extends Parameters {
-            private final String mSeoIdentifierId;
-            private final String mSkuId;
 
-            public FromDeepLink(String seoIdentifierId,
-                                String skuId) {
+            private final String mSaleId;
+            private final String mSeoIdentifierId;
+
+            private final String mProductName;
+
+            public FromDeepLink(String saleId, String seoIdentifierId, String productName) {
+                mSaleId = saleId;
                 mSeoIdentifierId = seoIdentifierId;
-                mSkuId = skuId;
+                mProductName = productName;
+            }
+
+            public String getSaleId() {
+                return mSaleId;
             }
 
             public String getSeoIdentifierId() {
                 return mSeoIdentifierId;
             }
 
-            public String getSkuId() {
-                return mSkuId;
+            public String getProductName() {
+                return mProductName;
             }
         }
     }
@@ -667,8 +674,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             controller.mOrigin = origin != null ? origin : DataCollector.EventParameters.ViewSource.SALE;
             controller.partialProductDetailsToShow = ((Parameters.FromProductList) parameters).getProduct();
         } else if (parameters instanceof Parameters.FromDeepLink) {
+            controller.mSaleId = ((Parameters.FromDeepLink) parameters).getSaleId();
             controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
-            controller.mSkuId = ((Parameters.FromDeepLink) parameters).getSkuId();
+            controller.mSaleName = ((Parameters.FromDeepLink) parameters).getProductName();
             controller.mOrigin = DataCollector.EventParameters.ViewSource.SALE;
         }
 

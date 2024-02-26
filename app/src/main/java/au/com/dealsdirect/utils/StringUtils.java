@@ -52,6 +52,34 @@ public class StringUtils {
         return builder.toString();
     }
 
+    public static String capitalizeCategoryKey(String str) {
+
+        if (str == null) {
+            return null;
+        }
+
+        boolean delimiter = true;
+        StringBuilder builder = new StringBuilder(str);
+        final int len = builder.length();
+
+        for (int i = 0; i < len; ++i) {
+            char c = builder.charAt(i);
+            if (delimiter) {
+                if (!Character.isWhitespace(c)) {
+                    // Convert to title case and switch out of whitespace mode.
+                    builder.setCharAt(i, Character.toTitleCase(c));
+                    delimiter = false;
+                }
+            } else if (c == '>') {
+                delimiter = true;
+            } else {
+                builder.setCharAt(i, Character.toLowerCase(c));
+            }
+        }
+
+        return builder.toString();
+    }
+
     public static String getInitials(String text) {
         String initialLetters = "";
         text = text.replaceAll("[.,]", " "); // Replace dots, etc (optional)
@@ -343,4 +371,14 @@ public class StringUtils {
         }
         return output.toString();
     }
+
+    public static String splitAndGetLastString(String source, String regex) {
+        String[] strings = source.split(regex);
+        if (strings.length == 0) {
+            return null;
+        }
+        return strings[strings.length - 1];
+
+    }
+
 }

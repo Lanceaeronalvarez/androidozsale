@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.main;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,7 +40,6 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.account.AccountController;
-import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -51,6 +51,7 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DelayedMethodExecutionManager;
+import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -129,6 +130,10 @@ public class MainController extends BaseController implements MainMvpView {
 
     private boolean mShouldBottomNavigationViewEnabled = true;
 
+    private Uri deeplinkUriToProcess = null;
+
+    private Map<Integer, List<RouterTransaction>> deeplinkBackstack = new HashMap<>();
+
     public static MainController newInstance() {
         return new MainController(
                 new BundleBuilder(new Bundle())
@@ -176,6 +181,10 @@ public class MainController extends BaseController implements MainMvpView {
         super.onRestoreViewState(view, savedViewState);
         if (mBottomNavigationView != null) {
             resetIndicators(mBottomNavigationView.getCurrentItem());
+        }
+        if (deeplinkUriToProcess != null) {
+            processDeeplinkUri(deeplinkUriToProcess);
+            deeplinkUriToProcess = null;
         }
     }
 
@@ -238,6 +247,11 @@ public class MainController extends BaseController implements MainMvpView {
         }
 
         setUp(view);
+
+        if (deeplinkUriToProcess != null && !mHasSavedStateInstance) {
+            processDeeplinkUri(deeplinkUriToProcess);
+            deeplinkUriToProcess = null;
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -391,6 +405,14 @@ public class MainController extends BaseController implements MainMvpView {
         }
 
         CommonControllerChangeListener.addToRouter(router);
+
+        List<RouterTransaction> backstack = deeplinkBackstack.get(position);
+        if (backstack != null) {
+            backstack = new ArrayList<>(backstack);
+            backstack.add(0, router.getBackstack().get(0));
+            router.setBackstack(backstack, new HorizontalChangeHandler());
+            deeplinkBackstack.put(position, null);
+        }
     }
 
     public Router getShopRouter() {
@@ -590,25 +612,7 @@ public class MainController extends BaseController implements MainMvpView {
         mBottomNavigationView.setCurrentItem(SHOP_INDEX, false);
         resetIndicators(SHOP_INDEX);
         if (previousPagerPosition == SHOP_INDEX) {
-            Controller controller = getCurrentViewPagerController();
-            if (!mIsInitialSavedInstanceLoad && !(controller instanceof ShopsController)) {
-                Router router = routers.get(SHOP_INDEX);
-                if (router != null) {
-                    ArrayList<RouterTransaction> backstack = new ArrayList<>();
-                    backstack.add(router.getBackstack().get(0));
-                    if (router.getBackstackSize() == 1) {
-                        backstack.add(RouterTransaction.with(ShopsController.newInstance())
-                                .pushChangeHandler(new HorizontalChangeHandler())
-                                .popChangeHandler(new HorizontalChangeHandler()));
-                    } else {
-                        backstack.add(router.getBackstack().get(1));
-                    }
-                    router.setBackstack(backstack, new HorizontalChangeHandler());
-                }
-            }
-            if (controller instanceof BaseController) {
-                ((BaseController) controller).refreshContents();
-            }
+            getShopRouter().popToRoot();
         } else {
             setViewPagerItem(SHOP_INDEX);
             Controller controller = getCurrentViewPagerController();
@@ -625,18 +629,7 @@ public class MainController extends BaseController implements MainMvpView {
         mBottomNavigationView.setCurrentItem(CATEGORY_INDEX, false);
 
         if (previousPagerPosition == CATEGORY_INDEX) {
-            Controller controller = getCurrentViewPagerController();
-            if (!mIsInitialSavedInstanceLoad && !(controller instanceof NewSaleCategoriesController)) {
-                Router router = routers.get(CATEGORY_INDEX);
-                if (router != null) {
-                    categoryBackStack();
-                }
-            } else {
-                categoryBackStack();
-            }
-            if (controller instanceof BaseController) {
-                ((BaseController) controller).refreshContents();
-            }
+            getCategoriesRouter().popToRoot();
         } else {
             setViewPagerItem(CATEGORY_INDEX);
         }
@@ -644,17 +637,6 @@ public class MainController extends BaseController implements MainMvpView {
         showNewTagOnCategory(false);
 
         mIsInitialSavedInstanceLoad = false;
-    }
-
-    private void categoryBackStack() {
-        Router router = routers.get(CATEGORY_INDEX);
-        if (router != null) {
-            ArrayList<RouterTransaction> backstack = new ArrayList<>();
-            mActivity.getNewSaleCategoriesController().handleBack();
-            mActivity.getNewSaleCategoriesController().handleBack();
-            backstack.add(router.getBackstack().get(0));
-            router.setBackstack(backstack, new HorizontalChangeHandler());
-        }
     }
 
     @Override
@@ -845,29 +827,13 @@ public class MainController extends BaseController implements MainMvpView {
         showBottomNav();
     }
 
-    private void addControllerOnShopRouterBackStack(RouterTransaction routerTransaction) {
-        Router router = routers.get(SHOP_INDEX);
+    public void deepLinkSaleItemDetails(String saleId, String seoIdentifierId, String productName) {
+        mBottomNavigationView.setCurrentItem(SHOP_INDEX, false);
+        resetIndicators(SHOP_INDEX);
+        mHomeViewPager.setCurrentItem(SHOP_INDEX);
 
-        if (router == null) {
-            return;
-        }
-
-        ArrayList<RouterTransaction> backstack = new ArrayList<>();
-        backstack.add(router.getBackstack().get(0));
-        backstack.add(RouterTransaction.with(ShopsController.newInstance())
-                .pushChangeHandler(new HorizontalChangeHandler())
-                .popChangeHandler(new HorizontalChangeHandler()));
-        backstack.add(routerTransaction);
-        router.setBackstack(backstack, new HorizontalChangeHandler());
-    }
-
-    //----------------
-
-    public void deepLinkSaleItemDetails(String seoIdentifierId, String skuId, boolean isWithSale) {
         SaleItemDetailsController.Parameters.FromDeepLink parameters = new SaleItemDetailsController.Parameters
-                .FromDeepLink(seoIdentifierId, skuId);
-
-        mHomeViewPager.setCurrentItem(SHOP_INDEX, false);
+                .FromDeepLink(saleId, seoIdentifierId, productName);
 
         RouterTransaction routerTransaction = RouterTransaction.with(
                 SaleItemDetailsController.newInstance(parameters));
@@ -882,11 +848,13 @@ public class MainController extends BaseController implements MainMvpView {
                     .popChangeHandler(new SharedArcFadePopChangeHandler());
         }
 
-        addControllerOnShopRouterBackStack(routerTransaction);
-        showShopController();
+        addAsSecondControllerOnBackstack(SHOP_INDEX, routerTransaction);
     }
 
     public void openLocationFilterHash(String locationFilterHash) {
+        mBottomNavigationView.setCurrentItem(SHOP_INDEX, false);
+        resetIndicators(SHOP_INDEX);
+        mHomeViewPager.setCurrentItem(SHOP_INDEX);
 
         SaleItemsController.Parameters.FromLocationFilterHash parameters = new SaleItemsController
                 .Parameters.FromLocationFilterHash(locationFilterHash);
@@ -897,11 +865,13 @@ public class MainController extends BaseController implements MainMvpView {
                 .tag(mActivity.getString(R.string.sale_items_controller_tag))
                 .popChangeHandler(new HorizontalChangeHandler());
 
-        addControllerOnShopRouterBackStack(routerTransaction);
-        showShopController();
+        addAsSecondControllerOnBackstack(SHOP_INDEX, routerTransaction);
     }
 
-    public void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
+    private void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
+        mBottomNavigationView.setCurrentItem(SHOP_INDEX, false);
+        resetIndicators(SHOP_INDEX);
+        mHomeViewPager.setCurrentItem(SHOP_INDEX);
 
         SaleItemsController.Parameters.FromSaleItemDeepLink parameters = new SaleItemsController
                 .Parameters.FromSaleItemDeepLink(bannerTitle, saleId, bannerId);
@@ -913,11 +883,46 @@ public class MainController extends BaseController implements MainMvpView {
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler());
 
-        addControllerOnShopRouterBackStack(routerTransaction);
-        showShopController();
+        addAsSecondControllerOnBackstack(SHOP_INDEX, routerTransaction);
     }
 
-    public void deepLinkSaleCategory(String categoryName, String categoryIdentifier) {
+    private void deepLinkSearchQuery(String searchQuery) {
+        mBottomNavigationView.setCurrentItem(SHOP_INDEX, false);
+        resetIndicators(SHOP_INDEX);
+        mHomeViewPager.setCurrentItem(SHOP_INDEX);
+
+        SaleItemsController.Parameters.FromShopSearch parameters = new SaleItemsController
+                .Parameters.FromShopSearch(null, searchQuery);
+
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler());
+
+        addAsSecondControllerOnBackstack(SHOP_INDEX, routerTransaction);
+    }
+
+    private void deepLinkSaleCategory(String categoryName, String categoryIdentifier) {
+        mBottomNavigationView.setCurrentItem(CATEGORY_INDEX, false);
+        resetIndicators(CATEGORY_INDEX);
+        mHomeViewPager.setCurrentItem(CATEGORY_INDEX);
+
+        ShopsController controller = ShopsController.instanceWithCategoryFilter(categoryIdentifier, categoryName);
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .tag(mActivity.getString(R.string.shop_controller_tag))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler());
+
+        addAsSecondControllerOnBackstack(CATEGORY_INDEX, routerTransaction);
+    }
+
+    private void deepLinkSaleCategoryItems(String categoryName, String categoryIdentifier) {
+        mBottomNavigationView.setCurrentItem(CATEGORY_INDEX, false);
+        resetIndicators(CATEGORY_INDEX);
+        mHomeViewPager.setCurrentItem(CATEGORY_INDEX);
 
         SaleItemsController.Parameters.FromCategoryDeepLink parameters = new SaleItemsController
                 .Parameters.FromCategoryDeepLink(categoryName, categoryIdentifier);
@@ -929,8 +934,45 @@ public class MainController extends BaseController implements MainMvpView {
                 .pushChangeHandler(new HorizontalChangeHandler())
                 .popChangeHandler(new HorizontalChangeHandler());
 
-        addControllerOnShopRouterBackStack(routerTransaction);
-        showShopController();
+        addAsSecondControllerOnBackstack(CATEGORY_INDEX, routerTransaction);
+    }
+
+    private void deepLinkBrands() {
+        mBottomNavigationView.setCurrentItem(BRANDS_INDEX, false);
+        resetIndicators(BRANDS_INDEX);
+        mHomeViewPager.setCurrentItem(BRANDS_INDEX);
+    }
+
+    private void deepLinkBrandProductList(String brandName, String brandId) {
+        mBottomNavigationView.setCurrentItem(BRANDS_INDEX, false);
+        resetIndicators(BRANDS_INDEX);
+        mHomeViewPager.setCurrentItem(BRANDS_INDEX);
+
+        SaleItemsController.Parameters.FromTopBrands parameters = new SaleItemsController
+                .Parameters.FromTopBrands(brandName);
+
+        SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .tag(mActivity.getString(R.string.sale_items_controller_tag))
+                .pushChangeHandler(new HorizontalChangeHandler())
+                .popChangeHandler(new HorizontalChangeHandler());
+
+        addAsSecondControllerOnBackstack(BRANDS_INDEX, routerTransaction);
+    }
+
+    private void addAsSecondControllerOnBackstack(int index, RouterTransaction routerTransaction) {
+
+        ArrayList<RouterTransaction> backstack = new ArrayList<>();
+        backstack.add(routerTransaction);
+
+        Router router = routers.get(index);
+        if (router != null) {
+            backstack.add(0, router.getBackstack().get(0));
+            router.setBackstack(backstack, new HorizontalChangeHandler());
+        } else {
+            deeplinkBackstack.put(index, backstack);
+        }
     }
 
     public void setNavigationBarEnabled(boolean enabled) {
@@ -983,5 +1025,111 @@ public class MainController extends BaseController implements MainMvpView {
             }
         }
         router.setBackstack(backstack, null);
+    }
+
+    public void processDeeplinkUri(Uri uri) {
+        if (!isViewBound()) {
+            deeplinkUriToProcess = uri;
+            return;
+        }
+        final String path = uri.getPath();
+        if (path != null && !path.isEmpty()) {
+            final ArrayList<String> directories = new ArrayList<>(Arrays.asList(path.split("/")));
+            if (directories.isEmpty()) {
+                return;
+            }
+            if (directories.get(0).isEmpty()) {
+                directories.remove(0);
+                if (directories.isEmpty()) {
+                    return;
+                }
+            }
+
+            if (directories.get(0).equals("shop")) {
+                if (directories.get(1).equals("sale")) {
+                    // Specific Sale and Trending Now
+                    if (directories.size() < 5) {
+                        return;
+                    }
+                    String saleName = StringUtils.toTitleCase(
+                            directories.get(2).replace('-', ' '));
+                    if (!directories.get(3).equals("s")) {
+                        return;
+                    }
+                    String saleId = directories.get(4);
+
+                    if (directories.size() == 5) {
+                        String saleIdParam = uri.getQueryParameter("saleID");
+                        deepLinkSaleItems(null, saleId, saleIdParam);
+                    } else {
+                        deeplinkProductDetail(5, saleId, directories);
+                    }
+                } else if (directories.get(1).equals("sales")) {
+                    // Main sale category
+                    if (directories.size() != 4) {
+                        return;
+                    }
+                    String categoryName = StringUtils.splitAndGetLastString(directories.get(2), "-");
+                    categoryName = StringUtils.toTitleCase(categoryName);
+                    String categoryId = directories.get(3);
+                    deepLinkSaleCategory(categoryName, categoryId);
+                } else if (directories.get(1).equals("brand")) {
+                    // Brand product list
+                    if (directories.size() != 4) {
+                        return;
+                    }
+                    String brandName = StringUtils.toTitleCase(
+                            directories.get(2).replace('-', ' '));
+                    String brandId = directories.get(3);
+                    deepLinkBrandProductList(brandName, brandId);
+                } else if (directories.get(1).equals("brands")) {
+                    // Brands category
+                    if (directories.size() != 2) {
+                        return;
+                    }
+                    deepLinkBrands();
+                } else if (directories.get(1).equals("search")) {
+                    // Search
+                    if (directories.size() != 2) {
+                        return;
+                    }
+                    String searchQuery = uri.getQueryParameter("query");
+                    deepLinkSearchQuery(searchQuery);
+                } else {
+                    if (directories.size() == 3) {
+                        // Product list for subcategory
+                        String categoryId = StringUtils.capitalizeCategoryKey(
+                                directories.get(1)
+                                        .replace("-and-", " & ")
+                                        .replace("-", ">>>"));
+                        String categoryName = StringUtils.splitAndGetLastString(categoryId, ">>>");
+                        categoryName = StringUtils.toTitleCase(categoryName);
+                        deepLinkSaleCategoryItems(categoryName, categoryId);
+                    }
+                }
+            } else if (directories.get(0).equals("product")) {
+                deeplinkProductDetail(0, null, directories);
+            } else if (directories.get(0).equals("brands")) {
+                // Brands category
+                if (directories.size() != 1) {
+                    return;
+                }
+                deepLinkBrands();
+            }
+        }
+    }
+
+    private void deeplinkProductDetail(int index, String saleId, List<String> directories) {
+        if (!((directories.size() - index == 4) &&
+                directories.get(index).equals("product") &&
+                directories.get(index + 2).equals("s"))) {
+            return;
+        }
+        String productName = StringUtils.toTitleCase(
+                directories.get(index + 1)
+                        .replace("-s-", "'s ")
+                        .replace('-', ' '));
+        String productId = directories.get(index + 3);
+        deepLinkSaleItemDetails(saleId, productId, productName);
     }
 }

@@ -11,18 +11,15 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
@@ -88,9 +85,7 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BaseController.CommonControllerChangeListener;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.account.AccountDeletionConfirmationDialog;
-import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
-import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
@@ -110,7 +105,6 @@ import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderSatisfactionDialo
 import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderTrackerDialog;
 import au.com.dealsdirect.ui.controller.returns.currentreturns.BottomSheetReturnSatisfactionDialog;
 import au.com.dealsdirect.ui.controller.saleitemdetails.BottomSheetSizesDialog;
-import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterController;
 import au.com.dealsdirect.ui.controller.shops.BottomSheetInfoDialog;
@@ -171,10 +165,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private boolean isTemplateTextsStored = false;
     private boolean mIsViewAttached = false;
     private int mVisaCheckoutActionType = -1;
-
-    /* bug/gen-8065-reskin_bugfixing */
-    private int mDeepLinkLoadDelay = 1000;
-
     public boolean mAppHasSavedInstance = false;
     public boolean hasShownSplash = false;
     private Stripe mStripe;
@@ -186,6 +176,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private SupplierOriginalPriceInfoHelper supplierOriginalPriceInfoHelper = null;
 
     private GA4EventParams.GA4PurchaseParams ga4PurchaseParams = null;
+
+    private Uri deeplinkUriToProcess = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,9 +225,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             logEvent(Events.CVAppLaunch, parameters);
         }
 
-        showSplashScreen();
-
         onNewIntent(getIntent());
+
+        showSplashScreen();
 
         //Initialize version introspection
         if (!IntrospectionUtils.verifyIsAppUpdated(getApplicationContext())) {
@@ -313,18 +305,25 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Override
     protected void onNewIntent(Intent intent) {
-
         super.onNewIntent(intent);
-        String url = "";
-        if (intent.getData() != null) url = intent.getData().toString();
+        deeplinkUriToProcess = null;
+        if (intent == null) {
+            return;
+        }
 
-        //  mDeepLinkProgressDialog = new ProgressUtil().showLoadingDialog(this);
-        /* call for getDeepLink data */
-
-        if (intent.getData() != null && !url.isEmpty())
-            mPresenter.getDeepLinkData(url);
+        final Uri uri = intent.getData();
+        final String appHost = getString(R.string.app_uri_hostname);
+        if (uri == null || uri.getHost() == null) {
+            return;
+        }
+        if (uri.getHost().equals(appHost)) {
+            if (getMainController() == null) {
+                deeplinkUriToProcess = uri;
+            } else {
+                getMainController().processDeeplinkUri(uri);
+            }
+        }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -684,7 +683,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             if (newBackstack != null) {
                 if (backstack.size() == newBackstack.size()) {
 
-                } else if (newBackstack.size() > 1){
+                } else if (newBackstack.size() > 1) {
                     router.setBackstack(backstack, backstack.get(backstack.size() - 1).popChangeHandler());
                 } else {
                     router.popToRoot();
@@ -1111,6 +1110,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 }
             }
 
+
         }
     }
 
@@ -1144,6 +1144,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         mRouter.setRoot(RouterTransaction.with(mMainController).tag("Home"));
         if (isAuthorized()) {
             mMainController.updateBasketItemsQuantity();
+        }
+        if (deeplinkUriToProcess != null) {
+            mMainController.processDeeplinkUri(deeplinkUriToProcess);
+            deeplinkUriToProcess = null;
         }
     }
 
@@ -1356,92 +1360,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void deepLinkSaleItems(String bannerTitle, String saleId, String bannerId) {
-        //TODO: proper delay execution
-
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            mMainController.deepLinkSaleItems(bannerTitle, saleId, bannerId);
-        }, mDeepLinkLoadDelay);
-
-    }
-
-    @Override
-    public void deepLinkSales(String categoryName, String categoryId) {
-        //TODO: proper delay execution
-
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            if (getMainController() != null) {
-                if (getShopController() == null) {
-                    ShopsController shopsController = ShopsController.instanceWithCategoryFilter(
-                            categoryId,
-                            categoryName
-                    );
-                    getMainController().getShopRouter().pushController(
-                            RouterTransaction.with(shopsController)
-                                    .popChangeHandler(new HorizontalChangeHandler())
-                                    .pushChangeHandler(new HorizontalChangeHandler()));
-                } else {
-                    getShopController().goToSales(categoryName, categoryId);
-                }
-            }
-        }, mDeepLinkLoadDelay);
-
-        deepLinkSuceeded();
-    }
-
-    @Override
-    public void deepLinkSaleItemDetailsWithoutSale(String seoIdentifierId, String skuId) {
-        //TODO: proper delay execution
-
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            mMainController.deepLinkSaleItemDetails(seoIdentifierId, skuId, false);
-            deepLinkSuceeded();
-        }, mDeepLinkLoadDelay);
-
-    }
-
-    @Override
-    public void deepLinkSaleItemDetailsWithSale(String saleName, String encodedSaleId, String seoIdentifier, String skuId) {
-        //TODO: proper delay execution
-
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            mMainController.deepLinkSaleItems(saleName, encodedSaleId, "");
-            deepLinkSuceeded();
-            mMainController.deepLinkSaleItemDetails(seoIdentifier, skuId, true);
-        }, mDeepLinkLoadDelay);
-
-    }
-
-    @Override
-    public void deepLinkCategoryLink(String categoryName, String categoryIdentifier) {
-        //TODO: proper delay execution
-
-        Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            if (getShopController() == null) {
-                getMainController().resetShopRouter();
-            }
-            getShopController().goToCategoryLink(categoryName, categoryIdentifier);
-        }, mDeepLinkLoadDelay);
-
-        deepLinkSuceeded();
-    }
-
-    @Override
-    public void deeLinkMessageThread() {
-
-    }
-
-    @Override
-    public void deepLinkDefault() {
-        deepLinkSuceeded();
-    }
-
-    @Override
     public void showIntrospectionUtils(ArrayList<Android> androidArrayList) {
         IntrospectionUtils.checkVersion(this, androidArrayList);
     }
@@ -1499,10 +1417,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void showErrorMessage(String errorMessage) {
         CustomAlertDialog.showCustomAlertDialog(this, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
                 errorMessage);
-    }
-
-    private void deepLinkSuceeded() {
-        /* deep link succeeded */
     }
 
     public void showSplashScreen() {
