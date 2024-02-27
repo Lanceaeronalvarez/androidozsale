@@ -3,6 +3,7 @@ package au.com.dealsdirect.ui.controller.main;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -1027,6 +1028,9 @@ public class MainController extends BaseController implements MainMvpView {
         router.setBackstack(backstack, null);
     }
 
+    public void processLinkUri(Uri uri) {
+        processDeeplinkUri(uri);
+    }
     public void processDeeplinkUri(Uri uri) {
         if (!isViewBound()) {
             deeplinkUriToProcess = uri;
@@ -1036,11 +1040,15 @@ public class MainController extends BaseController implements MainMvpView {
         if (path != null && !path.isEmpty()) {
             final ArrayList<String> directories = new ArrayList<>(Arrays.asList(path.split("/")));
             if (directories.isEmpty()) {
+                showShopController();
+                getShopRouter().popToRoot();
                 return;
             }
             if (directories.get(0).isEmpty()) {
                 directories.remove(0);
                 if (directories.isEmpty()) {
+                    showShopController();
+                    getShopRouter().popToRoot();
                     return;
                 }
             }
@@ -1115,6 +1123,9 @@ public class MainController extends BaseController implements MainMvpView {
                     return;
                 }
                 deepLinkBrands();
+            } else {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(browserIntent);
             }
         }
     }

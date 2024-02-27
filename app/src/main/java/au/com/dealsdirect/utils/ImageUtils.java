@@ -316,6 +316,23 @@ public class ImageUtils {
         }
     }
 
+    public static void loadImageGif(String url, ImageView imageView) {
+        try {
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .format(DecodeFormat.PREFER_ARGB_8888);
+
+            Glide.with(imageView)
+                    .asGif()
+                    .apply(options)
+                    .load(url)
+                    .transform(WebpDrawable.class, new WebpDrawableTransformation(centerInside))
+                    .into(imageView);
+        } catch (Exception e) {
+            Log.e("ImageUtils", e.getMessage(), e);
+        }
+    }
+
     public static void loadImageWithImageViewDimens(final Context context, final String url,
                                                     final ImageView imageView) {
         if (imageView.getMeasuredWidth() != 0 && imageView.getMeasuredHeight() != 0) {

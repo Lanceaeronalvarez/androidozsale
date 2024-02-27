@@ -15,6 +15,8 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.cachedresponses.ListOfSortingResponses;
 import au.com.dealsdirect.data.cachedresponses.ParamaterizedCachableRequest;
 import au.com.dealsdirect.data.network.AppApiCallback;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -25,6 +27,7 @@ import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.leaderboardbanner.LeaderboardPresenterHelper;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -333,5 +336,27 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
     @Override
     public int getHoursLeftToDisplayTimer() {
         return getDataManager().getHoursLeftToDisplayTimer();
+    }
+
+    @Override
+    public void loadLeaderboardBanner() {
+        LeaderboardPresenterHelper.loadLeaderboardBanner(
+                GetLeaderboardBannerRequest.newInstanceForProductList(
+                        isTablet() ? GetLeaderboardBannerRequest.DESKTOP_BROWSER :
+                                GetLeaderboardBannerRequest.MOBILE_BROWSER),
+                getDataManager(),
+                getCompositeDisposable(),
+                getSchedulerProvider(),
+                new LeaderboardPresenterHelper.LeaderboardHelperListener() {
+                    @Override
+                    public void receiveResponse(GetBannerResponse response) {
+                        getMvpView().showLeaderboardBanner(response);
+                    }
+
+                    @Override
+                    public void receiveError(Throwable throwable) {
+                        getMvpView().showLeaderboardBanner(null);
+                    }
+                });
     }
 }

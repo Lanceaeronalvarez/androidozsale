@@ -36,4 +36,6 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
     boolean getPrefersOldShopBannerDimensions();
 
     void setPrefersOldShopBannerDimensions(boolean doesPrefer);
+
+    void loadLeaderboardBanner();
 }

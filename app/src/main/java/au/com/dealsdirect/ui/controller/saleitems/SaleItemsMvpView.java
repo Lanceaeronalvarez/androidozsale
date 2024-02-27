@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
@@ -47,4 +48,6 @@ public interface SaleItemsMvpView extends MvpView {
     void toggleTabSelection();
 
     void storeBrandNames(BrandNames brandNames);
+
+    void showLeaderboardBanner(GetBannerResponse response);
 }

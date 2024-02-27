@@ -41,6 +41,7 @@ import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.agerestriction.SaveAgeRestrictedConsentDataRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
@@ -228,6 +229,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<SampleResponse> doSampleApiCall(SampleRequest request) {
         return mApiHelper.doSampleApiCall(request);
+    }
+
+    @Override
+    public Observable<GetBannerResponse> callGetLeaderboardBanner(GetLeaderboardBannerRequest request) {
+        return mApiHelper.callGetLeaderboardBanner(request);
     }
 
     @Override

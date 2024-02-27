@@ -2,6 +2,7 @@ package au.com.dealsdirect.ui.controller.saleitemdetails;
 
 import java.util.List;
 
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
@@ -46,4 +47,6 @@ public interface SaleItemDetailsMvpView extends MvpView {
     void showDefaultPostcode(String postcode);
 
     void showPreviewShippingPrice(GetPostcodeShippingPriceResponse response, String postcode, Integer operation);
+
+    void showLeaderboardBanner(GetBannerResponse response);
 }

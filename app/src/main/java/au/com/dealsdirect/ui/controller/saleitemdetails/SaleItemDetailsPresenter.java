@@ -11,6 +11,8 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
 import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
 import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataRequest;
@@ -32,6 +34,7 @@ import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.ui.controller.leaderboardbanner.LeaderboardPresenterHelper;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CurrencyUtil;
@@ -95,7 +98,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
         }
 
         doApiCallForResponse(getDataManager().callGetOurpayData(OurpayDataRequest.init(
-                CurrencyUtil.getCurrency(getDataManager().getCountryId()), value.getPrice().getValue())),
+                        CurrencyUtil.getCurrency(getDataManager().getCountryId()), value.getPrice().getValue())),
                 new AppApiCallback() {
                     @Override
                     public void onSuccess(Object response) {
@@ -634,5 +637,28 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     @Override
     public String getBuyboxTemplateTextButtonText() {
         return getDataManager().getBuyBoxTemplateTextBottomText();
+    }
+
+    @Override
+    public void loadLeaderboardBanner() {
+        LeaderboardPresenterHelper.loadLeaderboardBanner(
+                GetLeaderboardBannerRequest.newInstanceForProductDetails(
+                        isTablet() ? GetLeaderboardBannerRequest.DESKTOP_BROWSER :
+                                GetLeaderboardBannerRequest.MOBILE_BROWSER),
+                getDataManager(),
+                getCompositeDisposable(),
+                getSchedulerProvider(),
+                new LeaderboardPresenterHelper.LeaderboardHelperListener() {
+                    @Override
+                    public void receiveResponse(GetBannerResponse response) {
+                        getMvpView().showLeaderboardBanner(response);
+                    }
+
+                    @Override
+                    public void receiveError(Throwable throwable) {
+                        getMvpView().showLeaderboardBanner(null);
+                    }
+
+                });
     }
 }
