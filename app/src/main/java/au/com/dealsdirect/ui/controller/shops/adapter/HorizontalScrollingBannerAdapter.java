@@ -62,7 +62,9 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
 
     public enum BannerViewType {
         ShopBanner,
-        PromoBanner
+        PromoBanner,
+
+        LeaderBanner
     }
 
     private String title;
@@ -139,6 +141,29 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
                 }
             }
             break;
+            case LeaderBanner:
+                virtualPosition = position % dataSource.size();
+                item = dataSource.get(virtualPosition);
+
+                if(item.getImage() != null || item.getImage() != ""){
+                    ImageUtils.loadImage(item.getImage(), ((ViewHolder) holder).image);
+                }
+
+                if (item.getGroup() != null && item.getGroup().getIsClickable() != null) {
+                    ((ViewHolder) holder).subscription = RxView.clicks(((ViewHolder) holder).layout)
+                            .throttleFirst(
+                                    THROTTLE_FIRST_WINDOW_DURATION,
+                                    TimeUnit.MILLISECONDS)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(action -> {
+                                if (onBannerTappedListener != null) {
+                                    onBannerTappedListener.onBannerTapped(item, position);
+                                }
+                            });
+                }
+
+                ((ViewHolder) holder).title.setVisibility(View.GONE);
+                break;
             default:
                 virtualPosition = position % dataSource.size();
 

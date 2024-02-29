@@ -1,5 +1,10 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
+import static android.graphics.Typeface.BOLD;
+import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
+import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
+import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
@@ -57,6 +62,7 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bumptech.glide.Priority;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
@@ -66,7 +72,6 @@ import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -81,6 +86,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.data.network.model.events.ProductViewRequest;
@@ -135,11 +141,6 @@ import au.com.dealsdirect.utils.ViewUtils;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static android.graphics.Typeface.BOLD;
-import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
-import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
-import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
 
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView {
 
@@ -314,21 +315,28 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         public static final class FromDeepLink extends Parameters {
-            private final String mSeoIdentifierId;
-            private final String mSkuId;
 
-            public FromDeepLink(String seoIdentifierId,
-                                String skuId) {
+            private final String mSaleId;
+            private final String mSeoIdentifierId;
+
+            private final String mProductName;
+
+            public FromDeepLink(String saleId, String seoIdentifierId, String productName) {
+                mSaleId = saleId;
                 mSeoIdentifierId = seoIdentifierId;
-                mSkuId = skuId;
+                mProductName = productName;
+            }
+
+            public String getSaleId() {
+                return mSaleId;
             }
 
             public String getSeoIdentifierId() {
                 return mSeoIdentifierId;
             }
 
-            public String getSkuId() {
-                return mSkuId;
+            public String getProductName() {
+                return mProductName;
             }
         }
     }
@@ -507,6 +515,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_buybox_items)
     RecyclerView buyBoxItemsRecyclerView;
 
+    @BindView(R.id.product_details_leaderboard_banner_image)
+    ImageView leaderboardBannerImageView;
+
     int[] mSharedImageLocation;
 
     public static final String TAG = SaleItemDetailsController.class.getSimpleName();
@@ -667,8 +678,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             controller.mOrigin = origin != null ? origin : DataCollector.EventParameters.ViewSource.SALE;
             controller.partialProductDetailsToShow = ((Parameters.FromProductList) parameters).getProduct();
         } else if (parameters instanceof Parameters.FromDeepLink) {
+            controller.mSaleId = ((Parameters.FromDeepLink) parameters).getSaleId();
             controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
-            controller.mSkuId = ((Parameters.FromDeepLink) parameters).getSkuId();
+            controller.mSaleName = ((Parameters.FromDeepLink) parameters).getProductName();
             controller.mOrigin = DataCollector.EventParameters.ViewSource.SALE;
         }
 
@@ -856,6 +868,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void setUp(View view) {
+
+        mPresenter.loadLeaderboardBanner();
 
         mShippingDescText.getSettings().setTextZoom(100);
         mProductDescriptionText.getSettings().setTextZoom(100);
@@ -2806,5 +2820,45 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 startActivity(browserIntent);
             });
         }
+    }
+
+    @Override
+    public void showLeaderboardBanner(GetBannerResponse response) {
+        if (!isViewAttached() || !isViewBound()) {
+            return;
+        }
+        leaderboardBannerImageView.setOnClickListener(null);
+        leaderboardBannerImageView.setImageDrawable(null);
+        if (response == null) {
+            return;
+        }
+
+        GetBannerResponse.Banner leaderboardBanner = null;
+        List<GetBannerResponse.Group> groups = response.getGroups();
+        if (groups != null) {
+            for (GetBannerResponse.Group group : groups) {
+                List<GetBannerResponse.Banner> banners = group.getBanners();
+                if (banners != null) {
+                    for (GetBannerResponse.Banner banner : banners) {
+                        if (banner.getBannerType().equals("leaderboardBanner")) {
+                            leaderboardBanner = banner;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (leaderboardBanner == null) {
+            return;
+        }
+
+        final Uri uri = Uri.parse(leaderboardBanner.getLink());
+        if (uri != null) {
+            leaderboardBannerImageView.setOnClickListener(
+                    view -> mActivity.getMainController().processLinkUri(uri));
+        }
+
+        ImageUtils.loadImageGif(leaderboardBanner.getImage(), leaderboardBannerImageView);
     }
 }

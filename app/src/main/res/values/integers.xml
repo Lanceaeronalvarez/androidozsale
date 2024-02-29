@@ -19,6 +19,10 @@
     <integer name="old_banner_tablet_height">193</integer>
     <integer name="old_sliding_banner_width">980</integer>
     <integer name="old_sliding_banner_height">350</integer>
+    <integer name="leaderboard_banner_mobile_width">375</integer>
+    <integer name="leaderboard_banner_mobile_height">150</integer>
+    <integer name="leaderboard_banner_tablet_width">1500</integer>
+    <integer name="leaderboard_banner_tablet_height">200</integer>
     <integer name="old_banner_mobile_portrait_column_count">1</integer>
     <integer name="old_banner_mobile_landscape_column_count">1</integer>
     <integer name="old_banner_tablet_portrait_column_count">3</integer>

@@ -12,10 +12,12 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.ui.controller.leaderboardbanner.LeaderboardPresenterHelper;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -230,6 +232,30 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     @Override
     public void setPrefersOldShopBannerDimensions(boolean doesPrefer) {
         getDataManager().setPrefersOldShopBannerDimensions(doesPrefer);
+    }
+
+    @Override
+    public void loadLeaderboardBanner(String categoryId) {
+        LeaderboardPresenterHelper.loadLeaderboardBanner(
+                GetLeaderboardBannerRequest.newInstanceForShopPage(
+                        isTablet() ? GetLeaderboardBannerRequest.DESKTOP_BROWSER :
+                                GetLeaderboardBannerRequest.MOBILE_BROWSER,
+                        categoryId),
+                getDataManager(),
+                getCompositeDisposable(),
+                getSchedulerProvider(),
+                new LeaderboardPresenterHelper.LeaderboardHelperListener() {
+                    @Override
+                    public void receiveResponse(GetBannerResponse response) {
+                        getMvpView().showLeaderboardBanner(response);
+                    }
+
+                    @Override
+                    public void receiveError(Throwable throwable) {
+                        getMvpView().showLeaderboardBanner(null);
+                    }
+
+                });
     }
 }
 

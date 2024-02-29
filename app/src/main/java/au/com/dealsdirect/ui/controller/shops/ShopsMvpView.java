@@ -27,4 +27,6 @@ public interface ShopsMvpView extends MvpView {
     void unBindPaginate();
 
     boolean isChangeInProgress();
+
+    void showLeaderboardBanner(GetBannerResponse response);
 }

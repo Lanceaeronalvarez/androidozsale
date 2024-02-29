@@ -31,10 +31,7 @@ import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerBanne
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-
-/**
- * dp Created by Admin on 6/7/17.
- */
+import io.reactivex.functions.Consumer;
 
 public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ResettableDimensions {
 
@@ -44,7 +41,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int mComputedHeight = -1;
     private final List<GetBannerResponse.Group> mGroups = new ArrayList<>();
     private final List<GetBannerResponse.Banner> mSales = new ArrayList<>();
+
     private GetBannerResponse.Banner promoBanner;
+    private GetBannerResponse.Banner leaderboardBanner = null;
+    private Consumer<Object> leaderboardBannerOnClick = null;
     private final Context context;
     private int mWidth;
     private int mHeight;
@@ -61,14 +61,17 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static final int VIEW_HOLDER_TYPE_OLD = 1;
     public static final int VIEW_HOLDER_TYPE_LANDSCAPE = 1 << 1;
     public static final int VIEW_HOLDER_TYPE_NORMAL_BANNER = 1 << 2;
-    public static final int VIEW_HOLDER_TYPE_PROMO_BANNER = 1 << 3;
-    public static final int VIEW_HOLDER_TYPE_SLIDING_BANNER = 1 << 4;
-    public static final int VIEW_HOLDER_TYPE_CATEGORY_BANNER = 1 << 5;
-    public static final int VIEW_HOLDER_TYPE_SPONSORED_BANNER = 1 << 6;
-    public static final int VIEW_HOLDER_TYPE_FOOTER = 1 << 7;
-    public static final int VIEW_HOLDER_TYPE_SPACER = 1 << 8;
+
+    public static final int VIEW_HOLDER_TYPE_LEADER_BANNER = 1 << 3;
+    public static final int VIEW_HOLDER_TYPE_PROMO_BANNER = 1 << 4;
+    public static final int VIEW_HOLDER_TYPE_SLIDING_BANNER = 1 << 5;
+    public static final int VIEW_HOLDER_TYPE_CATEGORY_BANNER = 1 << 6;
+    public static final int VIEW_HOLDER_TYPE_SPONSORED_BANNER = 1 << 7;
+    public static final int VIEW_HOLDER_TYPE_FOOTER = 1 << 8;
+    public static final int VIEW_HOLDER_TYPE_SPACER = 1 << 9;
 
     private static final int[] BANNER_ORDER = {
+            VIEW_HOLDER_TYPE_LEADER_BANNER,
             VIEW_HOLDER_TYPE_PROMO_BANNER,
             VIEW_HOLDER_TYPE_SLIDING_BANNER,
             VIEW_HOLDER_TYPE_CATEGORY_BANNER,
@@ -76,6 +79,15 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             VIEW_HOLDER_TYPE_SPACER,
             VIEW_HOLDER_TYPE_NORMAL_BANNER
     };
+
+    private static int getBannerOrderPosition(int viewHolderType) {
+        for (int i = 0; i < BANNER_ORDER.length; i++) {
+            if (i == viewHolderType) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     private boolean useOldBannerDimensions;
 
@@ -108,13 +120,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final HashSet<HorizontalRecyclerBannerViewHolder> horizontalRecyclerViewHolders = new HashSet<>();
 
-    public BannersAdapter(
-            Context context,
-            List<GetBannerResponse.Group> sales,
-            int orientation,
-            boolean useOldBannerDimensions,
-            boolean isTablet,
-            BannersAdapterHelper helper) {
+    public BannersAdapter(Context context, List<GetBannerResponse.Group> sales, int orientation, boolean useOldBannerDimensions, boolean isTablet, BannersAdapterHelper helper) {
 
         replace(sales);
 
@@ -137,12 +143,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public SpacerViewHolder(@NonNull View itemView) {
             super(itemView);
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    isTablet ?
-                            (int) itemView.getResources().getDimension(R.dimen.horizontal_banner_spacer_size_for_tablet) :
-                            (int) itemView.getResources().getDimension(R.dimen.horizontal_banner_spacer_size)
-            );
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, isTablet ? (int) itemView.getResources().getDimension(R.dimen.horizontal_banner_spacer_size_for_tablet) : (int) itemView.getResources().getDimension(R.dimen.horizontal_banner_spacer_size));
             itemView.setLayoutParams(params);
             itemView.setVisibility(View.VISIBLE);
             itemView.setBackgroundColor(itemView.getResources().getColor(R.color.white));
@@ -200,60 +201,43 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
                 mOffset += bannerGroup.getBanners().size();
                 mLastGroupType = bannerGroup.getType();
-                notifyItemRangeInserted(
-                        getPositionOfNormalBanners() + previousCount,
-                        mSales.size() - previousCount);
+                notifyItemRangeInserted(getPositionOfNormalBanners() + previousCount, mSales.size() - previousCount);
             }
         }
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = null;
 
         switch (removeViewHolderOldModifier(removeViewHolderOrientationModifier(viewType))) {
             case VIEW_HOLDER_TYPE_SPACER:
                 return new SpacerViewHolder(new View(parent.getContext(), null));
+            case VIEW_HOLDER_TYPE_LEADER_BANNER:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_leaderboard_banner, parent, false);
+                return new LeaderboardBannerViewHolder(view, getLeaderboardBannerHeight());
             case VIEW_HOLDER_TYPE_SLIDING_BANNER:
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
-                return new HorizontalRecyclerBannerViewHolder(view,
-                        (int) computeSlidingBannersGrid().getItemHeight(),
-                        mSlidingBannersAdapter,
-                        true,
-                        true);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
+                return new HorizontalRecyclerBannerViewHolder(view, (int) computeSlidingBannersGrid().getItemHeight(), mSlidingBannersAdapter, true, true);
             case VIEW_HOLDER_TYPE_CATEGORY_BANNER:
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
-                return new HorizontalRecyclerBannerViewHolder(view,
-                        (int) computeCategoryBannersGrid().getItemHeight(),
-                        mCategoryBannersAdapter,
-                        false,
-                        false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
+                return new HorizontalRecyclerBannerViewHolder(view, (int) computeCategoryBannersGrid().getItemHeight(), mCategoryBannersAdapter, false, false);
             case VIEW_HOLDER_TYPE_SPONSORED_BANNER:
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
-                return new HorizontalRecyclerBannerViewHolder(view,
-                        (int) computeSponsoredBannersGrid().getItemHeight(),
-                        mSponsoredBannersAdapter,
-                        false,
-                        false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
+                return new HorizontalRecyclerBannerViewHolder(view, (int) computeSponsoredBannersGrid().getItemHeight(), mSponsoredBannersAdapter, false, false);
             case VIEW_HOLDER_TYPE_FOOTER:
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.footer_ads, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_ads, parent, false);
                 return new FooterViewHolder(view);
             default:
                 if (isViewHolderOldType(viewType)) {
                     if (parent.getContext().getResources().getBoolean(R.bool.is_using_older_banner)) {
-                        view = LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.viewholder_older_banner, parent, false);
+                        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_older_banner, parent, false);
                     } else {
-                        view = LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.viewholder_old_banner, parent, false);
+                        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_old_banner, parent, false);
                     }
                 } else {
-                    view = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.viewholder_banner, parent, false);
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_banner, parent, false);
                 }
 
                 return new BannerViewHolder(view, mComputedHeight, viewType);
@@ -271,22 +255,41 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         BannerViewHolder bannerViewHolder = null;
         HorizontalRecyclerBannerViewHolder horizontalRecyclerViewHolder = null;
         FooterViewHolder footerViewHolder = null;
+        LeaderboardBannerViewHolder leaderboardBannerViewHolder = null;
         if (holder instanceof BannerViewHolder) {
             bannerViewHolder = (BannerViewHolder) holder;
         } else if (holder instanceof HorizontalRecyclerBannerViewHolder) {
             horizontalRecyclerViewHolder = (HorizontalRecyclerBannerViewHolder) holder;
             horizontalRecyclerViewHolder.onViewBound();
             horizontalRecyclerViewHolders.add(horizontalRecyclerViewHolder);
+        } else if (holder instanceof LeaderboardBannerViewHolder) {
+            leaderboardBannerViewHolder = (LeaderboardBannerViewHolder) holder;
         } else if (holder instanceof FooterViewHolder) {
             footerViewHolder = (FooterViewHolder) holder;
         }
         switch (removeViewHolderOldModifier(removeViewHolderOrientationModifier(holder.getItemViewType()))) {
             case VIEW_HOLDER_TYPE_SPACER:
                 break;
+            case VIEW_HOLDER_TYPE_LEADER_BANNER: {
+                ImageUtils.loadImageGif(leaderboardBanner.getImage(), leaderboardBannerViewHolder.image);
+
+                if (leaderboardBannerViewHolder.subscription != null) {
+                    leaderboardBannerViewHolder.subscription.dispose();
+                }
+
+                if (leaderboardBannerOnClick != null) {
+                    leaderboardBannerViewHolder.subscription =
+                            RxView.clicks(leaderboardBannerViewHolder.layout)
+                                    .throttleFirst(THROTTLE_FIRST_WINDOW_DURATION, TimeUnit.MILLISECONDS)
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(leaderboardBannerOnClick);
+                }
+                break;
+            }
             case VIEW_HOLDER_TYPE_SLIDING_BANNER:
                 setupSlidingBannersDimensions();
 
@@ -327,8 +330,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 break;
             case VIEW_HOLDER_TYPE_FOOTER:
                 if (bannersAdapterHelper.isGoogleAdsEnabled()) {
-                    CommonUtils.showAdmob(context, footerViewHolder.adView,
-                            context.getResources().getString(R.string.admob_banners_id));
+                    CommonUtils.showAdmob(context, footerViewHolder.adView, context.getResources().getString(R.string.admob_banners_id));
                 }
                 break;
             default:
@@ -360,9 +362,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         bannerViewHolder.discount.setVisibility(View.GONE);
                     }
 
-                    if (item.getPercentOffText() != null &&
-                            item.getPercentOffText().length() > 0 &&
-                            bannerViewHolder.itemView.getContext().getResources().getBoolean(R.bool.is_dynamic_discount_banners_enabled)) {
+                    if (item.getPercentOffText() != null && item.getPercentOffText().length() > 0 && bannerViewHolder.itemView.getContext().getResources().getBoolean(R.bool.is_dynamic_discount_banners_enabled)) {
                         bannerViewHolder.percentOff.setVisibility(View.VISIBLE);
                         bannerViewHolder.percentOff.setText(item.getPercentOffText());
                     } else {
@@ -391,12 +391,17 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
 
                     if (item.getGroup().getIsClickable()) {
-                        bannerViewHolder.subscription = RxView.clicks(bannerViewHolder.layout)
-                                .throttleFirst(
-                                        THROTTLE_FIRST_WINDOW_DURATION,
-                                        TimeUnit.MILLISECONDS)
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(action -> bannersAdapterHelper.onBannerTapped(item, holder.getAdapterPosition(), imgUrl, Events.RegularBannerClickEvent, item.getDescription()));
+                        bannerViewHolder.subscription =
+                                RxView.clicks(bannerViewHolder.layout)
+                                        .throttleFirst(THROTTLE_FIRST_WINDOW_DURATION, TimeUnit.MILLISECONDS)
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(action ->
+                                                bannersAdapterHelper.onBannerTapped(
+                                                        item,
+                                                        holder.getAdapterPosition(),
+                                                        imgUrl,
+                                                        Events.RegularBannerClickEvent,
+                                                        item.getDescription()));
                     }
                 }
                 break;
@@ -418,7 +423,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
         if (holder instanceof BannerViewHolder) {
             BannerViewHolder bannerViewHolder = (BannerViewHolder) holder;
             if (bannerViewHolder.subscription != null) {
@@ -446,6 +451,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (removeViewHolderOrientationModifier(viewType)) {
             case VIEW_HOLDER_TYPE_PROMO_BANNER:
                 return promoBanner != null;
+            case VIEW_HOLDER_TYPE_LEADER_BANNER:
+                return isLeaderBannersVisible();
             case VIEW_HOLDER_TYPE_SLIDING_BANNER:
                 return isSlidingBannersVisible();
             case VIEW_HOLDER_TYPE_CATEGORY_BANNER:
@@ -482,6 +489,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private int getPositionOfNormalBanners() {
         return getPositionOfViewType(VIEW_HOLDER_TYPE_NORMAL_BANNER);
+    }
+
+    private int getPositionOfLeaderboardBanner() {
+        return getPositionOfViewType(VIEW_HOLDER_TYPE_LEADER_BANNER);
     }
 
     private int getPositionOfPromoBanner() {
@@ -553,10 +564,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (!context.getResources().getBoolean(R.bool.is_ourpay_app)) {
             // Dynamic Height Computation
-            ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
-                    mWidth, mHeight,
-                    ScreenUtils.getScreenWidth(context),
-                    minColumns, maxColumns);
+            ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(mWidth, mHeight, ScreenUtils.getScreenWidth(context), minColumns, maxColumns);
             mNumberOfColumns = grid.getColumn();
             mComputedWidth = (int) grid.getItemWidth();
             if (useOldBannerDimensions) {
@@ -584,6 +592,14 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return (int) Math.ceil(dimen);
     }
 
+    private int getLeaderboardBannerHeight() {
+        final int numberOfColumns = 1;
+        final int width = context.getResources().getInteger(isTablet ? R.integer.leaderboard_banner_tablet_width : R.integer.leaderboard_banner_mobile_width);
+        final int height = context.getResources().getInteger(isTablet ? R.integer.leaderboard_banner_tablet_height : R.integer.leaderboard_banner_mobile_height);
+        ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(width, height, ScreenUtils.getScreenWidth(context), numberOfColumns, numberOfColumns);
+        return (int) grid.getItemHeight();
+    }
+
     private Pair<Integer, Integer> slidingBannersImageSize() {
         int width;
         int height;
@@ -604,14 +620,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final int numberOfColumns = context.getResources().getInteger(isTablet ? R.integer.sliding_banner_tablet_column_count : R.integer.sliding_banner_mobile_column_count);
         final int width = slidingBannersImageSize().first;
         final int height = slidingBannersImageSize().second;
-        ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
-                width, height,
-                ScreenUtils.getScreenWidth(context),
-                numberOfColumns, numberOfColumns);
-        return new ImageUtils.Grid(
-                1,
-                grid.getItemWidth(),
-                grid.getItemHeight() + context.getResources().getDimension(R.dimen.banner_sale_info_height) + context.getResources().getDimension(R.dimen.horizontal_banner_circle_indicator_height));
+        ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(width, height, ScreenUtils.getScreenWidth(context), numberOfColumns, numberOfColumns);
+        return new ImageUtils.Grid(1, grid.getItemWidth(), grid.getItemHeight() + context.getResources().getDimension(R.dimen.banner_sale_info_height) + context.getResources().getDimension(R.dimen.horizontal_banner_circle_indicator_height));
     }
 
     private void setupSlidingBannersDimensions() {
@@ -623,9 +633,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (isTablet) {
                 width += context.getResources().getDimension(R.dimen.promo_banner_tablet_right_padding);
             }
-            mSlidingBannersAdapter.setupDimensions(
-                    width,
-                    (int) slidingBannersGrid.getItemHeight());
+            mSlidingBannersAdapter.setupDimensions(width, (int) slidingBannersGrid.getItemHeight());
         }
     }
 
@@ -645,33 +653,17 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private ImageUtils.Grid computeCategoryBannersGrid() {
         final boolean useCircular = mCategoryBannersAdapter != null && mCategoryBannersAdapter.isUseCircularImage();
 
-        final int numberOfColumns = isTablet ?
-                context.getResources().getInteger(
-                        useCircular ? R.integer.category_banner_circular_column_count_for_tablet : R.integer.category_banner_column_count_for_tablet) :
-                context.getResources().getInteger(R.integer.category_banner_column_count);
+        final int numberOfColumns = isTablet ? context.getResources().getInteger(useCircular ? R.integer.category_banner_circular_column_count_for_tablet : R.integer.category_banner_column_count_for_tablet) : context.getResources().getInteger(R.integer.category_banner_column_count);
         final int width = categoryBannersImageSize().first;
         final int height = categoryBannersImageSize().second;
 
         if (!useCircular) {
-            ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
-                    width, height,
-                    ScreenUtils.getScreenWidth(context),
-                    numberOfColumns, numberOfColumns);
-            return new ImageUtils.Grid(
-                    1,
-                    grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(),
-                    grid.getItemHeight() + context.getResources().getDimension(R.dimen.horizontal_banner_title_height) + getBottomPaddingForHorizontalBanners()
-            );
+            ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(width, height, ScreenUtils.getScreenWidth(context), numberOfColumns, numberOfColumns);
+            return new ImageUtils.Grid(1, grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(), grid.getItemHeight() + context.getResources().getDimension(R.dimen.horizontal_banner_title_height) + getBottomPaddingForHorizontalBanners());
         } else {
             final float extraPercentage = context.getResources().getInteger(isTablet ? R.integer.category_banner_partial_column_percentage_for_tablet : R.integer.category_banner_partial_column_percentage) / 100f;
-            ImageUtils.Grid grid = ImageUtils.getExactGridDefinition(numberOfColumns + extraPercentage,
-                    height / (float) width,
-                    ScreenUtils.getScreenWidth(context));
-            return new ImageUtils.Grid(
-                    1,
-                    grid.getItemWidth(),
-                    grid.getItemWidth() + context.getResources().getDimension(R.dimen.horizontal_banner_header_title_height) + context.getResources().getDimension(R.dimen.horizontal_banner_title_height)
-            );
+            ImageUtils.Grid grid = ImageUtils.getExactGridDefinition(numberOfColumns + extraPercentage, height / (float) width, ScreenUtils.getScreenWidth(context));
+            return new ImageUtils.Grid(1, grid.getItemWidth(), grid.getItemWidth() + context.getResources().getDimension(R.dimen.horizontal_banner_header_title_height) + context.getResources().getDimension(R.dimen.horizontal_banner_title_height));
         }
     }
 
@@ -680,10 +672,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ImageUtils.Grid categoryBannersGrid = computeCategoryBannersGrid();
             mCategoryBannersAdapter.setImageWidth(categoryBannersImageSize().first);
             mCategoryBannersAdapter.setImageHeight(categoryBannersImageSize().second);
-            mCategoryBannersAdapter.setupDimensions(
-                    (int) categoryBannersGrid.getItemWidth(),
-                    (int) categoryBannersGrid.getItemHeight()
-            );
+            mCategoryBannersAdapter.setupDimensions((int) categoryBannersGrid.getItemWidth(), (int) categoryBannersGrid.getItemHeight());
         }
     }
 
@@ -701,20 +690,11 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private ImageUtils.Grid computeSponsoredBannersGrid() {
-        final int numberOfColumns = isTablet ?
-                context.getResources().getInteger(R.integer.sponsored_banner_column_count_for_tablet) :
-                context.getResources().getInteger(R.integer.sponsored_banner_column_count);
+        final int numberOfColumns = isTablet ? context.getResources().getInteger(R.integer.sponsored_banner_column_count_for_tablet) : context.getResources().getInteger(R.integer.sponsored_banner_column_count);
         final int width = sponsoredBannersImageSize().first;
         final int height = sponsoredBannersImageSize().second;
-        ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(
-                width, height,
-                ScreenUtils.getScreenWidth(context),
-                numberOfColumns, numberOfColumns);
-        return new ImageUtils.Grid(
-                1,
-                grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(),
-                grid.getItemHeight() + getBottomPaddingForHorizontalBanners()
-        );
+        ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(width, height, ScreenUtils.getScreenWidth(context), numberOfColumns, numberOfColumns);
+        return new ImageUtils.Grid(1, grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(), grid.getItemHeight() + getBottomPaddingForHorizontalBanners());
     }
 
     private void setupSponsoredBannersDimensions() {
@@ -722,9 +702,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ImageUtils.Grid sponsoredBannersGrid = computeSponsoredBannersGrid();
             mSponsoredBannersAdapter.setImageWidth(sponsoredBannersImageSize().first);
             mSponsoredBannersAdapter.setImageHeight(sponsoredBannersImageSize().second);
-            mSponsoredBannersAdapter.setupDimensions(
-                    (int) sponsoredBannersGrid.getItemWidth(),
-                    (int) sponsoredBannersGrid.getItemHeight());
+            mSponsoredBannersAdapter.setupDimensions((int) sponsoredBannersGrid.getItemWidth(), (int) sponsoredBannersGrid.getItemHeight());
         }
     }
 
@@ -749,9 +727,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        int viewType = (useOldBannerDimensions ? 1 : 0) |
-                (mOrientation == Configuration.ORIENTATION_LANDSCAPE ? VIEW_HOLDER_TYPE_LANDSCAPE : 0);
-        if (position == getPositionOfPromoBanner()) {
+        int viewType = (useOldBannerDimensions ? 1 : 0) | (mOrientation == Configuration.ORIENTATION_LANDSCAPE ? VIEW_HOLDER_TYPE_LANDSCAPE : 0);
+        if (position == getPositionOfLeaderboardBanner()) {
+            viewType = viewType | VIEW_HOLDER_TYPE_LEADER_BANNER;
+        } else if (position == getPositionOfPromoBanner()) {
             viewType = viewType | VIEW_HOLDER_TYPE_PROMO_BANNER;
         } else if (position == getPositionOfSpacer()) {
             viewType = viewType | VIEW_HOLDER_TYPE_SPACER;
@@ -769,6 +748,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return viewType;
     }
 
+    private boolean isLeaderBannersVisible() {
+        return leaderboardBanner != null;
+    }
+
     private boolean isSlidingBannersVisible() {
         return mSlidingBannersAdapter != null;
     }
@@ -779,6 +762,21 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private boolean isSponsoredBannersVisible() {
         return mSponsoredBannersAdapter != null;
+    }
+
+    public void setLeaderboardBanner(GetBannerResponse.Banner banner, Consumer<Object> onClick) {
+        boolean willInsert = leaderboardBanner == null && banner != null;
+        boolean willDelete = leaderboardBanner != null && banner == null;
+        if (willDelete) {
+            int index = getPositionOfLeaderboardBanner();
+            leaderboardBanner = null;
+            leaderboardBannerOnClick = null;
+            notifyItemRemoved(index);
+        } else if (willInsert) {
+            leaderboardBanner = banner;
+            leaderboardBannerOnClick = onClick;
+            notifyItemInserted(getBannerOrderPosition(VIEW_HOLDER_TYPE_LEADER_BANNER));
+        }
     }
 
     public HorizontalScrollingBannerAdapter getSlidingBannersAdapter() {
@@ -792,16 +790,11 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int index = getPositionOfSlidingBanners();
             mSlidingBannersAdapter.setOnBannerTappedListener(null);
             mSlidingBannersAdapter = null;
-            notifyDataSetChanged();
+            notifyItemRemoved(index);
         } else if (willInsert) {
             mSlidingBannersAdapter = slidingBannersAdapter;
-            if (mSlidingBannersAdapter != null) {
-                mSlidingBannersAdapter
-                        .setOnBannerTappedListener((banner, position) -> bannersAdapterHelper
-                                .onBannerTapped(banner, position, "",
-                                        Events.BannerClickEvent, banner.getBannerType()));
-            }
-            notifyDataSetChanged();
+            mSlidingBannersAdapter.setOnBannerTappedListener((banner, position) -> bannersAdapterHelper.onBannerTapped(banner, position, "", Events.BannerClickEvent, banner.getBannerType()));
+            notifyItemInserted(getBannerOrderPosition(VIEW_HOLDER_TYPE_SLIDING_BANNER));
         }
     }
 
@@ -816,17 +809,14 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int index = getPositionOfCategoryBanners();
             mCategoryBannersAdapter.setOnBannerTappedListener(null);
             mCategoryBannersAdapter = null;
-            notifyDataSetChanged();
+            notifyItemRemoved(index);
         } else if (willInsert) {
             mCategoryBannersAdapter = categoryBannersAdapter;
             mCategoryBannersAdapter.preloadBannerImages(context);
             if (mCategoryBannersAdapter != null) {
-                mCategoryBannersAdapter
-                        .setOnBannerTappedListener((banner, position) -> bannersAdapterHelper
-                                .onBannerTapped(banner, position, "",
-                                        Events.BannerClickEvent, banner.getBannerType()));
+                mCategoryBannersAdapter.setOnBannerTappedListener((banner, position) -> bannersAdapterHelper.onBannerTapped(banner, position, "", Events.BannerClickEvent, banner.getBannerType()));
             }
-            notifyDataSetChanged();
+            notifyItemInserted(getBannerOrderPosition(VIEW_HOLDER_TYPE_CATEGORY_BANNER));
         }
     }
 
@@ -841,16 +831,14 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             int index = getPositionOfSponsoredBanners();
             mSponsoredBannersAdapter.setOnBannerTappedListener(null);
             mSponsoredBannersAdapter = null;
-            notifyDataSetChanged();
+            notifyItemRemoved(index);
         } else if (willInsert) {
             mSponsoredBannersAdapter = sponsoredBannersAdapter;
             mSponsoredBannersAdapter.preloadBannerImages(context);
             if (mSponsoredBannersAdapter != null) {
-                mSponsoredBannersAdapter.setOnBannerTappedListener((banner, position) -> bannersAdapterHelper
-                        .onBannerTapped(banner, position, "",
-                                Events.SponsoredBannerClickEvent, banner.getBannerText()));
+                mSponsoredBannersAdapter.setOnBannerTappedListener((banner, position) -> bannersAdapterHelper.onBannerTapped(banner, position, "", Events.SponsoredBannerClickEvent, banner.getBannerText()));
             }
-            notifyDataSetChanged();
+            notifyItemInserted(getBannerOrderPosition(VIEW_HOLDER_TYPE_SPONSORED_BANNER));
         }
     }
 

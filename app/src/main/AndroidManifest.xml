@@ -25,32 +25,34 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <!-- Optional -->
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!--  Android Fingerprint -->
-    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <application
         android:name=".DDApplication"
-        tools:replace="android:allowBackup, android:theme"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:largeHeap="true"
         android:theme="@style/AppTheme"
-        android:networkSecurityConfig="@xml/network_security_config">
+        tools:replace="android:allowBackup, android:theme">
 
         <activity
             android:name=".ui.main.MainActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/SplashTheme"
             android:configChanges="orientation|keyboard|screenSize"
+            android:documentLaunchMode="intoExisting"
+            android:exported="true"
+            android:launchMode="singleInstance"
             android:resizeableActivity="false"
+            android:theme="@style/SplashTheme"
             android:windowSoftInputMode="stateHidden|adjustPan">
 
+            <tools:validation testUrl="https://www.ozsale.com.au/shop/sale/save-big-on-our-bulk-grocery-buys/s/6BM0pJzUd06pZF7SDE1g0A/" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -59,54 +61,48 @@
 
             <!-- Deep Linking -->
 
-            <intent-filter
-                android:label="@string/app_name">
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <!-- DealsDirect -->
-                <!-- Accepts URIs that begin with "https://www.dealsdirect.com.au” -->
-
-                <!-- note that the leading "/" is required for pathPrefix -->
-                <!-- Accepts URIs that begin with "dealsdirect://ta” -->
-
-                <!-- Ozsale -->
-                <!-- Accepts URIs that begin with "https://www.ozsale.com.au” -->
-                <data
-                    android:host="@string/app_uri_hostname"
-                    android:pathPrefix=""
-                    android:scheme="@string/app_uri_scheme"
-                    tools:ignore="AppLinkUrlError" />
-
-                <data
-                    android:host="@string/app_uri_klarna"
-                    android:pathPrefix=""
-                    android:scheme="@string/app_uri_scheme"
-                    tools:ignore="AppLinkUrlError" />
-
-                <!--&lt;!&ndash; Email Smart Banners &ndash;&gt;-->
-                <!--<data-->
-                <!--android:host="em.dealsdirect.com.au"-->
-                <!--android:scheme="https" />-->
-
-                <!-- TB Deeplinking Data -->
-                <data
-                    android:host="www.topbuy.com.au"
-                    android:pathPrefix=""
-                    android:scheme="https"
-                    tools:ignore="AppLinkUrlError" />
-
-            </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="${applicationId}.braintree" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="@string/app_uri_klarna"
+                    android:pathPrefix=""
+                    android:scheme="@string/app_uri_scheme"
+                    tools:ignore="AppLinkUrlError" />
+            </intent-filter>
+            <intent-filter
+                android:autoVerify="true"
+                tools:targetApi="m">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/app_uri_scheme" />
+                <data android:host="@string/app_uri_hostname" />
+                <data
+                    android:path=""
+                    tools:ignore="AppLinkUrlError" />
+                <data android:path="/" />
+                <data android:pathPattern="/shop/sale/.*/s/.*" />
+                <data android:pathPattern="/shop/sales/.*/.*" />
+                <data android:pathPattern="/shop/.*/.*" />
+                <data android:pathPattern="/brands" />
+                <data android:pathPattern="/shop/brand/.*/.*" />
+                <data android:pathPattern="/.*/product/.*/s/.*" />
+                <data android:pathPattern="/product/.*/s/.*" />
+                <data android:pathPattern="/shop/search" />
             </intent-filter>
         </activity>
 
@@ -141,8 +137,9 @@
             </intent-filter>
         </service>
 
-        <service android:name=".service.fcm.GcmIntentService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service
+            android:name=".service.fcm.GcmIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <!-- [END gcm_service] -->
 
         <!-- [START facebook] -->
@@ -180,7 +177,7 @@
         <!--[START ADMOB APP ID]-->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_app_id"/>
+            android:value="@string/admob_app_id" />
         <!--[END ADMOB APP ID]-->
 
         <!--[Firebase Crashlytics]-->

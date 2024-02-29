@@ -28,6 +28,7 @@ import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.agerestriction.SaveAgeRestrictedConsentDataRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
@@ -62,8 +63,6 @@ import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
-import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
-import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
@@ -179,6 +178,8 @@ public interface ApiHelper {
     ApiHeader getApiHeader();
 
     Observable<SampleResponse> doSampleApiCall(SampleRequest request);
+
+    Observable<GetBannerResponse> callGetLeaderboardBanner(GetLeaderboardBannerRequest request);
 
     Observable<GetBannerResponse> callGetBanners(GetBannerRequest getPublicSalesBannerRequest, boolean getOnlyFromNetwork);
 
@@ -484,9 +485,6 @@ public interface ApiHelper {
     Observable<CreateLPayOrderResponse> callCreateLPayOrder(CreateLPayOrderRequest request);
 
     Observable<JSONObject> callConfirmLPayTransaction(ConfirmLPayTransactionRequest request);
-
-    // DEEPLINK
-    Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest request);
 
     // ATTACHMENTS
     Observable<String> setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest);

@@ -223,11 +223,6 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.EVENTING, "events", ApiUrlVersion.v1.apiVersion());
     }
 
-    /* Deep Link Data */
-    public static String deepLink() {
-        return getFormattedUrl(ApiService.SETTING, "deeplinkdata", ApiUrlVersion.v1.apiVersion());
-    }
-
     /* Account Data*/
     public static String accountData() {
         return getFormattedUrl(ApiService.SETTING, "settings/accountdata/" + ACCOUNT_ID_DELIMETER, ApiUrlVersion.v2.apiVersion());

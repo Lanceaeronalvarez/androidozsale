@@ -48,4 +48,6 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
     int getPriceBlockMode();
 
     int getHoursLeftToDisplayTimer();
+
+    void loadLeaderboardBanner();
 }

@@ -32,6 +32,7 @@ import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
 import au.com.dealsdirect.data.network.model.agerestriction.SaveAgeRestrictedConsentDataRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
+import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
@@ -67,8 +68,6 @@ import au.com.dealsdirect.data.network.model.contactorder.ContactOrderResponse;
 import au.com.dealsdirect.data.network.model.contactreply.ReplyContactRequest;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.data.network.model.createcontact.CreateContactRequest;
-import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataRequest;
-import au.com.dealsdirect.data.network.model.deeplinkdata.DeepLinkDataResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
 import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
@@ -205,6 +204,16 @@ public class AppApiHelper implements ApiHelper {
                 .addBodyParameter(request)
                 .build()
                 .getObjectObservable(SampleResponse.class);
+    }
+
+    @Override
+    public Observable<GetBannerResponse> callGetLeaderboardBanner(GetLeaderboardBannerRequest request) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getSales2())
+                .addHeaders(mApiHeader.get())
+                .addQueryParameter(request)
+                .getResponseOnlyFromNetwork()
+                .build()
+                .getObjectObservable(GetBannerResponse.class);
     }
 
     @Override
@@ -1484,16 +1493,6 @@ public class AppApiHelper implements ApiHelper {
                 .build()
                 .getObjectObservable(CreateLPayOrderResponse.class);
     }
-
-    @Override
-    public Observable<DeepLinkDataResponse> callGetDeepLinkData(DeepLinkDataRequest deepLinkDataRequest) {
-        return Rx2AndroidNetworking.post(ApiEndPoint.deepLink())
-                .addHeaders(mApiHeader.get())
-                .addJSONObjectBody(JsonUtils.convertToJsonObject(deepLinkDataRequest))
-                .build()
-                .getObjectObservable(DeepLinkDataResponse.class);
-    }
-
     @Override
     public Observable<String> setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest) {
         return Rx2AndroidNetworking.put(ApiEndPoint.setAttachment())
