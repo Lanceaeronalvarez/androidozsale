@@ -1068,7 +1068,7 @@ public class MainController extends BaseController implements MainMvpView {
 
                     if (directories.size() == 5) {
                         String saleIdParam = uri.getQueryParameter("saleID");
-                        deepLinkSaleItems(null, saleId, saleIdParam);
+                        deepLinkSaleItems(saleName, saleId, saleIdParam);
                     } else {
                         deeplinkProductDetail(5, saleId, directories);
                     }

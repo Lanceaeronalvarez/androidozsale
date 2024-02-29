@@ -235,11 +235,12 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     }
 
     @Override
-    public void loadLeaderboardBanner() {
+    public void loadLeaderboardBanner(String categoryId) {
         LeaderboardPresenterHelper.loadLeaderboardBanner(
                 GetLeaderboardBannerRequest.newInstanceForShopPage(
                         isTablet() ? GetLeaderboardBannerRequest.DESKTOP_BROWSER :
-                                GetLeaderboardBannerRequest.MOBILE_BROWSER),
+                                GetLeaderboardBannerRequest.MOBILE_BROWSER,
+                        categoryId),
                 getDataManager(),
                 getCompositeDisposable(),
                 getSchedulerProvider(),

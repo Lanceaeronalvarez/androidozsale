@@ -291,6 +291,7 @@ public class NewSaleCategoriesController extends BaseController
         if (mCategoryName.contains("Today's Sales")) {
             mLevel = 0;
             mActivity.getMainController().showHomePage();
+            mActivity.getMainController().getShopRouter().popToRoot();
         } else if (mCategoryName.contains("Brands") && getCategoryTreeResponse.getKey() == null && getCategoryTreeResponse.getChildren() == null) {
             mLevel = 0;
             mActivity.getMainController().showBrands();
