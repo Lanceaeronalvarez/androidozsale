@@ -294,12 +294,17 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     public static ShopsController instanceWithCategoryFilter(String id, String key) {
-        Bundle bundle = new BundleBuilder(new Bundle()).putString(ShopsController.KEY_CATEGORY_ID, id).putString(ShopsController.KEY_CATEGORY_MAP, key).putString(ShopsController.KEY_CATEGORY_NAME, key).build();
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .putString(ShopsController.KEY_CATEGORY_ID, id)
+                .putString(ShopsController.KEY_CATEGORY_MAP, key)
+                .putString(ShopsController.KEY_CATEGORY_NAME, key)
+                .build();
         return new ShopsController(bundle);
     }
 
     public static ShopsController instanceWithBrandsOnlyFilter() {
-        Bundle bundle = new BundleBuilder(new Bundle()).putBoolean(ShopsController.KEY_BRANDS_ONLY, true).build();
+        Bundle bundle = new BundleBuilder(new Bundle())
+                .putBoolean(ShopsController.KEY_BRANDS_ONLY, true).build();
         return new ShopsController(bundle);
     }
 
@@ -523,7 +528,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             goToSalesFromCategories(mCategoryID, mCategoryKey);
         }
 
-        mPresenter.loadLeaderboardBanner();
+        mPresenter.loadLeaderboardBanner(mCategoryID);
     }
 
     private void setupBannersView() {

@@ -30,6 +30,10 @@ public class GetLeaderboardBannerRequest implements CachableRequest {
     @SerializedName("frontEnd")
     private String frontEnd;
 
+    @Expose
+    @SerializedName("category")
+    private String categoryId = null;
+
     public GetLeaderboardBannerRequest(String pageName, String frontEnd) {
         this.pageName = pageName;
         this.frontEnd = frontEnd;
@@ -37,8 +41,10 @@ public class GetLeaderboardBannerRequest implements CachableRequest {
         limit = 50;
     }
 
-    public static GetLeaderboardBannerRequest newInstanceForShopPage(String frontend) {
-        return new GetLeaderboardBannerRequest(SHOP_PAGE, frontend);
+    public static GetLeaderboardBannerRequest newInstanceForShopPage(String frontend, String categoryId) {
+        GetLeaderboardBannerRequest request = new GetLeaderboardBannerRequest(SHOP_PAGE, frontend);
+        request.categoryId = categoryId;
+        return request;
     }
 
     public static GetLeaderboardBannerRequest newInstanceForProductList(String frontEnd) {
