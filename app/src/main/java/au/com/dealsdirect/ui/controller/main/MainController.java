@@ -613,7 +613,9 @@ public class MainController extends BaseController implements MainMvpView {
         mBottomNavigationView.setCurrentItem(SHOP_INDEX, false);
         resetIndicators(SHOP_INDEX);
         if (previousPagerPosition == SHOP_INDEX) {
-            getShopRouter().popToRoot();
+            if (getShopRouter() != null) {
+                getShopRouter().popToRoot();
+            }
         } else {
             setViewPagerItem(SHOP_INDEX);
             Controller controller = getCurrentViewPagerController();
@@ -630,7 +632,9 @@ public class MainController extends BaseController implements MainMvpView {
         mBottomNavigationView.setCurrentItem(CATEGORY_INDEX, false);
 
         if (previousPagerPosition == CATEGORY_INDEX) {
-            getCategoriesRouter().popToRoot();
+            if (getCategoriesRouter() != null) {
+                getCategoriesRouter().popToRoot();
+            }
         } else {
             setViewPagerItem(CATEGORY_INDEX);
         }
@@ -997,7 +1001,9 @@ public class MainController extends BaseController implements MainMvpView {
 
     public void showReturnPolicy() {
         showAccountController();
-        getAccountRouter().popToRoot();
+        if (getAccountRouter() != null) {
+            getAccountRouter().popToRoot();
+        }
         final Controller controller = getAccountRouter().getBackstack().get(0).controller();
         if (controller instanceof AccountController) {
             ((AccountController) controller).showReturnsPolicy();
@@ -1041,14 +1047,18 @@ public class MainController extends BaseController implements MainMvpView {
             final ArrayList<String> directories = new ArrayList<>(Arrays.asList(path.split("/")));
             if (directories.isEmpty()) {
                 showShopController();
-                getShopRouter().popToRoot();
+                if (getShopRouter() != null) {
+                    getShopRouter().popToRoot();
+                }
                 return;
             }
             if (directories.get(0).isEmpty()) {
                 directories.remove(0);
                 if (directories.isEmpty()) {
                     showShopController();
-                    getShopRouter().popToRoot();
+                    if (getShopRouter() != null) {
+                        getShopRouter().popToRoot();
+                    }
                     return;
                 }
             }
