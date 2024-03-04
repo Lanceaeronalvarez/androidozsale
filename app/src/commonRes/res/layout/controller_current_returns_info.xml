@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"
             android:gravity="left"
-            android:text="Click the 'Request New Return' button to return your items within 30 days of receiving them.\n\nOur Customer Team will review request within 1-3 working days. Once approved, you will receive an email with your unique Return Authorisation Number (RAN) and return instructions. Please make sure your email address is correctly in My Details page. You can also track the progress of your return request below."
+            android:text="Click the 'Request New Return' button to return your items within 14 days of receiving them.\n\nOur Customer Team will review request within 1-3 working days. Once approved, you will receive an email with your unique Return Authorisation Number (RAN) and return instructions. Please make sure your email address is correctly in My Details page. You can also track the progress of your return request below."
             android:textColor="@color/text_medium"
             android:textSize="@dimen/text_size_body"
             app:layout_constraintBottom_toTopOf="@id/partial_new_return_info_continue_button"
