@@ -18,4 +18,5 @@
     <bool name="price_block_is_three_lines">true</bool>
 
     <bool name="is_gift_card_terms_and_conditions_visible">false</bool>
+    <bool name="is_gift_card_category_visible">false</bool>
 </resources>

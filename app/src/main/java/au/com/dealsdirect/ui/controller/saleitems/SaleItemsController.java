@@ -2725,6 +2725,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             SearchChipModel newChip = new SearchChipModel(chip.getFilterType(), chipTitle.replaceAll("[" + Settings.getSelectedCountry().currencySign + "]", ""));
             mUpdatedSelectedFilterList.add(newChip);
         }
+        if(mSourceType == SourceType.SELLER){
+            mUpdatedSelectedFilterList.addAll(mChipFilters);
+        }
         mPresenter.loadSaleItems(createSaleItemsRequest(mSelectedCategoryKeys, 0, mUpdatedSelectedFilterList));
     }
 

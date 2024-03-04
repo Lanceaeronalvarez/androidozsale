@@ -84,6 +84,7 @@ android {
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
         }
 
         buyinviteTest {
@@ -107,6 +108,7 @@ android {
 
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
         }
 
         dealsDirectRC {
@@ -135,6 +137,7 @@ android {
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
 
         }
 
@@ -159,6 +162,7 @@ android {
 
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
         }
 
         ooRC {
@@ -187,6 +191,7 @@ android {
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
         }
 
         ooTest {
@@ -210,6 +215,7 @@ android {
 
             ext.newRelicAppToken = "AAb0a85221e0d2eb8f185c2c2a34c566840b593941"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
         }
 
         topbuyRC {
@@ -238,6 +244,7 @@ android {
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
         }
 
         topbuyTest {
@@ -261,6 +268,7 @@ android {
 
             ext.newRelicAppToken = "AA17bba4366f389b0ca3e7c8068935df33ce10bd35"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
         }
 
         ozsaleRC {
@@ -289,6 +297,7 @@ android {
 
             ext.newRelicAppToken = "AA81128f803ab5bdb52bb2d4f6b19d29f0bb62bca1"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", "hHjxmc1ZTEOCgJrLGobtlQ"
 
         }
 
@@ -317,6 +326,7 @@ android {
 
             ext.newRelicAppToken = "AA81128f803ab5bdb52bb2d4f6b19d29f0bb62bca1"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", "hHjxmc1ZTEOCgJrLGobtlQ"
 
         }
 
@@ -346,6 +356,7 @@ android {
 
             ext.newRelicAppToken = "AA7859bf063d467b13d1118979fb839dec128eb88a"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", "VK14gfQWa02i5K12OaA5aA"
 
         }
 
@@ -370,6 +381,7 @@ android {
 
             ext.newRelicAppToken = "AA7859bf063d467b13d1118979fb839dec128eb88a"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", "VK14gfQWa02i5K12OaA5aA"
         }
 
         nzsaleRC {
@@ -398,6 +410,7 @@ android {
 
             ext.newRelicAppToken = "AAfebece95884f3f5bc6acaacb76d02440c0f7eb85"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", "w95zHeQSyUe2AjkNuGd_BQ"
 
         }
 
@@ -422,6 +435,7 @@ android {
 
             ext.newRelicAppToken = "AAfebece95884f3f5bc6acaacb76d02440c0f7eb85"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", "w95zHeQSyUe2AjkNuGd_BQ"
 
         }
 
@@ -451,6 +465,7 @@ android {
 
             ext.newRelicAppToken = "AAfb90a146f4b17ba00df83492608b2d7057e99e16"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
         }
 
         mysaleTest {
@@ -474,6 +489,7 @@ android {
 
             ext.newRelicAppToken = "AAfb90a146f4b17ba00df83492608b2d7057e99e16"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
+            resValue "string", "gift_card_id", ""
         }
 
     }
