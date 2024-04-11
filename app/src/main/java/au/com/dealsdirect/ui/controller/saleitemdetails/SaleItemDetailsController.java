@@ -62,7 +62,6 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.bumptech.glide.Priority;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
@@ -799,6 +798,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void onOrientationChanged(Configuration newConfiguration) {
+        if (!isViewAttached()) {
+            return;
+        }
         mProductDetailScrollView.scrollTo(0, 0);
         stretchImageView();
         if (mOurpay != null) {
@@ -1243,7 +1245,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @SuppressLint("SetJavaScriptEnabled")
     private void setupProductDetails(SaleItemDetails saleDetail) {
-        if (willViewDisappear) {
+        if (willViewDisappear || !isViewBound()) {
             return;
         }
 
@@ -1318,8 +1320,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
 
         DataCollector.logEvent(Events.CVItemDetails, parameters);
-
-        mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
 
         if (!IS_DISCOUNT_POG_ENABLED) {
             mPresenter.getDynamicDiscount(saleDetail.getSkuId());
@@ -1480,6 +1480,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         setupSeller(saleDetail);
         setupBuyBox(saleDetail);
+
+        mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
     }
 
     public void setupPartialProductDetails(SaleItemProduct saleDetail) {
@@ -2060,7 +2062,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     public boolean handleBack() {
         willViewDisappear = true;
         if (!isAnimating) {
-            mProductDetailScrollView.scrollTo(0, 0);
+            if (mProductDetailScrollView != null) {
+                mProductDetailScrollView.scrollTo(0, 0);
+            }
             if (mRootView != null) {
                 mRootView.removeListener(mDragDismissListener);
             }

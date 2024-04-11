@@ -1114,10 +1114,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mGridViewModePreferenceHelper.resetTimestamp();
 
         willOpenSaleDetails = false;
-        try {
-            updateBasketItemsQuantity(CartUtil.getCartValue());
-        } catch (Exception e) {
-        }
+        updateBasketItemsQuantity(CartUtil.getCartValue());
     }
 
     @Override
@@ -1135,16 +1132,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         itemsContainerHelper.removeItem(id);
                         mSaleItemsAdapter.removeData(indexInList);
                     } else if (indexInList < 0 && isInWishlist) {
-                        refreshContents();
+                        if (isViewAttached()) {
+                            refreshContents();
+                        }
                         break;
                     }
                 }
             }
         }
-        try {
-            updateBasketItemsQuantity(CartUtil.getCartValue());
-        } catch (Exception e) {
-        }
+        updateBasketItemsQuantity(CartUtil.getCartValue());
     }
 
     @Override
@@ -3325,6 +3321,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     public void updateBasketItemsQuantity(int quantity) {
         mBasketQuantity = quantity;
+        if (!isViewAttached()) {
+            return;
+        }
         if (mBasketQuantity == 0) {
             mBadge.setVisibility(View.GONE);
         } else {
