@@ -18,4 +18,6 @@ public interface OrderDetailsMvpView extends MvpView {
     void onReceivedSet(int invoiceNumber);
 
     void orderSatisfactionReceived(int invoiceNumber, boolean hasSetSatisfaction);
+
+    void addressChangeError(String message);
 }

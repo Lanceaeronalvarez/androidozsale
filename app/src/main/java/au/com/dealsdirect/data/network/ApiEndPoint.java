@@ -488,7 +488,7 @@ public final class ApiEndPoint {
     }
 
     public static String changeDeliveryAddress() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders/{order_id}/invoices/number={invoice_number}/addresses/{address_id}", ApiUrlVersion.v1.apiVersion());
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/orders/{order_id}/invoices/number={invoice_number}/addresses/{address_id}", ApiUrlVersion.v2.apiVersion());
     }
 
     public static String cancelInvoice() {

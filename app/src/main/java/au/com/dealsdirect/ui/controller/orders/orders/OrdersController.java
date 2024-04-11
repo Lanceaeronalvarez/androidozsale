@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.orders.orders;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,7 @@ import au.com.dealsdirect.ui.controller.orders.BottomSheetOrderSatisfactionDialo
 import au.com.dealsdirect.ui.controller.orders.menu.OrdersMenuHelper;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.controller.orders.tracking.OrderTrackingClickListener;
+import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
@@ -361,6 +363,13 @@ public class OrdersController extends BaseController implements OrdersMvpView, O
     }
 
     @Override
+    public void addressChangeError(String message) {
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                message);
+    }
+
+    @Override
     public void onNodeTapped(GetOrdersResponse.Order.Invoice.Delivery.Step upperStep, GetOrdersResponse.Order.Invoice.Delivery.Step lowerStep) {
         mActivity.showOrderTrackingStepBottomDialog(upperStep, lowerStep);
     }
@@ -440,4 +449,5 @@ public class OrdersController extends BaseController implements OrdersMvpView, O
         }
         mPaginateManager = PaginateUtils.init(mRecyclerView, mPaginateCallbacks);
     }
+
 }

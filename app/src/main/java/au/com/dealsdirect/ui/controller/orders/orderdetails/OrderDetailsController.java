@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
+import android.app.AlertDialog;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -312,6 +313,13 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     }
 
     @Override
+    public void addressChangeError(String message) {
+        CustomAlertDialog.showCustomAlertDialog(
+                mActivity, CustomAlertDialog.CustomDialogIconState.NEGATIVE,
+                message);
+    }
+
+    @Override
     public void onOrderItemTrackingButtonClick(String url, String errorMessage) {
         ActivityLaunchUtil.launchActivity(mActivity, url, errorMessage);
     }
@@ -372,4 +380,5 @@ public class OrderDetailsController extends BaseController implements OrderDetai
     public GetOrdersResponse.Order getOrderDetails() {
         return mOrderDetails;
     }
+
 }
