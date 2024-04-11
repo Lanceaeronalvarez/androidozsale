@@ -1069,7 +1069,9 @@ public class MainController extends BaseController implements MainMvpView {
                 }
             }
 
-            if (directories.get(0).equals("shop")) {
+            if (directories.get(0).equals("ItemsList.aspx")) {
+                mPresenter.loadSaleBannerDetails(uri.getQueryParameter("saleID"));
+            } else if (directories.get(0).equals("shop")) {
                 if (directories.get(1).equals("sale")) {
                     // Specific Sale and Trending Now
                     if (directories.size() < 5) {
@@ -1141,7 +1143,7 @@ public class MainController extends BaseController implements MainMvpView {
                 deepLinkBrands();
             } else {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(browserIntent);
+                mActivity.startActivity(browserIntent);
             }
         }
     }
@@ -1158,5 +1160,10 @@ public class MainController extends BaseController implements MainMvpView {
                         .replace('-', ' '));
         String productId = directories.get(index + 3);
         deepLinkSaleItemDetails(saleId, productId, productName);
+    }
+
+    @Override
+    public void receiveSaleBannerDetails(String saleName, String encodedId, String externalId) {
+        deepLinkSaleItems(saleName, encodedId, externalId);
     }
 }

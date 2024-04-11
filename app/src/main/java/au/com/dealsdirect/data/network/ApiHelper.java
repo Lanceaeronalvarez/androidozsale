@@ -187,6 +187,8 @@ public interface ApiHelper {
 
     Observable<GetSaleBannerDetailsResponse> callGetSaleBannerDetails(String saleId);
 
+    Observable<JSONObject> callGetSaleBannerDetails2(String externalSaleId);
+
     Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request);
 
     Observable<List<GetCategoryTreeResponse>> callGetCategories(GetCategoryTreeRequest request);

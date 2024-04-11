@@ -95,6 +95,7 @@
                     android:path=""
                     tools:ignore="AppLinkUrlError" />
                 <data android:path="/" />
+                <data android:path="/ItemsList.aspx" />
                 <data android:pathPattern="/shop/sale/.*/s/.*" />
                 <data android:pathPattern="/shop/sales/.*/.*" />
                 <data android:pathPattern="/shop/.*/.*" />

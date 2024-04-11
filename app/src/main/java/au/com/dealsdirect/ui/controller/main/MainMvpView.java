@@ -43,4 +43,6 @@ public interface MainMvpView extends MvpView {
     boolean isPopUpControllerVisible();
 
     void backClick();
+
+    void receiveSaleBannerDetails(String saleName, String encodedId, String externalId);
 }

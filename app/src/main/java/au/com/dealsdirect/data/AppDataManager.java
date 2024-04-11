@@ -252,6 +252,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<JSONObject> callGetSaleBannerDetails2(String externalSaleId) {
+        return mApiHelper.callGetSaleBannerDetails2((externalSaleId));
+    }
+
+    @Override
     public Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request) {
         return mApiHelper.callGetPublicSalesCategories(request);
     }

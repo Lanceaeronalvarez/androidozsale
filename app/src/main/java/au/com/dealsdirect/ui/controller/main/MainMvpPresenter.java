@@ -20,4 +20,6 @@ public interface MainMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
     void setHasWishlistBeenAccessed(boolean isAccessed);
 
     void setInitialLaunchFalse();
+
+    void loadSaleBannerDetails(String externalSaleId);
 }

@@ -2,12 +2,13 @@ package au.com.dealsdirect.ui.controller.main;
 
 import com.androidnetworking.error.ANError;
 
+import org.json.JSONObject;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -32,12 +33,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(basketQuantityResponse -> {
-                    if(!isViewAttached()){
+                    if (!isViewAttached()) {
                         return;
                     }
                     CartUtil.setValueToCart(basketQuantityResponse.getItemQuantity());
                     getMvpView().showBasketItemCount();
-                },throwable -> {
+                }, throwable -> {
                     if (!isViewAttached()) {
                         return;
                     }
@@ -77,5 +78,26 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void setInitialLaunchFalse() {
         getDataManager().setIsInitialLaunch(false);
+    }
+
+    @Override
+    public void loadSaleBannerDetails(String externalSaleId) {
+        doApiCallForResponse(getDataManager().callGetSaleBannerDetails2(externalSaleId),
+                new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        JSONObject jsonObject = ((JSONObject) response);
+                        try {
+                            final String saleName = jsonObject.getString("saleName");
+                            final String encodedId = jsonObject.getString("encodedId");
+                            final String externalId = jsonObject.getString("externalId");
+                            if (isViewAttached()) {
+                                getMvpView().receiveSaleBannerDetails(saleName, encodedId, externalId);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
     }
 }
