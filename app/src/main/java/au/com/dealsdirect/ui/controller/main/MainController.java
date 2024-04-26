@@ -619,7 +619,8 @@ public class MainController extends BaseController implements MainMvpView {
         } else {
             setViewPagerItem(SHOP_INDEX);
             Controller controller = getCurrentViewPagerController();
-            if (controller instanceof CheckoutMvpView) {
+            if (controller instanceof CheckoutMvpView &&
+                    ((CheckoutMvpView) controller).isViewAttached()) {
                 ((BaseController) controller).refreshContents();
             }
         }
@@ -649,7 +650,8 @@ public class MainController extends BaseController implements MainMvpView {
         mBottomNavigationView.setCurrentItem(ACCOUNT_INDEX, false);
         if (previousPagerPosition == ACCOUNT_INDEX) {
             Controller controller = getCurrentViewPagerController();
-            if (controller instanceof BaseController) {
+            if (controller instanceof BaseController &&
+                    ((BaseController) controller).isViewAttached()) {
                 ((BaseController) controller).refreshContents();
             }
         } else {
@@ -669,7 +671,8 @@ public class MainController extends BaseController implements MainMvpView {
         mBottomNavigationView.setCurrentItem(WISHLIST_INDEX, false);
         if (previousPagerPosition == WISHLIST_INDEX) {
             Controller controller = getCurrentViewPagerController();
-            if (controller instanceof BaseController) {
+            if (controller instanceof BaseController &&
+                    ((BaseController) controller).isViewAttached()) {
                 ((BaseController) controller).refreshContents();
             }
         } else {
@@ -697,7 +700,8 @@ public class MainController extends BaseController implements MainMvpView {
                     router.setBackstack(backstack, new HorizontalChangeHandler());
                 }
             }
-            if (controller instanceof BaseController) {
+            if (controller instanceof BaseController &&
+                    ((BaseController) controller).isViewAttached()) {
                 ((BaseController) controller).refreshContents();
             }
         } else {
@@ -809,7 +813,8 @@ public class MainController extends BaseController implements MainMvpView {
         for (int i = 0; i < VIEWPAGER_SIZE; i++) {
             Router router = routers.get(i);
             Controller controller = getCurrentControllerOnRouter(router);
-            if (controller instanceof BaseController) {
+            if (controller instanceof BaseController &&
+                    ((BaseController) controller).isViewAttached()) {
                 ((BaseController) controller).refreshContents();
             }
         }
@@ -1037,6 +1042,7 @@ public class MainController extends BaseController implements MainMvpView {
     public void processLinkUri(Uri uri) {
         processDeeplinkUri(uri);
     }
+
     public void processDeeplinkUri(Uri uri) {
         if (!isViewBound()) {
             deeplinkUriToProcess = uri;
@@ -1063,7 +1069,9 @@ public class MainController extends BaseController implements MainMvpView {
                 }
             }
 
-            if (directories.get(0).equals("shop")) {
+            if (directories.get(0).equals("ItemsList.aspx")) {
+                mPresenter.loadSaleBannerDetails(uri.getQueryParameter("saleID"));
+            } else if (directories.get(0).equals("shop")) {
                 if (directories.get(1).equals("sale")) {
                     // Specific Sale and Trending Now
                     if (directories.size() < 5) {
@@ -1135,7 +1143,7 @@ public class MainController extends BaseController implements MainMvpView {
                 deepLinkBrands();
             } else {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(browserIntent);
+                mActivity.startActivity(browserIntent);
             }
         }
     }
@@ -1152,5 +1160,10 @@ public class MainController extends BaseController implements MainMvpView {
                         .replace('-', ' '));
         String productId = directories.get(index + 3);
         deepLinkSaleItemDetails(saleId, productId, productName);
+    }
+
+    @Override
+    public void receiveSaleBannerDetails(String saleName, String encodedId, String externalId) {
+        deepLinkSaleItems(saleName, encodedId, externalId);
     }
 }

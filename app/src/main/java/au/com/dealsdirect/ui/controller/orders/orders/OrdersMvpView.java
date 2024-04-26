@@ -24,4 +24,6 @@ public interface OrdersMvpView extends MvpView {
     void addressChanged(String newAddress);
 
     void orderSatisfactionReceived(OrderReceivedRequest request, boolean hasSetSatisfactionAlready);
+
+    void addressChangeError(String message);
 }

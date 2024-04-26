@@ -31,6 +31,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -217,6 +218,14 @@ public class NewSaleCategoriesController extends BaseController
         mCategories.addAll(customNodeTypes);
         mCategories.addAll(fixedNodeTypes);
 
+        if(getBoolean(R.bool.is_gift_card_category_visible)){
+            GetCategoryTreeResponse giftCards = new GetCategoryTreeResponse();
+            giftCards.setName("Gift Cards");
+            giftCards.setNodeType("custom");
+            mCategories.add(giftCards);
+        }
+
+
         setupCategories();
     }
 
@@ -295,7 +304,24 @@ public class NewSaleCategoriesController extends BaseController
         } else if (mCategoryName.contains("Brands") && getCategoryTreeResponse.getKey() == null && getCategoryTreeResponse.getChildren() == null) {
             mLevel = 0;
             mActivity.getMainController().showBrands();
-        } else if (getCategoryTreeResponse.getChildren() == null) {
+        }else if(mCategoryName.contains("Gift Cards") && getCategoryTreeResponse.getKey() == null && getCategoryTreeResponse.getChildren() == null){
+            mLevel = 0;
+            final Router router = mActivity.getCategoriesRouter();
+            String storeId = getString(R.string.gift_card_id);
+
+            SaleItemsController.Parameters.FromSeller parameters = new SaleItemsController.Parameters
+                    .FromSeller("All Products", storeId);
+
+            SaleItemsController controller = SaleItemsController.newInstance(parameters);
+
+            RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                    .tag(getResources().getString(R.string.sale_items_controller_tag))
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler());
+
+            router.pushController(routerTransaction);
+
+        }else if(getCategoryTreeResponse.getChildren() == null){
             mLevel = 0;
             ShopsController shopsController = ShopsController.instanceWithCategoryFilter(
                     getCategoryTreeResponse.getId(),

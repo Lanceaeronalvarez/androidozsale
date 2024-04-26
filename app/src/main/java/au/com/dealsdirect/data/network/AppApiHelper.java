@@ -264,6 +264,15 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Observable<JSONObject> callGetSaleBannerDetails2(String externalSaleId) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.getSaleBannerDetails2())
+                .addHeaders(mApiHeader.get())
+                .addQueryParameter("encodedId", externalSaleId)
+                .build()
+                .getJSONObjectObservable();
+    }
+
+    @Override
     public Observable<GetPublicSalesCategoriesResponse> callGetPublicSalesCategories(GetPublicSalesCategoriesRequest request) {
         return Rx2AndroidNetworking.get(ApiEndPoint.getShopCategories())
                 .addHeaders(mApiHeader.get())

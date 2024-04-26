@@ -1,10 +1,16 @@
 package au.com.dealsdirect.ui.controller.orders.orderdetails;
 
+import com.androidnetworking.error.ANError;
+import com.google.gson.Gson;
+import com.newrelic.com.google.gson.JsonElement;
+import com.newrelic.com.google.gson.JsonParser;
+
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.address.ChangeDeliveryAddressRequest;
+import au.com.dealsdirect.data.network.model.error.ErrorResponse;
 import au.com.dealsdirect.data.network.model.orders.CancelInvoiceItemRequest;
 import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
@@ -141,6 +147,27 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
                     return;
                 }
                 getMvpView().addressChanged();
+            }
+            @Override
+            public void onFailure(Throwable throwable) {
+                if (!isViewAttached()) {
+                    return;
+                }
+
+                getMvpView().hideLoading();
+                getMvpView().onError(throwable.getMessage());
+
+                // handle load accounts error here
+                if (throwable instanceof ANError) {
+                    ANError anError = (ANError) throwable;
+                    handleApiError(anError);
+
+                    JsonParser parser = new JsonParser();
+                    JsonElement mJson =  parser.parse(anError.getErrorBody());
+                    Gson gson = new Gson();
+                    ErrorResponse errorResponse = gson.fromJson(String.valueOf(mJson), ErrorResponse.class);
+                    getMvpView().addressChangeError(errorResponse.getDetail());
+                }
             }
         });
     }

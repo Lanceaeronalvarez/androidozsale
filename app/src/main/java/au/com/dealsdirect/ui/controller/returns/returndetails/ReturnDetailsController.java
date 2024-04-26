@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.returns.returndetails;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -66,8 +68,6 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static android.app.Activity.RESULT_OK;
 
 /*
  * Created by Ayi on 05/06/2017.
@@ -297,8 +297,13 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     @Override
     protected void setUp(View view) {
 
-        mReturnId = item.getId();
-        mToolbarTitle = "Invoice " + item.getInvoiceNumber();
+        if (item != null) {
+            mReturnId = item.getId();
+            mToolbarTitle = "Invoice " + item.getInvoiceNumber();
+        } else {
+            mReturnId = "";
+            mToolbarTitle = "";
+        }
         mPresenter.loadCurrentReturnDetails(mReturnId);
 
         mReturnDetailsControllerToolbarRightOption.setVisibility(View.INVISIBLE);
@@ -334,6 +339,10 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
     @Override
     public void showCurrentReturnDetails(CurrentReturn item) {
+        if (item == null) {
+            return;
+        }
+
         ReturnReceivedRequest request = new ReturnReceivedRequest();
         request.setReturnId(item.getId());
         mPresenter.callGetReturnReceivedSatisfaction(request);
@@ -342,11 +351,6 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
             willScrollToMessage = false;
             scrollToMessage();
         }
-
-        if (item == null) {
-            return;
-        }
-
         this.item = item;
 
         attachmentId = item.getAttachmentId();
@@ -607,6 +611,9 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
     @OnClick(R.id.controller_return_details_message_button)
     public void onClick() {
+        if (item == null) {
+            return;
+        }
         if (shouldUploadImage && mReturnDetailsWriteMessageEditText.getText().toString().isEmpty()) {
             uploadImages();
         } else {
