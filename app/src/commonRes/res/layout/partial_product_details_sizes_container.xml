@@ -4,11 +4,11 @@
     android:id="@+id/product_details_sizes_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_small"
     android:background="@color/white"
     android:paddingLeft="@dimen/margin_small"
     android:paddingRight="@dimen/margin_small"
     android:paddingBottom="@dimen/margin_small"
+    android:paddingTop="@dimen/margin_small"
     android:visibility="visible">
 
     <RelativeLayout
@@ -25,36 +25,58 @@
             android:paddingBottom="@dimen/margin_extra_small"
             android:text="@string/choose_size"
             android:textColor="@color/text_medium"
-            android:textSize="@dimen/text_size_caption1" />
+            android:textSize="@dimen/text_size_caption1"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/size_guide_link_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_large"
             android:layout_toRightOf="@+id/product_details_size_label_text"
             android:paddingTop="@dimen/margin_extra_small"
             android:paddingBottom="@dimen/margin_extra_small">
 
             <ImageView
                 android:id="@+id/size_guide_link_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_size_guide_icon" />
+                android:src="@drawable/size_guide_icon" />
 
-            <TextView
-                android:id="@+id/size_guide_link_text"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin_tiny"
-                android:layout_toRightOf="@+id/size_guide_link_icon"
-                android:text="@string/size_guide_link"
-                android:textColor="@color/text_medium"
-                android:textSize="@dimen/text_size_caption2" />
+                android:orientation="horizontal"
+                android:layout_toRightOf="@+id/size_guide_link_icon">
+
+                <TextView
+                    android:id="@+id/size_guide_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:text="@string/size_guide"
+                    android:textColor="@color/black"
+                    fontPath="@string/font_app_bold"
+                    android:textSize="@dimen/text_size_headline3" />
+
+                <TextView
+                    android:id="@+id/size_guide_link_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_toRightOf="@+id/size_guide_text"
+                    android:text="@string/size_guide_link"
+                    android:textColor="@color/beige"
+                    fontPath="@string/font_app_bold"
+                    android:textSize="@dimen/text_size_caption1" />
+
+            </LinearLayout>
+
         </RelativeLayout>
+
     </RelativeLayout>
 
     <com.zhy.view.flowlayout.TagFlowLayout

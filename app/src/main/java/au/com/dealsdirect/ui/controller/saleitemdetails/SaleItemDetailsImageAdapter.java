@@ -99,7 +99,6 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
             ScalableImageView imageView = ((ScalableImageView) vh.image);
 
             imageView.init();
-            imageView.setOnDoubleTapListener(null);
             imageView.setZoomSnapBackMode(CustomPhotoViewAttacher.ZoomSnapBackMode.TO_MINIMUM);
         }
 
@@ -118,6 +117,9 @@ public class SaleItemDetailsImageAdapter extends RecyclerView.Adapter<RecyclerVi
                 ImageUtils.loadImage(url, vh.image);
             }
         }
+        vh.image.setOnClickListener( v -> {
+            mSaleDetailsListener.onClick(position);
+        });
     }
 
     @Override

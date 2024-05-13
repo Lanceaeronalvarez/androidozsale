@@ -2,9 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/edit_text_corner_radius"/>
-            <solid android:color="@color/bg_chips_soldout_fill"/>
-            <stroke android:width="@dimen/border_regular" android:color="@color/bg_chips_border_soldout"/>
+            <solid android:color="@color/alice_blue"/>
+            <stroke android:width="@dimen/border_regular" android:color="@color/beige"/>
         </shape>
     </item>
 </selector>

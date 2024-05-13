@@ -304,7 +304,7 @@
     <!--CHECKOUT-->
     <string name="checkout_page_toolbar_title">Checkout</string>
     <string name="test_category_name">Cache cache</string>
-    <string name="please_select_size">Please select size</string>
+    <string name="please_select_size">Please choose size</string>
     <string name="add_new_address_bottom_button">ADD</string>
     <string name="color">Color:&#160;</string>
     <string name="size">Size:&#160;</string>
@@ -664,7 +664,9 @@
     <string name="please_refer_to_our_return_policy">Please refer to our Return Policy</string>
     <string name="measurements">Measurements</string>
     <string name="size_guide">Size Guide</string>
-    <string name="size_guide_link"><u>Size Guide</u></string>
+    <string name="size_guide_link"><u>View Size Guide</u></string>
+    <string name="add_to_wishlist">Add to Wishlist</string>
+    <string name="share_text">Share</string>
     <string name="about_atom">About Atom</string>
     <string name="a_full_range_of_compression_wear_where_technology_is_at_the_heart_of_atom_pro_compression_born_out_of_the_desire_to_find_a_effective_great_looking_comfortable_range_that_enables_you_to_perform_at_your_best_for_extended_periods_of_time">A full range of compression wear. Where technology is at the heart of ATOM Pro Compression. Born out of the desire to find a effective, great looking, comfortable range that enables you to perform at your best for extended periods of time.</string>
     <string name="_100_rayon_mykonos_embroidered_off_shoulder_top_white_elasticated_top_and_bottom_the_clothing_at_morrisday_is_true_to_standard_austrailian_sizing">�  100% Rayon\n\n�  Mykonos Embroidered Off Shoulder Top (White)\n\n�  Elasticated top and bottom\n\n�  The clothing at Morrisday is true to standard Austrailian sizing</string>
@@ -1020,5 +1022,8 @@
     <string name="clear_underline"><u>Clear</u></string>
 
     <string name="clear_all_underline"><u>Clear all</u></string>
+
+    <string name="payment_methods">Payment Methods</string>
+    <string name="payment_method_details">We accept the following. Simply select your preferred payment method at checkout.</string>
 
 </resources>
