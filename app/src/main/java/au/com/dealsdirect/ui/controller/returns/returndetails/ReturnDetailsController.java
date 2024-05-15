@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -279,7 +281,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         outState.putString(BundleKeys.KEY_RETURN_ID, mReturnId);
         outState.putBoolean(BundleKeys.KEY_IS_FROM_ORDER, isFromOrders);
         outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
-        outState.putString(BundleKeys.KEY_USER_MESSAGE, mReturnDetailsWriteMessageEditText.getText().toString());
+        outState.putString(BundleKeys.KEY_USER_MESSAGE, userMessage);
         outState.putBoolean(BundleKeys.KEY_SHOULD_UPLOAD_IMAGE, shouldUploadImage);
     }
 
@@ -312,6 +314,22 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         if (hasSavedInstance) {
             mReturnDetailsWriteMessageEditText.setText(userMessage);
         }
+        mReturnDetailsWriteMessageEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                userMessage = charSequence.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         progressDescription.getSettings().setTextZoom(100);
         progressDescription.getSettings().setJavaScriptEnabled(true);
