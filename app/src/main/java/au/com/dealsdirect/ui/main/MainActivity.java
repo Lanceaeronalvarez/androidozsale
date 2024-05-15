@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
@@ -83,6 +84,7 @@ import au.com.dealsdirect.service.ourpay.OurpayState;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.BaseController.CommonControllerChangeListener;
+import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.account.AccountDeletionConfirmationDialog;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
@@ -258,12 +260,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        Router router = getCurrentRouter();
-        if (router != null) {
-            Controller controller = getCurrentController(router);
-            if (controller instanceof BaseController) {
-                ((BaseController) controller).onOrientationChanged(newConfig);
-            }
+        final Controller controller = getCurrentController();
+        if (controller instanceof BaseController) {
+            ((BaseController) controller).onOrientationChanged(newConfig);
         }
     }
 
@@ -412,13 +411,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         hideKeyboard();
 
-        if (getCurrentController(getCurrentRouter()) instanceof AfterpayViewController &&
-                ((AfterpayViewController) getCurrentController(getCurrentRouter())).isBusy()) {
+        if (getCurrentController() instanceof AfterpayViewController &&
+                ((AfterpayViewController) getCurrentController()).isBusy()) {
             return;
         }
 
-        if (getCurrentController(getCurrentRouter()) instanceof KlarnaViewController &&
-                ((KlarnaViewController) getCurrentController(getCurrentRouter())).isBusy()) {
+        if (getCurrentController() instanceof KlarnaViewController &&
+                ((KlarnaViewController) getCurrentController()).isBusy()) {
             return;
         }
 
@@ -456,6 +455,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                 currentRouter.handleBack();
             }
         }
+
+        if (getCurrentController() instanceof MvpView) {
+            if (((MvpView) getCurrentController()).isSecurePage()) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+            } else {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+            }
+        }
     }
 
     public void popToCheckout(Router router) {
@@ -489,9 +496,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         if (handler != null) {
             loginAuthHandlers.add(handler);
         }
-
-        //any router can show login controller
-        final Controller currentController = getCurrentController(router);
 
         if (!mPresenter.isTablet()) {
             GateKeeper.push(router, GateKeeper.Destination.LOGIN, new VerticalChangeHandler(), new VerticalChangeHandler());
@@ -1228,12 +1232,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public Controller getCurrentController(Router router) {
-        try {
-            return getMainController().getCurrentViewPagerController();
-        } catch (NullPointerException e) {
+    public Controller getCurrentController() {
+        final Controller controller = getMainController().getCurrentController();
+        if (controller == null) {
             return getMainController();
         }
+        return controller;
     }
 
     @Override
@@ -1316,11 +1320,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             if (isNetworkConnected()) {
                 refreshWishlist();
-                Controller currentController = getCurrentController(getCurrentRouter());
-                BaseController baseController = currentController instanceof BaseController ?
-                        (BaseController) getCurrentController(getCurrentRouter()) : null;
-                if (baseController != null && baseController.isViewAttached()) {
-                    baseController.refreshContents();
+                final Controller currentController = getCurrentController();
+                if (currentController instanceof BaseController &&
+                        ((BaseController) currentController).isViewAttached()) {
+                    ((BaseController) currentController).refreshContents();
                 }
             }
         }
@@ -1342,6 +1345,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     public void setMainController(MainController mainController) {
         mMainController = mainController;
+    }
+
+    @Override
+    public boolean isSecurePage() {
+        if (getCurrentController() instanceof MvpView) {
+            return ((MvpView) getCurrentController()).isSecurePage();
+        }
+        return false;
     }
 
     @Override

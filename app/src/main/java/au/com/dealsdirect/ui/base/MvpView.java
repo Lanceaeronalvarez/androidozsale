@@ -9,6 +9,8 @@ import androidx.annotation.StringRes;
  */
 public interface MvpView {
 
+    boolean isSecurePage();
+
     void showLoading();
 
     void hideLoading();

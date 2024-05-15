@@ -40,6 +40,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
@@ -624,6 +625,7 @@ public class MainController extends BaseController implements MainMvpView {
                 ((BaseController) controller).refreshContents();
             }
         }
+        resetSecureFlag(getCurrentControllerOnRouter(getShopRouter()));
 
         mIsInitialSavedInstanceLoad = false;
     }
@@ -642,6 +644,8 @@ public class MainController extends BaseController implements MainMvpView {
 
         showNewTagOnCategory(false);
 
+        resetSecureFlag(getCurrentControllerOnRouter(getCategoriesRouter()));
+
         mIsInitialSavedInstanceLoad = false;
     }
 
@@ -657,6 +661,9 @@ public class MainController extends BaseController implements MainMvpView {
         } else {
             setViewPagerItem(ACCOUNT_INDEX);
         }
+
+        resetSecureFlag(getCurrentControllerOnRouter(getAccountRouter()));
+
 
         mIsInitialSavedInstanceLoad = false;
     }
@@ -684,6 +691,8 @@ public class MainController extends BaseController implements MainMvpView {
             showWishlistItemCount(wishlistCount);
         }
 
+        resetSecureFlag(getCurrentControllerOnRouter(getWishlistRouter()));
+
         mIsInitialSavedInstanceLoad = false;
     }
 
@@ -707,6 +716,8 @@ public class MainController extends BaseController implements MainMvpView {
         } else {
             setViewPagerItem(BRANDS_INDEX);
         }
+
+        resetSecureFlag(getCurrentControllerOnRouter(getBrandsRouter()));
 
         mIsInitialSavedInstanceLoad = false;
     }
@@ -778,6 +789,10 @@ public class MainController extends BaseController implements MainMvpView {
         return mBottomNavigationView;
     }
 
+    public Controller getCurrentController() {
+        return getCurrentControllerOnRouter(getCurrentRouter());
+    }
+
     public Controller getCurrentViewPagerController() {
         return getCurrentControllerOnRouter(routers.get(mHomeViewPager.getCurrentItem()));
     }
@@ -793,7 +808,7 @@ public class MainController extends BaseController implements MainMvpView {
         }
     }
 
-    public Controller getCurrentControllerOnRouter(Router router) {
+    private static Controller getCurrentControllerOnRouter(Router router) {
         if (router == null) {
             return null;
         }
@@ -1165,5 +1180,16 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     public void receiveSaleBannerDetails(String saleName, String encodedId, String externalId) {
         deepLinkSaleItems(saleName, encodedId, externalId);
+    }
+
+    private void resetSecureFlag(Controller controller) {
+        if (controller instanceof MvpView) {
+            final Window window = mActivity.getWindow();
+            if (((MvpView) controller).isSecurePage()) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+            }
+        }
     }
 }

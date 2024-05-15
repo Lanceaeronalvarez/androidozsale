@@ -98,6 +98,11 @@ public abstract class BaseController
     }
 
     @Override
+    public boolean isSecurePage() {
+        return false;
+    }
+
+    @Override
     public void showLoading() {
         if (mActivity != null) {
             mActivity.showLoading();
