@@ -1665,7 +1665,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         hasLoadedDetails = true;
         if (isAddToBasketInputBuffered) {
             isAddToBasketInputBuffered = false;
-            addToBasket();
+            addToBasket(false);
         }
 
         setupSeller(saleDetail);
@@ -2342,13 +2342,20 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     @OnClick({R.id.product_details_buy_now_button})
-    void buyNow() {
-        isBuyNow = true;
-        addToBasket();
+    void onBuyNowButtonClicked() {
+        addToBasket(true);
     }
 
-    @OnClick({R.id.product_details_add_to_basket, R.id.product_details_add_to_basket_timer, R.id.product_details_add_to_cart_button})
-    void addToBasket() {
+    @OnClick({R.id.product_details_add_to_cart_button})
+    void onAddToBasketButtonClicked() {
+        addToBasket(false);
+    }
+
+    void addToBasket(boolean now) {
+        if(mIsSoldout && mIsSoldOutCombined){
+            return;
+        }
+        isBuyNow = now;
         if (!hasLoadedDetails) {
             if (!isAddToBasketInputBuffered) {
                 isAddToBasketInputBuffered = true;
@@ -2436,7 +2443,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 onSizeGuideTappedListener,
                 selectedIndex -> {
                     onSelectTag(selectedIndex);
-                    addToBasket();
+                    addToBasket(false);
                 });
     }
 

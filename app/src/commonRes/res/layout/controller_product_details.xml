@@ -1374,7 +1374,7 @@
                         android:background="@color/beige"/>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:paddingRight="@dimen/margin_large"
                         android:paddingLeft="@dimen/margin_large"
@@ -1384,16 +1384,23 @@
 
                         <RelativeLayout
                             android:id="@+id/product_details_add_to_cart_button"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:background="@drawable/add_to_cart_btn"
                             android:layout_marginRight="@dimen/margin_extra_small">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_centerInParent="true"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/add_to_cart_btn"
+                                android:adjustViewBounds="true"/>
 
                             <TextView
                                 android:id="@+id/sold_out_text"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_centerInParent="true"
                                 android:background="@color/fluorescent_blue"
                                 android:text="Sold Out"
@@ -1402,17 +1409,26 @@
                                 android:textSize="@dimen/text_size_headline3"
                                 android:padding="@dimen/margin_medium"
                                 android:textAlignment="center"
-                                android:visibility="gone"/>
+                                android:visibility="gone" />
 
                         </RelativeLayout>
 
                         <RelativeLayout
                             android:id="@+id/product_details_buy_now_button"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:background="@drawable/buy_now_btn"
-                            android:layout_marginLeft="@dimen/margin_extra_small"/>
+                            android:layout_marginLeft="@dimen/margin_extra_small">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_centerInParent="true"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/buy_now_btn"
+                                android:adjustViewBounds="true"/>
+
+                        </RelativeLayout>
 
                     </LinearLayout>
 
