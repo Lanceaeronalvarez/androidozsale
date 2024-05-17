@@ -18,7 +18,6 @@
 
     <string name="error">error</string>
     <string name="dummy_text">dummy text</string>
-    <string name="app_uri_hostname">https://www.nzsale.co.nz/</string>
 
     <string name="log_in">Log In</string>
     <string name="login">Login</string>
