@@ -307,6 +307,13 @@
         <item name="expiration_date_scrollbar_track_vertical">@color/white_12</item>
     </style>
 
+    <style name="DialogTheme" parent="android:Theme.Dialog">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
     <style name="Colors_Widget.MaterialComponents.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/alice_blue</item>
         <item name="chipStrokeColor">@color/beige</item>

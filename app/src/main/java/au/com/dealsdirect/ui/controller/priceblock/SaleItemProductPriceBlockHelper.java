@@ -1,6 +1,8 @@
 package au.com.dealsdirect.ui.controller.priceblock;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -11,6 +13,8 @@ import android.text.style.StrikethroughSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.List;
 
@@ -29,10 +33,12 @@ public class SaleItemProductPriceBlockHelper {
     protected final TextView topRightTextView;
     protected final TextView leftTextView;
     protected final TextView rightTextView;
+    protected final TextView rightTextView2;
     protected final View priceBlockBorder;
     protected final ViewGroup bottomTextContainer;
     protected final TextView bottomTextView;
     protected final TextView freeDeliveryTextView;
+    protected final ConstraintLayout priceBlockConstraintContainer;
 
     protected View.OnClickListener onPriceInfoClickListener = null;
     protected ImageSpan priceInfoImageSpan = null;
@@ -44,10 +50,12 @@ public class SaleItemProductPriceBlockHelper {
         topRightTextView = view.findViewById(R.id.top_right_text);
         leftTextView = view.findViewById(R.id.left_text);
         rightTextView = view.findViewById(R.id.right_text);
+        rightTextView2 = view.findViewById(R.id.right_text_bottom);
         priceBlockBorder = view.findViewById(R.id.price_block_border);
         bottomTextContainer = view.findViewById(R.id.bottom_text_container);
         bottomTextView = view.findViewById(R.id.bottom_text);
         freeDeliveryTextView = view.findViewById(R.id.free_delivery_text);
+        priceBlockConstraintContainer = view.findViewById(R.id.price_block_constraint_container);
     }
 
     public ViewGroup getPriceBlockViewGroup() {
@@ -128,10 +136,14 @@ public class SaleItemProductPriceBlockHelper {
             middleRightText.append(totalPercentOffString);
         }
         if (savedMoneyValueString != null) {
-            if (middleRightText.length() > 0) {
+            if (middleRightText.length() > 0 && rightTextView2 == null) {
                 middleRightText.append("\n");
             }
-            middleRightText.append(savedMoneyValueString);
+            if(rightTextView2 != null){
+                rightTextView2.setText(savedMoneyValueString);
+            }else{
+                middleRightText.append(savedMoneyValueString);
+            }
         }
 
         if (middlePriceText.length() > 8) {
@@ -140,6 +152,9 @@ public class SaleItemProductPriceBlockHelper {
         rightTextView.setText(middleRightText);
         final boolean isRightPartVisible = middleRightText.length() > 0;
         priceBlockBorder.setVisibility(isRightPartVisible ? View.VISIBLE : View.GONE);
+        if(priceBlockConstraintContainer != null){
+            priceBlockConstraintContainer.setBackgroundColor(isRightPartVisible ? Color.parseColor("#EFF5FF") : Color.parseColor("#FFFFFF"));
+        }
 
 
         //--------------------

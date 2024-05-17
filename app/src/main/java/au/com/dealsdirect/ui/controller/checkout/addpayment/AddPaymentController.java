@@ -660,4 +660,9 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     public GA4EventParams.GA4AddPaymentInfoParams getGa4AddPaymentInfoParams() {
         return ga4AddPaymentInfoParams;
     }
+
+    @Override
+    public boolean isSecurePage() {
+        return true;
+    }
 }

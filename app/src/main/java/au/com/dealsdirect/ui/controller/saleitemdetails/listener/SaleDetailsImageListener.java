@@ -9,4 +9,6 @@ public interface SaleDetailsImageListener {
     void toggleClipPadding(boolean isClipped);
 
     int getVerticalOffset();
+
+    void onClick(int position);
 }

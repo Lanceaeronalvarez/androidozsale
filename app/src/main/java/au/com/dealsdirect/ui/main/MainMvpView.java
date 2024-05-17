@@ -23,7 +23,7 @@ public interface MainMvpView extends MvpView {
 
     Router getCurrentRouter();
 
-    Controller getCurrentController(Router router);
+    Controller getCurrentController();
 
     // Authorization
     void showLoginController(Router router, AuthHandler handler);

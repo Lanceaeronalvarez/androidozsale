@@ -122,9 +122,13 @@
     <string name="estimated_delivery">Estimated Delivery</string>
     <string name="_05_06_15_09_06_17_orders_are_dispatched_directly_to_you_from_austrailia">05/06/15 - 09/06/17\nOrders are dispatched directly to you from Austrailia.</string>
     <string name="return_policy">Return Policy</string>
+    <string name="payment_methods">Payment Methods</string>
+    <string name="payment_method_details">We accept the following. Simply select your preferred payment method at checkout.</string>
     <string name="please_refer_to_our_return_policy">Please refer to our Return Policy</string>
     <string name="measurements">Measurements</string>
     <string name="size_guide">Size Guide</string>
+    <string name="add_to_wishlist">Add to Wishlist</string>
+    <string name="share_text">Share</string>
     <string name="pricing">Pricing</string>
     <string name="about_atom">About Atom</string>
     <string name="a_full_range_of_compression_wear_where_technology_is_at_the_heart_of_atom_pro_compression_born_out_of_the_desire_to_find_a_effective_great_looking_comfortable_range_that_enables_you_to_perform_at_your_best_for_extended_periods_of_time">A full range of compression wear. Where technology is at the heart of ATOM Pro Compression. Born out of the desire to find a effective, great looking, comfortable range that enables you to perform at your best for extended periods of time.</string>

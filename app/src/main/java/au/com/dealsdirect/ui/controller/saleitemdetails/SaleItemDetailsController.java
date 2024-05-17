@@ -8,6 +8,7 @@ import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -32,11 +33,15 @@ import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -44,15 +49,20 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,6 +75,7 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
@@ -83,6 +94,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
@@ -103,6 +115,7 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemR
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
+import au.com.dealsdirect.listeners.OnHorizontalSwipeTouchListener;
 import au.com.dealsdirect.service.afterpay.AfterpayPanelViewHolder;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventRecommendedField;
@@ -112,6 +125,7 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.priceblock.SaleItemProductPriceBlockHelper;
@@ -137,9 +151,17 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.ViewUtils;
+import au.com.dealsdirect.utils.module.ControllerFactory;
+import au.com.dealsdirect.utils.module.GateKeeper;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static android.graphics.Typeface.BOLD;
+import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
+import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
+import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
+import static au.com.dealsdirect.service.datacollection.registerservices.GenieEventService.getDataManager;
 
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView {
 
@@ -353,6 +375,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private String mItemImageUrl;
     private Drawable mItemLowResImageDrawable = null;
     private String mSeoIdentifierId;
+    private String mSeoUrl;
+    private String mSeoIdentifier;
     private String mSaleName;
     private String mSalePrice;
     private String mSaleOldPrice;
@@ -401,7 +425,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_shipping_not_available)
     TextView mShippingPostcodeNotAvailable;
     @BindView(R.id.product_details_shipping_postcode_header)
-    TextView mShippingPostcodeHeader;
+    LinearLayout mShippingPostcodeHeader;
     @BindView(R.id.product_details_shipping_postcode_container)
     ViewGroup mShippingPostcodeContainer;
     @BindView(R.id.product_details_shipping_desc_header)
@@ -514,8 +538,61 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_buybox_items)
     RecyclerView buyBoxItemsRecyclerView;
 
+    @BindView(R.id.productImageRecyclerViewLeftButton)
+    RelativeLayout productImageRecyclerViewLeftButton;
+
+    @BindView(R.id.productImageRecyclerViewRightButton)
+    RelativeLayout productImageRecyclerViewRightButton;
+
+    @BindView(R.id.productImageRecyclerViewSelectorLayout)
+    RelativeLayout mSelectorLayout;
+
+    @BindView(R.id.toolbar_item_brand_name)
+    TextView mToolbarItemBrandNameTextView;
+
+    @BindView(R.id.toolbar_item_description)
+    TextView mToolbarItemDescriptionTextView;
+
+    @BindView(R.id.toolbar_item_price)
+    TextView mToolbarItemPriceTextView;
+
+    @BindView(R.id.free_shipping_image_view)
+    ImageView mFreeShippingImageView;
+
+    @BindView(R.id.add_wishlist_layout)
+    LinearLayout mAddToWishlistButton;
+
+    @BindView(R.id.add_wishlist_text)
+    TextView mAddWishListText;
+
+    @BindView(R.id.wishlist_icon)
+    ImageView mWishlistIcon;
+
+    @BindView(R.id.share_layout)
+    LinearLayout mShareLayoutButton;
+
+    @BindView(R.id.product_details_postcode_layout)
+    LinearLayout mPostcodeLayout;
+
+    @BindView(R.id.product_details_paypal_free_shipping)
+    TextView mPaypalFreeShippingText;
+
+    @BindView(R.id.product_details_payment_method_recycler)
+    RecyclerView mPaymentMethodImagesRV;
+
+    @BindView(R.id.product_details_read_more)
+    TextView mReadMoreText;
+
+    @BindView(R.id.product_details_add_to_cart_button)
+    RelativeLayout mAddToCartBtn;
+
+    @BindView(R.id.product_details_buy_now_button)
+    RelativeLayout mBuyNowBtn;
     @BindView(R.id.product_details_leaderboard_banner_image)
     ImageView leaderboardBannerImageView;
+
+    @BindView(R.id.sold_out_text)
+    TextView mSoldOutTextView;
 
     int[] mSharedImageLocation;
 
@@ -590,6 +667,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private OnLoadProductDetails onLoadProductDetails = null;
 
     private BottomPopupView currentBottomPopupView = null;
+
+    List<String> qualitySaleImages = new ArrayList<>();
+
+    int currentSaleImagePosition = 0;
+
+    boolean showFullDescription = false;
+
+    boolean isBuyNow = false;
+
+    boolean isSizeValid = false;
 
     private interface OnLoadProductDetails {
         void onLoad(SaleItemDetails saleDetails);
@@ -756,7 +843,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (partialProductDetailsToShow != null) {
             setupPartialProductDetails(partialProductDetailsToShow);
             if (partialProductDetailsToShow.isFreeDelivery()) {
-                getPriceBlockHelper().setFreeDeliveryTextViewText(getFreeShippingSpan());
+//                getPriceBlockHelper().setFreeDeliveryTextViewText(getFreeShippingSpan());
+                mFreeShippingImageView.setVisibility(View.VISIBLE);
+                mPostcodeLayout.setVisibility(View.GONE);
+                mPaypalFreeShippingText.setVisibility(View.VISIBLE);
             }
         }
         if (currentItem != null) {
@@ -823,7 +913,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             return;
         }
 
-        mLikeButton.setVisibility(View.INVISIBLE);
+        mLikeButton.setVisibility(View.GONE);
         mLikeFloatingButton.setVisibility(View.INVISIBLE);
         loadProductDetails(mSaleId, mSeoIdentifierId);
         if (mHasSavedInstance) {
@@ -999,6 +1089,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 }
                 return false;
             }
+
         });
 
         mHtmlHeader = StringUtils.applyStyleToCSS(new StringUtils.CSSStyle() {
@@ -1088,6 +1179,27 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             }
         });
+
+        productImageRecyclerViewRightButton.setOnClickListener( v -> {
+            currentSaleImagePosition += 1;
+            if(currentSaleImagePosition <= qualitySaleImages.size() - 1){
+                mProductImagesRv.scrollToPosition(currentSaleImagePosition);
+            }else{
+                currentSaleImagePosition = qualitySaleImages.size() - 1;
+            }
+            ImageUtils.loadImageImmediate(qualitySaleImages.get(currentSaleImagePosition), mProductSharedImage, null);
+        });
+
+        productImageRecyclerViewLeftButton.setOnClickListener( v -> {
+            currentSaleImagePosition -= 1;
+            if(currentSaleImagePosition >= 0){
+                mProductImagesRv.scrollToPosition(currentSaleImagePosition);
+            }else{
+                currentSaleImagePosition = 0;
+            }
+            ImageUtils.loadImageImmediate(qualitySaleImages.get(currentSaleImagePosition), mProductSharedImage, null);
+        });
+
         mShippingPostcodeContainer.setVisibility(View.GONE);
         mShippingPostcodeNotAvailable.setVisibility(View.GONE);
         mShippingPreviewPrice.setText(null);
@@ -1095,6 +1207,38 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mSizesContainer.setVisibility(View.GONE);
         mSizeGuideLinkView.setVisibility(View.GONE);
+
+        setupPaymentMethodImages();
+    }
+
+    private void setupPaymentMethodImages(){
+
+        List<Integer> mData = new ArrayList<>();
+        final boolean isGenoaPay = Settings.getSelectedCountry().countryId.equalsIgnoreCase("NZ");
+
+        mData.add(R.drawable.paypal_logo_bw);
+
+        if (getDataManager().isAfterpayEnabled() ) {
+            mData.add(R.drawable.afterpay_logo_bw);
+        }
+        if (getDataManager().isLPayEnabled() ) {
+            mData.add(R.drawable.lpay_logo_bw);
+        }
+        if (getDataManager().isKlarnaEnabled()) {
+            mData.add(R.drawable.klarna_logo_bw);
+        }
+        if (getDataManager().isOurpayEnabled()) {
+            mData.add(R.drawable.ourpay_method_logo);
+        }
+        if (isGenoaPay ) {
+            mData.add(R.drawable.genoa_logo_bw);
+        }
+
+        SaleItemPaymentMethodAdapter mPaymentMethodImagesAdapter = new SaleItemPaymentMethodAdapter(
+                mData);
+        mPaymentMethodImagesRV.setLayoutManager(new GridLayoutManager(mActivity, 3, RecyclerView.VERTICAL, false));
+        mPaymentMethodImagesRV.setAdapter(mPaymentMethodImagesAdapter);
+        mPaymentMethodImagesRV.setEnabled(false);
     }
 
     private void gotoProductListWithSearchQuery(String searchKey) {
@@ -1109,11 +1253,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         final Controller controller = getRouter().getControllerWithTag(getResources().getString(R.string.sale_items_controller_tag));
         if (controller != null) {
-            getRouter().popController(controller);
+            getRouter().popCurrentController();
             getRouter().replaceTopController(RouterTransaction.with(saleItemsController)
                     .tag(getResources().getString(R.string.sale_items_controller_tag))
                     .pushChangeHandler(new HorizontalChangeHandler())
                     .popChangeHandler(new HorizontalChangeHandler()));
+
         } else {
             getRouter().popToRoot(new ArcZoomChangeHandler());
             getRouter().pushController(RouterTransaction.with(saleItemsController)
@@ -1221,7 +1366,20 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         getPriceBlockHelper().setup(saleDetail, mActivity.getSupplierOriginalPriceInfoHelper() != null, false);
 
         //update Images
-        final List<String> qualitySaleImages = getQualityImages(saleDetail.getImages());
+
+        qualitySaleImages = getQualityImages(saleDetail.getImages());
+        if(!qualitySaleImages.isEmpty()){
+            ImageUtils.loadImageImmediate(qualitySaleImages.get(0), mProductSharedImage, null);
+        }
+        if(qualitySaleImages.size() > 1){
+            mSelectorLayout.setVisibility(View.VISIBLE);
+            int visibility = qualitySaleImages.size() <= 3 ? View.GONE : View.VISIBLE;
+            productImageRecyclerViewLeftButton.setVisibility(visibility);
+            productImageRecyclerViewRightButton.setVisibility(visibility);
+        }else{
+            mSelectorLayout.setVisibility(View.GONE);
+        }
+
         if (mProductImagesRv.getAdapter() instanceof SaleItemDetailsImageAdapter) {
             ((SaleItemDetailsImageAdapter) mProductImagesRv.getAdapter()).replaceData(qualitySaleImages);
             mProductImagesRv.scrollToPosition(0);
@@ -1393,6 +1551,35 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductDescriptionText.startAnimation(anim);
             mProductDescriptionText.loadDataWithBaseURL(null, mHtmlHeader + saleDetail.getDescription() + mHtmlFooter,
                     "text/html", "UTF-8", null);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(mProductDescriptionText != null){
+                        if(mProductDescriptionText.getHeight() > 1040){
+                            mProductDescriptionText.getLayoutParams().height = 1040;
+                            mProductDescriptionText.requestLayout();
+                            mReadMoreText.setVisibility(View.VISIBLE);
+                            mReadMoreText.setText(Html.fromHtml("<u>....read more</u>"));
+                            mReadMoreText.setOnClickListener( v -> {
+                                if(showFullDescription){
+                                    showFullDescription = false;
+                                    mProductDescriptionText.getLayoutParams().height = 1040;
+                                    mProductDescriptionText.requestLayout();
+                                    mReadMoreText.setText(Html.fromHtml("<u>....read more</u>"));
+                                }else{
+                                    showFullDescription = true;
+                                    mProductDescriptionText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                                    mProductDescriptionText.requestLayout();
+                                    mReadMoreText.setText(Html.fromHtml("<u>....read less</u>"));
+                                }
+                            });
+                        }
+                    }
+                }
+            }, 2000);
+
         }
 
         mSizeGuideLink = getSizeGuideLink(saleDetail.getDescription());
@@ -1431,8 +1618,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         if (!mProductSizes.isEmpty()) {
-
+            mSizesContainer.setVisibility(!mProductSizes.isEmpty() ? View.VISIBLE : View.GONE);
             mHasSizes = true;
+            isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
 
             TagAdapter mSizesAdapter = createTagAdapter(mProductSizes);
 
@@ -1460,6 +1648,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 onSelectTag(0);
             }
 
+        }else{
+            isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
         }
 
         updatePriceDetails(saleDetail, false);
@@ -1468,7 +1658,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mPresenter.addToRecentlyViewedItems(saleDetail.getProductId(), saleDetail.getSeoIdentifier());
 
-        mLikeButton.setVisibility(View.VISIBLE);
+        mLikeButton.setVisibility(View.GONE);
         mLikeFloatingButton.setVisibility(View.VISIBLE);
         updateLikeButtonImage(mPresenter.isProductInWishlist(mProductId));
 
@@ -1481,7 +1671,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         setupSeller(saleDetail);
         setupBuyBox(saleDetail);
 
+        mSeoUrl = saleDetail.getSeoUrl();
+        mSeoIdentifier = saleDetail.getSeoIdentifier();
+
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
+
     }
 
     public void setupPartialProductDetails(SaleItemProduct saleDetail) {
@@ -1510,6 +1704,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mToolbarItemNameTextView.setText(toolbarItemNameText);
             mProductName.setText(name.trim());
             mProductBrand.setText(Html.fromHtml("<u>" + brandName.trim() + "</u>"));
+
+            mToolbarItemBrandNameTextView.setVisibility(View.VISIBLE);
+            mToolbarItemBrandNameTextView.setText(brandName);
+            mToolbarItemDescriptionTextView.setVisibility(View.VISIBLE);
+            mToolbarItemDescriptionTextView.setText(name.trim());
+            mToolbarItemPriceTextView.setVisibility(View.VISIBLE);
+            mToolbarItemPriceTextView.setText(mSalePrice);
         } else {
             mToolbarItemBrandTextView.setText(name.trim());
             mToolbarItemNameTextView.setText(saleDetail.getPrice() != null ? PriceUtils.getPriceStringValue(saleDetail.getPrice().getValue()) : null);
@@ -1521,8 +1722,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         updatePartialPriceDetails(saleDetail);
 
         if (mIsFreeDelivery) {
-            mShippingPreviewPrice.setText(getFreeShippingSpan());
-            mShippingPreviewPrice.setVisibility(mShippingPreviewPrice.getText() != null && mShippingPreviewPrice.getText().length() > 0 ? View.VISIBLE : View.GONE);
+            mFreeShippingImageView.setVisibility(View.VISIBLE);
+            mPostcodeLayout.setVisibility(View.GONE);
+            mPaypalFreeShippingText.setVisibility(View.VISIBLE);
         }
     }
 
@@ -1630,7 +1832,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
                 if (mSkuVariants.get(position).isSoldOut()) {
                     tv.setBackground(getDrawable(R.drawable.bg_chips_soldout));
-                    tv.setTextColor(getColor(R.color.bg_chips_soldout_text));
+                    tv.setTextColor(getColor(R.color.beige));
                 }
 
                 return tv;
@@ -1660,9 +1862,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                         (mEndDate != null && !mEndDate.isEmpty()) &&
                         DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
                         DateUtils.isLessThanADay(DateUtils.getRemainingTimeInMillis(mEndDate))) {
-                    setupSaleRemainingTime(mEndDate);
-                    mAddToCartTimer.setVisibility(View.VISIBLE);
-                    mAddToCartButtonContainer.setVisibility(View.GONE);
+                    mAddToCartButtonContainer.setVisibility(View.VISIBLE);
+                    mAddToCartButton.setEnabled(false);
+                    mAddToCartButton.bringToFront();
                 } else {
                     mAddToCartTimer.setVisibility(View.GONE);
                     mAddToCartButtonContainer.setVisibility(View.VISIBLE);
@@ -1689,9 +1891,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             mAddToCartTimerTextView.setText(R.string.add_to_cart);
             if (mIsSoldout && mIsSoldOutCombined) {
-                mAddToCartButton.setText(R.string.sold_out);
+                mSoldOutTextView.setVisibility(View.VISIBLE);
+                mBuyNowBtn.setVisibility(View.INVISIBLE);
             } else {
-                mAddToCartButton.setText(R.string.add_to_cart);
+                mSoldOutTextView.setVisibility(View.GONE);
+                mBuyNowBtn.setVisibility(View.VISIBLE);
             }
             mAddToCartProgressBar.setVisibility(View.GONE);
             mAddToCartTimerProgressBar.setVisibility(View.GONE);
@@ -1704,9 +1908,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mSharedImageLocation == null) {
             mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
         }
-        CustomAlertDialog.showCustomAlertDialog(
-                getActivity(), CustomAlertDialog.CustomDialogIconState.POSITIVE,
-                mActivity.getString(R.string.add_to_cart_success));
 
         RxBus.instance().post(IntrospectionUtils.EVENT_ADD_TO_CART);
         HashMap<String, Object> parameters = new HashMap<>();
@@ -1753,6 +1954,72 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         //notify bottom navigation view(checkout) with success.
         CartUtil.addValueToCart(1);
         mActivity.getMainController().updateBasketItemsQuantity();
+
+        if(isBuyNow){
+            isBuyNow = false;
+            goToCheckoutScreen();
+        }else{
+            addedToCartDialog();
+        }
+    }
+
+    private void addedToCartDialog(){
+        final Dialog dialog = new Dialog(mActivity, R.style.DialogTheme);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.added_to_cart_dialog);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.gravity = Gravity.TOP;
+        dialog.getWindow().setAttributes(lp);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.AppearDialog;
+        dialog.setCanceledOnTouchOutside(true);
+
+        TextView textBrandName = (TextView) dialog.findViewById(R.id.brand_name);
+        textBrandName.setText(mBrandName);
+
+        TextView textSaleName = (TextView) dialog.findViewById(R.id.item_name);
+        textSaleName.setText(mSaleName);
+
+        TextView textVariant = (TextView) dialog.findViewById(R.id.item_size);
+        textVariant.setText(isSizeValid ? mProductSizes.get(mSelectedSizeIndex).first : "");
+
+        TextView testSalePrice = (TextView) dialog.findViewById(R.id.item_price);
+        testSalePrice.setText(mSalePrice);
+
+        ImageView itemImageView = (ImageView) dialog.findViewById(R.id.item_image_view);
+        ImageUtils.loadImageImmediate(mItemImageUrl, itemImageView, null);
+
+        ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.added_to_cart_button_close);
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        Button viewCartButton = (Button) dialog.findViewById(R.id.button_view_cart);
+        viewCartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                goToCheckoutScreen();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void goToCheckoutScreen(){
+        Controller controller;
+        controller = mPresenter.isTablet() ?
+                ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST) :
+                ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
+
+        getRouter().pushController(RouterTransaction
+                .with(controller).tag(controller.getClass().getName()));
     }
 
     @Override
@@ -2074,7 +2341,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         return true;
     }
 
-    @OnClick({R.id.product_details_add_to_basket, R.id.product_details_add_to_basket_timer})
+    @OnClick({R.id.product_details_buy_now_button})
+    void buyNow() {
+        isBuyNow = true;
+        addToBasket();
+    }
+
+    @OnClick({R.id.product_details_add_to_basket, R.id.product_details_add_to_basket_timer, R.id.product_details_add_to_cart_button})
     void addToBasket() {
         if (!hasLoadedDetails) {
             if (!isAddToBasketInputBuffered) {
@@ -2100,7 +2373,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         request.setUserClientType(String.valueOf(mPresenter.isTablet() ? AppConstants.ADD_TO_CART_TABLET :
                 AppConstants.ADD_TO_CART_PHONE));
 
-        boolean isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
+        isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
 
         boolean isPersonalisationValid = mPersonalisationLayout.verifyRequiredFields();
 
@@ -2139,7 +2412,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 -(lp.bottomMargin + addToCartButtonHeight))) {
             shakeSizeButtons();
         } else {
-            showBottomDialogWithSizeSelection();
+            mProductDetailScrollView.scrollTo(0, mProductDescriptionText.getBottom());
         }
         mSizesNotSelectedNotice.setVisibility(View.VISIBLE);
     }
@@ -2313,6 +2586,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         setLikeStatus(!mPresenter.isProductInWishlist(mProductId));
     }
 
+    @OnClick(R.id.add_wishlist_layout)
+    void likeButtonLayoutPress() {
+        setLikeStatus(!mPresenter.isProductInWishlist(mProductId));
+    }
+
+    @OnClick(R.id.share_layout)
+    void shareButtonLayoutPress() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, thought you might like this \uD83D\uDC4D " + Settings.getSelectedCountry().genieRoot + "product/" + mSeoUrl + "/s/" + mSeoIdentifier);
+        sendIntent.setType("text/plain");
+        Intent.createChooser(sendIntent, "Share via");
+        startActivity(sendIntent);
+    }
+
     @OnClick(R.id.toolbar_right_view)
     void floatingLikeButtonPress() {
         setLikeStatus(!mPresenter.isProductInWishlist(mProductId));
@@ -2332,9 +2620,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     private void updateLikeButtonImage(boolean isLiked) {
-        int drawableId = isLiked ? R.drawable.wishlist_product_details_active : R.drawable.wishlist_product_details_inactive;
+        int drawableId = isLiked ? R.drawable.wishlist_product_details_active : R.drawable.ic_heart_add;
         mLikeButton.setImageDrawable(mLikeFloatingButton.getContext().getResources().getDrawable(drawableId));
         mLikeFloatingButton.setImageDrawable(mLikeFloatingButton.getContext().getResources().getDrawable(drawableId));
+
+        mWishlistIcon.setImageDrawable(mLikeFloatingButton.getContext().getResources().getDrawable(drawableId));
+        mWishlistIcon.setColorFilter(ContextCompat.getColor(mActivity, isLiked ? R.color.fluorescent_blue : R.color.black));
+        mAddWishListText.setText(isLiked ? "Added to Wishlist" : "Add to Wishlist");
     }
 
     private void logWishlistEvent(String productId, boolean liked) {
@@ -2365,6 +2657,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             mProductDetailsTitleLayout.getLocationOnScreen(location);
             float top = location[1];
             float alphaFactor = 1 - top / (float) mProductDetailsTitleLayout.getHeight();
+
+            if(alphaFactor > 0.5){
+                mToolbarItemBrandNameTextView.setVisibility(View.GONE);
+            }
+            if(alphaFactor < 0){
+                mToolbarItemBrandNameTextView.setVisibility(View.VISIBLE);
+            }
 
             if (mProductDetailsToolbar.getAnimation() == null && !willViewDisappear) {
                 switch (mProductDetailsToolbar.getVisibility()) {
@@ -2424,8 +2723,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         int selectedIndex = index;
         boolean isVariant = true;
 
+
         if (selectedIndex < 0) {
             isVariant = false;
+            mSelectedSizeIndex = selectedIndex;
+            isSizeValid = false;
             return;
         }
 
@@ -2434,6 +2736,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             selectedIndex = mSelectedSizeIndex;
             if (selectedIndex < 0) {
                 isVariant = false;
+                isSizeValid = false;
                 return;
             }
             isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
@@ -2460,7 +2763,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mSizesNotSelectedNotice.getVisibility() == View.VISIBLE && mSelectedSizeIndex >= 0) {
             mSizesNotSelectedNotice.setVisibility(View.GONE);
         }
+
+        isSizeValid = true;
     }
+
 
     private SaleDetailsImageListener saleDetailsImageListener() {
         return new SaleDetailsImageListener() {
@@ -2468,14 +2774,13 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             public void imagesLoaded() {
                 if (isAttached()) {
                     mSharedImageLocation = ImageUtils.getDisplayedImageLocation(mProductSharedImage);
-                    mProductSharedImage.setVisibility(View.GONE);
+
 
                     mImagesLoaded = true;
 
                     mProductImagesRv.setEnabled(true);
-                    mOtherImagesRv.setVisibility(View.VISIBLE);
+                    mOtherImagesRv.setVisibility(View.GONE);
                     mProductImagesRv.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-                    mSizesContainer.setVisibility(!mProductSizes.isEmpty() ? View.VISIBLE : View.GONE);
                 }
             }
 
@@ -2495,6 +2800,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             @Override
             public int getVerticalOffset() {
                 return mToolbarVerticalOffset;
+            }
+
+            @Override
+            public void onClick(int position) {
+                ImageUtils.loadImageImmediate(qualitySaleImages.get(position), mProductSharedImage, null);
+                currentSaleImagePosition = position;
             }
 
             @Override
@@ -2571,7 +2882,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             if (shippingPrice > 0) {
                 mShippingPreviewPrice.setText(PriceUtils.getPriceStringValue(shippingPrice));
             } else {
+                mFreeShippingImageView.setVisibility(View.VISIBLE);
                 mShippingPreviewPrice.setText(getFreeShippingSpan());
+                mPostcodeLayout.setVisibility(View.GONE);
+                mPaypalFreeShippingText.setVisibility(View.VISIBLE);
             }
         }
         mShippingPostcodeNotAvailable.setVisibility(isAvailable != null && !isAvailable ? View.VISIBLE : View.GONE);
@@ -2820,8 +3134,27 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         } else {
             mSizeGuideLinkView.setVisibility(View.VISIBLE);
             mSizeGuideLinkView.setOnClickListener(v -> {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mSizeGuideLink));
-                startActivity(browserIntent);
+                Bundle bundle = new BundleBuilder(new Bundle())
+                        .putString(FloatingImageViewerController.KEY_SOURCE_URL, mSizeGuideLink)
+                        .build();
+
+                FloatingImageViewerController controller = new FloatingImageViewerController(bundle);
+
+                controller.setImageClickListener((view, x, y) -> {
+                    Intent openUrl = new Intent(Intent.ACTION_VIEW);
+                    openUrl.setData(Uri.parse(mSizeGuideLink));
+                    startActivity(openUrl);
+                });
+
+                RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                        .popChangeHandler(new FadeChangeHandler())
+                        .pushChangeHandler(new FadeChangeHandler());
+
+                if (mActivity.getMainController().getPopUpHostRouter() != null) {
+                    mActivity.getMainController().getPopUpHostRouter().setRoot(routerTransaction);
+                } else {
+                    getRouter().pushController(routerTransaction);
+                }
             });
         }
     }

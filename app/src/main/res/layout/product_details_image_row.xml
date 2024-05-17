@@ -2,13 +2,12 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:layout_width="100dp"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
+    android:layout_margin="@dimen/margin_extra_small"
     android:clipChildren="false"
-    android:clipToPadding="false" >
+    android:clipToPadding="false">
 
     <com.github.chrisbanes.photoview.ScalableImageView
         android:id="@+id/vh_sale_item_image"
