@@ -17,7 +17,8 @@
         android:paddingEnd="@dimen/padding_default"
         android:text="@string/payment_method"
         android:textColor="@color/text_medium"
-        android:textSize="@dimen/text_size_caption2" />
+        android:textSize="@dimen/text_size_caption2"
+        android:visibility="gone"/>
 
     <View
         style="@style/horizontalBorderView"

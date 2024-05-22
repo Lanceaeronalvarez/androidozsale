@@ -312,7 +312,9 @@
     <string name="my_current_delivery_address">my current delivery address</string>
     <string name="add_new_address">add new address</string>
     <string name="change">change</string>
+    <string name="payment">PAYMENT</string>
     <string name="payment_method">payment method</string>
+    <string name="payment_options">PAYMENT OPTIONS</string>
     <string name="add_new_payment_method">add new payment method</string>
     <string name="voucher">Voucher</string>
     <string name="tax">Tax</string>
@@ -893,11 +895,11 @@
         <item>@string/returns_policy_step_title_3</item>
         <item>@string/returns_policy_step_title_4</item>
     </string-array>
-
-    <string name="returns_policy_step_description_1">You can request for a return within 14 days of receiving your order. Log in and go to My Returns. Select the item(s) you wish to return and indicate the reason for returning. Any attached photos, videos or additional comments in the form will be useful.\n\n</string>
-    <string name="returns_policy_step_description_2">Your return request will be reviewed within 1 - 3 working days. Once approved, you will receive an email with your unique Return Authorisation Number (RAN) and the return instructions.</string>
-    <string name="returns_policy_step_description_3">Follow the instructions. It is important you send your return to the address on the return email only, as sometimes your return will go directly back to the third-party Seller\'s warehouse. Attach the return label to your parcel and pass it to the delivery service within 7 calendar days. Make sure the RAN is visible on the parcel.</string>
-    <string name="returns_policy_step_description_4">Once your return has been received at the warehouse address provided, you will receive an email to confirm this. Your refunds or store credits will be processed within 3 - 5 working days.</string>
+    
+    <string name="returns_policy_step_description_1">You have up to 14 days from the date of receiving your order to request a return. Log in to your account and go to My Returns. Select the item(s) you wish to return and provide the reason for returning. Any attached photos, videos, or additional comments you include in the form will be helpful for us to process your request.\n\n</string>
+    <string name="returns_policy_step_description_2">Your return request will be reviewed within 1 - 3 working days. Upon approval, you will receive an email containing your unique Return Authorisation Number (RAN) and detailed return instructions.</string>
+    <string name="returns_policy_step_description_3">Follow the provided instructions carefully. If you\'re returning multiple items, you have the option to consolidate them into a single parcel. However, it\'s crucial to label each return with its corresponding RAN number for proper processing. Remember to ensure that the total weight of the parcel remains within the specified limit. Once prepared, please send your return within 7 calendar days of receiving the return label. Make sure the RAN is clearly visible on the parcel.</string>
+    <string name="returns_policy_step_description_4">Attach the provided return label to your parcel and send it to the address indicated in the return email. Sometimes, your return may need to be directed to the third-party Seller\'s warehouse, so it\'s essential to follow the instructions precisely. Once your return reaches the designated warehouse address, you will receive a confirmation email. Refunds or store credits will be processed within 3 - 5 working days upon receipt of the returned items.</string>
 
     <string-array name="returns_policy_step_descriptions">
         <item>@string/returns_policy_step_description_1</item>

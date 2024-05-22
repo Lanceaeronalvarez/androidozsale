@@ -1702,6 +1702,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         if (!isViewAttached() || !isViewBound()) return;
 
         mGPayButtonContainer.setVisibility(isGPayAvailable ? View.VISIBLE : View.GONE);
+
     }
 
     private void setPaymentButtonsVisibility(List<View> buttons, int visibility) {
@@ -1824,6 +1825,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> onGPayButtonClick()));
+
         mClickListeners.add(RxView.clicks(mPaypalButton)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
