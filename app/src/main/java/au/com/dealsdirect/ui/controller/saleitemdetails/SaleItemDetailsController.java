@@ -584,10 +584,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     TextView mReadMoreText;
 
     @BindView(R.id.product_details_add_to_cart_button)
-    RelativeLayout mAddToCartBtn;
+    ImageView mAddToCartBtn;
 
     @BindView(R.id.product_details_buy_now_button)
-    RelativeLayout mBuyNowBtn;
+    ImageView mBuyNowBtn;
     @BindView(R.id.product_details_leaderboard_banner_image)
     ImageView leaderboardBannerImageView;
 
@@ -1893,9 +1893,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             if (mIsSoldout && mIsSoldOutCombined) {
                 mSoldOutTextView.setVisibility(View.VISIBLE);
                 mBuyNowBtn.setVisibility(View.INVISIBLE);
+                mAddToCartBtn.setVisibility(View.INVISIBLE);
             } else {
                 mSoldOutTextView.setVisibility(View.GONE);
                 mBuyNowBtn.setVisibility(View.VISIBLE);
+                mAddToCartBtn.setVisibility(View.VISIBLE);
             }
             mAddToCartProgressBar.setVisibility(View.GONE);
             mAddToCartTimerProgressBar.setVisibility(View.GONE);

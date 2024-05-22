@@ -1383,23 +1383,24 @@
                         android:orientation="horizontal">
 
                         <RelativeLayout
-                            android:id="@+id/product_details_add_to_cart_button"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:layout_marginRight="@dimen/margin_extra_small">
 
                             <ImageView
-                                android:layout_width="match_parent"
+                                android:id="@+id/product_details_add_to_cart_button"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_centerInParent="true"
                                 android:scaleType="fitCenter"
                                 android:src="@drawable/add_to_cart_btn"
-                                android:adjustViewBounds="true"/>
+                                android:adjustViewBounds="true"
+                                android:maxWidth="200dp"/>
 
                             <TextView
                                 android:id="@+id/sold_out_text"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_centerInParent="true"
                                 android:background="@color/fluorescent_blue"
@@ -1407,26 +1408,32 @@
                                 fontPath="@string/font_app_bold"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_headline3"
-                                android:padding="@dimen/margin_medium"
                                 android:textAlignment="center"
-                                android:visibility="gone" />
+                                android:visibility="gone"
+                                android:paddingTop="@dimen/margin_medium"
+                                android:paddingBottom="@dimen/margin_medium"
+                                android:paddingRight="@dimen/margin_extra_large"
+                                android:paddingLeft="@dimen/margin_extra_large"/>
 
                         </RelativeLayout>
 
                         <RelativeLayout
-                            android:id="@+id/product_details_buy_now_button"
-                            android:layout_width="wrap_content"
+
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:layout_marginLeft="@dimen/margin_extra_small">
 
                             <ImageView
-                                android:layout_width="match_parent"
+                                android:id="@+id/product_details_buy_now_button"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_centerInParent="true"
                                 android:scaleType="fitCenter"
                                 android:src="@drawable/buy_now_btn"
-                                android:adjustViewBounds="true"/>
+                                android:adjustViewBounds="true"
+                                android:maxWidth="200dp"
+                                />
 
                         </RelativeLayout>
 
