@@ -312,7 +312,9 @@
     <string name="my_current_delivery_address">my current delivery address</string>
     <string name="add_new_address">add new address</string>
     <string name="change">change</string>
+    <string name="payment">PAYMENT</string>
     <string name="payment_method">payment method</string>
+    <string name="payment_options">PAYMENT OPTIONS</string>
     <string name="add_new_payment_method">add new payment method</string>
     <string name="voucher">Voucher</string>
     <string name="tax">Tax</string>

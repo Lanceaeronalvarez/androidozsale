@@ -146,7 +146,9 @@
     <string name="add_new_delivery_address">Add New Delivery Address</string>
     <string name="billing_address">Billing Address</string>
     <string name="add_new_billing_address">Add New Billing Address</string>
+    <string name="payment">PAYMENT</string>
     <string name="payment_method">MY PAYMENT METHOD</string>
+    <string name="payment_options">PAYMENT OPTIONS</string>
     <string name="add_new_payment_method">Add New Payment Method</string>
     <string name="subtotal">Subtotal</string>
     <string name="shipping_fee">Shipping Fee</string>
