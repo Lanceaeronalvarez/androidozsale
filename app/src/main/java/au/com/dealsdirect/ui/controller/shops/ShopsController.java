@@ -103,7 +103,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private static final int INITIAL_BANNER_COUNT = 25;
 
     private static boolean SLIDING_BANNERS_ENABLED = true;
-    private static boolean CATEGORY_BANNERS_ENABLED = false;
+    private static boolean CATEGORY_BANNERS_ENABLED = true;
     private static boolean SPONSORED_BANNERS_ENABLED = false;
 
     @Inject
@@ -215,7 +215,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
                 getRouter().pushController(RouterTransaction.with(controller).tag(mActivity.getString(R.string.sale_items_controller_tag)).pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler()));
-            } else if (banner.getBannerType() != null && banner.getBannerType().equals("categoryShop")) {
+            } else if (banner.getBannerType() != null && banner.getBannerType().equals("brandBanner")) {
                 // support for no linkOptions category banner
 
                 Uri uri = Uri.parse(banner.getLink());
@@ -895,11 +895,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             List<GetBannerResponse.Group> groups = getBannerResponses.getGroups();
             if (groups != null) {
                 for (GetBannerResponse.Group group : groups) {
-                    if (group.getType().equals("categoryShop")) {
+                    if (group.getType().equals("brand")) {
                         List<GetBannerResponse.Banner> banners = group.getBanners();
                         if (banners != null) {
                             for (GetBannerResponse.Banner banner : banners) {
-                                if (banner.getBannerType().equals("categoryShop")) {
+                                categoryBanners.add(banner);
+                                if (banner.getBannerType().equals("brandBanner")) {
                                     categoryBanners.add(banner);
                                 }
                             }
@@ -1184,7 +1185,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         GetBannerRequest request = new GetBannerRequest();
         request.setOffset(null);
         request.setLimit("50");
-        request.setBannergroups("7");
+        request.setBannergroups("7,8,9");
         request.setCategory(mCategoryID);
 
         mPresenter.loadCategoryBanners(request);
