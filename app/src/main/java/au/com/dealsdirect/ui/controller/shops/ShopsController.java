@@ -86,7 +86,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         DONT_OVERRIDE, USE_OLD, USE_NEW
     }
 
-    private static final boolean CIRCULAR_CATEGORY_BANNERS = false;
+    private static final boolean CIRCULAR_CATEGORY_BANNERS = true;
 
     private static final boolean BANNER_DIMENSIONS_TOGGLE_BUTTON_ENABLED = false;
     private static final BannerDimensionsOverride OVERRIDE_BANNER_DIMENSIONS_FOR_MOBILE = BannerDimensionsOverride.USE_NEW;
