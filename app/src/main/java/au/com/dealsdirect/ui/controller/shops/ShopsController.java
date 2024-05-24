@@ -899,7 +899,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                         List<GetBannerResponse.Banner> banners = group.getBanners();
                         if (banners != null) {
                             for (GetBannerResponse.Banner banner : banners) {
-                                categoryBanners.add(banner);
                                 if (banner.getBannerType().equals("brandBanner")) {
                                     categoryBanners.add(banner);
                                 }
