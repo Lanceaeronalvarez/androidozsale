@@ -132,42 +132,6 @@ lane :firebase_deploy_ba_test do
   " app_id:" + '1:135798231877:android:d1712d1f61e17b08'
  end
 
- lane :firebase_deploy_oo_rc do
-  Dir.chdir("..")
-  app_dir = Dir.pwd
-
-  #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'ooRC' emails:" + dev_emails + " apk_name:" + 'app-ooRC-release.apk' + " build_variant:" + 'ooRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'ooRC' + " app_notes_path:" + app_dir + '/fastlane/OOReleaseNotes' +
-  " app_id:" + '1:461445694369:android:a4e0fae8297e663c'
- end
-
- lane :firebase_deploy_oo_test do
-  Dir.chdir("..")
-  app_dir = Dir.pwd
-
-  #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'ooTest' emails:" + dev_emails + " apk_name:" + 'app-ooTest-release.apk' + " build_variant:" + 'ooTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'ooTest' + " app_notes_path:" + app_dir + '/fastlane/OOReleaseNotes' +
-  " app_id:" + '1:461445694369:android:dece612b12dc3aee'
- end
-
- lane :firebase_deploy_tb_rc do
-  Dir.chdir("..")
-  app_dir = Dir.pwd
-
-  #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'topbuy RC Test' emails:" + dev_emails + " apk_name:" + 'app-topbuyRC-release.apk' + " build_variant:" + 'topbuyRCRelease' + " app_path:" + app_dir + " app_flavor:" + 'topbuyRC' + " app_notes_path:" + app_dir + '/fastlane/TopBuyReleaseNotes' +
-  " app_id:" + '1:493241976299:android:e301635b7d8bf4be'
-end
-
-lane :firebase_deploy_tb_test do
-  Dir.chdir("..")
-  app_dir = Dir.pwd
-
-  #Change apk_name and app_name for other flavors
-  sh "fastlane dd_build app_name:'topbuy Test' emails:" + dev_emails + " apk_name:" + 'app-topbuyTest-release.apk' + " build_variant:" + 'topbuyTestRelease' + " app_path:" + app_dir + " app_flavor:" + 'topbuyTest' + " app_notes_path:" + app_dir + '/fastlane/TopBuyReleaseNotes' +
-  " app_id:" + '1:493241976299:android:3b2f2878c50c82d6'
-end
-
 lane :firebase_deploy_ozsale_rc do
   Dir.chdir("..")
   app_dir = Dir.pwd
