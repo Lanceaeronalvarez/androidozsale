@@ -127,7 +127,7 @@ public class StringUtils {
     }
 
     public static GetSaleItemsRequest updateSaleItemRequest(String categoryKey, GetSaleItemsRequest getSaleItemsRequest) {
-        if (!categoryKey.isEmpty()) {
+        if (categoryKey != null && !categoryKey.isEmpty()) {
             if (categoryKey.contains("\"")) {
                 getSaleItemsRequest.setCategoryKey("[" + categoryKey + "]");
             } else {
