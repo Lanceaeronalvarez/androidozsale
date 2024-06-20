@@ -29,6 +29,7 @@ import com.paginate.Paginate;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -70,6 +71,7 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
+import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -219,11 +221,30 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 // support for no linkOptions category banner
 
                 Uri uri = Uri.parse(banner.getLink());
-                String id = uri.getLastPathSegment();
 
-                specialBannerEvent(createBannerClickEventRequest(EventParameters.SpecialBannerType.SHOP_BY_CATEGORY, banner, position), saleName);
+                String saleId = uri.getQueryParameter("saleID");
 
-                onBannerClicked(id);
+                if (saleId != null && !saleId.isEmpty()) {
+                    String saleNameFromUri = null;
+                    final String path = uri.getPath();
+                    if (path != null && !path.isEmpty()) {
+                        final ArrayList<String> directories = new ArrayList<>(Arrays.asList(path.split("/")));
+                        if (directories.get(0).isEmpty()) {
+                            directories.remove(0);
+                        }
+                        saleNameFromUri = StringUtils.toTitleCase(
+                                StringUtils.fixApostropheS(
+                                        directories.get(2)
+                                                .replace('-', ' ')
+                                                .replace(" or ", " | ")
+                                                .replace(" and ", " & ")));
+                    }
+                    onBannerClicked(saleId, saleNameFromUri, banner.getId(), position, null, banner.getEndDate(), banner.getIsAvailable(), banner.getLinkOptions());
+                } else {
+                    String id = uri.getLastPathSegment();
+                    specialBannerEvent(createBannerClickEventRequest(EventParameters.SpecialBannerType.SHOP_BY_CATEGORY, banner, position), saleName);
+                    onBannerClicked(id);
+                }
             } else if (banner.getLink() != null && !banner.getLink().isEmpty()) {
                 String link = banner.getLink();
                 Pattern pattern = Pattern.compile("(?<=/s/)([^?\\n\\r])+");

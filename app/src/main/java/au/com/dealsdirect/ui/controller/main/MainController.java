@@ -1093,7 +1093,11 @@ public class MainController extends BaseController implements MainMvpView {
                         return;
                     }
                     String saleName = StringUtils.toTitleCase(
-                            directories.get(2).replace('-', ' '));
+                            StringUtils.fixApostropheS(
+                                    directories.get(2)
+                                            .replace('-', ' ')
+                                            .replace(" or ", " | ")
+                                            .replace(" and ", " & ")));
                     if (!directories.get(3).equals("s")) {
                         return;
                     }
@@ -1120,7 +1124,11 @@ public class MainController extends BaseController implements MainMvpView {
                         return;
                     }
                     String brandName = StringUtils.toTitleCase(
-                            directories.get(2).replace('-', ' '));
+                            StringUtils.fixApostropheS(
+                                    directories.get(2)
+                                            .replace('-', ' ')
+                                            .replace(" or ", " | ")
+                                            .replace(" and ", " & ")));
                     String brandId = directories.get(3);
                     deepLinkBrandProductList(brandName, brandId);
                 } else if (directories.get(1).equals("brands")) {
@@ -1170,9 +1178,11 @@ public class MainController extends BaseController implements MainMvpView {
             return;
         }
         String productName = StringUtils.toTitleCase(
-                directories.get(index + 1)
-                        .replace("-s-", "'s ")
-                        .replace('-', ' '));
+                StringUtils.fixApostropheS(
+                        directories.get(index + 1)
+                                .replace('-', ' ')
+                                .replace(" or ", " | ")
+                                .replace(" and ", " & ")));
         String productId = directories.get(index + 3);
         deepLinkSaleItemDetails(saleId, productId, productName);
     }

@@ -52,6 +52,42 @@ public class StringUtils {
         return builder.toString();
     }
 
+    public static String fixApostropheS(String str) {
+        boolean foundWhiteSpace = false;
+        int whiteSpacePosition = -1;
+        boolean foundS = false;
+        StringBuilder builder = new StringBuilder(str);
+        final int len = builder.length();
+        for (int i = 0; i <= len; ++i) {
+            if (foundS) {
+                if (i >= len || Character.isWhitespace(builder.charAt(i))) {
+                    if (whiteSpacePosition >= 1 && i - whiteSpacePosition == 2) {
+                        builder.setCharAt(whiteSpacePosition, '\'');
+                    }
+                    foundS = false;
+                }
+            }
+            if (i >= len) {
+                break;
+            }
+            final char c = builder.charAt(i);
+            if (Character.isWhitespace(c)) {
+                foundWhiteSpace = true;
+                whiteSpacePosition = i;
+                foundS = false;
+            } else {
+                if (foundWhiteSpace) {
+                    if (c == 's' || c =='S') {
+                        foundS = true;
+                    }
+                }
+                foundWhiteSpace = false;
+            }
+        }
+
+        return builder.toString();
+    }
+
     public static String capitalizeCategoryKey(String str) {
 
         if (str == null) {
