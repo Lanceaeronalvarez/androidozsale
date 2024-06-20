@@ -122,9 +122,11 @@
     <color name="tab_bar_icon_active">@color/colorAccent</color>
     <color name="tab_bar_icon_hovered">@color/colorAccent</color>
 
-    <color name="bottom_nav_accent">@color/colorAccent</color>
-    <color name="bottom_nav_inactive">@color/text_medium</color>
-    <color name="bottom_nav_background">@color/toolbar_skin</color>
+    <color name="bottom_nav_accent">@color/nav_dark_blue</color>
+    <color name="bottom_nav_inactive">@color/beige</color>
+    <color name="bottom_nav_badge">@color/fluorescent_blue</color>
+    <color name="bottom_nav_badge_text">@color/black</color>
+    <color name="bottom_nav_background">@color/white</color>
 
     <color name="progress_loader_stroke">@color/colorAccent</color>
 
