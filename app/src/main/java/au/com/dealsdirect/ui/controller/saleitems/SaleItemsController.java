@@ -880,9 +880,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             controller.mChipFilters = SearchChipModel.chipListFromStoreId(((Parameters.FromSeller) parameters).getStoreId());
             controller.mSourceType = SourceType.SELLER;
         } else if (parameters instanceof Parameters.FromShopSearch) {
-            title = ((Parameters.FromShopSearch) parameters).getTitle();
+            final String searchQuery = ((Parameters.FromShopSearch) parameters).getSearchKey();
+            if (searchQuery == null || searchQuery.isEmpty()) {
+                title = ((Parameters.FromShopSearch) parameters).getTitle();
+            } else {
+                title = searchQuery;
+            }
             controller.mSourceType = SourceType.SHOP_SEARCH;
-            controller.mSearchQuery = ((Parameters.FromShopSearch) parameters).getSearchKey();
+            controller.mSearchQuery = searchQuery;
         } else if (parameters instanceof Parameters.FromTopBrands) {
             title = ((Parameters.FromTopBrands) parameters).getBrandName();
             controller.mSourceType = SourceType.SHOP_SEARCH;
@@ -1080,11 +1085,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     itemsContainerHelper.clearItems();
                     searchOperationType = null;
                     mGenieCategory = null;
-                    if (mSearchQuery == "" || mSearchQuery == null) {
-                        mSearchQuery = "";
-                    } else {
-                        mSearchResultText.setText(mSearchQuery);
-                    }
                     mPresenter.loadSaleItems(createSaleItemsRequest(mCategoryKey, 0, mChipFilters));
                     if (mHasSavedInstance) {
                         mActivity.getMainController().setSavedCurrentItem();
@@ -1233,9 +1233,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 } else if (mTitle != null && !mTitle.isEmpty()) {
                     mSaleItemsToolbarTitle.setText(mTitle);
                     mSearchResultText.setText(mTitle);
-                } else {
-                    mSaleItemsToolbarTitle.setText(getString(R.string.i_am_looking_for));
-                    mSearchResultText.setText(getString(R.string.i_am_looking_for));
                 }
 
                 if (mSourceType != SourceType.CATEGORY_SEARCH) {
