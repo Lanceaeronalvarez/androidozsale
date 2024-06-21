@@ -10,13 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/controller_main_line"
-        android:layout_alignParentStart="true">
-
-        <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
-            android:id="@+id/popup_host_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </au.com.dealsdirect.ui.controller.main.MainCustomViewPager>
+        android:layout_alignParentStart="true"/>
 
     <View
         android:id="@+id/controller_main_line"
@@ -133,5 +127,10 @@
             app:layout_constraintGuide_percent="0.5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
+        android:id="@+id/popup_host_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
