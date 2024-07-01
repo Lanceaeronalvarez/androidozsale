@@ -12,10 +12,22 @@ import au.com.dealsdirect.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HorizontalCircleIndicatorAdapter extends RecyclerView.Adapter<HorizontalCircleIndicatorAdapter.ViewHolder> {
+public class HorizontalPageIndicatorAdapter extends RecyclerView.Adapter<HorizontalPageIndicatorAdapter.ViewHolder> {
+
+    public enum Style {
+        CIRCLE,
+        RECTANGLE
+    }
+
     private int mItemCount = 0;
     private int mSelectedPosition = -1;
     private int mPreviousSelectedPosition = -1;
+
+    private final Style style;
+
+    public HorizontalPageIndicatorAdapter(Style style) {
+        this.style = style;
+    }
 
     @NonNull
     @Override
@@ -28,9 +40,23 @@ public class HorizontalCircleIndicatorAdapter extends RecyclerView.Adapter<Horiz
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (position != mSelectedPosition) {
-            holder.circleIndicatorImage.setImageResource(R.drawable.circle_indicator_inactive);
+            switch (style) {
+                case RECTANGLE:
+                    holder.circleIndicatorImage.setImageResource(R.drawable.rectangle_indicator_inactive);
+                    break;
+                default:
+                    holder.circleIndicatorImage.setImageResource(R.drawable.circle_indicator_inactive);
+                    break;
+            }
         } else {
-            holder.circleIndicatorImage.setImageResource(R.drawable.circle_indicator_active);
+            switch (style) {
+                case RECTANGLE:
+                    holder.circleIndicatorImage.setImageResource(R.drawable.rectangle_indicator_active);
+                    break;
+                default:
+                    holder.circleIndicatorImage.setImageResource(R.drawable.circle_indicator_active);
+                    break;
+            }
         }
     }
 

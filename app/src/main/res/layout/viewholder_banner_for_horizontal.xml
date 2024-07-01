@@ -8,6 +8,7 @@
     android:clickable="true"
     android:orientation="vertical"
     android:paddingLeft="@dimen/horizontal_banner_spacing"
+    android:paddingTop="@dimen/horizontal_banner_top_padding"
     android:paddingRight="@dimen/horizontal_banner_spacing"
     android:paddingBottom="@dimen/horizontal_banner_bottom_padding"
     tools:ignore="MissingPrefix">
@@ -21,8 +22,8 @@
         android:transitionName="image" />
 
     <TextView
-        fontPath="@string/font_app_bold"
         android:id="@+id/viewholder_horizontal_scrolling_cell_title"
+        fontPath="@string/font_app_bold"
         android:layout_width="match_parent"
         android:layout_height="@dimen/horizontal_banner_title_height"
         android:text="Title"

@@ -18,7 +18,7 @@ public interface ShopsMvpView extends MvpView {
 
     void showSponsoredBanners(GetBannerResponse getBannerResponses);
 
-    void showCategoryBanners(GetBannerResponse getBannerResponses);
+    void showTrendingBrands(GetBannerResponse getBannerResponses);
 
     void storeCategories(List<GetCategoryTreeResponse> categories);
 

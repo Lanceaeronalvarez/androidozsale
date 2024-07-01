@@ -143,7 +143,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     }
 
     @Override
-    public void loadCategoryBanners(GetBannerRequest request) {
+    public void loadTrendingBrands(GetBannerRequest request) {
         doApiCallForResponse(
                 getDataManager().callGetBanners2(request, false), new AppApiCallback() {
                     @Override
@@ -152,7 +152,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                         if (!isViewAttached()) {
                             return;
                         }
-                        getMvpView().showCategoryBanners((GetBannerResponse) response);
+                        getMvpView().showTrendingBrands((GetBannerResponse) response);
                     }
 
                     @Override
@@ -161,7 +161,7 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                         if (!isViewAttached()) {
                             return;
                         }
-                        getMvpView().showCategoryBanners(null);
+                        getMvpView().showTrendingBrands(null);
                     }
                 });
     }

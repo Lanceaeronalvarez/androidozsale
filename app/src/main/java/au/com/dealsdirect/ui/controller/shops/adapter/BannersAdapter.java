@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.shops.adapter;
 
+import static au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter.*;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Pair;
@@ -65,7 +67,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static final int VIEW_HOLDER_TYPE_LEADER_BANNER = 1 << 3;
     public static final int VIEW_HOLDER_TYPE_PROMO_BANNER = 1 << 4;
     public static final int VIEW_HOLDER_TYPE_SLIDING_BANNER = 1 << 5;
-    public static final int VIEW_HOLDER_TYPE_CATEGORY_BANNER = 1 << 6;
+    public static final int VIEW_HOLDER_TYPE_TRENDING_BRANDS_WIDGET = 1 << 6;
     public static final int VIEW_HOLDER_TYPE_SPONSORED_BANNER = 1 << 7;
     public static final int VIEW_HOLDER_TYPE_FOOTER = 1 << 8;
     public static final int VIEW_HOLDER_TYPE_SPACER = 1 << 9;
@@ -74,7 +76,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             VIEW_HOLDER_TYPE_LEADER_BANNER,
             VIEW_HOLDER_TYPE_PROMO_BANNER,
             VIEW_HOLDER_TYPE_SLIDING_BANNER,
-            VIEW_HOLDER_TYPE_CATEGORY_BANNER,
+            VIEW_HOLDER_TYPE_TRENDING_BRANDS_WIDGET,
             VIEW_HOLDER_TYPE_SPONSORED_BANNER,
             VIEW_HOLDER_TYPE_SPACER,
             VIEW_HOLDER_TYPE_NORMAL_BANNER
@@ -114,7 +116,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private HorizontalScrollingBannerAdapter mSlidingBannersAdapter = null;
-    private HorizontalScrollingBannerAdapter mCategoryBannersAdapter = null;
+    private HorizontalScrollingBannerAdapter mTrendingBrandsAdapter = null;
     private HorizontalScrollingBannerAdapter mSponsoredBannersAdapter = null;
     private final BannersAdapterHelper bannersAdapterHelper;
 
@@ -219,13 +221,44 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 return new LeaderboardBannerViewHolder(view, getLeaderboardBannerHeight());
             case VIEW_HOLDER_TYPE_SLIDING_BANNER:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
-                return new HorizontalRecyclerBannerViewHolder(view, (int) computeSlidingBannersGrid().getItemHeight(), mSlidingBannersAdapter, true, true);
-            case VIEW_HOLDER_TYPE_CATEGORY_BANNER:
+                return new HorizontalRecyclerBannerViewHolder(
+                        view,
+                        (int) computeSlidingBannersGrid().getItemHeight(),
+                        mSlidingBannersAdapter,
+                        true,
+                        true,
+                        HorizontalPageIndicatorAdapter.Style.CIRCLE);
+            case VIEW_HOLDER_TYPE_TRENDING_BRANDS_WIDGET: {
+                final boolean isCircular = mTrendingBrandsAdapter.getBannerStyle() == BannerStyle.CIRCULAR;
+                final int numberOfColumns = isTablet ? context.getResources().getInteger(isCircular ? R.integer.trending_brands_circular_column_count_for_tablet : R.integer.trending_brands_column_count_for_tablet) : context.getResources().getInteger(R.integer.trending_brands_column_count);
+                final int numberOfItems = mTrendingBrandsAdapter.getDataSource().size();
+                final float extraPercentage = numberOfItems > numberOfColumns && isCircular ?
+                        context.getResources().getInteger(isTablet ? R.integer.trending_brands_partial_column_percentage_for_tablet : R.integer.trending_brands_partial_column_percentage) / 100f : 0;
+                int height = (int) (computeTrendingBrandsGrid(
+                        isCircular ? Math.min(numberOfColumns, numberOfItems) : numberOfColumns,
+                        extraPercentage).getItemHeight());
+                if (mTrendingBrandsAdapter.isShowHeader()) {
+                    height += context.getResources().getDimension(R.dimen.horizontal_banner_header_title_height);
+                }
+                height += context.getResources().getDimension(R.dimen.horizontal_banner_circle_indicator_height);
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
-                return new HorizontalRecyclerBannerViewHolder(view, (int) computeCategoryBannersGrid().getItemHeight(), mCategoryBannersAdapter, false, false);
+                return new HorizontalRecyclerBannerViewHolder(
+                        view,
+                        height,
+                        mTrendingBrandsAdapter,
+                        true,
+                        true,
+                        HorizontalPageIndicatorAdapter.Style.RECTANGLE);
+            }
             case VIEW_HOLDER_TYPE_SPONSORED_BANNER:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
-                return new HorizontalRecyclerBannerViewHolder(view, (int) computeSponsoredBannersGrid().getItemHeight(), mSponsoredBannersAdapter, false, false);
+                return new HorizontalRecyclerBannerViewHolder(
+                        view,
+                        (int) computeSponsoredBannersGrid().getItemHeight(),
+                        mSponsoredBannersAdapter,
+                        false,
+                        false,
+                        HorizontalPageIndicatorAdapter.Style.CIRCLE);
             case VIEW_HOLDER_TYPE_FOOTER:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_ads, parent, false);
                 return new FooterViewHolder(view);
@@ -250,6 +283,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder instanceof HorizontalRecyclerBannerViewHolder) {
             HorizontalRecyclerBannerViewHolder horizontalRecyclerViewHolder = (HorizontalRecyclerBannerViewHolder) holder;
             horizontalRecyclerViewHolder.onViewRecycled();
+            horizontalRecyclerViewHolder.onViewRemoved();
             horizontalRecyclerViewHolders.remove(horizontalRecyclerViewHolder);
         }
     }
@@ -296,34 +330,47 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 if (horizontalRecyclerViewHolder != null) {
                     horizontalRecyclerViewHolder.setAdapter(mSlidingBannersAdapter);
 
-                    horizontalRecyclerViewHolder.setCircleIndicatorVisibility(View.VISIBLE);
+                    horizontalRecyclerViewHolder.setPageIndicatorVisibility(View.VISIBLE);
 
                     if (mSlidingBannersAdapter != null) {
                         mSlidingBannersAdapter.resetReyclerViewPosition();
-                        horizontalRecyclerViewHolder.setCircleIndicatorItemCount(mSlidingBannersAdapter.getDataSource().size());
+                        horizontalRecyclerViewHolder.setPageIndicatorItemCount(mSlidingBannersAdapter.getDataSource().size());
                     } else {
-                        horizontalRecyclerViewHolder.setCircleIndicatorItemCount(0);
+                        horizontalRecyclerViewHolder.setPageIndicatorItemCount(0);
                     }
 
-                    if (horizontalRecyclerViewHolder.getCircleIndicatorAdapter() != null) {
-                        horizontalRecyclerViewHolder.getCircleIndicatorAdapter().setSelectedPosition(0);
+                    if (horizontalRecyclerViewHolder.getPageIndicatorAdapter() != null) {
+                        horizontalRecyclerViewHolder.getPageIndicatorAdapter().setSelectedPosition(0);
                     }
                 }
 
                 break;
-            case VIEW_HOLDER_TYPE_CATEGORY_BANNER:
-                setupCategoryBannersDimensions();
-                horizontalRecyclerViewHolder.setAdapter(mCategoryBannersAdapter);
-                horizontalRecyclerViewHolder.setCircleIndicatorVisibility(View.GONE);
-                if (mCategoryBannersAdapter != null) {
-                    mCategoryBannersAdapter.resetReyclerViewPosition();
+            case VIEW_HOLDER_TYPE_TRENDING_BRANDS_WIDGET:
+                setupTrendingBrandsDimensions();
+                horizontalRecyclerViewHolder.setAdapter(mTrendingBrandsAdapter);
+                horizontalRecyclerViewHolder.setPageIndicatorVisibility(View.VISIBLE);
+
+                if (mTrendingBrandsAdapter != null) {
+                    mTrendingBrandsAdapter.resetReyclerViewPosition();
+                    final boolean isCircular = mTrendingBrandsAdapter != null && mTrendingBrandsAdapter.getBannerStyle() == BannerStyle.CIRCULAR;
+                    final int numberOfColumns = isTablet ? context.getResources().getInteger(isCircular ? R.integer.trending_brands_circular_column_count_for_tablet : R.integer.trending_brands_column_count_for_tablet) : context.getResources().getInteger(R.integer.trending_brands_column_count);
+                    horizontalRecyclerViewHolder.setScrollStepSize(numberOfColumns);
+                    horizontalRecyclerViewHolder.setPageIndicatorCountWithPageSize(numberOfColumns);
+                    final boolean willScrollWrapAround = horizontalRecyclerViewHolder.getPageIndicatorAdapter().getItemCount() > 1;
+                    mTrendingBrandsAdapter.setWillScrollWrapAround(willScrollWrapAround);
+                } else {
+                    horizontalRecyclerViewHolder.setPageIndicatorItemCount(0);
                 }
-                horizontalRecyclerViewHolder.setHeaderText(mCategoryBannersAdapter.isUseCircularImage() ? mCategoryBannersAdapter.getTitle() : null);
+
+                if (horizontalRecyclerViewHolder.getPageIndicatorAdapter() != null) {
+                    horizontalRecyclerViewHolder.getPageIndicatorAdapter().setSelectedPosition(0);
+                }
+                horizontalRecyclerViewHolder.setHeaderText(mTrendingBrandsAdapter.isShowHeader() ? mTrendingBrandsAdapter.getTitle() : null);
                 break;
             case VIEW_HOLDER_TYPE_SPONSORED_BANNER:
                 setupSponsoredBannersDimensions();
                 horizontalRecyclerViewHolder.setAdapter(mSponsoredBannersAdapter);
-                horizontalRecyclerViewHolder.setCircleIndicatorVisibility(View.GONE);
+                horizontalRecyclerViewHolder.setPageIndicatorVisibility(View.GONE);
                 if (mSponsoredBannersAdapter != null) {
                     mSponsoredBannersAdapter.resetReyclerViewPosition();
                 }
@@ -413,8 +460,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         synchronized (mSales) {
             if (position == getPositionOfSponsoredBanners()) {
                 return mSponsoredBannersAdapter != null ? mSponsoredBannersAdapter.getTitle() : null;
-            } else if (position == getPositionOfCategoryBanners() && !mCategoryBannersAdapter.isUseCircularImage()) {
-                return mCategoryBannersAdapter != null ? mCategoryBannersAdapter.getTitle() : null;
+            } else if (position == getPositionOfTrendingBrands() && !mTrendingBrandsAdapter.isShowHeader()) {
+                return mTrendingBrandsAdapter != null ? mTrendingBrandsAdapter.getTitle() : null;
             } else if (position >= getPositionOfNormalBanners()) {
                 return position < getItemCount() - 1 ? mSales.get(position - getPositionOfNormalBanners()).getGroup().getTitle() : "";
             }
@@ -433,9 +480,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder instanceof HorizontalRecyclerBannerViewHolder) {
             HorizontalRecyclerBannerViewHolder viewHolder = (HorizontalRecyclerBannerViewHolder) holder;
             viewHolder.onViewRecycled();
-            viewHolder.setAdapter(null);
-            viewHolder.setCirclIndicatorAdapter(null);
             horizontalRecyclerViewHolders.remove(viewHolder);
+            viewHolder.onViewRemoved();
         }
         super.onViewRecycled(holder);
     }
@@ -455,12 +501,12 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 return isLeaderBannersVisible();
             case VIEW_HOLDER_TYPE_SLIDING_BANNER:
                 return isSlidingBannersVisible();
-            case VIEW_HOLDER_TYPE_CATEGORY_BANNER:
-                return isCategoryBannersVisible();
+            case VIEW_HOLDER_TYPE_TRENDING_BRANDS_WIDGET:
+                return isTrendingBrandsVisible();
             case VIEW_HOLDER_TYPE_SPONSORED_BANNER:
                 return isSponsoredBannersVisible();
             case VIEW_HOLDER_TYPE_SPACER:
-                return isSlidingBannersVisible() || isCategoryBannersVisible() || isSponsoredBannersVisible();
+                return isSlidingBannersVisible() || isTrendingBrandsVisible() || isSponsoredBannersVisible();
             default:
                 for (int value : BANNER_ORDER) {
                     if (value == (removeViewHolderOrientationModifier(viewType))) {
@@ -507,8 +553,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return getPositionOfViewType(VIEW_HOLDER_TYPE_SLIDING_BANNER);
     }
 
-    private int getPositionOfCategoryBanners() {
-        return getPositionOfViewType(VIEW_HOLDER_TYPE_CATEGORY_BANNER);
+    private int getPositionOfTrendingBrands() {
+        return getPositionOfViewType(VIEW_HOLDER_TYPE_TRENDING_BRANDS_WIDGET);
     }
 
     private int getPositionOfSponsoredBanners() {
@@ -577,7 +623,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
 
             setupSlidingBannersDimensions();
-            setupCategoryBannersDimensions();
+            setupTrendingBrandsDimensions();
             setupSponsoredBannersDimensions();
         }
     }
@@ -587,8 +633,15 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return (int) Math.ceil(dimen) * 2;
     }
 
-    private int getBottomPaddingForHorizontalBanners() {
-        float dimen = context.getResources().getDimension(R.dimen.horizontal_banner_bottom_padding);
+    private int getVerticalPaddingForHorizontalBanners() {
+        final boolean isCircular = mTrendingBrandsAdapter != null && mTrendingBrandsAdapter.getBannerStyle() == BannerStyle.CIRCULAR;
+        float dimen = 0;
+        if (isCircular) {
+            dimen += context.getResources().getDimension(R.dimen.horizontal_circular_banner_top_padding);
+            dimen += context.getResources().getDimension(R.dimen.horizontal_circular_banner_bottom_padding);
+        } else {
+            dimen += context.getResources().getDimension(R.dimen.horizontal_banner_bottom_padding);
+        }
         return (int) Math.ceil(dimen);
     }
 
@@ -637,42 +690,62 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private Pair<Integer, Integer> categoryBannersImageSize() {
+    private Pair<Integer, Integer> trendingBrandsImageSize() {
         int width;
         int height;
         if (isTablet) {
-            width = context.getResources().getInteger(R.integer.category_banner_width_for_tablet);
-            height = context.getResources().getInteger(R.integer.category_banner_height_for_tablet);
+            width = context.getResources().getInteger(R.integer.trending_brands_width_for_tablet);
+            height = context.getResources().getInteger(R.integer.trending_brands_height_for_tablet);
         } else {
-            width = context.getResources().getInteger(R.integer.category_banner_width);
-            height = context.getResources().getInteger(R.integer.category_banner_height);
+            width = context.getResources().getInteger(R.integer.trending_brands_width);
+            height = context.getResources().getInteger(R.integer.trending_brands_height);
         }
         return new Pair<>(width, height);
     }
 
-    private ImageUtils.Grid computeCategoryBannersGrid() {
-        final boolean useCircular = mCategoryBannersAdapter != null && mCategoryBannersAdapter.isUseCircularImage();
+    private ImageUtils.Grid computeTrendingBrandsGrid(int numberOfColumns, float extraPercentage) {
+        final boolean isCircular = mTrendingBrandsAdapter != null && mTrendingBrandsAdapter.getBannerStyle() == BannerStyle.CIRCULAR;
 
-        final int numberOfColumns = isTablet ? context.getResources().getInteger(useCircular ? R.integer.category_banner_circular_column_count_for_tablet : R.integer.category_banner_column_count_for_tablet) : context.getResources().getInteger(R.integer.category_banner_column_count);
-        final int width = categoryBannersImageSize().first;
-        final int height = categoryBannersImageSize().second;
+        final int width = trendingBrandsImageSize().first;
+        final int height = trendingBrandsImageSize().second;
 
-        if (!useCircular) {
+        int verticalPadding = getVerticalPaddingForHorizontalBanners();
+        if (mTrendingBrandsAdapter.isShouldShowTitle()) {
+            verticalPadding += context.getResources().getDimension(R.dimen.horizontal_banner_title_upper_spacing);
+            verticalPadding += context.getResources().getDimension(R.dimen.horizontal_banner_title_height);
+        }
+        if (mTrendingBrandsAdapter.isShouldShowSubtitle()) {
+            verticalPadding += context.getResources().getDimension(R.dimen.horizontal_banner_title_height);
+        }
+
+        if (!isCircular) {
             ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(width, height, ScreenUtils.getScreenWidth(context), numberOfColumns, numberOfColumns);
-            return new ImageUtils.Grid(1, grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(), grid.getItemHeight() + context.getResources().getDimension(R.dimen.horizontal_banner_title_height) + getBottomPaddingForHorizontalBanners());
+            return new ImageUtils.Grid(
+                    1,
+                    grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(),
+                    grid.getItemHeight() + verticalPadding);
         } else {
-            final float extraPercentage = context.getResources().getInteger(isTablet ? R.integer.category_banner_partial_column_percentage_for_tablet : R.integer.category_banner_partial_column_percentage) / 100f;
             ImageUtils.Grid grid = ImageUtils.getExactGridDefinition(numberOfColumns + extraPercentage, height / (float) width, ScreenUtils.getScreenWidth(context));
-            return new ImageUtils.Grid(1, grid.getItemWidth(), grid.getItemWidth() + context.getResources().getDimension(R.dimen.horizontal_banner_header_title_height) + context.getResources().getDimension(R.dimen.horizontal_banner_title_height));
+            return new ImageUtils.Grid(
+                    1,
+                    grid.getItemWidth(),
+                    Math.min(width, grid.getItemWidth()) + verticalPadding);
         }
     }
 
-    private void setupCategoryBannersDimensions() {
-        if (mCategoryBannersAdapter != null) {
-            ImageUtils.Grid categoryBannersGrid = computeCategoryBannersGrid();
-            mCategoryBannersAdapter.setImageWidth(categoryBannersImageSize().first);
-            mCategoryBannersAdapter.setImageHeight(categoryBannersImageSize().second);
-            mCategoryBannersAdapter.setupDimensions((int) categoryBannersGrid.getItemWidth(), (int) categoryBannersGrid.getItemHeight());
+    private void setupTrendingBrandsDimensions() {
+        if (mTrendingBrandsAdapter != null) {
+            final boolean isCircular = mTrendingBrandsAdapter.getBannerStyle() == BannerStyle.CIRCULAR;
+            final int numberOfColumns = isTablet ? context.getResources().getInteger(isCircular ? R.integer.trending_brands_circular_column_count_for_tablet : R.integer.trending_brands_column_count_for_tablet) : context.getResources().getInteger(R.integer.trending_brands_column_count);
+            final int numberOfItems = mTrendingBrandsAdapter.getDataSource().size();
+            final float extraPercentage = numberOfItems > numberOfColumns && isCircular ?
+                    context.getResources().getInteger(isTablet ? R.integer.trending_brands_partial_column_percentage_for_tablet : R.integer.trending_brands_partial_column_percentage) / 100f : 0;
+            ImageUtils.Grid trendingBrandsGrid = computeTrendingBrandsGrid(
+                    isCircular ? Math.min(numberOfColumns, numberOfItems) : numberOfColumns,
+                    extraPercentage);
+            mTrendingBrandsAdapter.setImageWidth(trendingBrandsImageSize().first);
+            mTrendingBrandsAdapter.setImageHeight(trendingBrandsImageSize().second);
+            mTrendingBrandsAdapter.setupDimensions((int) trendingBrandsGrid.getItemWidth(), (int) trendingBrandsGrid.getItemHeight());
         }
     }
 
@@ -694,7 +767,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final int width = sponsoredBannersImageSize().first;
         final int height = sponsoredBannersImageSize().second;
         ImageUtils.Grid grid = ImageUtils.getRangedGridDefinition(width, height, ScreenUtils.getScreenWidth(context), numberOfColumns, numberOfColumns);
-        return new ImageUtils.Grid(1, grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(), grid.getItemHeight() + getBottomPaddingForHorizontalBanners());
+        return new ImageUtils.Grid(1, grid.getItemWidth() + getHorizontalPaddingForHorizontalBanners(), grid.getItemHeight() + getVerticalPaddingForHorizontalBanners());
     }
 
     private void setupSponsoredBannersDimensions() {
@@ -736,8 +809,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             viewType = viewType | VIEW_HOLDER_TYPE_SPACER;
         } else if (position == getPositionOfSlidingBanners()) {
             viewType = viewType | VIEW_HOLDER_TYPE_SLIDING_BANNER;
-        } else if (position == getPositionOfCategoryBanners()) {
-            viewType = viewType | VIEW_HOLDER_TYPE_CATEGORY_BANNER;
+        } else if (position == getPositionOfTrendingBrands()) {
+            viewType = viewType | VIEW_HOLDER_TYPE_TRENDING_BRANDS_WIDGET;
         } else if (position == getPositionOfSponsoredBanners()) {
             viewType = viewType | VIEW_HOLDER_TYPE_SPONSORED_BANNER;
         } else if (position == (getItemCount() - 1) && getItemCount() != 0) {
@@ -756,8 +829,8 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return mSlidingBannersAdapter != null;
     }
 
-    private boolean isCategoryBannersVisible() {
-        return mCategoryBannersAdapter != null;
+    private boolean isTrendingBrandsVisible() {
+        return mTrendingBrandsAdapter != null;
     }
 
     private boolean isSponsoredBannersVisible() {
@@ -798,25 +871,25 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public HorizontalScrollingBannerAdapter getCategoryBannersAdapter() {
-        return mCategoryBannersAdapter;
+    public HorizontalScrollingBannerAdapter getTrendingBrandsAdapter() {
+        return mTrendingBrandsAdapter;
     }
 
-    public void setCategoryBannersAdapter(HorizontalScrollingBannerAdapter categoryBannersAdapter) {
-        boolean willInsert = mCategoryBannersAdapter == null && categoryBannersAdapter != null;
-        boolean willDelete = mCategoryBannersAdapter != null && categoryBannersAdapter == null;
+    public void setTrendingBrandsAdapter(HorizontalScrollingBannerAdapter trendingBrandsAdapter) {
+        boolean willInsert = mTrendingBrandsAdapter == null && trendingBrandsAdapter != null;
+        boolean willDelete = mTrendingBrandsAdapter != null && trendingBrandsAdapter == null;
         if (willDelete) {
-            int index = getPositionOfCategoryBanners();
-            mCategoryBannersAdapter.setOnBannerTappedListener(null);
-            mCategoryBannersAdapter = null;
+            int index = getPositionOfTrendingBrands();
+            mTrendingBrandsAdapter.setOnBannerTappedListener(null);
+            mTrendingBrandsAdapter = null;
             notifyItemRemoved(index);
         } else if (willInsert) {
-            mCategoryBannersAdapter = categoryBannersAdapter;
-            mCategoryBannersAdapter.preloadBannerImages(context);
-            if (mCategoryBannersAdapter != null) {
-                mCategoryBannersAdapter.setOnBannerTappedListener((banner, position) -> bannersAdapterHelper.onBannerTapped(banner, position, "", Events.BannerClickEvent, banner.getBannerType()));
+            mTrendingBrandsAdapter = trendingBrandsAdapter;
+            mTrendingBrandsAdapter.preloadBannerImages(context);
+            if (mTrendingBrandsAdapter != null) {
+                mTrendingBrandsAdapter.setOnBannerTappedListener((banner, position) -> bannersAdapterHelper.onBannerTapped(banner, position, "", Events.BannerClickEvent, banner.getBannerType()));
             }
-            notifyItemInserted(getBannerOrderPosition(VIEW_HOLDER_TYPE_CATEGORY_BANNER));
+            notifyItemInserted(getBannerOrderPosition(VIEW_HOLDER_TYPE_TRENDING_BRANDS_WIDGET));
         }
     }
 
