@@ -66,7 +66,6 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
     private final BannerStyle bannerStyle;
 
     private boolean showHeader = false;
-
     private boolean willScrollWrapAround = true;
 
     public enum BannerViewType {

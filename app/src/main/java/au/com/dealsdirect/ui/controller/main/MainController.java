@@ -45,6 +45,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.account.AccountController;
+import au.com.dealsdirect.ui.controller.brands.TopBrandsController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -568,8 +569,8 @@ public class MainController extends BaseController implements MainMvpView {
 
     private void setupBrandsRouter(Router router, boolean willReset) {
         if (!router.hasRootController() || willReset) {
-            ShopsController shopsController = ShopsController.instanceWithBrandsOnlyFilter();
-            router.setRoot(RouterTransaction.with(shopsController)
+            TopBrandsController brandsController = TopBrandsController.newInstance();
+            router.setRoot(RouterTransaction.with(brandsController)
                     .popChangeHandler(new HorizontalChangeHandler()));
         }
     }
@@ -907,7 +908,7 @@ public class MainController extends BaseController implements MainMvpView {
         mBottomNavigationView.setCurrentItem(BRANDS_INDEX, false);
         if (previousPagerPosition == BRANDS_INDEX) {
             Controller controller = getCurrentViewPagerController();
-            if (!mIsInitialSavedInstanceLoad && !(controller instanceof ShopsController)) {
+            if (!mIsInitialSavedInstanceLoad && !(controller instanceof TopBrandsController)) {
                 Router router = routers.get(BRANDS_INDEX);
                 if (router != null) {
                     ArrayList<RouterTransaction> backstack = new ArrayList<>();

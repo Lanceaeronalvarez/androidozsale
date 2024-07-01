@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class GetTopBrandsResponse {
+public class GetTopBrandsResponse implements Comparable<GetTopBrandsResponse> {
     @SerializedName("name")
     @Expose
     private String name;
@@ -44,6 +44,11 @@ public class GetTopBrandsResponse {
 
     public Attributes getAttributes() {
         return attributes;
+    }
+
+    @Override
+    public int compareTo(GetTopBrandsResponse getTopBrandsResponse) {
+        return getName().compareToIgnoreCase(getTopBrandsResponse.getName());
     }
 
     private static class Attributes {

@@ -26,6 +26,9 @@ import au.com.dealsdirect.ui.controller.afterpay.AfterpayPresenter;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersMvpPresenter;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersMvpView;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersPresenter;
+import au.com.dealsdirect.ui.controller.brands.TopBrandsMvpPresenter;
+import au.com.dealsdirect.ui.controller.brands.TopBrandsMvpView;
+import au.com.dealsdirect.ui.controller.brands.TopBrandsPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpPresenter;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.categories.CategoriesPresenter;
@@ -212,6 +215,11 @@ public class ControllerModule {
 
     @Provides
     ShopsMvpPresenter<ShopsMvpView> provideShopPresenter(ShopsPresenter<ShopsMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    TopBrandsMvpPresenter<TopBrandsMvpView> provideBrandsPresenter(TopBrandsPresenter<TopBrandsMvpView> presenter) {
         return presenter;
     }
 
