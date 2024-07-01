@@ -12,6 +12,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesRequest;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
+import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetEmailSubscriptionTemplatesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
@@ -124,7 +125,7 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
                     @Override
                     public void onSuccess(Object response) {
                         super.onSuccess(response);
-                        getMvpView().onUpdateEmailSubscriptionPreference();
+                        getMvpView().onUpdateEmailSubscriptionPreferenceWithResponse((UpdateEmailSubscriptionResponse) response);
                     }
 
                     @Override
@@ -151,11 +152,9 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
     public void getEmailSubscriptionTemplates() {
         doApiCallForResponse(getDataManager().getEmailSubscriptionTemplates(), new AppApiCallback() {
                     @Override
-                    public void onSuccess(Object response) {
-                        super.onSuccess(response);
-                        if (response instanceof GetEmailSubscriptionTemplatesResponse) {
-                            getMvpView().onGetEmailSubscriptionTemplates((GetEmailSubscriptionTemplatesResponse) response);
-                        }
+                    public void onSuccess(List<?> list) {
+                        super.onSuccess(list);
+                        getMvpView().onGetEmailSubscriptionTemplates((List<GetEmailSubscriptionTemplatesResponse>) list);
                     }
 
                     @Override

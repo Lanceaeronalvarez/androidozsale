@@ -1,5 +1,6 @@
 package au.com.dealsdirect.data.network;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
@@ -124,6 +125,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.Verif
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
+import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
@@ -1071,20 +1073,20 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<String> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request) {
-        return Rx2AndroidNetworking.put(ApiEndPoint.upddateEmailSubscription())
+    public Observable<UpdateEmailSubscriptionResponse> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request) {
+        return Rx2AndroidNetworking.put(ApiEndPoint.updateEmailSubscriptionV2())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
-                .getStringObservable();
+                .getObjectObservable(UpdateEmailSubscriptionResponse.class);
     }
 
     @Override
-    public Observable<GetEmailSubscriptionTemplatesResponse> getEmailSubscriptionTemplates() {
+    public Observable<List<GetEmailSubscriptionTemplatesResponse>> getEmailSubscriptionTemplates() {
         return Rx2AndroidNetworking.get(ApiEndPoint.getEmailSubscriptionTemplates())
                 .addHeaders(mApiHeader.get())
                 .build()
-                .getObjectObservable(GetEmailSubscriptionTemplatesResponse.class);
+                .getObjectListObservable(GetEmailSubscriptionTemplatesResponse.class);
     }
 
     @Override

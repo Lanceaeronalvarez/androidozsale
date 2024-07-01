@@ -12,6 +12,12 @@ public class GetEmailSubscriptionTemplatesResponse {
     @SerializedName("options")
     @Expose
     private List<Option> options;
+    @SerializedName("fetch-property")
+    @Expose
+    private String fetchProperty;
+    @SerializedName("select-all-text")
+    @Expose
+    private String selectAllText;
 
     public String getTitle() {
         return title;
@@ -20,9 +26,15 @@ public class GetEmailSubscriptionTemplatesResponse {
     public List<Option> getOptions() {
         return options;
     }
+    public String getProperty() {
+        return fetchProperty;
+    }
+    public String getSelectAllText() {
+        return selectAllText;
+    }
 
     public static class Option {
-        @SerializedName("preference")
+        @SerializedName("value")
         @Expose
         private String preference;
         @SerializedName("text")

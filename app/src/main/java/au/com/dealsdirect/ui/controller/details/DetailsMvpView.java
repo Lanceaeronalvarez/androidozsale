@@ -1,6 +1,9 @@
 package au.com.dealsdirect.ui.controller.details;
 
+import java.util.List;
+
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
+import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetEmailSubscriptionTemplatesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.ui.base.MvpView;
@@ -20,7 +23,9 @@ public interface DetailsMvpView extends MvpView {
 
     void onUpdateEmailSubscriptionPreference();
 
-    void onGetEmailSubscriptionTemplates(GetEmailSubscriptionTemplatesResponse response);
+    void onGetEmailSubscriptionTemplates(List<GetEmailSubscriptionTemplatesResponse> response);
 
     boolean isActive();
+
+    void onUpdateEmailSubscriptionPreferenceWithResponse(UpdateEmailSubscriptionResponse response);
 }

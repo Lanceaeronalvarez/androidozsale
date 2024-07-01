@@ -131,6 +131,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.Verif
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
+import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
@@ -476,12 +477,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<String> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request) {
+    public Observable<UpdateEmailSubscriptionResponse> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request) {
         return mApiHelper.callUpdateUserEmailSubscription(request);
     }
 
     @Override
-    public Observable<GetEmailSubscriptionTemplatesResponse> getEmailSubscriptionTemplates() {
+    public Observable<List<GetEmailSubscriptionTemplatesResponse>> getEmailSubscriptionTemplates() {
         return mApiHelper.getEmailSubscriptionTemplates();
     }
 

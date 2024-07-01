@@ -620,8 +620,12 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/notifications/email/subscription", ApiUrlVersion.v1.apiVersion());
     }
 
+    public static String updateEmailSubscriptionV2() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/notifications/email/preference", ApiUrlVersion.v1.apiVersion());
+    }
+
     public static String getEmailSubscriptionTemplates() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/notifications/email/subscription/templates", ApiUrlVersion.v1.apiVersion());
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/notifications/email/subscription/templates", ApiUrlVersion.v2.apiVersion());
     }
 
     /* Summary */

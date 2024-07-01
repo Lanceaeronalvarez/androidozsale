@@ -1,6 +1,7 @@
 package au.com.dealsdirect.data.network;
 
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
@@ -118,6 +119,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.Verif
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
+import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
@@ -289,9 +291,9 @@ public interface ApiHelper {
 
     Observable<String> callAccountDeletion(String userDetailsId);
 
-    Observable<String> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request);
+    Observable<UpdateEmailSubscriptionResponse> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request);
 
-    Observable<GetEmailSubscriptionTemplatesResponse> getEmailSubscriptionTemplates();
+    Observable<List<GetEmailSubscriptionTemplatesResponse>> getEmailSubscriptionTemplates();
 
     // MY ORDERS API CALLS
 

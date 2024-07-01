@@ -7,6 +7,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -15,6 +16,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +33,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.gdpr.savereceivesales.SaveReceiveSalesResponse;
+import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetEmailSubscriptionTemplatesResponse;
 import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
@@ -43,11 +48,15 @@ import au.com.dealsdirect.utils.LoadingDialogType;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class DetailsController extends BasePullToRefreshController implements DetailsMvpView {
+public class DetailsController extends BasePullToRefreshController implements DetailsMvpView, PreferenceCategoriesClickListener {
 
     private final static boolean SHOULD_SHOW_SUCCESS_DIALOGS = false;
     private final static String UNSUBSCRIBE_PREFERENCE_KEY = "Unsubscribe";
     private final static String UNSUBSCRIBE_PREFERENCE_TEXT = "Unsubscribe.";
+    private final static String PREFERENCE_CATEGORIES_PROPERTY = "preference_categories";
+    private final static String PREFERENCE_MEMBER_PROPERTY = "member_preference";
+
+    private final static int showApiResponseMillis = 3000;
 
     @Inject
     DetailsMvpPresenter<DetailsMvpView> mPresenter;
@@ -94,12 +103,24 @@ public class DetailsController extends BasePullToRefreshController implements De
     @BindView(R.id.controller_details_promo_emails_radio_group)
     RadioGroup emailSubscriptionPreferencesRadioGroup;
 
+    @BindView(R.id.controller_details_checkbox_recycler)
+    RecyclerView categoriesRecyclerView;
+
+    @BindView(R.id.controller_details_categories_header)
+    TextView emailCategoryPreferencesHeaderTextView;
+
+    @BindView(R.id.controller_unsubscribe_button)
+    Button unsubscribeButton;
+
+    @BindView(R.id.controller_success_message)
+    TextView emailCategoryPreferencesSuccessMessage;
+
     private final List<RadioButton> emailSubscriptionPreferencesRadioButtonsList = new ArrayList<>();
     private final Map<String, RadioButton> emailSubscriptionPreferencesRadioButtonsMap = new HashMap<>();
     private final Map<Integer, String> emailSubscriptionPreferencesRadioButtonsIdMap = new HashMap<>();
 
     @BindView(R.id.controller_account_deletion_button)
-    View mAccountDeletionButton;
+    Button mAccountDeletionButton;
 
 
     private Date dateOfBirth = null;
@@ -116,9 +137,23 @@ public class DetailsController extends BasePullToRefreshController implements De
 
     private GetEmailSubscriptionTemplatesResponse emailSubscriptionTemplates = null;
 
+    private PreferenceCategoriesAdapter mAdapter;
+
+    Map<String, String> mCategoriesList = new LinkedHashMap<>();
+
+    HashMap<String, Boolean> mCategories = new HashMap<>();
+
+    boolean isCategorySelectionEnabled = true;
+
     private final RadioGroup.OnCheckedChangeListener emailSubscriptionPreferenceRadioGroupChangeListener = (group, checkedId) -> {
         emailSubscriptionPreference = emailSubscriptionPreferencesRadioButtonsIdMap.get(checkedId);
         emailSubscriptionPreferenceDate = Calendar.getInstance().getTime();
+
+        if(isCategorySelectionEnabled == false){
+            isCategorySelectionEnabled = true;
+            setRecyclerAdapter();
+        }
+
     };
 
     public DetailsController(Bundle args) {
@@ -134,6 +169,20 @@ public class DetailsController extends BasePullToRefreshController implements De
     @Override
     public boolean isActive() {
         return false;
+    }
+
+    @Override
+    public void onUpdateEmailSubscriptionPreferenceWithResponse(UpdateEmailSubscriptionResponse response) {
+        emailCategoryPreferencesSuccessMessage.setVisibility(View.VISIBLE);
+        emailCategoryPreferencesSuccessMessage.setText(response.getMessage());
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                emailCategoryPreferencesSuccessMessage.setVisibility(View.GONE);
+            }
+        }, showApiResponseMillis);
     }
 
     @Override
@@ -162,7 +211,8 @@ public class DetailsController extends BasePullToRefreshController implements De
         mSaveUserDetailsButton.setVisibility(getBoolean(R.bool.is_ozsale_app) ? View.INVISIBLE : View.VISIBLE);
         mTitleTextView.setText(getString(R.string.account_details));
         mToolbarLeftView.setVisibility(mPresenter.isTablet() && getBoolean(R.bool.master_detail_enabled) ? View.INVISIBLE : View.VISIBLE);
-
+        unsubscribeButton.setText(Html.fromHtml("<u><i>Unsubscribe</i></u>"));
+        mAccountDeletionButton.setText(Html.fromHtml("<u>Request Account and Data Deletion</u>"));
         if (getBoolean(R.bool.is_gender_enabled)) {
             List<String> list = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.genders)));
             CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(mActivity,
@@ -204,7 +254,11 @@ public class DetailsController extends BasePullToRefreshController implements De
         }
 
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
+
+        mCategories = new HashMap<>();
+
         showLoading(LoadingDialogType.DEFAULT);
+
         mPresenter.getEmailSubscriptionTemplates();
         mPresenter.loadUser(setUserDetailsRequest);
     }
@@ -242,6 +296,18 @@ public class DetailsController extends BasePullToRefreshController implements De
         emailSubscriptionPreferenceDate = getDateFromServerDateString(userDetailsResponse.getPreferenceDate());
 
         updateEmailSubscriptionPreferenceRadioGroupSelection();
+
+        if(userDetailsResponse.getCategories() != null ){
+            mCategories.putAll(userDetailsResponse.getCategories());
+        }
+
+        if(emailSubscriptionPreference.equals(UNSUBSCRIBE_PREFERENCE_KEY)){
+            unsubscribeRecycler();
+        }else{
+            isCategorySelectionEnabled = true;
+            setRecyclerAdapter();
+        }
+
     }
 
     @Override
@@ -291,59 +357,76 @@ public class DetailsController extends BasePullToRefreshController implements De
         }
         currentUserDetails.setMemberPreference(emailSubscriptionPreference);
         currentUserDetails.setPreferenceDate(serverDateFormat.format(emailSubscriptionPreferenceDate));
-
         if (SHOULD_SHOW_SUCCESS_DIALOGS) {
             CustomAlertDialog.showCustomAlertDialog(mActivity, CustomAlertDialog.CustomDialogIconState.POSITIVE, "Changes Saved");
         }
     }
 
     @Override
-    public void onGetEmailSubscriptionTemplates(GetEmailSubscriptionTemplatesResponse response) {
-        emailSubscriptionTemplates = response;
-        if (response == null) {
-            emailSubscriptionPreferencesContainerView.setVisibility(View.GONE);
-            return;
+    public void onGetEmailSubscriptionTemplates(List<GetEmailSubscriptionTemplatesResponse> list) {
+        for (int it = 0; it < list.size(); it++) {
+            if(list.get(it).getProperty().equals(PREFERENCE_CATEGORIES_PROPERTY)){
+                GetEmailSubscriptionTemplatesResponse categoryPreferenceOption = list.get(it);
+                for (int itOption = 0; itOption < categoryPreferenceOption.getOptions().size(); itOption++) {
+                    String key = categoryPreferenceOption.getOptions().get(itOption).getPreference().toLowerCase();
+                    mCategoriesList.put(categoryPreferenceOption.getOptions().get(itOption).getText(), categoryPreferenceOption.getOptions().get(itOption).getPreference());
+                    if(!mCategories.containsKey(key)){
+                        mCategories.put(key, false);
+                    }
+                }
+                if(!categoryPreferenceOption.getOptions().isEmpty()){
+                    emailCategoryPreferencesHeaderTextView.setText(categoryPreferenceOption.getTitle());
+                    mCategoriesList.put(categoryPreferenceOption.getSelectAllText(), "all");
+                    setRecyclerAdapter();
+                }
+            }
+            if(list.get(it).getProperty().equals(PREFERENCE_MEMBER_PROPERTY)){
+                emailSubscriptionTemplates = list.get(it);
+                if (emailSubscriptionTemplates == null) {
+                    emailSubscriptionPreferencesContainerView.setVisibility(View.GONE);
+                    return;
+                }
+                new Handler(mActivity.getMainLooper()).post(() -> {
+                    emailSubscriptionPreferencesContainerView.setVisibility(View.VISIBLE);
+
+                    // Set Header Text
+                    emailSubscriptionPreferencesHeaderTextView.setText(emailSubscriptionTemplates.getTitle());
+
+                    // Inflate/Hide RadioButtons according to Options size
+                    final int optionsSizeDifference = emailSubscriptionTemplates.getOptions().size() - emailSubscriptionPreferencesRadioButtonsList.size();
+                    if (optionsSizeDifference > 0) {
+                        for (int i = 0; i < optionsSizeDifference; i++) {
+                            addNewEmailSubscriptionRadioButton();
+                        }
+                    }
+                    if (optionsSizeDifference < 0) {
+                        for (int i = optionsSizeDifference; i < 0; i++) {
+                            final RadioButton radioButton = emailSubscriptionPreferencesRadioButtonsList.get(
+                                    emailSubscriptionPreferencesRadioButtonsList.size() + i);
+                            radioButton.setVisibility(View.GONE);
+                        }
+                    }
+
+                    // Setup RadioButtons
+                    emailSubscriptionPreferencesRadioButtonsMap.clear();
+                    emailSubscriptionPreferencesRadioButtonsIdMap.clear();
+                    emailSubscriptionPreferencesRadioGroup.setOnCheckedChangeListener(null);
+                    for (int i = 0; i < emailSubscriptionTemplates.getOptions().size(); i++) {
+                        RadioButton radioButton = emailSubscriptionPreferencesRadioButtonsList.get(i);
+                        GetEmailSubscriptionTemplatesResponse.Option option = emailSubscriptionTemplates.getOptions().get(i);
+
+                        radioButton.setVisibility(View.VISIBLE);
+                        radioButton.setText(Html.fromHtml(option.getText()));
+                        radioButton.setChecked(false);
+                        emailSubscriptionPreferencesRadioButtonsMap.put(option.getPreference(), radioButton);
+                        emailSubscriptionPreferencesRadioButtonsIdMap.put(radioButton.getId(), option.getPreference());
+                    }
+                    emailSubscriptionPreferencesRadioGroup.setOnCheckedChangeListener(emailSubscriptionPreferenceRadioGroupChangeListener);
+
+                    updateEmailSubscriptionPreferenceRadioGroupSelection();
+                });
+            }
         }
-        new Handler(mActivity.getMainLooper()).post(() -> {
-            emailSubscriptionPreferencesContainerView.setVisibility(View.VISIBLE);
-
-            // Set Header Text
-            emailSubscriptionPreferencesHeaderTextView.setText(response.getTitle());
-
-            // Inflate/Hide RadioButtons according to Options size
-            final int optionsSizeDifference = response.getOptions().size() - emailSubscriptionPreferencesRadioButtonsList.size();
-            if (optionsSizeDifference > 0) {
-                for (int i = 0; i < optionsSizeDifference; i++) {
-                    addNewEmailSubscriptionRadioButton();
-                }
-            }
-            if (optionsSizeDifference < 0) {
-                for (int i = optionsSizeDifference; i < 0; i++) {
-                    final RadioButton radioButton = emailSubscriptionPreferencesRadioButtonsList.get(
-                            emailSubscriptionPreferencesRadioButtonsList.size() + i);
-                    radioButton.setVisibility(View.GONE);
-                }
-            }
-
-            // Setup RadioButtons
-            emailSubscriptionPreferencesRadioButtonsMap.clear();
-            emailSubscriptionPreferencesRadioButtonsIdMap.clear();
-            emailSubscriptionPreferencesRadioGroup.setOnCheckedChangeListener(null);
-            for (int i = 0; i < response.getOptions().size(); i++) {
-                RadioButton radioButton = emailSubscriptionPreferencesRadioButtonsList.get(i);
-                GetEmailSubscriptionTemplatesResponse.Option option = response.getOptions().get(i);
-
-                radioButton.setVisibility(View.VISIBLE);
-                radioButton.setText(Html.fromHtml(option.getText()));
-                radioButton.setChecked(false);
-                emailSubscriptionPreferencesRadioButtonsMap.put(option.getPreference(), radioButton);
-                emailSubscriptionPreferencesRadioButtonsIdMap.put(radioButton.getId(), option.getPreference());
-            }
-            emailSubscriptionPreferencesRadioGroup.setOnCheckedChangeListener(emailSubscriptionPreferenceRadioGroupChangeListener);
-
-            updateEmailSubscriptionPreferenceRadioGroupSelection();
-            addUnsubcribeOption();
-        });
     }
 
     @OnClick(R.id.partial_toolbar_right_view)
@@ -401,6 +484,11 @@ public class DetailsController extends BasePullToRefreshController implements De
     @OnClick(R.id.controller_details_button)
     public void saveChanges() {
         saveUserDetails();
+    }
+
+    @OnClick(R.id.controller_unsubscribe_button)
+    public void unsubscribeClicked() {
+        updateEmailUnsubscribePreference();
     }
 
     @Override
@@ -484,8 +572,20 @@ public class DetailsController extends BasePullToRefreshController implements De
         request.setEmail(email);
         request.setPreference(emailSubscriptionPreference);
         request.setStatus(!emailSubscriptionPreference.equalsIgnoreCase(UNSUBSCRIBE_PREFERENCE_KEY));
+        request.setCategories(mCategories);
 
         mPresenter.updateEmailSubscriptionPreference(request);
+    }
+
+    private void updateEmailUnsubscribePreference() {
+        UpdateUserEmailSubscriptionRequest request = new UpdateUserEmailSubscriptionRequest();
+        request.setEmail(currentUserDetails.getEmail());
+        request.setPreference(UNSUBSCRIBE_PREFERENCE_KEY);
+        request.setStatus(false);
+
+        mPresenter.updateEmailSubscriptionPreference(request);
+        emailSubscriptionPreferencesRadioGroup.clearCheck();
+        unsubscribeRecycler();
     }
 
     private String getFieldValue(TextView textView) {
@@ -592,4 +692,27 @@ public class DetailsController extends BasePullToRefreshController implements De
     public void onConfirmPasswordContainerClick() {
         KeyboardUtils.showSoftInput(mConfirmPasswordText, mActivity);
     }
+
+    @Override
+    public void onCategoryClicked(HashMap<String, Boolean> category) {
+        emailSubscriptionPreferenceDate = Calendar.getInstance().getTime();
+        mCategories = category;
+        setRecyclerAdapter();
+    }
+
+    public void setRecyclerAdapter(){
+        mAdapter = new PreferenceCategoriesAdapter(mActivity, this, mCategoriesList, mCategories, isCategorySelectionEnabled);
+        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
+        categoriesRecyclerView.setMotionEventSplittingEnabled(false);
+        categoriesRecyclerView.setAdapter(mAdapter);
+        categoriesRecyclerView.setNestedScrollingEnabled(false);
+        mAdapter.notifyDataSetChanged();
+
+    }
+
+    public void unsubscribeRecycler(){
+        isCategorySelectionEnabled = false;
+        setRecyclerAdapter();
+    }
+
 }

@@ -3,6 +3,9 @@ package au.com.dealsdirect.data.network.model.userdetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
+import java.util.List;
+
 public class GetUserDetailsResponse {
 
     @SerializedName("id")
@@ -44,6 +47,9 @@ public class GetUserDetailsResponse {
     @SerializedName("preference_date")
     @Expose
     private String preferenceDate;
+    @SerializedName("preference_categories")
+    @Expose
+    private HashMap<String, Boolean> categories;
 
     public String getID() {
         return id;
@@ -147,5 +153,13 @@ public class GetUserDetailsResponse {
 
     public void setPreferenceDate(String preferenceDate) {
         this.preferenceDate = preferenceDate;
+    }
+
+    public HashMap<String, Boolean> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(HashMap<String, Boolean> categories) {
+        this.categories = categories;
     }
 }

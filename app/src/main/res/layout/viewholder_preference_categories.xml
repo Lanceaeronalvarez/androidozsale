@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:clickable="true"
+    tools:ignore="MissingPrefix"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal"
+        android:paddingRight="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small">
+
+        <CheckBox
+            android:id="@+id/row_filter_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:checked="false"
+            android:buttonTint="@drawable/custom_preferences_checkbox_selector" />
+
+        <RelativeLayout
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@color/lightGrey"
+            android:layout_marginRight="@dimen/margin_small"
+            android:id="@+id/row_filter_disabled_checkbox"
+            android:layout_margin="@dimen/margin_extra_small"
+            android:visibility="gone"/>
+
+        <TextView
+            fontPath="@string/font_app_semibold"
+            android:id="@+id/row_category_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_caption1"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:text="" />
+
+    </LinearLayout>
+
+</RelativeLayout>
