@@ -834,6 +834,10 @@
     <string name="klarna">Klarna</string>
     <string name="klarna_failed_transaction">@string/generic_failed_transaction_message</string>
 
+    <!--ZIP PAY-->
+    <string name="zippay">Zip Pay</string>
+    <string name="zippay_failed_transaction">@string/generic_failed_transaction_message</string>
+
     <!--LPPAY-->
     <string name="lpay">Latitude Pay</string>
     <string name="genoapay">Genoa Pay</string>

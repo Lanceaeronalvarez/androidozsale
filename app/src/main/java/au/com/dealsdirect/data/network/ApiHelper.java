@@ -169,6 +169,14 @@ import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayConfirmNzOrderRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateChargeRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutResponse;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicChargeRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicCheckoutRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderResponse;
 import io.reactivex.Observable;
 
 public interface ApiHelper {
@@ -529,4 +537,17 @@ public interface ApiHelper {
     Observable<KlarnaCreateSessionResponse> callCreateKlarnaSession(KlarnaCreateSessionRequest request);
 
     Observable<KlarnaCreateOrderResponse> callCreateKlarnaOrder(KlarnaCreateOrderRequest request);
+
+    // Zip Payment
+    Observable<ZipCreateCheckoutResponse> callCreateZipCheckout(ZipCreateCheckoutRequest request);
+    Observable<JSONObject> callCreateZipCharge(ZipCreateChargeRequest request);
+
+    Observable<JSONObject> callCreatePublicZipCheckout(ZipCreatePublicCheckoutRequest request);
+
+    Observable<JSONObject> callCreatePublicZipCharge(ZipCreatePublicChargeRequest request);
+
+    Observable<ZipPayCreateNzOrderResponse> callCreateZipPayNzOrder(ZipPayCreateNzOrderRequest request);
+
+    Observable<JSONObject> callConfirmZipPayNzOrder(ZipPayConfirmNzOrderRequest request);
+
 }

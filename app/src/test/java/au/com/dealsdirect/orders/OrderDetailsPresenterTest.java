@@ -92,7 +92,7 @@ public class OrderDetailsPresenterTest {
         mPresenter.loadOrderDetails(requestValues);
         mTestScheduler.triggerActions();
 
-        verify(mvpView).showLoading();
+        verify(mvpView).showLoading(LoadingDialogType.DEFAULT);
         verify(mvpView).showOrderDetails(responseValue);
     }
 

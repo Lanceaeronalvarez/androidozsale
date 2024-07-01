@@ -123,6 +123,7 @@ import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.DelayedMethodExecutionManager;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.IntrospectionUtils;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.NetworkUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.legacycookie.LegacyCookie;
@@ -1131,6 +1132,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
         mPresenter.callGetPublicAppSettingsSectionsAfterpay(this);
         mPresenter.callGetPublicAppSettingsSectionsLPay(this);
+        mPresenter.callGetAppSettingsSectionsZipPay(this);
         mPresenter.callGetAccountData();
         refreshWishlist();
 
@@ -1755,7 +1757,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     PaymentMethodCreateParams.createFromGooglePay(
                             new JSONObject(paymentData.toJson()));
 
-            showGPayLoading();
+            showLoading(LoadingDialogType.GPAY);
             mStripe.createPaymentMethod(
                     paymentMethodCreateParams,
                     new ApiResultCallback<com.stripe.android.model.PaymentMethod>() {
@@ -1766,7 +1768,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
                         @Override
                         public void onError(@NonNull Exception e) {
-                            hideGPayLoading();
+                            hideLoading();
                             CustomAlertDialog.showCustomAlertDialog(MainActivity.this, CustomAlertDialog.CustomDialogIconState.NEGATIVE, e.getMessage());
                         }
                     }

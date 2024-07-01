@@ -5,6 +5,8 @@ import androidx.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
+import au.com.dealsdirect.utils.LoadingDialogType;
+
 
 public abstract class BaseSubView extends ViewGroup implements SubMvpView {
 
@@ -32,9 +34,9 @@ public abstract class BaseSubView extends ViewGroup implements SubMvpView {
     }
 
     @Override
-    public void showLoading() {
+    public void showLoading(LoadingDialogType loadingDialogType) {
         if (mParentMvpView != null) {
-            mParentMvpView.showLoading();
+            mParentMvpView.showLoading(loadingDialogType);
         }
     }
 

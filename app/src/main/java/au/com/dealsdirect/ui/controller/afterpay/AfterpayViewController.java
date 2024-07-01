@@ -32,6 +32,7 @@ import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -129,12 +130,12 @@ public class AfterpayViewController extends BaseController implements AfterpayMv
 
     @Override
     public void showProgressIndicator() {
-        showAfterpayLoading();
+        showLoading(LoadingDialogType.AFTERPAY);
     }
 
     @Override
     public void hideProgressIndicator() {
-        hideAfterpayLoading();
+        hideLoading();
     }
 
     @Override

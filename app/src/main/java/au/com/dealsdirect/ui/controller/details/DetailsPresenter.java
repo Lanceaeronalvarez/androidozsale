@@ -17,6 +17,7 @@ import au.com.dealsdirect.data.network.model.userdetails.GetUserDetailsResponse;
 import au.com.dealsdirect.data.network.model.userdetails.SetUserDetailsRequest;
 import au.com.dealsdirect.data.network.model.userdetails.UpdateUserEmailSubscriptionRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -106,7 +107,7 @@ public class DetailsPresenter<V extends DetailsMvpView> extends BasePresenter<V>
     @Override
     public void saveReceiveSales(boolean receiveInvitations) {
         SaveReceiveSalesRequest request = new SaveReceiveSalesRequest(getDataManager().getCountryId(), getDataManager().getLanguageId(), receiveInvitations);
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         doApiCallForResponse(getDataManager().callSaveReceiveSales(request), new AppApiCallback() {
                     @Override
                     public void onSuccess(Object response) {

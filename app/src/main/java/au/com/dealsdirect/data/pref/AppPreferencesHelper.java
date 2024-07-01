@@ -209,6 +209,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String KLARNA_ENABLED = "KLARNA_ENABLED";
 
+
+    private static final String ZIP_PAY_ENABLED = "ZIP_PAY_ENABLED";
+
     private static final String PRODUCT_PAGE_PRICE_BLOCK_MODE = "PRODUCT_PAGE_PRICE_BLOCK_MODE";
 
     private static final String HOURS_LEFT_TO_DISPLAY_TIMER = "HOURS_LEFT_TO_DISPLAY_TIMER";
@@ -1243,6 +1246,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean isKlarnaEnabled() {
         return Prefs.getBoolean(KLARNA_ENABLED, false);
+    }
+
+    @Override
+    public void setZipPayEnabled(boolean enabled) {
+        Prefs.putBoolean(ZIP_PAY_ENABLED, enabled);
+    }
+
+    @Override
+    public boolean isZipPayEnabled() {
+        return Prefs.getBoolean(ZIP_PAY_ENABLED, false);
     }
 
     @Override

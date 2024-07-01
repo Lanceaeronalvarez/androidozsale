@@ -16,6 +16,7 @@ import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedRequest;
 import au.com.dealsdirect.data.network.model.orders.OrderReceivedSatisfactionResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -41,7 +42,7 @@ public class OrderDetailsPresenter<V extends OrderDetailsMvpView> extends BasePr
         if (!isViewAttached()) {
             return;
         }
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
 
 
         doApiCallForResponse(getDataManager().callGetOrderDetails(orderNumber), new AppApiCallback() {

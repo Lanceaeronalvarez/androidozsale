@@ -58,6 +58,7 @@ import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.controller.webviewcontroller.WebViewController;
+import au.com.dealsdirect.ui.controller.zippay.ZipPayViewController;
 import au.com.dealsdirect.ui.sample.SampleController;
 import dagger.Component;
 
@@ -172,6 +173,8 @@ public interface ControllerComponent {
     void inject(ReturnsPolicyViewController controller);
 
     void inject(KlarnaViewController klarnaViewController);
+
+    void inject(ZipPayViewController zipPayViewController);
 
     void inject(NewSaleCategoriesController controller);
 

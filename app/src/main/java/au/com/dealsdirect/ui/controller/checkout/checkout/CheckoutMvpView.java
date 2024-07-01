@@ -58,6 +58,10 @@ public interface CheckoutMvpView extends MvpView {
 
     void hideKlarnaPanel();
 
+    void showZipPayPanel();
+
+    void hideZipPayPanel();
+
     void storeCartDetails(CheckoutDetailsMapper mappedValues);
 
     void triggerLoginTicket();

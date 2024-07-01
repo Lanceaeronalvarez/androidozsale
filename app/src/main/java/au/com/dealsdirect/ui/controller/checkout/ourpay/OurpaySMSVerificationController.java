@@ -30,6 +30,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -321,7 +322,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
     @OnClick(R.id.ourpay_button_confirm)
     void onConfirmButtonClick() {
         hideKeyboard();
-        showLoading();
+        showLoading(LoadingDialogType.DEFAULT);
         mSMSVerificationConfirmButton.setEnabled(false);
         mPresenter.callVerificationCodeConfirm(mSMSVerificationPhone.getText().toString(), mExtensionString, mSMSVerificationCode.getText().toString());
         isToVerifyCode = true;

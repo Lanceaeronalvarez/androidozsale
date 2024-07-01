@@ -12,6 +12,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.returns.returnorders.GetReturnOrders;
 import au.com.dealsdirect.data.network.model.returns.returnorders.ReturnOrdersList;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -24,7 +25,7 @@ public class ReturnOrdersPresenter<V extends ReturnOrdersMvpView> extends BasePr
 
     @Override
     public void loadOrders() {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         getCompositeDisposable()
                 .add(getDataManager()
                         .callGetReturnOrders()

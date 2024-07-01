@@ -285,6 +285,9 @@ public class CheckoutDetailsMapper {
         public static final PaymentOption LATITUDEPAY = new PaymentOption("LatitudePay");
         public static final PaymentOption KLARNA = new PaymentOption("Klarna");
 
+        public static final PaymentOption ZIPPAYAU = new PaymentOption("ZipPayAU");
+        public static final PaymentOption ZIPPAYNZ = new PaymentOption("ZipPayNZ");
+
         private static final HashMap<String, PaymentOption> paymentOptions =
                 new HashMap<String, PaymentOption>() {{
                     put("Afterpay".toLowerCase(), AFTERPAY);
@@ -298,6 +301,8 @@ public class CheckoutDetailsMapper {
                     put("Stripe".toLowerCase(), STRIPE);
                     put("LatitudePay".toLowerCase(), LATITUDEPAY);
                     put("Klarna".toLowerCase(), KLARNA);
+                    put("ZipPayAU".toLowerCase(), ZIPPAYAU);
+                    put("ZipPayNZ".toLowerCase(), ZIPPAYNZ);
                 }};
 
         private String value;

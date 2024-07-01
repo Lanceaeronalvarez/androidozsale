@@ -34,6 +34,7 @@ import au.com.dealsdirect.ui.controller.checkout.paymentsuccess.PaymentSuccessCo
 import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
@@ -213,12 +214,12 @@ public class KlarnaViewController extends BaseController implements KlarnaMvpVie
 
     @Override
     public void showProgressIndicator() {
-        showAfterpayLoading();
+        showLoading(LoadingDialogType.KLARNA);
     }
 
     @Override
     public void hideProgressIndicator() {
-        hideAfterpayLoading();
+        hideLoading();
     }
 
     @Override

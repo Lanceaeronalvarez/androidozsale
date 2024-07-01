@@ -49,7 +49,6 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.mysale.genie.utility.RxBus;
 import com.stripe.android.model.CardBrand;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,7 +67,6 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryAd
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOption;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Item;
-import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Shipment;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
@@ -102,6 +100,7 @@ import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
+import au.com.dealsdirect.ui.controller.zippay.ZipPayViewController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
@@ -241,6 +240,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     WebView mKlarnaDescriptionView;
     @BindView(R.id.partial_checkout_button_klarna)
     View mKlarnaButton;
+
+    @BindView(R.id.partial_checkout_zippay_panel_holder)
+    ViewGroup mZipPayHolder;
+    @BindView(R.id.partial_checkout_button_zippay)
+    View mZipPayButton;
     @Nullable
     @BindView(R.id.controller_checkout_orders_label)
     TextView mOrdersLabel;
@@ -528,7 +532,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         super.onActivityResult(requestCode, resultCode, data);
 
         /*if (requestCode == BraintreeRequestCodes.VISA_CHECKOUT) {
-            showLoading();
+            showLoading(LoadingDialogType.DEFAULT);
             AppLogger.d("VC_onActivityResult", "Result got back from Visa Checkout SDK");
             String msg = "";
 
@@ -608,6 +612,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     public void showMyPayDetails(CheckoutDetailsMapper mappedValues, Ourpay ourpay) {
 
         if (mappedValues != null) {
+            mOurpayHolder.setVisibility(View.VISIBLE);
             mOurpay = ourpay;
             final PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
 
@@ -1169,6 +1174,16 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         mKlarnaContainer.setVisibility(View.GONE);
     }
 
+    @Override
+    public void showZipPayPanel() {
+        mZipPayHolder.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideZipPayPanel() {
+        mZipPayHolder.setVisibility(View.GONE);
+    }
+
     private void onKlarnaButtonClick() {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Klarna"));
         logInitiateCheckout(mActivity, PaymentInfo.TYPE_KLARNA, mItemList.size(),
@@ -1537,6 +1552,35 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         }
     }
 
+    private void onZipPayButtonClick() {
+        logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("ZipPay"));
+        logInitiateCheckout(mActivity, PaymentInfo.TYPE_ZIPPAY, mItemList.size(),
+                mValue.getSummary().getTotal(), AppConstants.ZIPPAY);
+
+        if (!commonPaymentAbilityDetermination()) {
+            return;
+        }
+
+        ZipPayViewController controller = new ZipPayViewController(new Bundle());
+
+        controller.setEventListener(new ZipPayViewController.EventListener() {
+            @Override
+            public void onError(String errorMessage) {
+                logFailedTransaction(mActivity, errorMessage);
+            }
+        });
+
+        RouterTransaction routerTransaction = RouterTransaction.with(controller)
+                .popChangeHandler(new FadeChangeHandler())
+                .pushChangeHandler(new FadeChangeHandler());
+
+        if (mActivity.getMainController().getPopUpHostRouter() != null) {
+            mActivity.getMainController().getPopUpHostRouter().setRoot(routerTransaction);
+        } else {
+            getDisplayRouter().pushController(routerTransaction);
+        }
+    }
+
     private void onOurpayButtonClick(boolean isStripeOption) {
         logGA4AddPaymentInfoEvent(createGA4AddPaymentInfoParams("Ourpay"));
         logInitiateCheckout(mActivity, PaymentInfo.getPaymentType(), mItemList.size(),
@@ -1618,6 +1662,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             add(mAfterpayButton);
             add(mKlarnaButton);
             add(mLPayButton);
+            add(mZipPayButton);
         }};
 
         for (View button : buttons) {
@@ -1856,6 +1901,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action -> onLPayButtonClick()));
 
+        mClickListeners.add(RxView.clicks(mZipPayButton)
+                .throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action -> onZipPayButtonClick()));
+
         mChangeClickListeners = new CompositeDisposable();
         mChangeClickListeners.add(RxView.clicks(mAddressContainerLayout)
                 .throttleFirst(1000, TimeUnit.MILLISECONDS)
@@ -1949,8 +1999,11 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     public void removeOurpayView() {
-        if (mOurpayHolder != null)
-            mOurpayHolder.removeAllViews();
+        if (mOurpayHolder == null) {
+            return;
+        }
+        mOurpayHolder.removeAllViews();
+        mOurpayHolder.setVisibility(View.GONE);
     }
 
 //    @Override
@@ -2210,6 +2263,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 break;
             case AppConstants.PAYPAL:
                 commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.PAYPAL.getValue());
+                break;
+            case AppConstants.ZIPPAY:
+                commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.ZIPPAY.getValue());
                 break;
             default: // UNKNOWN
                 commonCheckoutRequest.setOperation(DataCollector.EventParameters.Operation.UNKNOWN.getValue());

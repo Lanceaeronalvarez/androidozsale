@@ -32,6 +32,7 @@ import au.com.dealsdirect.di.module.ActivityModule;
 import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.CommonUtils;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.NetworkUtils;
 import butterknife.Unbinder;
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
@@ -90,73 +91,10 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     }
 
     @Override
-    public void showLoading() {
+    public void showLoading(LoadingDialogType loadingDialogType) {
         hideLoading();
         if (!isFinishing() || !isDestroyed()) {
-            mProgressDialog = CommonUtils.showLoadingDialog(this);
-        }
-    }
-
-    @Override
-    public void showOurpayLoading() {
-        hideOurpayLoading();
-        if (!isFinishing() || !isDestroyed()) {
-            mProgressDialog = CommonUtils.showLoadingDialogOurpay(this);
-        }
-    }
-
-    @Override
-    public void hideOurpayLoading() {
-        if (mProgressDialog != null && mProgressDialog.isShowing() && (!isFinishing() || !isDestroyed())) {
-            mProgressDialog.cancel();
-        }
-    }
-
-    @Override
-    public void showGPayLoading() {
-        hideGPayLoading();
-        if (!isFinishing() || !isDestroyed()) {
-            mProgressDialog = CommonUtils.showLoadingDialogGPay(this);
-        }
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
-
-    @Override
-    public void hideGPayLoading() {
-        if (mProgressDialog != null && mProgressDialog.isShowing() && (!isFinishing() || !isDestroyed())) {
-            mProgressDialog.cancel();
-        }
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
-
-    @Override
-    public void showAfterpayLoading() {
-        hideAfterpayLoading();
-        if (!isFinishing() || !isDestroyed()) {
-            mProgressDialog = CommonUtils.showLoadingDialogAfterpay(this);
-        }
-    }
-
-    @Override
-    public void hideAfterpayLoading() {
-        if (mProgressDialog != null && mProgressDialog.isShowing() && (!isFinishing() || !isDestroyed())) {
-            mProgressDialog.cancel();
-        }
-    }
-
-    @Override
-    public void showLPayLoading() {
-        hideLPayLoading();
-        if (!isFinishing() || !isDestroyed()) {
-            mProgressDialog = CommonUtils.showLoadingDialogLPay(this);
-        }
-    }
-
-    @Override
-    public void hideLPayLoading() {
-        if (mProgressDialog != null && mProgressDialog.isShowing() && (!isFinishing() || !isDestroyed())) {
-            mProgressDialog.cancel();
+            mProgressDialog = CommonUtils.showLoadingDialog(this, loadingDialogType);
         }
     }
 

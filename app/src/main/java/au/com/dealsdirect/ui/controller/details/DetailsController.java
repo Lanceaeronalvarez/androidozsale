@@ -39,6 +39,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.transitions.CustomSpinnerAdapter;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.KeyboardUtils;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -203,7 +204,7 @@ public class DetailsController extends BasePullToRefreshController implements De
         }
 
         SetUserDetailsRequest setUserDetailsRequest = new SetUserDetailsRequest();
-        showLoading();
+        showLoading(LoadingDialogType.DEFAULT);
         mPresenter.getEmailSubscriptionTemplates();
         mPresenter.loadUser(setUserDetailsRequest);
     }

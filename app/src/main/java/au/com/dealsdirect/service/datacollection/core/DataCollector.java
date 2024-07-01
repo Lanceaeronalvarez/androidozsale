@@ -240,6 +240,7 @@ public class DataCollector {
             LPAY(7),
             STRIPE(501),
             GPAY(560),
+            ZIPPAY(301),
             UNKNOWN(8);
 
             private int value;

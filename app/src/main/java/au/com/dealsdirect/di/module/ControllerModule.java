@@ -170,6 +170,9 @@ import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersPresenter;
 import au.com.dealsdirect.ui.controller.webviewcontroller.WebViewMvpPresenter;
 import au.com.dealsdirect.ui.controller.webviewcontroller.WebViewMvpView;
 import au.com.dealsdirect.ui.controller.webviewcontroller.WebViewPresenter;
+import au.com.dealsdirect.ui.controller.zippay.ZipPayMvpPresenter;
+import au.com.dealsdirect.ui.controller.zippay.ZipPayMvpView;
+import au.com.dealsdirect.ui.controller.zippay.ZipPayPresenter;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.sample.SampleMvpPresenter;
 import au.com.dealsdirect.ui.sample.SampleMvpView;
@@ -481,6 +484,11 @@ public class ControllerModule {
 
     @Provides
     KlarnaMvpPresenter<KlarnaMvpView> provideKlarnaMvpPresenter(KlarnaPresenter<KlarnaMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    ZipPayMvpPresenter<ZipPayMvpView> provideZipPayMvpPresenter(ZipPayPresenter<ZipPayMvpView> presenter) {
         return presenter;
     }
 

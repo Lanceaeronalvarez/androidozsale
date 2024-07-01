@@ -42,6 +42,7 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DateUtils;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.PaginateUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -181,7 +182,7 @@ public class OrdersController extends BaseController implements OrdersMvpView, O
                 showOrder(orderDetailsController.getOrderDetails());
             }
         } else {
-            showLoading();
+            showLoading(LoadingDialogType.DEFAULT);
             reloadOrders();
         }
 

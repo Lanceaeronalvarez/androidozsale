@@ -39,6 +39,7 @@ import au.com.dealsdirect.ui.controller.returns.returnorders.ReturnOrdersControl
 import au.com.dealsdirect.ui.controller.returns.returnsteps.ReturnTrackingClickListener;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -146,7 +147,7 @@ public class CurrentReturnsController extends BaseController implements CurrentR
         }
 
         if (mCurrentReturns == null || mCurrentReturns.size() == 0) {
-            showLoading();
+            showLoading(LoadingDialogType.DEFAULT);
         }
         mPresenter.loadCurrentReturns();
     }

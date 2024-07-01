@@ -56,6 +56,7 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ImageUploadUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -230,7 +231,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
 
         mNewReturnToolbarTitle.setText(R.string.request_new_return);
 
-        showLoading();
+        showLoading(LoadingDialogType.DEFAULT);
 
         setupImageList();
 

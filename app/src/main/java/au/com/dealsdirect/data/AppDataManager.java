@@ -182,6 +182,14 @@ import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayConfirmNzOrderRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateChargeRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutResponse;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicChargeRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicCheckoutRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderResponse;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.data.wishlist.WishlistChangeListener;
@@ -895,6 +903,7 @@ public class AppDataManager implements DataManager {
     public Observable<JSONObject> callConfirmLPayTransaction(ConfirmLPayTransactionRequest request) {
         return mApiHelper.callConfirmLPayTransaction(request);
     }
+
     @Override
     public Observable<String> setAttachment(String returnId, List<ImageAttachment> setAttachmentRequest) {
         return mApiHelper.setAttachment(returnId, setAttachmentRequest);
@@ -1035,6 +1044,36 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<KlarnaCreateOrderResponse> callCreateKlarnaOrder(KlarnaCreateOrderRequest request) {
         return mApiHelper.callCreateKlarnaOrder(request);
+    }
+
+    @Override
+    public Observable<ZipCreateCheckoutResponse> callCreateZipCheckout(ZipCreateCheckoutRequest request) {
+        return mApiHelper.callCreateZipCheckout(request);
+    }
+
+    @Override
+    public Observable<JSONObject> callCreateZipCharge(ZipCreateChargeRequest request) {
+        return mApiHelper.callCreateZipCharge(request);
+    }
+
+    @Override
+    public Observable<JSONObject> callCreatePublicZipCheckout(ZipCreatePublicCheckoutRequest request) {
+        return mApiHelper.callCreatePublicZipCheckout(request);
+    }
+
+    @Override
+    public Observable<JSONObject> callCreatePublicZipCharge(ZipCreatePublicChargeRequest request) {
+        return mApiHelper.callCreatePublicZipCharge(request);
+    }
+
+    @Override
+    public Observable<ZipPayCreateNzOrderResponse> callCreateZipPayNzOrder(ZipPayCreateNzOrderRequest request) {
+        return mApiHelper.callCreateZipPayNzOrder(request);
+    }
+
+    @Override
+    public Observable<JSONObject> callConfirmZipPayNzOrder(ZipPayConfirmNzOrderRequest request) {
+        return mApiHelper.callConfirmZipPayNzOrder(request);
     }
 
     @Override
@@ -2056,6 +2095,16 @@ public class AppDataManager implements DataManager {
     @Override
     public boolean isKlarnaEnabled() {
         return mPreferencesHelper.isKlarnaEnabled();
+    }
+
+    @Override
+    public void setZipPayEnabled(boolean enabled) {
+        mPreferencesHelper.setZipPayEnabled(enabled);
+    }
+
+    @Override
+    public boolean isZipPayEnabled() {
+        return mPreferencesHelper.isZipPayEnabled();
     }
 
     @Override

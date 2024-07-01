@@ -28,6 +28,7 @@ import au.com.dealsdirect.di.module.ControllerModule;
 import au.com.dealsdirect.service.datacollection.registerservices.FirebaseAnalyticsService;
 import au.com.dealsdirect.service.datacollection.registerservices.GenieEventService;
 import au.com.dealsdirect.ui.main.MainActivity;
+import au.com.dealsdirect.utils.LoadingDialogType;
 
 
 public abstract class BaseController
@@ -103,9 +104,9 @@ public abstract class BaseController
     }
 
     @Override
-    public void showLoading() {
+    public void showLoading(LoadingDialogType loadingDialogType) {
         if (mActivity != null) {
-            mActivity.showLoading();
+            mActivity.showLoading(loadingDialogType);
         }
     }
 
@@ -114,65 +115,6 @@ public abstract class BaseController
         if (mActivity != null) {
             mActivity.hideLoading();
             mActivity.updateSnackbar(mActivity.isNetworkConnected());
-        }
-    }
-
-    @Override
-    public void showOurpayLoading() {
-        if (mActivity != null) {
-            mActivity.showOurpayLoading();
-        }
-    }
-
-    @Override
-    public void hideOurpayLoading() {
-        if (mActivity != null) {
-            mActivity.hideOurpayLoading();
-            mActivity.updateSnackbar(mActivity.isNetworkConnected());
-        }
-    }
-
-    @Override
-    public void showGPayLoading() {
-        if (mActivity != null) {
-            mActivity.showGPayLoading();
-        }
-    }
-
-    @Override
-    public void hideGPayLoading() {
-        if (mActivity != null) {
-            mActivity.hideGPayLoading();
-            mActivity.updateSnackbar(mActivity.isNetworkConnected());
-        }
-    }
-
-    @Override
-    public void showAfterpayLoading() {
-        if (mActivity != null) {
-            mActivity.showAfterpayLoading();
-        }
-    }
-
-    @Override
-    public void hideAfterpayLoading() {
-        if (mActivity != null) {
-            mActivity.hideAfterpayLoading();
-            mActivity.updateSnackbar(mActivity.isNetworkConnected());
-        }
-    }
-
-    @Override
-    public void showLPayLoading() {
-        if (mActivity != null) {
-            mActivity.showLPayLoading();
-        }
-    }
-
-    @Override
-    public void hideLPayLoading() {
-        if (mActivity != null) {
-            mActivity.hideLPayLoading();
         }
     }
 
@@ -243,7 +185,6 @@ public abstract class BaseController
 
     @Override
     public void onDetach(View view) {
-        /* gen-8065_ozsale-reskin_bugfixing - dismiss keyboard when changing screen fix */
         hideKeyboard();
         super.onDetach(view);
     }
@@ -267,7 +208,7 @@ public abstract class BaseController
 
     @Override
     public void onRefreshStart() {
-        showLoading();
+        showLoading(LoadingDialogType.DEFAULT);
         hideNoNetworkLayout();
     }
 

@@ -62,7 +62,7 @@ public class AddVoucherPresenterTest {
         mPresenter.clearVouchers(1);
         testScheduler.triggerActions();
 
-        verify(mMvpView).showLoading();
+        verify(mMvpView).showLoading(LoadingDialogType.DEFAULT);
         verify(mMvpView).onVouchersCleared(clearVouchersResponse);
     }
 
@@ -76,7 +76,7 @@ public class AddVoucherPresenterTest {
         mPresenter.addAndApplyVoucherByKey(1, "");
         testScheduler.triggerActions();
 
-        verify(mMvpView).showLoading();
+        verify(mMvpView).showLoading(LoadingDialogType.DEFAULT);
         verify(mMvpView).onAddAndAppliedVoucher(applyVoucherByKeyResponse);
     }
 
@@ -90,7 +90,7 @@ public class AddVoucherPresenterTest {
         mPresenter.applyVouchers(1, new ArrayList<>());
         testScheduler.triggerActions();
 
-        verify(mMvpView).showLoading();
+        verify(mMvpView).showLoading(LoadingDialogType.DEFAULT);
         verify(mMvpView).onVouchersApplied(applyVouchersResponse);
     }
 

@@ -42,6 +42,7 @@ import au.com.dealsdirect.ui.controller.ourpay.MyAccountsOurpayDataSource.Item.S
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.ViewUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -201,7 +202,7 @@ public class MyAccountsOurpayController extends BaseController
     @Override
     public void showLoadingDialog() {
         if (isViewAttached()) {
-            mActivity.showOurpayLoading();
+            mActivity.showLoading(LoadingDialogType.OURPAY);
         }
     }
 

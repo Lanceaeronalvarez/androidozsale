@@ -122,6 +122,7 @@ import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.JsonUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.PaginateUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.TabLayoutUtils;
@@ -718,7 +719,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             if (!isViewAttached()) {
                                 return;
                             }
-                            mActivity.runOnUiThread(SaleItemsController.this::showLoading);
+                            mActivity.runOnUiThread(() -> showLoading(LoadingDialogType.DEFAULT));
                             if (mSearchFilterMvpView != null) {
                                 mActivity.runOnUiThread(() -> {
                                             searchOperationType = SearchOperationType.ENTERTERM;
@@ -2543,7 +2544,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 hideBrandBubbles();
                 mSearchQuery = textView.getText().toString();
                 mIsSearch = true;
-                showLoading();
+                showLoading(LoadingDialogType.DEFAULT);
                 if (mSearchFilterMvpView != null) {
                     itemsContainerHelper.clearItems();
                     searchOperationType = SearchOperationType.ENTERTERM;

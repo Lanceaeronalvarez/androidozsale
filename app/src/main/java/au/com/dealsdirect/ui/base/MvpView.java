@@ -2,6 +2,8 @@ package au.com.dealsdirect.ui.base;
 
 import androidx.annotation.StringRes;
 
+import au.com.dealsdirect.utils.LoadingDialogType;
+
 /**
  * Base interface that any class that wants to act as a View in the MVP (Model View Presenter)
  * pattern must implement. Generally this interface will be extended by a more specific interface
@@ -11,7 +13,7 @@ public interface MvpView {
 
     boolean isSecurePage();
 
-    void showLoading();
+    void showLoading(LoadingDialogType loadingDialogType);
 
     void hideLoading();
 
@@ -36,22 +38,6 @@ public interface MvpView {
     void showNoNetworkLayout();
 
     boolean isViewAttached();
-
-    void showOurpayLoading();
-
-    void hideOurpayLoading();
-
-    void showGPayLoading();
-
-    void hideGPayLoading();
-
-    void showAfterpayLoading();
-
-    void hideAfterpayLoading();
-
-    void showLPayLoading();
-
-    void hideLPayLoading();
 
     void showLoadingDelayed(int delay);
 }

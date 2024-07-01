@@ -374,6 +374,10 @@ public interface PreferencesHelper {
 
     boolean isKlarnaEnabled();
 
+    void setZipPayEnabled(boolean enabled);
+
+    boolean isZipPayEnabled();
+
     void setProductPagePriceBlockMode(int mode);
 
     int getProductPagePriceBlockMode();

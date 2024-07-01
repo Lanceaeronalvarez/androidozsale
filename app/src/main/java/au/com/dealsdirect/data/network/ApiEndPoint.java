@@ -733,6 +733,30 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateKlarnaOrder");
     }
 
+    public static String callCreateZipCheckout() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateZipCheckout");
+    }
+
+    public static String callCreateZipCharge() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateZipCharge");
+    }
+
+    public static String callCreatePublicZipCheckout() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreatePublicZipCheckout");
+    }
+
+    public static String callCreatePublicZipCharge() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreatePublicZipCharge");
+    }
+
+    public static String callCreateZipPayNzOrder() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateZipPayNzOrder");
+    }
+
+    public static String callConfirmZipPayNzOrder() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "ConfirmZipPayNzOrder");
+    }
+
     /*VISA CHECKOUT*/
     public static String visaCheckoutLogin() {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "LoginVisa");
