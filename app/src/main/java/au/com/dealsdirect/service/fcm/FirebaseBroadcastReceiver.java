@@ -57,7 +57,7 @@ public class FirebaseBroadcastReceiver extends FirebaseMessagingService {
 
         builder = new NotificationCompat.Builder(context, GENERAL_CHANNEL_ID);
         builder.setContentTitle(title)
-                .setSmallIcon(R.drawable.ic_loader_logo)
+                .setSmallIcon(R.drawable.notif_small_icon)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentText(notificationMessage)
                 .setAutoCancel(true)
