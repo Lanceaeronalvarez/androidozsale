@@ -20,6 +20,7 @@ import au.com.dealsdirect.data.network.model.address.AddAddress;
 import au.com.dealsdirect.data.network.model.address.DecorationInfoList;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppLogger;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
@@ -106,7 +107,7 @@ public class AddNewAddressPresenter <V extends AddNewAddressMvpView> extends Bas
             return;
         }
 
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         doApiCallForResponse(getDataManager()
                 .callSetUserDeliveryAddress(jsonAddress), new AppApiCallback() {
             @Override

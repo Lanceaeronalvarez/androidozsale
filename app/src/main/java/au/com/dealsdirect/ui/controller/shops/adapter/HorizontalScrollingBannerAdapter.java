@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetYouMayAlsoLikeResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -31,6 +30,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    public enum BannerStyle {
+        CIRCULAR,
+        DEFAULT
+    }
 
     private boolean hasInitializedDimensions = false;
 
@@ -44,6 +48,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
 
     private List<GetBannerResponse.Banner> dataSource = new ArrayList<>();
     private boolean shouldShowTitle = false;
+    private boolean shouldShowSubtitle = false;
 
     private RecyclerView recyclerView = null;
 
@@ -58,7 +63,10 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
     private boolean shouldRepeatCellsToFillWidth = true;
 
     private Integer imageResolutionOverride = null;
-    private boolean useCircularImage = false;
+    private final BannerStyle bannerStyle;
+
+    private boolean showHeader = false;
+    private boolean willScrollWrapAround = true;
 
     public enum BannerViewType {
         ShopBanner,
@@ -69,7 +77,8 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
 
     private String title;
 
-    public HorizontalScrollingBannerAdapter() {
+    public HorizontalScrollingBannerAdapter(BannerStyle bannerStyle) {
+        this.bannerStyle = bannerStyle;
     }
 
     @NonNull
@@ -84,20 +93,19 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
                 return new PromoBannerViewHolder(view, cellWidth, backgroundColorOverride);
             default:
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(useCircularImage ? R.layout.viewholder_banner_for_horizontal_circular : R.layout.viewholder_banner_for_horizontal,
+                        .inflate(bannerStyle == BannerStyle.CIRCULAR ?
+                                        R.layout.viewholder_banner_for_horizontal_circular :
+                                        R.layout.viewholder_banner_for_horizontal,
                                 parent, false);
-                return new ViewHolder(view, cellWidth, backgroundColorOverride);
+                return new HorizontalScrollingBannerViewHolder(view, cellWidth, backgroundColorOverride);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         String imgUrl = "";
-        GetBannerResponse.Banner item;
-        GetYouMayAlsoLikeResponse youMayLikeItem;
-        RecentlyViewedItemResponse recentlyItemResponse;
-        RecommendedItemsResponse recommendedItemsResponse;
-        int virtualPosition;
+        final GetBannerResponse.Banner item;
+        final int virtualPosition;
 
         switch (getBannerViewType()) {
             case PromoBanner: {
@@ -141,16 +149,17 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
                 }
             }
             break;
-            case LeaderBanner:
+            case LeaderBanner: {
+                final HorizontalScrollingBannerViewHolder viewHolder = (HorizontalScrollingBannerViewHolder) holder;
                 virtualPosition = position % dataSource.size();
                 item = dataSource.get(virtualPosition);
 
-                if(item.getImage() != null || item.getImage() != ""){
-                    ImageUtils.loadImage(item.getImage(), ((ViewHolder) holder).image);
+                if (item.getImage() != null || item.getImage() != "") {
+                    ImageUtils.loadImage(item.getImage(), viewHolder.image);
                 }
 
                 if (item.getGroup() != null && item.getGroup().getIsClickable() != null) {
-                    ((ViewHolder) holder).subscription = RxView.clicks(((ViewHolder) holder).layout)
+                    viewHolder.subscription = RxView.clicks(viewHolder.layout)
                             .throttleFirst(
                                     THROTTLE_FIRST_WINDOW_DURATION,
                                     TimeUnit.MILLISECONDS)
@@ -162,21 +171,28 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
                             });
                 }
 
-                ((ViewHolder) holder).title.setVisibility(View.GONE);
+                if (viewHolder.title != null) {
+                    viewHolder.title.setVisibility(View.GONE);
+                }
+                if (viewHolder.subtitle != null) {
+                    viewHolder.subtitle.setVisibility(View.GONE);
+                }
                 break;
-            default:
+            }
+            default: {
+                final HorizontalScrollingBannerViewHolder viewHolder = (HorizontalScrollingBannerViewHolder) holder;
                 virtualPosition = position % dataSource.size();
 
                 item = dataSource.get(virtualPosition);
 
                 imgUrl = ImageUtils.appendBannerSizeUrl(item.getImage(), imageWidth, imageHeight, imageResolutionOverride);
 
-                if (((ViewHolder) holder).subscription != null) {
-                    ((ViewHolder) holder).subscription.dispose();
+                if (viewHolder.subscription != null) {
+                    viewHolder.subscription.dispose();
                 }
 
                 if (item.getGroup() != null && item.getGroup().getIsClickable() != null) {
-                    ((ViewHolder) holder).subscription = RxView.clicks(((ViewHolder) holder).layout)
+                    viewHolder.subscription = RxView.clicks(viewHolder.layout)
                             .throttleFirst(
                                     THROTTLE_FIRST_WINDOW_DURATION,
                                     TimeUnit.MILLISECONDS)
@@ -189,20 +205,27 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
                 }
 
                 String title = item.getBannerText();
-                if (shouldShowTitle && title != null) {
-                    ((ViewHolder) holder).title.setText(title);
-                    ((ViewHolder) holder).title.setVisibility(View.VISIBLE);
-                } else {
-                    ((ViewHolder) holder).title.setVisibility(View.GONE);
+                if (viewHolder.title != null) {
+                    viewHolder.title.setText(title);
+                    viewHolder.title.setVisibility(shouldShowTitle && title != null ? View.VISIBLE : View.GONE);
+                }
+                String subtitle = item.getDescription();
+                if (viewHolder.subtitle != null) {
+                    viewHolder.subtitle.setText(subtitle);
+                    viewHolder.subtitle.setVisibility(shouldShowSubtitle && subtitle != null ? View.VISIBLE : View.GONE);
                 }
                 break;
+            }
         }
 
-        if (holder instanceof ViewHolder && !imgUrl.isEmpty() && !CommonUtils.isActivityOfViewDestroyed(((ViewHolder) holder).image)) {
-            if (useCircularImage) {
-                ImageUtils.loadImageWithCircleCrop(imgUrl, ((ViewHolder) holder).image);
-            } else {
-                ImageUtils.loadImage(imgUrl, ((ViewHolder) holder).image);
+        if (holder instanceof HorizontalScrollingBannerViewHolder && !imgUrl.isEmpty()) {
+            final HorizontalScrollingBannerViewHolder viewHolder = (HorizontalScrollingBannerViewHolder) holder;
+            if (!CommonUtils.isActivityOfViewDestroyed(viewHolder.image)) {
+                if (bannerStyle == BannerStyle.CIRCULAR) {
+                    ImageUtils.loadImageWithCircleCrop(imgUrl, viewHolder.image);
+                } else {
+                    ImageUtils.loadImage(imgUrl, viewHolder.image);
+                }
             }
         }
 
@@ -305,6 +328,10 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     private int getEdgeBufferSize() {
+        if (!willScrollWrapAround) {
+            return 0;
+        }
+
         final int datasourceSize = dataSource.size();
 
         if (!shouldRepeatCellsToFillWidth) {
@@ -354,7 +381,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
     }
 
     public void wrapScrollPosition(int speed) {
-        if (recyclerView == null) {
+        if (recyclerView == null || !willScrollWrapAround) {
             return;
         }
         final int x = recyclerView.computeHorizontalScrollOffset();
@@ -390,7 +417,7 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
         return getCellWidth() * getDataSource().size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class HorizontalScrollingBannerViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.viewholder_banner_layout)
         ViewGroup layout;
@@ -403,7 +430,11 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
         @BindView(R.id.viewholder_horizontal_scrolling_cell_title)
         TextView title;
 
-        ViewHolder(View view, int width, Integer backgroundColorOverride) {
+        @Nullable
+        @BindView(R.id.viewholder_horizontal_scrolling_cell_subtitle)
+        TextView subtitle;
+
+        HorizontalScrollingBannerViewHolder(View view, int width, Integer backgroundColorOverride) {
             super(view);
             ButterKnife.bind(this, view);
 
@@ -473,6 +504,14 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
         this.shouldShowTitle = shouldShowTitle;
     }
 
+    public boolean isShouldShowSubtitle() {
+        return shouldShowSubtitle;
+    }
+
+    public void setShouldShowSubtitle(boolean shouldShowSubtitle) {
+        this.shouldShowSubtitle = shouldShowSubtitle;
+    }
+
     public Integer getImageResolutionOverride() {
         return imageResolutionOverride;
     }
@@ -481,12 +520,24 @@ public class HorizontalScrollingBannerAdapter extends RecyclerView.Adapter<Recyc
         this.imageResolutionOverride = imageResolutionOverride;
     }
 
-    public boolean isUseCircularImage() {
-        return useCircularImage;
+    public BannerStyle getBannerStyle() {
+        return bannerStyle;
     }
 
-    public void setUseCircularImage(boolean useCircularImage) {
-        this.useCircularImage = useCircularImage;
+    public boolean isShowHeader() {
+        return showHeader;
+    }
+
+    public void setShowHeader(boolean showHeader) {
+        this.showHeader = showHeader;
+    }
+
+    public boolean isWillScrollWrapAround() {
+        return willScrollWrapAround;
+    }
+
+    public void setWillScrollWrapAround(boolean willScrollWrapAround) {
+        this.willScrollWrapAround = willScrollWrapAround;
     }
 
     public Integer getBackgroundColorOverride() {

@@ -16,13 +16,14 @@
         layout="@layout/partial_toolbar_title_details"
         android:visibility="gone" />
 
-    <include layout="@layout/partial_toolbar_logo_sales"
-        android:visibility="visible"/>
+    <include
+        layout="@layout/partial_toolbar_logo_sales"
+        android:visibility="visible" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/beige"/>
+        android:background="@color/beige" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/controller_sale_items_main_container"
@@ -31,40 +32,40 @@
         android:layout_weight="1"
         android:visibility="visible">
 
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="vertical"
-           app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-           <RelativeLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-               <TextView
-                   android:id="@+id/controller_sale_items_result_count"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:textSize="@dimen/text_size_body"
-                   android:textColor="@color/black"
-                   android:paddingTop="10dp"
-                   android:paddingBottom="10dp"
-                   android:layout_marginLeft="10dp"/>
+                <TextView
+                    android:id="@+id/controller_sale_items_result_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_body" />
 
-           </RelativeLayout>
+            </RelativeLayout>
 
-           <androidx.recyclerview.widget.RecyclerView
-               android:id="@+id/controller_sale_items_grid_view"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:background="@color/white"
-               android:clickable="true"
-               android:focusable="true"
-               android:paddingLeft="@dimen/margin_extra_small"
-               android:paddingRight="@dimen/margin_extra_small"
-               android:visibility="visible" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/controller_sale_items_grid_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingLeft="@dimen/margin_extra_small"
+                android:paddingRight="@dimen/margin_extra_small"
+                android:visibility="visible" />
 
-       </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/controller_sale_items_text_placeholder"
@@ -121,9 +122,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
+                android:background="@color/toolbar_skin"
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/toolbar_fade_in_color"
-                android:background="@color/toolbar_skin"
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <LinearLayout
@@ -138,6 +139,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="10dp"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:clickable="true"
                         android:drawableLeft="@drawable/ic_search_gray"
@@ -153,57 +155,56 @@
                         android:visibility="gone"
                         app:layout_collapseMode="parallax"
                         app:layout_collapseParallaxMultiplier="0.5"
-                        app:layout_scrollFlags="scroll|enterAlways"
-                        android:layout_marginTop="10dp"/>
+                        app:layout_scrollFlags="scroll|enterAlways" />
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:id="@+id/Search_term_Result"
                         fontPath="@string/font_app_bold"
-                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:textSize="@dimen/text_size_headline3"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:text="Search Results term"
-                        android:maxLines="1"
                         android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingLeft="10dp"
                         android:paddingTop="30dp"
-                        android:textColor="@color/black"/>
+                        android:paddingRight="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_headline3"
+                        android:textStyle="bold"
+                        tools:text="Search Results term" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:paddingBottom="20dp"
+                        android:gravity="center"
                         android:paddingTop="20dp"
-                        android:gravity="center">
+                        android:paddingBottom="20dp">
 
                         <androidx.cardview.widget.CardView
+                            android:id="@+id/sale_item_filter_cardview"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginRight="10dp"
                             android:layout_marginLeft="10dp"
-                            android:id="@+id/sale_item_filter_cardview">
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="60dp"
-                                android:gravity="center"
                                 android:background="@drawable/border_black"
+                                android:gravity="center"
                                 android:padding="20dp">
 
                                 <TextView
-                                    android:drawableStart="@drawable/new_filter_icon"
+                                    android:id="@+id/Filter_Text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:drawableStart="@drawable/new_filter_icon"
                                     android:drawablePadding="10dp"
-                                    android:id="@+id/Filter_Text"
                                     android:text="Filter"
-                                    android:textSize="@dimen/text_size_body"
-                                    android:textColor="@color/black"/>
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/text_size_body" />
 
                             </RelativeLayout>
 
@@ -211,46 +212,46 @@
                                 android:id="@+id/sale_filter_count"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:layout_marginLeft="60dp"
-                                android:visibility="gone"
                                 android:layout_gravity="center"
+                                android:layout_marginLeft="60dp"
                                 android:background="@drawable/circle_indicator_active"
-                                android:backgroundTint="@color/fluorescent_blue"/>
+                                android:backgroundTint="@color/fluorescent_blue"
+                                android:visibility="gone" />
 
                             <TextView
+                                android:id="@+id/Filter_Count_Text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/black"
-                                android:layout_marginLeft="60dp"
                                 android:layout_gravity="center"
-                                android:id="@+id/Filter_Count_Text"
-                                android:visibility="gone"
-                                android:text="0" />
+                                android:layout_marginLeft="60dp"
+                                android:text="0"
+                                android:textColor="@color/black"
+                                android:visibility="gone" />
 
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
+                            android:id="@+id/sale_item_sort_cardview"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:layout_marginRight="10dp"
-                            android:id="@+id/sale_item_sort_cardview">
+                            android:layout_weight="1">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="60dp"
-                                android:gravity="center"
                                 android:background="@drawable/border_black"
+                                android:gravity="center"
                                 android:padding="20dp">
 
                                 <TextView
-                                    android:drawableStart="@drawable/new_sort_icon"
-                                    android:drawablePadding="10dp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textSize="@dimen/text_size_body"
+                                    android:drawableStart="@drawable/new_sort_icon"
+                                    android:drawablePadding="10dp"
                                     android:text="Sort"
-                                    android:textColor="@color/black"/>
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/text_size_body" />
 
                             </LinearLayout>
 
@@ -258,21 +259,21 @@
                                 android:id="@+id/sale_sort_count"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:layout_marginLeft="60dp"
-                                android:visibility="gone"
                                 android:layout_gravity="center"
+                                android:layout_marginLeft="60dp"
                                 android:background="@drawable/circle_indicator_active"
-                                android:backgroundTint="@color/fluorescent_blue"/>
+                                android:backgroundTint="@color/fluorescent_blue"
+                                android:visibility="gone" />
 
                             <TextView
+                                android:id="@+id/sort_count_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/black"
-                                android:layout_marginLeft="60dp"
                                 android:layout_gravity="center"
-                                android:id="@+id/sort_count_text"
-                                android:visibility="gone"
-                                android:text="1" />
+                                android:layout_marginLeft="60dp"
+                                android:text="1"
+                                android:textColor="@color/black"
+                                android:visibility="gone" />
 
                         </androidx.cardview.widget.CardView>
 
@@ -290,7 +291,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="10dp"
                             android:layout_marginBottom="10dp"
-                            android:theme="@style/Theme.MaterialComponents.Light"/>
+                            android:theme="@style/Theme.MaterialComponents.Light" />
 
                     </HorizontalScrollView>
 
@@ -298,14 +299,14 @@
                         android:id="@+id/toolbar_border"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/beige"
                         android:layout_alignParentBottom="true"
-                        android:visibility="gone"/>
+                        android:background="@color/beige"
+                        android:visibility="gone" />
 
                     <ImageView
+                        android:id="@+id/leaderBoardBanner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/leaderBoardBanner"
                         android:adjustViewBounds="true" />
 
                 </LinearLayout>

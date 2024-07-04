@@ -9,6 +9,7 @@ import au.com.dealsdirect.data.network.model.checkout.GetDeliveryServicePackageD
 import au.com.dealsdirect.data.network.model.checkout.SetDeliveryOption;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -45,7 +46,7 @@ public class DeliveryOptionsPresenter<V extends DeliveryOptionsMvpView> extends 
         setDeliveryOption.setDeliveryDetails(new SetDeliveryOption.DeliveryDetails(null, null));
         setDeliveryOption.setPostcode(null);
 
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         doApiCallForResponse(getDataManager().callSetDeliveryOption(setDeliveryOption), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {

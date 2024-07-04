@@ -16,6 +16,7 @@ import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjects;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectsRequest;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactMvpView;
 import au.com.dealsdirect.ui.controller.contact.addcontact.AddContactPresenter;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.TestSchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -83,7 +84,7 @@ public class AddContactPresenterTest {
         addContactPresenter.loadContactUsSubjects();
         testScheduler.triggerActions();
 
-        verify(addContactView).showLoading();
+        verify(addContactView).showLoading(LoadingDialogType.DEFAULT);
         verify(addContactView).hideLoading();
         verify(addContactView).showContactFirstSubject(contactSubjectResponse.getContactSubjectResponse().getList());
     }

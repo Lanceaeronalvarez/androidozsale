@@ -93,10 +93,17 @@
     <dimen name="banner_tablet_width">313dp</dimen>
     <dimen name="banner_tablet_height">294dp</dimen>
     <dimen name="horizontal_banner_spacing">1dp</dimen>
+    <dimen name="horizontal_banner_top_padding">0dp</dimen>
     <dimen name="horizontal_banner_bottom_padding">1dp</dimen>
+    <dimen name="horizontal_circular_banner_spacing">6dp</dimen>
+    <dimen name="horizontal_circular_banner_top_padding">2dp</dimen>
+    <dimen name="horizontal_circular_banner_bottom_padding">15dp</dimen>
     <dimen name="horizontal_banner_spacer_size">16dp</dimen>
     <dimen name="horizontal_banner_spacer_size_for_tablet">28dp</dimen>
     <dimen name="horizontal_banner_circle_indicator_height">28dp</dimen>
+    <dimen name="horizontal_banner_title_upper_spacing">4dp</dimen>
+    <dimen name="horizontal_banner_title_height">16dp</dimen>
+    <dimen name="horizontal_banner_header_title_height">56dp</dimen>
 
     <!-- Checkout -->
     <dimen name="row_checkout_image_width">100dp</dimen>
@@ -334,9 +341,6 @@
 
     <dimen name="recently_viewed_height">225dp</dimen>
     <dimen name="recently_viewed_width">250dp</dimen>
-
-    <dimen name="horizontal_banner_title_height">24dp</dimen>
-    <dimen name="horizontal_banner_header_title_height">56dp</dimen>
 
     <dimen name="controller_brand_bubbles_height">40dp</dimen>
 

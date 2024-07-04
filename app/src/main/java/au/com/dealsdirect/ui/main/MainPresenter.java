@@ -67,6 +67,7 @@ import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.GdprUtils;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -446,7 +447,15 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribe(mAppSettingsSectionAcceptLPayCallback, mAppSettingsSectionThrowableCallback));
     }
 
-    private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptAfterpayCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
+    public void callGetAppSettingsSectionsZipPay(Context context) {
+        getCompositeDisposable().add(getDataManager()
+                .callGetAppSettingsSection(getDataManager().getCountryId(), "ZipPay")
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(mAppSettingsSectionAcceptZipPayCallback, mAppSettingsSectionThrowableCallback));
+    }
+
+    private final Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptAfterpayCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
         @Override
         public void accept(@NonNull GetAppSettingsSection.ResponseValue responseValue) throws Exception {
             if (!isViewAttached()) {
@@ -471,7 +480,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         }
     };
 
-    private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptLPayCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
+    private final Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptLPayCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
         @Override
         public void accept(@NonNull GetAppSettingsSection.ResponseValue responseValue) throws Exception {
             if (!isViewAttached()) {
@@ -488,7 +497,24 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         }
     };
 
-    private Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
+    private final Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptZipPayCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
+        @Override
+        public void accept(@NonNull GetAppSettingsSection.ResponseValue responseValue) throws Exception {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            if (responseValue.d == null || responseValue.d.getValue() == null || responseValue.d.getValue().getZipPay() == null) {
+                return;
+            }
+
+            boolean isEnabled = responseValue.d.getValue().getZipPay().isEnabled();
+
+            getDataManager().setZipPayEnabled(isEnabled);
+        }
+    };
+
+    private final Consumer<GetAppSettingsSection.ResponseValue> mAppSettingsSectionAcceptCallback = new Consumer<GetAppSettingsSection.ResponseValue>() {
         @Override
         public void accept(@NonNull GetAppSettingsSection.ResponseValue responseValue) throws Exception {
             if (!isViewAttached()) {
@@ -550,7 +576,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
         }
     };
 
-    private Consumer<Throwable> mAppSettingsSectionThrowableCallback = new Consumer<Throwable>() {
+    private final Consumer<Throwable> mAppSettingsSectionThrowableCallback = new Consumer<Throwable>() {
         @Override
         public void accept(@NonNull Throwable throwable) throws Exception {
             if (!isViewAttached()) {
@@ -933,7 +959,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void createPaymentTransaction(String deviceData, String paymentType, String paymentNonce,
                                          String paymentToken, String provider) {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
 
         String languageId = getDataManager().getLanguageId();
         String countryId = getDataManager().getCountryId();
@@ -997,7 +1023,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void createPaymentTransactionGPay(String token) {
-        getMvpView().showGPayLoading();
+        getMvpView().showLoading(LoadingDialogType.GPAY);
 
         String languageId = getDataManager().getLanguageId();
         String countryId = getDataManager().getCountryId();
@@ -1008,10 +1034,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(responseValue -> {
-                    getMvpView().showGPayLoading();
+                    getMvpView().showLoading(LoadingDialogType.GPAY);
                     mStripePaymentCallback.accept(responseValue);
                 }, throwable -> {
-                    getMvpView().hideGPayLoading();
+                    getMvpView().hideLoading();
                     mStripePaymentThrowableCallback.accept(throwable);
                 })
         );
@@ -1019,7 +1045,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
     @Override
     public void createPaymentTransactionVco(VisaPaymentSummary visaPaymentSummary) {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
 
         String languageId = getDataManager().getLanguageId();
         String countryId = getDataManager().getCountryId();
@@ -1299,7 +1325,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
     @Override
     public void callLogout(AuthHandler handler) {
 
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         getCompositeDisposable().add(getDataManager()
                 .callLogout(new Logout.RequestValue())
                 .subscribeOn(getSchedulerProvider().io())

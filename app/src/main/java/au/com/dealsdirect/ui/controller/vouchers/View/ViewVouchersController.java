@@ -24,6 +24,7 @@ import au.com.dealsdirect.data.network.model.vouchers.GetUserVoucherResponse;
 import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import butterknife.BindView;
 
 /**
@@ -130,7 +131,7 @@ public class ViewVouchersController extends BaseController implements ViewVouche
         mUsedVouchersRecyclerViewPager.setAdapter(mUsedVouchersAdapter);
         mUsedVouchersRecyclerViewPager.setLayoutManager(usedVouchersLayoutManager);
 
-        showLoading();
+        showLoading(LoadingDialogType.DEFAULT);
         mPresenter.loadMyVouchers();
     }
 

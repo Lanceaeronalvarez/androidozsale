@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.listeners.OnHorizontalSwipeTouchListener;
-import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalCircleIndicatorAdapter;
+import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalPageIndicatorAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.utils.CommonUtils;
 import butterknife.BindView;
@@ -35,6 +35,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder {
 
+    private int scrollStepSize = 1;
+    private int scrollSpeed = 0;
     private boolean isAutoScroll;
 
     private HorizontalScrollingBannerAdapter adapter;
@@ -64,13 +66,14 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
     RecyclerView recyclerView;
 
     @BindView(R.id.viewholder_horizontal_scrolling_banner_indicator)
-    RecyclerView circleIndicatorRecyclerView;
+    RecyclerView pageIndicatorRecyclerView;
 
     public HorizontalRecyclerBannerViewHolder(View view,
                                               int height,
                                               HorizontalScrollingBannerAdapter adapter,
                                               boolean isAutoScroll,
-                                              boolean isSwipeEnabled) {
+                                              boolean isSwipeEnabled,
+                                              HorizontalPageIndicatorAdapter.Style pageIndicatorStyle) {
         super(view);
         ButterKnife.bind(this, view);
 
@@ -94,29 +97,29 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
         this.isAutoScroll = isAutoScroll;
         this.isSwipeEnabled = isSwipeEnabled;
 
-        CustomLinearLayoutManager circleLayoutManager = new CustomLinearLayoutManager(
-                circleIndicatorRecyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        final CustomLinearLayoutManager pageIndicatorLayoutManager = new CustomLinearLayoutManager(
+                pageIndicatorRecyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        pageIndicatorLayoutManager.setScrollEnabled(false);
+        pageIndicatorRecyclerView.setLayoutManager(pageIndicatorLayoutManager);
 
-        circleLayoutManager.setScrollEnabled(false);
-        circleIndicatorRecyclerView.setLayoutManager(circleLayoutManager);
-        HorizontalCircleIndicatorAdapter horizontalCircleIndicatorAdapter = new HorizontalCircleIndicatorAdapter();
-        circleIndicatorRecyclerView.setAdapter(horizontalCircleIndicatorAdapter);
+        final HorizontalPageIndicatorAdapter horizontalPageIndicatorAdapter = new HorizontalPageIndicatorAdapter(pageIndicatorStyle);
+        pageIndicatorRecyclerView.setAdapter(horizontalPageIndicatorAdapter);
 
         onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             Handler mainHandler = new Handler(recyclerView.getContext().getMainLooper());
             Runnable myRunnable = () -> {
                 adapter.resetReyclerViewPosition();
-                horizontalCircleIndicatorAdapter.setSelectedPosition(0);
+                horizontalPageIndicatorAdapter.setSelectedPosition(0);
 
                 if (onLayoutChangeListener != null) {
-                    circleIndicatorRecyclerView.removeOnLayoutChangeListener(onLayoutChangeListener);
+                    pageIndicatorRecyclerView.removeOnLayoutChangeListener(onLayoutChangeListener);
                     onLayoutChangeListener = null;
                 }
             };
             mainHandler.post(myRunnable);
         };
 
-        circleIndicatorRecyclerView.addOnLayoutChangeListener(onLayoutChangeListener);
+        pageIndicatorRecyclerView.addOnLayoutChangeListener(onLayoutChangeListener);
     }
 
     public HorizontalScrollingBannerAdapter getAdapter() {
@@ -132,12 +135,18 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
             }
         }
 
-        if (headerContainer != null) {
-            if (adapter != null && adapter.getBackgroundColorOverride() != null) {
+        if (adapter != null && adapter.getBackgroundColorOverride() != null) {
+            if (headerContainer != null) {
                 headerContainer.setBackgroundColor(adapter.getBackgroundColorOverride());
+            }
+            if (headerTextView != null) {
                 headerTextView.setBackgroundColor(adapter.getBackgroundColorOverride());
-            } else {
+            }
+        } else {
+            if (headerContainer != null) {
                 headerContainer.setBackground(null);
+            }
+            if (headerTextView != null) {
                 headerTextView.setBackground(null);
             }
         }
@@ -152,16 +161,26 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
         }
     }
 
-    public void setCircleIndicatorItemCount(int count) {
-        if (getCircleIndicatorAdapter() != null) {
-            getCircleIndicatorAdapter().setItemCount(count);
-            getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition());
+    public void setPageIndicatorItemCount(int count) {
+        if (getPageIndicatorAdapter() != null) {
+            getPageIndicatorAdapter().setItemCount(count);
+            if (count > 0) {
+                int ratio = adapter.getDataSource().size() / getPageIndicatorAdapter().getItemCount();
+                getPageIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition() / ratio);
+            }
         }
     }
 
-    public HorizontalCircleIndicatorAdapter getCircleIndicatorAdapter() {
-        if (circleIndicatorRecyclerView != null) {
-            return (HorizontalCircleIndicatorAdapter) circleIndicatorRecyclerView.getAdapter();
+    public void setPageIndicatorCountWithPageSize(int pageSize) {
+        assert pageSize > 0;
+        final float ratio = adapter.getDataSource().size() / (float) pageSize;
+        final int indicatorCount = ratio > 0 && ratio < 1 ? 1 : (int) Math.floor(ratio);
+        setPageIndicatorItemCount(indicatorCount);
+    }
+
+    public HorizontalPageIndicatorAdapter getPageIndicatorAdapter() {
+        if (pageIndicatorRecyclerView != null) {
+            return (HorizontalPageIndicatorAdapter) pageIndicatorRecyclerView.getAdapter();
         } else {
             return null;
         }
@@ -176,6 +195,12 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
         stopAutoScroll();
     }
 
+    public void onViewRemoved() {
+        setAdapter(null);
+        setPageIndicatorItemCount(0);
+        setPageIndicatorVisibility(View.GONE);
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private void setupScrollListener() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -187,9 +212,17 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
 
         if (isSwipeEnabled) {
             recyclerView.setOnTouchListener(new OnHorizontalSwipeTouchListener() {
+                private int touchDownX = 0;
+
                 @Override
                 public void onFinishDragging() {
-                    snapToCenter(true);
+                    if (scrollSpeed > scrollStepSize / 4) {
+                        scrollToNext(true);
+                    } else if (scrollSpeed < scrollStepSize / -4) {
+                        scrollToPrevious(true);
+                    } else {
+                        snapToCenter(true);
+                    }
                 }
 
                 @Override
@@ -204,6 +237,7 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
 
                 @Override
                 public void onTouchDown() {
+                    touchDownX = adapter != null ? adapter.getRecyclerViewPosition() : 0;
                     if (isAutoScroll) {
                         stopAutoScroll();
                     }
@@ -211,6 +245,7 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
 
                 @Override
                 public void onTouchUp() {
+                    scrollSpeed = (adapter != null ? adapter.getRecyclerViewPosition() : 0) - touchDownX;
                     if (isAutoScroll) {
                         startAutoscroll();
                     }
@@ -271,10 +306,6 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
             } else {
                 recyclerView.scrollBy(displacement, 0);
             }
-
-            if (getCircleIndicatorAdapter() != null) {
-                getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition(displacement));
-            }
         };
         mainHandler.post(myRunnable);
     }
@@ -291,23 +322,19 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
             wrapAround(-1);
             int displacement = -getXAfterPreviousPosition();
             if (displacement >= 0) {
-                displacement = -adapter.getCellWidth();
+                displacement = -getStepWidth();
             }
             if (withAnimation) {
                 recyclerView.smoothScrollBy(displacement, 0);
             } else {
                 recyclerView.scrollBy(displacement, 0);
             }
-
-            if (getCircleIndicatorAdapter() != null) {
-                getCircleIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition(displacement));
-            }
         };
         mainHandler.post(myRunnable);
     }
 
     public void snapToCenter(boolean withAnimation) {
-        int diff = (getXBeforeNextPosition() - getXAfterPreviousPosition()) % adapter.getCellWidth();
+        int diff = (getXBeforeNextPosition() - getXAfterPreviousPosition()) % getStepWidth();
         if (diff < 0) {
             scrollToNext(withAnimation);
         } else if (diff > 0) {
@@ -319,14 +346,23 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
         if (adapter == null) {
             return 0;
         }
-        return (recyclerView.computeHorizontalScrollOffset() - (recyclerView.getWidth() - adapter.getCellWidth())) % adapter.getCellWidth();
+        return (recyclerView.computeHorizontalScrollOffset() -
+                Math.max(0, (int) Math.ceil(recyclerView.getWidth() /
+                        (float) getStepWidth()) - 1) * getStepWidth()) % getStepWidth();
     }
 
     private int getXBeforeNextPosition() {
         if (adapter == null) {
             return 0;
         }
-        return adapter.getCellWidth() - getXAfterPreviousPosition();
+        return getStepWidth() - getXAfterPreviousPosition();
+    }
+
+    private int getStepWidth() {
+        if (adapter == null) {
+            return 0;
+        }
+        return adapter.getCellWidth() * scrollStepSize;
     }
 
     private int previousX = 0;
@@ -335,6 +371,11 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
         int speed = scrollX - previousX;
         previousX = scrollX;
         wrapAround(speed);
+
+        if (getPageIndicatorAdapter() != null && getPageIndicatorAdapter().getItemCount() > 0) {
+            int ratio = adapter.getDataSource().size() / getPageIndicatorAdapter().getItemCount();
+            getPageIndicatorAdapter().setSelectedPosition(adapter.getRecyclerViewPosition() / ratio);
+        }
     }
 
     private void wrapAround(int speed) {
@@ -356,15 +397,17 @@ public class HorizontalRecyclerBannerViewHolder extends RecyclerView.ViewHolder 
         }
     }
 
-    public void setCircleIndicatorVisibility(int visibility) {
-        if (circleIndicatorRecyclerView != null) {
-            circleIndicatorRecyclerView.setVisibility(visibility);
+    public void setPageIndicatorVisibility(int visibility) {
+        if (pageIndicatorRecyclerView != null) {
+            pageIndicatorRecyclerView.setVisibility(visibility);
         }
     }
 
-    public void setCirclIndicatorAdapter(RecyclerView.Adapter adapter) {
-        if (circleIndicatorRecyclerView != null) {
-            circleIndicatorRecyclerView.setAdapter(adapter);
-        }
+    public int getScrollStepSize() {
+        return scrollStepSize;
+    }
+
+    public void setScrollStepSize(int scrollStepSize) {
+        this.scrollStepSize = scrollStepSize;
     }
 }

@@ -12,6 +12,7 @@ import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.contactsubject.ContactSubjectResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -24,7 +25,7 @@ public class ContactSelectSubjectPresenter<V extends ContactSelectSubjectMvpView
 
     @Override
     public void loadContactUsSubjects() {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
 
         doApiCallForResponse(getDataManager().callGetContactSubjects(!getDataManager().isAuthorized()), new AppApiCallback() {
             @Override

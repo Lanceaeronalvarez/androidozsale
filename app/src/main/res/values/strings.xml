@@ -763,6 +763,7 @@
     <string name="default_image_link">https://c1.mysalec.com/brands/%1$s/%2$s/%3$s</string>
     <string name="ourpay_order_schedule">ORDER PAYMENT SCHEDULE</string>
     <string name="vouchers_balance_prefix">Balance </string>
+    <string name="top_brands">Brands</string>
 
     <!--Country Id Mapping-->
     <string name="country_id_AS">AS</string>
@@ -832,6 +833,10 @@
     <!--KLARNA-->
     <string name="klarna">Klarna</string>
     <string name="klarna_failed_transaction">@string/generic_failed_transaction_message</string>
+
+    <!--ZIP PAY-->
+    <string name="zippay">Zip Pay</string>
+    <string name="zippay_failed_transaction">@string/generic_failed_transaction_message</string>
 
     <!--LPPAY-->
     <string name="lpay">Latitude Pay</string>

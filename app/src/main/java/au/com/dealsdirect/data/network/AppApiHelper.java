@@ -1,5 +1,6 @@
 package au.com.dealsdirect.data.network;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
@@ -124,6 +125,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.Verif
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
+import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
@@ -175,6 +177,14 @@ import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayConfirmNzOrderRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateChargeRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutResponse;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicChargeRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicCheckoutRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderResponse;
 import au.com.dealsdirect.data.wishlist.CallAddToWishlistRequest;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.JsonUtils;
@@ -1063,20 +1073,20 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<String> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request) {
-        return Rx2AndroidNetworking.put(ApiEndPoint.upddateEmailSubscription())
+    public Observable<UpdateEmailSubscriptionResponse> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request) {
+        return Rx2AndroidNetworking.put(ApiEndPoint.updateEmailSubscriptionV2())
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request))
                 .build()
-                .getStringObservable();
+                .getObjectObservable(UpdateEmailSubscriptionResponse.class);
     }
 
     @Override
-    public Observable<GetEmailSubscriptionTemplatesResponse> getEmailSubscriptionTemplates() {
+    public Observable<List<GetEmailSubscriptionTemplatesResponse>> getEmailSubscriptionTemplates() {
         return Rx2AndroidNetworking.get(ApiEndPoint.getEmailSubscriptionTemplates())
                 .addHeaders(mApiHeader.get())
                 .build()
-                .getObjectObservable(GetEmailSubscriptionTemplatesResponse.class);
+                .getObjectListObservable(GetEmailSubscriptionTemplatesResponse.class);
     }
 
     @Override
@@ -1682,6 +1692,60 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
                 .build()
                 .getObjectObservable(KlarnaCreateOrderResponse.class);
+    }
+
+    @Override
+    public Observable<ZipCreateCheckoutResponse> callCreateZipCheckout(ZipCreateCheckoutRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callCreateZipCheckout())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
+                .build()
+                .getObjectObservable(ZipCreateCheckoutResponse.class);
+    }
+
+    @Override
+    public Observable<JSONObject> callCreateZipCharge(ZipCreateChargeRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callCreateZipCharge())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
+                .build()
+                .getJSONObjectObservable();
+    }
+
+    @Override
+    public Observable<JSONObject> callCreatePublicZipCheckout(ZipCreatePublicCheckoutRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callCreatePublicZipCheckout())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
+                .build()
+                .getJSONObjectObservable();
+    }
+
+    @Override
+    public Observable<JSONObject> callCreatePublicZipCharge(ZipCreatePublicChargeRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callCreatePublicZipCharge())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
+                .build()
+                .getJSONObjectObservable();
+    }
+
+    @Override
+    public Observable<ZipPayCreateNzOrderResponse> callCreateZipPayNzOrder(ZipPayCreateNzOrderRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callCreateZipPayNzOrder())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
+                .build()
+                .getObjectObservable(ZipPayCreateNzOrderResponse.class);
+    }
+
+    @Override
+    public Observable<JSONObject> callConfirmZipPayNzOrder(ZipPayConfirmNzOrderRequest request) {
+        return Rx2AndroidNetworking.post(ApiEndPoint.callConfirmZipPayNzOrder())
+                .addHeaders(mApiHeader.get())
+                .addJSONObjectBody(JsonUtils.convertToJsonObject(request, true))
+                .build()
+                .getJSONObjectObservable();
     }
 }
 

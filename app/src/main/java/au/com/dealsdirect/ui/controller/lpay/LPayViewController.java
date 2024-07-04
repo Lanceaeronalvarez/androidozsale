@@ -27,6 +27,7 @@ import au.com.dealsdirect.ui.controller.login.PopUpHostController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 
@@ -112,12 +113,12 @@ public class LPayViewController extends BaseController implements LPayMvpView {
 
     @Override
     public void showProgressIndicator() {
-        showLPayLoading();
+        showLoading(LoadingDialogType.LPAY);
     }
 
     @Override
     public void hideProgressIndicator() {
-        hideLPayLoading();
+        hideLoading();
     }
 
     @Override

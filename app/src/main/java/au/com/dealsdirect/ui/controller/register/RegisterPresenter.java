@@ -21,6 +21,7 @@ import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.AuthenticationBasePresenter;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppConstants;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -35,7 +36,7 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
     @Override
     public void registerUser(Context context, String firstName, String lastName, String email, String password,
                              boolean tncAccepted, boolean emailsAccepted) {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         SafetyNet.getClient(context)
                 .verifyWithRecaptcha(Settings.getReCaptchaSiteKey())
                 .addOnSuccessListener(recaptchaTokenResponse -> {
@@ -53,7 +54,7 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
     private void registerUserWithToken(String firstName, String lastName, String email, String password,
                              boolean tncAccepted, boolean emailsAccepted, String token) {
 
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         RegisterUserRequest registerUserRequest
                 = new RegisterUserRequest(
                 getDataManager().getLanguageId(),

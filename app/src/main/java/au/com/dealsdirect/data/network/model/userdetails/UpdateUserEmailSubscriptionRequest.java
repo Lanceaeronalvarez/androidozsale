@@ -3,6 +3,8 @@ package au.com.dealsdirect.data.network.model.userdetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
+
 public class UpdateUserEmailSubscriptionRequest {
     @SerializedName("email")
     @Expose
@@ -13,6 +15,9 @@ public class UpdateUserEmailSubscriptionRequest {
     @SerializedName("preference")
     @Expose
     private String preference;
+    @SerializedName("categories")
+    @Expose
+    private HashMap<String, Boolean> categories;
 
     public String getEmail() {
         return email;
@@ -36,6 +41,14 @@ public class UpdateUserEmailSubscriptionRequest {
 
     public void setPreference(String preference) {
         this.preference = preference;
+    }
+
+    public HashMap<String, Boolean> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(HashMap<String, Boolean> categories) {
+        this.categories = categories;
     }
 }
 

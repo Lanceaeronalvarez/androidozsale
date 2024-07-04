@@ -16,6 +16,7 @@ import au.com.dealsdirect.data.network.model.vouchers.ClearVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -32,7 +33,7 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView> extends BasePres
 
     @Override
     public void applyVouchers(String postcode, int imageSize, List<String> voucherIds) {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         ApplyVouchersRequest request = new ApplyVouchersRequest(voucherIds, postcode, null, imageSize, getDataManager().getLanguageId());
         doApiCallForResponse(getDataManager().callGetApplyVouchers(request), new AppApiCallback() {
             @Override
@@ -51,7 +52,7 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView> extends BasePres
 
     @Override
     public void clearVouchers(String postcode, int imageSize) {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         ClearVouchersRequest request = new ClearVouchersRequest(postcode, null, imageSize, getDataManager().getLanguageId());
         doApiCallForResponse(getDataManager().callGetClearVouchers(request), new AppApiCallback() {
             @Override
@@ -64,7 +65,7 @@ public class AddVouchersPresenter<V extends AddVouchersMvpView> extends BasePres
 
     @Override
     public void addAndApplyVoucherByKey(String postcode, int imageSize, String key) {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         AddAndApplyVoucherByKeyRequest request = new AddAndApplyVoucherByKeyRequest(key, postcode, null, imageSize, getDataManager().getLanguageId());
         doApiCallForResponse(getDataManager().callGetAddAndApplyVoucherByKey(request), new AppApiCallback() {
             @Override

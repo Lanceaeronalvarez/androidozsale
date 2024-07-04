@@ -13,6 +13,7 @@ import au.com.dealsdirect.data.network.model.orders.GetOrdersResponse;
 import au.com.dealsdirect.data.network.model.setattachmentforcontact.SetAttachmentForContactRequest;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.utils.JsonUtils;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -30,7 +31,7 @@ public class AddContactPresenter<V extends AddContactMvpView> extends BasePresen
 
     @Override
     public void createNewContact(CreateContactRequest createContactRequest) {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
 
         final AppApiCallback callback = new AppApiCallback() {
             @Override
@@ -91,7 +92,7 @@ public class AddContactPresenter<V extends AddContactMvpView> extends BasePresen
 
     @Override
     public void loadContactHistory(GetContactHistoryRequest contactHistoryRequest) {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
 
         doApiCallForResponse(getDataManager().callGetContactHistory(contactHistoryRequest), new AppApiCallback() {
             @Override

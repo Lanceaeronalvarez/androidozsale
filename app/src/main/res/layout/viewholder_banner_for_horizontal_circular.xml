@@ -4,13 +4,12 @@
     android:id="@+id/viewholder_banner_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:clickable="true"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/horizontal_banner_spacing"
-    android:paddingTop="@dimen/margin_tiny"
-    android:paddingRight="@dimen/horizontal_banner_spacing"
-    android:paddingBottom="@dimen/margin_medium"
+    android:paddingLeft="@dimen/horizontal_circular_banner_spacing"
+    android:paddingTop="@dimen/horizontal_circular_banner_top_padding"
+    android:paddingRight="@dimen/horizontal_circular_banner_spacing"
+    android:paddingBottom="@dimen/horizontal_circular_banner_bottom_padding"
     tools:ignore="MissingPrefix">
 
     <ImageView
@@ -26,13 +25,29 @@
         fontPath="@string/font_app_bold"
         android:layout_width="match_parent"
         android:layout_height="@dimen/horizontal_banner_title_height"
+        android:layout_marginTop="@dimen/horizontal_banner_title_upper_spacing"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
-        android:text="Title"
         android:textAlignment="center"
         android:textColor="@color/text_dark"
         android:textSize="@dimen/text_size_caption2"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="Title" />
+
+    <TextView
+        android:id="@+id/viewholder_horizontal_scrolling_cell_subtitle"
+        fontPath="@string/font_app_regular"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/horizontal_banner_title_height"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textAlignment="center"
+        android:textColor="@color/text_dark"
+        android:textSize="@dimen/text_size_caption2"
+        android:textStyle="normal"
+        android:visibility="gone"
+        tools:text="Subtitle" />
 
 </LinearLayout>

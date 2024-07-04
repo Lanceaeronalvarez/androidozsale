@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewholder_top_brands_header_text"
+    fontPath="@string/font_app_bold"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/top_brands_list_background"
+    android:paddingLeft="@dimen/margin_large"
+    android:paddingTop="@dimen/margin_large"
+    android:paddingRight="@dimen/margin_large"
+    android:paddingBottom="@dimen/margin_extra_small"
+    android:textColor="@color/top_brands_header"
+    android:textSize="@dimen/text_size_headline3"
+    android:textStyle="bold"
+    tools:ignore="MissingPrefix"
+    tools:text="Header" />

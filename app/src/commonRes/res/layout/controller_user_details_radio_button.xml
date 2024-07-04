@@ -4,5 +4,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="Text"
-    android:textColor="@color/text_medium"
-    android:textSize="@dimen/text_size_caption1"/>
+    android:textColor="@color/black"
+    android:textSize="@dimen/text_size_caption1"
+    android:buttonTint="@drawable/custom_preferences_checkbox_selector"/>

@@ -1,6 +1,7 @@
 package au.com.dealsdirect.data.network;
 
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
@@ -118,6 +119,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.Verif
 import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.VerificationCodeConfirmResponseBody;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
+import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
@@ -169,6 +171,14 @@ import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayConfirmNzOrderRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateChargeRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutResponse;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicChargeRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicCheckoutRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderResponse;
 import io.reactivex.Observable;
 
 public interface ApiHelper {
@@ -281,9 +291,9 @@ public interface ApiHelper {
 
     Observable<String> callAccountDeletion(String userDetailsId);
 
-    Observable<String> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request);
+    Observable<UpdateEmailSubscriptionResponse> callUpdateUserEmailSubscription(UpdateUserEmailSubscriptionRequest request);
 
-    Observable<GetEmailSubscriptionTemplatesResponse> getEmailSubscriptionTemplates();
+    Observable<List<GetEmailSubscriptionTemplatesResponse>> getEmailSubscriptionTemplates();
 
     // MY ORDERS API CALLS
 
@@ -529,4 +539,17 @@ public interface ApiHelper {
     Observable<KlarnaCreateSessionResponse> callCreateKlarnaSession(KlarnaCreateSessionRequest request);
 
     Observable<KlarnaCreateOrderResponse> callCreateKlarnaOrder(KlarnaCreateOrderRequest request);
+
+    // Zip Payment
+    Observable<ZipCreateCheckoutResponse> callCreateZipCheckout(ZipCreateCheckoutRequest request);
+    Observable<JSONObject> callCreateZipCharge(ZipCreateChargeRequest request);
+
+    Observable<JSONObject> callCreatePublicZipCheckout(ZipCreatePublicCheckoutRequest request);
+
+    Observable<JSONObject> callCreatePublicZipCharge(ZipCreatePublicChargeRequest request);
+
+    Observable<ZipPayCreateNzOrderResponse> callCreateZipPayNzOrder(ZipPayCreateNzOrderRequest request);
+
+    Observable<JSONObject> callConfirmZipPayNzOrder(ZipPayConfirmNzOrderRequest request);
+
 }

@@ -620,8 +620,12 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/notifications/email/subscription", ApiUrlVersion.v1.apiVersion());
     }
 
+    public static String updateEmailSubscriptionV2() {
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/notifications/email/preference", ApiUrlVersion.v1.apiVersion());
+    }
+
     public static String getEmailSubscriptionTemplates() {
-        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/notifications/email/subscription/templates", ApiUrlVersion.v1.apiVersion());
+        return getFormattedUrl(ApiService.MYACCOUNT, ACCOUNT_ID_DELIMETER + "/my-account/notifications/email/subscription/templates", ApiUrlVersion.v2.apiVersion());
     }
 
     /* Summary */
@@ -731,6 +735,30 @@ public final class ApiEndPoint {
 
     public static String callCreateKlarnaOrder() {
         return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateKlarnaOrder");
+    }
+
+    public static String callCreateZipCheckout() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateZipCheckout");
+    }
+
+    public static String callCreateZipCharge() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateZipCharge");
+    }
+
+    public static String callCreatePublicZipCheckout() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreatePublicZipCheckout");
+    }
+
+    public static String callCreatePublicZipCharge() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreatePublicZipCharge");
+    }
+
+    public static String callCreateZipPayNzOrder() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "CreateZipPayNzOrder");
+    }
+
+    public static String callConfirmZipPayNzOrder() {
+        return getFormattedUrl(ApiService.LEGACY, NO_AKAMAI_EXTENSION + "ConfirmZipPayNzOrder");
     }
 
     /*VISA CHECKOUT*/

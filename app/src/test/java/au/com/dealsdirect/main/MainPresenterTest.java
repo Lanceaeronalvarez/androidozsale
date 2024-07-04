@@ -572,7 +572,7 @@ public class MainPresenterTest {
         mPresenter.callLogout(null);
         mTestScheduler.triggerActions();
 
-        verify(mMockMainMvpView).showLoading();
+        verify(mMockMainMvpView).showLoading(LoadingDialogType.DEFAULT);
         verify(mMockMainMvpView).hideLoading();
         verify(mMockDataManager).revokeAuth();
         verify(mMockMainMvpView).performBraintreeReset();

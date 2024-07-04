@@ -38,6 +38,7 @@ import au.com.dealsdirect.ui.controller.leaderboardbanner.LeaderboardPresenterHe
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CurrencyUtil;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -182,7 +183,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
         if (!isViewAttached()) {
             return;
         }
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
 
         doApiCallForResponse(getDataManager()
                 .callAddItemToCart(requestValues), new AppApiCallback() {

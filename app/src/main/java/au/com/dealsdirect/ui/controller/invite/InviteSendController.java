@@ -43,6 +43,7 @@ import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.BasePullToRefreshController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -435,7 +436,7 @@ public class InviteSendController extends BasePullToRefreshController implements
                     setInviteLinkRequest.inviteLink = editedLink;
 
 
-                    showLoading();
+                    showLoading(LoadingDialogType.DEFAULT);
 
                     mPresenter.setInviteLink(setInviteLinkRequest);
                 } else {

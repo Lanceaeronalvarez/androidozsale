@@ -1,5 +1,8 @@
 package au.com.dealsdirect.ui.controller.checkout.addpayment;
 
+import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.PaymentOption;
+import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.decompress;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +27,6 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-//import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.braintreepayments.cardform.OnCardFormScanListener;
 import com.braintreepayments.cardform.OnCardFormSubmitListener;
 import com.braintreepayments.cardform.utils.CardType;
@@ -34,7 +36,6 @@ import com.mysale.genie.utility.RxBus;
 import com.stripe.android.model.CardBrand;
 import com.stripe.android.view.CardNumberEditText;
 import com.stripe.android.view.CvcEditText;
-//import com.visa.checkout.VisaCheckoutSdk;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -44,6 +45,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
 import au.com.dealsdirect.data.network.model.events.GA4EventParams;
+import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
@@ -58,17 +60,14 @@ import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
-import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ExpiryDateEditText;
 import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.PaymentOption;
-import static au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.decompress;
 
 /*
  * Created by smartwave on 29/06/2017.
@@ -147,6 +146,9 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     RelativeLayout mKlarnaButton;
     @BindView(R.id.partial_checkout_button_g_pay_container)
     RelativeLayout mGPayButton;
+
+    @BindView(R.id.partial_checkout_button_zippay)
+    View mZippayButton;
 
     // Stripe
     @BindView(R.id.stripe_form_layout)
@@ -247,10 +249,12 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mViewAddressToolarTitle.setText("Add New Payment");
 
         mLineView.setVisibility(View.GONE);
+        mOurpayHolder.setVisibility(View.GONE);
         mAfterpayPanel.setVisibility(View.GONE);
         mLPayPanel.setVisibility(View.GONE);
         mKlarnaButton.setVisibility(View.GONE);
         mGPayButton.setVisibility(View.GONE);
+        mZippayButton.setVisibility(View.GONE);
         mPayButton.setText("Add");
         mPayButton.setBackground(getResources().getDrawable(R.drawable.bg_button_login));
 
@@ -392,7 +396,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     protected void onActivityResumed(@NonNull Activity activity) {
         super.onActivityResumed(activity);
         if (isPayPalSubmitClicked) {
-            showLoading();
+            showLoading(LoadingDialogType.DEFAULT);
         }
         isPayPalSubmitClicked = false;
     }
@@ -442,7 +446,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
 //            if (paymentOptions.contains(PaymentOption.VISACHECKOUT) && mVcoPresenter.isVisaCheckoutEnabled()) {
 //                mVcoButton.setVisibility(View.VISIBLE);
 //            } else {
-                mVcoButton.setVisibility(View.GONE);
+            mVcoButton.setVisibility(View.GONE);
 //            }
         }
     }
@@ -477,12 +481,12 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @Override
     public void onPaypalSubmit() {
         isPayPalSubmitClicked = true;
-        showLoading();
+        showLoading(LoadingDialogType.DEFAULT);
         mActivity.startPaypalPayment();
     }
 
     private void onPaypalCreditSubmit() {
-        showLoading();
+        showLoading(LoadingDialogType.DEFAULT);
         mActivity.startPaypalCreditPayment(mCartTotalCost);
     }
 
@@ -513,6 +517,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @Override
     public void showMyPayDetails(CheckoutDetailsMapper value, Ourpay ourpay) {
         if (value != null) {
+            mOurpayHolder.setVisibility(View.VISIBLE);
 
             PaymentMethod paymentMethod = mActivity.getPaymentMethodSelected();
             boolean isMyPayEnabled = mActivity.getIsMyPayEnabled();
@@ -600,7 +605,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         super.onActivityResult(requestCode, resultCode, data);
 
         /*if (requestCode == BraintreeRequestCodes.VISA_CHECKOUT) {
-            showLoading();
+            showLoading(LoadingDialogType.DEFAULT);
             AppLogger.d("VC_onActivityResult", "Result got back from Visa Checkout SDK");
             String msg = "";
 

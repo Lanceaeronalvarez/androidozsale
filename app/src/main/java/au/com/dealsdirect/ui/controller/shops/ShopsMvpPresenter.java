@@ -17,7 +17,7 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     void loadSponsoredBanners(GetBannerRequest request);
 
-    void loadCategoryBanners(GetBannerRequest request);
+    void loadTrendingBrands(GetBannerRequest request);
 
     void loadCategoryTree();
 

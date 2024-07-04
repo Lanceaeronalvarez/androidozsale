@@ -321,6 +321,38 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/partial_checkout_zippay_panel_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_tiny"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/partial_checkout_button_zippay"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_regular"
+                android:background="@drawable/bg_zippay_button"
+                android:clickable="true"
+                android:elevation="1.5dp"
+                android:padding="6dp"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/partial_checkout_button_zippay_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:padding="@dimen/lpay_button_logo_margin"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/zippay_logo_white" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/partial_checkout_ourpay_panel_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

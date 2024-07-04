@@ -15,6 +15,7 @@ import au.com.dealsdirect.data.network.model.returns.createreturn.CreateReturnRe
 import au.com.dealsdirect.data.network.model.returns.newreturn.ImageAttachment;
 import au.com.dealsdirect.data.network.model.returns.newreturn.NewReturnItem;
 import au.com.dealsdirect.ui.base.BasePresenter;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -28,7 +29,7 @@ public class NewReturnPresenter<V extends NewReturnMvpView> extends BasePresente
 
     @Override
     public void addNewReturnOrderRequest(CreateReturnRequest createReturnRequest) {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         doApiCallForResponse(getDataManager().callCreateReturnRequest(createReturnRequest), new AppApiCallback() {
             @Override
             public void onSuccess(Object response) {

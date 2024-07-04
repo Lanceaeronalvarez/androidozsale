@@ -349,6 +349,20 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
+    public void showZipPayPanel() {
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.showZipPayPanel();
+        }
+    }
+
+    @Override
+    public void hideZipPayPanel() {
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.hideZipPayPanel();
+        }
+    }
+
+    @Override
     public void storeCartDetails(CheckoutDetailsMapper value) {
         if (mCheckoutDetailView != null) {
             mCheckoutDetailView.storeCartDetails(value);

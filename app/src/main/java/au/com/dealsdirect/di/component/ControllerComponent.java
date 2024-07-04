@@ -9,6 +9,7 @@ import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressContr
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
 import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
+import au.com.dealsdirect.ui.controller.brands.TopBrandsController;
 import au.com.dealsdirect.ui.controller.categories.NewCategoriesController;
 import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
 import au.com.dealsdirect.ui.controller.categories.OldCategoriesController;
@@ -58,6 +59,7 @@ import au.com.dealsdirect.ui.controller.splash.SplashScreenController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.controller.vouchers.View.ViewVouchersController;
 import au.com.dealsdirect.ui.controller.webviewcontroller.WebViewController;
+import au.com.dealsdirect.ui.controller.zippay.ZipPayViewController;
 import au.com.dealsdirect.ui.sample.SampleController;
 import dagger.Component;
 
@@ -72,6 +74,8 @@ public interface ControllerComponent {
     void inject(NewCategoriesController controller);
 
     void inject(ShopsController controller);
+
+    void inject(TopBrandsController controller);
 
     void inject(MainController controller);
 
@@ -172,6 +176,8 @@ public interface ControllerComponent {
     void inject(ReturnsPolicyViewController controller);
 
     void inject(KlarnaViewController klarnaViewController);
+
+    void inject(ZipPayViewController zipPayViewController);
 
     void inject(NewSaleCategoriesController controller);
 

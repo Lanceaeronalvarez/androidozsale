@@ -28,6 +28,7 @@ import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.service.ourpay.OurpayUtils;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -49,7 +50,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
     @Override
     public void callCartContent(String postcode) {
         if (!isCartAlreadyLoadedOnce() && isViewAttached()) {
-            getMvpView().showLoading();
+            getMvpView().showLoading(LoadingDialogType.DEFAULT);
         }
         fetchCartDetails(postcode);
     }
@@ -104,7 +105,7 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 
     @Override
     public void fetchUserPaymentMethods() {
-        getMvpView().showLoading();
+        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         getCompositeDisposable().add(getDataManager()
                 .callGetUserPaymentMethods(new GetUserPaymentMethods.RequestValue())
                 .subscribeOn(getSchedulerProvider().io())
@@ -361,38 +362,52 @@ public class CheckoutPresenter<V extends CheckoutMvpView> extends BasePresenter<
 //            getMvpView().initializeVisaCheckout();
 
             getMvpView().showCartDetails(mappedValues.getMappedShipments());
+
+            if (getDataManager().isAfterpayEnabled() &&
+                    mappedValues.getAfterpay() != null &&
+                    mappedValues.getAfterpay().isAvailableMobileApp()) {
+                getMvpView().showAfterpayPanel(
+                        mappedValues.getAfterpay().isAvailable(),
+                        mappedValues.getAfterpay().getDescription());
+            } else {
+                getMvpView().hideAfterpayPanel();
+            }
+
+            if (getDataManager().isLPayEnabled() &&
+                    mappedValues.getAvailablePaymentOptions() != null &&
+                    mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.LATITUDEPAY)) {
+                getMvpView().showLPayPanel();
+            } else {
+                getMvpView().hideLPayPanel();
+            }
+
+            if (getDataManager().isKlarnaEnabled() &&
+                    mappedValues.getAvailablePaymentOptions() != null &&
+                    mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.KLARNA)
+            ) {
+                getMvpView().showKlarnaPanel(getDataManager().getTemplateTextsRepository().getKlarnaDescription());
+            } else {
+                getMvpView().hideKlarnaPanel();
+            }
+
+            if (getDataManager().isZipPayEnabled() &&
+                    mappedValues.getAvailablePaymentOptions() != null &&
+                    mappedValues.getAvailablePaymentOptions().contains(
+                            getDataManager().getCountryId().equalsIgnoreCase("AS") ?
+                                    CheckoutDetailsMapper.PaymentOption.ZIPPAYAU :
+                                    CheckoutDetailsMapper.PaymentOption.ZIPPAYNZ)
+            ) {
+                getMvpView().showZipPayPanel();
+            } else {
+                getMvpView().hideZipPayPanel();
+            }
         } else {
             getDataManager().setCheckoutHasWishlistItem(false);
             getMvpView().showCartDetails(new ArrayList<>());
-        }
-
-        if (getDataManager().isAfterpayEnabled() &&
-                mappedValues.getAfterpay() != null &&
-                mappedValues.getAfterpay().isAvailableMobileApp()) {
-            getMvpView().showAfterpayPanel(
-                    mappedValues.getAfterpay().isAvailable(),
-                    mappedValues.getAfterpay().getDescription());
-        } else {
             getMvpView().hideAfterpayPanel();
-        }
-
-        if (getDataManager().isLPayEnabled() &&
-                mappedValues != null &&
-                mappedValues.getAvailablePaymentOptions() != null &&
-                mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.LATITUDEPAY)) {
-            getMvpView().showLPayPanel();
-        } else {
             getMvpView().hideLPayPanel();
-        }
-
-        if (getDataManager().isKlarnaEnabled() &&
-                mappedValues.getAvailablePaymentOptions() != null &&
-                mappedValues.getAvailablePaymentOptions().contains(CheckoutDetailsMapper.PaymentOption.KLARNA) &&
-                getDataManager().isKlarnaEnabled()
-        ) {
-            getMvpView().showKlarnaPanel(getDataManager().getTemplateTextsRepository().getKlarnaDescription());
-        } else {
             getMvpView().hideKlarnaPanel();
+            getMvpView().hideZipPayPanel();
         }
     }
 

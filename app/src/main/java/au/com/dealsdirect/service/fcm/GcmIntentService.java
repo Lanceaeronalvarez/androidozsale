@@ -113,7 +113,7 @@ public class GcmIntentService extends JobIntentService {
 
         Uri uriSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, GENERAL_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_loader_logo)
+                .setSmallIcon(R.drawable.notif_small_icon)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(appName)
                 .setContentText(msg)

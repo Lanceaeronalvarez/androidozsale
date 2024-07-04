@@ -35,6 +35,7 @@ import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
 import au.com.dealsdirect.utils.BundleBuilder;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import butterknife.BindView;
 import butterknife.OnClick;
 import timber.log.Timber;
@@ -145,7 +146,7 @@ public class ViewAddressController extends BaseController implements ViewAddress
 
     @Override
     protected void setUp(View view) {
-        showLoading();
+        showLoading(LoadingDialogType.DEFAULT);
         mPresenter.loadAddresses();
 
 

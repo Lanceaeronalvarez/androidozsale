@@ -36,6 +36,7 @@ import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.JsonUtils;
+import au.com.dealsdirect.utils.LoadingDialogType;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -193,7 +194,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
 
         if (!isFromCart) {
-            showLoading();
+            showLoading(LoadingDialogType.DEFAULT);
             mPresenter.fetchUserPaymentMethods();
         } else {
             if (!mPaymentMethods.isEmpty()) {

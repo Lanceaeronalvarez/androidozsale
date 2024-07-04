@@ -3,24 +3,24 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_invite"
+        android:id="@+id/action_categories"
         android:enabled="true"
         android:icon="@drawable/ic_new_category"
         android:title="@string/categories"
         app:showAsAction="collapseActionView" />
 
     <item
-        android:id="@+id/action_checkout"
+        android:id="@+id/action_top_brands"
         android:enabled="true"
         android:icon="@drawable/ic_new_brands"
-        android:title="@string/my_basket"
+        android:title="@string/top_brands"
         app:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/action_shop"
         android:enabled="true"
         android:icon="@drawable/ic_center_nav_bar"
-        android:title="@string/shop"
+        android:title=""
         app:showAsAction="collapseActionView"/>
 
     <item

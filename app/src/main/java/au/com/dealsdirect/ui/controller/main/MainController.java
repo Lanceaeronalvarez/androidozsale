@@ -2,8 +2,10 @@ package au.com.dealsdirect.ui.controller.main;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,9 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -33,8 +34,10 @@ import com.bluelinelabs.conductor.support.RouterPagerAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -42,6 +45,7 @@ import au.com.dealsdirect.R;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.account.AccountController;
+import au.com.dealsdirect.ui.controller.brands.TopBrandsController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
@@ -53,6 +57,7 @@ import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DelayedMethodExecutionManager;
+import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
@@ -72,6 +77,12 @@ public class MainController extends BaseController implements MainMvpView {
 
     private static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";
 
+    private static final long INDICATOR_ANIMATION_DURATION = 250;
+
+    private static final boolean WILL_ANIMATE_INDICATOR = true;
+
+    private final Set<ObjectAnimator> indicatorAnimators = new HashSet<>();
+
     private int wishlistCount = 0;
 
     @SuppressLint("UseSparseArrays")
@@ -85,18 +96,23 @@ public class MainController extends BaseController implements MainMvpView {
     @BindView(R.id.home_viewpager)
     MainCustomViewPager mHomeViewPager;
 
+    @BindView(R.id.controller_nav_container)
+    ViewGroup mBottomNavigationContainer;
+
     @BindView(R.id.controller_home_bottom_nav)
     AHBottomNavigation mBottomNavigationView;
 
     @BindView(R.id.controller_main_line)
-    RelativeLayout mBeigeLine;
+    View mBottomNavigationUpperLine;
 
     @BindView(R.id.controller_nav_indicator)
-    LinearLayout mNavIndicatorView;
+    View mNavIndicatorView;
 
     @BindView(R.id.popup_host_frame)
     ViewGroup mPopupHostContainer;
 
+    @BindView(R.id.indicator_slidng)
+    View mIndicatorSliding;
     @BindView(R.id.indicator_1)
     View mIndicator1;
 
@@ -204,23 +220,23 @@ public class MainController extends BaseController implements MainMvpView {
         navigationAdapter.setupWithBottomNavigation(mBottomNavigationView);
         mBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         mBottomNavigationView.setDefaultBackgroundColor(mActivity.getResources().getColor(R.color.bottom_nav_background));
-        mBottomNavigationView.setAccentColor(mActivity.getResources().getColor(R.color.nav_dark_blue));
-        mBottomNavigationView.setInactiveColor(mActivity.getResources().getColor(R.color.beige));
-        mBottomNavigationView.getItem(1).setTitle("Brands");
-        mBottomNavigationView.getItem(2).setTitle("");
-        mBottomNavigationView.getItem(2).setColor(mActivity.getResources().getColor(R.color.nav_dark_blue));
+        mBottomNavigationView.setAccentColor(mActivity.getResources().getColor(R.color.bottom_nav_accent));
+        mBottomNavigationView.setInactiveColor(mActivity.getResources().getColor(R.color.bottom_nav_inactive));
+        readjustBottomNavigationViewLayoutWidth();
+
         mBottomNavigationView.setCurrentItem(SHOP_INDEX);
 
         mHomeButton.setOnClickListener(it -> {
             mBottomNavigationView.setCurrentItem(SHOP_INDEX);
         });
 
-        if (mPresenter.isTablet()) {
-            mNavIndicatorView.setVisibility(View.GONE);
-        }
-
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
-            resetIndicators(position);
+            if (WILL_ANIMATE_INDICATOR) {
+                final int oldPosition = mBottomNavigationView.getCurrentItem();
+                animateIndicator(oldPosition, position);
+            } else {
+                resetIndicators(position);
+            }
             switch (position) {
                 case SHOP_INDEX:
                     showShopController();
@@ -241,8 +257,6 @@ public class MainController extends BaseController implements MainMvpView {
                     return false;
             }
         });
-
-//        ADD "NEW" Badge to categories
 
         if (mPresenter.isInitialLaunch()) {
             mPresenter.setInitialLaunchFalse();
@@ -281,8 +295,33 @@ public class MainController extends BaseController implements MainMvpView {
         setupViewPager();
     }
 
+    @Override
+    public void onOrientationChanged(Configuration newConfiguration) {
+        super.onOrientationChanged(newConfiguration);
+        readjustBottomNavigationViewLayoutWidth();
+    }
+
+    // workaround to exactly wrap content in bottom navigation view
+    private void readjustBottomNavigationViewLayoutWidth() {
+        float minWidth = mActivity.getResources().getDimension(R.dimen.bottom_navigation_min_width);
+        float maxWidth = mActivity.getResources().getDimension(R.dimen.bottom_navigation_max_width);
+        if (mBottomNavigationView.getTitleState() == AHBottomNavigation.TitleState.ALWAYS_SHOW &&
+                mBottomNavigationView.getItemsCount() > 3) {
+            minWidth = mActivity.getResources().getDimension(R.dimen.bottom_navigation_small_inactive_min_width);
+            maxWidth = mActivity.getResources().getDimension(R.dimen.bottom_navigation_small_inactive_max_width);
+        }
+        final int layoutWidth = ScreenUtils.getScreenWidth(mActivity) - mBottomNavigationContainer.getPaddingLeft() - mBottomNavigationContainer.getPaddingRight();
+        float itemWidth = layoutWidth / (float) mBottomNavigationView.getItemsCount();
+        if (itemWidth < minWidth) {
+            itemWidth = minWidth;
+        } else if (itemWidth > maxWidth) {
+            itemWidth = maxWidth;
+        }
+        mBottomNavigationView.getLayoutParams().width = (int) (itemWidth * mBottomNavigationView.getItemsCount());
+    }
+
     private void resetIndicators(int index) {
-        if (!isViewBound()) {
+        if (!isViewBound() || !indicatorAnimators.isEmpty()) {
             return;
         }
         mIndicator1.setVisibility(View.INVISIBLE);
@@ -293,6 +332,179 @@ public class MainController extends BaseController implements MainMvpView {
         View view = mIndicators.get(index);
         if (view != null) {
             view.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void cancelIndicatorAnimators() {
+        final List<ObjectAnimator> arrayCopy = new ArrayList<>(indicatorAnimators);
+        for (ObjectAnimator objectAnimator : arrayCopy) {
+            objectAnimator.cancel();
+        }
+    }
+
+    private void animateIndicator(int oldIndex, int newIndex) {
+        if (!isViewBound()) {
+            return;
+        }
+        mIndicator1.setVisibility(View.INVISIBLE);
+        mIndicator2.setVisibility(View.INVISIBLE);
+        mIndicator3.setVisibility(View.INVISIBLE);
+        mIndicator4.setVisibility(View.INVISIBLE);
+        mIndicator5.setVisibility(View.INVISIBLE);
+        cancelIndicatorAnimators();
+        indicatorAnimators.clear();
+        mIndicatorSliding.setVisibility(View.VISIBLE);
+        final View oldIndicator = mIndicators.get(oldIndex);
+        final View newIndicator = mIndicators.get(newIndex);
+
+        final float scaleBase = 1f / (float) mIndicators.size();
+        final float scaleMax = (Math.abs(newIndex - oldIndex) + 1) * scaleBase;
+
+        final float medianIndex = ((float) mIndicators.size() + 1f) / 2f - 1f;
+        final float moveStartX = ((oldIndex - medianIndex) / (float) mIndicators.size()) * (float) mIndicatorSliding.getWidth();
+        final float moveEndX = ((newIndex - medianIndex) / (float) mIndicators.size()) * (float) mIndicatorSliding.getWidth();
+
+        if (newIndicator != null) {
+            if (oldIndicator == newIndicator) {
+                mIndicatorSliding.setVisibility(View.INVISIBLE);
+                newIndicator.setVisibility(View.VISIBLE);
+            } else if (oldIndicator != null) {
+                mIndicatorSliding.setAlpha(1f);
+
+                final ObjectAnimator animateScale = ObjectAnimator.ofFloat(mIndicatorSliding, View.SCALE_X, scaleBase, scaleMax, scaleBase);
+                animateScale.setDuration(INDICATOR_ANIMATION_DURATION);
+                animateScale.setInterpolator(new AccelerateDecelerateInterpolator());
+                animateScale.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(@NonNull Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(@NonNull Animator animator) {
+                        mIndicatorSliding.setScaleX(scaleBase);
+                        indicatorAnimators.remove(animateScale);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(@NonNull Animator animator) {
+                        mIndicatorSliding.setScaleX(scaleBase);
+                        indicatorAnimators.remove(animateScale);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(@NonNull Animator animator) {
+
+                    }
+                });
+                indicatorAnimators.add(animateScale);
+                animateScale.start();
+
+                final ObjectAnimator animateMove = ObjectAnimator.ofFloat(mIndicatorSliding, View.X, moveStartX, moveEndX);
+                animateMove.setDuration(INDICATOR_ANIMATION_DURATION);
+                animateMove.setInterpolator(new AccelerateDecelerateInterpolator());
+                animateMove.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(@NonNull Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(@NonNull Animator animator) {
+                        mIndicatorSliding.setX(moveEndX);
+                        mIndicatorSliding.setVisibility(View.INVISIBLE);
+                        newIndicator.setVisibility(View.VISIBLE);
+                        indicatorAnimators.remove(animateMove);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(@NonNull Animator animator) {
+                        mIndicatorSliding.setX(moveEndX);
+                        mIndicatorSliding.setVisibility(View.INVISIBLE);
+                        newIndicator.setVisibility(View.VISIBLE);
+                        indicatorAnimators.remove(animateMove);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(@NonNull Animator animator) {
+
+                    }
+                });
+                indicatorAnimators.add(animateMove);
+                animateMove.start();
+            } else {
+                mIndicatorSliding.setX(moveEndX);
+                mIndicatorSliding.setScaleX(scaleBase);
+                mIndicatorSliding.setAlpha(0f);
+                final ObjectAnimator fadeIn = ObjectAnimator.ofFloat(mIndicatorSliding, View.ALPHA, 1f);
+                fadeIn.setDuration(INDICATOR_ANIMATION_DURATION);
+                fadeIn.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(@NonNull Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(@NonNull Animator animator) {
+                        mIndicatorSliding.setAlpha(1f);
+                        mIndicatorSliding.setVisibility(View.INVISIBLE);
+                        newIndicator.setVisibility(View.VISIBLE);
+                        indicatorAnimators.remove(fadeIn);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(@NonNull Animator animator) {
+                        mIndicatorSliding.setAlpha(1f);
+                        mIndicatorSliding.setVisibility(View.INVISIBLE);
+                        newIndicator.setVisibility(View.VISIBLE);
+                        indicatorAnimators.remove(fadeIn);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(@NonNull Animator animator) {
+
+                    }
+                });
+                indicatorAnimators.add(fadeIn);
+                fadeIn.start();
+            }
+        } else {
+            if (oldIndicator != null) {
+                mIndicatorSliding.setX(moveStartX);
+                mIndicatorSliding.setScaleX(scaleBase);
+                mIndicatorSliding.setAlpha(1f);
+                final ObjectAnimator fadeOut = ObjectAnimator.ofFloat(mIndicatorSliding, View.ALPHA, 0f);
+                fadeOut.setDuration(INDICATOR_ANIMATION_DURATION);
+                fadeOut.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(@NonNull Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(@NonNull Animator animator) {
+                        mIndicatorSliding.setAlpha(0f);
+                        mIndicatorSliding.setVisibility(View.INVISIBLE);
+                        indicatorAnimators.remove(fadeOut);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(@NonNull Animator animator) {
+                        mIndicatorSliding.setAlpha(0f);
+                        mIndicatorSliding.setVisibility(View.INVISIBLE);
+                        indicatorAnimators.remove(fadeOut);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(@NonNull Animator animator) {
+
+                    }
+                });
+                indicatorAnimators.add(fadeOut);
+                fadeOut.start();
+            } else {
+                mIndicatorSliding.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -357,8 +569,8 @@ public class MainController extends BaseController implements MainMvpView {
 
     private void setupBrandsRouter(Router router, boolean willReset) {
         if (!router.hasRootController() || willReset) {
-            ShopsController shopsController = ShopsController.instanceWithBrandsOnlyFilter();
-            router.setRoot(RouterTransaction.with(shopsController)
+            TopBrandsController brandsController = TopBrandsController.newInstance();
+            router.setRoot(RouterTransaction.with(brandsController)
                     .popChangeHandler(new HorizontalChangeHandler()));
         }
     }
@@ -526,7 +738,7 @@ public class MainController extends BaseController implements MainMvpView {
     public void hideBottomNav() {
         if (mBottomNavigationView != null) {
             mBottomNavigationView.setVisibility(View.GONE);
-            mBeigeLine.setVisibility(View.GONE);
+            mBottomNavigationUpperLine.setVisibility(View.GONE);
             mNavIndicatorView.setVisibility(View.GONE);
             mHomeButton.setVisibility(View.GONE);
         }
@@ -536,14 +748,9 @@ public class MainController extends BaseController implements MainMvpView {
         if (mBottomNavigationView != null && mBottomNavigationView.getVisibility() == View.GONE) {
             mBottomNavigationView.setVisibility(View.VISIBLE);
             mBottomNavigationView.bringToFront();
-            mBeigeLine.setVisibility(View.VISIBLE);
+            mBottomNavigationUpperLine.setVisibility(View.VISIBLE);
             mHomeButton.setVisibility(View.VISIBLE);
             mHomeButton.bringToFront();
-            if (mPresenter.isTablet()) {
-                mNavIndicatorView.setVisibility(View.GONE);
-            } else {
-                mNavIndicatorView.setVisibility(View.VISIBLE);
-            }
         }
     }
 
@@ -701,7 +908,7 @@ public class MainController extends BaseController implements MainMvpView {
         mBottomNavigationView.setCurrentItem(BRANDS_INDEX, false);
         if (previousPagerPosition == BRANDS_INDEX) {
             Controller controller = getCurrentViewPagerController();
-            if (!mIsInitialSavedInstanceLoad && !(controller instanceof ShopsController)) {
+            if (!mIsInitialSavedInstanceLoad && !(controller instanceof TopBrandsController)) {
                 Router router = routers.get(BRANDS_INDEX);
                 if (router != null) {
                     ArrayList<RouterTransaction> backstack = new ArrayList<>();
@@ -750,8 +957,8 @@ public class MainController extends BaseController implements MainMvpView {
         }
         AHNotification notification = new AHNotification.Builder()
                 .setText(text)
-                .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.fluorescent_blue))
-                .setTextColor(ContextCompat.getColor(mActivity, R.color.black))
+                .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.bottom_nav_badge))
+                .setTextColor(ContextCompat.getColor(mActivity, R.color.bottom_nav_badge_text))
                 .build();
         mBottomNavigationView.setNotification(notification, WISHLIST_INDEX);
 
@@ -1013,8 +1220,8 @@ public class MainController extends BaseController implements MainMvpView {
     private void showNewTagOnCategory(boolean show) {
         AHNotification notification = new AHNotification.Builder()
                 .setText(show ? "NEW" : "")
-                .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.fluorescent_blue))
-                .setTextColor(ContextCompat.getColor(mActivity, R.color.white))
+                .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.bottom_nav_badge))
+                .setTextColor(ContextCompat.getColor(mActivity, R.color.bottom_nav_badge_text))
                 .build();
         mBottomNavigationView.setNotification(notification, CATEGORY_INDEX);
     }
@@ -1093,7 +1300,11 @@ public class MainController extends BaseController implements MainMvpView {
                         return;
                     }
                     String saleName = StringUtils.toTitleCase(
-                            directories.get(2).replace('-', ' '));
+                            StringUtils.fixApostropheS(
+                                    directories.get(2)
+                                            .replace('-', ' ')
+                                            .replace(" or ", " | ")
+                                            .replace(" and ", " & ")));
                     if (!directories.get(3).equals("s")) {
                         return;
                     }
@@ -1120,7 +1331,11 @@ public class MainController extends BaseController implements MainMvpView {
                         return;
                     }
                     String brandName = StringUtils.toTitleCase(
-                            directories.get(2).replace('-', ' '));
+                            StringUtils.fixApostropheS(
+                                    directories.get(2)
+                                            .replace('-', ' ')
+                                            .replace(" or ", " | ")
+                                            .replace(" and ", " & ")));
                     String brandId = directories.get(3);
                     deepLinkBrandProductList(brandName, brandId);
                 } else if (directories.get(1).equals("brands")) {
@@ -1170,9 +1385,11 @@ public class MainController extends BaseController implements MainMvpView {
             return;
         }
         String productName = StringUtils.toTitleCase(
-                directories.get(index + 1)
-                        .replace("-s-", "'s ")
-                        .replace('-', ' '));
+                StringUtils.fixApostropheS(
+                        directories.get(index + 1)
+                                .replace('-', ' ')
+                                .replace(" or ", " | ")
+                                .replace(" and ", " & ")));
         String productId = directories.get(index + 3);
         deepLinkSaleItemDetails(saleId, productId, productName);
     }
