@@ -27,5 +27,5 @@ print_yellow(){
     printf "\e[1;33m$1\e[0m"
 }
 
-expectedVersionName="8.8.0"
-expectedVersionCode="477"
+expectedVersionName="8.9.0"
+expectedVersionCode="482"
