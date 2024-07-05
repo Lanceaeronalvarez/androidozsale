@@ -751,6 +751,9 @@ public class MainController extends BaseController implements MainMvpView {
             mBottomNavigationUpperLine.setVisibility(View.VISIBLE);
             mHomeButton.setVisibility(View.VISIBLE);
             mHomeButton.bringToFront();
+            mBottomNavigationContainer.setVisibility(View.VISIBLE);
+            mNavIndicatorView.setVisibility(View.VISIBLE);
+            resetIndicators(mBottomNavigationView.getCurrentItem());
         }
     }
 
