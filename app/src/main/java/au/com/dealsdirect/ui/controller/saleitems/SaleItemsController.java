@@ -393,10 +393,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
-        public static final class FromTopBrands extends Parameters {
+        public static final class FromBrandClick extends Parameters {
             private String mBrandName;
 
-            public FromTopBrands(String brandName) {
+            public FromBrandClick(String brandName) {
                 mBrandName = brandName;
             }
 
@@ -889,10 +889,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
             controller.mSourceType = SourceType.SHOP_SEARCH;
             controller.mSearchQuery = searchQuery;
-        } else if (parameters instanceof Parameters.FromTopBrands) {
-            title = ((Parameters.FromTopBrands) parameters).getBrandName();
+        } else if (parameters instanceof Parameters.FromBrandClick) {
+            title = ((Parameters.FromBrandClick) parameters).getBrandName();
             controller.mSourceType = SourceType.SHOP_SEARCH;
             controller.mChipFilters.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, title, title));
+            controller.mSearchQuery = title;
         } else if (parameters instanceof Parameters.FromCategory) {
             title = ((Parameters.FromCategory) parameters).getTitle();
             controller.mCategoryKey = ((Parameters.FromCategory) parameters).getCategoryMap();
@@ -2719,7 +2720,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             SearchChipModel newChip = new SearchChipModel(chip.getFilterType(), chipTitle.replaceAll("[" + Settings.getSelectedCountry().currencySign + "]", ""));
             mUpdatedSelectedFilterList.add(newChip);
         }
-        if(mSourceType == SourceType.SELLER){
+        if (mSourceType == SourceType.SELLER) {
             mUpdatedSelectedFilterList.addAll(mChipFilters);
         }
         mPresenter.loadSaleItems(createSaleItemsRequest(mSelectedCategoryKeys, 0, mUpdatedSelectedFilterList));

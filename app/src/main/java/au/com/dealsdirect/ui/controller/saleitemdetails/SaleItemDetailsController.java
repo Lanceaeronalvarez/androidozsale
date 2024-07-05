@@ -4,6 +4,7 @@ import static android.graphics.Typeface.BOLD;
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
+import static au.com.dealsdirect.service.datacollection.registerservices.GenieEventService.getDataManager;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -33,7 +34,6 @@ import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -55,7 +55,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -75,7 +74,6 @@ import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
@@ -94,7 +92,6 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
@@ -115,7 +112,6 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemR
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
-import au.com.dealsdirect.listeners.OnHorizontalSwipeTouchListener;
 import au.com.dealsdirect.service.afterpay.AfterpayPanelViewHolder;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventRecommendedField;
@@ -125,7 +121,6 @@ import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.floatingimageviewer.FloatingImageViewerController;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.priceblock.SaleItemProductPriceBlockHelper;
@@ -156,12 +151,6 @@ import au.com.dealsdirect.utils.module.GateKeeper;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static android.graphics.Typeface.BOLD;
-import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
-import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
-import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
-import static au.com.dealsdirect.service.datacollection.registerservices.GenieEventService.getDataManager;
 
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView {
 
@@ -1160,7 +1149,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mSoldOutView.setVisibility(mIsSoldout != null && mIsSoldout ? View.VISIBLE : View.GONE);
 
         mProductBrand.setOnClickListener(v -> {
-            gotoProductListWithSearchQuery(mProductBrand.getText().toString());
+            gotoProductListWithBrand(mProductBrand.getText().toString());
         });
 
         mShippingPostcodeInput.addTextChangedListener(new TextWatcher() {
@@ -1180,21 +1169,21 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
         });
 
-        productImageRecyclerViewRightButton.setOnClickListener( v -> {
+        productImageRecyclerViewRightButton.setOnClickListener(v -> {
             currentSaleImagePosition += 1;
-            if(currentSaleImagePosition <= qualitySaleImages.size() - 1){
+            if (currentSaleImagePosition <= qualitySaleImages.size() - 1) {
                 mProductImagesRv.scrollToPosition(currentSaleImagePosition);
-            }else{
+            } else {
                 currentSaleImagePosition = qualitySaleImages.size() - 1;
             }
             ImageUtils.loadImageImmediate(qualitySaleImages.get(currentSaleImagePosition), mProductSharedImage, null);
         });
 
-        productImageRecyclerViewLeftButton.setOnClickListener( v -> {
+        productImageRecyclerViewLeftButton.setOnClickListener(v -> {
             currentSaleImagePosition -= 1;
-            if(currentSaleImagePosition >= 0){
+            if (currentSaleImagePosition >= 0) {
                 mProductImagesRv.scrollToPosition(currentSaleImagePosition);
-            }else{
+            } else {
                 currentSaleImagePosition = 0;
             }
             ImageUtils.loadImageImmediate(qualitySaleImages.get(currentSaleImagePosition), mProductSharedImage, null);
@@ -1211,17 +1200,17 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         setupPaymentMethodImages();
     }
 
-    private void setupPaymentMethodImages(){
+    private void setupPaymentMethodImages() {
 
         List<Integer> mData = new ArrayList<>();
         final boolean isGenoaPay = Settings.getSelectedCountry().countryId.equalsIgnoreCase("NZ");
 
         mData.add(R.drawable.paypal_logo_bw);
 
-        if (getDataManager().isAfterpayEnabled() ) {
+        if (getDataManager().isAfterpayEnabled()) {
             mData.add(R.drawable.afterpay_logo_bw);
         }
-        if (getDataManager().isLPayEnabled() ) {
+        if (getDataManager().isLPayEnabled()) {
             mData.add(R.drawable.lpay_logo_bw);
         }
         if (getDataManager().isKlarnaEnabled()) {
@@ -1230,7 +1219,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (getDataManager().isOurpayEnabled()) {
             mData.add(R.drawable.ourpay_method_logo);
         }
-        if (isGenoaPay ) {
+        if (isGenoaPay) {
             mData.add(R.drawable.genoa_logo_bw);
         }
 
@@ -1241,9 +1230,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mPaymentMethodImagesRV.setEnabled(false);
     }
 
-    private void gotoProductListWithSearchQuery(String searchKey) {
-        final SaleItemsController.Parameters.FromShopSearch parameters = new SaleItemsController.Parameters
-                .FromShopSearch(null, searchKey);
+    private void gotoProductListWithBrand(String brand) {
+        final SaleItemsController.Parameters.FromBrandClick parameters = new SaleItemsController.Parameters
+                .FromBrandClick(brand);
 
         gotoProductListWithParameters(parameters);
     }
@@ -1368,15 +1357,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         //update Images
 
         qualitySaleImages = getQualityImages(saleDetail.getImages());
-        if(!qualitySaleImages.isEmpty()){
+        if (!qualitySaleImages.isEmpty()) {
             ImageUtils.loadImageImmediate(qualitySaleImages.get(0), mProductSharedImage, null);
         }
-        if(qualitySaleImages.size() > 1){
+        if (qualitySaleImages.size() > 1) {
             mSelectorLayout.setVisibility(View.VISIBLE);
             int visibility = qualitySaleImages.size() <= 3 ? View.GONE : View.VISIBLE;
             productImageRecyclerViewLeftButton.setVisibility(visibility);
             productImageRecyclerViewRightButton.setVisibility(visibility);
-        }else{
+        } else {
             mSelectorLayout.setVisibility(View.GONE);
         }
 
@@ -1556,19 +1545,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(mProductDescriptionText != null){
-                        if(mProductDescriptionText.getHeight() > 1040){
+                    if (mProductDescriptionText != null) {
+                        if (mProductDescriptionText.getHeight() > 1040) {
                             mProductDescriptionText.getLayoutParams().height = 1040;
                             mProductDescriptionText.requestLayout();
                             mReadMoreText.setVisibility(View.VISIBLE);
                             mReadMoreText.setText(Html.fromHtml("<u>....read more</u>"));
-                            mReadMoreText.setOnClickListener( v -> {
-                                if(showFullDescription){
+                            mReadMoreText.setOnClickListener(v -> {
+                                if (showFullDescription) {
                                     showFullDescription = false;
                                     mProductDescriptionText.getLayoutParams().height = 1040;
                                     mProductDescriptionText.requestLayout();
                                     mReadMoreText.setText(Html.fromHtml("<u>....read more</u>"));
-                                }else{
+                                } else {
                                     showFullDescription = true;
                                     mProductDescriptionText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                                     mProductDescriptionText.requestLayout();
@@ -1648,7 +1637,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 onSelectTag(0);
             }
 
-        }else{
+        } else {
             isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
         }
 
@@ -1957,15 +1946,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         CartUtil.addValueToCart(1);
         mActivity.getMainController().updateBasketItemsQuantity();
 
-        if(isBuyNow){
+        if (isBuyNow) {
             isBuyNow = false;
             goToCheckoutScreen();
-        }else{
+        } else {
             addedToCartDialog();
         }
     }
 
-    private void addedToCartDialog(){
+    private void addedToCartDialog() {
         final Dialog dialog = new Dialog(mActivity, R.style.DialogTheme);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -2014,7 +2003,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         dialog.show();
     }
 
-    private void goToCheckoutScreen(){
+    private void goToCheckoutScreen() {
         Controller controller;
         controller = mPresenter.isTablet() ?
                 ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST) :
@@ -2354,7 +2343,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     void addToBasket(boolean now) {
-        if(mIsSoldout && mIsSoldOutCombined){
+        if (mIsSoldout && mIsSoldOutCombined) {
             return;
         }
         isBuyNow = now;
@@ -2667,10 +2656,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             float top = location[1];
             float alphaFactor = 1 - top / (float) mProductDetailsTitleLayout.getHeight();
 
-            if(alphaFactor > 0.5){
+            if (alphaFactor > 0.5) {
                 mToolbarItemBrandNameTextView.setVisibility(View.GONE);
             }
-            if(alphaFactor < 0){
+            if (alphaFactor < 0) {
                 mToolbarItemBrandNameTextView.setVisibility(View.VISIBLE);
             }
 

@@ -1183,8 +1183,7 @@ public class MainController extends BaseController implements MainMvpView {
         resetIndicators(BRANDS_INDEX);
         mHomeViewPager.setCurrentItem(BRANDS_INDEX);
 
-        SaleItemsController.Parameters.FromTopBrands parameters = new SaleItemsController
-                .Parameters.FromTopBrands(brandName);
+        SaleItemsController.Parameters.FromBrandClick parameters = new SaleItemsController.Parameters.FromBrandClick(brandName);
 
         SaleItemsController controller = SaleItemsController.newInstance(parameters);
 
