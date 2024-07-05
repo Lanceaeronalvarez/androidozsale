@@ -354,8 +354,8 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + ext.facebookAppId
             resValue "string", "fb_page_id", "161478120632146"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524892602"
-            resValue "string", "app_uri_hostname", "www.mysale.ph"
-            resValue "string", "app_uri_klarna", "www.mysale.ph.klarna"
+            resValue "string", "app_uri_hostname", "www.mysale.my"
+            resValue "string", "app_uri_klarna", "www.mysale.my.klarna"
 
             ext.newRelicAppToken = "AAfb90a146f4b17ba00df83492608b2d7057e99e16"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
@@ -378,8 +378,8 @@ android {
             resValue "string", "fb_login_protocol_scheme", "fb" + facebookAppId
             resValue "string", "fb_page_id", "161478120632146"
             resValue "string", "twitter_user_id", "twitter://user?user_id=524892602"
-            resValue "string", "app_uri_hostname", "www.mysale.ph"
-            resValue "string", "app_uri_klarna", "www.mysale.ph.klarna"
+            resValue "string", "app_uri_hostname", "www.mysale.my"
+            resValue "string", "app_uri_klarna", "www.mysale.my.klarna"
 
             ext.newRelicAppToken = "AAfb90a146f4b17ba00df83492608b2d7057e99e16"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
