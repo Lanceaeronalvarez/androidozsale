@@ -8,7 +8,6 @@ import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.address.addnewaddress.AddNewAddressController;
 import au.com.dealsdirect.ui.controller.address.viewaddress.ViewAddressController;
 import au.com.dealsdirect.ui.controller.afterpay.AfterpayViewController;
-import au.com.dealsdirect.ui.controller.bannerfilter.BannerFiltersController;
 import au.com.dealsdirect.ui.controller.brands.TopBrandsController;
 import au.com.dealsdirect.ui.controller.categories.NewCategoriesController;
 import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
@@ -150,8 +149,6 @@ public interface ControllerComponent {
     void inject(BaseController controller);
 
     void inject(SplashScreenController controller);
-
-    void inject(BannerFiltersController controller);
 
     void inject(DeliveryOptionsController controller);
 
