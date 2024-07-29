@@ -8,7 +8,7 @@ print_yellow "\n\nSTARTING AUTOMATION"
 
 # Getting Compile SDK Version
 print_blue "\n\nCHECKING COMPILE SDK"
-expectedCompileSDK="33"
+expectedCompileSDK="34"
 currentCompileSDK=$(./gradlew -q printCompileSdkVersion -PflavorName=$flavorName)
 if [ $expectedCompileSDK = "$currentCompileSDK" ]; then
 print_green "\nexpected compile sdk $expectedCompileSDK and current compile sdk $currentCompileSDK is the same\n"
@@ -30,7 +30,7 @@ fi
 
 # Checking target sdk version
 print_blue "\n\nCHECKING TARGET SDK"
-expectedTargetSDK="33"
+expectedTargetSDK="34"
 currentTargetSDK=$(./gradlew -q printTargetSdkVersion -PflavorName=$flavorName)
 if [ $expectedTargetSDK = "$currentTargetSDK" ]; then
 print_green "\nexpected target sdk $expectedTargetSDK and current target sdk $currentTargetSDK is the same\n"

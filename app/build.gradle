@@ -1,7 +1,11 @@
-apply plugin: 'com.android.application'
-apply plugin: 'newrelic'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
+import com.android.build.gradle.api.ApplicationVariant
+
+plugins {
+    id "com.android.application"
+    id "newrelic"
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
+}
 
 def buildType
 
@@ -14,7 +18,8 @@ android {
     }
 
     defaultConfig {
-        applicationId "au.com.dealsdirect.rc"
+        applicationId "au.com.dealsdirect"
+        namespace "au.com.dealsdirect"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
@@ -455,7 +460,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    configurations.all {
+    configurations.configureEach {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
     }
 
@@ -486,16 +491,16 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.databinding:databinding-runtime:8.1.1'
-    implementation 'androidx.databinding:databinding-adapters:8.1.1'
+    implementation 'androidx.databinding:databinding-runtime:8.5.1'
+    implementation 'androidx.databinding:databinding-adapters:8.5.1'
 
     // android support libraries
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.recyclerview:recyclerview:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.2.0'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.2.0'
 
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
@@ -530,8 +535,8 @@ dependencies {
 
     // code generator for view
     //noinspection AnnotationProcessorOnCompilePath
-    implementation 'com.jakewharton:butterknife:10.1.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
 
     // swipe view
@@ -559,8 +564,8 @@ dependencies {
     implementation 'me.relex:circleindicator:1.2.2@aar'
 
     // glide
-    def GLIDE_VERSION = "4.11.0"
-    implementation "com.zlc.glide:webpdecoder:1.6.${GLIDE_VERSION}"
+    def GLIDE_VERSION = "4.16.0"
+    implementation "com.github.zjupure:webpdecoder:2.6.${GLIDE_VERSION}"
     implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
 
@@ -593,23 +598,23 @@ dependencies {
     testImplementation "junit:junit:$rootProject.ext.junitVersion"
     testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
-    testImplementation 'org.json:json:20160810'
+    testImplementation 'org.json:json:20180813'
 
     // UI Testing
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.6.1'
     androidTestImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 
     // NR
-    implementation 'com.newrelic.agent.android:android-agent:6.2.1'
+    implementation 'com.newrelic.agent.android:android-agent:7.5.0'
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:29.1.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-messaging:23.2.1'
-    implementation 'com.google.firebase:firebase-crashlytics:18.4.1'
+    implementation 'com.google.firebase:firebase-messaging:24.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:19.0.3'
 
     //VISA CHECKOUT
     implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
@@ -619,15 +624,15 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
 
-    implementation 'com.google.android.gms:play-services-ads:22.4.0'
+    implementation 'com.google.android.gms:play-services-ads:23.2.0'
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // reCAPTCHA
-    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
+    implementation 'com.google.android.gms:play-services-safetynet:18.1.0'
 
     implementation 'com.stripe:stripe-android:20.23.1'
 
-    implementation 'com.google.android.gms:play-services-wallet:19.2.1'
+    implementation 'com.google.android.gms:play-services-wallet:19.4.0'
 
     // guava
     implementation "com.google.guava:guava:$rootProject.guavaVersion"
@@ -652,7 +657,7 @@ File newRelicProperties = new File("${project.projectDir.absolutePath}/newrelic.
 newRelicProperties.createNewFile()
 
 
-android.applicationVariants.all { variant ->
+android.applicationVariants.configureEach { variant ->
     variant.productFlavors.each { flavor ->
         def variantSuffix = variant.name.capitalize()
         def generateResourcesTask = project.tasks.getByName("compile${variantSuffix}Sources")
@@ -669,14 +674,14 @@ android.applicationVariants.all { variant ->
 
 }
 
-configurations.all {
+configurations.configureEach {
     resolutionStrategy.force "com.android.support:support-annotations:$supportLibrary"
 }
 
 //Below tasks is for automation checklist
-task printVersionName {
+tasks.register('printVersionName') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     println flavor.versionName
@@ -685,9 +690,9 @@ task printVersionName {
     }
 }
 
-task printVersionCode {
+tasks.register('printVersionCode') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     println flavor.versionCode
@@ -696,9 +701,9 @@ task printVersionCode {
     }
 }
 
-task printApplicationId {
+tasks.register('printApplicationId') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     println flavor.applicationId
@@ -707,9 +712,9 @@ task printApplicationId {
     }
 }
 
-task printCompileSdkVersion {
+tasks.register('printCompileSdkVersion') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     def value = project.getProperties().get("APP_NAME")
@@ -719,9 +724,9 @@ task printCompileSdkVersion {
     }
 }
 
-task printMinSdkVersion {
+tasks.register('printMinSdkVersion') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     println rootProject.ext.minSdkVersion
@@ -730,9 +735,9 @@ task printMinSdkVersion {
     }
 }
 
-task printTargetSdkVersion {
+tasks.register('printTargetSdkVersion') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     println rootProject.ext.targetSdkVersion
@@ -741,9 +746,9 @@ task printTargetSdkVersion {
     }
 }
 
-task printBuildToolsVersion {
+tasks.register('printBuildToolsVersion') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     println rootProject.ext.buildToolsVersion
@@ -752,9 +757,9 @@ task printBuildToolsVersion {
     }
 }
 
-task printSupportLibrary {
+tasks.register('printSupportLibrary') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     println rootProject.ext.supportLibrary
@@ -763,9 +768,9 @@ task printSupportLibrary {
     }
 }
 
-task printAppName {
+tasks.register('printAppName') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     println flavor.ext.appName
@@ -774,9 +779,9 @@ task printAppName {
     }
 }
 
-task printFacebookAppId {
+tasks.register('printFacebookAppId') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     println flavor.ext.facebookAppId
@@ -785,9 +790,9 @@ task printFacebookAppId {
     }
 }
 
-task printFacebookAppSecret {
+tasks.register('printFacebookAppSecret') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     println flavor.ext.facebookAppSecret
@@ -796,9 +801,9 @@ task printFacebookAppSecret {
     }
 }
 
-task printNewRelicAppToken {
+tasks.register('printNewRelicAppToken') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     println flavor.ext.newRelicAppToken
@@ -808,13 +813,13 @@ task printNewRelicAppToken {
 }
 
 
-task printDebugMode {
+tasks.register('printDebugMode') {
 
-    android.applicationVariants.all {
-        com.android.build.gradle.api.ApplicationVariant variant ->
+    android.applicationVariants.configureEach {
+        ApplicationVariant variant ->
 
             doLast {
-                android.productFlavors.all {
+                android.productFlavors.configureEach {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             if (variant.buildType.name.equalsIgnoreCase("Release")) {
@@ -830,10 +835,10 @@ task printDebugMode {
     }
 }
 
-task parseAdmobAppId {
+tasks.register('parseAdmobAppId') {
 
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     def xmlFile = "app/src/" + flavorName + "/res/values/strings.xml"
@@ -850,9 +855,9 @@ task parseAdmobAppId {
 
 }
 
-task parseAdmobBanners {
+tasks.register('parseAdmobBanners') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     def xmlFile = "app/src/" + flavorName + "/res/values/strings.xml"
@@ -868,9 +873,9 @@ task parseAdmobBanners {
     }
 }
 
-task parseAdmobProducts {
+tasks.register('parseAdmobProducts') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     def xmlFile = "app/src/" + flavorName + "/res/values/strings.xml"
@@ -886,9 +891,9 @@ task parseAdmobProducts {
     }
 }
 
-task parseAdmobAccount {
+tasks.register('parseAdmobAccount') {
     doLast {
-        android.productFlavors.all {
+        android.productFlavors.configureEach {
             flavor ->
                 if (flavorName.matches(flavor.name)) {
                     def xmlFile = "app/src/" + flavorName + "/res/values/strings.xml"
@@ -904,13 +909,13 @@ task parseAdmobAccount {
     }
 }
 
-task getLegacyVersion {
+tasks.register('getLegacyVersion') {
 
-    android.applicationVariants.all {
-        com.android.build.gradle.api.ApplicationVariant variant ->
+    android.applicationVariants.configureEach {
+        ApplicationVariant variant ->
 
             doLast {
-                android.productFlavors.all {
+                android.productFlavors.configureEach {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
@@ -927,12 +932,12 @@ task getLegacyVersion {
     }
 }
 
-task printCountryId {
+tasks.register('printCountryId') {
     android.applicationVariants.all {
-        com.android.build.gradle.api.ApplicationVariant variant ->
+        ApplicationVariant variant ->
 
             doLast {
-                android.productFlavors.all {
+                android.productFlavors.configureEach {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
@@ -949,12 +954,12 @@ task printCountryId {
     }
 }
 
-task printAccountId {
-    android.applicationVariants.all {
-        com.android.build.gradle.api.ApplicationVariant variant ->
+tasks.register('printAccountId') {
+    android.applicationVariants.configureEach {
+        ApplicationVariant variant ->
 
             doLast {
-                android.productFlavors.all {
+                android.productFlavors.configureEach {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
@@ -971,12 +976,12 @@ task printAccountId {
     }
 }
 
-task printGenieApi {
+tasks.register('printGenieApi') {
     android.applicationVariants.all {
-        com.android.build.gradle.api.ApplicationVariant variant ->
+        ApplicationVariant variant ->
 
             doLast {
-                android.productFlavors.all {
+                android.productFlavors.configureEach {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
@@ -993,12 +998,12 @@ task printGenieApi {
     }
 }
 
-task printCurrencyCode {
-    android.applicationVariants.all {
-        com.android.build.gradle.api.ApplicationVariant variant ->
+tasks.register('printCurrencyCode') {
+    android.applicationVariants.configureEach {
+        ApplicationVariant variant ->
 
             doLast {
-                android.productFlavors.all {
+                android.productFlavors.configureEach {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
@@ -1015,12 +1020,12 @@ task printCurrencyCode {
     }
 }
 
-task printRecaptcha {
-    android.applicationVariants.all {
-        com.android.build.gradle.api.ApplicationVariant variant ->
+tasks.register('printRecaptcha') {
+    android.applicationVariants.configureEach {
+        ApplicationVariant variant ->
 
             doLast {
-                android.productFlavors.all {
+                android.productFlavors.configureEach {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
