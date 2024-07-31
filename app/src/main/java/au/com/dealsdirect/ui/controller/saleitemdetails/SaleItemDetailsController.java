@@ -1974,8 +1974,15 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         TextView testSalePrice = (TextView) dialog.findViewById(R.id.item_price);
         testSalePrice.setText(mSalePrice);
 
+        String imageUrl = null;
+        if (qualitySaleImages != null && !qualitySaleImages.isEmpty()) {
+            imageUrl = qualitySaleImages.get(0);
+        }
+        if (imageUrl == null) {
+            imageUrl = mItemImageUrl;
+        }
         ImageView itemImageView = (ImageView) dialog.findViewById(R.id.item_image_view);
-        ImageUtils.loadImageImmediate(mItemImageUrl, itemImageView, null);
+        ImageUtils.loadImageImmediate(imageUrl, itemImageView, null);
 
         ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.added_to_cart_button_close);
         dialogButton.setOnClickListener(new View.OnClickListener() {
