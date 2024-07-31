@@ -1376,6 +1376,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mGridLayoutManager = gridLayoutManager;
         mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+        mSaleItemsAdapter.notifyDataSetChanged();
         mSaleItemsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -1557,8 +1558,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mGridLayoutManager = gridLayoutManager;
         mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
-
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+        mSaleItemsAdapter.notifyDataSetChanged();
     }
 
     private void setupSaleRemainingTime(String endDate) {
@@ -2566,6 +2567,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
         mSaleItemsAdapter.computeItemViewDimensions(mActivity);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+        mSaleItemsAdapter.notifyDataSetChanged();
         gridLayoutManager.scrollToPosition(currentScrollPosition);
 
         gridLayoutManager.setSpanCount(mSaleItemsAdapter.getColumnCount());
