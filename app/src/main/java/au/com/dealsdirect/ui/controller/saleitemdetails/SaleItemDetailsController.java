@@ -1840,7 +1840,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private void showAddToCartButton() {
         if (mAddToCartButton != null) {
-            if (!mIsSoldOutCombined || !mIsSoldout) {
+            if (!mIsSoldOutCombined || mIsSoldout == null || !mIsSoldout) {
                 if (mActivity.getResources().getBoolean(R.bool.is_sale_countdown_timer_enabled) &&
                         (mEndDate != null && !mEndDate.isEmpty()) &&
                         DateUtils.getRemainingTimeInMillis(mEndDate) >= 0 &&
@@ -2339,7 +2339,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     }
 
     void addToBasket(boolean now) {
-        if (mIsSoldout && mIsSoldOutCombined) {
+        if ((mIsSoldout != null && mIsSoldout) && mIsSoldOutCombined) {
             return;
         }
         isBuyNow = now;
@@ -2777,7 +2777,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 } else {
                     mProductImagesRv.setZ(0);
                     mProductDetailsButtonContainer.setVisibility(View.VISIBLE);
-                    mSoldOutView.setVisibility(mIsSoldout ? View.VISIBLE : View.GONE);
+                    mSoldOutView.setVisibility(mIsSoldout != null && mIsSoldout ? View.VISIBLE : View.GONE);
                 }
             }
 
