@@ -2110,7 +2110,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void setDynamicDiscount(String discountText) {
-        if (!IS_DISCOUNT_POG_ENABLED || discountText == null) {
+        if (!IS_DISCOUNT_POG_ENABLED ||
+                discountText == null ||
+                discountText.equalsIgnoreCase("null")) {
             mProductDiscountPogTextView.setVisibility(View.GONE);
             return;
         }
