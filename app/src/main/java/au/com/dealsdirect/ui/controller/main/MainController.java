@@ -298,11 +298,17 @@ public class MainController extends BaseController implements MainMvpView {
     @Override
     public void onOrientationChanged(Configuration newConfiguration) {
         super.onOrientationChanged(newConfiguration);
+        if (!isViewAttached()) {
+            return;
+        }
         readjustBottomNavigationViewLayoutWidth();
     }
 
     // workaround to exactly wrap content in bottom navigation view
     private void readjustBottomNavigationViewLayoutWidth() {
+        if (mActivity == null) {
+            return;
+        }
         float minWidth = mActivity.getResources().getDimension(R.dimen.bottom_navigation_min_width);
         float maxWidth = mActivity.getResources().getDimension(R.dimen.bottom_navigation_max_width);
         if (mBottomNavigationView.getTitleState() == AHBottomNavigation.TitleState.ALWAYS_SHOW &&
