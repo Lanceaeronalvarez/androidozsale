@@ -206,6 +206,8 @@
     <dimen name="controller_sale_items_tab_height">40dp</dimen>
     <!-- sum of filter tabs, search edittext and margins-->
     <dimen name="collapsing_toolbar_height">90dp</dimen>
+    <dimen name="sale_item_toolbar_border_height">1dp</dimen>
+    <dimen name="sale_item_result_count_height">48dp</dimen>
 
     <!-- Return -->
     <dimen name="return_card_height">450dp</dimen>
