@@ -598,8 +598,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private ArrayList<Pair<String, String>> mProductSizes = new ArrayList<>();
 
     private boolean mImagesLoaded = false;
-
-    private boolean mHasSizes = false;
     private int mSelectedSizeIndex = -1;
     private boolean mAllowSelectingSoldoutSizes = false;
     private int mFromPosition = -1;
@@ -664,8 +662,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     boolean showFullDescription = false;
 
     boolean isBuyNow = false;
-
-    boolean isSizeValid = false;
 
     private interface OnLoadProductDetails {
         void onLoad(SaleItemDetails saleDetails);
@@ -1607,11 +1603,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         if (!mProductSizes.isEmpty()) {
-            mSizesContainer.setVisibility(!mProductSizes.isEmpty() ? View.VISIBLE : View.GONE);
-            mHasSizes = true;
-            isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
+            mSizesContainer.setVisibility(View.VISIBLE);
 
-            TagAdapter mSizesAdapter = createTagAdapter(mProductSizes);
+            TagAdapter<Pair<String, String>> sizesAdapter = createTagAdapter(mProductSizes);
 
             mIsSoldOutCombined = true;
             for (SaleItemDetails response : mSkuVariants) {
@@ -1621,9 +1615,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 }
             }
 
-            mSizesFlowLayout.setAdapter(mSizesAdapter);
+            mSizesFlowLayout.setAdapter(sizesAdapter);
             if (mSelectedSizeIndex >= 0) {
-                mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(mSelectedSizeIndex));
+                sizesAdapter.setSelectedList(Sets.newHashSet(mSelectedSizeIndex));
             }
 
             mSizesFlowLayout.setOnTagClickListener((view, position, parent) -> false);
@@ -1638,7 +1632,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
 
         } else {
-            isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
+            mSizesContainer.setVisibility(View.GONE);
         }
 
         updatePriceDetails(saleDetail, false);
@@ -1975,7 +1969,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         textSaleName.setText(mSaleName);
 
         TextView textVariant = (TextView) dialog.findViewById(R.id.item_size);
-        textVariant.setText(isSizeValid ? mProductSizes.get(mSelectedSizeIndex).first : "");
+        textVariant.setText(mSelectedSizeIndex >= 0 && !mProductSizes.isEmpty() ? mProductSizes.get(mSelectedSizeIndex).first : "");
 
         TextView testSalePrice = (TextView) dialog.findViewById(R.id.item_price);
         testSalePrice.setText(mSalePrice);
@@ -2373,8 +2367,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         request.setUserClientType(String.valueOf(mPresenter.isTablet() ? AppConstants.ADD_TO_CART_TABLET :
                 AppConstants.ADD_TO_CART_PHONE));
 
-        isSizeValid = !(mHasSizes && mSelectedSizeIndex < 0);
-
         boolean isPersonalisationValid = mPersonalisationLayout.verifyRequiredFields();
 
         String personalisationError = !mPresenter.getPersonalisationErrorText().equals("") ?
@@ -2395,7 +2387,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                             PERSONALIZATION_SHAKE_DELAY);
 
 
-        } else if (!isSizeValid) {
+        } else if (mSelectedSizeIndex < 0 && !mProductSizes.isEmpty()) {
             bringAttentionToSizeSelection();
         } else {
             verifyAddToCart(request);
@@ -2721,13 +2713,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     private void onSelectTag(int index) {
         int selectedIndex = index;
-        boolean isVariant = true;
-
 
         if (selectedIndex < 0) {
-            isVariant = false;
             mSelectedSizeIndex = selectedIndex;
-            isSizeValid = false;
             return;
         }
 
@@ -2735,8 +2723,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (isSizeSoldOut && !mAllowSelectingSoldoutSizes) {
             selectedIndex = mSelectedSizeIndex;
             if (selectedIndex < 0) {
-                isVariant = false;
-                isSizeValid = false;
                 return;
             }
             isSizeSoldOut = mSkuVariants.get(selectedIndex).isSoldOut();
@@ -2763,8 +2749,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (mSizesNotSelectedNotice.getVisibility() == View.VISIBLE && mSelectedSizeIndex >= 0) {
             mSizesNotSelectedNotice.setVisibility(View.GONE);
         }
-
-        isSizeValid = true;
     }
 
 
