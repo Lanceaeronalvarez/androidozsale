@@ -1350,7 +1350,8 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <Button
                         android:id="@+id/product_details_add_to_basket"
@@ -1362,6 +1363,7 @@
                 </FrameLayout>
 
                 <LinearLayout
+                    android:id="@+id/product_details_cta_layout"
                     android:layout_width="match_parent"
                     android:layout_height="90dp"
                     android:background="@color/white"

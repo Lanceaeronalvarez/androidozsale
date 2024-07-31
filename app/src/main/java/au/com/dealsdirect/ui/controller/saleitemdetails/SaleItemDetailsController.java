@@ -583,6 +583,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.sold_out_text)
     TextView mSoldOutTextView;
 
+    @BindView(R.id.product_details_cta_layout)
+    LinearLayout mCTALayout;
+
     int[] mSharedImageLocation;
 
     public static final String TAG = SaleItemDetailsController.class.getSimpleName();
@@ -620,6 +623,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     int[] mCheckoutLocation = new int[2];
     boolean isAnimating = false;
     boolean willViewDisappear = false;
+
+    boolean isProductDetailsToolbarAnimating = false;
+    boolean isCTALayoutAnimating = false;
 
     ElasticDragDismissFrameLayout mRootView;
     View mCheckoutView;
@@ -1192,6 +1198,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mSizesContainer.setVisibility(View.GONE);
         mSizeGuideLinkView.setVisibility(View.GONE);
+
+        mCTALayout.setVisibility(View.GONE);
 
         setupPaymentMethodImages();
     }
@@ -2664,17 +2672,31 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 mToolbarItemBrandNameTextView.setVisibility(View.VISIBLE);
             }
 
-            if (mProductDetailsToolbar.getAnimation() == null && !willViewDisappear) {
+            if (!isProductDetailsToolbarAnimating && !willViewDisappear) {
                 switch (mProductDetailsToolbar.getVisibility()) {
                     case View.GONE:
                     case View.INVISIBLE:
                         if (alphaFactor > 0.5) {
                             mProductDetailsToolbar.setVisibility(View.VISIBLE);
-                            CommonUtils.fadeInView(mProductDetailsToolbar, null);
+                            isProductDetailsToolbarAnimating = true;
+                            CommonUtils.fadeInView(mProductDetailsToolbar, new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+                                    super.onAnimationCancel(animation);
+                                    isProductDetailsToolbarAnimating = false;
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    isProductDetailsToolbarAnimating = false;
+                                }
+                            });
                         }
                         break;
                     case View.VISIBLE:
                         if (alphaFactor < 0) {
+                            isProductDetailsToolbarAnimating = true;
                             CommonUtils.fadeOutView(mProductDetailsToolbar, new AnimatorListenerAdapter() {
                                 @Override
                                 public void onAnimationCancel(Animator animation) {
@@ -2682,6 +2704,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                     if (mProductDetailsToolbar != null) {
                                         mProductDetailsToolbar.setVisibility(View.GONE);
                                     }
+                                    isProductDetailsToolbarAnimating = false;
                                 }
 
                                 @Override
@@ -2690,10 +2713,53 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                                     if (mProductDetailsToolbar != null) {
                                         mProductDetailsToolbar.setVisibility(View.GONE);
                                     }
+                                    isProductDetailsToolbarAnimating = false;
                                 }
                             });
                         }
                         break;
+                }
+            }
+
+            if (!isCTALayoutAnimating && !willViewDisappear) {
+                int[] loc = new int[2];
+                mAddToWishlistButton.getLocationOnScreen(loc);
+                final int screenHeight = mActivity.getResources().getDisplayMetrics().heightPixels;
+                final boolean shouldShowCTA = loc[1] + (mAddToWishlistButton.getHeight() * 2) < screenHeight;
+
+                final View viewToFade = mCTALayout;
+                if (viewToFade.getVisibility() != View.VISIBLE && shouldShowCTA) {
+                    viewToFade.setVisibility(View.VISIBLE);
+                    CommonUtils.fadeInView(viewToFade, new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                            super.onAnimationCancel(animation);
+                            isCTALayoutAnimating = false;
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            isCTALayoutAnimating = false;
+                        }
+                    });
+                } else if (viewToFade.getVisibility() != View.GONE && !shouldShowCTA) {
+                    isCTALayoutAnimating = true;
+                    CommonUtils.fadeOutView(viewToFade, new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                            super.onAnimationCancel(animation);
+                            viewToFade.setVisibility(View.GONE);
+                            isCTALayoutAnimating = false;
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            viewToFade.setVisibility(View.GONE);
+                            isCTALayoutAnimating = false;
+                        }
+                    });
                 }
             }
         }
