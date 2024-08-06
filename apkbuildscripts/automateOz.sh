@@ -8,7 +8,6 @@ print_yellow "\n\nSTARTING AUTOMATION"
 
 # Getting Compile SDK Version
 print_blue "\n\nCHECKING COMPILE SDK"
-expectedCompileSDK="34"
 currentCompileSDK=$(./gradlew -q printCompileSdkVersion -PflavorName=$flavorName)
 if [ $expectedCompileSDK = "$currentCompileSDK" ]; then
 print_green "\nexpected compile sdk $expectedCompileSDK and current compile sdk $currentCompileSDK is the same\n"
@@ -19,7 +18,6 @@ fi
 
 # Checking min sdk version
 print_blue "\n\nCHECKING MIN SDK"
-expectedMinSDK="21"
 currentMinSDK=$(./gradlew -q printMinSdkVersion -PflavorName=$flavorName)
 if [ $expectedMinSDK = "$currentMinSDK" ]; then
 print_green "\nexpected min sdk $expectedMinSDK and current min sdk $currentMinSDK is the same\n"
@@ -30,7 +28,6 @@ fi
 
 # Checking target sdk version
 print_blue "\n\nCHECKING TARGET SDK"
-expectedTargetSDK="34"
 currentTargetSDK=$(./gradlew -q printTargetSdkVersion -PflavorName=$flavorName)
 if [ $expectedTargetSDK = "$currentTargetSDK" ]; then
 print_green "\nexpected target sdk $expectedTargetSDK and current target sdk $currentTargetSDK is the same\n"
@@ -41,7 +38,6 @@ fi
 
 # Checking Build tools version
 print_blue "\n\nCHECKING BUILD TOOLS VERSION"
-expectedBuildToolsVersion="33.0.2"
 currentBuildToolsVersion=$(./gradlew -q printBuildToolsVersion -PflavorName=$flavorName)
 if [ $expectedBuildToolsVersion = "$currentBuildToolsVersion" ]; then
 print_green "\nexpected build tools version $expectedBuildToolsVersion and current build tools version $currentBuildToolsVersion is the same\n"
@@ -52,7 +48,6 @@ fi
 
 # Checking Support library
 print_blue "\n\nCHECKING SUPPORT LIBRARY"
-expectedSupportLibrary="28.0.0"
 currentSupportLibrary=$(./gradlew -q printSupportLibrary -PflavorName=$flavorName)
 if [ $expectedSupportLibrary = "$currentSupportLibrary" ]; then
 print_green "\nexpected support library $expectedSupportLibrary and current support library $currentSupportLibrary is the same\n"
@@ -208,7 +203,6 @@ print_blue "\n\n\n Launched main activity\n"
 
 #Get Legacy Version after Main Activity launch
 print_blue "\nCHECKING LEGACY API VERSION"
-expectedLegacyVersion="3.31"
 currentLegacyVersion=$(./gradlew -q getLegacyVersion -PflavorName=$flavorName -PbuildTypeAssemble=$buildTypeAssemble)
 if [ $expectedLegacyVersion = "$currentLegacyVersion" ]; then
 print_green "\nexpected: $expectedLegacyVersion and current: $currentLegacyVersion is the same\n"
