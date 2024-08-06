@@ -106,7 +106,7 @@ public class GcmIntentService extends JobIntentService {
         intent.putExtra(GNotification.FCM_INTENT_LAUNCHED, true);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent resultIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
         Uri notificationSoundURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         String appName = getResources().getString(R.string.app_name);
