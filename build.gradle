@@ -8,12 +8,12 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath 'com.android.tools.build:gradle:8.1.4'
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
-        classpath 'com.google.gms:google-services:4.3.10'
+        classpath 'com.google.gms:google-services:4.4.2'
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3'
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:6.2.1"
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:7.5.0"
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -38,24 +38,24 @@ task clean(type: Delete) {
 ext {
     // Sdk and tools
     minSdkVersion = 21
-    targetSdkVersion = 33
-    compileSdkVersion = 33
+    targetSdkVersion = 34
+    compileSdkVersion = 34
     buildToolsVersion = '33.0.2'
 
     // App dependencies
     supportLibrary = '28.0.0'
-    gsonVersion = '2.8.1'
+    gsonVersion = '2.9.0'
     calligraphyVersion = '3.1.1'
     viewPumpVersion = '2.0.3'
 
     // Network
-    rx2FastAndroidNetworking = '1.0.0'
+    rx2FastAndroidNetworking = '1.0.2'
     cookieJarVersion = 'v1.0.1'
 
-    dagger2Version = '2.29'
-    rxjava2Version = '2.2.13'
+    dagger2Version = '2.51.1'
+    rxjava2Version = '2.2.21'
     rxandroidVersion = '2.1.1'
-    butterKnifeVersion = '8.8.1'
+    butterKnifeVersion = '10.2.3'
     greenDaoVersion = '3.2.2'
     placeholderviewVersion = '0.6.1'
     debugDBVersion = '1.0.0'
@@ -64,9 +64,9 @@ ext {
     numberPickerVersion = '2.4.4'
 
     //Test dependencies
-    junitVersion = '4.12'
+    junitVersion = '4.13.2'
     espressoVersion = '2.2.2'
-    mockitoVersion = '2.7.1'
+    mockitoVersion = '5.12.0'
 
     //Routing
     conductorVersion = '3.0.0-rc2'
@@ -77,7 +77,7 @@ ext {
     photoViewVersion = '2.0.0'
 
     braintreeVersion = '4.38.0'
-    facebookVersion = '16.0.0'
+    facebookVersion = '17.0.0'
 
     gcmVersion = '17.0.0'
     crystalRangeSeekbarVersion = '1.1.3'

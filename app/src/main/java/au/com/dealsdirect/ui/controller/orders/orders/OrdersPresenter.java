@@ -2,8 +2,8 @@ package au.com.dealsdirect.ui.controller.orders.orders;
 
 import com.androidnetworking.error.ANError;
 import com.google.gson.Gson;
-import com.newrelic.com.google.gson.JsonElement;
-import com.newrelic.com.google.gson.JsonParser;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import java.util.List;
 

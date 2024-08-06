@@ -22,8 +22,6 @@ public interface ShopsMvpView extends MvpView {
 
     void storeCategories(List<GetCategoryTreeResponse> categories);
 
-    void showTopBrands(List<GetTopBrandsResponse> topBrands);
-
     void unBindPaginate();
 
     boolean isChangeInProgress();

@@ -1,6 +1,5 @@
 package au.com.dealsdirect.data.network;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
@@ -372,7 +371,7 @@ public class AppApiHelper implements ApiHelper {
                 .addHeaders(mApiHeader.get())
                 .addQueryParameter(AppConstants.PARAM_SKUID, skuId)
                 .build()
-                .getObjectObservable(String.class);
+                .getStringObservable();
     }
 
     @Override
@@ -922,7 +921,7 @@ public class AppApiHelper implements ApiHelper {
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(createContactRequest))
                 .build()
-                .getObjectObservable(String.class);
+                .getStringObservable();
     }
 
     @Override
@@ -931,7 +930,7 @@ public class AppApiHelper implements ApiHelper {
                 .addHeaders(mApiHeader.get())
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(createContactRequest))
                 .build()
-                .getObjectObservable(String.class);
+                .getStringObservable();
     }
 
     @Override
@@ -941,7 +940,7 @@ public class AppApiHelper implements ApiHelper {
                 .addJSONObjectBody(JsonUtils.convertToJsonObject(createContactRequest))
                 .addPathParameter("number", createContactRequest.getNumber().toString())
                 .build()
-                .getObjectObservable(String.class);
+                .getStringObservable();
     }
 
     @Override
@@ -1531,7 +1530,7 @@ public class AppApiHelper implements ApiHelper {
                 .addPathParameter("number", Integer.toString(setAttachmentRequest.getNumber()))
                 .addPathParameter("id", setAttachmentRequest.getMessageId())
                 .build()
-                .getObjectObservable(String.class);
+                .getStringObservable();
     }
 
     @Override

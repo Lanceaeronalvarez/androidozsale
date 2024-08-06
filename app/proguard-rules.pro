@@ -78,6 +78,9 @@
 -keep class com.google.**
 -dontwarn com.google.**
 
+#Stripe
+-dontwarn com.stripe.android.stripecardscan.**
+
 #GreenDao
 -keepattributes *Annotation*
 -keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {

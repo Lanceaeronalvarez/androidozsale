@@ -346,7 +346,7 @@ public class TopBrandsController extends BaseController implements TopBrandsMvpV
 
             @Override
             public void onBrandClick(GetTopBrandsResponse brand) {
-                SaleItemsController.Parameters.FromTopBrands parameters = new SaleItemsController.Parameters.FromTopBrands(brand.getName());
+                SaleItemsController.Parameters.FromBrandClick parameters = new SaleItemsController.Parameters.FromBrandClick(brand.getName());
 
                 SaleItemsController controller = SaleItemsController.newInstance(parameters);
 

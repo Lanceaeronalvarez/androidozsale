@@ -187,19 +187,6 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
     }
 
     @Override
-    public void loadTopBrands() {
-        doApiCallForResponse(getDataManager().callGetTopBrands(), new AppApiCallback() {
-            @Override
-            public void onSuccess(List<?> response) {
-                super.onSuccess(response);
-                if (response != null && isViewAttached()) {
-                    getMvpView().showTopBrands((List<GetTopBrandsResponse>) response);
-                }
-            }
-        });
-    }
-
-    @Override
     public boolean isAccessAnonymousEnabled() {
         return getDataManager().getAccessAnonymousEnabled();
     }

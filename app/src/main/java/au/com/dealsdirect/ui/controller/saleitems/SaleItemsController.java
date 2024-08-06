@@ -11,6 +11,7 @@ import static au.com.dealsdirect.service.datacollection.core.DataCollector.Event
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -393,10 +394,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
         }
 
-        public static final class FromTopBrands extends Parameters {
+        public static final class FromBrandClick extends Parameters {
             private String mBrandName;
 
-            public FromTopBrands(String brandName) {
+            public FromBrandClick(String brandName) {
                 mBrandName = brandName;
             }
 
@@ -466,6 +467,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     public static final String TAG = SaleItemsController.class.getSimpleName();
     private static final long SEARCH_DELAY_MS = 1000; // milliseconds
     private static final long DELETE_DELAY_MS = 1250; // milliseconds
+    private static final long SALE_RESULTS_ANIMATION_DURATION = 200; // milliseconds
     private static final String CATEGORY_KEY_SEPARATOR = ">>>";
     private static final String CATEGORY_KEY_SEPARATOR_REPLACEMENT = " • ";
     private static final String CATEGORY_FILTER_TYPE = "Category";
@@ -514,6 +516,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private String mCategoryKeyFromCategorySearch = "";
 
     private boolean tabsLoaded = false;
+
+    private ValueAnimator searchResultAnimation = null;
+    private ValueAnimator toolbarAnimation = null;
 
     @BindView(R.id.controller_sale_items_main_container)
     ViewGroup mMainContainer;
@@ -581,7 +586,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     RecyclerView mBrandBubblesRecyclerView;
 
     @BindView(R.id.controller_sale_items_result_count)
-    TextView mSaleResultCount;
+    TextView mSaleResultCountTextView;
 
     @BindView(R.id.sale_item_filter_cardview)
     CardView mFilterCard;
@@ -620,7 +625,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     ChipGroup mChipGroup;
 
     @BindView(R.id.Search_term_Result)
-    TextView mSearchResultText;
+    TextView mSearchResultTextView;
 
     @BindView(R.id.partial_toolbar_logo)
     ImageView mLogo;
@@ -738,7 +743,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                         }
                     }, count >= before ? SEARCH_DELAY_MS : DELETE_DELAY_MS);
 
-            mSearchResultText.setText(mSearchQuery);
+            mSearchResultTextView.setText(mSearchQuery);
 
         }
 
@@ -889,10 +894,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             }
             controller.mSourceType = SourceType.SHOP_SEARCH;
             controller.mSearchQuery = searchQuery;
-        } else if (parameters instanceof Parameters.FromTopBrands) {
-            title = ((Parameters.FromTopBrands) parameters).getBrandName();
+        } else if (parameters instanceof Parameters.FromBrandClick) {
+            title = ((Parameters.FromBrandClick) parameters).getBrandName();
             controller.mSourceType = SourceType.SHOP_SEARCH;
             controller.mChipFilters.add(new SearchChipModel(BundleKeys.BRANDS_FACETFILTER_NAME, title, title));
+            controller.mSearchQuery = title;
         } else if (parameters instanceof Parameters.FromCategory) {
             title = ((Parameters.FromCategory) parameters).getTitle();
             controller.mCategoryKey = ((Parameters.FromCategory) parameters).getCategoryMap();
@@ -1226,14 +1232,14 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                             mActivity.getResources().getDrawable(R.drawable.logo_colored));
                     mSaleItemsToolbarSubTitleText.setText(subTitle);
                     if (!mCategoryKeyFromCategorySearch.equals("") && !mSelectedCategoryKeys.isEmpty()) {
-                        mSearchResultText.setText(title);
+                        mSearchResultTextView.setText(title);
                     }
                 } else if (mCategoryForTitle != null && !mCategoryForTitle.isEmpty()) {
                     mSaleItemsToolbarTitle.setText(mCategoryForTitle);
-                    mSearchResultText.setText(mCategoryForTitle);
+                    mSearchResultTextView.setText(mCategoryForTitle);
                 } else if (mTitle != null && !mTitle.isEmpty()) {
                     mSaleItemsToolbarTitle.setText(mTitle);
-                    mSearchResultText.setText(mTitle);
+                    mSearchResultTextView.setText(mTitle);
                 }
 
                 if (mSourceType != SourceType.CATEGORY_SEARCH) {
@@ -1375,6 +1381,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mGridLayoutManager = gridLayoutManager;
         mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+        mSaleItemsAdapter.notifyDataSetChanged();
         mSaleItemsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -1396,14 +1403,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                int itemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-
-                if (itemPosition == 0) {
-                    mSaleResultCount.setVisibility(View.VISIBLE);
-                    mToolbarBorder.setVisibility(View.GONE);
-                } else {
-                    mSaleResultCount.setVisibility(View.GONE);
-                    mToolbarBorder.setVisibility(View.VISIBLE);
+                if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                    final int itemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+                    showResultCount(itemPosition == 0);
                 }
             }
 
@@ -1556,8 +1558,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mGridLayoutManager = gridLayoutManager;
         mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
-
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+        mSaleItemsAdapter.notifyDataSetChanged();
     }
 
     private void setupSaleRemainingTime(String endDate) {
@@ -1662,7 +1664,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mGenieTotal = getSaleItemsResponse.total;
         mGenieQuery = getSaleItemsResponse.query;
 
-        mSaleResultCount.setText(mGenieTotal + " Results");
+        mSaleResultCountTextView.setText(mGenieTotal + " Results");
 
         for (SaleItemFacet facet : getSaleItemsResponse.getFacets()) {
             if (facet.getFacetName().equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
@@ -2565,6 +2567,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
         mSaleItemsAdapter.computeItemViewDimensions(mActivity);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
+        mSaleItemsAdapter.notifyDataSetChanged();
         gridLayoutManager.scrollToPosition(currentScrollPosition);
 
         gridLayoutManager.setSpanCount(mSaleItemsAdapter.getColumnCount());
@@ -2663,7 +2666,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             addCategoryKeyChipFromCategorySearch();
         } else {
             if (mSourceType == SourceType.CATEGORY_SEARCH) {
-                mSearchResultText.setText("All Products");
+                mSearchResultTextView.setText("All Products");
             }
         }
         callLoadSaleItems();
@@ -2719,7 +2722,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             SearchChipModel newChip = new SearchChipModel(chip.getFilterType(), chipTitle.replaceAll("[" + Settings.getSelectedCountry().currencySign + "]", ""));
             mUpdatedSelectedFilterList.add(newChip);
         }
-        if(mSourceType == SourceType.SELLER){
+        if (mSourceType == SourceType.SELLER) {
             mUpdatedSelectedFilterList.addAll(mChipFilters);
         }
         mPresenter.loadSaleItems(createSaleItemsRequest(mSelectedCategoryKeys, 0, mUpdatedSelectedFilterList));
@@ -2777,7 +2780,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void resetFromCategorySearchFilters() {
         mCategoryKeyFromCategorySearch = "";
-        mSearchResultText.setText("All Products");
+        mSearchResultTextView.setText("All Products");
         mInitialCategoryTree.clear();
         mHasCategoryTreeResponse = false;
         mShouldRefreshFacets = true;
@@ -3368,5 +3371,48 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         ImageUtils.loadImageGif(leaderboardBanner.getImage(), mLeaderBoardBanner);
+    }
+
+    private void showResultCount(boolean shouldShow) {
+        if ((searchResultAnimation != null && searchResultAnimation.isRunning()) ||
+                (toolbarAnimation != null && toolbarAnimation.isRunning())) {
+            return;
+        }
+
+        if ((mSaleResultCountTextView.getVisibility() == View.VISIBLE && shouldShow) ||
+                (mSaleResultCountTextView.getVisibility() == View.GONE && !shouldShow)) {
+            return;
+        }
+
+        final int searchResultTextViewHeight = (int) mActivity.getResources().getDimension(R.dimen.sale_item_result_count_height);
+        final int toolbarHeight = (int) mActivity.getResources().getDimension(R.dimen.sale_item_toolbar_border_height);
+
+        if (shouldShow) {
+            searchResultAnimation = ValueAnimator.ofInt(0, searchResultTextViewHeight);
+            toolbarAnimation = ValueAnimator.ofInt(toolbarHeight, 0);
+        } else {
+            searchResultAnimation = ValueAnimator.ofInt(searchResultTextViewHeight, 0);
+            toolbarAnimation = ValueAnimator.ofInt(0, toolbarHeight);
+        }
+
+        searchResultAnimation.addUpdateListener(valueAnimator -> {
+            int val = (Integer) valueAnimator.getAnimatedValue();
+            ViewGroup.LayoutParams layoutParams = mSaleResultCountTextView.getLayoutParams();
+            layoutParams.height = val;
+            mSaleResultCountTextView.setLayoutParams(layoutParams);
+            mSaleResultCountTextView.setVisibility(val > 0 ? View.VISIBLE : View.GONE);
+        });
+        searchResultAnimation.setDuration(SALE_RESULTS_ANIMATION_DURATION);
+        searchResultAnimation.start();
+
+        toolbarAnimation.addUpdateListener(valueAnimator -> {
+            int val = (Integer) valueAnimator.getAnimatedValue();
+            ViewGroup.LayoutParams layoutParams = mToolbarBorder.getLayoutParams();
+            layoutParams.height = val;
+            mToolbarBorder.setLayoutParams(layoutParams);
+            mToolbarBorder.setVisibility(val > 0 ? View.VISIBLE : View.GONE);
+        });
+        toolbarAnimation.setDuration(SALE_RESULTS_ANIMATION_DURATION);
+        toolbarAnimation.start();
     }
 }

@@ -47,7 +47,6 @@ import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse.LinkOptions;
-import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
@@ -61,8 +60,6 @@ import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapterHelper;
-import au.com.dealsdirect.ui.controller.shops.adapter.BrandsBannersAdapter;
-import au.com.dealsdirect.ui.controller.shops.adapter.BrandsBannersAdapterHelper;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.ResettableDimensions;
 import au.com.dealsdirect.ui.custom.SearchEditText;
@@ -95,14 +92,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private static final boolean BANNER_DIMENSIONS_TOGGLE_BUTTON_ENABLED = false;
     private static final BannerDimensionsOverride OVERRIDE_BANNER_DIMENSIONS_FOR_MOBILE = BannerDimensionsOverride.USE_NEW;
     private static final BannerDimensionsOverride OVERRIDE_BANNER_DIMENSIONS_FOR_TABLET = BannerDimensionsOverride.USE_NEW;
-    private static final BannerDimensionsOverride OVERRIDE_BRAND_BANNER_DIMENSIONS_FOR_MOBILE = BannerDimensionsOverride.USE_NEW;
-    private static final BannerDimensionsOverride OVERRIDE_BRAND_BANNER_DIMENSIONS_FOR_TABLET = BannerDimensionsOverride.USE_OLD;
 
     public static final String TAG = "ShopsController";
     public static final String KEY_CATEGORY_ID = "ShopController.KEY_CATEGORY_ID";
     public static final String KEY_CATEGORY_NAME = "ShopController.KEY_CATEGORY_NAME";
     public static final String KEY_CATEGORY_MAP = "ShopController.KEY_CATEGORY_KEY";
-    public static final String KEY_BRANDS_ONLY = "ShopController.BRANDS_ONLY";
     private static final String TEXT_ALL = "• All";
     private static final int INITIAL_BANNER_COUNT = 25;
 
@@ -159,9 +153,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private String mCategoryID;
     private String mCategoryName;
     private String mCategoryKey;
-
-    private boolean mIsBrandsOnly = false;
-
     private boolean mIsDeeplink = false;
     private boolean mHasSavedInstance = false;
 
@@ -325,18 +316,11 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         return new ShopsController(bundle);
     }
 
-    public static ShopsController instanceWithBrandsOnlyFilter() {
-        Bundle bundle = new BundleBuilder(new Bundle())
-                .putBoolean(ShopsController.KEY_BRANDS_ONLY, true).build();
-        return new ShopsController(bundle);
-    }
-
     public ShopsController(Bundle args) {
         super(args);
         mCategoryID = getArgs().getString(KEY_CATEGORY_ID);
         mCategoryName = getArgs().getString(KEY_CATEGORY_NAME);
         mCategoryKey = getArgs().getString(KEY_CATEGORY_MAP);
-        mIsBrandsOnly = getArgs().getBoolean(KEY_BRANDS_ONLY, false);
     }
 
     @Override
@@ -418,7 +402,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     @Override
     public void onViewDidAppear(Controller previousController) {
         super.onViewDidAppear(previousController);
-        if (!mIsBrandsOnly && !(previousController instanceof SaleItemsController) && !(mActivity.getMainController().getCurrentViewPagerController() instanceof ShopsController)) {
+        if (!(previousController instanceof SaleItemsController) && !(mActivity.getMainController().getCurrentViewPagerController() instanceof ShopsController)) {
             mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
             loadSlidingBanners();
             loadSponsoredBanners();
@@ -458,50 +442,37 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         });
         mSearchBarEditText.setHint(getResource().getString(R.string.search_tag));
 
-        if (!mIsBrandsOnly) {
-            mPaginateCallbacks = new Paginate.Callbacks() {
-                @Override
-                public void onLoadMore() {
-                    // Load next page of data (e.g. network or database)
-                    page++;
-                    bannerOffset += INITIAL_BANNER_COUNT;
-                    loadingInProgress = true;
-                    GetBannerRequest request;
-                    if (mIsDeeplink) {
-                        request = createDeepLinkBannerRequest(mCategoryID, bannerOffset, bannerLimit);
-                    } else {
-                        request = createBannerRequest(mCategoryID, bannerOffset, bannerLimit);
-                    }
-                    mPresenter.loadShopsBanner(request);
+        mPaginateCallbacks = new Paginate.Callbacks() {
+            @Override
+            public void onLoadMore() {
+                // Load next page of data (e.g. network or database)
+                page++;
+                bannerOffset += INITIAL_BANNER_COUNT;
+                loadingInProgress = true;
+                GetBannerRequest request;
+                if (mIsDeeplink) {
+                    request = createDeepLinkBannerRequest(mCategoryID, bannerOffset, bannerLimit);
+                } else {
+                    request = createBannerRequest(mCategoryID, bannerOffset, bannerLimit);
                 }
-
-                @Override
-                public boolean isLoading() {
-                    // Indicate whether new page loading is in progress or not
-                    return loadingInProgress;
-                }
-
-                @Override
-                public boolean hasLoadedAllItems() {
-                    // Indicate whether all data (pages) are loaded or not
-                    return hasLoadedAllItems;
-                }
-            };
-
-            if (mBannersAdapter != null) {
-                shopsControllerBannerRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBannersAdapter.getStickyRecyclerHeadersAdapter()));
+                mPresenter.loadShopsBanner(request);
             }
-        } else {
-            mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
-            mShopsControllerToolbarTextView.setText("Brands");
-            mShopsControllerToolbarLogo.setVisibility(View.GONE);
-            mShopsControllerCartButton.setImageDrawable(mActivity.getDrawable(R.drawable.ic_new_checkout));
-            mShopsControllerCartButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            shopsControllerSearchButton.setImageDrawable(mActivity.getDrawable(R.drawable.ic_search));
-            shopsControllerSearchButton.setVisibility(View.VISIBLE);
-            shopsControllerSearchButton.setImageTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.black)));
-            mSearchBarEditText.setVisibility(View.GONE);
-            shouldShowCartButton = true;
+
+            @Override
+            public boolean isLoading() {
+                // Indicate whether new page loading is in progress or not
+                return loadingInProgress;
+            }
+
+            @Override
+            public boolean hasLoadedAllItems() {
+                // Indicate whether all data (pages) are loaded or not
+                return hasLoadedAllItems;
+            }
+        };
+
+        if (mBannersAdapter != null) {
+            shopsControllerBannerRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mBannersAdapter.getStickyRecyclerHeadersAdapter()));
         }
 
         shopsControllerBannerRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -525,12 +496,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         if (mSales.isEmpty() && (mSalesFromCache == null || mSalesFromCache.isEmpty()) && !mHasSavedInstance) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-        } else if (!mIsBrandsOnly) {
-            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
-            loadSlidingBanners();
-            loadSponsoredBanners();
-            loadTrendingBrands();
         }
 
         if (mPreLoadedCategories.size() == 0) {
@@ -545,46 +510,20 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             mHasSavedInstance = false;
         }
 
-        if (mIsBrandsOnly) {
-            mPresenter.loadTopBrands();
-        } else {
-            goToSalesFromCategories(mCategoryID, mCategoryKey);
-        }
+        goToSalesFromCategories(mCategoryID, mCategoryKey);
 
         mPresenter.loadLeaderboardBanner(mCategoryID);
     }
 
     private void setupBannersView() {
         int orientation = ScreenUtils.getOrientation(mActivity);
-        if (mResettableDimensionsAdapter != null && ((!(mResettableDimensionsAdapter instanceof BrandsBannersAdapter) && mIsBrandsOnly) || (mResettableDimensionsAdapter instanceof BrandsBannersAdapter && !mIsBrandsOnly))) {
+        if (!(mResettableDimensionsAdapter instanceof BannersAdapter)) {
             mResettableDimensionsAdapter = null;
         }
         if (mResettableDimensionsAdapter == null) {
-            if (mIsBrandsOnly) {
-                mBannersAdapter = null;
-                BrandsBannersAdapter brandsBannersAdapter = new BrandsBannersAdapter(mActivity, new ArrayList<>(), orientation, getPrefersOldShopBannerDimensions(), mPresenter.isTablet(), new BrandsBannersAdapterHelper() {
-                    @Override
-                    public int getBannerColumnCount() {
-                        return mPresenter.getBannerColumnCount();
-                    }
-
-                    @Override
-                    public void onBannerClick(GetTopBrandsResponse brand) {
-
-                    }
-
-                    @Override
-                    public void onInfoClick(String title, String description) {
-
-                    }
-                });
-                shopsControllerBannerRecyclerView.setAdapter(brandsBannersAdapter);
-                mResettableDimensionsAdapter = brandsBannersAdapter;
-            } else {
-                mBannersAdapter = new BannersAdapter(mActivity, new ArrayList<>(), orientation, getPrefersOldShopBannerDimensions(), mPresenter.isTablet(), bannersAdapterHelper);
-                shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
-                mResettableDimensionsAdapter = mBannersAdapter;
-            }
+            mBannersAdapter = new BannersAdapter(mActivity, new ArrayList<>(), orientation, getPrefersOldShopBannerDimensions(), mPresenter.isTablet(), bannersAdapterHelper);
+            shopsControllerBannerRecyclerView.setAdapter(mBannersAdapter);
+            mResettableDimensionsAdapter = mBannersAdapter;
         } else {
             mResettableDimensionsAdapter.setupDimensions(orientation);
         }
@@ -733,7 +672,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private void resetDimensionToggleButton(boolean useOldDimensions) {
-        shopsControllerSearchButton.setVisibility(!BANNER_DIMENSIONS_TOGGLE_BUTTON_ENABLED || mPresenter.isTablet() || mIsBrandsOnly ? View.GONE : View.VISIBLE);
+        shopsControllerSearchButton.setVisibility(!BANNER_DIMENSIONS_TOGGLE_BUTTON_ENABLED || mPresenter.isTablet() ? View.GONE : View.VISIBLE);
         shopsControllerSearchButton.setImageResource(useOldDimensions ? R.drawable.shop_banner_toggle_list : R.drawable.shop_banner_toggle_grid);
     }
 
@@ -953,14 +892,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         super.refreshContents();
         if (isViewAttached() && mSales.isEmpty() && (mSalesFromCache == null || mSalesFromCache.isEmpty()) && !mHasSavedInstance && shopsControllerBannerRecyclerView != null) {
             shopsControllerBannerRecyclerView.setVisibility(View.GONE);
-            if (mIsBrandsOnly) {
-                mPresenter.loadTopBrands();
-            } else {
-                mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, INITIAL_BANNER_COUNT));
-                loadSlidingBanners();
-                loadSponsoredBanners();
-                loadTrendingBrands();
-            }
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, INITIAL_BANNER_COUNT));
+            loadSlidingBanners();
+            loadSponsoredBanners();
+            loadTrendingBrands();
         }
         resetBannerLayout();
         if (mShopAppBarLayout != null) {
@@ -972,44 +907,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void storeCategories(List<GetCategoryTreeResponse> categories) {
         mPreLoadedCategories = categories;
         createCategoryMap(mPreLoadedCategories);
-    }
-
-    @Override
-    public void showTopBrands(List<GetTopBrandsResponse> topBrands) {
-        if (!mIsBrandsOnly) {
-            return;
-        }
-
-        // TopBrands has no pagination yet??
-        unBindPaginate();
-        mPaginateManager = null;
-        mPaginateCallbacks = null;
-        loadingInProgress = false;
-        hasLoadedAllItems = true;
-
-        BrandsBannersAdapter adapter = new BrandsBannersAdapter(mActivity, topBrands, ScreenUtils.getOrientation(mActivity), getPrefersOldShopBannerDimensions(), mPresenter.isTablet(), new BrandsBannersAdapterHelper() {
-            @Override
-            public int getBannerColumnCount() {
-                return mPresenter.getBannerColumnCount();
-            }
-
-            @Override
-            public void onBannerClick(GetTopBrandsResponse brand) {
-                SaleItemsController.Parameters.FromTopBrands parameters = new SaleItemsController.Parameters.FromTopBrands(brand.getName());
-
-                SaleItemsController controller = SaleItemsController.newInstance(parameters);
-
-                getRouter().pushController(RouterTransaction.with(controller).tag(getResources().getString(R.string.sale_items_controller_tag)).pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler()));
-            }
-
-            @Override
-            public void onInfoClick(String title, String description) {
-                mActivity.showInfoDialog(title, description);
-            }
-        });
-        mResettableDimensionsAdapter = adapter;
-        shopsControllerBannerRecyclerView.setAdapter(adapter);
-        shopsControllerBannerRecyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -1151,14 +1048,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         if (isAttached()) {
             showLogoHeader();
         }
-        if (mIsBrandsOnly) {
-            mPresenter.loadTopBrands();
-        } else {
-            mPresenter.loadShopsBanner(createBannerRequest("", 0, 0));
-            loadSlidingBanners();
-            loadSponsoredBanners();
-            loadTrendingBrands();
-        }
+        mPresenter.loadShopsBanner(createBannerRequest("", 0, 0));
+        loadSlidingBanners();
+        loadSponsoredBanners();
+        loadTrendingBrands();
     }
 
     public void clearHorizontalBanners() {
@@ -1244,18 +1137,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         isRefreshShop = true;
         bannerOffset = 0;
 
-        if (mIsBrandsOnly) {
-            mPresenter.loadTopBrands();
+        if (mIsDeeplink) {
+            mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, bannerOffset, bannerLimit), true);
         } else {
-            if (mIsDeeplink) {
-                mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, bannerOffset, bannerLimit), true);
-            } else {
-                mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit), true);
-            }
-            loadSlidingBanners();
-            loadSponsoredBanners();
-            loadTrendingBrands();
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit), true);
         }
+        loadSlidingBanners();
+        loadSponsoredBanners();
+        loadTrendingBrands();
     }
 
     private GetBannerRequest createBannerRequest(String categoryId, int bannerOffset, int bannerLimit) {
@@ -1314,18 +1203,14 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     public void onRefreshBegin(PtrFrameLayout frame) {
         resetShopsBanners(mCategoryID);
 
-        if (mIsBrandsOnly) {
-            mPresenter.loadTopBrands();
+        if (mIsDeeplink) {
+            mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, 0, 0));
         } else {
-            if (mIsDeeplink) {
-                mPresenter.loadShopsBanner(createDeepLinkBannerRequest(mCategoryID, 0, 0));
-            } else {
-                mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
-            }
-            loadSlidingBanners();
-            loadSponsoredBanners();
-            loadTrendingBrands();
+            mPresenter.loadShopsBanner(createBannerRequest(mCategoryID, bannerOffset, bannerLimit));
         }
+        loadSlidingBanners();
+        loadSponsoredBanners();
+        loadTrendingBrands();
     }
 
     @Override
@@ -1434,7 +1319,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     public void refreshFromLogout() {
-        mIsBrandsOnly = false;
         bannerGroupType = "";
         resetShopsBanners("");
         mPresenter.loadShopsBanner(createBannerRequest("", 0, bannerLimit), true);
@@ -1448,12 +1332,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private boolean getPrefersOldShopBannerDimensions() {
-        BannerDimensionsOverride override;
-        if (mIsBrandsOnly) {
-            override = mPresenter.isTablet() ? OVERRIDE_BRAND_BANNER_DIMENSIONS_FOR_TABLET : OVERRIDE_BRAND_BANNER_DIMENSIONS_FOR_MOBILE;
-        } else {
-            override = mPresenter.isTablet() ? OVERRIDE_BANNER_DIMENSIONS_FOR_TABLET : OVERRIDE_BANNER_DIMENSIONS_FOR_MOBILE;
-        }
+        final BannerDimensionsOverride override;
+        override = mPresenter.isTablet() ? OVERRIDE_BANNER_DIMENSIONS_FOR_TABLET : OVERRIDE_BANNER_DIMENSIONS_FOR_MOBILE;
         switch (override) {
             case USE_OLD:
                 return true;

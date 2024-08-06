@@ -318,7 +318,12 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
         doApiCallForResponse(getDataManager().callDynamicDiscount(skuId), new AppApiCallback() {
             @Override
             public void onSuccess(Object o) {
-                if (o != null && isViewAttached()) getMvpView().setDynamicDiscount((String) o);
+                super.onSuccess();
+                if ((o instanceof String) && isViewAttached()) {
+                    getMvpView().setDynamicDiscount((String) o);
+                } else {
+                    getMvpView().setDynamicDiscount(null);
+                }
             }
 
             @Override

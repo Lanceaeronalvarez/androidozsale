@@ -1,7 +1,6 @@
 package au.com.dealsdirect.data.network;
 
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mysale.genie.utility.config.api.GetAppSettings;
 import com.mysale.genie.utility.config.api.GetAppSettingsConsent;
