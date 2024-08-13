@@ -13,9 +13,10 @@ import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
-import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
+import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.leaderboardbanner.LeaderboardPresenterHelper;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -166,6 +167,30 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                 });
     }
 
+    @Override
+    public void loadBestSellers(String category) {
+        doApiCallForResponse(
+                getDataManager().callBestSellers(category), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(List<?> response) {
+                        super.onSuccess(response);
+                        if (!isViewAttached()) {
+                            return;
+                        }
+                        getMvpView().showBestSellers((List<GetBestSellerResponse>) response);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                        if (!isViewAttached()) {
+                            return;
+                        }
+                        getMvpView().showBestSellers(null);
+                    }
+                });
+    }
+
     private void cancelPreviousLoadShopsBannerRequest() {
         if (mPreviousLoadShopsBannerRequest != null) {
             getCompositeDisposable().delete(mPreviousLoadShopsBannerRequest);
@@ -242,6 +267,86 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                         getMvpView().showLeaderboardBanner(null);
                     }
 
+                });
+    }
+
+    @Override
+    public int wishlistCount() {
+        return getDataManager().getWishlist().size();
+    }
+
+    @Override
+    public boolean isProductInWishlist(String productId) {
+        return getDataManager().isProductInWishlist(productId);
+    }
+
+    @Override
+    public void addProductToWishlist(String productId, String seoIdentifier, String masterProductId, ShopsMvpPresenter.WishlistDelayedCallback delayedCallback) {
+        getDataManager().addToWishlist(new WishlistObject() {
+            private String mProductId = productId;
+            private String mSeoId = seoIdentifier;
+            private String mMasterProductId = masterProductId;
+
+            @Override
+            public String getProductId() {
+                return mProductId;
+            }
+
+            @Override
+            public void setProductId(String id) {
+                mProductId = id;
+            }
+
+            @Override
+            public String getSeoId() {
+                return mSeoId;
+            }
+
+            @Override
+            public void setSeoId(String id) {
+                mSeoId = id;
+            }
+
+            @Override
+            public String getMasterProductId() {
+                return mMasterProductId;
+            }
+
+            @Override
+            public void setMasterProductId(String masterPId) {
+                mMasterProductId = masterPId;
+            }
+        }, () -> {
+            doApiCallForResponse(
+                    getDataManager().callAddToWishlist(productId, seoIdentifier),
+                    new AppApiCallback() {
+                        @Override
+                        public void onSuccess(Object response) {
+                            super.onSuccess(response);
+                            if (delayedCallback != null) {
+                                delayedCallback.performDelayedAction();
+                            }
+                        }
+                    });
+        });
+    }
+
+    @Override
+    public void removeProductFromWishlist(String productId, ShopsMvpPresenter.WishlistDelayedCallback delayedCallback) {
+        getDataManager().removeFromWishlist(
+                productId,
+                () -> {
+                    doApiCallForResponse(
+                            getDataManager().callRemoveFromWishlist(productId),
+                            new AppApiCallback() {
+                                @Override
+                                public void onSuccess(Object response) {
+                                    super.onSuccess(response);
+                                    if (delayedCallback != null) {
+                                        delayedCallback.performDelayedAction();
+                                    }
+                                }
+                            });
                 });
     }
 }

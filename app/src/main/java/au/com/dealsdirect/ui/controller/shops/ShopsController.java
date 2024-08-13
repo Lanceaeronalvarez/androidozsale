@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.shops;
 
+import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
 import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.ClickType.BANNER_CLICK;
 import static au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter.BannerStyle;
 import static au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter.BannerViewType;
@@ -50,6 +51,9 @@ import au.com.dealsdirect.data.network.model.banner.GetBannerResponse.LinkOption
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
+import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.EventParameters;
 import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
@@ -57,6 +61,8 @@ import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.datacollection.enums.FeatureUsageEventType;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.categories.CategoriesMvpView;
+import au.com.dealsdirect.ui.controller.saleitemdetails.HorizontalScrollingItemsAdapter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapterHelper;
@@ -171,6 +177,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private boolean mIsChangeInProgress = false;
 
     private boolean shouldShowCartButton = false;
+
+    private int lastBestSellerItemPosition = -1;
 
     private final BannersAdapterHelper bannersAdapterHelper = new BannersAdapterHelper() {
         @Override
@@ -382,6 +390,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         if (mBannersAdapter != null) {
             mBannersAdapter.restartHorizontalViewHolders();
         }
+
+        if (previousController instanceof SaleItemDetailsController) {
+            if (mBannersAdapter != null && mBannersAdapter.getBestSellersAdapter() != null &&
+                    lastBestSellerItemPosition >= 0) {
+                mBannersAdapter.getBestSellersAdapter().notifyItemChanged(lastBestSellerItemPosition);
+            }
+        }
     }
 
     @Override
@@ -407,6 +422,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             loadSlidingBanners();
             loadSponsoredBanners();
             loadTrendingBrands();
+            loadBestSellers();
             mActivity.getMainController().setSavedCurrentItem();
         }
 
@@ -549,6 +565,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                         case BannersAdapter.VIEW_HOLDER_TYPE_PROMO_BANNER:
                         case BannersAdapter.VIEW_HOLDER_TYPE_SLIDING_BANNER:
                         case BannersAdapter.VIEW_HOLDER_TYPE_TRENDING_BRANDS_WIDGET:
+                        case BannersAdapter.VIEW_HOLDER_TYPE_BEST_SELLERS_WIDGET:
                         case BannersAdapter.VIEW_HOLDER_TYPE_SPONSORED_BANNER:
                         case BannersAdapter.VIEW_HOLDER_TYPE_FOOTER:
                             return mResettableDimensionsAdapter.getNumberOfColumns();
@@ -888,6 +905,75 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     @Override
+    public void showBestSellers(List<GetBestSellerResponse> getBestSellerResponses) {
+        if (mBannersAdapter == null) {
+            setupBannersView();
+        }
+        if (mBannersAdapter == null) {
+            return;
+        }
+        if (getBestSellerResponses == null) {
+            mBannersAdapter.setBestSellersAdapter(null);
+            return;
+        }
+
+        final List<SaleItemProduct> items = new ArrayList<>(getBestSellerResponses);
+
+        HorizontalScrollingItemsAdapter adapter = null;
+        if (!items.isEmpty()) {
+            adapter = new HorizontalScrollingItemsAdapter(items, false);
+            adapter.setOnItemTappedListener(new HorizontalScrollingItemsAdapter.OnItemTappedListener() {
+                @Override
+                public void onItemTapped(SaleItemProduct item, int position, int size) {
+                    lastBestSellerItemPosition = position;
+
+                    SaleItemDetailsController.Parameters.FromSaleItemProduct parameters = new SaleItemDetailsController.Parameters.FromSaleItemProduct(item);
+
+                    RouterTransaction routerTransaction = RouterTransaction
+                            .with(SaleItemDetailsController.newInstance(parameters));
+
+                    routerTransaction = routerTransaction
+                            .pushChangeHandler(new HorizontalChangeHandler())
+                            .popChangeHandler(new HorizontalChangeHandler());
+
+                    getRouter().pushController(routerTransaction);
+                }
+
+                @Override
+                public void onPriceInfoTapped(SaleItemProduct item) {
+                    // TODO?
+                }
+            });
+
+            adapter.setWishlistListener(new HorizontalScrollingItemsAdapter.WishlistListener() {
+                @Override
+                public void addToWishlist(SaleItemProduct item) {
+                    final String productId = item.getId();
+                    ShopsMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
+                        logWishlistEvent(productId, true);
+                    };
+                    mPresenter.addProductToWishlist(item.getId(), item.getSeoIdentifier(), getMasterProductId(item), delayedCallback);
+                }
+
+                @Override
+                public void removeFromWishlist(SaleItemProduct item) {
+                    final String productId = item.getId();
+                    ShopsMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
+                        logWishlistEvent(productId, false);
+                    };
+                    mPresenter.removeProductFromWishlist(item.getId(), delayedCallback);
+                }
+
+                @Override
+                public boolean isProductInWishlist(SaleItemProduct item) {
+                    return mPresenter.isProductInWishlist(item.getId());
+                }
+            });
+        }
+        mBannersAdapter.setBestSellersAdapter(adapter);
+    }
+
+    @Override
     public void refreshContents() {
         super.refreshContents();
         if (isViewAttached() && mSales.isEmpty() && (mSalesFromCache == null || mSalesFromCache.isEmpty()) && !mHasSavedInstance && shopsControllerBannerRecyclerView != null) {
@@ -896,6 +982,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             loadSlidingBanners();
             loadSponsoredBanners();
             loadTrendingBrands();
+            loadBestSellers();
         }
         resetBannerLayout();
         if (mShopAppBarLayout != null) {
@@ -1009,6 +1096,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSlidingBanners();
         loadSponsoredBanners();
         loadTrendingBrands();
+        loadBestSellers();
     }
 
     private void resetShopsBanners(String categoryID) {
@@ -1052,6 +1140,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSlidingBanners();
         loadSponsoredBanners();
         loadTrendingBrands();
+        loadBestSellers();
     }
 
     public void clearHorizontalBanners() {
@@ -1108,6 +1197,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mPresenter.loadTrendingBrands(request);
     }
 
+    public void loadBestSellers() {
+        mPresenter.loadBestSellers(mCategoryID != null ? mCategoryID : "");
+    }
+
     private void showLogoHeader() {
         mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
         mShopsControllerToolbarTextView.setVisibility(View.GONE);
@@ -1145,6 +1238,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSlidingBanners();
         loadSponsoredBanners();
         loadTrendingBrands();
+        loadBestSellers();
     }
 
     private GetBannerRequest createBannerRequest(String categoryId, int bannerOffset, int bannerLimit) {
@@ -1211,6 +1305,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSlidingBanners();
         loadSponsoredBanners();
         loadTrendingBrands();
+        loadBestSellers();
     }
 
     @Override
@@ -1278,6 +1373,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 loadSlidingBanners();
                 loadSponsoredBanners();
                 loadTrendingBrands();
+                loadBestSellers();
             }
 
             mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
@@ -1325,6 +1421,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         loadSlidingBanners();
         loadSponsoredBanners();
         loadTrendingBrands();
+        loadBestSellers();
     }
 
     public boolean isFromCategories() {
@@ -1397,4 +1494,30 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         mBannersAdapter.setLeaderboardBanner(leaderboardBanner, onClick);
     }
 
+    private void logWishlistEvent(String productId, boolean liked) {
+        WishlistEventRequest request = new WishlistEventRequest();
+        request.setEventType(EventTypeId.EVENT_WISHLIST);
+
+        WishlistEventRequest.WishListInfo wishlistInfo = new WishlistEventRequest.WishListInfo();
+        request.setWishlistInfo(wishlistInfo);
+
+        wishlistInfo.setOperation(liked ? 1 : 0);
+        wishlistInfo.setProductId(productId);
+        wishlistInfo.setReferrer(PRODUCT_PAGE);
+        wishlistInfo.setProductsQuantity(mPresenter.wishlistCount());
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.WISHLIST_EVENT_REQUEST, request);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+
+        DataCollector.logEvent(Events.WishlistEvent, parameters);
+    }
+
+    private String getMasterProductId(SaleItemProduct item) {
+        if (item instanceof GetBestSellerResponse) {
+            return ((GetBestSellerResponse) item).getMasterProductId();
+        }
+        return null;
+    }
 }

@@ -125,6 +125,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.Verif
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
@@ -1605,6 +1606,15 @@ public class AppApiHelper implements ApiHelper {
                 .addPathParameter("sku_id", skuId)
                 .build()
                 .getObjectListObservable(GetYouMayAlsoLikeResponse.class);
+    }
+
+    @Override
+    public Observable<List<GetBestSellerResponse>> callBestSellers(String category) {
+        return Rx2AndroidNetworking.get(ApiEndPoint.bestSellers())
+                .addHeaders(mApiHeader.get())
+                .addQueryParameter("category", category)
+                .build()
+                .getObjectListObservable(GetBestSellerResponse.class);
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.util.List;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface ShopsMvpView extends MvpView {
@@ -19,6 +20,8 @@ public interface ShopsMvpView extends MvpView {
     void showSponsoredBanners(GetBannerResponse getBannerResponses);
 
     void showTrendingBrands(GetBannerResponse getBannerResponses);
+
+    void showBestSellers(List<GetBestSellerResponse> getBestSellerResponses);
 
     void storeCategories(List<GetCategoryTreeResponse> categories);
 

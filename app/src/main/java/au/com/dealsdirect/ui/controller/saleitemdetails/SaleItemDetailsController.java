@@ -349,6 +349,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 return mProductName;
             }
         }
+
+        public static final class FromSaleItemProduct extends Parameters {
+
+            private final SaleItemProduct saleItemProduct;
+
+            public FromSaleItemProduct(SaleItemProduct saleItemProduct) {
+                this.saleItemProduct = saleItemProduct;
+            }
+
+            public SaleItemProduct getSaleItemProduct() {
+                return saleItemProduct;
+            }
+        }
     }
 
     private final static int PERSONALIZATION_SHAKE_DELAY = 300; //milliseconds
@@ -759,6 +772,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             controller.mSeoIdentifierId = ((Parameters.FromDeepLink) parameters).getSeoIdentifierId();
             controller.mSaleName = ((Parameters.FromDeepLink) parameters).getProductName();
             controller.mOrigin = DataCollector.EventParameters.ViewSource.SALE;
+        } else if (parameters instanceof Parameters.FromSaleItemProduct) {
+            final SaleItemProduct item = ((Parameters.FromSaleItemProduct) parameters).getSaleItemProduct();
+            controller.mSaleId = item.getId();
+            controller.mSeoIdentifierId = item.getSeoIdentifier();
+            controller.mSaleName = item.getName();
+            controller.partialProductDetailsToShow = item;
         }
 
         return controller;

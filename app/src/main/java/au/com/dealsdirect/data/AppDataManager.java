@@ -132,6 +132,7 @@ import au.com.dealsdirect.data.network.model.ourpayverificationcodeconfirm.Verif
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneRequest;
 import au.com.dealsdirect.data.network.model.ourpayverificationnormalizephone.VerificationNormalizePhoneResponseBody;
 import au.com.dealsdirect.data.network.model.preferencecenter.UpdateEmailSubscriptionResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeDefaultResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPostcodeShippingPriceResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetPublicSaleDetailsRequest;
@@ -953,6 +954,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<List<GetYouMayAlsoLikeResponse>> callYouMayAlsoLike(String skuId) {
         return mApiHelper.callYouMayAlsoLike(skuId);
+    }
+
+    @Override
+    public Observable<List<GetBestSellerResponse>> callBestSellers(String category) {
+        return mApiHelper.callBestSellers(category);
     }
 
     @Override
