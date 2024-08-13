@@ -562,7 +562,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     ImageView mFreeShippingImageView;
 
     @BindView(R.id.add_wishlist_layout)
-    LinearLayout mAddToWishlistButton;
+    ViewGroup mAddToWishlistButton;
 
     @BindView(R.id.add_wishlist_text)
     TextView mAddWishListText;
