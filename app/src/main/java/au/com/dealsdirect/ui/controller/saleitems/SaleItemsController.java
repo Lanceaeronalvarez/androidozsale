@@ -1272,6 +1272,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSaleItemsToolbarField.removeTextChangedListener(mTextWatcher);
         hideKeyboard();
         hideBrandBubbles();
+        if (searchResultAnimation != null) {
+            searchResultAnimation.cancel();
+        }
+        if (toolbarAnimation != null) {
+            toolbarAnimation.cancel();
+        }
         super.onDetach(view);
     }
 
@@ -3396,6 +3402,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         searchResultAnimation.addUpdateListener(valueAnimator -> {
+            if (mSaleResultCountTextView == null) {
+                return;
+            }
             int val = (Integer) valueAnimator.getAnimatedValue();
             ViewGroup.LayoutParams layoutParams = mSaleResultCountTextView.getLayoutParams();
             layoutParams.height = val;
@@ -3406,6 +3415,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         searchResultAnimation.start();
 
         toolbarAnimation.addUpdateListener(valueAnimator -> {
+            if (mToolbarBorder == null) {
+                return;
+            }
             int val = (Integer) valueAnimator.getAnimatedValue();
             ViewGroup.LayoutParams layoutParams = mToolbarBorder.getLayoutParams();
             layoutParams.height = val;
