@@ -352,13 +352,13 @@ public class MainController extends BaseController implements MainMvpView {
         if (!isViewBound()) {
             return;
         }
+        cancelIndicatorAnimators();
+        indicatorAnimators.clear();
         mIndicator1.setVisibility(View.INVISIBLE);
         mIndicator2.setVisibility(View.INVISIBLE);
         mIndicator3.setVisibility(View.INVISIBLE);
         mIndicator4.setVisibility(View.INVISIBLE);
         mIndicator5.setVisibility(View.INVISIBLE);
-        cancelIndicatorAnimators();
-        indicatorAnimators.clear();
         mIndicatorSliding.setVisibility(View.VISIBLE);
         final View oldIndicator = mIndicators.get(oldIndex);
         final View newIndicator = mIndicators.get(newIndex);
