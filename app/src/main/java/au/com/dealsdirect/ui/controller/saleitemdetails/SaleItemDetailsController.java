@@ -599,6 +599,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     @BindView(R.id.product_details_cta_layout)
     LinearLayout mCTALayout;
 
+    @BindView(R.id.product_details_bottom_spacer)
+    View mBottomSpacer;
+
     int[] mSharedImageLocation;
 
     public static final String TAG = SaleItemDetailsController.class.getSimpleName();
@@ -2749,21 +2752,31 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                 final View viewToFade = mCTALayout;
                 if (viewToFade.getVisibility() != View.VISIBLE && shouldShowCTA) {
                     viewToFade.setVisibility(View.VISIBLE);
+                    mBottomSpacer.setVisibility(View.VISIBLE);
                     CommonUtils.fadeInView(viewToFade, new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationCancel(Animator animation) {
                             super.onAnimationCancel(animation);
+                            ViewGroup.LayoutParams layoutParams = mBottomSpacer.getLayoutParams();
+                            layoutParams.height = mCTALayout.getMeasuredHeight();
+                            mBottomSpacer.setLayoutParams(layoutParams);
+
                             isCTALayoutAnimating = false;
                         }
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
+                            ViewGroup.LayoutParams layoutParams = mBottomSpacer.getLayoutParams();
+                            layoutParams.height = mCTALayout.getMeasuredHeight();
+                            mBottomSpacer.setLayoutParams(layoutParams);
+
                             isCTALayoutAnimating = false;
                         }
                     });
                 } else if (viewToFade.getVisibility() != View.GONE && !shouldShowCTA) {
                     isCTALayoutAnimating = true;
+                    mBottomSpacer.setVisibility(View.GONE);
                     CommonUtils.fadeOutView(viewToFade, new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationCancel(Animator animation) {
