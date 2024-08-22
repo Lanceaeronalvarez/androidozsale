@@ -87,9 +87,9 @@ public abstract class WakefulBroadcastReceiver extends BroadcastReceiver {
             }
 
             intent.putExtra(EXTRA_WAKE_LOCK_ID, id);
-            ComponentName comp;
+            ComponentName comp = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                comp = context.startForegroundService(intent);
+//                comp = context.startForegroundService(intent);
                 GcmIntentService.enqueueWork(context, intent);
             } else {
                 comp = context.startService(intent);

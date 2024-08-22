@@ -16,19 +16,24 @@
 
 package au.com.dealsdirect.service.fcm;
 
+import android.Manifest;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -125,15 +130,20 @@ public class GcmIntentService extends JobIntentService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0, notificationBuilder.build());
 
         NotificationChannel generalChannel;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             generalChannel = new NotificationChannel(GENERAL_CHANNEL_ID, "General", NotificationManager.IMPORTANCE_HIGH);
 
             notificationManager.createNotificationChannel(generalChannel);
+        }
 
-            startForeground(0, notificationBuilder.build());
+        Notification notification = notificationBuilder.build();
+
+        notificationManager.notify(0, notificationBuilder.build());
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            NotificationManagerCompat.from(getApplicationContext()).notify(0, notification);
         }
     }
 
