@@ -1,16 +1,21 @@
 package au.com.dealsdirect.service.fcm;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -23,11 +28,10 @@ import au.com.dealsdirect.ui.main.MainActivity;
  */
 public class FirebaseBroadcastReceiver extends FirebaseMessagingService {
 
-    private NotificationManager notificationManager;
     private String notificationTitle = "";
 
     @Override
-    public void onMessageReceived(RemoteMessage message){
+    public void onMessageReceived(RemoteMessage message) {
 
         if (message.getNotification() != null) {
             notificationTitle = message.getNotification().getTitle();
@@ -51,9 +55,7 @@ public class FirebaseBroadcastReceiver extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
-        if (notificationManager == null) {
-            notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        }
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         builder = new NotificationCompat.Builder(context, GENERAL_CHANNEL_ID);
         builder.setContentTitle(title)
@@ -67,18 +69,20 @@ public class FirebaseBroadcastReceiver extends FirebaseMessagingService {
                 .setPriority(Notification.PRIORITY_HIGH);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager = (NotificationManager) context.getSystemService(NotificationManager.class);
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = notificationManager.getNotificationChannel(GENERAL_CHANNEL_ID);
             if (mChannel == null) {
                 mChannel = new NotificationChannel(GENERAL_CHANNEL_ID, appName, importance);
                 notificationManager.createNotificationChannel(mChannel);
             }
-
-            Notification notification = builder.build();
-            startForeground(NOTIFY_ID, notification);
         }
 
         Notification notification = builder.build();
         notificationManager.notify(NOTIFY_ID, notification);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            NotificationManagerCompat.from(context).notify(NOTIFY_ID, notification);
+        }
     }
 }
