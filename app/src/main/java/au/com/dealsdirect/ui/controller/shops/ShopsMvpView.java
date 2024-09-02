@@ -30,4 +30,6 @@ public interface ShopsMvpView extends MvpView {
     boolean isChangeInProgress();
 
     void showLeaderboardBanner(GetBannerResponse response);
+
+    void showPricingInfoText(String rrpText, Double totalPercentOff, Double originalPrice, String combinedPricingInfoText);
 }

@@ -312,10 +312,10 @@
     <color name="contact_us_escalate_background_color">#ffffff</color>
 
     <color name="price_block_price_drop">#000000</color>
-    <color name="price_block_right_text">#DF1E33</color>
-    <color name="price_block_right_background">#ffffff</color>
-    <color name="price_block_left_text">#ffffff</color>
-    <color name="price_block_left_background">#000000</color>
+    <color name="price_block_right_text">#000000</color>
+    <color name="price_block_right_background">@color/alice_blue</color>
+    <color name="price_block_left_text">#000000</color>
+    <color name="price_block_left_background">@color/fluorescent_blue</color>
     <color name="price_block_light_text">#616161</color>
     <color name="price_block_dark_text">#000000</color>
 

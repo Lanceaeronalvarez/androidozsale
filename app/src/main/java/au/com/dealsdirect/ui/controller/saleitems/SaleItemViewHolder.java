@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -57,6 +58,10 @@ public class SaleItemViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.vh_sale_item_container)
     ViewGroup layout;
 
+    @BindView(R.id.vh_sale_item_with_border_container)
+    @Nullable
+    ViewGroup layoutWithBorder;
+
     private final boolean isSupplierOriginalPriceInfoEnabled;
 
     private View.OnClickListener priceInfoOnClickListener = null;
@@ -69,6 +74,7 @@ public class SaleItemViewHolder extends RecyclerView.ViewHolder {
         super(view);
         ButterKnife.bind(this, view);
 
+        final ViewGroup layout = layoutWithBorder == null ? this.layout : this.layoutWithBorder;
         ViewGroup.LayoutParams params = layout.getLayoutParams();
         params.width = pair.first;
         params.height = pair.second;

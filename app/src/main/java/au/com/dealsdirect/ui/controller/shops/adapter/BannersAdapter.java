@@ -1,6 +1,6 @@
 package au.com.dealsdirect.ui.controller.shops.adapter;
 
-import static au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter.*;
+import static au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter.BannerStyle;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -259,13 +259,16 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             case VIEW_HOLDER_TYPE_BEST_SELLERS_WIDGET:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
+                float height = computeBestSellersGrid().getItemHeight();
+                height += context.getResources().getDimension(R.dimen.horizontal_banner_circle_indicator_height);
+                height += context.getResources().getDimension(R.dimen.margin_extra_small) * 2;
                 return new HorizontalRecyclerItemsViewHolder(
                         view,
-                        (int) computeBestSellersGrid().getItemHeight(),
+                        (int) height,
                         mBestSellersAdapter,
                         false,
                         false,
-                        HorizontalPageIndicatorAdapter.Style.CIRCLE);
+                        HorizontalPageIndicatorAdapter.Style.RECTANGLE);
             case VIEW_HOLDER_TYPE_SPONSORED_BANNER:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
                 return new HorizontalRecyclerBannerViewHolder(
@@ -301,6 +304,11 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             horizontalRecyclerViewHolder.onViewRecycled();
             horizontalRecyclerViewHolder.onViewRemoved();
             horizontalRecyclerViewHolders.remove(horizontalRecyclerViewHolder);
+        }
+        if (holder instanceof HorizontalRecyclerItemsViewHolder) {
+            HorizontalRecyclerItemsViewHolder viewHolder = (HorizontalRecyclerItemsViewHolder) holder;
+            viewHolder.onViewRecycled();
+            viewHolder.onViewRemoved();
         }
     }
 
@@ -538,6 +546,11 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             HorizontalRecyclerBannerViewHolder viewHolder = (HorizontalRecyclerBannerViewHolder) holder;
             viewHolder.onViewRecycled();
             horizontalRecyclerViewHolders.remove(viewHolder);
+            viewHolder.onViewRemoved();
+        }
+        if (holder instanceof HorizontalRecyclerItemsViewHolder) {
+            HorizontalRecyclerItemsViewHolder viewHolder = (HorizontalRecyclerItemsViewHolder) holder;
+            viewHolder.onViewRecycled();
             viewHolder.onViewRemoved();
         }
         super.onViewRecycled(holder);
@@ -867,7 +880,9 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return;
         }
         ImageUtils.Grid grid = computeBestSellersGrid();
-        mBestSellersAdapter.setupDimensions((int) grid.getItemWidth(), (int) grid.getItemHeight());
+        float height = grid.getItemHeight();
+        height += context.getResources().getDimension(R.dimen.margin_extra_small) * 2;
+        mBestSellersAdapter.setupDimensions((int) grid.getItemWidth(), (int) height);
     }
 
     public int getOffset() {

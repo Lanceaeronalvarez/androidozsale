@@ -11,10 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jakewharton.rxbinding2.view.RxView;
-
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;

@@ -12,10 +12,10 @@
         android:id="@+id/top_text_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_small"
         android:layout_marginBottom="@dimen/margin_tiny"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/margin_extra_small">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/top_left_text"
@@ -62,17 +62,17 @@
             android:id="@+id/price_block_constraint_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/alice_blue"
+            android:background="@color/price_block_right_background"
             android:orientation="horizontal">
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/price_block_tallside"
+                android:background="@color/price_block_left_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/separator_image_view"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/separator_image_view"
@@ -81,10 +81,10 @@
                 android:layout_marginLeft="-4dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/bg_price_block_center"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/left_text"
-                app:layout_constraintTop_toTopOf="parent"
-                android:visibility="gone"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/left_text"
@@ -94,40 +94,42 @@
                 android:gravity="center_vertical|left"
                 android:lineSpacingExtra="-6dp"
                 android:paddingLeft="16dp"
-                android:paddingBottom="@dimen/margin_small"
-                android:paddingRight="20dp"
                 android:paddingTop="@dimen/margin_small"
-                android:textColor="@color/black"
+                android:paddingRight="5dp"
+                android:paddingBottom="@dimen/margin_small"
+                android:textColor="@color/price_block_left_text"
                 android:textSize="@dimen/price_block_large_middle_left_text_size"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/right_text_layout"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="left side\ntaller"/>
+                tools:text="left side\ntaller" />
 
             <LinearLayout
                 android:id="@+id/right_text_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingTop="@dimen/margin_small"
+                android:paddingBottom="@dimen/margin_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/left_text"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:paddingTop="@dimen/margin_small"
-                android:paddingBottom="@dimen/margin_small"
-                android:orientation="vertical">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/right_text"
                     fontPath="@string/font_app_bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/transparent"
                     android:layout_gravity="right"
+                    android:layout_marginBottom="-2dp"
+                    android:background="@color/transparent"
                     android:paddingTop="2dp"
                     android:paddingRight="12dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/price_block_right_text"
                     android:textSize="@dimen/price_block_large_middle_right_text_size"
                     android:textStyle="bold"
                     android:visibility="visible"
@@ -137,11 +139,12 @@
                     android:id="@+id/right_text_bottom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/transparent"
                     android:layout_gravity="right"
+                    android:layout_marginTop="-2dp"
+                    android:background="@color/transparent"
                     android:paddingRight="12dp"
                     android:paddingBottom="2dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/price_block_right_text"
                     android:textSize="@dimen/price_block_large_middle_right_text_size"
                     android:visibility="visible"
                     tools:text="really long text" />
@@ -166,10 +169,10 @@
             android:layout_height="55dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="@dimen/marginBottom_10"
-            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:visibility="gone"
-            android:background="@drawable/free_shipping_new"/>
+            android:background="@drawable/free_shipping_new"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
 
     </LinearLayout>
 

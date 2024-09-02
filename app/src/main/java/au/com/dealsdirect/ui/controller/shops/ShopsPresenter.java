@@ -16,6 +16,8 @@ import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeRequest;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
+import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
+import au.com.dealsdirect.data.priceinfo.PricingInfoLoaderHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.leaderboardbanner.LeaderboardPresenterHelper;
@@ -27,6 +29,23 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
         ShopsMvpPresenter<V> {
 
     private Disposable mPreviousLoadShopsBannerRequest = null;
+
+    private PricingInfoLoaderHelper pricingInfoLoaderHelper = new PricingInfoLoaderHelper(new PricingInfoLoaderHelper.SaleItemProductLoader() {
+        @Override
+        public void load(String seoIdentifier, String saleId, PricingInfoLoaderHelper.SaleItemProductReceiver receiver) {
+            doApiCallForResponse(getDataManager().callGetSaleItemDetails(seoIdentifier), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    SaleItemDetails saleItemDetails = (SaleItemDetails) response;
+
+                    if (response != null) {
+                        receiver.receive(saleItemDetails);
+                    }
+                }
+            });
+        }
+    }, getDataManager());
 
     @Inject
     public ShopsPresenter(
@@ -348,6 +367,17 @@ public class ShopsPresenter<V extends ShopsMvpView> extends BasePresenter<V> imp
                                 }
                             });
                 });
+    }
+
+    @Override
+    public void getPricingInfoText(String seoIdentifier) {
+        pricingInfoLoaderHelper.getPricingInfo(seoIdentifier, null, (rrpText, totalPercentOff, originalPrice, combinedPricingInfoText) -> {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            getMvpView().showPricingInfoText(rrpText, totalPercentOff, originalPrice, combinedPricingInfoText);
+        });
     }
 }
 

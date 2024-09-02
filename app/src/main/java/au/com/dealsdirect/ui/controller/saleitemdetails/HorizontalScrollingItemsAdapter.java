@@ -24,8 +24,10 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
 
     private RecyclerView recyclerView = null;
 
-    public OnItemTappedListener onItemTappedListener = null;
-    public WishlistListener wishlistListener = null;
+    private OnItemTappedListener onItemTappedListener = null;
+
+    private OnPriceInfoTappedListener onPriceInfoTappedListener = null;
+    private WishlistListener wishlistListener = null;
 
     private final List<SaleItemProduct> mDataSource;
 
@@ -33,8 +35,11 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
 
     private final boolean isSupplierOriginalPriceInfoEnabled;
 
-    public HorizontalScrollingItemsAdapter(List<SaleItemProduct> dataSource, boolean isSupplierOriginalPriceInfoEnabled) {
+    private boolean isWithBorder;
+
+    public HorizontalScrollingItemsAdapter(List<SaleItemProduct> dataSource, boolean isWithBorder, boolean isSupplierOriginalPriceInfoEnabled) {
         mDataSource = new ArrayList<>(dataSource);
+        this.isWithBorder = isWithBorder;
         this.isSupplierOriginalPriceInfoEnabled = isSupplierOriginalPriceInfoEnabled;
     }
 
@@ -42,7 +47,9 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
     @Override
     public SaleItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.viewholder_sale_item, parent, false);
+                .inflate(isWithBorder ? R.layout.viewholder_sale_item_with_border : R.layout.viewholder_sale_item,
+                        parent,
+                        false);
         return new SaleItemViewHolder(view, new Pair<>(cellWidth, cellHeight), isSupplierOriginalPriceInfoEnabled, false);
     }
 
@@ -63,8 +70,16 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
 
         holder.setupViewHolderSkeleton(false);
         holder.setupViewHolder(saleItemProduct, imgUrl, isProductInWishlist);
-        holder.itemView.setOnClickListener(v -> onItemTappedListener.onItemTapped(saleItemProduct, virtualPosition, mDataSource.size()));
-        holder.setPriceInfoOnClickListener(v -> onItemTappedListener.onPriceInfoTapped(saleItemProduct));
+        if (onItemTappedListener == null) {
+            holder.itemView.setOnClickListener(null);
+        } else {
+            holder.itemView.setOnClickListener(v -> onItemTappedListener.onItemTapped(saleItemProduct, virtualPosition, mDataSource.size()));
+        }
+        if (onPriceInfoTappedListener == null) {
+            holder.setPriceInfoOnClickListener(null);
+        } else {
+            holder.setPriceInfoOnClickListener(v -> onPriceInfoTappedListener.onPriceInfoTapped(saleItemProduct));
+        }
         holder.setLikeButtonOnClickListener(v -> {
             if (wishlistListener != null) {
                 holder.setLiked(!holder.isLiked());
@@ -157,6 +172,15 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
         this.onItemTappedListener = onItemTappedListener;
     }
 
+
+    public OnPriceInfoTappedListener getOnPriceInfoTappedListener() {
+        return onPriceInfoTappedListener;
+    }
+
+    public void setOnPriceInfoTappedListener(OnPriceInfoTappedListener onPriceInfoTappedListener) {
+        this.onPriceInfoTappedListener = onPriceInfoTappedListener;
+    }
+
     public WishlistListener getWishlistListener() {
         return wishlistListener;
     }
@@ -210,7 +234,9 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
 
     public interface OnItemTappedListener {
         void onItemTapped(SaleItemProduct item, int position, int size);
+    }
 
+    public interface OnPriceInfoTappedListener {
         void onPriceInfoTapped(SaleItemProduct item);
     }
 

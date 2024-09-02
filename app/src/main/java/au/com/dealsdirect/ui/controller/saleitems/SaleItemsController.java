@@ -87,7 +87,6 @@ import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
-import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemFacet;
@@ -692,9 +691,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private Parameters mSavedParameters = null;
 
-    private final Map<String, String> rrpTextCache = new HashMap<>();
-    private final Map<String, String> pricingTextCache = new HashMap<>();
-
     private TextWatcher mTextWatcher = new TextWatcher() {
         private Timer mTextWatcherTimer = null;
 
@@ -825,16 +821,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         @Override
         public void onPriceInfoClicked(SaleItemProduct item) {
-            String rrpText = rrpTextCache.get(item.getId());
-            String pricingText = pricingTextCache.get(item.getId());
-            if (mActivity.getSupplierOriginalPriceInfoHelper() != null) {
-                showItemPricingInfoView(mActivity.getSupplierOriginalPriceInfoHelper().getOriginalPriceInfoWebViewContent(rrpText, item));
-            } else if (rrpText != null) {
-                showItemPricingInfoView(getPricingInfo(rrpText, pricingText));
-            }
-            if (rrpText == null) {
-                mPresenter.loadProductDetails(mSaleId, item.getSeoIdentifier());
-            }
+            mPresenter.getPricingInfoText(item.getSeoIdentifier(), mSaleId);
         }
     };
 
@@ -1104,7 +1091,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
                     if (mActivity.getSupplierOriginalPriceInfoHelper() != null &&
                             SupplierOriginalPriceInfoHelper.shouldShowSaleNotice(mPresenter.getSupplierOriginaPriceInfoTimeAgreed())) {
-                        showPricingInfoView();
+                        showSaleListNoticeBottomPopupView();
                     }
                     break;
                 case WISHLIST:
@@ -2031,20 +2018,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 mSaleEndsInText.setVisibility(View.VISIBLE);
                 setupSaleRemainingTime(mEndDate);
             }
-        }
-    }
-
-    @Override
-    public void productDetailsReceived(SaleItemDetails productDetails) {
-        rrpTextCache.put(productDetails.getProductId(), productDetails.getRrpText());
-        pricingTextCache.put(productDetails.getProductId(), productDetails.getPricing());
-        if (mActivity.getSupplierOriginalPriceInfoHelper() != null) {
-            updatePricingInfoViewContent(
-                    mActivity.getSupplierOriginalPriceInfoHelper().getOriginalPriceInfoWebViewContent(
-                            productDetails.getRrpText(), productDetails));
-        } else {
-            final String pricingInfoText = getPricingInfo(productDetails.getRrpText(), productDetails.getPricing());
-            showItemPricingInfoView(pricingInfoText);
         }
     }
 
@@ -3233,17 +3206,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         return mPresenter.isTablet();
     }
 
-    private static String getPricingInfo(String rrpText, String pricingText) {
-        String pricingInfoText = rrpText;
-        if (pricingInfoText != null && !pricingInfoText.isEmpty()) {
-            pricingInfoText += "<br/><br/>";
-        }
-        if (pricingInfoText == null) {
-            pricingInfoText = pricingText;
+    @Override
+    public void showPricingInfoText(String rrpText, Double totalPercentOff, Double originalPrice, String combinedPricingInfoText) {
+        if (mActivity.getSupplierOriginalPriceInfoHelper() != null) {
+            showItemPricingInfoView(
+                    mActivity.getSupplierOriginalPriceInfoHelper()
+                            .getOriginalPriceInfoWebViewContent(rrpText, totalPercentOff, originalPrice));
         } else {
-            pricingInfoText += pricingText;
+            showItemPricingInfoView(combinedPricingInfoText);
         }
-        return pricingInfoText;
     }
 
     private void showItemPricingInfoView(String pricingInfoText) {
@@ -3264,37 +3235,28 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         currentBottomPopupView.show(true);
     }
 
-    private void updatePricingInfoViewContent(String pricingInfoText) {
-        if (currentBottomPopupView == null) {
+    private void showSaleListNoticeBottomPopupView() {
+        if (mActivity.getSupplierOriginalPriceInfoHelper() == null) {
             return;
         }
 
+        if (currentBottomPopupView != null) {
+            currentBottomPopupView.dismiss(true);
+        }
+        currentBottomPopupView = mActivity.getSupplierOriginalPriceInfoHelper()
+                .createSaleListNoticeBottomPopupView(
+                        mMainContainer,
+                        () -> mPresenter.setSupplierOriginaPriceInfoTimeAgreed(System.currentTimeMillis()));
         if (currentBottomPopupView.getAdapter() instanceof BottomPopupWebViewContentAdapter) {
-            final BottomPopupWebViewContentAdapter adapter = (BottomPopupWebViewContentAdapter) currentBottomPopupView.getAdapter();
-            adapter.setWebViewContent(pricingInfoText);
+            ((BottomPopupWebViewContentAdapter) currentBottomPopupView.getAdapter()).setWebViewClientOverrideUrlLoading(url -> {
+                if (!url.contains("about:blank")) {
+                    ActivityLaunchUtil.launchActivity(mActivity, url);
+                }
+                return true;
+            });
         }
-    }
 
-    private void showPricingInfoView() {
-        if (mActivity.getSupplierOriginalPriceInfoHelper() != null) {
-            if (currentBottomPopupView != null) {
-                currentBottomPopupView.dismiss(true);
-            }
-            currentBottomPopupView = mActivity.getSupplierOriginalPriceInfoHelper()
-                    .createSaleListNoticeBottomPopupView(
-                            mMainContainer,
-                            () -> mPresenter.setSupplierOriginaPriceInfoTimeAgreed(System.currentTimeMillis()));
-            if (currentBottomPopupView.getAdapter() instanceof BottomPopupWebViewContentAdapter) {
-                ((BottomPopupWebViewContentAdapter) currentBottomPopupView.getAdapter()).setWebViewClientOverrideUrlLoading(url -> {
-                    if (!url.contains("about:blank")) {
-                        ActivityLaunchUtil.launchActivity(mActivity, url);
-                    }
-                    return true;
-                });
-            }
-
-            currentBottomPopupView.show(true);
-        }
+        currentBottomPopupView.show(true);
     }
 
     private void showCheckoutController() {

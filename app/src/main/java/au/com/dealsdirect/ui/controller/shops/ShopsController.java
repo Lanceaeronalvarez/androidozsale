@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -68,8 +69,11 @@ import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapterHelper;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.ResettableDimensions;
+import au.com.dealsdirect.ui.custom.BottomPopupView;
+import au.com.dealsdirect.ui.custom.BottomPopupWebViewContentAdapter;
 import au.com.dealsdirect.ui.custom.SearchEditText;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
+import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -106,12 +110,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private static final String TEXT_ALL = "• All";
     private static final int INITIAL_BANNER_COUNT = 25;
 
-    private static boolean SLIDING_BANNERS_ENABLED = true;
-    private static boolean TRENDING_BRANDS_ENABLED = true;
-    private static boolean SPONSORED_BANNERS_ENABLED = false;
+    private static final boolean SLIDING_BANNERS_ENABLED = true;
+    private static final boolean TRENDING_BRANDS_ENABLED = true;
+    private static final boolean BEST_SELLERS_ENABLED = true;
+    private static final boolean SPONSORED_BANNERS_ENABLED = false;
 
     @Inject
     ShopsMvpPresenter<ShopsMvpView> mPresenter;
+
+    @BindView(R.id.controller_shop_coordinator_layout)
+    CoordinatorLayout shopCoordinatorLayout;
 
     @BindView(R.id.controller_shop_banner_recycler)
     RecyclerView shopsControllerBannerRecyclerView;
@@ -147,6 +155,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private ResettableDimensions mResettableDimensionsAdapter = null;
     private Paginate.Callbacks mPaginateCallbacks;
     private Paginate mPaginateManager = null;
+
+    private BottomPopupView currentBottomPopupView = null;
 
     private int page = 0;
     private boolean loadingInProgress = false;
@@ -921,29 +931,23 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         HorizontalScrollingItemsAdapter adapter = null;
         if (!items.isEmpty()) {
-            adapter = new HorizontalScrollingItemsAdapter(items, false);
-            adapter.setOnItemTappedListener(new HorizontalScrollingItemsAdapter.OnItemTappedListener() {
-                @Override
-                public void onItemTapped(SaleItemProduct item, int position, int size) {
-                    lastBestSellerItemPosition = position;
+            adapter = new HorizontalScrollingItemsAdapter(items, true, false);
+            adapter.setOnItemTappedListener((item, position, size) -> {
+                lastBestSellerItemPosition = position;
 
-                    SaleItemDetailsController.Parameters.FromSaleItemProduct parameters = new SaleItemDetailsController.Parameters.FromSaleItemProduct(item);
+                SaleItemDetailsController.Parameters.FromSaleItemProduct parameters = new SaleItemDetailsController.Parameters.FromSaleItemProduct(item);
 
-                    RouterTransaction routerTransaction = RouterTransaction
-                            .with(SaleItemDetailsController.newInstance(parameters));
+                RouterTransaction routerTransaction = RouterTransaction
+                        .with(SaleItemDetailsController.newInstance(parameters));
 
-                    routerTransaction = routerTransaction
-                            .pushChangeHandler(new HorizontalChangeHandler())
-                            .popChangeHandler(new HorizontalChangeHandler());
+                routerTransaction = routerTransaction
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler());
 
-                    getRouter().pushController(routerTransaction);
-                }
-
-                @Override
-                public void onPriceInfoTapped(SaleItemProduct item) {
-                    // TODO?
-                }
+                getRouter().pushController(routerTransaction);
             });
+
+            adapter.setOnPriceInfoTappedListener(item -> mPresenter.getPricingInfoText(item.getSeoIdentifier()));
 
             adapter.setWishlistListener(new HorizontalScrollingItemsAdapter.WishlistListener() {
                 @Override
@@ -1198,6 +1202,10 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     public void loadBestSellers() {
+        if (!BEST_SELLERS_ENABLED) {
+            return;
+        }
+
         mPresenter.loadBestSellers(mCategoryID != null ? mCategoryID : "");
     }
 
@@ -1519,5 +1527,34 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
             return ((GetBestSellerResponse) item).getMasterProductId();
         }
         return null;
+    }
+
+    @Override
+    public void showPricingInfoText(String rrpText, Double totalPercentOff, Double originalPrice, String combinedPricingInfoText) {
+        if (mActivity.getSupplierOriginalPriceInfoHelper() != null) {
+            showItemPricingInfoView(
+                    mActivity.getSupplierOriginalPriceInfoHelper()
+                            .getOriginalPriceInfoWebViewContent(rrpText, totalPercentOff, originalPrice));
+        } else {
+            showItemPricingInfoView(combinedPricingInfoText);
+        }
+    }
+
+    private void showItemPricingInfoView(String pricingInfoText) {
+        if (currentBottomPopupView != null) {
+            currentBottomPopupView.dismiss(true);
+        }
+        final BottomPopupWebViewContentAdapter adapter = new BottomPopupWebViewContentAdapter();
+        currentBottomPopupView = new BottomPopupView(shopCoordinatorLayout, adapter);
+
+        adapter.setWebViewContent(pricingInfoText);
+        adapter.setOnCloseButtonClickListener(() -> currentBottomPopupView.dismiss(true));
+        adapter.setWebViewClientOverrideUrlLoading(url -> {
+            if (!url.contains("about:blank")) {
+                ActivityLaunchUtil.launchActivity(mActivity, url);
+            }
+            return true;
+        });
+        currentBottomPopupView.show(true);
     }
 }

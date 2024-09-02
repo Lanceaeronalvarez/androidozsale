@@ -23,8 +23,6 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
 
     void loadSaleItems(GetSaleItemsRequest getSaleItemsRequest);
 
-    void loadProductDetails(String saleId, String seoIdentifier);
-
     void loadSortingFacets();
 
     boolean isSortingEnabled();
@@ -50,4 +48,6 @@ public interface SaleItemsMvpPresenter<V extends SaleItemsMvpView> extends MvpPr
     int getHoursLeftToDisplayTimer();
 
     void loadLeaderboardBanner();
+
+    void getPricingInfoText(String seoIdentifier, String saleId);
 }

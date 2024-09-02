@@ -184,15 +184,16 @@ import au.com.dealsdirect.data.network.model.vouchers.GetVouchersResponse;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyRequest;
 import au.com.dealsdirect.data.network.model.vouchers.RemoveVoucherByKeyResponse;
 import au.com.dealsdirect.data.network.model.wishlist.GetWishlistIdResponse;
-import au.com.dealsdirect.data.network.model.zippay.ZipPayConfirmNzOrderRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipCreateChargeRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipCreateCheckoutResponse;
-import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicChargeRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipCreatePublicCheckoutRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayConfirmNzOrderRequest;
+import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderRequest;
 import au.com.dealsdirect.data.network.model.zippay.ZipPayCreateNzOrderResponse;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
+import au.com.dealsdirect.data.priceinfo.PricingInfoCacheHelper;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.data.wishlist.WishlistChangeListener;
 import au.com.dealsdirect.data.wishlist.WishlistHelper;
@@ -213,6 +214,7 @@ public class AppDataManager implements DataManager {
     private final WishlistHelper mWishlistHelper;
     private final CachedResponseHelper mCachedResponseHelper;
     private final TemplateTextsHelper mTemplateTextsHelper;
+    private final PricingInfoCacheHelper mPricingInfoCacheHelper;
 
     @Inject
     public AppDataManager(@ApplicationContext Context context,
@@ -221,7 +223,8 @@ public class AppDataManager implements DataManager {
                           AuthHelper authHelper,
                           WishlistHelper wishlistHelper,
                           CachedResponseHelper cachedResponseHelper,
-                          TemplateTextsHelper templateTextsHelper) {
+                          TemplateTextsHelper templateTextsHelper,
+                          PricingInfoCacheHelper pricingInfoCacheHelper) {
         mContext = context;
         mPreferencesHelper = preferencesHelper;
         mApiHelper = apiHelper;
@@ -229,6 +232,7 @@ public class AppDataManager implements DataManager {
         mWishlistHelper = wishlistHelper;
         mCachedResponseHelper = cachedResponseHelper;
         mTemplateTextsHelper = templateTextsHelper;
+        mPricingInfoCacheHelper = pricingInfoCacheHelper;
     }
 
     @Override
@@ -2132,5 +2136,45 @@ public class AppDataManager implements DataManager {
     @Override
     public int getHoursLeftToDisplayTimer() {
         return mPreferencesHelper.getHoursLeftToDisplayTimer();
+    }
+
+    @Override
+    public void cacheRrpText(String id, String rrpText) {
+        mPricingInfoCacheHelper.cacheRrpText(id, rrpText);
+    }
+
+    @Override
+    public String getCachedRrpText(String id) {
+        return mPricingInfoCacheHelper.getCachedRrpText(id);
+    }
+
+    @Override
+    public void cachePricingText(String id, String pricingText) {
+        mPricingInfoCacheHelper.cachePricingText(id, pricingText);
+    }
+
+    @Override
+    public String getCachedPricingText(String id) {
+        return mPricingInfoCacheHelper.getCachedPricingText(id);
+    }
+
+    @Override
+    public void cacheTotalPercentOff(String id, Double totalPercentOff) {
+        mPricingInfoCacheHelper.cacheTotalPercentOff(id, totalPercentOff);
+    }
+
+    @Override
+    public Double getCachedTotalPercentOff(String id) {
+        return mPricingInfoCacheHelper.getCachedTotalPercentOff(id);
+    }
+
+    @Override
+    public void cacheOriginalPrice(String id, Double originalPrice) {
+        mPricingInfoCacheHelper.cacheOriginalPrice(id, originalPrice);
+    }
+
+    @Override
+    public Double getCachedOriginalPrice(String id) {
+        return mPricingInfoCacheHelper.getCachedOriginalPrice(id);
     }
 }

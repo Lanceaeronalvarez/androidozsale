@@ -47,6 +47,8 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     void removeProductFromWishlist(String productId, WishlistDelayedCallback delayedCallback);
 
+    void getPricingInfoText(String seoIdentifier);
+
     interface WishlistDelayedCallback {
         void performDelayedAction();
     }

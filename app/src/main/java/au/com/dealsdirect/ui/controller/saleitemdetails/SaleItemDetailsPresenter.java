@@ -27,6 +27,7 @@ import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemR
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecentlyViewedItemResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.RecommendedItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
+import au.com.dealsdirect.data.priceinfo.PricingInfoLoaderHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.service.ourpay.OurpayError;
@@ -43,11 +44,24 @@ import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
-/**
- * .Created by smartwave on 08/06/2017.
- */
-
 public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends BasePresenter<V> implements SaleItemDetailsMvpPresenter<V> {
+
+    private PricingInfoLoaderHelper pricingInfoLoaderHelper = new PricingInfoLoaderHelper(new PricingInfoLoaderHelper.SaleItemProductLoader() {
+        @Override
+        public void load(String seoIdentifier, String saleId, PricingInfoLoaderHelper.SaleItemProductReceiver receiver) {
+            doApiCallForResponse(getDataManager().callGetSaleItemDetails(seoIdentifier), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    SaleItemDetails saleItemDetails = (SaleItemDetails) response;
+
+                    if (response != null) {
+                        receiver.receive(saleItemDetails);
+                    }
+                }
+            });
+        }
+    }, getDataManager());
 
     @Inject
     public SaleItemDetailsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
@@ -72,6 +86,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
                 if (response != null) {
                     getMvpView().showProductDetails(saleItemDetails);
+                    pricingInfoLoaderHelper.cacheItem(saleItemDetails, saleId);
                 }
 
                 getMvpView().hideLoading();
@@ -666,5 +681,16 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                     }
 
                 });
+    }
+
+    @Override
+    public void getPricingInfoText(String seoIdentifier, String saleId) {
+        pricingInfoLoaderHelper.getPricingInfo(seoIdentifier, saleId, (rrpText, totalPercentOff, originalPrice, combinedPricingInfoText) -> {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            getMvpView().showPricingInfoText(rrpText, totalPercentOff, originalPrice, combinedPricingInfoText);
+        });
     }
 }
