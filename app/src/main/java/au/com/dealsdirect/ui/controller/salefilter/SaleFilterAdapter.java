@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.checkbox.MaterialCheckBox;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,6 +24,7 @@ import java.util.Set;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
+import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
@@ -48,6 +51,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
     private List<GetCategoryTreeResponse> mCategoryItems = new ArrayList<>();
     private ArrayList<SortingResponse> mSortingList = new ArrayList<>();
     private ArrayList<String> mfilterCountList = new ArrayList<>();
+    private ArrayList<String> mSubCategoriesToShow = new ArrayList<>();
 
     public SaleFilterAdapter(Context context, SaleFilterClickListener clickListener, int filterLevel, List<?> data, List<String> tabTitles, String filterType, List<SearchChipModel> selectedFilters, List<GetCategoryTreeResponse> mCategoryTree, boolean showSubCategories, Set<String> categoryKeys, ArrayList<SortingResponse> sortingList, Boolean showSort, ArrayList<String> filterCountList, Boolean showColor, String categoryKey, String sourceType, boolean showCategory) {
         mContext = context;
@@ -60,16 +64,16 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
         mCategoryKey = categoryKey;
         mSourceType = sourceType;
         mShowCategory = showCategory;
-        if(showSubCategories){
+        if (showSubCategories) {
             mSelectedCategoryKeys.addAll(categoryKeys);
             transformData(mCategoryTree);
-        }else if(showSort){
+        } else if (showSort) {
             mShowSort = true;
             mSortingList.addAll(sortingList);
-            for(SortingResponse sortData: sortingList){
+            for (SortingResponse sortData : sortingList) {
                 mData.add(sortData.getTitle());
             }
-        }else{
+        } else {
             mfilterCountList.addAll(filterCountList);
             mData = (ArrayList<String>) tabTitles;
         }
@@ -88,146 +92,179 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
 
         holder.categoryText.setText(mData.get(position));
 
-        if(mFilterLevel == 1){
-            if(mData.get(position).contains("Sort") || mData.get(position).contains("Delivery") || mData.get(position).contains("New arrival") ){
+        if (mFilterLevel == 1) {
+            if (mData.get(position).contains("Sort") || mData.get(position).contains("Delivery") || mData.get(position).contains("New arrival")) {
                 holder.saleFilterTile.setVisibility(View.GONE);
             }
-            if(mShowColor == false && mData.get(position).contains("Color")){
+            if (mShowColor == false && mData.get(position).contains("Color")) {
                 holder.saleFilterTile.setVisibility(View.GONE);
             }
-            if(mShowCategory == false && mData.get(position).equals("Category")){
+            if (mShowCategory == false && mData.get(position).equals("Category")) {
                 holder.saleFilterTile.setVisibility(View.GONE);
             }
             holder.itemView.setOnClickListener(view -> {
                 mSaleFilterAdapterClickListener.onCategoryClicked(mData.get(position), position);
             });
-        }else{
+        } else {
             holder.filterCheckbox.setVisibility(View.VISIBLE);
             holder.filterChevron.setVisibility(View.GONE);
             holder.productCountText.setVisibility(View.VISIBLE);
 
-            if(!mShowSort && mFilterType != BundleKeys.COLORS_FACETFILTER_NAME && !mfilterCountList.isEmpty()){
+            if (!mShowSort && mFilterType != BundleKeys.COLORS_FACETFILTER_NAME && !mfilterCountList.isEmpty()) {
                 holder.productCountText.setText("(" + mfilterCountList.get(position) + ")");
             }
 
-            if(mShowSubCategories){
+            if (mShowSubCategories) {
+                holder.filterCheckbox.setButtonDrawable(R.drawable.custom_checkbox_selector);
                 String currentCategoryKey = mCategoryItems.get(position).getKey();
                 RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.saleFilterTile.getLayoutParams();
-                if(Integer.valueOf(mfilterCountList.get(position)) <= 1){
+                if (Integer.valueOf(mfilterCountList.get(position)) <= 1) {
                     holder.productCountText.setVisibility(View.GONE);
                 }
 
-                if(mCategoryLevel.get(position) == 0){
+                if (!mCategoryItems.get(position).getChildren().isEmpty()) {
+                    holder.filterChevron.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    holder.filterChevron.setVisibility(View.VISIBLE);
+                    if (mSubCategoriesToShow.contains(mCategoryItems.get(position).getChildren().get(0).getKey())) {
+                        holder.filterChevron.setImageResource(R.drawable.ic_arrow_down);
+                        holder.filterChevron.setScaleY(-1f);
+                    } else {
+                        holder.filterChevron.setImageResource(R.drawable.ic_arrow_down);
+                        holder.filterChevron.setScaleY(1f);
+                    }
+                }
+
+                if (mCategoryLevel.get(position) == 0) {
                     holder.categoryText.setVisibility(View.GONE);
                     holder.parentCategoryName.setVisibility(View.VISIBLE);
                     holder.parentCategoryName.setText(mData.get(position));
-                    if(position != 0){
-                        lp.setMargins(0, 150, 0, 0);
-                        holder.saleFilterTile.setLayoutParams(lp);
+                } else {
+                    lp.setMargins((30 * mCategoryLevel.get(position)), 0, 0, 0);
+                    holder.saleFilterTile.setLayoutParams(lp);
+
+                    if (mSubCategoriesToShow.contains(mCategoryItems.get(position).getKey())) {
+                        holder.saleFilterTile.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.saleFilterTile.setVisibility(View.GONE);
                     }
                 }
 
-                if(mSelectedCategoryKeys.contains(currentCategoryKey)) {
+                if (mSelectedCategoryKeys.contains(currentCategoryKey)) {
                     holder.filterCheckbox.setChecked(true);
-                }else{
+                } else {
                     holder.filterCheckbox.setChecked(false);
                 }
 
-                if(mCategoryLevel.get(position) == 0 &&
-                        !mCategoryItems.get(position).getChildren().isEmpty()){
+                if (!mCategoryItems.get(position).getChildren().isEmpty()) {
                     // Check parent category if all child category is checked
                     int totalChildCount = 0;
                     int totalCheckedChildCount = 0;
-                    for(int i = 0; i < mCategoryItems.size(); i++) {
-                        String iCategory = mCategoryItems.get(i).getKey();
-                        if (iCategory.split(">")[0].equals(currentCategoryKey.split(">")[0])) {
-                            if(mCategoryLevel.get(i) != 0){
-                                totalChildCount +=1;
-                                if(mSelectedCategoryKeys.contains(iCategory)){
-                                    totalCheckedChildCount +=1;
-                                }
-                            }
-                        }
-                    }
-                    if(totalCheckedChildCount == totalChildCount){
-                        holder.filterCheckbox.setChecked(true);
-                    }
-                }
 
-                holder.filterCheckbox.setOnClickListener( v -> {
-                    if(holder.filterCheckbox.isChecked()){
-                        if(mCategoryLevel.get(position) == 0){
-                            if(mCategoryItems.get(position).getChildren().isEmpty()){
-                                mSaleFilterAdapterClickListener.onAddRemoveFilter(true, currentCategoryKey, mData.get(position).trim(), mShowSubCategories, null, true);
-                                mSelectedCategoryKeys.add(currentCategoryKey);
-                            }else{
-                                // if parent category is checked, all child should be checked too.
-                                List<String> mNewSelectedCategoryKeys = new ArrayList<>();
-                                for(int i = 0; i < mCategoryItems.size(); i++) {
-                                    String iCategory = mCategoryItems.get(i).getKey();
-                                    if (iCategory.split(">")[0].equals(currentCategoryKey)) {
-                                        if(!mNewSelectedCategoryKeys.contains(iCategory) && !mSelectedCategoryKeys.contains(iCategory)){
-                                            if(mCategoryLevel.get(i) != 0){
-                                                mSaleFilterAdapterClickListener.onAddRemoveFilter(true, iCategory, mData.get(i).trim(), mShowSubCategories, null, i+1 == mCategoryItems.size());
-                                                mNewSelectedCategoryKeys.add(iCategory);
-                                            }
+                    totalChildCount += mCategoryItems.get(position).getChildren().size();
+
+                    for (GetCategoryTreeResponse subCategories : mCategoryItems.get(position).getChildren()) {
+                        if (mSelectedCategoryKeys.contains(subCategories.getKey())) {
+                            totalCheckedChildCount += 1;
+                        }else if(mSelectedCategoryKeys.contains(currentCategoryKey)){
+                            mSelectedCategoryKeys.add(subCategories.getKey());
+                            mSaleFilterAdapterClickListener.onAddRemoveFilter(true, subCategories.getKey(), subCategories.getName(), mShowSubCategories, null, false);
+                            totalCheckedChildCount += 1;
+                        }
+
+                        if (!subCategories.getChildren().isEmpty()) {
+                            totalChildCount += subCategories.getChildren().size();
+                            for (GetCategoryTreeResponse subCategories2 : subCategories.getChildren()) {
+                                if (mSelectedCategoryKeys.contains(subCategories2.getKey())) {
+                                    totalCheckedChildCount += 1;
+                                }else if(mSelectedCategoryKeys.contains(currentCategoryKey)){
+                                    mSelectedCategoryKeys.add(subCategories2.getKey());
+                                    mSaleFilterAdapterClickListener.onAddRemoveFilter(true, subCategories2.getKey(), subCategories2.getName(), mShowSubCategories, null, false);
+                                    totalCheckedChildCount += 1;
+                                }
+
+                                if (!subCategories2.getChildren().isEmpty()) {
+                                    totalChildCount += subCategories2.getChildren().size();
+                                    for (GetCategoryTreeResponse subCategories3 : subCategories2.getChildren()) {
+                                        if (mSelectedCategoryKeys.contains(subCategories3.getKey())) {
+                                            totalCheckedChildCount += 1;
+                                        }else if(mSelectedCategoryKeys.contains(currentCategoryKey)){
+                                            mSelectedCategoryKeys.add(subCategories3.getKey());
+                                            mSaleFilterAdapterClickListener.onAddRemoveFilter(true, subCategories3.getKey(), subCategories3.getName(), mShowSubCategories, null, false);
+                                            totalCheckedChildCount += 1;
                                         }
                                     }
                                 }
-                                mSelectedCategoryKeys.addAll(mNewSelectedCategoryKeys);
-                                mSaleFilterAdapterClickListener.updateSeeAllProducts();
-                            }
-                        }else{
-                            if(!mSelectedCategoryKeys.contains(currentCategoryKey)){
-                                mSaleFilterAdapterClickListener.onAddRemoveFilter(true, currentCategoryKey, mData.get(position).trim(), mShowSubCategories, null, true);
-                                mSelectedCategoryKeys.add(currentCategoryKey);
                             }
                         }
-                        notifyDataSetChanged();
-                    }else{
-                        List<String> mSelectedToBeRemovedCategoryKeys = new ArrayList<>();
-                        if(mCategoryLevel.get(position) == 0){
-                            // if parent category is unchecked, all child should be unchecked too.
-                            for(int i = 0; i < mCategoryItems.size(); i++) {
-                                String iCategory = mCategoryItems.get(i).getKey();
-                                if (iCategory.split(">")[0].equals(currentCategoryKey) ) {
-                                    mSaleFilterAdapterClickListener.onAddRemoveFilter(false, iCategory, mData.get(i).trim(), mShowSubCategories, null, i+1 == mCategoryItems.size());
-                                    mSelectedToBeRemovedCategoryKeys.add(iCategory);
-                                }
-                            }
-                            mSaleFilterAdapterClickListener.updateSeeAllProducts();
-                        }else{
-                            mSelectedToBeRemovedCategoryKeys.add(currentCategoryKey);
-                            mSaleFilterAdapterClickListener.onAddRemoveFilter(false, currentCategoryKey, mData.get(position), mShowSubCategories, null, true);
-                        }
-                        mSelectedCategoryKeys.removeAll(mSelectedToBeRemovedCategoryKeys);
-                        notifyDataSetChanged();
                     }
+
+                    if (totalCheckedChildCount == totalChildCount) {
+                        holder.filterCheckbox.setChecked(true);
+                        if(!mSelectedCategoryKeys.contains(currentCategoryKey)){
+                            mSelectedCategoryKeys.add(currentCategoryKey);
+                        }
+                    } else {
+                        if (totalCheckedChildCount != 0) {
+                            holder.filterCheckbox.setButtonDrawable(R.drawable.ic_checkbox_indeterminate_small);
+                        }
+                        holder.filterCheckbox.setChecked(false);
+                        mSelectedCategoryKeys.remove(currentCategoryKey);
+                    }
+                }
+
+                holder.filterCheckbox.setOnClickListener(v -> {
+                    if (holder.filterCheckbox.isChecked()) {
+                        mSelectedCategoryKeys.add(mCategoryItems.get(position).getKey());
+                        mSelectedCategoryKeys.addAll(categoriesToShowOrHide(position, true));
+                    } else {
+                        mSelectedCategoryKeys.remove(mCategoryItems.get(position).getKey());
+                        mSelectedCategoryKeys.removeAll(categoriesToShowOrHide(position, false));
+                        String categoryNameKey = mCategoryItems.get(position).getKey().replace(">>>"+mCategoryItems.get(position).getName(), "");
+                        mSelectedCategoryKeys.remove(categoryNameKey);
+                        if(mCategoryLevel.get(position) == 3){
+                            mSelectedCategoryKeys.remove(categoryNameKey.replace(">>>"+currentCategoryKey.split(">>>")[2], ""));
+                        }
+                        mSelectedCategoryKeys.remove(currentCategoryKey.split(">>>")[0]);
+                    }
+                    mSaleFilterAdapterClickListener.updateSeeAllProducts();
+                    notifyDataSetChanged();
                 });
-            }else if(mShowSort){
+
+                holder.saleFilterTile.setOnClickListener(view -> {
+                    holder.filterChevron.setImageResource(R.drawable.ic_chevron_up);
+                    for (GetCategoryTreeResponse child : mCategoryItems.get(position).getChildren()) {
+                        if (mSubCategoriesToShow.contains(child.getKey())) {
+                            mSubCategoriesToShow.remove(child.getKey());
+                        } else {
+                            mSubCategoriesToShow.add(child.getKey());
+                        }
+                    }
+                    notifyDataSetChanged();
+                });
+            } else if (mShowSort) {
                 holder.categoryText.setText(mData.get(position).substring(0, 1).toUpperCase() + mData.get(position).substring(1).toLowerCase());
-                for(SearchChipModel chip : mSelectedFilters){
-                    if(chip.getFilterType() == mFilterType){
-                        if(chip.getChipTitle().contains(mData.get(position))){
+                for (SearchChipModel chip : mSelectedFilters) {
+                    if (chip.getFilterType() == mFilterType) {
+                        if (chip.getChipTitle().contains(mData.get(position))) {
                             holder.filterCheckbox.setChecked(true);
                         }
                     }
                 }
                 holder.filterCheckbox.setOnClickListener(view -> {
                     mSaleFilterAdapterClickListener.removeAllSort();
-                    if(!holder.filterCheckbox.isChecked()){
+                    if (!holder.filterCheckbox.isChecked()) {
                         mSaleFilterAdapterClickListener.removeAllSort();
-                    }else{
+                    } else {
                         addChip(position);
                     }
                     notifyDataSetChanged();
                 });
-            }else{
-                for(SearchChipModel chip : mSelectedFilters){
-                    if(chip.getFilterType().equals(mFilterType)){
-                        if(chip.getChipTitle().equals(mData.get(position))){
+            } else {
+                for (SearchChipModel chip : mSelectedFilters) {
+                    if (chip.getFilterType().equals(mFilterType)) {
+                        if (chip.getChipTitle().equals(mData.get(position))) {
                             holder.filterCheckbox.setChecked(true);
-                            if(mShowSort){
+                            if (mShowSort) {
                                 holder.filterCheck.setVisibility(View.VISIBLE);
                             }
                         }
@@ -237,9 +274,9 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                 holder.filterCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(isChecked){
+                        if (isChecked) {
                             addChip(position);
-                        }else{
+                        } else {
                             removeChip(position);
                         }
                     }
@@ -247,6 +284,33 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
             }
         }
 
+    }
+
+    private List<String> categoriesToShowOrHide(int position, boolean isAdd) {
+        List<String> mNewSelectedCategoryKeys = new ArrayList<>();
+        if (!mCategoryItems.get(position).getChildren().isEmpty()) {
+            for (GetCategoryTreeResponse subCategories : mCategoryItems.get(position).getChildren()) {
+                mSaleFilterAdapterClickListener.onAddRemoveFilter(isAdd, subCategories.getKey(), subCategories.getName(), mShowSubCategories, null, false);
+                mNewSelectedCategoryKeys.add(subCategories.getKey());
+
+                if (!subCategories.getChildren().isEmpty()) {
+                    for (GetCategoryTreeResponse subCategories2 : subCategories.getChildren()) {
+                        mSaleFilterAdapterClickListener.onAddRemoveFilter(isAdd, subCategories2.getKey(), subCategories2.getName(), mShowSubCategories, null, false);
+                        mNewSelectedCategoryKeys.add(subCategories2.getKey());
+
+                        if (!subCategories2.getChildren().isEmpty()) {
+                            for (GetCategoryTreeResponse subCategories3 : subCategories2.getChildren()) {
+                                mSaleFilterAdapterClickListener.onAddRemoveFilter(isAdd, subCategories3.getKey(), subCategories3.getName(), mShowSubCategories, null, false);
+                                mNewSelectedCategoryKeys.add(subCategories3.getKey());
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            mSaleFilterAdapterClickListener.onAddRemoveFilter(isAdd, mCategoryItems.get(position).getKey(), mCategoryItems.get(position).getName(), mShowSubCategories, null, false);
+        }
+        return mNewSelectedCategoryKeys;
     }
 
     @Override
@@ -266,7 +330,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
     }
 
     private void addChip(int position) {
-        SearchChipModel newChip = new SearchChipModel(mFilterType, mData.get(position), mShowSort ? mSortingList.get(position).getKey() :"");
+        SearchChipModel newChip = new SearchChipModel(mFilterType, mData.get(position), mShowSort ? mSortingList.get(position).getKey() : "");
         mSearchItemsList.add(newChip);
         mSaleFilterAdapterClickListener.onAddRemoveFilter(true, mFilterType, mData.get(position), mShowSubCategories, newChip, true);
     }
@@ -326,12 +390,17 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
 
     public List<SaleFilterAdapter.TransformedNode> transformData(List<GetCategoryTreeResponse> data) {
         ArrayList<SaleFilterAdapter.TransformedNode> list = new ArrayList<>();
-        for (GetCategoryTreeResponse node: data) {
+        for (GetCategoryTreeResponse node : data) {
             node.traverseTree(new GetCategoryTreeResponse.TreeTraversalBlock() {
                 @Override
                 public boolean execute(GetCategoryTreeResponse parent, Object option) {
                     int level = ((Integer) option).intValue();
                     list.add(new SaleFilterAdapter.TransformedNode(parent, Integer.valueOf(level)));
+
+                    mCategoryItems.add(parent);
+                    mCategoryLevel.add(level);
+                    mfilterCountList.add(String.valueOf(parent.getCount()));
+                    mData.add(parent.getName());
                     return true;
                 }
 
@@ -341,71 +410,8 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                 }
             }, Integer.valueOf(0));
         }
-        for(SaleFilterAdapter.TransformedNode node: list){
-            GetCategoryTreeResponse categoryItem = node.getObject();
 
-            if(mSourceType.equals("CategorySearch")){
-                if (mCategoryKey.split(">")[0].equals(categoryItem.getKey()) ) {
-                    mCategoryItems.add(categoryItem);
-                    mCategoryLevel.add(node.getLevel());
-                    mfilterCountList.add(String.valueOf(categoryItem.getCount()));
-                    mData.add(categoryItem.getName());
-                }
-                if(mCategoryKey.equals(categoryItem.getKey())){
-                    if(!categoryItem.getChildren().isEmpty()){
-                        List<GetCategoryTreeResponse> child = categoryItem.getChildren();
-                        for(GetCategoryTreeResponse children: child){
-                            mCategoryItems.add(children);
-                            mCategoryLevel.add(2);
-                            mfilterCountList.add(String.valueOf(children.getCount()));
-                            mData.add(children.getName());
-                        }
-                    }else{
-                        if(node.getLevel() == 2){
-                            mData.clear();
-                            mCategoryItems.clear();
-                            mCategoryLevel.clear();
-                            mfilterCountList.clear();
-                        }
-                        mCategoryItems.add(categoryItem);
-                        mCategoryLevel.add(node.getLevel());
-                        mfilterCountList.add(String.valueOf(categoryItem.getCount()));
-                        mData.add(categoryItem.getName());
-                    }
-                }else if(mCategoryKey == ""){
-                    addCategoriesToList(node, categoryItem);
-                }
-            }else{
-                addCategoriesToList(node, categoryItem);
-            }
-        }
         return list;
-    }
-
-    private void addCategoriesToList(TransformedNode node, GetCategoryTreeResponse categoryItem) {
-        if(node.getLevel() == 0){
-            mCategoryItems.add(categoryItem);
-            mCategoryLevel.add(node.getLevel());
-            mfilterCountList.add(String.valueOf(categoryItem.getCount()));
-            mData.add(categoryItem.getName());
-        }else{
-            if(!categoryItem.getChildren().isEmpty()){
-                List<GetCategoryTreeResponse> child = categoryItem.getChildren();
-                for(GetCategoryTreeResponse children: child){
-                    mCategoryItems.add(children);
-                    mCategoryLevel.add(2);
-                    mfilterCountList.add(String.valueOf(children.getCount()));
-                    mData.add(children.getName());
-                }
-            }else{
-                if(node.getLevel() == 1){
-                    mCategoryItems.add(categoryItem);
-                    mCategoryLevel.add(node.getLevel());
-                    mfilterCountList.add(String.valueOf(categoryItem.getCount()));
-                    mData.add(categoryItem.getName());
-                }
-            }
-        }
     }
 
     public static class SaleFilterViewHolder extends RecyclerView.ViewHolder {
@@ -417,7 +423,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
         public TextView productCountText;
 
         @BindView(R.id.row_filter_checkbox)
-        public CheckBox filterCheckbox;
+        public MaterialCheckBox filterCheckbox;
 
         @BindView(R.id.row_filter_chevron)
         public ImageView filterChevron;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -23,7 +24,7 @@
             android:paddingBottom="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small">
 
-            <CheckBox
+            <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/row_filter_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -31,8 +32,7 @@
                 android:checked="false"
                 android:button="@drawable/custom_checkbox_selector"
                 android:paddingRight="@dimen/margin_small"
-                android:layout_marginLeft="@dimen/margin_small"
-                />
+                android:layout_marginLeft="@dimen/margin_small" />
 
             <TextView
                 android:id="@+id/row_category_name"
@@ -69,15 +69,17 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/black"
                 android:background="@drawable/ic_check"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/row_filter_chevron"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/beige"
-                android:background="@drawable/ic_chevron_right"
-                android:visibility="visible"/>
+                android:src="@drawable/ic_chevron_right"
+                android:scaleType="fitCenter"
+                android:visibility="visible"
+                app:tint="@color/beige" />
 
         </LinearLayout>
 
