@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.categories;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,7 +33,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
@@ -47,6 +48,7 @@ import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
@@ -59,6 +61,9 @@ public class NewSaleCategoriesController extends BaseController
 
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
+
+    @BindView(R.id.controller_salecategory)
+    ViewGroup mLayout;
 
     @BindView(R.id.controller_salecategory_recyclerview)
     RecyclerView mRecyclerView;
@@ -218,7 +223,7 @@ public class NewSaleCategoriesController extends BaseController
         mCategories.addAll(customNodeTypes);
         mCategories.addAll(fixedNodeTypes);
 
-        if(getBoolean(R.bool.is_gift_card_category_visible)){
+        if (getBoolean(R.bool.is_gift_card_category_visible)) {
             GetCategoryTreeResponse giftCards = new GetCategoryTreeResponse();
             giftCards.setName("Gift Cards");
             giftCards.setNodeType("custom");
@@ -304,7 +309,7 @@ public class NewSaleCategoriesController extends BaseController
         } else if (mCategoryName.contains("Brands") && getCategoryTreeResponse.getKey() == null && getCategoryTreeResponse.getChildren() == null) {
             mLevel = 0;
             mActivity.getMainController().showBrands();
-        }else if(mCategoryName.contains("Gift Cards") && getCategoryTreeResponse.getKey() == null && getCategoryTreeResponse.getChildren() == null){
+        } else if (mCategoryName.contains("Gift Cards") && getCategoryTreeResponse.getKey() == null && getCategoryTreeResponse.getChildren() == null) {
             mLevel = 0;
             final Router router = mActivity.getCategoriesRouter();
             String storeId = getString(R.string.gift_card_id);
@@ -321,7 +326,7 @@ public class NewSaleCategoriesController extends BaseController
 
             router.pushController(routerTransaction);
 
-        }else if(getCategoryTreeResponse.getChildren() == null){
+        } else if (getCategoryTreeResponse.getChildren() == null) {
             mLevel = 0;
             ShopsController shopsController = ShopsController.instanceWithCategoryFilter(
                     getCategoryTreeResponse.getId(),
@@ -333,7 +338,7 @@ public class NewSaleCategoriesController extends BaseController
                             .pushChangeHandler(new HorizontalChangeHandler()));
         } else {
             updateBasketItemsQuantity(mBasketQuantity);
-            updateRecyclerView();
+            updateRecyclerView(true);
         }
     }
 
@@ -494,7 +499,7 @@ public class NewSaleCategoriesController extends BaseController
         } else {
             mLevel -= 1;
             updateBasketItemsQuantity(mBasketQuantity);
-            updateRecyclerView();
+            updateRecyclerView(true);
         }
     }
 
@@ -510,7 +515,32 @@ public class NewSaleCategoriesController extends BaseController
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-    void updateRecyclerView() {
+    private void updateRecyclerView(boolean isAnimated) {
+        if (!(isViewAttached() && isViewBound())) {
+            return;
+        }
+        if (!isAnimated) {
+            updateRecyclerView();
+            return;
+        }
+        CommonUtils.fadeOutView(mLayout, new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                updateRecyclerView();
+                CommonUtils.fadeInView(mLayout, null);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+                updateRecyclerView();
+                CommonUtils.fadeInView(mLayout, null);
+            }
+        });
+    }
+
+    private void updateRecyclerView() {
         if (!(isViewAttached() && isViewBound())) {
             return;
         }
