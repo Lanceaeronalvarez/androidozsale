@@ -413,8 +413,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     final int numberOfColumns = isTablet ? 3 : 2;
                     horizontalRecyclerItemsViewHolder.setScrollStepSize(numberOfColumns);
                     horizontalRecyclerItemsViewHolder.setPageIndicatorCountWithPageSize(numberOfColumns);
-                    final boolean willScrollWrapAround = horizontalRecyclerItemsViewHolder.getPageIndicatorAdapter().getItemCount() > 1;
-                    mTrendingBrandsAdapter.setWillScrollWrapAround(willScrollWrapAround);
                 } else {
                     horizontalRecyclerItemsViewHolder.setPageIndicatorItemCount(0);
                 }
