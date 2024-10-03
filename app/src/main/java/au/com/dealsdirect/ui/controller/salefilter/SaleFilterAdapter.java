@@ -155,6 +155,22 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                     holder.filterCheckbox.setChecked(false);
                 }
 
+                if(holder.filterCheckbox.isChecked()){
+                    // Add category if parent category is not selected
+                    if(mCategoryLevel.get(position) == 1){
+                        if(!mSelectedCategoryKeys.contains(currentCategoryKey.split(">>>")[0])) {
+                            mSaleFilterAdapterClickListener.onAddCategoryFilter(currentCategoryKey, mCategoryItems.get(position).getName());
+                        }
+                    }
+
+                    if(mCategoryLevel.get(position) >= 2){
+                        String categoryNameKey = currentCategoryKey.substring(0, currentCategoryKey.lastIndexOf(">") - 2);
+                        if(!mSelectedCategoryKeys.contains(categoryNameKey)) {
+                            mSaleFilterAdapterClickListener.onAddCategoryFilter(currentCategoryKey, mCategoryItems.get(position).getName());
+                        }
+                    }
+                }
+
                 if (!mCategoryItems.get(position).getChildren().isEmpty()) {
                     // Check parent category if all child category is checked
                     int totalChildCount = 0;
@@ -167,7 +183,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                             totalCheckedChildCount += 1;
                         }else if(mSelectedCategoryKeys.contains(currentCategoryKey)){
                             mSelectedCategoryKeys.add(subCategories.getKey());
-                            mSaleFilterAdapterClickListener.onAddRemoveFilter(true, subCategories.getKey(), subCategories.getName(), mShowSubCategories, null, false);
+                            mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey, subCategories.getName());
                             totalCheckedChildCount += 1;
                         }
 
@@ -178,7 +194,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                                     totalCheckedChildCount += 1;
                                 }else if(mSelectedCategoryKeys.contains(currentCategoryKey)){
                                     mSelectedCategoryKeys.add(subCategories2.getKey());
-                                    mSaleFilterAdapterClickListener.onAddRemoveFilter(true, subCategories2.getKey(), subCategories2.getName(), mShowSubCategories, null, false);
+                                    mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey, subCategories2.getName());
                                     totalCheckedChildCount += 1;
                                 }
 
@@ -189,7 +205,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                                             totalCheckedChildCount += 1;
                                         }else if(mSelectedCategoryKeys.contains(currentCategoryKey)){
                                             mSelectedCategoryKeys.add(subCategories3.getKey());
-                                            mSaleFilterAdapterClickListener.onAddRemoveFilter(true, subCategories3.getKey(), subCategories3.getName(), mShowSubCategories, null, false);
+                                            mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey, subCategories3.getName());
                                             totalCheckedChildCount += 1;
                                         }
                                     }
@@ -202,6 +218,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                         holder.filterCheckbox.setChecked(true);
                         if(!mSelectedCategoryKeys.contains(currentCategoryKey)){
                             mSelectedCategoryKeys.add(currentCategoryKey);
+                            categoriesToShowOrHide(position, true);
                         }
                     } else {
                         if (totalCheckedChildCount != 0) {
@@ -220,11 +237,18 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                         mSelectedCategoryKeys.remove(mCategoryItems.get(position).getKey());
                         mSelectedCategoryKeys.removeAll(categoriesToShowOrHide(position, false));
                         String categoryNameKey = mCategoryItems.get(position).getKey().replace(">>>"+mCategoryItems.get(position).getName(), "");
+                        String categoryNameKey2 = "";
                         mSelectedCategoryKeys.remove(categoryNameKey);
-                        if(mCategoryLevel.get(position) == 3){
-                            mSelectedCategoryKeys.remove(categoryNameKey.replace(">>>"+currentCategoryKey.split(">>>")[2], ""));
-                        }
                         mSelectedCategoryKeys.remove(currentCategoryKey.split(">>>")[0]);
+                        if(mCategoryLevel.get(position) == 2) {
+                            mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey, currentCategoryKey.split(">>>")[1]);
+                        }
+                        if(mCategoryLevel.get(position) == 3){
+                            categoryNameKey2 = categoryNameKey.replace(">>>"+currentCategoryKey.split(">>>")[2], "");
+                            mSelectedCategoryKeys.remove(categoryNameKey2);
+                            mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey, currentCategoryKey.split(">>>")[2]);
+                        }
+                        mSaleFilterAdapterClickListener.onRemoveCategoryFilter(currentCategoryKey.split(">>>")[0], currentCategoryKey.split(">>>")[0]);
                     }
                     mSaleFilterAdapterClickListener.updateSeeAllProducts();
                     notifyDataSetChanged();
@@ -288,27 +312,36 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
 
     private List<String> categoriesToShowOrHide(int position, boolean isAdd) {
         List<String> mNewSelectedCategoryKeys = new ArrayList<>();
+        if(isAdd){
+            mSaleFilterAdapterClickListener.onAddCategoryFilter(mCategoryItems.get(position).getKey(), mCategoryItems.get(position).getName());
+        }else{
+            mSaleFilterAdapterClickListener.onRemoveCategoryFilter(mCategoryItems.get(position).getKey(), mCategoryItems.get(position).getName());
+        }
         if (!mCategoryItems.get(position).getChildren().isEmpty()) {
             for (GetCategoryTreeResponse subCategories : mCategoryItems.get(position).getChildren()) {
-                mSaleFilterAdapterClickListener.onAddRemoveFilter(isAdd, subCategories.getKey(), subCategories.getName(), mShowSubCategories, null, false);
-                mNewSelectedCategoryKeys.add(subCategories.getKey());
+                mSaleFilterAdapterClickListener.onRemoveCategoryFilter(subCategories.getKey(), subCategories.getName());
+                if(!mSelectedCategoryKeys.contains(subCategories.getKey()) || !isAdd){
+                    mNewSelectedCategoryKeys.add(subCategories.getKey());
+                }
 
                 if (!subCategories.getChildren().isEmpty()) {
                     for (GetCategoryTreeResponse subCategories2 : subCategories.getChildren()) {
-                        mSaleFilterAdapterClickListener.onAddRemoveFilter(isAdd, subCategories2.getKey(), subCategories2.getName(), mShowSubCategories, null, false);
-                        mNewSelectedCategoryKeys.add(subCategories2.getKey());
+                        mSaleFilterAdapterClickListener.onRemoveCategoryFilter(subCategories2.getKey(), subCategories2.getName());
+                        if(!mSelectedCategoryKeys.contains(subCategories2.getKey()) || !isAdd){
+                            mNewSelectedCategoryKeys.add(subCategories2.getKey());
+                        }
 
                         if (!subCategories2.getChildren().isEmpty()) {
                             for (GetCategoryTreeResponse subCategories3 : subCategories2.getChildren()) {
-                                mSaleFilterAdapterClickListener.onAddRemoveFilter(isAdd, subCategories3.getKey(), subCategories3.getName(), mShowSubCategories, null, false);
-                                mNewSelectedCategoryKeys.add(subCategories3.getKey());
+                                mSaleFilterAdapterClickListener.onRemoveCategoryFilter(subCategories3.getKey(), subCategories3.getName());
+                                if(!mSelectedCategoryKeys.contains(subCategories3.getKey()) || !isAdd){
+                                    mNewSelectedCategoryKeys.add(subCategories3.getKey());
+                                }
                             }
                         }
                     }
                 }
             }
-        } else {
-            mSaleFilterAdapterClickListener.onAddRemoveFilter(isAdd, mCategoryItems.get(position).getKey(), mCategoryItems.get(position).getName(), mShowSubCategories, null, false);
         }
         return mNewSelectedCategoryKeys;
     }
@@ -332,7 +365,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
     private void addChip(int position) {
         SearchChipModel newChip = new SearchChipModel(mFilterType, mData.get(position), mShowSort ? mSortingList.get(position).getKey() : "");
         mSearchItemsList.add(newChip);
-        mSaleFilterAdapterClickListener.onAddRemoveFilter(true, mFilterType, mData.get(position), mShowSubCategories, newChip, true);
+        mSaleFilterAdapterClickListener.onAddFilter(mFilterType, mData.get(position), newChip);
     }
 
     private void removeChip(int position) {
@@ -362,7 +395,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
 
         if (chipToRemove != null) {
             mSearchItemsList.remove(chipToRemove);
-            mSaleFilterAdapterClickListener.onAddRemoveFilter(false, mFilterType, mData.get(position), mShowSubCategories, chipToRemove, true);
+            mSaleFilterAdapterClickListener.onRemoveFilter(mFilterType, mData.get(position), chipToRemove);
         }
     }
 

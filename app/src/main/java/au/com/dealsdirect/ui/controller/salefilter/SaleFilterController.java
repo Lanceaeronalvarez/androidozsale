@@ -359,46 +359,46 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     }
 
     @Override
-    public void onAddRemoveFilter(boolean isAdd, String filterType, String title, boolean isCategory, SearchChipModel chip, boolean isLast) {
-        if(isCategory){
-            if(isAdd){
-                mCategoryKeys.add(filterType);
-                mCategoryTitles.add(title);
-                addChipGroupSubCategoryChip(title, filterType);
-                showClearButton();
-            }else{
-                if(filterType == mCategoryKey){
-                    mRemoveCategoryKeyFromCategory = true;
-                }
-                mCategoryKeys.remove(filterType);
-                mCategoryTitles.remove(title);
-                removeChipGroupFilterChip(title);
-            }
-        }else{
-            SearchChipModel newChip = new SearchChipModel(filterType, title, "");
-            if(isAdd){
-                if(!filterType.equals(BundleKeys.SORT_FACETFILTER_NAME)){
-                    addChipGroupFilterChip(title);
-                }
-                mSelectedFilters.add(newChip);
-                mSearchItemsList.add(chip);
-                mPresenter.onFacetItemClicked(mSearchItemsList, chip, true);
-                showClearButton();
-            }else{
-                for(int i = 0; i < mSelectedFilters.size(); i++) {
-                    if (mSelectedFilters.get(i).getFilterType() == filterType && mSelectedFilters.get(i).getChipTitle().equals(title)) {
-                        mSelectedFilters.remove(i);
-                    }
-                }
-                mSearchItemsList.remove(chip);
-                mPresenter.onFacetItemClicked(mSearchItemsList, chip, false);
-                removeChipGroupFilterChip(title);
+    public void onAddFilter(String filterType, String title, SearchChipModel chip) {
+        SearchChipModel newChip = new SearchChipModel(filterType, title, "");
+        if(!filterType.equals(BundleKeys.SORT_FACETFILTER_NAME)){
+            addChipGroupFilterChip(title);
+        }
+        mSelectedFilters.add(newChip);
+        mSearchItemsList.add(chip);
+        mPresenter.onFacetItemClicked(mSearchItemsList, chip, true);
+        showClearButton();
+    }
+    @Override
+    public void onRemoveFilter(String filterType, String title, SearchChipModel chip) {
+        for(int i = 0; i < mSelectedFilters.size(); i++) {
+            if (mSelectedFilters.get(i).getFilterType() == filterType && mSelectedFilters.get(i).getChipTitle().equals(title)) {
+                mSelectedFilters.remove(i);
             }
         }
-        if(isLast){
-            requestLoadItems();
+        mSearchItemsList.remove(chip);
+        mPresenter.onFacetItemClicked(mSearchItemsList, chip, false);
+        removeChipGroupFilterChip(title);
+    }
+    @Override
+    public void onAddCategoryFilter(String filterType, String title) {
+        if(!mCategories.contains(filterType)){
+            mCategoryKeys.add(filterType);
+            mCategoryTitles.add(title);
+            addChipGroupSubCategoryChip(title, filterType);
+            showClearButton();
         }
     }
+    @Override
+    public void onRemoveCategoryFilter(String filterType, String title) {
+        if(filterType == mCategoryKey){
+            mRemoveCategoryKeyFromCategory = true;
+        }
+        mCategoryKeys.remove(filterType);
+        mCategoryTitles.remove(title);
+        removeChipGroupFilterChip(title);
+    }
+
 
     @Override
     public void removeAllSort() {
@@ -880,7 +880,8 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     private void requestLoadItems(){
         if(mSourceType.equals("CategorySearch") && mCategoryKeys.size() > 1 || mRemoveCategoryKeyFromCategory){
             mCategoryKeys.remove(mCategoryKey);
-        } else if(mSourceType.equals("CategorySearch") && mCategoryKeys.isEmpty() && !mCategoryKey.equals("")){
+        }
+        if(mSourceType.equals("CategorySearch") && mCategoryKeys.isEmpty() && !mCategoryKey.equals("")){
             mCategoryKeys.add(mCategoryKey);
         }
         SearchChipModel chipChanged = new SearchChipModel("", "", "");

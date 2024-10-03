@@ -2623,12 +2623,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mSelectedCategoryKeys.clear();
         mSelectedCategoryKeys.addAll(categoryKeys);
         addChipGroupFilterChip();
-        if (mSourceType == SourceType.CATEGORY_SEARCH && !mCategoryKeyFromCategorySearch.equals("") && !categoryKeys.contains(mCategoryKeyFromCategorySearch) && !mSelectedCategoryKeys.isEmpty()) {
-            addCategoryKeyChipFromCategorySearch();
-        } else {
-            if (mSourceType == SourceType.CATEGORY_SEARCH) {
-                mSearchResultTextView.setText("All Products");
-            }
+        if (mSourceType == SourceType.CATEGORY_SEARCH && !mCategoryKeyFromCategorySearch.equals("") && categoryKeys.contains(mCategoryKeyFromCategorySearch) && !mSelectedCategoryKeys.isEmpty()) {
+            mSearchResultTextView.setText("All Products");
         }
         callLoadSaleItems();
     }

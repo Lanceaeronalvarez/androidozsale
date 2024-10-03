@@ -10,7 +10,10 @@ public interface SaleFilterClickListener {
 
     void onCategoryClicked(String category, int type);
 
-    void onAddRemoveFilter(boolean addOrRemove, String name, String title, boolean isCategory, SearchChipModel chip, boolean isLast);
+    void onAddFilter(String name, String title,SearchChipModel chip);
+    void onRemoveFilter(String name, String title, SearchChipModel chip);
+    void onAddCategoryFilter(String name, String title);
+    void onRemoveCategoryFilter(String name, String title);
 
     void removeAllSort();
 
