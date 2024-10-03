@@ -27,7 +27,7 @@ public class NotificationController extends BaseController implements Notificati
     NotificationMvpPresenter<NotificationMvpView> mPresenter;
 
     @BindView(R.id.partial_toolbar_left_view)
-    TextView mToolbarTextViewLeft;
+    View mToolbarTextViewLeft;
     @BindView(R.id.notification_switch)
     Switch mNotificationSwitch;
     @BindView(R.id.partial_toolbar_title)

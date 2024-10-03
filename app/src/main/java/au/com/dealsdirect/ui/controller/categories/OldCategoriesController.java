@@ -75,7 +75,7 @@ public class OldCategoriesController extends BaseController
     TextView mToolbarTitle;
 
     @BindView(R.id.partial_toolbar_left_view)
-    TextView mToolbarLeftButton;
+    View mToolbarLeftButton;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mToolbarRightButton;

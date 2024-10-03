@@ -17,10 +17,10 @@
         app:showAsAction="collapseActionView" />
 
     <item
-        android:id="@+id/action_shop"
+        android:id="@+id/action_checkout"
         android:enabled="true"
-        android:icon="@drawable/ic_center_nav_bar"
-        android:title=""
+        android:icon="@drawable/ic_checkout"
+        android:title="@string/checkout"
         app:showAsAction="collapseActionView"/>
 
     <item

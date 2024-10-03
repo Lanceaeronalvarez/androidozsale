@@ -56,7 +56,7 @@ public class ContactSelectSubjectController extends BaseController
     ContactSelectSubjectMvpPresenter<ContactSelectSubjectMvpView> mPresenter;
 
     @BindView(R.id.partial_toolbar_left_view)
-    TextView mCancelButton;
+    View mToolbarLeftOptionButton;
 
     @BindView(R.id.partial_toolbar_title)
     TextView mViewContactsToolarTitle;
@@ -106,8 +106,6 @@ public class ContactSelectSubjectController extends BaseController
 
     @Override
     protected void setUp(View view) {
-
-        mCancelButton.setText(getResource().getString(R.string.cancel));
 
         mViewContactsToolarTitle.setText(getResource().getString(R.string.select_a_subject));
         mViewContactsToolbarRightOption.setVisibility(View.INVISIBLE);

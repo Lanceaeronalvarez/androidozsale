@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,7 +44,6 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse.LinkOptions;
@@ -77,12 +75,11 @@ import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
+import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.PaginateUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.StringUtils;
-import au.com.dealsdirect.utils.module.ControllerFactory;
-import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -125,16 +122,16 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     RecyclerView shopsControllerBannerRecyclerView;
 
     @BindView(R.id.partial_toolbar_search_button)
-    ImageButton shopsControllerSearchButton;
+    ImageButton mToolbarSearchButton;
 
-    @BindView(R.id.partial_toolbar_cart)
-    ImageButton mShopsControllerCartButton;
+    @BindView(R.id.partial_toolbar_field_logo_left_option)
+    ImageButton mToolberLeftOptionButton;
 
     @BindView(R.id.partial_toolbar_logo)
-    ImageView mShopsControllerToolbarLogo;
+    ImageView mToolbarLogo;
 
     @BindView(R.id.partial_toolbar_logo_title_view)
-    TextView mShopsControllerToolbarTextView;
+    TextView mToolbarTextView;
 
     @BindView(R.id.partial_toolbar_field_title_edittext)
     SearchEditText mSearchBarEditText;
@@ -144,12 +141,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
     @BindView(R.id.controller_sale_items_appbar)
     AppBarLayout mShopAppBarLayout;
-
-    @BindView(R.id.partial_toolbar_badge)
-    RelativeLayout mBadge;
-
-    @BindView(R.id.partial_toolbar_badge_text)
-    TextView mBadgeText;
 
     private BannersAdapter mBannersAdapter = null;
     private ResettableDimensions mResettableDimensionsAdapter = null;
@@ -185,8 +176,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     private boolean mIsRecyclerViewScrollIdle;
 
     private boolean mIsChangeInProgress = false;
-
-    private boolean shouldShowCartButton = false;
 
     private int lastBestSellerItemPosition = -1;
 
@@ -646,29 +635,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         return mIsChangeInProgress;
     }
 
-    @OnClick(R.id.partial_toolbar_cart)
-    void onClickCart() {
-        if (!shouldShowCartButton) {
+    @OnClick(R.id.partial_toolbar_field_logo_left_option)
+    void onLeftOptionButtonPressed() {
+        if (CommonUtils.positionOfControllerInRouterBackstack(getRouter(), this) > 0) {
             getRouter().handleBack();
-            return;
-        }
-        Controller controller = mPresenter.isTablet() ? ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST) : ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
-
-        if (!mActivity.isAuthorized()) {
-            mActivity.showLoginController(getRouter(), new AuthHandler() {
-                @Override
-                public void success() {
-                    getRouter().popCurrentController();
-                    getRouter().pushController(RouterTransaction.with(controller).tag(controller.getClass().getName()).pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler()));
-                }
-
-                @Override
-                public void error() {
-
-                }
-            });
-        } else if (mActivity.isAuthorized()) {
-            getRouter().pushController(RouterTransaction.with(controller).tag(controller.getClass().getName()).pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler()));
+        } else {
+            mActivity.getMainController().getCategoriesRouter().popToRoot();
+            mActivity.getMainController().showCategoryController();
         }
     }
 
@@ -683,8 +656,21 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         shopsControllerBannerRecyclerView.scrollToPosition(0);
     };
 
+    @OnClick(R.id.partial_toolbar_logo_title_view)
+    void onClickTitleView() {
+        scrollToTop();
+    }
+
     @OnClick(R.id.partial_toolbar_logo)
     void onClickLogo() {
+        if (shopsControllerBannerRecyclerView.computeVerticalScrollOffset() == 0) {
+            mActivity.getMainController().showHomePage();
+            return;
+        }
+        scrollToTop();
+    }
+
+    private void scrollToTop() {
         shopsControllerBannerRecyclerView.smoothScrollToPosition(0);
         if (shopsControllerBannerRecyclerView.getHandler() != null) {
             shopsControllerBannerRecyclerView.getHandler().removeCallbacks(onClickLogoRunnable);
@@ -699,8 +685,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private void resetDimensionToggleButton(boolean useOldDimensions) {
-        shopsControllerSearchButton.setVisibility(!BANNER_DIMENSIONS_TOGGLE_BUTTON_ENABLED || mPresenter.isTablet() ? View.GONE : View.VISIBLE);
-        shopsControllerSearchButton.setImageResource(useOldDimensions ? R.drawable.shop_banner_toggle_list : R.drawable.shop_banner_toggle_grid);
+        mToolbarSearchButton.setVisibility(!BANNER_DIMENSIONS_TOGGLE_BUTTON_ENABLED || mPresenter.isTablet() ? View.GONE : View.VISIBLE);
+        mToolbarSearchButton.setImageResource(useOldDimensions ? R.drawable.shop_banner_toggle_list : R.drawable.shop_banner_toggle_grid);
     }
 
     private void logDimensionsToggleFeatureUsageEvent() {
@@ -1085,13 +1071,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         if (key != null) {
             mPresenter.loadShopsBanner(createBannerRequest(id, bannerOffset, bannerLimit), false);
-            if (mShopsControllerToolbarLogo != null) {
-                mShopsControllerToolbarLogo.setVisibility(View.GONE);
+            if (mToolbarLogo != null) {
+                mToolbarLogo.setVisibility(View.GONE);
             }
-            mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
-            mShopsControllerCartButton.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
-            mShopsControllerCartButton.setScaleType(ImageView.ScaleType.CENTER);
-            mShopsControllerToolbarTextView.setText(getCategoryParentKey(key));
+            mToolbarTextView.setVisibility(View.VISIBLE);
+            mToolberLeftOptionButton.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
+            mToolberLeftOptionButton.setScaleType(ImageView.ScaleType.CENTER);
+            mToolbarTextView.setText(getCategoryParentKey(key));
         } else {
             assert (mActivity) != null;
             showLogoHeader();
@@ -1210,15 +1196,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
     }
 
     private void showLogoHeader() {
-        mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
-        mShopsControllerToolbarTextView.setVisibility(View.GONE);
-        mShopsControllerCartButton.setImageDrawable(mActivity.getDrawable(R.drawable.ic_new_checkout));
-        mShopsControllerCartButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        shopsControllerSearchButton.setImageDrawable(mActivity.getDrawable(R.drawable.ic_search));
-        shopsControllerSearchButton.setVisibility(View.VISIBLE);
-        shopsControllerSearchButton.setImageTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.black)));
+        mToolbarLogo.setVisibility(View.VISIBLE);
+        mToolbarTextView.setVisibility(View.GONE);
+        mToolbarSearchButton.setImageDrawable(mActivity.getDrawable(R.drawable.ic_search));
+        mToolbarSearchButton.setVisibility(View.VISIBLE);
+        mToolbarSearchButton.setImageTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.black)));
         mSearchBarEditText.setVisibility(View.GONE);
-        shouldShowCartButton = true;
     }
 
     public void goToSaleItemsFromCategorySearch() {
@@ -1384,15 +1367,12 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 loadBestSellers();
             }
 
-            mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
-            mShopsControllerToolbarTextView.setText(getCategoryParentKey(categoryKey));
-            mShopsControllerToolbarLogo.setVisibility(View.GONE);
-            mShopsControllerCartButton.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
-            mShopsControllerCartButton.setScaleType(ImageView.ScaleType.CENTER);
-            shouldShowCartButton = false;
-
+            mToolbarTextView.setVisibility(View.VISIBLE);
+            mToolbarTextView.setText(getCategoryParentKey(categoryKey));
+            mToolbarLogo.setVisibility(View.GONE);
+            mToolberLeftOptionButton.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
+            mToolberLeftOptionButton.setScaleType(ImageView.ScaleType.CENTER);
         } else {
-
             assert (mActivity) != null;
             loadShopBanners();
         }
@@ -1446,17 +1426,6 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
                 return false;
             default:
                 return mPresenter.getPrefersOldShopBannerDimensions();
-        }
-    }
-
-    public void updateBasketItemsQuantity(int quantity) {
-        if (quantity == 0) {
-            mBadge.setVisibility(View.GONE);
-        } else {
-            if (shouldShowCartButton) {
-                mBadge.setVisibility(View.VISIBLE);
-                mBadgeText.setText(Integer.toString(quantity));
-            }
         }
     }
 

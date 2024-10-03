@@ -45,7 +45,7 @@ public class StrictConsentController extends BaseController {
     Button mButton;
 
     @BindView(R.id.partial_toolbar_field_title_left_option)
-    TextView mBackButton;
+    View mBackButton;
 
     public StrictConsentController(Bundle args) {
         super(args);

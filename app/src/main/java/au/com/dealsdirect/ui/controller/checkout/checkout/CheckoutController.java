@@ -418,8 +418,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
 
-        //disable toolbar left and right buttons
-        mToolbarLeftButton.setVisibility(!mPresenter.isTablet() ? View.VISIBLE : View.INVISIBLE);
+        mToolbarLeftButton.setVisibility(getRouter().getBackstackSize() > 1 ? View.VISIBLE : View.INVISIBLE);
         mToolbarRightButton.setVisibility(View.INVISIBLE);
 
         if (mActivity != null) {
@@ -2166,8 +2165,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @Override
     public void updateCartWithValue(Value value) {
         CheckoutDetailsMapper mappedValues = new CheckoutDetailsMapper(value);
-        mPresenter.updateCartValues(mappedValues);
+        updateCartWithMappedValues(mappedValues);
         showAgeRestriction(mappedValues.isAgeRestricted() != null && mappedValues.isAgeRestricted());
+    }
+
+    @Override
+    public void updateCartWithMappedValues(CheckoutDetailsMapper mappedValues) {
+        mPresenter.updateCartValues(mappedValues);
     }
 
     private boolean isAgeValid() {

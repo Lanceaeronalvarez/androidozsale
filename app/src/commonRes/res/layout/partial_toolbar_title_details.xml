@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/toolbar_skin"
-    android:contentInsetEnd="0dp"
-    android:contentInsetLeft="0dp"
-    android:contentInsetRight="0dp"
     android:contentInsetStart="0dp"
+    android:contentInsetLeft="0dp"
+    android:contentInsetEnd="0dp"
+    android:contentInsetRight="0dp"
     app:contentInsetEnd="0dp"
     app:contentInsetLeft="0dp"
     app:contentInsetRight="0dp"
@@ -20,19 +20,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <ImageButton
             android:id="@+id/partial_toolbar_field_title_left_option"
-            fontPath="@string/font_app_regular"
             android:layout_width="@dimen/partial_toolbar_button_width"
             android:layout_height="@dimen/partial_toolbar_button_height"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:gravity="center"
-            android:paddingEnd="@dimen/margin_extra_small"
-            android:src="@drawable/ic_pink_chevron"
-            android:text="@string/back"
-            android:textColor="@color/toolbar_text_medium"
+            android:background="@color/toolbar_skin"
+            android:padding="4dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_chevron_left_black"
             android:textSize="@dimen/text_size_caption1" />
 
 
@@ -40,12 +37,12 @@
             android:id="@+id/partial_toolbar_field_title_right_option"
             android:layout_width="@dimen/partial_toolbar_button_width"
             android:layout_height="@dimen/partial_toolbar_button_height"
-            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/partial_toolbar_field_title_left_option"
+            android:layout_alignParentEnd="true"
             android:background="@drawable/bg_toolbar_button"
             android:src="@drawable/ic_3_column_view"
             android:textSize="@dimen/text_size_caption1"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,10 +58,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:singleLine="true"
                 android:textColor="@color/toolbar_text_dark"
                 android:textSize="@dimen/text_size_headline2"
                 android:visibility="gone"
-                android:singleLine="true"
                 tools:text="Bedroom" />
 
             <TextView
@@ -72,11 +69,11 @@
                 fontPath="@string/font_app_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_tiny"
                 android:gravity="center|bottom"
                 android:singleLine="true"
                 android:textColor="@color/toolbar_text_dark"
                 android:textSize="@dimen/text_size_subtitle"
-                android:layout_marginBottom="@dimen/margin_tiny"
                 tools:text="Bedroom" />
 
             <TextView
@@ -84,12 +81,12 @@
                 fontPath="@string/font_app_regular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="middle"
                 android:gravity="center|top"
                 android:singleLine="true"
-                android:ellipsize="middle"
-                android:visibility="gone"
                 android:textColor="@color/toolbar_text_medium"
                 android:textSize="@dimen/text_size_caption2"
+                android:visibility="gone"
                 tools:text="Home • Furniture" />
 
             <LinearLayout
@@ -97,35 +94,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"
-                android:orientation="horizontal">
-            <TextView
-                android:id="@+id/partial_toolbar_details_end_time_text"
-                fontPath="@string/font_app_semibold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center|top"
-                android:singleLine="true"
-                android:ellipsize="middle"
-                android:layout_marginRight="@dimen/margin_extra_small"
-                android:textColor="@color/toolbar_text_medium_dark"
-                android:textSize="@dimen/text_size_caption2"
-                android:text="@string/timer_label" />
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-            <TextView
-                android:id="@+id/partial_toolbar_details_remaining_time_value"
-                fontPath="@string/font_app_semibold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_tiny"
-                android:gravity="center"
-                android:singleLine="true"
-                android:drawablePadding="@dimen/margin_tiny"
-                android:drawableLeft="@drawable/ic_chronometer_red"
-                android:ellipsize="middle"
-                android:textColor="@color/ourpay_red"
-                android:textSize="@dimen/text_size_caption2"
-                tools:text="23:12:12"/>
+                <TextView
+                    android:id="@+id/partial_toolbar_details_end_time_text"
+                    fontPath="@string/font_app_semibold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/margin_extra_small"
+                    android:ellipsize="middle"
+                    android:gravity="center|top"
+                    android:singleLine="true"
+                    android:text="@string/timer_label"
+                    android:textColor="@color/toolbar_text_medium_dark"
+                    android:textSize="@dimen/text_size_caption2" />
+
+                <TextView
+                    android:id="@+id/partial_toolbar_details_remaining_time_value"
+                    fontPath="@string/font_app_semibold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_tiny"
+                    android:drawableLeft="@drawable/ic_chronometer_red"
+                    android:drawablePadding="@dimen/margin_tiny"
+                    android:ellipsize="middle"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:textColor="@color/ourpay_red"
+                    android:textSize="@dimen/text_size_caption2"
+                    tools:text="23:12:12" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

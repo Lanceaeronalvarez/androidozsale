@@ -22,6 +22,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -30,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -330,5 +334,18 @@ public final class CommonUtils {
     public static boolean isActivityOfViewDestroyed(View view) {
         final Activity activity = getActivityFromView(view);
         return activity == null || activity.isDestroyed();
+    }
+
+    public static int positionOfControllerInRouterBackstack(Router router, Controller controller) {
+        if (router == null || controller == null) {
+            return -1;
+        }
+        final List<RouterTransaction> backstack = router.getBackstack();
+        for (int i = 0; i < backstack.size(); i++) {
+            if (backstack.get(i).controller() == controller) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

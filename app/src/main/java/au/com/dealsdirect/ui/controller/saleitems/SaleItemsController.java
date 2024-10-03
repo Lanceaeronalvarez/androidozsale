@@ -76,7 +76,6 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse.LinkOptions;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
@@ -116,7 +115,6 @@ import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
-import au.com.dealsdirect.utils.CartUtil;
 import au.com.dealsdirect.utils.CommonUtils;
 import au.com.dealsdirect.utils.DateUtils;
 import au.com.dealsdirect.utils.ImageUtils;
@@ -126,7 +124,6 @@ import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.PaginateUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.TabLayoutUtils;
-import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -549,7 +546,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     @BindView(R.id.controller_sale_items_text_placeholder)
     LinearLayout mPlaceholder;
 
-    @BindView(R.id.partial_toolbar_field_title_left_option)
+    @BindView(R.id.partial_toolbar_logo_sales_left_option)
     View mSaleItemsBackIcon;
 
     @BindView(R.id.controller_search_filter_frame)
@@ -592,15 +589,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     @BindView(R.id.sale_item_sort_cardview)
     CardView mSortCard;
-
-    @BindView(R.id.partial_toolbar_checkout)
-    ImageView mCheckoutButton;
-
-    @BindView(R.id.partial_toolbar_badge)
-    RelativeLayout mBadge;
-
-    @BindView(R.id.partial_toolbar_badge_text)
-    TextView mBadgeText;
 
     @BindView(R.id.partial_toolbar_search)
     ImageView mSearchButton;
@@ -682,7 +670,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     private int mGenieMaxPrice = 200;
     private int mGenieSizesCount = 0;
     private int mGenieTotal = 0;
-    private int mBasketQuantity = 0;
     private String mGenieQuery = null;
     private String mGenieSort = null;
     private String mGenieFilters = null;
@@ -1108,7 +1095,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mGridViewModePreferenceHelper.resetTimestamp();
 
         willOpenSaleDetails = false;
-        updateBasketItemsQuantity(CartUtil.getCartValue());
     }
 
     @Override
@@ -1134,7 +1120,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 }
             }
         }
-        updateBasketItemsQuantity(CartUtil.getCartValue());
     }
 
     @Override
@@ -1142,9 +1127,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         super.onViewBound(view);
         mActivity.getProfiler().setStartLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue());
         mSaleItemsBackIcon.setOnClickListener(view12 -> mActivity.onBackPressed());
-        mCheckoutButton.setOnClickListener(view12 -> showCheckoutController());
         mSearchButton.setOnClickListener(view12 -> mSaleItemsToolbarField.setVisibility(View.VISIBLE));
-        mLogo.setOnClickListener(view12 -> mActivity.onBackPressed());
+        mLogo.setOnClickListener(view12 -> mActivity.getMainController().showHomePage());
 
         setUp(view);
 
@@ -1435,8 +1419,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleItemsToolbarField.setText(linkOptions.getSearchQuery());
             mSearchQuery = linkOptions.getSearchQuery();
         }
-
-        updateBasketItemsQuantity(CartUtil.getCartValue());
 
         mFilterCard.setOnClickListener(view12 -> {
             if (tabsLoaded) {
@@ -3257,48 +3239,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         currentBottomPopupView.show(true);
-    }
-
-    private void showCheckoutController() {
-        Controller controller = mPresenter.isTablet() ?
-                ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST) :
-                ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
-
-        if (!mActivity.isAuthorized()) {
-            mActivity.showLoginController(getRouter(), new AuthHandler() {
-                @Override
-                public void success() {
-                    getRouter().popCurrentController();
-                    getRouter().pushController(RouterTransaction.with(controller)
-                            .tag(controller.getClass().getName())
-                            .pushChangeHandler(new HorizontalChangeHandler())
-                            .popChangeHandler(new HorizontalChangeHandler()));
-                }
-
-                @Override
-                public void error() {
-
-                }
-            });
-        } else if (mActivity.isAuthorized()) {
-            getRouter().pushController(RouterTransaction.with(controller)
-                    .tag(controller.getClass().getName())
-                    .pushChangeHandler(new HorizontalChangeHandler())
-                    .popChangeHandler(new HorizontalChangeHandler()));
-        }
-    }
-
-    public void updateBasketItemsQuantity(int quantity) {
-        mBasketQuantity = quantity;
-        if (!isViewAttached()) {
-            return;
-        }
-        if (mBasketQuantity == 0) {
-            mBadge.setVisibility(View.GONE);
-        } else {
-            mBadge.setVisibility(View.VISIBLE);
-            mBadgeText.setText(Integer.toString(mBasketQuantity));
-        }
     }
 
     @Override

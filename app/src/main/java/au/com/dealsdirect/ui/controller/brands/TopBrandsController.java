@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +30,6 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
@@ -47,8 +45,6 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.DialogUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.StringUtils;
-import au.com.dealsdirect.utils.module.ControllerFactory;
-import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -61,23 +57,18 @@ public class TopBrandsController extends BaseController implements TopBrandsMvpV
 
     @BindView(R.id.controller_top_bands_recyclerview)
     RecyclerView topBrandsRecyclerView;
-    @BindView(R.id.partial_toolbar_cart)
-    ImageButton mShopsControllerCartButton;
+    @BindView(R.id.partial_toolbar_field_logo_left_option)
+    ImageButton mToolbarLeftOptionButton;
     @BindView(R.id.partial_toolbar_logo)
-    ImageView mShopsControllerToolbarLogo;
+    ImageView mToolbarLogo;
     @BindView(R.id.partial_toolbar_logo_title_view)
-    TextView mShopsControllerToolbarTextView;
-    @BindView(R.id.partial_toolbar_badge)
-    RelativeLayout mBadge;
-    @BindView(R.id.partial_toolbar_badge_text)
-    TextView mBadgeText;
+    TextView mToolbarTextView;
 
     private TopBrandsAdapter mTopBrandsAdapter = null;
     private HorizontalScrollingBannerAdapter mTrendingBrandsAdapter = null;
     private ResettableDimensions mResettableDimensionsAdapter = null;
     private GridLayoutManager mLayoutManager;
     private boolean mIsChangeInProgress = false;
-    private boolean shouldShowCartButton = false;
 
     private boolean shouldRefresh = false;
 
@@ -175,12 +166,10 @@ public class TopBrandsController extends BaseController implements TopBrandsMvpV
 
         setupTopBrandsView();
 
-        mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
-        mShopsControllerToolbarTextView.setText("Brands");
-        mShopsControllerToolbarLogo.setVisibility(View.GONE);
-        mShopsControllerCartButton.setImageDrawable(mActivity.getDrawable(R.drawable.ic_new_checkout));
-        mShopsControllerCartButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        shouldShowCartButton = true;
+        mToolbarTextView.setVisibility(View.VISIBLE);
+        mToolbarTextView.setText("Brands");
+        mToolbarLogo.setVisibility(View.GONE);
+        mToolbarLeftOptionButton.setVisibility(View.GONE);
 
         topBrandsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -266,30 +255,9 @@ public class TopBrandsController extends BaseController implements TopBrandsMvpV
         return mIsChangeInProgress;
     }
 
-    @OnClick(R.id.partial_toolbar_cart)
-    void onClickCart() {
-        if (!shouldShowCartButton) {
-            getRouter().handleBack();
-            return;
-        }
-        Controller controller = mPresenter.isTablet() ? ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST) : ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
-
-        if (!mActivity.isAuthorized()) {
-            mActivity.showLoginController(getRouter(), new AuthHandler() {
-                @Override
-                public void success() {
-                    getRouter().popCurrentController();
-                    getRouter().pushController(RouterTransaction.with(controller).tag(controller.getClass().getName()).pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler()));
-                }
-
-                @Override
-                public void error() {
-
-                }
-            });
-        } else if (mActivity.isAuthorized()) {
-            getRouter().pushController(RouterTransaction.with(controller).tag(controller.getClass().getName()).pushChangeHandler(new HorizontalChangeHandler()).popChangeHandler(new HorizontalChangeHandler()));
-        }
+    @OnClick(R.id.partial_toolbar_field_logo_left_option)
+    void onLeftOptionButtonPressed() {
+        getRouter().handleBack();
     }
 
     @Override
@@ -380,17 +348,6 @@ public class TopBrandsController extends BaseController implements TopBrandsMvpV
             int currentScrollPosition = Math.max(0, mLayoutManager.findFirstVisibleItemPosition());
             setupTopBrandsView();
             mLayoutManager.scrollToPosition(currentScrollPosition);
-        }
-    }
-
-    public void updateBasketItemsQuantity(int quantity) {
-        if (quantity == 0) {
-            mBadge.setVisibility(View.GONE);
-        } else {
-            if (shouldShowCartButton) {
-                mBadge.setVisibility(View.VISIBLE);
-                mBadgeText.setText(Integer.toString(quantity));
-            }
         }
     }
 

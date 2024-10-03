@@ -1965,6 +1965,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         //notify bottom navigation view(checkout) with success.
         CartUtil.addValueToCart(1);
         mActivity.getMainController().updateBasketItemsQuantity();
+        mActivity.getMainController().updateCheckoutWithCartDetails(cartDetailsResponse);
 
         if (isBuyNow) {
             isBuyNow = false;
@@ -1980,7 +1981,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.added_to_cart_dialog);
 
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        final WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.gravity = Gravity.TOP;
@@ -1988,16 +1989,16 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         dialog.getWindow().getAttributes().windowAnimations = R.style.AppearDialog;
         dialog.setCanceledOnTouchOutside(true);
 
-        TextView textBrandName = (TextView) dialog.findViewById(R.id.brand_name);
+        final TextView textBrandName = dialog.findViewById(R.id.brand_name);
         textBrandName.setText(mBrandName);
 
-        TextView textSaleName = (TextView) dialog.findViewById(R.id.item_name);
+        final TextView textSaleName = dialog.findViewById(R.id.item_name);
         textSaleName.setText(mSaleName);
 
-        TextView textVariant = (TextView) dialog.findViewById(R.id.item_size);
+        final TextView textVariant = dialog.findViewById(R.id.item_size);
         textVariant.setText(mSelectedSizeIndex >= 0 && !mProductSizes.isEmpty() ? mProductSizes.get(mSelectedSizeIndex).first : "");
 
-        TextView testSalePrice = (TextView) dialog.findViewById(R.id.item_price);
+        final TextView testSalePrice = dialog.findViewById(R.id.item_price);
         testSalePrice.setText(mSalePrice);
 
         String imageUrl = null;
@@ -2007,37 +2008,24 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (imageUrl == null) {
             imageUrl = mItemImageUrl;
         }
-        ImageView itemImageView = (ImageView) dialog.findViewById(R.id.item_image_view);
+        final ImageView itemImageView = dialog.findViewById(R.id.item_image_view);
         ImageUtils.loadImageImmediate(imageUrl, itemImageView, null);
 
-        ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.added_to_cart_button_close);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        final ImageButton dialogButton = dialog.findViewById(R.id.added_to_cart_button_close);
+        dialogButton.setOnClickListener(v -> dialog.dismiss());
 
-        Button viewCartButton = (Button) dialog.findViewById(R.id.button_view_cart);
-        viewCartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                goToCheckoutScreen();
-            }
+        final Button viewCartButton = dialog.findViewById(R.id.button_view_cart);
+        viewCartButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            goToCheckoutScreen();
         });
 
         dialog.show();
     }
 
     private void goToCheckoutScreen() {
-        Controller controller;
-        controller = mPresenter.isTablet() ?
-                ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST) :
-                ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
-
-        getRouter().pushController(RouterTransaction
-                .with(controller).tag(controller.getClass().getName()));
+        mActivity.getMainController().getCheckoutRouter().popToRoot();
+        mActivity.getMainController().showCheckoutController();
     }
 
     @Override

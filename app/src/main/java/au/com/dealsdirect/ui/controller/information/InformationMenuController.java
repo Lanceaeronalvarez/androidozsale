@@ -39,7 +39,7 @@ public class InformationMenuController extends BaseController implements Informa
     InformationMenuMvpPresenter<InformationMenuMvpView> mPresenter;
 
     @BindView(R.id.partial_toolbar_left_view)
-    TextView mToolbarTextViewLeft;
+    View mToolbarTextViewLeft;
     @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
     @BindView(R.id.controller_information_about_us)

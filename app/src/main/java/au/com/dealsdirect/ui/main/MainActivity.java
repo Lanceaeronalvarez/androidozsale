@@ -439,8 +439,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             getMainController().getPopUpHostRouter().handleBack();
         } else {
             Router currentRouter = getCurrentRouter();
-            if (getMainController().getBottomNav().getCurrentItem() == MainController.SHOP_INDEX &&
-                    currentRouter.getBackstack().size() <= 1) {
+            if (getMainController().getHomeViewPager().getCurrentItem() == MainController.SHOP_INDEX &&
+                    currentRouter.getBackstackSize() <= 1) {
                 DialogUtils.showYesNoDialog(
                         this,
                         getString(R.string.app_name),
@@ -450,8 +450,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                         (dialogInterface, i) -> finish(),
                         (dialogInterface, i) -> {
                         });
-            } else if (currentRouter.getBackstack().size() <= 1) {
-                getMainController().showShopController();
+            } else if (getMainController().getHomeViewPager().getCurrentItem() != MainController.CATEGORY_INDEX &&
+                    currentRouter.getBackstackSize() <= 1) {
+                getMainController().showHomePage();
             } else {
                 currentRouter.handleBack();
             }

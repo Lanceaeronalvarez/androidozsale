@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include layout="@layout/partial_toolbar_logo" />
+    <include layout="@layout/partial_toolbar_logo_categories" />
 
     <View style="@style/horizontalBorderView" />
 

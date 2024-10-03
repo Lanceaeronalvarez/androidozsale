@@ -72,7 +72,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     TextView mToolbarTitle;
 
     @BindView(R.id.partial_toolbar_left_view)
-    TextView mToolbarLeftButton;
+    View mToolbarLeftButton;
 
     @BindView(R.id.partial_toolbar_right_view)
     TextView mToolbarRightButton;
@@ -311,9 +311,6 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
 
     @Override
     public void onCategoryClicked(String category, int type) {
-        if(!category.equals("Sort")){
-            mToolbarLeftButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_pink_chevron, 0);
-        }
         mfilterLevel = 2;
         showClearButton();
 
@@ -857,7 +854,6 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
             }else{
                 mFilterByText.setVisibility(View.GONE);
             }
-            mToolbarLeftButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_close, 0);
             showClearButton();
             return true;
         }
