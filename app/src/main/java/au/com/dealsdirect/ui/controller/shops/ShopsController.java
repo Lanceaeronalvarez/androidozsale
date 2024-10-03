@@ -917,7 +917,7 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
 
         HorizontalScrollingItemsAdapter adapter = null;
         if (!items.isEmpty()) {
-            adapter = new HorizontalScrollingItemsAdapter(items, true, false);
+            adapter = new HorizontalScrollingItemsAdapter(items, true, false, true);
             adapter.setOnItemTappedListener((item, position, size) -> {
                 lastBestSellerItemPosition = position;
 

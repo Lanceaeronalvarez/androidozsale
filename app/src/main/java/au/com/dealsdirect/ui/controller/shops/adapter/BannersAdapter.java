@@ -19,8 +19,10 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
@@ -82,11 +84,12 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             VIEW_HOLDER_TYPE_PROMO_BANNER,
             VIEW_HOLDER_TYPE_SLIDING_BANNER,
             VIEW_HOLDER_TYPE_TRENDING_BRANDS_WIDGET,
-            VIEW_HOLDER_TYPE_BEST_SELLERS_WIDGET,
             VIEW_HOLDER_TYPE_SPONSORED_BANNER,
             VIEW_HOLDER_TYPE_SPACER,
-            VIEW_HOLDER_TYPE_NORMAL_BANNER
+            VIEW_HOLDER_TYPE_NORMAL_BANNER // NORMAL_BANNER should always be at the bottom
     };
+
+    private final Map<Integer, Integer> normalBannerInsertPositions;
 
     private static int getBannerOrderPosition(int viewHolderType) {
         for (int i = 0; i < BANNER_ORDER.length; i++) {
@@ -144,6 +147,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.useOldBannerDimensions = useOldBannerDimensions;
 
         bannersAdapterHelper = helper;
+
+        normalBannerInsertPositions = new HashMap<Integer, Integer>() {{
+            put(VIEW_HOLDER_TYPE_BEST_SELLERS_WIDGET, isTablet ? 4 : 5);
+        }};
 
         resetDimensions();
     }
@@ -260,13 +267,14 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case VIEW_HOLDER_TYPE_BEST_SELLERS_WIDGET:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
                 float height = computeBestSellersGrid().getItemHeight();
+                height += context.getResources().getDimension(R.dimen.horizontal_banner_header_title_height);
                 height += context.getResources().getDimension(R.dimen.horizontal_banner_circle_indicator_height);
                 height += context.getResources().getDimension(R.dimen.margin_extra_small) * 2;
                 return new HorizontalRecyclerItemsViewHolder(
                         view,
                         (int) height,
                         mBestSellersAdapter,
-                        false,
+                        true,
                         false,
                         HorizontalPageIndicatorAdapter.Style.RECTANGLE);
             case VIEW_HOLDER_TYPE_SPONSORED_BANNER:
@@ -410,7 +418,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 if (mBestSellersAdapter != null) {
                     mBestSellersAdapter.resetReyclerViewPosition();
-                    final int numberOfColumns = isTablet ? 3 : 2;
+                    final int numberOfColumns = isTablet ? 4 : 3;
                     horizontalRecyclerItemsViewHolder.setScrollStepSize(numberOfColumns);
                     horizontalRecyclerItemsViewHolder.setPageIndicatorCountWithPageSize(numberOfColumns);
                 } else {
@@ -420,6 +428,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 if (horizontalRecyclerItemsViewHolder.getPageIndicatorAdapter() != null) {
                     horizontalRecyclerItemsViewHolder.getPageIndicatorAdapter().setSelectedPosition(0);
                 }
+                horizontalRecyclerItemsViewHolder.setHeaderText(context.getString(R.string.best_sellers).toUpperCase());
                 break;
             case VIEW_HOLDER_TYPE_SPONSORED_BANNER:
                 if (horizontalRecyclerBannersViewHolder == null) {
@@ -599,6 +608,12 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     pos--;
                 }
             }
+            if (pos < 0) {
+                Integer insertPosition = normalBannerInsertPositions.get(removeViewHolderOrientationModifier(viewType));
+                if (insertPosition != null) {
+                    pos = insertPosition + getPositionOfNormalBanners();
+                }
+            }
         }
         return pos;
     }
@@ -628,8 +643,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private int getPositionOfBestSellers() {
-        int position = getPositionOfViewType(VIEW_HOLDER_TYPE_BEST_SELLERS_WIDGET);
-        return position;
+        return getPositionOfViewType(VIEW_HOLDER_TYPE_BEST_SELLERS_WIDGET);
     }
 
     private int getPositionOfSponsoredBanners() {
@@ -858,10 +872,12 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private ImageUtils.Grid computeBestSellersGrid() {
-        final float numberOfColumns = isTablet ? 3f : 2.1f;
+        final float numberOfColumns = isTablet ? 4f : 3f;
         final float screenDensity = ScreenUtils.getScreenDensity(context);
         final int proposedWidth = (int) (context.getResources().getInteger(R.integer.item_image_width) * screenDensity);
         final int proposedHeight = (int) ((context.getResources().getInteger(R.integer.item_image_height) * screenDensity) +
+                context.getResources().getDimension((R.dimen.product_list_item_like_button_size)) +
+                context.getResources().getDimension((R.dimen.product_list_text_view_height)) +
                 context.getResources().getDimension(R.dimen.price_block_top_text_height) +
                 context.getResources().getDimension(R.dimen.price_block_height) +
                 SaleItemProductPriceBlockHelper.getBottomTextViewHeight(context, true, false) +

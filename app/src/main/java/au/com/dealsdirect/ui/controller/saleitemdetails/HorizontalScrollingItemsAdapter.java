@@ -37,10 +37,13 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
 
     private boolean isWithBorder;
 
-    public HorizontalScrollingItemsAdapter(List<SaleItemProduct> dataSource, boolean isWithBorder, boolean isSupplierOriginalPriceInfoEnabled) {
+    private boolean isScaledDown;
+
+    public HorizontalScrollingItemsAdapter(List<SaleItemProduct> dataSource, boolean isWithBorder, boolean isSupplierOriginalPriceInfoEnabled, boolean isScaledDown) {
         mDataSource = new ArrayList<>(dataSource);
         this.isWithBorder = isWithBorder;
         this.isSupplierOriginalPriceInfoEnabled = isSupplierOriginalPriceInfoEnabled;
+        this.isScaledDown = isScaledDown;
     }
 
     @NonNull
@@ -50,7 +53,7 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
                 .inflate(isWithBorder ? R.layout.viewholder_sale_item_with_border : R.layout.viewholder_sale_item,
                         parent,
                         false);
-        return new SaleItemViewHolder(view, new Pair<>(cellWidth, cellHeight), isSupplierOriginalPriceInfoEnabled, false);
+        return new SaleItemViewHolder(view, new Pair<>(cellWidth, cellHeight), isSupplierOriginalPriceInfoEnabled, false, isScaledDown);
     }
 
     @Override

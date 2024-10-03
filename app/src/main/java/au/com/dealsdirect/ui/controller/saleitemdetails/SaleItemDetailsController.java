@@ -2190,7 +2190,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mYouMayAlsoLikeContainer.setVisibility(View.VISIBLE);
 
         final List<SaleItemProduct> dataSource = new ArrayList<>(mYouMayAlsoLikeList);
-        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(dataSource, false, mActivity.getSupplierOriginalPriceInfoHelper() != null);
+        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(dataSource, false, mActivity.getSupplierOriginalPriceInfoHelper() != null, false);
         adapter.setOnItemTappedListener((item, position, size) -> SaleItemDetailsController.this.onItemTapped((GetYouMayAlsoLikeResponse) item, position, size));
         adapter.setOnPriceInfoTappedListener(item -> onPriceInfoClicked(item, null));
         adapter.setWishlistListener(horizontalItemsWishlistListener);
@@ -2225,7 +2225,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mRecommendedList = recommendedItemsResponseList;
 
         final List<SaleItemProduct> dataSource = new ArrayList<>(mRecommendedList);
-        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(dataSource, false, mActivity.getSupplierOriginalPriceInfoHelper() != null);
+        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(dataSource, false, mActivity.getSupplierOriginalPriceInfoHelper() != null, false);
         adapter.setOnItemTappedListener((item, position, size) -> SaleItemDetailsController.this.onItemTapped((RecommendedItemsResponse) item, position, size));
         adapter.setOnPriceInfoTappedListener(item -> onPriceInfoClicked(item, null));
         adapter.setWishlistListener(horizontalItemsWishlistListener);
@@ -2259,7 +2259,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mRecentlyViewedContainer.setVisibility(View.VISIBLE);
 
         final List<SaleItemProduct> dataSource = new ArrayList<>(response);
-        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(dataSource, false, mActivity.getSupplierOriginalPriceInfoHelper() != null);
+        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(dataSource, false, mActivity.getSupplierOriginalPriceInfoHelper() != null, false);
         adapter.setShouldRepeatCellsToFillWidth(false);
         adapter.setOnItemTappedListener((item, position, size) -> SaleItemDetailsController.this.onItemTapped((RecentlyViewedItemResponse) item, position, size));
         adapter.setOnPriceInfoTappedListener(item -> onPriceInfoClicked(item, null));

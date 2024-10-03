@@ -36,6 +36,7 @@
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/price_block_constraint_container"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/price_block_height"
         android:background="@color/price_block_right_background"

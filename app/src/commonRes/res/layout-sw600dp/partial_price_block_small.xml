@@ -53,6 +53,7 @@
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/price_block_constraint_container"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/price_block_height"
         android:background="@color/price_block_right_background"
@@ -102,9 +103,9 @@
             android:id="@+id/right_text_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:orientation="vertical"
             android:paddingLeft="15dp"
+            android:paddingRight="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/left_text"
             app:layout_constraintRight_toRightOf="parent"

@@ -70,7 +70,9 @@ public class SaleItemViewHolder extends RecyclerView.ViewHolder {
 
     boolean useAlternatePriceBlockHelper = false;
 
-    public SaleItemViewHolder(View view, Pair<Integer, Integer> pair, boolean isSupplierOriginalPriceInfoEnabled, boolean useAlternatePriceBlockHelper) {
+    boolean isScaledDown = false;
+
+    public SaleItemViewHolder(View view, Pair<Integer, Integer> pair, boolean isSupplierOriginalPriceInfoEnabled, boolean useAlternatePriceBlockHelper, boolean isScaledDown) {
         super(view);
         ButterKnife.bind(this, view);
 
@@ -82,6 +84,7 @@ public class SaleItemViewHolder extends RecyclerView.ViewHolder {
 
         this.isSupplierOriginalPriceInfoEnabled = isSupplierOriginalPriceInfoEnabled;
         this.useAlternatePriceBlockHelper = useAlternatePriceBlockHelper;
+        this.isScaledDown = isScaledDown;
     }
 
     private boolean isLiked = true;
@@ -147,8 +150,8 @@ public class SaleItemViewHolder extends RecyclerView.ViewHolder {
         setLiked(isProductInWishlist);
 
         if (priceBlockHelper == null ||
-                (useAlternatePriceBlockHelper && (priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper)) ||
-                (!useAlternatePriceBlockHelper && !(priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper))) {
+                (useAlternatePriceBlockHelper && !(priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper)) ||
+                (!useAlternatePriceBlockHelper && (priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper))) {
             priceBlockHelper = useAlternatePriceBlockHelper ?
                     new SaleItemProductAlternatePriceBlockHelper(priceBlockContainer) :
                     new SaleItemProductPriceBlockHelper(priceBlockContainer);
@@ -156,6 +159,9 @@ public class SaleItemViewHolder extends RecyclerView.ViewHolder {
         priceBlockHelper.setup(product, isSupplierOriginalPriceInfoEnabled);
         priceBlockHelper.setFreeDeliveryTextViewText(null);
         priceBlockHelper.setPriceInfoOnClickListener(priceInfoOnClickListener);
+        if (isScaledDown) {
+            priceBlockHelper.scaleDown();
+        }
     }
 
     public boolean isUseAlternatePriceBlockHelper() {
@@ -165,8 +171,8 @@ public class SaleItemViewHolder extends RecyclerView.ViewHolder {
     public void setUseAlternatePriceBlockHelper(boolean useAlternatePriceBlockHelper) {
         this.useAlternatePriceBlockHelper = useAlternatePriceBlockHelper;
         if (priceBlockHelper != null &&
-                ((useAlternatePriceBlockHelper && (priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper)) ||
-                        (!useAlternatePriceBlockHelper && !(priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper)))) {
+                ((useAlternatePriceBlockHelper && !(priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper)) ||
+                        (!useAlternatePriceBlockHelper && (priceBlockHelper instanceof SaleItemProductAlternatePriceBlockHelper)))) {
             priceBlockHelper = useAlternatePriceBlockHelper ?
                     new SaleItemProductAlternatePriceBlockHelper(priceBlockContainer) :
                     new SaleItemProductPriceBlockHelper(priceBlockContainer);
