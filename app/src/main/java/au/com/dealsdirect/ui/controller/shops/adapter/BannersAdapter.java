@@ -418,7 +418,11 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 if (mBestSellersAdapter != null) {
                     mBestSellersAdapter.resetReyclerViewPosition();
-                    final int numberOfColumns = isTablet ? 4 : 3;
+                    final int numberOfColumns = isTablet ?
+                            (mOrientation == Configuration.ORIENTATION_LANDSCAPE ?
+                                    context.getResources().getInteger(R.integer.best_sellers_column_count_for_landscape_tablet) :
+                                    context.getResources().getInteger(R.integer.best_sellers_column_count_for_portrait_tablet)) :
+                            context.getResources().getInteger(R.integer.best_sellers_column_count_for_mobile);
                     horizontalRecyclerItemsViewHolder.setScrollStepSize(numberOfColumns);
                     horizontalRecyclerItemsViewHolder.setPageIndicatorCountWithPageSize(numberOfColumns);
                 } else {
@@ -611,7 +615,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (pos < 0) {
                 Integer insertPosition = normalBannerInsertPositions.get(removeViewHolderOrientationModifier(viewType));
                 if (insertPosition != null) {
-                    pos = insertPosition + getPositionOfNormalBanners();
+                    pos = insertPosition * mNumberOfColumns + getPositionOfNormalBanners();
                 }
             }
         }
@@ -872,7 +876,11 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private ImageUtils.Grid computeBestSellersGrid() {
-        final float numberOfColumns = isTablet ? 4f : 3f;
+        final float numberOfColumns = isTablet ?
+                (mOrientation == Configuration.ORIENTATION_LANDSCAPE ?
+                        context.getResources().getInteger(R.integer.best_sellers_column_count_for_landscape_tablet) :
+                        context.getResources().getInteger(R.integer.best_sellers_column_count_for_portrait_tablet)) :
+                context.getResources().getInteger(R.integer.best_sellers_column_count_for_mobile);
         final float screenDensity = ScreenUtils.getScreenDensity(context);
         final int proposedWidth = (int) (context.getResources().getInteger(R.integer.item_image_width) * screenDensity);
         final int proposedHeight = (int) ((context.getResources().getInteger(R.integer.item_image_height) * screenDensity) +
