@@ -467,7 +467,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         width = mWidthForPromoBanner;
                         height = mHeightForPromoBanner;
                     } else {
-                        item = mSales.get(position - getPositionOfNormalBanners());
+                        item = mSales.get(getPositionOfNormalBannersFromAdapterPosition(position));
                         width = mWidth;
                         height = mHeight;
                     }
@@ -624,6 +624,17 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private int getPositionOfNormalBanners() {
         return getPositionOfViewType(VIEW_HOLDER_TYPE_NORMAL_BANNER);
+    }
+
+    private int getPositionOfNormalBannersFromAdapterPosition(int position) {
+        final int pos = position - getPositionOfNormalBanners();
+        int adjustment = 0;
+        for (Integer insertPos : normalBannerInsertPositions.values()) {
+            if (insertPos < pos) {
+                adjustment++;
+            }
+        }
+        return pos - adjustment;
     }
 
     private int getPositionOfLeaderboardBanner() {
