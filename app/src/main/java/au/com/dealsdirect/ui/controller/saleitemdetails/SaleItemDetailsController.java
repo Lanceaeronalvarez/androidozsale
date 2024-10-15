@@ -2588,7 +2588,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         mLikeFloatingButton.setImageDrawable(mLikeFloatingButton.getContext().getResources().getDrawable(drawableId));
 
         mWishlistIcon.setImageDrawable(mLikeFloatingButton.getContext().getResources().getDrawable(drawableId));
-        mWishlistIcon.setColorFilter(ContextCompat.getColor(mActivity, isLiked ? R.color.fluorescent_blue : R.color.black));
         mAddWishListText.setText(isLiked ? "Added to Wishlist" : "Add to Wishlist");
     }
 
