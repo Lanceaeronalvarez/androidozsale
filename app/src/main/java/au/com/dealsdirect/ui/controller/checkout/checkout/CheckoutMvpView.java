@@ -87,4 +87,6 @@ public interface CheckoutMvpView extends MvpView {
     void showAgeRestriction(boolean hasAgeRestriction);
 
     void updateCartWithValue(Value value);
+
+    void updateCartWithMappedValues(CheckoutDetailsMapper mappedValues);
 }

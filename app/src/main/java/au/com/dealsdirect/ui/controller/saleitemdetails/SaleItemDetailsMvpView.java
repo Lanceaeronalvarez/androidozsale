@@ -49,4 +49,6 @@ public interface SaleItemDetailsMvpView extends MvpView {
     void showPreviewShippingPrice(GetPostcodeShippingPriceResponse response, String postcode, Integer operation);
 
     void showLeaderboardBanner(GetBannerResponse response);
+
+    void showPricingInfoText(String rrpText, Double totalPercentOff, Double originalPrice, String combinedPricingInfoText);
 }

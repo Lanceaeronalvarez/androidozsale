@@ -46,7 +46,11 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.MvpView;
 import au.com.dealsdirect.ui.controller.account.AccountController;
 import au.com.dealsdirect.ui.controller.brands.TopBrandsController;
+import au.com.dealsdirect.ui.controller.categories.NewSaleCategoriesController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
+import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
+import au.com.dealsdirect.ui.controller.checkout.checkouthost.CheckoutHostController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
@@ -67,13 +71,14 @@ public class MainController extends BaseController implements MainMvpView {
 
     public static final String TAG = "Home";
 
-    public static final int SHOP_INDEX = 2;
+    public static final int SHOP_INDEX = 5;
     public static final int CATEGORY_INDEX = 0;
     public static final int ACCOUNT_INDEX = 4;
     public static final int WISHLIST_INDEX = 3;
     public static final int BRANDS_INDEX = 1;
+    public static final int CHECKOUT_INDEX = 2;
 
-    private static final int VIEWPAGER_SIZE = 5;
+    private static final int VIEWPAGER_SIZE = 6;
 
     private static final String KEY_HAS_SAVED_INSTANCE = "KEY_HAS_SAVED_INSTANCE";
 
@@ -139,7 +144,7 @@ public class MainController extends BaseController implements MainMvpView {
 
     private String mChosenSubCategoryItemKey = "";
 
-    private int previousPagerPosition = 2;
+    private int previousPagerPosition = -1;
 
     private boolean mHasSavedStateInstance;
     public static boolean mIsInitialSavedInstanceLoad;
@@ -149,6 +154,8 @@ public class MainController extends BaseController implements MainMvpView {
     private boolean mShouldBottomNavigationViewEnabled = true;
 
     private Uri deeplinkUriToProcess = null;
+
+    boolean willGoToShopInsteadOfCategories = false;
 
     private Map<Integer, List<RouterTransaction>> deeplinkBackstack = new HashMap<>();
 
@@ -212,7 +219,7 @@ public class MainController extends BaseController implements MainMvpView {
 
         mIndicators.put(CATEGORY_INDEX, mIndicator1);
         mIndicators.put(BRANDS_INDEX, mIndicator2);
-        mIndicators.put(SHOP_INDEX, mIndicator3);
+        mIndicators.put(CHECKOUT_INDEX, mIndicator3);
         mIndicators.put(WISHLIST_INDEX, mIndicator4);
         mIndicators.put(ACCOUNT_INDEX, mIndicator5);
 
@@ -224,25 +231,24 @@ public class MainController extends BaseController implements MainMvpView {
         mBottomNavigationView.setInactiveColor(mActivity.getResources().getColor(R.color.bottom_nav_inactive));
         readjustBottomNavigationViewLayoutWidth();
 
-        mBottomNavigationView.setCurrentItem(SHOP_INDEX);
+        showHomePage();
+        previousPagerPosition = mHomeViewPager.getCurrentItem();
 
         mHomeButton.setOnClickListener(it -> {
-            mBottomNavigationView.setCurrentItem(SHOP_INDEX);
+            showHomePage();
         });
 
         mBottomNavigationView.setOnTabSelectedListener((position, wasSelected) -> {
-            if (WILL_ANIMATE_INDICATOR) {
-                final int oldPosition = mBottomNavigationView.getCurrentItem();
-                animateIndicator(oldPosition, position);
-            } else {
-                resetIndicators(position);
-            }
             switch (position) {
                 case SHOP_INDEX:
                     showShopController();
                     return true;
                 case CATEGORY_INDEX:
-                    showCategoryController();
+                    if (willGoToShopInsteadOfCategories) {
+                        showShopController();
+                    } else {
+                        showCategoryController();
+                    }
                     return true;
                 case ACCOUNT_INDEX:
                     showAccountController();
@@ -252,6 +258,9 @@ public class MainController extends BaseController implements MainMvpView {
                     return true;
                 case BRANDS_INDEX:
                     showBrandsController();
+                    return true;
+                case CHECKOUT_INDEX:
+                    showCheckoutController();
                     return true;
                 default:
                     return false;
@@ -352,13 +361,13 @@ public class MainController extends BaseController implements MainMvpView {
         if (!isViewBound()) {
             return;
         }
+        cancelIndicatorAnimators();
+        indicatorAnimators.clear();
         mIndicator1.setVisibility(View.INVISIBLE);
         mIndicator2.setVisibility(View.INVISIBLE);
         mIndicator3.setVisibility(View.INVISIBLE);
         mIndicator4.setVisibility(View.INVISIBLE);
         mIndicator5.setVisibility(View.INVISIBLE);
-        cancelIndicatorAnimators();
-        indicatorAnimators.clear();
         mIndicatorSliding.setVisibility(View.VISIBLE);
         final View oldIndicator = mIndicators.get(oldIndex);
         final View newIndicator = mIndicators.get(newIndex);
@@ -519,14 +528,16 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     private void setupShopRouter(Router router, boolean willReset) {
-        if (!router.hasRootController() || willReset) {
-            router.setBackstack(
-                    Arrays.asList(
-                            RouterTransaction.with(ShopsController.newInstance()).tag(ShopsController.TAG)
-                                    .popChangeHandler(new HorizontalChangeHandler())
-                                    .pushChangeHandler(new HorizontalChangeHandler())),
-                    null);
+        if (router == null || (router.hasRootController() && !willReset)) {
+            return;
         }
+
+        router.setBackstack(
+                Arrays.asList(
+                        RouterTransaction.with(ShopsController.newInstance()).tag(ShopsController.TAG)
+                                .popChangeHandler(new HorizontalChangeHandler())
+                                .pushChangeHandler(new HorizontalChangeHandler())),
+                null);
     }
 
     private void setupCategoryRouter(Router router) {
@@ -534,13 +545,15 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     private void setupCategoryRouter(Router router, boolean willReset) {
-        if (!router.hasRootController() || willReset) {
-            Controller categoryController = mActivity.getResources().getBoolean(R.bool.should_use_old_category_layout) ?
-                    ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES) : ControllerFactory.getInstance(GateKeeper.Destination.SALECATEGORY);
-            router.setRoot(RouterTransaction.with(categoryController)
-                    .popChangeHandler(new HorizontalChangeHandler())
-                    .pushChangeHandler(new HorizontalChangeHandler()));
+        if (router == null || (router.hasRootController() && !willReset)) {
+            return;
         }
+
+        Controller categoryController = mActivity.getResources().getBoolean(R.bool.should_use_old_category_layout) ?
+                ControllerFactory.getInstance(GateKeeper.Destination.CATEGORIES) : ControllerFactory.getInstance(GateKeeper.Destination.SALECATEGORY);
+        router.setRoot(RouterTransaction.with(categoryController)
+                .popChangeHandler(new HorizontalChangeHandler())
+                .pushChangeHandler(new HorizontalChangeHandler()));
     }
 
     private void setupAccountRouter(Router router) {
@@ -548,12 +561,14 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     private void setupAccountRouter(Router router, boolean willReset) {
-        if (!router.hasRootController() || willReset) {
-            Controller accountController = ControllerFactory.getInstance(GateKeeper.Destination.ACCOUNT);
-            router.setRoot(RouterTransaction.with(accountController)
-                    .popChangeHandler(new HorizontalChangeHandler())
-                    .pushChangeHandler(new HorizontalChangeHandler()));
+        if (router == null || (router.hasRootController() && !willReset)) {
+            return;
         }
+
+        Controller accountController = ControllerFactory.getInstance(GateKeeper.Destination.ACCOUNT);
+        router.setRoot(RouterTransaction.with(accountController)
+                .popChangeHandler(new HorizontalChangeHandler())
+                .pushChangeHandler(new HorizontalChangeHandler()));
     }
 
     private void setupWishlistRouter(Router router) {
@@ -561,12 +576,14 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     private void setupWishlistRouter(Router router, boolean willReset) {
-        if (!router.hasRootController() || willReset) {
-            SaleItemsController wishlistController = (SaleItemsController) ControllerFactory.getInstance(GateKeeper.Destination.SALEITEMS);
-            wishlistController.setSourceMode(SaleItemsController.SourceMode.WISHLIST);
-            router.setRoot(RouterTransaction.with(wishlistController)
-                    .popChangeHandler(new HorizontalChangeHandler()));
+        if (router == null || (router.hasRootController() && !willReset)) {
+            return;
         }
+
+        SaleItemsController wishlistController = (SaleItemsController) ControllerFactory.getInstance(GateKeeper.Destination.SALEITEMS);
+        wishlistController.setSourceMode(SaleItemsController.SourceMode.WISHLIST);
+        router.setRoot(RouterTransaction.with(wishlistController)
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     private void setupBrandsRouter(Router router) {
@@ -574,11 +591,35 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     private void setupBrandsRouter(Router router, boolean willReset) {
-        if (!router.hasRootController() || willReset) {
-            TopBrandsController brandsController = TopBrandsController.newInstance();
-            router.setRoot(RouterTransaction.with(brandsController)
-                    .popChangeHandler(new HorizontalChangeHandler()));
+        if (router == null || (router.hasRootController() && !willReset)) {
+            return;
         }
+
+        TopBrandsController brandsController = TopBrandsController.newInstance();
+        router.setRoot(RouterTransaction.with(brandsController)
+                .popChangeHandler(new HorizontalChangeHandler()));
+    }
+
+    private void setupCheckoutRouter(Router router) {
+        setupCheckoutRouter(router, false);
+    }
+
+    private void setupCheckoutRouter(Router router, boolean willReset) {
+        if (router == null || (router.hasRootController() && !willReset)) {
+            return;
+        }
+
+        Controller controller;
+
+        if (mPresenter.isTablet()) {
+            controller = CheckoutHostController.newInstance();
+        } else {
+            controller = CheckoutController.newInstance();
+        }
+
+        router.setRoot(RouterTransaction.with(controller)
+                .tag(CheckoutController.TAG)
+                .popChangeHandler(new HorizontalChangeHandler()));
     }
 
     public void resetShopRouter() {
@@ -601,6 +642,10 @@ public class MainController extends BaseController implements MainMvpView {
         setupBrandsRouter(routers.get(BRANDS_INDEX), true);
     }
 
+    public void resetCheckoutRouter() {
+        setupCheckoutRouter(routers.get(CHECKOUT_INDEX), true);
+    }
+
     private void setupRouterAtPosition(Router router, int position) {
         routers.put(position, router);
 
@@ -619,6 +664,9 @@ public class MainController extends BaseController implements MainMvpView {
                 break;
             case BRANDS_INDEX:
                 setupBrandsRouter(router);
+                break;
+            case CHECKOUT_INDEX:
+                setupCheckoutRouter(router);
                 break;
             default:
                 return;
@@ -653,6 +701,10 @@ public class MainController extends BaseController implements MainMvpView {
 
     public Router getBrandsRouter() {
         return routers.get(BRANDS_INDEX);
+    }
+
+    public Router getCheckoutRouter() {
+        return routers.get(CHECKOUT_INDEX);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -755,8 +807,6 @@ public class MainController extends BaseController implements MainMvpView {
             mBottomNavigationView.setVisibility(View.VISIBLE);
             mBottomNavigationView.bringToFront();
             mBottomNavigationUpperLine.setVisibility(View.VISIBLE);
-            mHomeButton.setVisibility(View.VISIBLE);
-            mHomeButton.bringToFront();
             mBottomNavigationContainer.setVisibility(View.VISIBLE);
             mNavIndicatorView.setVisibility(View.VISIBLE);
             resetIndicators(mBottomNavigationView.getCurrentItem());
@@ -825,21 +875,33 @@ public class MainController extends BaseController implements MainMvpView {
         });
     }
 
+    private void setBottomNavigationItem(int index) {
+        final int oldPosition = mBottomNavigationView.getCurrentItem();
+        final int newPosition = index == SHOP_INDEX ? CATEGORY_INDEX : index;
+        if (WILL_ANIMATE_INDICATOR) {
+            animateIndicator(oldPosition, newPosition);
+        } else {
+            resetIndicators(newPosition);
+        }
+        mBottomNavigationView.setCurrentItem(index, false);
+    }
+
     @Override
     public void showShopController() {
-        mBottomNavigationView.setCurrentItem(SHOP_INDEX, false);
-        resetIndicators(SHOP_INDEX);
+        showShopController(false);
+    }
+
+    private void showShopController(boolean willNotNavigateFromAwayShop) {
+        setBottomNavigationItem(CATEGORY_INDEX);
         if (previousPagerPosition == SHOP_INDEX) {
-            if (getShopRouter() != null) {
-                getShopRouter().popToRoot();
+            if (!willNotNavigateFromAwayShop) {
+                if (getCategoriesRouter() != null) {
+                    getCategoriesRouter().popToRoot();
+                }
+                setViewPagerItem(CATEGORY_INDEX);
             }
         } else {
             setViewPagerItem(SHOP_INDEX);
-            Controller controller = getCurrentViewPagerController();
-            if (controller instanceof CheckoutMvpView &&
-                    ((CheckoutMvpView) controller).isViewAttached()) {
-                ((BaseController) controller).refreshContents();
-            }
         }
         resetSecureFlag(getCurrentControllerOnRouter(getShopRouter()));
 
@@ -848,9 +910,11 @@ public class MainController extends BaseController implements MainMvpView {
 
     @Override
     public void showCategoryController() {
-        mBottomNavigationView.setCurrentItem(CATEGORY_INDEX, false);
+        setWillGoToShopInsteadOfCategories(false);
+        setBottomNavigationItem(CATEGORY_INDEX);
 
-        if (previousPagerPosition == CATEGORY_INDEX) {
+        if (previousPagerPosition == CATEGORY_INDEX &&
+                mHomeViewPager.getCurrentItem() == CATEGORY_INDEX) {
             if (getCategoriesRouter() != null) {
                 getCategoriesRouter().popToRoot();
             }
@@ -867,7 +931,7 @@ public class MainController extends BaseController implements MainMvpView {
 
     @Override
     public void showAccountController() {
-        mBottomNavigationView.setCurrentItem(ACCOUNT_INDEX, false);
+        setBottomNavigationItem(ACCOUNT_INDEX);
         if (previousPagerPosition == ACCOUNT_INDEX) {
             Controller controller = getCurrentViewPagerController();
             if (controller instanceof BaseController &&
@@ -891,7 +955,7 @@ public class MainController extends BaseController implements MainMvpView {
 
     @Override
     public void showWishlistController() {
-        mBottomNavigationView.setCurrentItem(WISHLIST_INDEX, false);
+        setBottomNavigationItem(WISHLIST_INDEX);
         if (previousPagerPosition == WISHLIST_INDEX) {
             Controller controller = getCurrentViewPagerController();
             if (controller instanceof BaseController &&
@@ -914,7 +978,7 @@ public class MainController extends BaseController implements MainMvpView {
 
     @Override
     public void showBrandsController() {
-        mBottomNavigationView.setCurrentItem(BRANDS_INDEX, false);
+        setBottomNavigationItem(BRANDS_INDEX);
         if (previousPagerPosition == BRANDS_INDEX) {
             Controller controller = getCurrentViewPagerController();
             if (!mIsInitialSavedInstanceLoad && !(controller instanceof TopBrandsController)) {
@@ -939,12 +1003,63 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     @Override
+    public void showCheckoutController() {
+        setBottomNavigationItem(CHECKOUT_INDEX);
+        if (previousPagerPosition == CHECKOUT_INDEX) {
+            Controller controller = getCurrentViewPagerController();
+            if (!mIsInitialSavedInstanceLoad && !(controller instanceof CheckoutMvpView)) {
+                Router router = routers.get(CHECKOUT_INDEX);
+                if (router != null) {
+                    ArrayList<RouterTransaction> backstack = new ArrayList<>();
+                    backstack.add(router.getBackstack().get(0));
+                    router.setBackstack(backstack, new HorizontalChangeHandler());
+                }
+            }
+            if (controller instanceof BaseController &&
+                    ((BaseController) controller).isViewAttached()) {
+                ((BaseController) controller).refreshContents();
+            }
+        } else {
+            setViewPagerItem(CHECKOUT_INDEX);
+        }
+
+        if (!mActivity.isAuthorized()) {
+            mActivity.showLoginController(null);
+        }
+
+        resetSecureFlag(getCurrentControllerOnRouter(getBrandsRouter()));
+
+        mIsInitialSavedInstanceLoad = false;
+    }
+
+    @Override
     public void showBasketItemCount() {
-        mActivity.getBrandsController().updateBasketItemsQuantity(CartUtil.getCartValue());
-        mActivity.getShopController().updateBasketItemsQuantity(CartUtil.getCartValue());
-        mActivity.getNewSaleCategoriesController().updateBasketItemsQuantity(CartUtil.getCartValue());
-        mActivity.getWishlistController().updateBasketItemsQuantity(CartUtil.getCartValue());
-        mActivity.getSaleItemsControllerFromShop().updateBasketItemsQuantity(CartUtil.getCartValue());
+        final int count = CartUtil.getCartValue();
+        updateBasketItemCount(count);
+    }
+
+    private void updateBasketItemCount(int count) {
+        if (mPresenter == null || mBottomNavigationView == null) {
+            DelayedMethodExecutionManager.getInstance()
+                    .queueDelayedMethodCall(
+                            this.getClass().getName(),
+                            "showBasketItemCount",
+                            this::showBasketItemCount);
+            return;
+        }
+
+        String text;
+        if (count == 0) {
+            text = "";
+        } else {
+            text = Integer.toString(count);
+        }
+        AHNotification notification = new AHNotification.Builder()
+                .setText(text)
+                .setBackgroundColor(ContextCompat.getColor(mActivity, R.color.bottom_nav_badge))
+                .setTextColor(ContextCompat.getColor(mActivity, R.color.bottom_nav_badge_text))
+                .build();
+        mBottomNavigationView.setNotification(notification, CHECKOUT_INDEX);
     }
 
     @Override
@@ -978,12 +1093,18 @@ public class MainController extends BaseController implements MainMvpView {
         mPresenter.callGetBasketItemsQuantity();
     }
 
+    public void updateCheckoutWithCartDetails(CheckoutDetailsMapper cartDetails) {
+        if (getCheckoutRouter() == null) {
+            return;
+        }
+        Controller controller = getCheckoutRouter().getControllerWithTag(CheckoutController.TAG);
+        if (controller instanceof CheckoutMvpView) {
+            ((CheckoutMvpView) controller).updateCartWithMappedValues(cartDetails);
+        }
+    }
+
     public void removeBasketItemCount() {
-        mActivity.getBrandsController().updateBasketItemsQuantity(0);
-        mActivity.getShopController().updateBasketItemsQuantity(0);
-        mActivity.getNewSaleCategoriesController().updateBasketItemsQuantity(0);
-        mActivity.getWishlistController().updateBasketItemsQuantity(0);
-        mBottomNavigationView.setNotification("", BRANDS_INDEX);
+        updateBasketItemCount(0);
     }
 
     @Override
@@ -1246,7 +1367,16 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public void showHomePage() {
-        mBottomNavigationView.setCurrentItem(2);
+        if (getShopRouter() != null && getShopRouter().getBackstackSize() > 0) {
+            getShopRouter().popToRoot();
+        }
+        if (getCategoriesRouter() != null && getCategoriesRouter().getBackstackSize() > 0) {
+            Controller controller = getCategoriesRouter().getBackstack().get(0).controller();
+            if (controller instanceof NewSaleCategoriesController) {
+                ((NewSaleCategoriesController) controller).resetLevels();
+            }
+        }
+        showShopController(true);
     }
 
     public void showBrands() {
@@ -1416,5 +1546,13 @@ public class MainController extends BaseController implements MainMvpView {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
             }
         }
+    }
+
+    public boolean isWillGoToShopInsteadOfCategories() {
+        return willGoToShopInsteadOfCategories;
+    }
+
+    public void setWillGoToShopInsteadOfCategories(boolean willGoToShopInsteadOfCategories) {
+        this.willGoToShopInsteadOfCategories = willGoToShopInsteadOfCategories;
     }
 }

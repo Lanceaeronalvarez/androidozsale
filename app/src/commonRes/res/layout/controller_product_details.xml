@@ -39,20 +39,21 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="60dp"
                     android:clipChildren="false"
                     android:clipToPadding="false"
-                    android:orientation="vertical"
-                    android:layout_marginTop="60dp">
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:id="@+id/product_details_leaderboard_banner_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <ImageView
                             android:id="@+id/product_details_leaderboard_banner_image"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:adjustViewBounds="true"/>
+                            android:adjustViewBounds="true" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -105,11 +106,11 @@
                                             android:id="@+id/productName"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
+                                            android:layout_marginTop="5dp"
+                                            android:maxLines="2"
                                             android:text="Brand Description"
                                             android:textColor="@color/black"
-                                            android:textSize="@dimen/text_size_caption1"
-                                            android:layout_marginTop="5dp"
-                                            android:maxLines="2"/>
+                                            android:textSize="@dimen/text_size_caption1" />
 
                                     </LinearLayout>
 
@@ -163,73 +164,73 @@
                                         android:layout_height="match_parent"
                                         android:layout_alignParentTop="true"
                                         android:layout_gravity="center"
-                                        android:paddingTop="@dimen/margin_extra_small"
-                                        android:layout_weight="1"/>
+                                        android:layout_weight="1"
+                                        android:paddingTop="@dimen/margin_extra_small" />
 
                                     <RelativeLayout
+                                        android:id="@+id/productImageRecyclerViewSelectorLayout"
                                         android:layout_width="match_parent"
                                         android:layout_height="160dp"
-                                        android:id="@+id/productImageRecyclerViewSelectorLayout"
                                         android:visibility="visible">
 
                                         <androidx.recyclerview.widget.RecyclerView
                                             android:id="@+id/productImageRecyclerView"
                                             android:layout_width="wrap_content"
                                             android:layout_height="match_parent"
-                                            android:layout_gravity="center"
                                             android:layout_alignParentBottom="true"
                                             android:layout_centerInParent="true"
+                                            android:layout_gravity="center"
+                                            android:layout_marginLeft="@dimen/margin_small"
+                                            android:layout_marginRight="@dimen/margin_small"
                                             android:clipChildren="false"
                                             android:clipToPadding="false"
-                                            android:overScrollMode="always"
-                                            android:layout_marginLeft="@dimen/margin_small"
-                                            android:layout_marginRight="@dimen/margin_small"/>
+                                            android:overScrollMode="always" />
 
                                         <RelativeLayout
+                                            android:id="@+id/productImageRecyclerViewLeftButton"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_centerVertical="true"
-                                            android:id="@+id/productImageRecyclerViewLeftButton"
-                                            android:layout_alignParentLeft="true">
+                                            android:layout_alignParentLeft="true"
+                                            android:layout_centerVertical="true">
 
                                             <ImageView
                                                 android:layout_width="45dp"
                                                 android:layout_height="45dp"
-                                                android:scaleType="fitCenter"
+                                                android:layout_marginLeft="@dimen/marginBottom_10"
+                                                android:alpha="0.8"
                                                 android:background="@color/lightGrey"
-                                                android:layout_marginLeft="@dimen/marginBottom_10"
-                                                android:alpha="0.8"/>
+                                                android:scaleType="fitCenter" />
 
                                             <ImageView
                                                 android:layout_width="45dp"
                                                 android:layout_height="45dp"
-                                                android:src="@drawable/ic_chevron_left"
-                                                android:scaleType="fitCenter"
                                                 android:layout_marginLeft="@dimen/marginBottom_10"
+                                                android:scaleType="fitCenter"
+                                                android:src="@drawable/ic_chevron_left"
                                                 app:tint="@color/black" />
 
                                         </RelativeLayout>
 
                                         <RelativeLayout
+                                            android:id="@+id/productImageRecyclerViewRightButton"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_centerVertical="true"
-                                            android:id="@+id/productImageRecyclerViewRightButton"
-                                            android:layout_alignParentRight="true">
+                                            android:layout_alignParentRight="true"
+                                            android:layout_centerVertical="true">
 
                                             <ImageView
                                                 android:layout_width="45dp"
                                                 android:layout_height="45dp"
-                                                android:background="@color/lightGrey"
                                                 android:layout_marginRight="@dimen/marginBottom_10"
-                                                android:alpha="0.8"/>
+                                                android:alpha="0.8"
+                                                android:background="@color/lightGrey" />
 
                                             <ImageView
                                                 android:layout_width="45dp"
                                                 android:layout_height="45dp"
+                                                android:layout_marginRight="@dimen/marginBottom_10"
                                                 android:src="@drawable/ic_chevron_right"
-                                                android:layout_marginRight="@dimen/marginBottom_10"
-                                                app:tint="@color/black"/>
+                                                app:tint="@color/black" />
 
                                         </RelativeLayout>
 
@@ -406,22 +407,22 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/border_regular"
                                     android:layout_alignParentTop="true"
-                                    android:layout_marginTop="@dimen/margin_small"
                                     android:layout_gravity="center"
-                                    android:background="@color/beige"
-                                    android:layout_marginLeft="5dp"/>
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="@dimen/margin_small"
+                                    android:background="@color/beige" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/margin_small"
-                                    android:paddingTop="@dimen/margin_small"
-                                    android:paddingLeft="8.5dp">
-                                    
+                                    android:paddingLeft="8.5dp"
+                                    android:paddingTop="@dimen/margin_small">
+
                                     <ImageView
                                         android:layout_width="24dp"
                                         android:layout_height="24dp"
-                                        android:src="@drawable/ic_product_description"/>
+                                        android:src="@drawable/ic_product_description" />
 
                                     <TextView
                                         android:id="@+id/product_description_text_header"
@@ -444,10 +445,10 @@
                                     android:id="@+id/product_details_read_more"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:paddingLeft="8.5dp"
                                     android:text="...read more"
                                     android:textColor="@color/beige"
-                                    android:paddingLeft="8.5dp"
-                                    android:visibility="gone"/>
+                                    android:visibility="gone" />
 
                             </LinearLayout>
 
@@ -465,10 +466,10 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/border_regular"
                                     android:layout_alignParentTop="true"
-                                    android:layout_marginTop="@dimen/margin_small"
                                     android:layout_gravity="center"
-                                    android:background="@color/beige"
-                                    android:layout_marginLeft="5dp"/>
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="@dimen/margin_small"
+                                    android:background="@color/beige" />
 
                                 <LinearLayout
                                     android:id="@+id/product_details_shipping_postcode_header"
@@ -482,7 +483,7 @@
                                     <ImageView
                                         android:layout_width="24dp"
                                         android:layout_height="24dp"
-                                        android:src="@drawable/ic_product_shipping"/>
+                                        android:src="@drawable/ic_product_shipping" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -602,9 +603,9 @@
 
                                     <TextView
                                         android:id="@+id/product_details_ready_to_ship"
+                                        fontPath="@string/font_app_bold"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        fontPath="@string/font_app_bold"
                                         android:paddingLeft="8.5dp"
                                         android:text="In stock &amp; Ready to Ship"
                                         android:textColor="@color/black" />
@@ -699,22 +700,22 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/border_regular"
                                     android:layout_alignParentTop="true"
-                                    android:layout_marginTop="@dimen/margin_small"
                                     android:layout_gravity="center"
-                                    android:background="@color/beige"
-                                    android:layout_marginLeft="5dp"/>
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="@dimen/margin_small"
+                                    android:background="@color/beige" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/margin_small"
-                                    android:paddingTop="@dimen/margin_small"
-                                    android:paddingLeft="8.5dp">
+                                    android:paddingLeft="8.5dp"
+                                    android:paddingTop="@dimen/margin_small">
 
                                     <ImageView
                                         android:layout_width="24dp"
                                         android:layout_height="24dp"
-                                        android:src="@drawable/ic_product_payment_method"/>
+                                        android:src="@drawable/ic_product_payment_method" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -738,22 +739,22 @@
                                     android:textSize="@dimen/text_size_caption1" />
 
                                 <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/product_details_payment_method_recycler"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/product_details_payment_method_recycler"/>
+                                    android:layout_height="wrap_content" />
 
                                 <TextView
                                     android:id="@+id/product_details_paypal_free_shipping"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:drawableEnd="@drawable/paypal_method_logo"
                                     android:paddingLeft="8.5dp"
                                     android:paddingTop="@dimen/margin_small"
                                     android:paddingBottom="@dimen/margin_small"
                                     android:text="Free shipping if you pay by "
                                     android:textColor="@color/text_extra_dark"
                                     android:textSize="@dimen/text_size_caption1"
-                                    android:drawableEnd="@drawable/paypal_method_logo"
-                                    android:visibility="gone"/>
+                                    android:visibility="gone" />
 
                             </LinearLayout>
 
@@ -771,22 +772,22 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/border_regular"
                                     android:layout_alignParentTop="true"
-                                    android:layout_marginTop="@dimen/margin_small"
                                     android:layout_gravity="center"
-                                    android:background="@color/beige"
-                                    android:layout_marginLeft="5dp"/>
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="@dimen/margin_small"
+                                    android:background="@color/beige" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/margin_small"
-                                    android:paddingTop="@dimen/margin_small"
-                                    android:paddingLeft="8.5dp">
+                                    android:paddingLeft="8.5dp"
+                                    android:paddingTop="@dimen/margin_small">
 
                                     <ImageView
                                         android:layout_width="24dp"
                                         android:layout_height="24dp"
-                                        android:src="@drawable/ic_product_returns"/>
+                                        android:src="@drawable/ic_product_returns" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -1105,7 +1106,13 @@
                         </LinearLayout>
                     </LinearLayout>
 
-            </LinearLayout>
+                    <View
+                        android:id="@+id/product_details_bottom_spacer"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
 
             </androidx.core.widget.NestedScrollView>
 
@@ -1203,8 +1210,8 @@
                         android:singleLine="true"
                         android:textColor="@color/text_extra_dark"
                         android:textSize="@dimen/text_size_headline3"
-                        tools:text="Havren and Nougat London"
-                        android:visibility="visible"/>
+                        android:visibility="visible"
+                        tools:text="Havren and Nougat London" />
 
                     <TextView
                         android:id="@+id/toolbar_item_description"
@@ -1220,8 +1227,8 @@
                         android:singleLine="true"
                         android:textColor="@color/text_dark"
                         android:textSize="@dimen/text_size_caption1"
-                        tools:text="Cassie Wrap Dress Wine Includes bonus Cheese and Ice and Mayonnaise, all High Quality Sourced in Switzerland"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        tools:text="Cassie Wrap Dress Wine Includes bonus Cheese and Ice and Mayonnaise, all High Quality Sourced in Switzerland" />
 
                     <TextView
                         android:id="@+id/toolbar_item_price"
@@ -1229,42 +1236,35 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignEnd="@dimen/margin_extra_small"
+                        android:background="#0EEAFF"
                         android:ellipsize="middle"
                         android:paddingLeft="@dimen/margin_tiny"
                         android:paddingRight="@dimen/margin_tiny"
                         android:singleLine="true"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_caption1"
-                        tools:text="$13.00"
                         android:visibility="gone"
-                        android:background="#0EEAFF"/>
+                        tools:text="$13.00" />
 
                 </LinearLayout>
 
-                <TextView
+                <ImageButton
                     android:id="@+id/toolbar_left_view"
-                    fontPath="@string/font_app_regular"
                     android:layout_width="@dimen/partial_toolbar_button_width"
                     android:layout_height="@dimen/partial_toolbar_button_height"
                     android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:gravity="center"
-                    android:paddingTop="@dimen/padding_small"
-                    android:paddingRight="@dimen/margin_extra_small"
-                    android:src="@drawable/ic_pink_chevron"
-                    android:text=""
-                    android:drawableStart="@drawable/ic_pink_chevron"
-                    android:textColor="@color/text_medium"
-                    android:textSize="@dimen/text_size_caption1"
-                    android:drawableTint="@color/black" />
+                    android:background="@color/toolbar_skin"
+                    android:padding="4dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_chevron_left_black"
+                    android:textSize="@dimen/text_size_caption1" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/beige"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/beige" />
 
             </RelativeLayout>
 
@@ -1373,49 +1373,49 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/border_regular"
                         android:layout_gravity="center"
-                        android:background="@color/beige"/>
+                        android:background="@color/beige" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingRight="@dimen/margin_large"
+                        android:orientation="horizontal"
                         android:paddingLeft="@dimen/margin_large"
-                        android:paddingBottom="@dimen/margin_medium"
                         android:paddingTop="@dimen/margin_medium"
-                        android:orientation="horizontal">
+                        android:paddingRight="@dimen/margin_large"
+                        android:paddingBottom="@dimen/margin_medium">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:layout_marginRight="@dimen/margin_extra_small">
+                            android:layout_marginRight="@dimen/margin_extra_small"
+                            android:layout_weight="1">
 
                             <ImageView
                                 android:id="@+id/product_details_add_to_cart_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_centerInParent="true"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/add_to_cart_btn"
                                 android:adjustViewBounds="true"
-                                android:maxWidth="200dp"/>
+                                android:maxWidth="200dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/add_to_cart_btn" />
 
                             <TextView
                                 android:id="@+id/sold_out_text"
+                                fontPath="@string/font_app_bold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_centerInParent="true"
                                 android:background="@color/fluorescent_blue"
+                                android:paddingLeft="@dimen/margin_extra_large"
+                                android:paddingTop="@dimen/margin_medium"
+                                android:paddingRight="@dimen/margin_extra_large"
+                                android:paddingBottom="@dimen/margin_medium"
                                 android:text="Sold Out"
-                                fontPath="@string/font_app_bold"
+                                android:textAlignment="center"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_size_headline3"
-                                android:textAlignment="center"
-                                android:visibility="gone"
-                                android:paddingTop="@dimen/margin_medium"
-                                android:paddingBottom="@dimen/margin_medium"
-                                android:paddingRight="@dimen/margin_extra_large"
-                                android:paddingLeft="@dimen/margin_extra_large"/>
+                                android:visibility="gone" />
 
                         </RelativeLayout>
 
@@ -1423,19 +1423,18 @@
 
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:layout_marginLeft="@dimen/margin_extra_small">
+                            android:layout_marginLeft="@dimen/margin_extra_small"
+                            android:layout_weight="1">
 
                             <ImageView
                                 android:id="@+id/product_details_buy_now_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_centerInParent="true"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/buy_now_btn"
                                 android:adjustViewBounds="true"
                                 android:maxWidth="200dp"
-                                />
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/buy_now_btn" />
 
                         </RelativeLayout>
 

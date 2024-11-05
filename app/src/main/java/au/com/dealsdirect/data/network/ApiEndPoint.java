@@ -810,6 +810,10 @@ public final class ApiEndPoint {
         return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/recommendations/sims/{sku_id}", ApiUrlVersion.v4.apiVersion());
     }
 
+    public static String bestSellers() {
+        return getFormattedUrl(ApiService.PRODUCT, ACCOUNT_ID_DELIMETER + "/recommendations/popularitycount", ApiUrlVersion.v5.apiVersion());
+    }
+
     public static String addToRecentlyViewedItems() {
         return getFormattedUrl(ApiService.RECENTLY, "", ApiUrlVersion.v4.apiVersion());
     }

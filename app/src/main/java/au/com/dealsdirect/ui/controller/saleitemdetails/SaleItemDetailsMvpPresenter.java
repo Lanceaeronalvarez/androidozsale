@@ -70,4 +70,6 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     String getBuyboxTemplateTextButtonText();
 
     void loadLeaderboardBanner();
+
+    void getPricingInfoText(String seoIdentifier, String saleId);
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetTopBrandsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
+import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.ui.base.MvpView;
 
 public interface ShopsMvpView extends MvpView {
@@ -20,6 +21,8 @@ public interface ShopsMvpView extends MvpView {
 
     void showTrendingBrands(GetBannerResponse getBannerResponses);
 
+    void showBestSellers(List<GetBestSellerResponse> getBestSellerResponses);
+
     void storeCategories(List<GetCategoryTreeResponse> categories);
 
     void unBindPaginate();
@@ -27,4 +30,6 @@ public interface ShopsMvpView extends MvpView {
     boolean isChangeInProgress();
 
     void showLeaderboardBanner(GetBannerResponse response);
+
+    void showPricingInfoText(String rrpText, Double totalPercentOff, Double originalPrice, String combinedPricingInfoText);
 }

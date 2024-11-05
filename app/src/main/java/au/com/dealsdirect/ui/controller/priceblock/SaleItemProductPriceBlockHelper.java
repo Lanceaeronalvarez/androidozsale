@@ -2,7 +2,6 @@ package au.com.dealsdirect.ui.controller.priceblock;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -12,6 +11,8 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -26,14 +27,17 @@ import au.com.dealsdirect.utils.PriceUtils;
 public class SaleItemProductPriceBlockHelper {
     final String PRICE_INFO_IMAGE_PLACEHOLDER = "asdf ";
     final String PRICE_INFO_IMAGE_SPACER = " ";
+    final float SCALE_DOWN_MULTIPLIER = 0.85f;
 
     protected final ViewGroup priceBlockViewGroup;
     protected final ViewGroup topTextContainer;
     protected final TextView topLeftTextView;
     protected final TextView topRightTextView;
     protected final TextView leftTextView;
+    protected final ImageView separatorImageView;
     protected final TextView rightTextView;
     protected final TextView rightTextView2;
+    protected final ViewGroup rightTextLayout;
     protected final View priceBlockBorder;
     protected final ViewGroup bottomTextContainer;
     protected final TextView bottomTextView;
@@ -43,14 +47,18 @@ public class SaleItemProductPriceBlockHelper {
     protected View.OnClickListener onPriceInfoClickListener = null;
     protected ImageSpan priceInfoImageSpan = null;
 
+    protected boolean isScaledDown = false;
+
     public SaleItemProductPriceBlockHelper(ViewGroup view) {
         priceBlockViewGroup = view.findViewById(R.id.price_block);
         topTextContainer = view.findViewById(R.id.top_text_container);
         topLeftTextView = view.findViewById(R.id.top_left_text);
         topRightTextView = view.findViewById(R.id.top_right_text);
         leftTextView = view.findViewById(R.id.left_text);
+        separatorImageView = view.findViewById(R.id.separator_image_view);
         rightTextView = view.findViewById(R.id.right_text);
         rightTextView2 = view.findViewById(R.id.right_text_bottom);
+        rightTextLayout = view.findViewById(R.id.right_text_layout);
         priceBlockBorder = view.findViewById(R.id.price_block_border);
         bottomTextContainer = view.findViewById(R.id.bottom_text_container);
         bottomTextView = view.findViewById(R.id.bottom_text);
@@ -139,9 +147,9 @@ public class SaleItemProductPriceBlockHelper {
             if (middleRightText.length() > 0 && rightTextView2 == null) {
                 middleRightText.append("\n");
             }
-            if(rightTextView2 != null){
+            if (rightTextView2 != null) {
                 rightTextView2.setText(savedMoneyValueString);
-            }else{
+            } else {
                 middleRightText.append(savedMoneyValueString);
             }
         }
@@ -150,10 +158,19 @@ public class SaleItemProductPriceBlockHelper {
             middleRightText.setSpan(new RelativeSizeSpan(0.8f), 0, middleRightText.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         rightTextView.setText(middleRightText);
-        final boolean isRightPartVisible = middleRightText.length() > 0;
+        final boolean isRightPartVisible = rightTextView.getText().length() > 0 ||
+                (rightTextView2 != null && rightTextView2.getText().length() > 0);
         priceBlockBorder.setVisibility(isRightPartVisible ? View.VISIBLE : View.GONE);
-        if(priceBlockConstraintContainer != null){
-            priceBlockConstraintContainer.setBackgroundColor(isRightPartVisible ? Color.parseColor("#EFF5FF") : Color.parseColor("#FFFFFF"));
+        separatorImageView.setVisibility(isRightPartVisible ? View.VISIBLE : View.GONE);
+        if (priceBlockConstraintContainer != null) {
+            final int leftColor = context.getResources().getColor(R.color.price_block_left_background);
+            final int rightColor = context.getResources().getColor(R.color.price_block_right_background);
+            priceBlockConstraintContainer.setBackgroundColor(isRightPartVisible ? rightColor : leftColor);
+        }
+
+        rightTextView.setVisibility(rightTextView.getText().length() > 0 ? View.VISIBLE : View.GONE);
+        if (rightTextView2 != null) {
+            rightTextView2.setVisibility(rightTextView2.getText().length() > 0 ? View.VISIBLE : View.GONE);
         }
 
 
@@ -266,5 +283,67 @@ public class SaleItemProductPriceBlockHelper {
         } else {
             return hasPriceRangeText;
         }
+    }
+
+    public void scaleDown() {
+        scaleDown(SCALE_DOWN_MULTIPLIER);
+    }
+
+    public void scaleDown(float multiplier) {
+        if (isScaledDown || multiplier <= 0f || multiplier >= 1f) {
+            return;
+        }
+        isScaledDown = true;
+        final Context context = priceBlockViewGroup.getContext();
+        final float dpi = context.getResources().getDisplayMetrics().density;
+
+        topLeftTextView.setTextSize((topLeftTextView.getTextSize() * multiplier) / dpi);
+        topRightTextView.setTextSize((topRightTextView.getTextSize() * multiplier) / dpi);
+        LinearLayout.LayoutParams topContainerLayoutParams = (LinearLayout.LayoutParams) topTextContainer.getLayoutParams();
+        if (topContainerLayoutParams.height > 0) {
+            topContainerLayoutParams.height = (int) (topContainerLayoutParams.height * multiplier);
+        }
+        topTextContainer.setLayoutParams(topContainerLayoutParams);
+
+        leftTextView.setTextSize((leftTextView.getTextSize() * multiplier) / dpi);
+        leftTextView.setLineSpacing(leftTextView.getLineSpacingExtra() * multiplier, 1f);
+        leftTextView.setPadding(
+                (int) (leftTextView.getPaddingLeft() * multiplier),
+                leftTextView.getPaddingTop(),
+                leftTextView.getPaddingRight(),
+                leftTextView.getPaddingBottom());
+
+        rightTextView.setTextSize((rightTextView.getTextSize() * multiplier) / dpi);
+        LinearLayout.LayoutParams rightTextLayoutParams = (LinearLayout.LayoutParams) rightTextView.getLayoutParams();
+        rightTextLayoutParams.bottomMargin = (int) (rightTextLayoutParams.bottomMargin * multiplier);
+        rightTextView.setLayoutParams(rightTextLayoutParams);
+
+        if (rightTextView2 != null){
+            rightTextView2.setTextSize((rightTextView2.getTextSize() * multiplier) / dpi);
+            LinearLayout.LayoutParams rightText2LayoutParams = (LinearLayout.LayoutParams) rightTextView.getLayoutParams();
+            rightText2LayoutParams.topMargin = (int) (rightText2LayoutParams.topMargin * multiplier);
+            rightTextView2.setLayoutParams(rightText2LayoutParams);
+        }
+
+        rightTextLayout.setPadding(
+                (int) (rightTextLayout.getPaddingLeft() * multiplier),
+                rightTextLayout.getPaddingTop(),
+                (int) (rightTextLayout.getPaddingRight() * multiplier),
+                rightTextLayout.getPaddingBottom());
+        ConstraintLayout.LayoutParams separatorLayoutParams = (ConstraintLayout.LayoutParams) separatorImageView.getLayoutParams();
+        separatorLayoutParams.leftMargin = (int) (separatorLayoutParams.leftMargin / multiplier);
+        separatorImageView.setLayoutParams(separatorLayoutParams);
+        LinearLayout.LayoutParams constraintContainerLayoutParams = (LinearLayout.LayoutParams) priceBlockConstraintContainer.getLayoutParams();
+        if (constraintContainerLayoutParams.height > 0) {
+            constraintContainerLayoutParams.height = (int) (constraintContainerLayoutParams.height * multiplier);
+        }
+        priceBlockConstraintContainer.setLayoutParams(constraintContainerLayoutParams);
+
+        bottomTextView.setTextSize((bottomTextView.getTextSize() * multiplier) / dpi);
+        LinearLayout.LayoutParams bottomContainerLayoutParams = (LinearLayout.LayoutParams) bottomTextContainer.getLayoutParams();
+        if (bottomContainerLayoutParams.height > 0) {
+            bottomContainerLayoutParams.height = (int) (bottomContainerLayoutParams.height * multiplier);
+        }
+        bottomTextContainer.setLayoutParams(bottomContainerLayoutParams);
     }
 }

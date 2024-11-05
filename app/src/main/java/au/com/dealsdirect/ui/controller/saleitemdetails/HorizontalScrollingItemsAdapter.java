@@ -24,32 +24,42 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
 
     private RecyclerView recyclerView = null;
 
-    public OnItemTappedListener onItemTappedListener = null;
-    public WishlistListener wishlistListener = null;
+    private OnItemTappedListener onItemTappedListener = null;
 
-    private final List<SaleItemProduct> mDatasource;
+    private OnPriceInfoTappedListener onPriceInfoTappedListener = null;
+    private WishlistListener wishlistListener = null;
+
+    private final List<SaleItemProduct> mDataSource;
 
     private boolean shouldRepeatCellsToFillWidth = true;
 
     private final boolean isSupplierOriginalPriceInfoEnabled;
 
-    public HorizontalScrollingItemsAdapter(List<SaleItemProduct> dataSource, boolean isSupplierOriginalPriceInfoEnabled) {
-        mDatasource = new ArrayList<>(dataSource);
+    private boolean isWithBorder;
+
+    private boolean isScaledDown;
+
+    public HorizontalScrollingItemsAdapter(List<SaleItemProduct> dataSource, boolean isWithBorder, boolean isSupplierOriginalPriceInfoEnabled, boolean isScaledDown) {
+        mDataSource = new ArrayList<>(dataSource);
+        this.isWithBorder = isWithBorder;
         this.isSupplierOriginalPriceInfoEnabled = isSupplierOriginalPriceInfoEnabled;
+        this.isScaledDown = isScaledDown;
     }
 
     @NonNull
     @Override
     public SaleItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.viewholder_sale_item, parent, false);
-        return new SaleItemViewHolder(view, new Pair<>(cellWidth, cellHeight), isSupplierOriginalPriceInfoEnabled, false);
+                .inflate(isWithBorder ? R.layout.viewholder_sale_item_with_border : R.layout.viewholder_sale_item,
+                        parent,
+                        false);
+        return new SaleItemViewHolder(view, new Pair<>(cellWidth, cellHeight), isSupplierOriginalPriceInfoEnabled, false, isScaledDown);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SaleItemViewHolder holder, int position) {
-        final int virtualPosition = position % mDatasource.size();
-        final SaleItemProduct saleItemProduct = mDatasource.get(virtualPosition);
+        final int virtualPosition = position % mDataSource.size();
+        final SaleItemProduct saleItemProduct = mDataSource.get(virtualPosition);
 
         final List<String> imgUrls = saleItemProduct.getImages();
         final String imgUrl = imgUrls == null || imgUrls.isEmpty() ? null : imgUrls.get(0);
@@ -63,8 +73,16 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
 
         holder.setupViewHolderSkeleton(false);
         holder.setupViewHolder(saleItemProduct, imgUrl, isProductInWishlist);
-        holder.itemView.setOnClickListener(v -> onItemTappedListener.onItemTapped(saleItemProduct, virtualPosition, mDatasource.size()));
-        holder.setPriceInfoOnClickListener(v -> onItemTappedListener.onPriceInfoTapped(saleItemProduct));
+        if (onItemTappedListener == null) {
+            holder.itemView.setOnClickListener(null);
+        } else {
+            holder.itemView.setOnClickListener(v -> onItemTappedListener.onItemTapped(saleItemProduct, virtualPosition, mDataSource.size()));
+        }
+        if (onPriceInfoTappedListener == null) {
+            holder.setPriceInfoOnClickListener(null);
+        } else {
+            holder.setPriceInfoOnClickListener(v -> onPriceInfoTappedListener.onPriceInfoTapped(saleItemProduct));
+        }
         holder.setLikeButtonOnClickListener(v -> {
             if (wishlistListener != null) {
                 holder.setLiked(!holder.isLiked());
@@ -79,8 +97,8 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
 
     @Override
     public int getItemCount() {
-        return !mDatasource.isEmpty() ?
-                mDatasource.size() + getEdgeBufferSize() * 2 : 0;
+        return !mDataSource.isEmpty() ?
+                mDataSource.size() + getEdgeBufferSize() * 2 : 0;
     }
 
     public boolean isShouldRepeatCellsToFillWidth() {
@@ -91,8 +109,8 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
         this.shouldRepeatCellsToFillWidth = shouldRepeatCellsToFillWidth;
     }
 
-    public List<SaleItemProduct> getDatasource() {
-        return mDatasource;
+    public List<SaleItemProduct> getDataSource() {
+        return mDataSource;
     }
 
     public void setupDimensions(int width, int height) {
@@ -115,7 +133,7 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
     }
 
     private int getEdgeBufferSize() {
-        final int datasourceSize = mDatasource.size();
+        final int datasourceSize = mDataSource.size();
 
         if (!shouldRepeatCellsToFillWidth) {
             if (recyclerView != null && recyclerView.getWidth() > 0 && cellWidth > 0 &&
@@ -157,6 +175,15 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
         this.onItemTappedListener = onItemTappedListener;
     }
 
+
+    public OnPriceInfoTappedListener getOnPriceInfoTappedListener() {
+        return onPriceInfoTappedListener;
+    }
+
+    public void setOnPriceInfoTappedListener(OnPriceInfoTappedListener onPriceInfoTappedListener) {
+        this.onPriceInfoTappedListener = onPriceInfoTappedListener;
+    }
+
     public WishlistListener getWishlistListener() {
         return wishlistListener;
     }
@@ -177,7 +204,7 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
         }
         int x = recyclerView.computeHorizontalScrollOffset();
 
-        final int itemSize = getDatasource().size();
+        final int itemSize = getDataSource().size();
 
         if (speed > 0 && x > getCellWidth() * (itemSize + getEdgeBufferSize())) {
             recyclerView.scrollBy(-getScrollRange(), 0);
@@ -199,18 +226,20 @@ public class HorizontalScrollingItemsAdapter extends RecyclerView.Adapter<SaleIt
     }
 
     public int getAdapterPositionFromX(int x) {
-        final int dataSize = getDatasource().size();
+        final int dataSize = getDataSource().size();
         final int index = Math.round(x / getCellWidth() - getEdgeBufferSize()) % dataSize;
         return index < 0 ? index + dataSize : index;
     }
 
     private int getScrollRange() {
-        return getCellWidth() * getDatasource().size();
+        return getCellWidth() * getDataSource().size();
     }
 
     public interface OnItemTappedListener {
         void onItemTapped(SaleItemProduct item, int position, int size);
+    }
 
+    public interface OnPriceInfoTappedListener {
         void onPriceInfoTapped(SaleItemProduct item);
     }
 

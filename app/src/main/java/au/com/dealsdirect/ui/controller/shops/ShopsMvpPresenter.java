@@ -19,6 +19,8 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
 
     void loadTrendingBrands(GetBannerRequest request);
 
+    void loadBestSellers(String category);
+
     void loadCategoryTree();
 
     boolean isAccessAnonymousEnabled();
@@ -36,4 +38,18 @@ public interface ShopsMvpPresenter<V extends ShopsMvpView> extends MvpPresenter<
     void setPrefersOldShopBannerDimensions(boolean doesPrefer);
 
     void loadLeaderboardBanner(String categoryId);
+
+    int wishlistCount();
+
+    boolean isProductInWishlist(String productId);
+
+    void addProductToWishlist(String productId, String seoIdentifier, String masterProductId, WishlistDelayedCallback delayedCallback);
+
+    void removeProductFromWishlist(String productId, WishlistDelayedCallback delayedCallback);
+
+    void getPricingInfoText(String seoIdentifier);
+
+    interface WishlistDelayedCallback {
+        void performDelayedAction();
+    }
 }

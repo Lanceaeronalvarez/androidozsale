@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.categories;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,9 +33,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.auth.AuthHandler;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
@@ -46,9 +46,7 @@ import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.ui.controller.shops.ShopsController;
 import au.com.dealsdirect.ui.custom.transitions.SimpleChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.CartUtil;
-import au.com.dealsdirect.utils.module.ControllerFactory;
-import au.com.dealsdirect.utils.module.GateKeeper;
+import au.com.dealsdirect.utils.CommonUtils;
 import butterknife.BindView;
 
 /**
@@ -60,17 +58,20 @@ public class NewSaleCategoriesController extends BaseController
     @Inject
     CategoriesMvpPresenter<CategoriesMvpView> mPresenter;
 
+    @BindView(R.id.controller_salecategory)
+    ViewGroup mLayout;
+
     @BindView(R.id.controller_salecategory_recyclerview)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.partial_toolbar_cart)
-    ImageButton mShopsControllerHamburgerView;
+    @BindView(R.id.partial_toolbar_field_logo_left_option)
+    ImageButton mToolbarLeftOptionButton;
 
     @BindView(R.id.partial_toolbar_logo)
-    ImageView mShopsControllerToolbarLogo;
+    ImageView mToolbarLogo;
 
     @BindView(R.id.partial_toolbar_logo_title_bold_view)
-    TextView mShopsControllerToolbarTextView;
+    TextView mToolbarTextView;
 
     @BindView(R.id.no_network_layout)
     LinearLayout mNoNetworkLayout;
@@ -82,13 +83,7 @@ public class NewSaleCategoriesController extends BaseController
     TextView mSeeAllButtonText;
 
     @BindView(R.id.partial_toolbar_search_button)
-    ImageButton mShopsControllerSearchButton;
-
-    @BindView(R.id.partial_toolbar_badge)
-    RelativeLayout mBadge;
-
-    @BindView(R.id.partial_toolbar_badge_text)
-    TextView mBadgeText;
+    ImageButton mToolbarSearchButton;
 
     private SubCategoryItemClickListener mSubCategoryItemClickListener;
     private NewSaleCategoryAdapter mCategoryAdapter;
@@ -127,14 +122,16 @@ public class NewSaleCategoriesController extends BaseController
 
     @Override
     protected void setUp(View view) {
-        mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
-        mShopsControllerSearchButton.setVisibility(View.VISIBLE);
-        mShopsControllerSearchButton.setImageTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.black)));
-        mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_new_checkout));
-        mShopsControllerToolbarTextView.setVisibility(View.GONE);
+        mToolbarLogo.setVisibility(View.VISIBLE);
+        mToolbarSearchButton.setVisibility(View.VISIBLE);
+        mToolbarSearchButton.setImageTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.black)));
+        mToolbarLeftOptionButton.setVisibility(
+                CommonUtils.positionOfControllerInRouterBackstack(getRouter(), this) > 0 ?
+                        View.VISIBLE : View.GONE);
+        mToolbarTextView.setVisibility(View.GONE);
 
-        mShopsControllerHamburgerView.setOnClickListener(v -> onLeftButtonClicked());
-        mShopsControllerSearchButton.setOnClickListener(v -> onRightButtonClick());
+        mToolbarLeftOptionButton.setOnClickListener(v -> onLeftButtonClicked());
+        mToolbarSearchButton.setOnClickListener(v -> onRightButtonClick());
         mSeeAllButton.setOnClickListener(v -> {
             System.out.println("mLevel " + mLevel);
             if (mLevel == 1) {
@@ -183,7 +180,6 @@ public class NewSaleCategoriesController extends BaseController
             mPresenter.callGetCategoryTree();
             mActivity.getMainController().setSavedCurrentItem();
         }
-        updateBasketItemsQuantity(CartUtil.getCartValue());
         updateRecyclerView();
     }
 
@@ -218,7 +214,7 @@ public class NewSaleCategoriesController extends BaseController
         mCategories.addAll(customNodeTypes);
         mCategories.addAll(fixedNodeTypes);
 
-        if(getBoolean(R.bool.is_gift_card_category_visible)){
+        if (getBoolean(R.bool.is_gift_card_category_visible)) {
             GetCategoryTreeResponse giftCards = new GetCategoryTreeResponse();
             giftCards.setName("Gift Cards");
             giftCards.setNodeType("custom");
@@ -264,6 +260,11 @@ public class NewSaleCategoriesController extends BaseController
 
     }
 
+    public void resetLevels() {
+        mLevel = 0;
+        updateRecyclerView();
+    }
+
     private void setupCategories() {
         if (mCategories != null) {
 
@@ -301,10 +302,11 @@ public class NewSaleCategoriesController extends BaseController
             mLevel = 0;
             mActivity.getMainController().showHomePage();
             mActivity.getMainController().getShopRouter().popToRoot();
+            mActivity.getMainController().setWillGoToShopInsteadOfCategories(true);
         } else if (mCategoryName.contains("Brands") && getCategoryTreeResponse.getKey() == null && getCategoryTreeResponse.getChildren() == null) {
             mLevel = 0;
             mActivity.getMainController().showBrands();
-        }else if(mCategoryName.contains("Gift Cards") && getCategoryTreeResponse.getKey() == null && getCategoryTreeResponse.getChildren() == null){
+        } else if (mCategoryName.contains("Gift Cards") && getCategoryTreeResponse.getKey() == null && getCategoryTreeResponse.getChildren() == null) {
             mLevel = 0;
             final Router router = mActivity.getCategoriesRouter();
             String storeId = getString(R.string.gift_card_id);
@@ -321,7 +323,7 @@ public class NewSaleCategoriesController extends BaseController
 
             router.pushController(routerTransaction);
 
-        }else if(getCategoryTreeResponse.getChildren() == null){
+        } else if (getCategoryTreeResponse.getChildren() == null) {
             mLevel = 0;
             ShopsController shopsController = ShopsController.instanceWithCategoryFilter(
                     getCategoryTreeResponse.getId(),
@@ -332,8 +334,7 @@ public class NewSaleCategoriesController extends BaseController
                             .popChangeHandler(new HorizontalChangeHandler())
                             .pushChangeHandler(new HorizontalChangeHandler()));
         } else {
-            updateBasketItemsQuantity(mBasketQuantity);
-            updateRecyclerView();
+            updateRecyclerView(true);
         }
     }
 
@@ -455,46 +456,27 @@ public class NewSaleCategoriesController extends BaseController
     @Override
     public boolean handleBack() {
         if (mLevel == 0) {
-            return super.handleBack();
+            if (getRouter().getBackstackSize() > 1) {
+                return super.handleBack();
+            } else {
+                return true;
+            }
         } else if (mLevel == 1) {
             onLeftButtonClicked();
             return true;
         } else if (mLevel == 2) {
             onLeftButtonClicked();
             return true;
-        } else {
-            return true;
         }
+        return true;
     }
 
     private void onLeftButtonClicked() {
         if (mLevel == 0) {
-            Controller controller = mPresenter.isTablet() ?
-                    ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT_HOST) :
-                    ControllerFactory.getInstance(GateKeeper.Destination.CHECKOUT);
-
-            if (!mActivity.isAuthorized()) {
-                mActivity.showLoginController(getRouter(), new AuthHandler() {
-                    @Override
-                    public void success() {
-                        getRouter().popCurrentController();
-                        getRouter().pushController(RouterTransaction
-                                .with(controller).tag(controller.getClass().getName()));
-                    }
-
-                    @Override
-                    public void error() {
-
-                    }
-                });
-            } else if (mActivity.isAuthorized()) {
-                getRouter().pushController(RouterTransaction
-                        .with(controller).tag(controller.getClass().getName()));
-            }
+            getRouter().handleBack();
         } else {
             mLevel -= 1;
-            updateBasketItemsQuantity(mBasketQuantity);
-            updateRecyclerView();
+            updateRecyclerView(true);
         }
     }
 
@@ -510,32 +492,59 @@ public class NewSaleCategoriesController extends BaseController
                 .popChangeHandler(new HorizontalChangeHandler()));
     }
 
-    void updateRecyclerView() {
+    private void updateRecyclerView(boolean isAnimated) {
+        if (!(isViewAttached() && isViewBound())) {
+            return;
+        }
+        if (!isAnimated) {
+            updateRecyclerView();
+            return;
+        }
+        CommonUtils.fadeOutView(mLayout, new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                updateRecyclerView();
+                CommonUtils.fadeInView(mLayout, null);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+                updateRecyclerView();
+                CommonUtils.fadeInView(mLayout, null);
+            }
+        });
+    }
+
+    private void updateRecyclerView() {
         if (!(isViewAttached() && isViewBound())) {
             return;
         }
         List<GetCategoryTreeResponse> mSubCategoriesUpdated = new ArrayList<>();
 
         if (mLevel != 0) {
-            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_pink_chevron));
-            mShopsControllerHamburgerView.setImageTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.black)));
-            mShopsControllerToolbarTextView.setVisibility(View.VISIBLE);
+            mToolbarLeftOptionButton.setVisibility(View.VISIBLE);
+            mToolbarLeftOptionButton.setImageTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.black)));
+            mToolbarTextView.setVisibility(View.VISIBLE);
             mSeeAllButton.setVisibility(View.VISIBLE);
-            mShopsControllerToolbarLogo.setVisibility(View.GONE);
-            mShopsControllerSearchButton.setVisibility(View.GONE);
+            mToolbarLogo.setVisibility(View.GONE);
+            mToolbarSearchButton.setVisibility(View.GONE);
         } else {
-            mShopsControllerSearchButton.setVisibility(View.VISIBLE);
-            mShopsControllerSearchButton.setImageTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.black)));
-            mShopsControllerToolbarLogo.setVisibility(View.VISIBLE);
-            mShopsControllerToolbarTextView.setVisibility(View.GONE);
+            mToolbarSearchButton.setVisibility(View.VISIBLE);
+            mToolbarSearchButton.setImageTintList(ColorStateList.valueOf(mActivity.getResources().getColor(R.color.black)));
+            mToolbarLogo.setVisibility(View.VISIBLE);
+            mToolbarTextView.setVisibility(View.GONE);
             mSeeAllButton.setVisibility(View.GONE);
         }
 
         if (mLevel == 0) {
-            mShopsControllerHamburgerView.setImageDrawable(mActivity.getDrawable(R.drawable.ic_new_checkout));
+            mToolbarLeftOptionButton.setVisibility(
+                    CommonUtils.positionOfControllerInRouterBackstack(getRouter(), this) > 0 ?
+                            View.VISIBLE : View.GONE);
             mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mCategories, this, mCategoryMap);
         } else if (mLevel == 1) {
-            mShopsControllerToolbarTextView.setText(mCategoryName);
+            mToolbarTextView.setText(mCategoryName);
             mSeeAllButtonText.setText(allText + mCategoryName);
             if (!mSubCategories.isEmpty()) {
                 mAllSubCategory = mSubCategories.get(0);
@@ -546,7 +555,7 @@ public class NewSaleCategoriesController extends BaseController
             }
             mCategoryAdapter = new NewSaleCategoryAdapter(mActivity, mSubCategories, this, mCategoryMap);
         } else if (mLevel == 2) {
-            mShopsControllerToolbarTextView.setText(mSubCategoryName);
+            mToolbarTextView.setText(mSubCategoryName);
             mSeeAllButtonText.setText(allText + mSubCategoryName);
             if (!mSubCategoriesChildren.isEmpty()) {
                 mAllSubCategory = mSubCategoriesChildren.get(0);
@@ -562,22 +571,4 @@ public class NewSaleCategoriesController extends BaseController
         mRecyclerView.setMotionEventSplittingEnabled(false);
         mCategoryAdapter.notifyDataSetChanged();
     }
-
-    public void updateBasketItemsQuantity(int quantity) {
-        if (!(isViewAttached() && isViewBound())) {
-            return;
-        }
-        mBasketQuantity = quantity;
-        if (mBasketQuantity == 0) {
-            mBadge.setVisibility(View.GONE);
-        } else {
-            if (mLevel == 0) {
-                mBadge.setVisibility(View.VISIBLE);
-                mBadgeText.setText(Integer.toString(mBasketQuantity));
-            } else {
-                mBadge.setVisibility(View.GONE);
-            }
-        }
-    }
-
 }

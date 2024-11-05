@@ -115,7 +115,8 @@
                 android:elevation="8dp"
                 android:outlineAmbientShadowColor="@color/white"
                 android:outlineSpotShadowColor="@color/white"
-                android:src="@drawable/ic_center_nav_bar" />
+                android:src="@drawable/ic_center_nav_bar"
+                android:visibility="gone"/>
 
         </FrameLayout>
 

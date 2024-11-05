@@ -70,7 +70,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     ViewGroup mCheckoutContainer;
 
     @BindView(R.id.partial_toolbar_left_view)
-    TextView mToolbarLeftButton;
+    View mToolbarLeftButton;
     @BindView(R.id.partial_toolbar_title)
     TextView mTitleTextView;
     @BindView(R.id.partial_toolbar_right_view)
@@ -121,7 +121,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Override
     protected void setUp(View view) {
         //disable toolbar left and right buttons
-        mToolbarLeftButton.setVisibility(mPresenter.isTablet() ? View.VISIBLE : View.INVISIBLE);
+        mToolbarLeftButton.setVisibility(View.INVISIBLE);
         mToolbarRightButton.setVisibility(View.INVISIBLE);
         mTitleTextView.setText(getString(R.string.account_orders));
 
@@ -499,6 +499,13 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     public void updateCartWithValue(Value value) {
         if (mCheckoutDetailView != null) {
             mCheckoutDetailView.updateCartWithValue(value);
+        }
+    }
+
+    @Override
+    public void updateCartWithMappedValues(CheckoutDetailsMapper mappedValues) {
+        if (mCheckoutDetailView != null) {
+            mCheckoutDetailView.updateCartWithMappedValues(mappedValues);
         }
     }
 

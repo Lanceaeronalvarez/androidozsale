@@ -16,6 +16,8 @@ import au.com.dealsdirect.data.network.ApiHelper;
 import au.com.dealsdirect.data.network.AppApiHelper;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.data.pref.PreferencesHelper;
+import au.com.dealsdirect.data.priceinfo.AppPricingInfoCacheHelper;
+import au.com.dealsdirect.data.priceinfo.PricingInfoCacheHelper;
 import au.com.dealsdirect.data.templatetexts.AppTemplateTextsHelper;
 import au.com.dealsdirect.data.templatetexts.TemplateTextsHelper;
 import au.com.dealsdirect.data.wishlist.AppWishlistHelper;
@@ -120,6 +122,12 @@ public class ApplicationModule {
     @Singleton
     TemplateTextsHelper provideTemplateTextsHelper(AppTemplateTextsHelper templateTextsHelper) {
         return templateTextsHelper;
+    }
+
+    @Provides
+    @Singleton
+    PricingInfoCacheHelper providePricingInfoCacheHelper(AppPricingInfoCacheHelper pricingInfoCacheHelper) {
+        return pricingInfoCacheHelper;
     }
 
 //    @Provides

@@ -106,14 +106,24 @@ public class SupplierOriginalPriceInfoHelper {
     }
 
     public static Map<String, String> createStringReplacementsFromSaleItem(SaleItemProduct itemProduct) {
-        final Map<String, String> replacements = new HashMap<>();
-        replacements.put("discountPercentOff", Integer.toString((int) Math.floor(itemProduct.getTotalPercentOff())));
-        replacements.put("priceValue", itemProduct.getOriginalPrice() != null ? PriceUtils.getPriceStringValue(itemProduct.getOriginalPrice().getValue()) : "??");
-        return replacements;
+        return createStringReplacementsWithItemValues(
+                itemProduct.getTotalPercentOff(),
+                itemProduct.getOriginalPrice() != null ? itemProduct.getOriginalPrice().getValue() : null);
     }
 
     public String getOriginalPriceInfoWebViewContent(String prepend, SaleItemProduct itemProduct) {
         return getOriginalPriceInfoWebViewContent(prepend, createStringReplacementsFromSaleItem(itemProduct));
+    }
+
+    public static Map<String, String> createStringReplacementsWithItemValues(Double totalPercentOff, Double originalPrice) {
+        final Map<String, String> replacements = new HashMap<>();
+        replacements.put("discountPercentOff", totalPercentOff != null ? Integer.toString((int) Math.floor(totalPercentOff)) : "??");
+        replacements.put("priceValue", originalPrice != null ? PriceUtils.getPriceStringValue(originalPrice) : "??");
+        return replacements;
+    }
+
+    public String getOriginalPriceInfoWebViewContent(String prepend, Double totalPercentOff, Double originalPrice) {
+        return getOriginalPriceInfoWebViewContent(prepend, createStringReplacementsWithItemValues(totalPercentOff, originalPrice));
     }
 
     private String getOriginalPriceInfoWebViewContent(String prepend, Map<String, String> replacements) {

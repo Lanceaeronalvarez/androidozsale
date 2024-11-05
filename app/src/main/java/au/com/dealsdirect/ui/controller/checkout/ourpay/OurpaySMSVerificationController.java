@@ -54,7 +54,7 @@ public class OurpaySMSVerificationController extends BaseController implements O
     TextView mOurpaySMSVerificationTitle;
 
     @BindView(R.id.partial_toolbar_left_view)
-    TextView mOurpaySMSVerificationLeftOption;
+    View mOurpaySMSVerificationLeftOption;
 
     @BindView(R.id.partial_toolbar_right_view)
     ImageButton mOurpaySMSVerificationRightOption;

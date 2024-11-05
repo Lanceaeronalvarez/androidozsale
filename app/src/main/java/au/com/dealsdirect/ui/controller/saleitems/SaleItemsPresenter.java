@@ -25,6 +25,7 @@ import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
+import au.com.dealsdirect.data.priceinfo.PricingInfoLoaderHelper;
 import au.com.dealsdirect.data.wishlist.WishlistObject;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.leaderboardbanner.LeaderboardPresenterHelper;
@@ -37,6 +38,23 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         implements SaleItemsMvpPresenter<V> {
 
     private Disposable mPreviousGetSaleItemsRequest = null;
+
+    private PricingInfoLoaderHelper pricingInfoLoaderHelper = new PricingInfoLoaderHelper(new PricingInfoLoaderHelper.SaleItemProductLoader() {
+        @Override
+        public void load(String seoIdentifier, String saleId, PricingInfoLoaderHelper.SaleItemProductReceiver receiver) {
+            doApiCallForResponse(getDataManager().callGetSaleItemDetails(seoIdentifier), new AppApiCallback() {
+                @Override
+                public void onSuccess(Object response) {
+                    super.onSuccess(response);
+                    SaleItemDetails saleItemDetails = (SaleItemDetails) response;
+
+                    if (response != null) {
+                        receiver.receive(saleItemDetails);
+                    }
+                }
+            });
+        }
+    }, getDataManager());
 
     @Inject
     public SaleItemsPresenter(DataManager dataManager, SchedulerProvider schedulerProvider,
@@ -208,36 +226,6 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
         }
     }
 
-    @Override
-    public void loadProductDetails(String saleId, String seoIdentifier) {
-        Observable<SaleItemDetails> callGetSaleItemDetailObservable = saleId == null || saleId.isEmpty() ?
-                getDataManager().callGetSaleItemDetails(seoIdentifier) :
-                getDataManager().callGetSaleItemDetails(saleId, seoIdentifier);
-
-        doApiCallForResponse(callGetSaleItemDetailObservable, new AppApiCallback() {
-            @Override
-            public void onSuccess(Object response) {
-                super.onSuccess(response);
-                SaleItemDetails saleItemDetails = (SaleItemDetails) response;
-
-                if (response != null) {
-                    getMvpView().productDetailsReceived(saleItemDetails);
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                super.onFailure(throwable);
-
-                // handle load accounts error here
-                if (throwable instanceof ANError) {
-                    ANError anError = (ANError) throwable;
-                    handleApiError(anError);
-                }
-            }
-        });
-    }
-
     protected <T> Observable<T> wrapObservable(Observable<T> observable) {
         return observable.subscribeOn(getSchedulerProvider().io());
     }
@@ -358,5 +346,16 @@ public class SaleItemsPresenter<V extends SaleItemsMvpView> extends BasePresente
                         getMvpView().showLeaderboardBanner(null);
                     }
                 });
+    }
+
+    @Override
+    public void getPricingInfoText(String seoIdentifier, String saleId) {
+        pricingInfoLoaderHelper.getPricingInfo(seoIdentifier, saleId, (rrpText, totalPercentOff, originalPrice, combinedPricingInfoText) -> {
+            if (!isViewAttached()) {
+                return;
+            }
+
+            getMvpView().showPricingInfoText(rrpText, totalPercentOff, originalPrice, combinedPricingInfoText);
+        });
     }
 }

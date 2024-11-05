@@ -11,10 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jakewharton.rxbinding2.view.RxView;
-
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
@@ -78,6 +75,8 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         final int proposedWidth = (int) (context.getResources().getInteger(R.integer.item_image_width) * screenDensity);
         final int proposedHeight = (int) ((context.getResources().getInteger(R.integer.item_image_height) * screenDensity) +
+                context.getResources().getDimension((R.dimen.product_list_item_like_button_size)) +
+                context.getResources().getDimension((R.dimen.product_list_text_view_height)) +
                 context.getResources().getDimension(R.dimen.price_block_top_text_height) +
                 context.getResources().getDimension(R.dimen.price_block_height) +
                 SaleItemProductPriceBlockHelper.getBottomTextViewHeight(context, true, isSupplierOriginalPriceInfoEnabled) +
@@ -107,7 +106,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.viewholder_sale_item, parent, false);
-            return new SaleItemViewHolder(view, mComputedPair, isSupplierOriginalPriceInfoEnabled, useAlternatePriceBlockHelper);
+            return new SaleItemViewHolder(view, mComputedPair, isSupplierOriginalPriceInfoEnabled, useAlternatePriceBlockHelper, false);
         }
     }
 

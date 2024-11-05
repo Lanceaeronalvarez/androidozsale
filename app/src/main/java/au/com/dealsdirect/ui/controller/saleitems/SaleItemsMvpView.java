@@ -7,7 +7,6 @@ import java.util.Set;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetSaleBannerDetailsResponse;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
-import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsRequest;
 import au.com.dealsdirect.data.network.model.saleitems.GetSaleItemsResponse;
 import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
@@ -33,8 +32,6 @@ public interface SaleItemsMvpView extends MvpView {
 
     void showSaleBannerDetails(GetSaleBannerDetailsResponse response);
 
-    void productDetailsReceived(SaleItemDetails productDetails);
-
     GetSaleItemsRequest createSaleItemsRequest(String categoryKey, int pageNumber, Set<SearchChipModel> chipsList);
 
     GetSaleItemsRequest createSaleItemsRequest(Set<String> categoryKeys, int pageNumber, Set<SearchChipModel> chipsList);
@@ -50,4 +47,6 @@ public interface SaleItemsMvpView extends MvpView {
     void storeBrandNames(BrandNames brandNames);
 
     void showLeaderboardBanner(GetBannerResponse response);
+
+    void showPricingInfoText(String rrpText, Double totalPercentOff, Double originalPrice, String combinedPricingInfoText);
 }
