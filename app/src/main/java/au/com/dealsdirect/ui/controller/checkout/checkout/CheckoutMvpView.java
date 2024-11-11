@@ -76,8 +76,6 @@ public interface CheckoutMvpView extends MvpView {
 
     boolean isOurPaySelectDeliveryMethod();
 
-    void setIsPaymentMethodChanged(boolean isPaymentMethodChanged);
-
     Router getDisplayRouter();
 
 //    void initializeVisaCheckout();

@@ -1,16 +1,15 @@
 package au.com.dealsdirect.ui.controller.checkout.deliveryoptions;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 import com.google.gson.Gson;
@@ -29,8 +28,6 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryOp
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliveryServicePackageDetail;
 import au.com.dealsdirect.service.ourpay.OurpayTemplateText;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.custom.SimpleDividerItemDecoration;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
@@ -55,7 +52,6 @@ public class DeliveryOptionsController extends BaseController implements Deliver
     private List<DeliveryOption> mDeliveryOptions;
     private DeliveryServicePackageDetail mDeliveryServicePackageDetail;
     private String mDeliveryAddressId;
-    private CheckoutMvpView mCheckoutMvpView;
     private boolean mIsAddressValid;
 
     public static DeliveryOptionsController newInstance() {
@@ -78,7 +74,6 @@ public class DeliveryOptionsController extends BaseController implements Deliver
         View view = inflater.inflate(R.layout.controller_delivery_options, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(CheckoutController.class.getName());
         return view;
     }
 

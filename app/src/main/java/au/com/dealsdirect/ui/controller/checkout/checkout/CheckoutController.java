@@ -42,7 +42,6 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-//import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -73,6 +72,7 @@ import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.Paym
 import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.GA4EventParams;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
+import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.AgeRestrictionOperationType;
 import au.com.dealsdirect.service.datacollection.enums.CheckoutUserActivityOperationType;
@@ -105,7 +105,6 @@ import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
-import au.com.dealsdirect.service.braintree.FetchBraintreeClientTokenHandler;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.ui.main.PaymentInfo;
 import au.com.dealsdirect.utils.ActivityLaunchUtil;
@@ -1281,11 +1280,6 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     }
 
     @Override
-    public void setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
-        mIsPaymentMethodChanged = isPaymentMethodChanged;
-    }
-
-    @Override
     public Router getDisplayRouter() {
         return getRouter();
     }
@@ -1798,6 +1792,17 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         super.refreshContents();
         if (!mIsCartLoading) {
             loadCart();
+        }
+    }
+
+    @Override
+    public void onViewWillAppear(Controller previousController) {
+        super.onViewWillAppear(previousController);
+        mIsPaymentMethodChanged = false;
+        if (previousController instanceof AddPaymentController) {
+            mIsPaymentMethodChanged = ((AddPaymentController) previousController).isPaymentMethodChanged();
+        } else if (previousController instanceof PaymentSelectController) {
+            mIsPaymentMethodChanged = ((PaymentSelectController) previousController).isPaymentMethodChanged();
         }
     }
 

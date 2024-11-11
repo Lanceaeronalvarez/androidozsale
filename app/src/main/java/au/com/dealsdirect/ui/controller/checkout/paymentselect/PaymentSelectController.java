@@ -28,7 +28,6 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.checkout.addpayment.AddPaymentController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.RecyclerOnTouchListener;
@@ -62,8 +61,6 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     @BindView(R.id.controller_payment_description_text)
     TextView mPaymentSubtitleText;
 
-    private CheckoutMvpView mCheckoutMvpView;
-
     private PaymentSelectAdapter mAdapter;
 
     private ArrayList<PaymentMethod> mPaymentMethods = new ArrayList<>();
@@ -72,6 +69,8 @@ public class PaymentSelectController extends BaseController implements PaymentSe
     private String mCartTotalCost;
     private CheckoutDetailsMapper mValue;
     private GA4EventParams.GA4AddPaymentInfoParams ga4AddPaymentInfoParams = null;
+
+    private boolean isPaymentMethodChanged = false;
 
 
     public static PaymentSelectController newInstance() {
@@ -100,7 +99,6 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(CheckoutController.class.getName());
         return view;
     }
 
@@ -202,7 +200,7 @@ public class PaymentSelectController extends BaseController implements PaymentSe
                 mRecyclerView.addOnItemTouchListener(new RecyclerOnTouchListener(mActivity, (v, position) -> {
                     final PaymentMethod selectedPaymentMethod = mPaymentMethods.get(position);
                     if (mActivity.getPaymentMethodSelected() != selectedPaymentMethod) {
-                        mCheckoutMvpView.setIsPaymentMethodChanged(true);
+                        isPaymentMethodChanged = true;
                     }
                     mActivity.setPaymentMethodSelected(selectedPaymentMethod);
 
@@ -253,5 +251,9 @@ public class PaymentSelectController extends BaseController implements PaymentSe
 
     public GA4EventParams.GA4AddPaymentInfoParams getGa4AddPaymentInfoParams() {
         return ga4AddPaymentInfoParams;
+    }
+
+    public boolean isPaymentMethodChanged() {
+        return isPaymentMethodChanged;
     }
 }

@@ -129,7 +129,7 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         CommonControllerChangeListener.addToRouter(mCheckoutDetailRouter);
 
         final CheckoutController checkoutController = CheckoutController.newInstance(this);
-        mCheckoutDetailRouter.setRoot(RouterTransaction.with(checkoutController).tag(CheckoutController.class.getName()));
+        mCheckoutDetailRouter.setRoot(RouterTransaction.with(checkoutController).tag(CheckoutController.TAG));
 
         mCheckoutDetailView = checkoutController;
 
@@ -414,13 +414,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
             return mCheckoutDetailView.isOurPaySelectDeliveryMethod();
         } else {
             return false;
-        }
-    }
-
-    @Override
-    public void setIsPaymentMethodChanged(boolean isPaymentMethodChanged) {
-        if (mCheckoutDetailView != null) {
-            mCheckoutDetailView.setIsPaymentMethodChanged(isPaymentMethodChanged);
         }
     }
 

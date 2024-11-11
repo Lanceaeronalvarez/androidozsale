@@ -53,9 +53,7 @@ import au.com.dealsdirect.service.ourpay.OurpayPanel;
 import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BaseActivity;
 import au.com.dealsdirect.ui.base.BaseController;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
-import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
@@ -163,7 +161,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @BindView(R.id.partial_toolbar_title)
     TextView mViewAddressToolarTitle;
 
-    private CheckoutMvpView mCheckoutMvpView;
+    private boolean isPaymentMethodChanged = false;
 
     private boolean isFromCart;
     private boolean isPayPalSubmitClicked = false;
@@ -226,7 +224,6 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mPresenter.onAttach(this);
 //        mVcoPresenter.onAttach(this);
 
-        mCheckoutMvpView = (CheckoutMvpView) getRouter().getControllerWithTag(CheckoutController.class.getName());
         return view;
     }
 
@@ -297,21 +294,21 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         mPayButton.setOnClickListener(action -> {
             onCardFormSubmit();
             if (isFromCart) {
-                mCheckoutMvpView.setIsPaymentMethodChanged(true);
+                isPaymentMethodChanged = true;
             }
         });
 
         mPaypalButton.setOnClickListener(action -> {
             onPaypalSubmit();
             if (isFromCart) {
-                mCheckoutMvpView.setIsPaymentMethodChanged(true);
+                isPaymentMethodChanged = true;
             }
         });
 
         mPaypalCreditButton.setOnClickListener(action -> {
             onPaypalCreditSubmit();
             if (isFromCart) {
-                mCheckoutMvpView.setIsPaymentMethodChanged(true);
+                isPaymentMethodChanged = true;
             }
         });
 
@@ -335,7 +332,7 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
         if (isFromCart) {
             mMasterpassButton.setOnClickListener(action -> {
                 onMasterpassButtonClick();
-                mCheckoutMvpView.setIsPaymentMethodChanged(true);
+                isPaymentMethodChanged = true;
             });
 
         } else {
@@ -669,5 +666,9 @@ public class AddPaymentController extends BaseController implements AddPaymentMv
     @Override
     public boolean isSecurePage() {
         return true;
+    }
+
+    public boolean isPaymentMethodChanged() {
+        return isPaymentMethodChanged;
     }
 }
