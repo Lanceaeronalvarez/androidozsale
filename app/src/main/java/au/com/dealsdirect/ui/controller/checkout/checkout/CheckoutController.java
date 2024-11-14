@@ -101,6 +101,8 @@ import au.com.dealsdirect.ui.controller.masterpass.MasterpassController;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.controller.vouchers.Add.AddVouchersController;
 import au.com.dealsdirect.ui.controller.zippay.ZipPayViewController;
+import au.com.dealsdirect.ui.custom.BottomPopupView;
+import au.com.dealsdirect.ui.custom.BottomPopupWebViewContentAdapter;
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.ui.custom.toggleswitch.OurPayToggleSwitch;
@@ -262,6 +264,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     ImageButton mToolbarRightButton;
     @BindView(R.id.checkout_scrollview)
     NestedScrollView mNestedScrollView;
+    @BindView(R.id.checkout_scrollview_container)
+    @Nullable
+    ViewGroup mScrollViewContainer;
 
     //DELIVERY OPTIONS UI
     @Nullable
@@ -327,6 +332,8 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     private Calendar birthday = null;
 
     private boolean isGPayAvailable = false;
+
+    private BottomPopupView currentBottomPopupView = null;
 
     public static CheckoutController newInstance() {
         return new CheckoutController(
@@ -460,7 +467,12 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
 
         if (!mPresenter.isTablet() || !getBoolean(R.bool.master_detail_enabled)) {
             mRecyclerView.setVisibility(View.VISIBLE);
-            mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
+            mAdapter = new CheckoutOrderAdapter(
+                    mActivity,
+                    mItemList,
+                    mPresenter,
+                    this,
+                    priceInfo -> showBottomPopupView(priceInfo));
             mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
             mAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
                 @Override
@@ -2357,6 +2369,27 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
 
         DataCollector.logEvent(Events.RemoveFromCart, parameters);
+    }
+
+    private void showBottomPopupView(String textContent) {
+        if (mScrollViewContainer == null) {
+            return;
+        }
+        if (currentBottomPopupView != null) {
+            currentBottomPopupView.dismiss(true);
+        }
+        final BottomPopupWebViewContentAdapter adapter = new BottomPopupWebViewContentAdapter();
+        currentBottomPopupView = new BottomPopupView(mScrollViewContainer, adapter);
+
+        adapter.setWebViewContent(textContent);
+        adapter.setOnCloseButtonClickListener(() -> currentBottomPopupView.dismiss(true));
+        adapter.setWebViewClientOverrideUrlLoading(url -> {
+            if (!url.contains("about:blank")) {
+                ActivityLaunchUtil.launchActivity(mActivity, url);
+            }
+            return true;
+        });
+        currentBottomPopupView.show(true);
     }
 }
 

@@ -40,6 +40,14 @@ public class Item {
         return subtotal;
     }
 
+    public Double getSubtotalWithDiscount() {
+        return subtotalWithDiscount;
+    }
+
+    public void setSubtotalWithDiscount(Double subtotalWithDiscount) {
+        this.subtotalWithDiscount = subtotalWithDiscount;
+    }
+
     public String getBrandID() {
         return brandID;
     }
@@ -84,6 +92,18 @@ public class Item {
     public String saleID;
     @SerializedName(value = "CustomizableItemDetails", alternate = {"customizableItemDetails"})
     private List<Personalisation.CustomizableItemDetails> customizableItemDetailsList;
+    @SerializedName("Discount")
+    public double discount;
+    @SerializedName("DiscountPercentOff")
+    public double discountPercentOff;
+    @SerializedName("SubtotalWithDiscount")
+    public double subtotalWithDiscount;
+    @SerializedName("MultiBuyEnabled")
+    public boolean multiBuyEnabled;
+    @SerializedName("MultiBuyCount")
+    public int multiBuyCount;
+    @SerializedName("MultiBuyDiscountPrice")
+    public double multiBuyDiscountPrice;
 
     @Override
     public int hashCode() {

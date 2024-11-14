@@ -44,8 +44,11 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
+import au.com.dealsdirect.ui.custom.BottomPopupView;
+import au.com.dealsdirect.ui.custom.BottomPopupWebViewContentAdapter;
 import au.com.dealsdirect.ui.custom.ProductQuantityLayout;
 import au.com.dealsdirect.ui.custom.transitions.ArcZoomChangeHandler;
+import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CommonUtils;
@@ -92,6 +95,8 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     private boolean mIsCheckoutHostUpdated;
     private boolean mHasSavedInstance = false;
 
+    private BottomPopupView currentBottomPopupView = null;
+
 
     public static CheckoutHostController newInstance() {
         return new CheckoutHostController(
@@ -133,7 +138,12 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
         mCheckoutDetailView = checkoutController;
 
-        mAdapter = new CheckoutOrderAdapter(mActivity, mItemList, mPresenter, this);
+        mAdapter = new CheckoutOrderAdapter(
+                mActivity,
+                mItemList,
+                mPresenter,
+                this,
+                priceInfo -> showBottomPopupView(priceInfo));
         mAdapter.setShouldAddSpacerOnTop(mPresenter.isTablet());
         mAdapter.setEligibleProductsLinkListener(locationFilterHash -> mActivity.getMainController().openLocationFilterHash(locationFilterHash));
         mAdapter.setItemQuantityChangedListener(new CheckoutOrderAdapter.ItemQuantityChangedListener() {
@@ -508,5 +518,23 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, CheckoutController.class.getSimpleName());
 
         DataCollector.logEvent(Events.RemoveFromCart, parameters);
+    }
+
+    private void showBottomPopupView(String textContent) {
+        if (currentBottomPopupView != null) {
+            currentBottomPopupView.dismiss(true);
+        }
+        final BottomPopupWebViewContentAdapter adapter = new BottomPopupWebViewContentAdapter();
+        currentBottomPopupView = new BottomPopupView(mCheckoutContainer, adapter);
+
+        adapter.setWebViewContent(textContent);
+        adapter.setOnCloseButtonClickListener(() -> currentBottomPopupView.dismiss(true));
+        adapter.setWebViewClientOverrideUrlLoading(url -> {
+            if (!url.contains("about:blank")) {
+                ActivityLaunchUtil.launchActivity(mActivity, url);
+            }
+            return true;
+        });
+        currentBottomPopupView.show(true);
     }
 }

@@ -1,13 +1,21 @@
 package au.com.dealsdirect.ui.controller.checkout.checkout;
 
+import static android.graphics.Typeface.BOLD;
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
+import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
+import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
+import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,11 +43,6 @@ import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.graphics.Typeface.BOLD;
-import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
-import static android.text.Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
-
 public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final static int VIEW_TYPE_ITEM = 0;
@@ -61,12 +64,18 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private String postcodeOverride = null;
 
-    public CheckoutOrderAdapter(Context context, List<MappedShipment> data, CheckoutMvpPresenter<CheckoutMvpView> presenter,
-                                CheckoutListener clickListener) {
+    final private CheckoutOrderPriceHelper checkoutOrderPriceHelper;
+
+    public CheckoutOrderAdapter(Context context,
+                                List<MappedShipment> data,
+                                CheckoutMvpPresenter<CheckoutMvpView> presenter,
+                                CheckoutListener clickListener,
+                                CheckoutOrderPriceInfoClickListener onClickItemPriceInfo) {
         this.mContext = context;
         this.mSourceData = data;
         this.mPresenter = presenter;
         this.mClickListener = clickListener;
+        checkoutOrderPriceHelper = new CheckoutOrderPriceHelper(context, onClickItemPriceInfo);
     }
 
     @Override
@@ -165,19 +174,16 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.personalisationLayout.inflateForCheckout(mContext, item.getCustomizableItemDetailsList());
         }
 
-        holder.price.setText(PriceUtils.getPriceStringValue(item.price));
+        checkoutOrderPriceHelper.setupPriceTextView(holder.price, item);
+
         holder.quantityLayout.setMax(MAX_ITEM_QTY);
         holder.quantityLayout.setQuantity(item.qty);
         holder.quantityLayout.setAutoUpdateQuantity(false);
         holder.quantityLayout.setEditTextToNonEditable();
 
-        int subTotalVisibility = item.qty > 1 ? View.VISIBLE : View.GONE;
-        holder.subTotal.setVisibility(subTotalVisibility);
+        holder.subTotal.setVisibility(View.GONE);
         if (holder.subTotalLabel != null) {
-            holder.subTotalLabel.setVisibility(subTotalVisibility);
-        }
-        if (item.qty > 1) {
-            holder.subTotal.setText(PriceUtils.getPriceStringValue(item.getSubtotal()));
+            holder.subTotalLabel.setVisibility(View.GONE);
         }
 
         final String itemId = item.id;
@@ -500,6 +506,7 @@ public class CheckoutOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public interface ItemQuantityChangedListener {
         void onIncrease(String itemId, int newCount, ProductQuantityLayout view);
+
         void onDecrease(String itemId, int newCount, ProductQuantityLayout view);
     }
 
