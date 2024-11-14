@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.afterpay.GetAfterpayDataResponse;
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.banner.GetLeaderboardBannerRequest;
 import au.com.dealsdirect.data.network.model.checkout.BasketQuantityResponse;
@@ -692,5 +693,29 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
 
             getMvpView().showPricingInfoText(rrpText, totalPercentOff, originalPrice, combinedPricingInfoText);
         });
+    }
+
+    @Override
+    public void loadTrendingBrands(GetBannerRequest request) {
+        doApiCallForResponse(
+                getDataManager().callGetBanners2(request, false), new AppApiCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        super.onSuccess(response);
+                        if (!isViewAttached()) {
+                            return;
+                        }
+                        getMvpView().showTrendingBrands((GetBannerResponse) response);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        super.onFailure(t);
+                        if (!isViewAttached()) {
+                            return;
+                        }
+                        getMvpView().showTrendingBrands(null);
+                    }
+                });
     }
 }

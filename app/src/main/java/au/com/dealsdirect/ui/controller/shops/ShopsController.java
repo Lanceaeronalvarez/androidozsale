@@ -67,6 +67,7 @@ import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.BannersAdapterHelper;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.ResettableDimensions;
+import au.com.dealsdirect.ui.controller.trendingbrands.TrendingBrandsWidgetHelper;
 import au.com.dealsdirect.ui.custom.BottomPopupView;
 import au.com.dealsdirect.ui.custom.BottomPopupWebViewContentAdapter;
 import au.com.dealsdirect.ui.custom.SearchEditText;
@@ -864,30 +865,13 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         }
 
         HorizontalScrollingBannerAdapter adapter = null;
-        String title = null;
         if (getBannerResponses != null) {
-            List<GetBannerResponse.Banner> categoryBanners = new ArrayList<>();
-            List<GetBannerResponse.Group> groups = getBannerResponses.getGroups();
-            if (groups != null) {
-                for (GetBannerResponse.Group group : groups) {
-                    if (group.getType().equals("brand")) {
-                        List<GetBannerResponse.Banner> banners = group.getBanners();
-                        if (banners != null) {
-                            for (GetBannerResponse.Banner banner : banners) {
-                                if (banner.getBannerType().equals("brandBanner")) {
-                                    categoryBanners.add(banner);
-                                }
-                            }
-                            title = group.getTitle();
-                        }
-                    }
-                }
-            }
-            if (!categoryBanners.isEmpty()) {
+            List<GetBannerResponse.Banner> trendingBrandsBanners = TrendingBrandsWidgetHelper.getBannersFromResponse(getBannerResponses);
+            if (!trendingBrandsBanners.isEmpty()) {
                 adapter = new HorizontalScrollingBannerAdapter(
                         CIRCULAR_TRENDING_BRANDS ? BannerStyle.CIRCULAR : BannerStyle.DEFAULT);
-                adapter.setDataSource(categoryBanners);
-                adapter.setTitle(title.toUpperCase());
+                adapter.setDataSource(trendingBrandsBanners);
+                adapter.setTitle(mActivity.getResources().getString(R.string.trending_brands).toUpperCase());
                 adapter.setShowHeader(CIRCULAR_TRENDING_BRANDS);
                 adapter.setShouldShowTitle(CIRCULAR_TRENDING_BRANDS);
                 adapter.setShouldShowSubtitle(CIRCULAR_TRENDING_BRANDS);

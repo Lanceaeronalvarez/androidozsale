@@ -94,6 +94,7 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.auth.AuthHandler;
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.events.GA4EventParams;
@@ -126,6 +127,9 @@ import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.priceblock.SaleItemProductPriceBlockHelper;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
+import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalPageIndicatorAdapter;
+import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
+import au.com.dealsdirect.ui.controller.trendingbrands.TrendingBrandsWidgetHelper;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
 import au.com.dealsdirect.ui.custom.BottomPopupView;
 import au.com.dealsdirect.ui.custom.BottomPopupWebViewContentAdapter;
@@ -144,6 +148,7 @@ import au.com.dealsdirect.utils.IntrospectionUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
+import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerBannerViewHolder;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.ViewUtils;
 import au.com.dealsdirect.utils.module.ControllerFactory;
@@ -155,6 +160,8 @@ import butterknife.OnClick;
 public class SaleItemDetailsController extends BaseController implements SaleItemDetailsMvpView {
 
     private final static int ACTIVITY_INDICATOR_DELAY = 2000; // milliseconds
+
+    private static final boolean CIRCULAR_TRENDING_BRANDS = true; // TODO: make helper class
 
     private final static boolean IS_DISCOUNT_POG_ENABLED = false;
 
@@ -513,6 +520,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     RecyclerView mRecommendedRecyclerView;
     @BindView(R.id.controller_product_details_recommended_container)
     View mRecommendedContainer;
+    @BindView(R.id.controller_product_details_trending_brands_container)
+    ViewGroup mTrendingBrandsContainer;
     @BindView(R.id.controller_product_details_recently_view_recyclerview)
     RecyclerView mRecentlyViewedRecyclerView;
     @BindView(R.id.controller_product_details_recently_viewed_container)
@@ -668,6 +677,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private SaleItemDetailsHorizontalScrollingItemsHelper recommendedItemsHelper = null;
     private SaleItemDetailsHorizontalScrollingItemsHelper youMayAlsoLikeHelper = null;
     private SaleItemDetailsHorizontalScrollingItemsHelper recentlyViewedHelper = null;
+    private HorizontalRecyclerBannerViewHolder trendingBrandsViewHolder = null;
+    private HorizontalScrollingBannerAdapter trendingBrandsAdapter = null;
+    private TrendingBrandsWidgetHelper trendingBrandsWidgetHelper = null;
 
     private final Set<String> productListItemsToUpdate = new HashSet<>();
 
@@ -892,6 +904,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
         if (priceBlockHelper != null) {
             priceBlockHelper = null;
+        }
+        if (trendingBrandsViewHolder != null) {
+            trendingBrandsViewHolder.onViewRemoved();
         }
 
         super.onDetach(view);
@@ -1426,6 +1441,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         // Disabled recommended items
 //        mPresenter.loadRecommendedItems();
+
+        loadTrendingBrands(saleDetail);
 
         mProductId = saleDetail.getProductId();
         mMasterProductId = saleDetail.getAttributes().getProductId();
@@ -3219,5 +3236,65 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         ImageUtils.loadImageGif(leaderboardBanner.getImage(), leaderboardBannerImageView);
+    }
+
+    public void loadTrendingBrands(SaleItemDetails saleItemDetails) {
+        String categoryId = "";
+        if (!saleItemDetails.getTaxonomy().isEmpty()) {
+            categoryId = saleItemDetails.getTaxonomy().get(0).getId();
+        }
+
+        GetBannerRequest request = new GetBannerRequest();
+        request.setOffset(null);
+        request.setLimit("50");
+        request.setBannergroups("7,8,9");
+        request.setCategory(categoryId);
+
+        mPresenter.loadTrendingBrands(request);
+    }
+
+    @Override
+    public void showTrendingBrands(GetBannerResponse getBannerResponses) {
+        HorizontalScrollingBannerAdapter adapter = null;
+        if (getBannerResponses != null) {
+            List<GetBannerResponse.Banner> trendingBrandsBanners = TrendingBrandsWidgetHelper.getBannersFromResponse(getBannerResponses);
+            if (!trendingBrandsBanners.isEmpty()) {
+                adapter = new HorizontalScrollingBannerAdapter(
+                        CIRCULAR_TRENDING_BRANDS ? HorizontalScrollingBannerAdapter.BannerStyle.CIRCULAR : HorizontalScrollingBannerAdapter.BannerStyle.DEFAULT);
+                adapter.setDataSource(trendingBrandsBanners);
+                adapter.setShowHeader(false);
+                adapter.setShouldShowTitle(false);
+                adapter.setShouldShowSubtitle(false);
+                adapter.setImageResolutionOverride(mActivity.getResources().getInteger(R.integer.trending_brands_resolution_override));
+                if (CIRCULAR_TRENDING_BRANDS) {
+                    adapter.setBackgroundColorOverride(mActivity.getResources().getColor(R.color.background_default));
+                }
+
+                adapter.setOnBannerTappedListener((banner, position) -> {
+                    if (trendingBrandsWidgetHelper == null) {
+                        return;
+                    }
+                    trendingBrandsWidgetHelper.onBannerBrandClicked(banner, getRouter(), position);
+                });
+            }
+        }
+        trendingBrandsWidgetHelper = new TrendingBrandsWidgetHelper(adapter, mActivity, mPresenter.isTablet());
+        trendingBrandsAdapter = adapter;
+        mTrendingBrandsContainer.setVisibility(adapter == null ? View.GONE : View.VISIBLE);
+        if (adapter != null) {
+            if (trendingBrandsViewHolder == null) {
+                trendingBrandsViewHolder = trendingBrandsWidgetHelper.createViewHolder(mTrendingBrandsContainer);
+                if (mTrendingBrandsContainer.indexOfChild(trendingBrandsViewHolder.itemView) < 0) {
+                    mTrendingBrandsContainer.addView(trendingBrandsViewHolder.itemView);
+                }
+            }
+
+            trendingBrandsViewHolder.onViewBound();
+            trendingBrandsWidgetHelper.onBindViewHolder(trendingBrandsViewHolder);
+        } else {
+            if (trendingBrandsViewHolder != null) {
+                trendingBrandsViewHolder.setPageIndicatorItemCount(0);
+            }
+        }
     }
 }
