@@ -1422,8 +1422,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mFilterCard.setOnClickListener(view12 -> {
             if (tabsLoaded) {
-                final Controller saleFilterController = SaleFilterController.newInstance(mTabTitles, mFacets, this, new ArrayList<SearchChipModel>(mSelectedFilterList), new ArrayList<String>(mSelectedCategoryKeys), mSortingResponse,
-                        mCategoryTreeResponse, false, mGenieTotal, mSaleId, linkOptions, mGenieMaxPrice, mCategoryKeyFromCategorySearch, mSourceType.sourceTypeName);
+                final Controller saleFilterController = SaleFilterController.newInstance(
+                        mTabTitles,
+                        mFacets,
+                        this,
+                        new ArrayList<SearchChipModel>(mSelectedFilterList),
+                        new ArrayList<String>(mSelectedCategoryKeys),
+                        mSortingResponse,
+                        mCategoryTreeResponse,
+                        false,
+                        mGenieTotal,
+                        mSaleId,
+                        linkOptions,
+                        mGenieMaxPrice,
+                        mCategoryKeyFromCategorySearch,
+                        mSourceType.sourceTypeName);
 
                 RouterTransaction filterRouterTransaction = RouterTransaction
                         .with(saleFilterController).pushChangeHandler(new HorizontalChangeHandler())
@@ -1437,8 +1450,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSortCard.setOnClickListener(view12 -> {
             if (tabsLoaded) {
-                final Controller saleFilterController = SaleFilterController.newInstance(mTabTitles, mFacets, this, new ArrayList<SearchChipModel>(mSelectedFilterList), new ArrayList<String>(mSelectedCategoryKeys), mSortingResponse,
-                        mCategoryTreeResponse, true, mGenieTotal, mSaleId, linkOptions, mGenieMaxPrice, mCategoryKeyFromCategorySearch, mSourceType.sourceTypeName);
+                final Controller saleFilterController = SaleFilterController.newInstance(
+                        mTabTitles,
+                        mFacets,
+                        this,
+                        new ArrayList<SearchChipModel>(mSelectedFilterList),
+                        new ArrayList<String>(mSelectedCategoryKeys),
+                        mSortingResponse,
+                        mCategoryTreeResponse,
+                        true,
+                        mGenieTotal,
+                        mSaleId,
+                        linkOptions,
+                        mGenieMaxPrice,
+                        mCategoryKeyFromCategorySearch,
+                        mSourceType.sourceTypeName);
 
                 RouterTransaction sortRouterTransaction = RouterTransaction
                         .with(saleFilterController).pushChangeHandler(new HorizontalChangeHandler())

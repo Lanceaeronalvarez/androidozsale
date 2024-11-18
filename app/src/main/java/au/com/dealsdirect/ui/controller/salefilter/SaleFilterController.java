@@ -9,7 +9,6 @@ import static au.com.dealsdirect.utils.BundleKeys.PRICE_FACET_FILTER_TYPE;
 import static au.com.dealsdirect.utils.BundleKeys.SIZE_FACET_FILTER_TYPE;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +49,6 @@ import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
 import au.com.dealsdirect.service.datacollection.enums.SearchOperationType;
 import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.controller.main.Settings;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpPresenter;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpRepository;
 import au.com.dealsdirect.ui.controller.searchfilter.SearchFilterMvpView;
@@ -60,7 +58,6 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
-
 
 
 public class SaleFilterController extends BaseController implements SaleFilterClickListener, SearchFilterMvpView {
@@ -178,7 +175,20 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         return new SaleFilterController(new BundleBuilder(new Bundle()).build());
     }
 
-    public static SaleFilterController newInstance(List<String> mCategories, List<SaleItemFacet> mFacets, SearchFilterMvpRepository repository, List<SearchChipModel> selectedFilters, List<String> categoryKeys, List<SortingResponse> mSortingResponse, List<GetCategoryTreeResponse> mCategoryTreeResponse, boolean showSort, int saleItemCount, String saleId, GetBannerResponse.LinkOptions linkOptions, int genieMaxPrice, String categoryKey, String sourceType) {
+    public static SaleFilterController newInstance(
+            List<String> mCategories,
+            List<SaleItemFacet> mFacets,
+            SearchFilterMvpRepository repository,
+            List<SearchChipModel> selectedFilters,
+            List<String> categoryKeys,
+            List<SortingResponse> mSortingResponse,
+            List<GetCategoryTreeResponse> mCategoryTreeResponse,
+            boolean showSort,
+            int saleItemCount,
+            String saleId,
+            GetBannerResponse.LinkOptions linkOptions,
+            int genieMaxPrice,
+            String categoryKey, String sourceType) {
         SaleFilterController controller = SaleFilterController.newInstance();
 
         controller.mCategories.addAll(mCategories);
@@ -217,10 +227,10 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
             for (GetCategoryTreeResponse category : getCategoryTreeResponses) {
                 mCategoryMap.put(category.getKey(), category);
                 createCategoryMap(category.getChildren());
-                if(mPreSelectedCategoryKeys.contains(category.getKey())){
+                if (mPreSelectedCategoryKeys.contains(category.getKey())) {
                     mCategoryTitles.add(category.getName());
                     addChipGroupSubCategoryChip(category.getName(), category.getKey());
-                    if(category.getKey().equals(mCategoryKey) && category.getChildren().isEmpty()){
+                    if (category.getKey().equals(mCategoryKey) && category.getChildren().isEmpty()) {
                         mShowCategory = false;
                     }
                 }
@@ -259,13 +269,13 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         setUp(view);
     }
 
-    void setupFilters(){
-        if(!mSelectedFilters.isEmpty() || !mCategoryKeys.isEmpty()){
-            if(mSelectedFilters.size() == 1 && mCategoryKeys.isEmpty()){
-                if(!mSelectedFilters.get(0).getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)){
+    void setupFilters() {
+        if (!mSelectedFilters.isEmpty() || !mCategoryKeys.isEmpty()) {
+            if (mSelectedFilters.size() == 1 && mCategoryKeys.isEmpty()) {
+                if (!mSelectedFilters.get(0).getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
                     mFilterByText.setVisibility(View.VISIBLE);
                 }
-            }else{
+            } else {
                 mFilterByText.setVisibility(View.VISIBLE);
             }
         }
@@ -275,8 +285,8 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
             createCategoryMap(mCategoryTree);
         }
 
-        for(SearchChipModel filter: mPreselectedFilter){
-            if(!filter.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)){
+        for (SearchChipModel filter : mPreselectedFilter) {
+            if (!filter.getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
                 addChipGroupFilterChip(filter.getChipTitle());
             }
         }
@@ -285,14 +295,13 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
             mSortingList = new ArrayList<>(mSortingFacets);
         }
 
-        ArrayList<String> sortedCategories = new ArrayList<>();
         Collections.sort(mCategories, String.CASE_INSENSITIVE_ORDER);
-        sortedCategories.addAll(mCategories);
-        for(String filterTitles: sortedCategories){
-            if(filterTitles.equals("Category")){
+        List<String> sortedCategories = new ArrayList<>(mCategories);
+        for (String filterTitles : sortedCategories) {
+            if (filterTitles.equals("Category")) {
                 mCategories.remove(filterTitles);
                 mCategories.add(0, filterTitles);
-            }else if(filterTitles.equals("Color")){
+            } else if (filterTitles.equals("Color")) {
                 mCategories.remove(filterTitles);
                 mCategories.add(4, filterTitles);
             }
@@ -301,10 +310,10 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
 
         setRepository(mRepository);
 
-        if(mShowSort){
+        if (mShowSort) {
             onCategoryClicked("Sort", 7);
-        }else{
-            setRecyclerAdapter("",  new ArrayList<>());
+        } else {
+            setRecyclerAdapter("", new ArrayList<>());
         }
 
     }
@@ -314,17 +323,17 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         mfilterLevel = 2;
         showClearButton();
 
-        if(category.equals("Category")){
+        if (category.equals("Category")) {
             mToolbarTitle.setText(category);
             ArrayList list = new ArrayList();
             mShowSubCategories = true;
             setSecondLevelFilters(list, "", list);
         }
-        if(category.equals("Size")){
+        if (category.equals("Size")) {
             mToolbarTitle.setText(category);
             setSecondLevelFilters(mSizeList, BundleKeys.SIZES_FACETFILTER_NAME, mSizeCountList);
         }
-        if(category.equals("Price")){
+        if (category.equals("Price")) {
             mToolbarTitle.setText(category);
             mChipGroup.setVisibility(View.GONE);
             mFilterByText.setVisibility(View.GONE);
@@ -334,34 +343,34 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
             mPriceText.setVisibility(View.VISIBLE);
             mFilterType = BundleKeys.PRICE_FACETFILTER_NAME;
         }
-        if(category.equals("Brands")){
+        if (category.equals("Brands")) {
             mToolbarTitle.setText(category);
             setSecondLevelFilters(mBrandList, BundleKeys.BRANDS_FACETFILTER_NAME, mBrandCountList);
         }
-        if(category.equals("Color")){
+        if (category.equals("Color")) {
             mToolbarTitle.setText(category);
             setSecondLevelFilters(mColorList, BundleKeys.COLORS_FACETFILTER_NAME, mColorCountList);
         }
-        if(category.equals("Delivery")){
+        if (category.equals("Delivery")) {
             mToolbarTitle.setText(category);
             setSecondLevelFilters(mDelivery, BundleKeys.DELIVERY_FACETFILTER_NAME, mDeliveryCountList);
         }
-        if(category.equals("New Arrivals")){
+        if (category.equals("New Arrivals")) {
             mToolbarTitle.setText(category);
             setSecondLevelFilters(mNewArrivals, BundleKeys.NEW_ARRIVAL_FACETFILTER_NAME, mNewArrivalsCountList);
         }
-        if(category.equals("Sort")){
+        if (category.equals("Sort")) {
             mToolbarTitle.setText(category);
             mShowSort = true;
             setSecondLevelFilters(new ArrayList(), BundleKeys.SORT_FACETFILTER_NAME, new ArrayList<>());
         }
-        
+
     }
 
     @Override
     public void onAddFilter(String filterType, String title, SearchChipModel chip) {
         SearchChipModel newChip = new SearchChipModel(filterType, title, "");
-        if(!filterType.equals(BundleKeys.SORT_FACETFILTER_NAME)){
+        if (!filterType.equals(BundleKeys.SORT_FACETFILTER_NAME)) {
             addChipGroupFilterChip(title);
         }
         mSelectedFilters.add(newChip);
@@ -369,9 +378,10 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         mPresenter.onFacetItemClicked(mSearchItemsList, chip, true);
         showClearButton();
     }
+
     @Override
     public void onRemoveFilter(String filterType, String title, SearchChipModel chip) {
-        for(int i = 0; i < mSelectedFilters.size(); i++) {
+        for (int i = 0; i < mSelectedFilters.size(); i++) {
             if (mSelectedFilters.get(i).getFilterType() == filterType && mSelectedFilters.get(i).getChipTitle().equals(title)) {
                 mSelectedFilters.remove(i);
             }
@@ -380,18 +390,20 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         mPresenter.onFacetItemClicked(mSearchItemsList, chip, false);
         removeChipGroupFilterChip(title);
     }
+
     @Override
     public void onAddCategoryFilter(String filterType, String title) {
-        if(!mCategories.contains(filterType)){
+        if (!mCategories.contains(filterType)) {
             mCategoryKeys.add(filterType);
             mCategoryTitles.add(title);
             addChipGroupSubCategoryChip(title, filterType);
             showClearButton();
         }
     }
+
     @Override
     public void onRemoveCategoryFilter(String filterType, String title) {
-        if(filterType == mCategoryKey){
+        if (filterType == mCategoryKey) {
             mRemoveCategoryKeyFromCategory = true;
         }
         mCategoryKeys.remove(filterType);
@@ -410,15 +422,15 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         requestLoadItems();
     }
 
-    void addChipGroupFilterChip(String title){
+    void addChipGroupFilterChip(String title) {
         Chip chip = (Chip) mActivity.getLayoutInflater().inflate(R.layout.single_chip_layout, mChipGroup, false);
         chip.setText(title);
         chip.setCloseIconVisible(true);
         chip.setCheckable(false);
-        chip.setOnCloseIconClickListener(it ->{
-            for(int i = 0; i < mSelectedFilters.size(); i++) {
+        chip.setOnCloseIconClickListener(it -> {
+            for (int i = 0; i < mSelectedFilters.size(); i++) {
                 if (mSelectedFilters.get(i).getChipTitle().equals(title) || mSelectedFilters.get(i).getFilterType().equals(BundleKeys.SORT_FACETFILTER_NAME)) {
-                    if(mSelectedFilters.get(i).getFilterType() == BundleKeys.PRICE_FACETFILTER_NAME){
+                    if (mSelectedFilters.get(i).getFilterType() == BundleKeys.PRICE_FACETFILTER_NAME) {
                         onResetPriceRange();
                     }
                     SearchChipModel chipToRemove = mSelectedFilters.get(i);
@@ -429,7 +441,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
                 }
             }
             mChipGroup.removeView(it);
-            if(mChipGroup.getChildCount() == 0){
+            if (mChipGroup.getChildCount() == 0) {
                 mFilterByText.setVisibility(View.GONE);
                 mToolbarRightButton.setVisibility(View.GONE);
             }
@@ -438,19 +450,19 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         mChipGroup.addView(chip);
     }
 
-    void addChipGroupSubCategoryChip(String title, String filterType){
+    void addChipGroupSubCategoryChip(String title, String filterType) {
         Chip chip = (Chip) mActivity.getLayoutInflater().inflate(R.layout.single_chip_layout, mChipGroup, false);
         chip.setText(title);
         chip.setCloseIconVisible(true);
         chip.setCheckable(false);
-        chip.setOnCloseIconClickListener(it ->{
+        chip.setOnCloseIconClickListener(it -> {
             mCategoryKeys.remove(filterType);
             mCategoryTitles.remove(title);
             mChipGroup.removeView(it);
-            if(filterType.equals(mCategoryKey)){
+            if (filterType.equals(mCategoryKey)) {
                 mRemoveCategoryKeyFromCategory = true;
             }
-            if(mChipGroup.getChildCount() == 0){
+            if (mChipGroup.getChildCount() == 0) {
                 mFilterByText.setVisibility(View.GONE);
                 mToolbarRightButton.setVisibility(View.GONE);
             }
@@ -459,20 +471,20 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         mChipGroup.addView(chip);
     }
 
-    void removeChipGroupFilterChip(String title){
-        for (int i=0; i<mChipGroup.getChildCount();i++){
+    void removeChipGroupFilterChip(String title) {
+        for (int i = 0; i < mChipGroup.getChildCount(); i++) {
             Chip chipToRemove = (Chip) mChipGroup.getChildAt(i);
-            if(chipToRemove.getText().equals(title)){
+            if (chipToRemove.getText().equals(title)) {
                 mChipGroup.removeView(chipToRemove);
             }
         }
-        if(mChipGroup.getChildCount() == 0){
+        if (mChipGroup.getChildCount() == 0) {
             mFilterByText.setVisibility(View.GONE);
             mToolbarRightButton.setVisibility(View.GONE);
         }
     }
 
-    public void setSecondLevelFilters(ArrayList filers, String type, ArrayList<String> filterCountList){
+    public void setSecondLevelFilters(ArrayList filers, String type, ArrayList<String> filterCountList) {
         mChipGroup.setVisibility(View.GONE);
         mFilterByText.setVisibility(View.GONE);
         mFiltersToDisplay.clear();
@@ -483,9 +495,26 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         setRecyclerAdapter(type, filterCountList);
     }
 
-    public void setRecyclerAdapter(String type, ArrayList<String> filterCountList){
+    public void setRecyclerAdapter(String type, ArrayList<String> filterCountList) {
         mCurrentCountList = filterCountList;
-        mFilterAdapter = new SaleFilterAdapter(mActivity, this, mfilterLevel, new ArrayList<>(), mFiltersToDisplay, type, mSelectedFilters, mCategoryTree, mShowSubCategories, mCategoryKeys, mSortingList, mShowSort, filterCountList, mShowColor, mCategoryKey, mSourceType, mShowCategory);
+        mFilterAdapter = new SaleFilterAdapter(
+                mActivity,
+                this,
+                mfilterLevel,
+                new ArrayList<>(),
+                mFiltersToDisplay,
+                type,
+                mSelectedFilters,
+                mCategoryTree,
+                mShowSubCategories,
+                mCategoryKeys,
+                mSortingList,
+                mShowSort,
+                filterCountList,
+                mShowColor,
+                mCategoryKey,
+                mSourceType,
+                mShowCategory);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(mFilterAdapter);
@@ -746,18 +775,18 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
 
     @Override
     public void showSaleItems(GetSaleItemsResponse getSaleItemsResponse, int pageNumber, boolean forFacetCorrection, boolean isFromCache) {
-        if(mSourceType.equals("CategorySearch") && mRemoveCategoryKeyFromCategory){
+        if (mSourceType.equals("CategorySearch") && mRemoveCategoryKeyFromCategory) {
             mRemoveCategoryKeyFromCategory = false;
             mShowCategory = true;
             mCategoryKey = "";
             mCategoryTree = getSaleItemsResponse.getCategories();
-            setRecyclerAdapter("",  new ArrayList<>());
+            setRecyclerAdapter("", new ArrayList<>());
         }
         mSaleItemResults.setText("See all " + getSaleItemsResponse.total + " products");
     }
 
     private void setupPriceFacet() {
-        mPriceText.setText("Price (" +Settings.getSelectedCountry().currencySign + ")");
+        mPriceText.setText("Price (" + Settings.getSelectedCountry().currencySign + ")");
         mOrigMaxValue = mGeniemaxPrice; //mPresenter.getSearchMaxPrice();
         mOrigMinValue = mSeekbar != null ? mSeekbar.getSelectedMinValue().intValue() : 0;
 
@@ -801,9 +830,6 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
                         addChipGroupFilterChip(priceChip.getChipTitle());
                     }
 
-                    Set<SearchChipModel> selectedFilters = new HashSet<>();
-                    selectedFilters.addAll(mSelectedFilters);
-
                     getUpdatedTotalProductCount();
                     showClearButton();
                 }
@@ -829,15 +855,15 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
 
     @Override
     public boolean handleBack() {
-        if(mfilterLevel == 1 || mShowSort){
+        if (mfilterLevel == 1 || mShowSort) {
             mShowSubCategories = false;
             mShowSort = false;
-            if(!mIsSeeAllClicked){
+            if (!mIsSeeAllClicked) {
                 displayPreSelectedFilters();
             }
             mActivity.getMainController().showBottomNav();
             return super.handleBack();
-        }else{
+        } else {
             mShowSubCategories = false;
             mShowSort = false;
             mToolbarTitle.setText("Filter");
@@ -849,9 +875,9 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
             mRecyclerView.setVisibility(View.VISIBLE);
             mSeekbarLayout.setVisibility(View.GONE);
             mPriceText.setVisibility(View.GONE);
-            if(!mSelectedFilters.isEmpty() || !mCategoryKeys.isEmpty()){
+            if (!mSelectedFilters.isEmpty() || !mCategoryKeys.isEmpty()) {
                 mFilterByText.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 mFilterByText.setVisibility(View.GONE);
             }
             showClearButton();
@@ -859,8 +885,10 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         }
     }
 
-    private void displayPreSelectedFilters(){
-        if(mSourceType.equals("CategorySearch") && mCategoryKeys.isEmpty() && !mCategoryKey.equals("")){
+    private void displayPreSelectedFilters() {
+        if (mSourceType.equals("CategorySearch") &&
+                mCategoryKeys.isEmpty() &&
+                (mCategoryKey != null && !mCategoryKey.isEmpty())) {
             mCategoryKeys.add(mCategoryKey);
         }
         SearchChipModel chipChanged = new SearchChipModel("", "", "");
@@ -877,11 +905,11 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
                 SearchOperationType.UNCHECKBOX);
     }
 
-    private void requestLoadItems(){
-        if(mSourceType.equals("CategorySearch") && mCategoryKeys.size() > 1 || mRemoveCategoryKeyFromCategory){
+    private void requestLoadItems() {
+        if (mSourceType.equals("CategorySearch") && mCategoryKeys.size() > 1 || mRemoveCategoryKeyFromCategory) {
             mCategoryKeys.remove(mCategoryKey);
         }
-        if(mSourceType.equals("CategorySearch") && mCategoryKeys.isEmpty() && !mCategoryKey.equals("")){
+        if (mSourceType.equals("CategorySearch") && mCategoryKeys.isEmpty() && !mCategoryKey.equals("")) {
             mCategoryKeys.add(mCategoryKey);
         }
         SearchChipModel chipChanged = new SearchChipModel("", "", "");
@@ -902,7 +930,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         getUpdatedTotalProductCount();
     }
 
-    private void seeAllProducts(){
+    private void seeAllProducts() {
         requestLoadItems();
         mIsSeeAllClicked = true;
         mfilterLevel = 1;
@@ -910,7 +938,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         mActivity.onBackPressed();
     }
 
-    void clearAllFilters(){
+    void clearAllFilters() {
         mCategoryKeys.clear();
         mChipGroup.removeAllViews();
         mFilterByText.setVisibility(View.GONE);
@@ -919,54 +947,54 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         getUpdatedTotalProductCount();
     }
 
-    void clearFilters(){
-        if(mfilterLevel == 1){
+    void clearFilters() {
+        if (mfilterLevel == 1) {
             clearAllFilters();
-        }else{
-            if(mShowSubCategories){
+        } else {
+            if (mShowSubCategories) {
                 clearAllFilters();
-                setRecyclerAdapter("",  mCurrentCountList);
-            }else {
+                setRecyclerAdapter("", mCurrentCountList);
+            } else {
                 List<SearchChipModel> mNewSelectedFilters = new ArrayList();
-                for(SearchChipModel filters: mSelectedFilters){
-                    if(filters.getFilterType() == mFilterType){
+                for (SearchChipModel filters : mSelectedFilters) {
+                    if (filters.getFilterType() == mFilterType) {
                         removeChipGroupFilterChip(filters.getChipTitle());
-                    }else{
+                    } else {
                         mNewSelectedFilters.add(filters);
                     }
                 }
-                if(mFilterType == BundleKeys.PRICE_FACETFILTER_NAME){
+                if (mFilterType.equals(BundleKeys.PRICE_FACETFILTER_NAME)) {
                     onResetPriceRange();
                 }
                 mSelectedFilters.clear();
                 mSelectedFilters.addAll(mNewSelectedFilters);
-                setRecyclerAdapter(mFilterType,  mCurrentCountList);
+                setRecyclerAdapter(mFilterType, mCurrentCountList);
             }
         }
         getUpdatedTotalProductCount();
     }
 
-    void showClearButton(){
-        if(mfilterLevel == 1){
-            mToolbarRightButton.setText(getResources().getString(R.string.clear_all_underline));
+    void showClearButton() {
+        if (mfilterLevel == 1) {
+            mToolbarRightButton.setText(mActivity.getResources().getString(R.string.clear_all_underline));
             mPadding.getLayoutParams().height = 42;
-            if(mSelectedFilters.isEmpty() && mCategoryKeys.isEmpty()){
+            if (mSelectedFilters.isEmpty() && mCategoryKeys.isEmpty()) {
                 mToolbarRightButton.setVisibility(View.GONE);
-            }else{
+            } else {
                 mToolbarRightButton.setVisibility(View.VISIBLE);
             }
-        }else{
-            mToolbarRightButton.setText(getResources().getString(R.string.clear_underline));
+        } else {
+            mToolbarRightButton.setText(mActivity.getResources().getString(R.string.clear_underline));
             mPadding.getLayoutParams().height = 10;
-            if(mShowSort){
+            if (mShowSort) {
                 mToolbarRightButton.setVisibility(View.GONE);
-            }else{
+            } else {
                 mToolbarRightButton.setVisibility(View.VISIBLE);
             }
         }
     }
 
-    private void getUpdatedTotalProductCount(){
+    private void getUpdatedTotalProductCount() {
         Set<SearchChipModel> mUpdatedSelectedFilterList = new HashSet<>();
         for (SearchChipModel chip : mSelectedFilters) {
             String chipTitle = chip.getChipTitle();
@@ -1012,7 +1040,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     }
 
     public GetSaleItemsRequest createSaleItemsRequest(String categoryKey, int pageNumber, Set<SearchChipModel> chipsList) {
-        HashMap<String, List<String>> facetFilters = new HashMap<>();
+        Map<String, List<String>> facetFilters = new HashMap<>();
         String locationFilterHash = null;
         List<String> mSelectedTitle = new ArrayList<>();
         final String CATEGORY_FILTER_TYPE = "Category";
@@ -1057,7 +1085,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         if (chipsList == null) {
             getSaleItemsRequest.setHasFilters(false);
         } else {
-            if (chipsList.size() != 0) {
+            if (!chipsList.isEmpty()) {
                 ArrayList<String> brandNameFacetFilters = new ArrayList<>();
                 ArrayList<String> colorFacetFilters = new ArrayList<>();
                 ArrayList<String> sizesFacetFilters = new ArrayList<>();
@@ -1149,6 +1177,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
 
         return getSaleItemsRequest;
     }
+
     private String mapSortingTitleToKey(String title) {
         for (SortingResponse response : mSortingFacets) {
             if (response.getTitle().equalsIgnoreCase(title)) {
