@@ -127,7 +127,6 @@ import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.priceblock.SaleItemProductPriceBlockHelper;
 import au.com.dealsdirect.ui.controller.saleitemdetails.listener.SaleDetailsImageListener;
 import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
-import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalPageIndicatorAdapter;
 import au.com.dealsdirect.ui.controller.shops.adapter.HorizontalScrollingBannerAdapter;
 import au.com.dealsdirect.ui.controller.trendingbrands.TrendingBrandsWidgetHelper;
 import au.com.dealsdirect.ui.custom.ArcTranslateAnimation;
@@ -151,8 +150,6 @@ import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerBannerViewHolder;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.ViewUtils;
-import au.com.dealsdirect.utils.module.ControllerFactory;
-import au.com.dealsdirect.utils.module.GateKeeper;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -1207,6 +1204,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         });
 
         productImageRecyclerViewRightButton.setOnClickListener(v -> {
+            if (qualitySaleImages == null || qualitySaleImages.isEmpty()) {
+                currentSaleImagePosition = 0;
+                return;
+            }
             currentSaleImagePosition += 1;
             if (currentSaleImagePosition <= qualitySaleImages.size() - 1) {
                 mProductImagesRv.scrollToPosition(currentSaleImagePosition);
@@ -1217,6 +1218,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         });
 
         productImageRecyclerViewLeftButton.setOnClickListener(v -> {
+            if (qualitySaleImages == null || qualitySaleImages.isEmpty()) {
+                currentSaleImagePosition = 0;
+                return;
+            }
             currentSaleImagePosition -= 1;
             if (currentSaleImagePosition >= 0) {
                 mProductImagesRv.scrollToPosition(currentSaleImagePosition);
