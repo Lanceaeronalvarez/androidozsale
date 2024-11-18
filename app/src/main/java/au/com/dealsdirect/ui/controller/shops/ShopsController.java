@@ -713,7 +713,8 @@ public class ShopsController extends BaseController implements ShopsMvpView, Ptr
         hasLoadedAllItems = false;
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_SALEBANNERS.getValue());
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put(DataCollector.EventParameters.MILLISECONDS, Profiler.getTotalTime(DataCollector.EventParameters.CustomEventType.CV_SALEBANNERS.getValue()));
+        parameters.put(DataCollector.EventParameters.MILLISECONDS,
+                mActivity.getProfiler().getTotalTime(DataCollector.EventParameters.CustomEventType.CV_SALEBANNERS.getValue()));
         parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
         parameters.put(DataCollector.EventParameters.SCREEN_NAME, ShopsController.class.getSimpleName());
         DataCollector.logEvent(Events.CVSaleBanners, parameters);

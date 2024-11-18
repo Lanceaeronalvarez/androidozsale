@@ -1467,51 +1467,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         productViewRequest.setSkuInfo(skuInfo);
 
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put(DataCollector.EventParameters.MILLISECONDS,
-                Profiler.getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue()));
-        parameters.put(DataCollector.EventParameters.PRODUCT_VIEW_REQUEST, productViewRequest);
-        parameters.put(DataCollector.EventParameters.ITEM_ID, saleDetail.getSkuId());
-        parameters.put(DataCollector.EventParameters.ITEM_NAME, saleDetail.getName());
-        if (saleDetail.getSalePrice() != null) {
-            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getSalePrice().getValue());
-        } else if (saleDetail.getPrice() != null) {
-            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getPrice().getValue());
-        }
-        parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
-        parameters.put(DataCollector.EventParameters.ITEM_BRAND, saleDetail.getBrandName());
-        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-        parameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
-
-        GA4EventParams.GA4ViewItemParams ga4EventParams = new GA4EventParams.GA4ViewItemParams();
-        ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
-        GA4EventParams.Item ga4Item = new GA4EventParams.Item();
-        ga4Item.setItemName(saleDetail.getName());
-        ga4Item.setItemId(saleDetail.getProductId());
-        if (saleDetail.getSalePrice() != null) {
-            ga4Item.setPrice(saleDetail.getSalePrice().getValue());
-        } else if (saleDetail.getPrice() != null) {
-            ga4Item.setPrice((saleDetail.getPrice().getValue()));
-        } else {
-            ga4Item.setPrice(0.0);
-        }
-        ga4Item.setQuantity(1);
-        ga4Item.setItemBrand(saleDetail.getBrandName());
-        ga4Item.setItemCategories(saleDetail.getCategories());
-        ga4Items.add(ga4Item);
-        ga4EventParams.setItems(ga4Items);
-        ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
-        if (saleDetail.getSalePrice() != null) {
-            ga4EventParams.setValue(saleDetail.getSalePrice().getValue());
-        } else if (saleDetail.getPrice() != null) {
-            ga4EventParams.setValue((saleDetail.getPrice().getValue()));
-        } else {
-            ga4EventParams.setValue(0.0);
-        }
-        parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
-
-        DataCollector.logEvent(Events.CVItemDetails, parameters);
-
         if (!IS_DISCOUNT_POG_ENABLED) {
             mPresenter.getDynamicDiscount(saleDetail.getSkuId());
         }
@@ -1707,6 +1662,50 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
 
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.MILLISECONDS,
+                mActivity.getProfiler().getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue()));
+        parameters.put(DataCollector.EventParameters.PRODUCT_VIEW_REQUEST, productViewRequest);
+        parameters.put(DataCollector.EventParameters.ITEM_ID, saleDetail.getSkuId());
+        parameters.put(DataCollector.EventParameters.ITEM_NAME, saleDetail.getName());
+        if (saleDetail.getSalePrice() != null) {
+            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getSalePrice().getValue());
+        } else if (saleDetail.getPrice() != null) {
+            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getPrice().getValue());
+        }
+        parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
+        parameters.put(DataCollector.EventParameters.ITEM_BRAND, saleDetail.getBrandName());
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
+
+        GA4EventParams.GA4ViewItemParams ga4EventParams = new GA4EventParams.GA4ViewItemParams();
+        ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
+        GA4EventParams.Item ga4Item = new GA4EventParams.Item();
+        ga4Item.setItemName(saleDetail.getName());
+        ga4Item.setItemId(saleDetail.getProductId());
+        if (saleDetail.getSalePrice() != null) {
+            ga4Item.setPrice(saleDetail.getSalePrice().getValue());
+        } else if (saleDetail.getPrice() != null) {
+            ga4Item.setPrice((saleDetail.getPrice().getValue()));
+        } else {
+            ga4Item.setPrice(0.0);
+        }
+        ga4Item.setQuantity(1);
+        ga4Item.setItemBrand(saleDetail.getBrandName());
+        ga4Item.setItemCategories(saleDetail.getCategories());
+        ga4Items.add(ga4Item);
+        ga4EventParams.setItems(ga4Items);
+        ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
+        if (saleDetail.getSalePrice() != null) {
+            ga4EventParams.setValue(saleDetail.getSalePrice().getValue());
+        } else if (saleDetail.getPrice() != null) {
+            ga4EventParams.setValue((saleDetail.getPrice().getValue()));
+        } else {
+            ga4EventParams.setValue(0.0);
+        }
+        parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
+
+        DataCollector.logEvent(Events.CVItemDetails, parameters);
     }
 
     public void setupPartialProductDetails(SaleItemProduct saleDetail) {

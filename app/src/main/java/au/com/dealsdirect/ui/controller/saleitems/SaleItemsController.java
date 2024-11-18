@@ -1664,7 +1664,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             HashMap<String, Object> parameters = new HashMap<>();
             parameters.put(DataCollector.EventParameters.MILLISECONDS,
-                    Profiler.getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue()));
+                    mActivity.getProfiler().getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue()));
             parameters.put(DataCollector.EventParameters.CATEGORY_REQUEST, categoryRequest);
             parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
             parameters.put(DataCollector.EventParameters.ITEM_LIST, categories);

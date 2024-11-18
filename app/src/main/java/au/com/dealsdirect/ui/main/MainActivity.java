@@ -222,7 +222,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
             HashMap<String, Object> parameters = new HashMap<>();
             parameters.put(EventParameters.MILLISECONDS,
-                    Profiler.getTotalTime(EventParameters.CustomEventType.CV_APPLAUNCH.getValue()));
+                    getProfiler().getTotalTime(EventParameters.CustomEventType.CV_APPLAUNCH.getValue()));
             parameters.put(EventParameters.APP_CONTEXT, this);
 
             logEvent(Events.CVAppLaunch, parameters);
