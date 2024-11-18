@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.AsyncListDiffer;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -21,7 +23,6 @@ import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 
 public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<SaleItemProduct> mData;
     private int mColumnCount;
     private static final int FOOTER_VIEW = 1;
     private final int mMinColumn;
@@ -36,6 +37,20 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private boolean useAlternatePriceBlockHelper = false;
 
+    private DiffUtil.ItemCallback<SaleItemProduct> diffUtilItemCallback = new DiffUtil.ItemCallback<SaleItemProduct>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull SaleItemProduct oldItem, @NonNull SaleItemProduct newItem) {
+            return oldItem.getSeoIdentifier().equals(newItem.getSeoIdentifier());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull SaleItemProduct oldItem, @NonNull SaleItemProduct newItem) {
+            return helper.isProductInWishlist(oldItem) == helper.isProductInWishlist(newItem);
+        }
+    };
+
+    private AsyncListDiffer<SaleItemProduct> asyncListDiffer = new AsyncListDiffer<>(this, diffUtilItemCallback);
+
     public SaleItemsAdapter(
             Context context,
             List<SaleItemProduct> saleItems,
@@ -46,7 +61,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             SaleItemsMvpPresenter.WishlistDelayedCallback delayedCallbackForWishlist,
             SaleItemAdapterHelper listener) {
 
-        this.mData = saleItems;
+        updateData(saleItems);
         this.mMinColumn = minColumn;
         this.isSupplierOriginalPriceInfoEnabled = isSupplierOriginalPriceInfoEnabled;
         this.isPriceInfoClickable = isPriceInfoClilckable;
@@ -114,9 +129,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final Context context = holder.itemView.getContext();
 
-        if (holder.getItemViewType() == 0 && mData.size() != 0 && holder instanceof SaleItemViewHolder) {
+        List<SaleItemProduct> data = asyncListDiffer.getCurrentList();
+
+        if (holder.getItemViewType() == 0 && !data.isEmpty() && holder instanceof SaleItemViewHolder) {
             final SaleItemViewHolder saleItemViewHolder = (SaleItemViewHolder) holder;
-            final SaleItemProduct product = mData.get(position);
+            final SaleItemProduct product = data.get(position);
             if (product == null) {
                 saleItemViewHolder.setupViewHolderSkeleton(true);
             } else {
@@ -194,42 +211,26 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         super.onViewDetachedFromWindow(holder);
     }
 
-    public void replaceData(List<SaleItemProduct> saleItems) {
-        int previousCount = mData.size();
-        mData = saleItems;
-        if (previousCount > 0 || !saleItems.isEmpty()) {
-            notifyItemRangeChanged(0, Math.min(previousCount, saleItems.size()));
-        }
-        if (previousCount < saleItems.size()) {
-            notifyItemRangeInserted(previousCount, saleItems.size() - previousCount);
-        } else if (previousCount > saleItems.size()) {
-            notifyItemRangeRemoved(saleItems.size(), previousCount - saleItems.size());
-        }
-        mCurrentItemCount = getItemCount();
+    public void updateData(List<SaleItemProduct> saleItems) {
+        updateData(saleItems, false);
     }
 
-    public void addData(List<SaleItemProduct> saleItems) {
-        addData(saleItems, true);
-    }
-
-    public void addData(List<SaleItemProduct> saleItems, boolean withAnimation) {
-        int previousCount = mData.size();
-        mData.addAll(saleItems);
-        if (withAnimation) {
-            notifyItemRangeInserted(previousCount, mData.size() - previousCount);
-        } else {
-            notifyDataSetChanged();
+    public void updateData(List<SaleItemProduct> saleItems, boolean willEmptyFirst) {
+        if (willEmptyFirst) {
+            asyncListDiffer.submitList(null);
         }
+        asyncListDiffer.submitList(saleItems);
         mCurrentItemCount = getItemCount();
     }
 
     @Override
     public int getItemCount() {
-        return mData.size() + (mIsFooterEnabled && !mData.isEmpty() ? 1 : 0);
+        List<SaleItemProduct> data = asyncListDiffer.getCurrentList();
+        return data.size() + (mIsFooterEnabled && !data.isEmpty() ? 1 : 0);
     }
 
     public List<SaleItemProduct> getData() {
-        return mData;
+        return asyncListDiffer.getCurrentList();
     }
 
     public int getColumnCount() {
@@ -245,27 +246,12 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private boolean isPositionFooter(int position) {
-        return mIsFooterEnabled && !mData.isEmpty() && position == getItemCount() - 1;
+        List<SaleItemProduct> data = asyncListDiffer.getCurrentList();
+        return mIsFooterEnabled && !data.isEmpty() && position == getItemCount() - 1;
     }
 
     public void reloadCell(int position) {
         notifyItemChanged(position);
-    }
-
-    public void removeData(int position) {
-        removeData(position, true);
-    }
-
-    public void removeData(int position, boolean updateData) {
-        if (updateData) {
-            mData.remove(position);
-        }
-        if (getItemCount() == 0 && mCurrentItemCount > 0) {
-            notifyItemRangeRemoved(0, mCurrentItemCount);
-        } else {
-            notifyItemRemoved(position);
-        }
-        mCurrentItemCount = getItemCount();
     }
 
     public boolean isFooterEnabled() {
@@ -273,16 +259,18 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void setFooterEnabled(boolean footerEnabled) {
+        List<SaleItemProduct> data = asyncListDiffer.getCurrentList();
         if (mIsFooterEnabled && !footerEnabled) {
-            notifyItemRemoved(mData.size() + 1);
+            notifyItemRemoved(data.size() + 1);
         } else if (!mIsFooterEnabled && footerEnabled) {
-            notifyItemInserted(mData.size());
+            notifyItemInserted(data.size());
         }
         mIsFooterEnabled = footerEnabled;
     }
 
     public int getContentHeight() {
-        return (int) (Math.ceil(mData.size() / (float) mColumnCount) * mComputedPair.second);
+        List<SaleItemProduct> data = asyncListDiffer.getCurrentList();
+        return (int) (Math.ceil(data.size() / (float) mColumnCount) * mComputedPair.second);
     }
 
     public int getWidthOfCell() {

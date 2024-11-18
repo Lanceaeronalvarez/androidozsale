@@ -1110,7 +1110,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     final int indexInList = itemsContainerHelper.indexOfItem(id);
                     if (indexInList >= 0 && !isInWishlist) {
                         itemsContainerHelper.removeItem(id);
-                        mSaleItemsAdapter.removeData(indexInList);
+                        mSaleItemsAdapter.updateData(itemsContainerHelper.getItems());
                     } else if (indexInList < 0 && isInWishlist) {
                         if (isViewAttached()) {
                             refreshContents();
@@ -1300,7 +1300,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 switch (mSourceMode) {
                     case NORMAL:
                         if (!mInitialLoad) {
-                            if (itemsContainerHelper.getSize() < getResources().getInteger(R.integer.sale_items_threshold)) {
+                            if (itemsContainerHelper.getSize() < mActivity.getResources().getInteger(R.integer.sale_items_threshold)) {
                                 mHasLoadedAllItems = true;
                             } else {
                                 mIsLoadingProgress = true;
@@ -1703,20 +1703,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mIsLoadingProgress = false;
 
-        if (items.size() == 0 && !itemsContainerHelper.isEmpty()) {
+        setupSearchFilters();
+
+        if (items.isEmpty() && !itemsContainerHelper.isEmpty()) {
             mHasLoadedAllItems = true;
             if (mPaginateManager != null) {
                 mPaginateManager.setHasMoreDataToLoad(false);
             }
         } else {
-
             if (pageNumber == 0 || mIsSearch) {
                 if (mPaginateManager != null) {
                     mPaginateManager.unbind();
                 }
 
-                if (items.size() <= getResources().getInteger(R.integer.sale_items_threshold)) {
-                    if (mPaginateManager == null || items.size() == 0) {
+                if (items.size() <= mActivity.getResources().getInteger(R.integer.sale_items_threshold)) {
+                    if (mPaginateManager == null || items.isEmpty()) {
                         if (mHasLoadedAllItems) {
                             showPlaceholder(true);
                         }
@@ -1737,10 +1738,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         itemsContainerHelper.setItemsInSlot(pageNumber, items, !isFromCache);
-        mSaleItemsAdapter.replaceData(itemsContainerHelper.getItems());
+        mSaleItemsAdapter.updateData(itemsContainerHelper.getItems(), mInitialLoad);
 
-        setupSearchFilters();
         setupTabs();
+
         if (mInitialLoad) mInitialLoad = false;
 
         //replace category tree all the time.
@@ -1776,7 +1777,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         itemsContainerHelper.setItemsInSlot(offset, wishlist, true);
-        mSaleItemsAdapter.replaceData(itemsContainerHelper.getItems());
+        mSaleItemsAdapter.updateData(itemsContainerHelper.getItems());
 
         if (mPaginateManager == null) {
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
@@ -1803,11 +1804,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         final int indexOfItem = itemsContainerHelper.indexOfItem(productId);
         if (indexOfItem >= 0) {
-            mSaleItemsAdapter.removeData(indexOfItem);
             itemsContainerHelper.removeItem(productId);
-        } else {
-            mSaleItemsAdapter.replaceData(itemsContainerHelper.getItems());
         }
+        mSaleItemsAdapter.updateData(itemsContainerHelper.getItems());
 
         showPlaceholderWithAnimation(itemsContainerHelper.isEmpty());
         determineWhereToShowAds();
@@ -3054,14 +3053,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         final LayoutAnimationController controller =
                 AnimationUtils.loadLayoutAnimation(mActivity, R.anim.layout_sale_list_skeleton);
 
-        ArrayList<SaleItemProduct> nullList = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            nullList.add(null);
-        }
         if (mSaleItemsRecyclerView != null) {
             mSaleItemsRecyclerView.setLayoutAnimation(controller);
         }
-        mSaleItemsAdapter.addData(nullList, false);
+        mSaleItemsAdapter.updateData(CommonUtils.initArrayListWithCopiesOfObject(8, null));
         mSaleItemsRecyclerView.scheduleLayoutAnimation();
         mGridLayoutManager.setScrollEnabled(false);
 
