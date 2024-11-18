@@ -2642,7 +2642,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             default:
                 break;
         }
-        mChipGroup.removeAllViews();
+        if (mChipGroup != null) {
+            mChipGroup.removeAllViews();
+        }
         mSelectedFilterList.clear();
         mSelectedFilterList.addAll(chipsList);
         mSelectedCategoryKeys.clear();
