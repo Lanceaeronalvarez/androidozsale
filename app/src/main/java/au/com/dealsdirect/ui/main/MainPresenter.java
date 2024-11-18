@@ -644,9 +644,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V> imple
 
         int prevMode = -1;
 
-        for (Iterator<Cookie> it = CookieUtils.getInstance().getCookieIterator(); it.hasNext(); ) {
-
-            Cookie cookie = it.next();
+        for (Cookie cookie : CookieUtils.getInstance().getCookieSet()) {
 
             hasConsentCookie = cookie.name().contains("cs") &&
                     cookie.value().equals(Integer.toString(consentMode));

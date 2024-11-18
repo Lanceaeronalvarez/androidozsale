@@ -195,16 +195,14 @@ public class ImageUploadUtil {
     }
 
     public static String getUserCookie() {
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
         HashMap<String, String> cookieHash = new HashMap<>();
 
-        for (Iterator<Cookie> it = CookieUtils.getInstance().getCookieIterator(); it.hasNext(); ) {
-
-            Cookie cookie = it.next();
+        for (Cookie cookie : CookieUtils.getInstance().getCookieSet()) {
 
             if (!cookieHash.containsKey(cookie.name())) {
                 cookieHash.put(cookie.name(), cookie.toString());
-                output.append(cookie.toString());
+                output.append(cookie);
             }
         }
 

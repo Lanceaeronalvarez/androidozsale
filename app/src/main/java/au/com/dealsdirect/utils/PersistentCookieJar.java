@@ -15,13 +15,17 @@ package au.com.dealsdirect.utils;
  * limitations under the License.
  */
 
+import androidx.annotation.NonNull;
+
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.cache.CookieCache;
 import com.franmontiel.persistentcookiejar.persistence.CookiePersistor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import au.com.dealsdirect.BuildConfig;
 import okhttp3.Cookie;
@@ -29,20 +33,24 @@ import okhttp3.HttpUrl;
 
 public class PersistentCookieJar implements ClearableCookieJar {
 
-    private CookieCache cache;
-    private CookiePersistor persistor;
+    private final CookieCache cache;
+    private final CookiePersistor persistor;
+
+    private Set<Cookie> cookieSet = null;
 
     public PersistentCookieJar(CookieCache cache, CookiePersistor persistor) {
         this.cache = cache;
         this.persistor = persistor;
 
         this.cache.addAll(persistor.loadAll());
+        updateCookieSet();
     }
 
     @Override
-    synchronized public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+    synchronized public void saveFromResponse(@NonNull HttpUrl url, @NonNull List<Cookie> cookies) {
         cache.addAll(cookies);
         persistor.saveAll(filterPersistentCookies(cookies));
+        updateCookieSet();
     }
 
     private static List<Cookie> filterPersistentCookies(List<Cookie> cookies) {
@@ -75,6 +83,7 @@ public class PersistentCookieJar implements ClearableCookieJar {
 
         persistor.removeAll(cookiesToRemove);
 
+        updateCookieSet();
         return validCookies;
     }
 
@@ -86,15 +95,29 @@ public class PersistentCookieJar implements ClearableCookieJar {
     synchronized public void clearSession() {
         cache.clear();
         cache.addAll(persistor.loadAll());
+        updateCookieSet();
     }
 
     @Override
     synchronized public void clear() {
         cache.clear();
         persistor.clear();
+        updateCookieSet();
     }
 
-    synchronized public Iterator<Cookie> getCookieIterator(){
+    synchronized public Iterator<Cookie> getCookieIterator() {
         return cache.iterator();
+    }
+
+    synchronized public Set<Cookie> getCookieSet() {
+        return new HashSet<>(cookieSet);
+    }
+
+    synchronized private void updateCookieSet() {
+        Set<Cookie> cookieSet = new HashSet<>();
+        for (Cookie cookie : cache) {
+            cookieSet.add(cookie);
+        }
+        this.cookieSet = cookieSet;
     }
 }
