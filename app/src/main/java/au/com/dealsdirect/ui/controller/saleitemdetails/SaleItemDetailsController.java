@@ -374,6 +374,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
 
     private SaleItemDetails currentItem = null;
+    private SaleItemDetails previousItem = null;
     // TODO: store SaleItemProduct instead of these
     private String mSaleId;
     private String mSkuId;
@@ -1426,6 +1427,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showProductDetails(SaleItemDetails saleDetail) {
+        previousItem = currentItem;
         currentItem = saleDetail;
         if (onLoadProductDetails != null) {
             onLoadProductDetails.onLoad(saleDetail);
@@ -1605,6 +1607,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
         }
 
+        if (previousItem == null || !previousItem.getSeoIdentifier().equals(currentItem.getSeoIdentifier())) {
+            mSelectedSizeIndex = -1;
+        }
+
         if (!mProductSizes.isEmpty()) {
             mSizesContainer.setVisibility(View.VISIBLE);
 
@@ -1619,8 +1625,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
 
             mSizesFlowLayout.setAdapter(sizesAdapter);
+
             if (mSelectedSizeIndex >= 0) {
-                sizesAdapter.setSelectedList(Sets.newHashSet(mSelectedSizeIndex));
+                sizesAdapter.setSelectedList(Math.min(mSelectedSizeIndex, mProductSizes.size() - 1));
             }
 
             mSizesFlowLayout.setOnTagClickListener((view, position, parent) -> false);
@@ -2788,7 +2795,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         // force selection - this prevents deselecting tags
-        mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(selectedIndex));
+        if (mSizesFlowLayout.getSelectedList().isEmpty()) {
+            mSizesFlowLayout.getAdapter().setSelectedList(selectedIndex);
+        }
 
         mSkuId = mProductSizes.get(selectedIndex).second;
 
