@@ -3273,6 +3273,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void showResultCount(boolean shouldShow) {
+        if (!isViewAttached()) {
+            return;
+        }
+
         if ((searchResultAnimation != null && searchResultAnimation.isRunning()) ||
                 (toolbarAnimation != null && toolbarAnimation.isRunning())) {
             return;
@@ -3295,7 +3299,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         searchResultAnimation.addUpdateListener(valueAnimator -> {
-            if (mSaleResultCountTextView == null) {
+            if (mSaleResultCountTextView == null || !isViewAttached()) {
+                valueAnimator.cancel();
                 return;
             }
             int val = (Integer) valueAnimator.getAnimatedValue();
@@ -3305,10 +3310,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleResultCountTextView.setVisibility(val > 0 ? View.VISIBLE : View.GONE);
         });
         searchResultAnimation.setDuration(SALE_RESULTS_ANIMATION_DURATION);
-        searchResultAnimation.start();
+        if (mSaleResultCountTextView != null) {
+            searchResultAnimation.start();
+        }
 
         toolbarAnimation.addUpdateListener(valueAnimator -> {
-            if (mToolbarBorder == null) {
+            if (mToolbarBorder == null || !isViewAttached()) {
+                valueAnimator.cancel();
                 return;
             }
             int val = (Integer) valueAnimator.getAnimatedValue();
@@ -3318,6 +3326,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mToolbarBorder.setVisibility(val > 0 ? View.VISIBLE : View.GONE);
         });
         toolbarAnimation.setDuration(SALE_RESULTS_ANIMATION_DURATION);
-        toolbarAnimation.start();
+        if (mToolbarBorder != null) {
+            toolbarAnimation.start();
+        }
     }
 }
