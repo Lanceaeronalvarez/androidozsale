@@ -491,8 +491,8 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.databinding:databinding-runtime:8.5.1'
-    implementation 'androidx.databinding:databinding-adapters:8.5.1'
+    implementation 'androidx.databinding:databinding-runtime:8.7.2'
+    implementation 'androidx.databinding:databinding-adapters:8.7.2'
 
     // android support libraries
     implementation 'androidx.appcompat:appcompat:1.7.0'
@@ -503,7 +503,7 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.2.0'
     implementation 'androidx.activity:activity:1.9.3'
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
 
     // font
     implementation "io.github.inflationx:calligraphy3:$rootProject.calligraphyVersion"
@@ -611,11 +611,11 @@ dependencies {
     implementation 'com.newrelic.agent.android:android-agent:7.5.0'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+    implementation platform('com.google.firebase:firebase-bom:33.6.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-messaging:24.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:19.0.3'
+    implementation 'com.google.firebase:firebase-messaging:24.1.0'
+    implementation 'com.google.firebase:firebase-crashlytics:19.2.1'
 
     //VISA CHECKOUT
     implementation 'com.braintreepayments.api:visa-checkout:3.0.0'
@@ -625,7 +625,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation group: 'de.greenrobot', name: 'eventbus', version: '2.4.1'
 
-    implementation 'com.google.android.gms:play-services-ads:23.2.0'
+    implementation 'com.google.android.gms:play-services-ads:23.5.0'
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // reCAPTCHA
