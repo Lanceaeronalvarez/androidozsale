@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
@@ -19,6 +22,12 @@ import androidx.annotation.StringRes;
 
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -75,7 +84,11 @@ public abstract class BaseController
     @Override
     protected void onAttach(@NonNull View view) {
         if (getActivity() instanceof MainActivity) {
-            this.mActivity = (MainActivity) getActivity();
+            MainActivity activity = (MainActivity) getActivity();
+            if (!activity.equals(mActivity)) {
+                unregisterActivityResultLaunchers();
+            }
+            mActivity = activity;
         }
         super.onAttach(view);
     }
@@ -186,6 +199,7 @@ public abstract class BaseController
     @Override
     public void onDetach(View view) {
         hideKeyboard();
+        unregisterActivityResultLaunchers();
         super.onDetach(view);
     }
 
@@ -354,6 +368,44 @@ public abstract class BaseController
             if (to instanceof BaseController) {
                 ((BaseController) to).onViewDidAppear(from);
             }
+        }
+    }
+
+    private Set<String> registeredActivityResultLauncherKeys = null;
+
+    public <I, O> ActivityResultLauncher<I> registerActivityResultLauncher(
+            ActivityResultContract<I, O> contract,
+            ActivityResultCallback<O> callback) {
+        String key = UUID.randomUUID().toString();
+        return registerActivityResultLauncher(key, contract, callback);
+    }
+
+    public <I, O> ActivityResultLauncher<I> registerActivityResultLauncher(
+            String key,
+            ActivityResultContract<I, O> contract,
+            ActivityResultCallback<O> callback) {
+        if (mActivity == null) {
+            return null;
+        }
+        if (registeredActivityResultLauncherKeys == null) {
+            registeredActivityResultLauncherKeys = new HashSet<>();
+        }
+        if (registeredActivityResultLauncherKeys.contains(key)) {
+            mActivity.getActivityResultRegistry().unregister$activity_release(key);
+        } else {
+            registeredActivityResultLauncherKeys.add(key);
+        }
+        return mActivity.getActivityResultRegistry().register(key, contract, callback);
+    }
+
+    private void unregisterActivityResultLaunchers() {
+        if (registeredActivityResultLauncherKeys != null) {
+            if (mActivity != null) {
+                for (String key : registeredActivityResultLauncherKeys) {
+                    mActivity.getActivityResultRegistry().unregister$activity_release(key);
+                }
+            }
+            registeredActivityResultLauncherKeys.clear();
         }
     }
 }

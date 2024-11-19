@@ -1,13 +1,9 @@
 package au.com.dealsdirect.ui.controller.returns.newreturn;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +13,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -62,8 +60,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 
-import static android.app.Activity.RESULT_OK;
-
 public class NewReturnController extends BaseController implements NewReturnMvpView {
 
     public static final String TAG = "NewReturnController";
@@ -99,9 +95,8 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     @SuppressLint("UseSparseArrays")
     private HashSet<NewReturnItem> updateList = new HashSet<>();
 
-    private NewReturnOrdersAdapter mAdapter = null;
-    private HashMap<Integer, File> mImageFileHashMap = new HashMap<>();
-    private ArrayList<ImageAttachment> itemsList = new ArrayList<>();
+    private final HashMap<Integer, File> mImageFileHashMap = new HashMap<>();
+    private final ArrayList<ImageAttachment> itemsList = new ArrayList<>();
     private String mProductName = "";
     private String mReasonReturnText;
 
@@ -115,28 +110,40 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     private String mReturnId = null;
     private String mAttachmentId = "";
     ImageUploadUtil.UploadFileToServer uploadFileToServer;
-    private ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
+    private final ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
 
     private boolean someImagesWereNotUploaded = false;
 
     private final ReturnDetailsListener returnDetailsListener = new ReturnDetailsListener() {
         @Override
         public void getImageFromDirectory(boolean uploadImage) {
+            final ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                    registerActivityResultLauncher(TAG, new ActivityResultContracts.PickVisualMedia(), uri -> {
+                        if (uri == null) {
+                            return;
+                        }
 
-            if (ActivityCompat.checkSelfPermission(mActivity,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        AppConstants.REQUEST_CODE_PERMISSION);
-            } else {
+                        ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
+                        imageLinks.setIsURL(false);
+                        imageLinks.setLink(uri.toString());
+                        final int previousSize = mImageUriArray.size();
+                        mImageUriArray.add(imageLinks);
 
-                Intent cameraIntent = new Intent(Intent.ACTION_PICK);
-                cameraIntent.setType("image/*");
-                if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivityForResult(cameraIntent, AppConstants.REQUEST_CODE_FOR_SUCCESS);
-                }
+                        final ReturnDetailsAddImageAdapter adapter = (ReturnDetailsAddImageAdapter) mImageRecyclerView.getAdapter();
+                        if (adapter != null) {
+                            adapter.notifyItemInserted(mImageUriArray.size() - 1);
+                            if (previousSize < mImageUriArray.size() && mImageUriArray.size() == AppConstants.MAX_IMAGE_COUNT) {
+                                adapter.notifyItemRemoved(mImageUriArray.size());
+                            }
+                        }
+                    });
+
+            if (pickMedia == null) {
+                return;
             }
-
+            pickMedia.launch(new PickVisualMediaRequest.Builder()
+                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                    .build());
         }
 
         @Override
@@ -148,9 +155,11 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             final int previousSize = mImageUriArray.size();
             mImageUriArray.remove(position);
 
-            adapter.notifyItemRemoved(position);
-            if (previousSize == AppConstants.MAX_IMAGE_COUNT) {
-                adapter.notifyItemInserted(mImageUriArray.size());
+            if (adapter != null) {
+                adapter.notifyItemRemoved(position);
+                if (previousSize == AppConstants.MAX_IMAGE_COUNT) {
+                    adapter.notifyItemInserted(mImageUriArray.size());
+                }
             }
 
         }
@@ -239,7 +248,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             mPresenter.getReturnOrderDetail(mSavedInvoiceNumber);
             mReasonEditText.setText(mReasonReturnText);
         } else {
-            mPresenter.getReturnOrderDetail(isFromOrder ? mInvoiceNumber : mInvoiceNumber);
+            mPresenter.getReturnOrderDetail(mInvoiceNumber);
         }
 
         mInfoButton.setVisibility(View.INVISIBLE);
@@ -306,7 +315,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
                 createReturnResponse.getId() != null && !createReturnResponse.getId().isEmpty()) {
 
             mReturnId = createReturnResponse.getId();
-            if (mImageFileHashMap == null || mImageFileHashMap.isEmpty()) {
+            if (mImageFileHashMap.isEmpty()) {
                 finishReturnRequestTransaction();
             } else {
                 mPresenter.setAttachment(mReturnId, itemsList, false);
@@ -336,15 +345,16 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
             }
         };
 
+        NewReturnOrdersAdapter adapter;
         if (mHasSavedInstance) {
-            mAdapter = new NewReturnOrdersAdapter(newReturnsOrderDetail, mActivity, listener,
+            adapter = new NewReturnOrdersAdapter(newReturnsOrderDetail, mActivity, listener,
                     mProductID, mSavedInvoiceNumber);
         } else {
-            mAdapter = new NewReturnOrdersAdapter(newReturnsOrderDetail, mActivity, listener,
+            adapter = new NewReturnOrdersAdapter(newReturnsOrderDetail, mActivity, listener,
                     mProductID, isFromOrder ? mInvoiceNumber : mInvoiceNumber);
         }
 
-        mNewReturnOrderRecyclerView.setAdapter(mAdapter);
+        mNewReturnOrderRecyclerView.setAdapter(adapter);
         mNewReturnOrderRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
     }
 
@@ -352,10 +362,8 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     public void getAttachmentId(String setAttachmentResponse) {
         mAttachmentId = setAttachmentResponse;
 
-        if (mImageFileHashMap != null) {
-            someImagesWereNotUploaded = false;
-            callUploadImage(0);
-        }
+        someImagesWereNotUploaded = false;
+        callUploadImage(0);
     }
 
     private void callUploadImage(int imageCount) {
@@ -409,7 +417,7 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
         if (mHasSavedInstance) {
             createReturnRequest.setInvoiceNumber(mSavedInvoiceNumber);
         } else {
-            createReturnRequest.setInvoiceNumber(isFromOrder ? mInvoiceNumber : mInvoiceNumber);
+            createReturnRequest.setInvoiceNumber(mInvoiceNumber);
         }
 
         createReturnRequest.setReason(mReasonEditText.getText().toString());
@@ -430,33 +438,12 @@ public class NewReturnController extends BaseController implements NewReturnMvpV
     }
 
     private void setupImageList() {
-        final ReturnDetailsAddImageAdapter imageAdapter = new ReturnDetailsAddImageAdapter(mImageUriArray, returnDetailsListener
-        );
+        final ReturnDetailsAddImageAdapter imageAdapter = new ReturnDetailsAddImageAdapter(
+                mImageUriArray,
+                returnDetailsListener);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, true);
         mImageRecyclerView.setAdapter(imageAdapter);
         mImageRecyclerView.setLayoutManager(layoutManager);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK || resultCode == AppConstants.REQUEST_CODE_FOR_SUCCESS) {
-            Uri chosenImageUri = data.getData();
-
-            ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
-            imageLinks.setIsURL(false);
-            imageLinks.setLink(String.valueOf(chosenImageUri));
-            final int previousSize = mImageUriArray.size();
-            mImageUriArray.add(imageLinks);
-
-            ReturnDetailsAddImageAdapter adapter = (ReturnDetailsAddImageAdapter) mImageRecyclerView.getAdapter();
-            if (adapter != null) {
-                adapter.notifyItemInserted(mImageUriArray.size() - 1);
-                if (previousSize < mImageUriArray.size() && mImageUriArray.size() == AppConstants.MAX_IMAGE_COUNT) {
-                    adapter.notifyItemRemoved(mImageUriArray.size());
-                }
-            }
-        }
     }
 
     @OnClick(R.id.partial_toolbar_right_view)

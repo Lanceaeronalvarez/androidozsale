@@ -1,14 +1,8 @@
 package au.com.dealsdirect.ui.controller.returns.returndetails;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,8 +20,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -70,10 +66,6 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-/*
- * Created by Ayi on 05/06/2017.
- */
 
 public class ReturnDetailsController extends BaseController implements ReturnDetailsMvpView {
 
@@ -135,39 +127,66 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
     private String mToolbarTitle = "";
     private String mReturnId = "";
     private boolean isFromOrders = false;
-    private ArrayList<ImageAttachment> itemsList = new ArrayList<>();
-    private HashMap<Integer, File> mImageFileHashMap = new HashMap<>();
+    private final ArrayList<ImageAttachment> itemsList = new ArrayList<>();
+    private final HashMap<Integer, File> mImageFileHashMap = new HashMap<>();
     private boolean shouldUploadImage = false;
     private boolean isBackButtonPressed = false;
     private boolean hasSavedInstance = false;
     private String userMessage = "";
     private String attachmentId = "";
     private boolean willScrollToMessage = false;
-    private ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
+    private final ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
 
     private boolean someImagesWereNotUploaded = false;
 
-    HashMap<String, Boolean> hasSetSatisfaction = new HashMap<>();
+    private final HashMap<String, Boolean> hasSetSatisfaction = new HashMap<>();
 
-    private ReturnDetailsListener returnDetailsListener = new ReturnDetailsListener() {
+    private ActivityResultLauncher<PickVisualMediaRequest> pickMedia = null;
+
+    private final ReturnDetailsListener returnDetailsListener = new ReturnDetailsListener() {
         @Override
         public void getImageFromDirectory(boolean uploadImage) {
-            shouldUploadImage = true;
+             ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                    registerActivityResultLauncher(TAG, new ActivityResultContracts.PickVisualMedia(), uri -> {
+                        if (uri == null) {
+                            return;
+                        }
 
-            if (ActivityCompat.checkSelfPermission(mActivity,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        AppConstants.REQUEST_CODE_PERMISSION);
-            } else {
+                        ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
+                        imageLinks.setIsURL(false);
+                        imageLinks.setLink(uri.toString());
+                        final int previousSize = mImageUriArray.size();
+                        mImageUriArray.add(imageLinks);
 
-                Intent cameraIntent = new Intent(Intent.ACTION_PICK);
-                cameraIntent.setType("image/*");
-                if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivityForResult(cameraIntent, AppConstants.REQUEST_CODE_FOR_SUCCESS);
-                }
+                        if (hasSavedInstance) {
+                            mPresenter.loadCurrentReturnDetails(mReturnId);
+                        } else {
+
+                            ReturnDetailsAddImageAdapter adapter = (ReturnDetailsAddImageAdapter) mReturnDetailsImageList.getAdapter();
+                            if (adapter != null) {
+                                adapter.notifyItemInserted(mImageUriArray.size() - 1);
+                                if (previousSize < mImageUriArray.size() && mImageUriArray.size() == AppConstants.MAX_IMAGE_COUNT) {
+                                    adapter.notifyItemRemoved(mImageUriArray.size());
+                                }
+                            } else {
+                                initReturnDetailsImageAdapter();
+                            }
+                        }
+
+                        if (attachmentId == null) {
+                            mPresenter.setAttachment(mReturnId, new ArrayList<>());
+                        }
+                    });
+
+            if (pickMedia == null) {
+                return;
             }
 
+            shouldUploadImage = true;
+
+            pickMedia.launch(new PickVisualMediaRequest.Builder()
+                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                    .build());
         }
 
         @Override
@@ -441,7 +460,7 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
 
         final int attachmentSize = item.getAttachments().size();
 
-        if (mImageUriArray.size() == 0 && attachmentSize != 0) {
+        if (mImageUriArray.isEmpty() && attachmentSize != 0) {
             for (int i = 0; i < attachmentSize; i++) {
                 ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
                 imageLinks.setIsURL(true);
@@ -450,12 +469,14 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
             }
         }
 
+        initReturnDetailsImageAdapter();
+    }
+
+    private void initReturnDetailsImageAdapter() {
         ReturnDetailsAddImageAdapter returnDetailsImageAdapter = new ReturnDetailsAddImageAdapter(mImageUriArray, returnDetailsListener);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, true);
         mReturnDetailsImageList.setAdapter(returnDetailsImageAdapter);
         mReturnDetailsImageList.setLayoutManager(layoutManager);
-
-
     }
 
     public void setupProgressDescription(String sourceText) {
@@ -588,43 +609,6 @@ public class ReturnDetailsController extends BaseController implements ReturnDet
         }
 
 
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if ((resultCode == RESULT_OK || resultCode == AppConstants.REQUEST_CODE_FOR_SUCCESS) && data != null) {
-            Uri chosenImageUri = data.getData();
-
-            ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
-            imageLinks.setIsURL(false);
-            imageLinks.setLink(String.valueOf(chosenImageUri));
-            final int previousSize = mImageUriArray.size();
-            mImageUriArray.add(imageLinks);
-
-            if (hasSavedInstance) {
-                mPresenter.loadCurrentReturnDetails(mReturnId);
-            } else {
-
-                ReturnDetailsAddImageAdapter adapter = (ReturnDetailsAddImageAdapter) mReturnDetailsImageList.getAdapter();
-                if (adapter != null) {
-                    adapter.notifyItemInserted(mImageUriArray.size() - 1);
-                    if (previousSize < mImageUriArray.size() && mImageUriArray.size() == AppConstants.MAX_IMAGE_COUNT) {
-                        adapter.notifyItemRemoved(mImageUriArray.size());
-                    }
-                } else {
-                    ReturnDetailsAddImageAdapter imageAdapter = new ReturnDetailsAddImageAdapter(mImageUriArray, returnDetailsListener);
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, true);
-                    mReturnDetailsImageList.setAdapter(imageAdapter);
-                    mReturnDetailsImageList.setLayoutManager(layoutManager);
-                }
-            }
-
-            if (attachmentId == null) {
-                mPresenter.setAttachment(mReturnId, new ArrayList<>());
-            }
-
-        }
     }
 
     @OnClick(R.id.controller_return_details_message_button)
