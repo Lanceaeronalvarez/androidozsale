@@ -3276,8 +3276,8 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
                         CIRCULAR_TRENDING_BRANDS ? HorizontalScrollingBannerAdapter.BannerStyle.CIRCULAR : HorizontalScrollingBannerAdapter.BannerStyle.DEFAULT);
                 adapter.setDataSource(trendingBrandsBanners);
                 adapter.setShowHeader(false);
-                adapter.setShouldShowTitle(false);
-                adapter.setShouldShowSubtitle(false);
+                adapter.setShouldShowTitle(true);
+                adapter.setShouldShowSubtitle(true);
                 adapter.setImageResolutionOverride(mActivity.getResources().getInteger(R.integer.trending_brands_resolution_override));
                 if (CIRCULAR_TRENDING_BRANDS) {
                     adapter.setBackgroundColorOverride(mActivity.getResources().getColor(R.color.background_default));
