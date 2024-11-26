@@ -1731,6 +1731,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         setupSearchFilters();
 
+        boolean willInitializePaginateManager = false;
         if (items.isEmpty() && !itemsContainerHelper.isEmpty()) {
             mHasLoadedAllItems = true;
             if (mPaginateManager != null) {
@@ -1754,8 +1755,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     }
                 } else {
                     showPlaceholder(false);
-                    mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-                    mSaleItemsRecyclerView.scrollToPosition(0);
+                    willInitializePaginateManager = true;
                 }
                 itemsContainerHelper.clearItems();
 
@@ -1765,6 +1765,11 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         itemsContainerHelper.setItemsInSlot(pageNumber, items, !isFromCache);
         mSaleItemsAdapter.updateData(itemsContainerHelper.getItems(), mInitialLoad);
+
+        if (willInitializePaginateManager) {
+            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            mSaleItemsRecyclerView.scrollToPosition(0);
+        }
 
         setupTabs();
 
