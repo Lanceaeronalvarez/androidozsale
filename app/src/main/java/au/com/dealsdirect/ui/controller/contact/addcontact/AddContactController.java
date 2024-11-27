@@ -763,6 +763,10 @@ public class AddContactController extends BaseController
 
     @Override
     public void asyncExecutionFinished(String imageUrl, int imagePosition) {
+        if (imageUrl == null) {
+            onError("Image may not be uploaded.");
+        }
+
         getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
 
         if (mImageRecyclerView != null) {

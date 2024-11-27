@@ -32,6 +32,8 @@ import com.google.android.gms.ads.AdView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -347,5 +349,9 @@ public final class CommonUtils {
             }
         }
         return -1;
+    }
+
+    public static <T> List<T> initArrayListWithCopiesOfObject(int number, T object) {
+        return new ArrayList<>(Collections.nCopies(number, object));
     }
 }

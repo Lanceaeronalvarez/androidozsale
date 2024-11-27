@@ -71,10 +71,8 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
-import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -146,8 +144,6 @@ import au.com.dealsdirect.utils.PriceUtils;
 import au.com.dealsdirect.utils.ScreenUtils;
 import au.com.dealsdirect.utils.StringUtils;
 import au.com.dealsdirect.utils.ViewUtils;
-import au.com.dealsdirect.utils.module.ControllerFactory;
-import au.com.dealsdirect.utils.module.GateKeeper;
 import au.com.dealsdirect.widget.ElasticDragDismissFrameLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -370,6 +366,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     SaleItemDetailsMvpPresenter<SaleItemDetailsMvpView> mPresenter;
 
     private SaleItemDetails currentItem = null;
+    private SaleItemDetails previousItem = null;
     // TODO: store SaleItemProduct instead of these
     private String mSaleId;
     private String mSkuId;
@@ -1192,6 +1189,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         });
 
         productImageRecyclerViewRightButton.setOnClickListener(v -> {
+            if (qualitySaleImages == null || qualitySaleImages.isEmpty()) {
+                currentSaleImagePosition = 0;
+                return;
+            }
             currentSaleImagePosition += 1;
             if (currentSaleImagePosition <= qualitySaleImages.size() - 1) {
                 mProductImagesRv.scrollToPosition(currentSaleImagePosition);
@@ -1202,6 +1203,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         });
 
         productImageRecyclerViewLeftButton.setOnClickListener(v -> {
+            if (qualitySaleImages == null || qualitySaleImages.isEmpty()) {
+                currentSaleImagePosition = 0;
+                return;
+            }
             currentSaleImagePosition -= 1;
             if (currentSaleImagePosition >= 0) {
                 mProductImagesRv.scrollToPosition(currentSaleImagePosition);
@@ -1406,6 +1411,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
     @Override
     public void showProductDetails(SaleItemDetails saleDetail) {
+        previousItem = currentItem;
         currentItem = saleDetail;
         if (onLoadProductDetails != null) {
             onLoadProductDetails.onLoad(saleDetail);
@@ -1444,51 +1450,6 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         skuInfo.setName(saleDetail.getName());
 
         productViewRequest.setSkuInfo(skuInfo);
-
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put(DataCollector.EventParameters.MILLISECONDS,
-                Profiler.getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue()));
-        parameters.put(DataCollector.EventParameters.PRODUCT_VIEW_REQUEST, productViewRequest);
-        parameters.put(DataCollector.EventParameters.ITEM_ID, saleDetail.getSkuId());
-        parameters.put(DataCollector.EventParameters.ITEM_NAME, saleDetail.getName());
-        if (saleDetail.getSalePrice() != null) {
-            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getSalePrice().getValue());
-        } else if (saleDetail.getPrice() != null) {
-            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getPrice().getValue());
-        }
-        parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
-        parameters.put(DataCollector.EventParameters.ITEM_BRAND, saleDetail.getBrandName());
-        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
-        parameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
-
-        GA4EventParams.GA4ViewItemParams ga4EventParams = new GA4EventParams.GA4ViewItemParams();
-        ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
-        GA4EventParams.Item ga4Item = new GA4EventParams.Item();
-        ga4Item.setItemName(saleDetail.getName());
-        ga4Item.setItemId(saleDetail.getProductId());
-        if (saleDetail.getSalePrice() != null) {
-            ga4Item.setPrice(saleDetail.getSalePrice().getValue());
-        } else if (saleDetail.getPrice() != null) {
-            ga4Item.setPrice((saleDetail.getPrice().getValue()));
-        } else {
-            ga4Item.setPrice(0.0);
-        }
-        ga4Item.setQuantity(1);
-        ga4Item.setItemBrand(saleDetail.getBrandName());
-        ga4Item.setItemCategories(saleDetail.getCategories());
-        ga4Items.add(ga4Item);
-        ga4EventParams.setItems(ga4Items);
-        ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
-        if (saleDetail.getSalePrice() != null) {
-            ga4EventParams.setValue(saleDetail.getSalePrice().getValue());
-        } else if (saleDetail.getPrice() != null) {
-            ga4EventParams.setValue((saleDetail.getPrice().getValue()));
-        } else {
-            ga4EventParams.setValue(0.0);
-        }
-        parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
-
-        DataCollector.logEvent(Events.CVItemDetails, parameters);
 
         if (!IS_DISCOUNT_POG_ENABLED) {
             mPresenter.getDynamicDiscount(saleDetail.getSkuId());
@@ -1628,6 +1589,10 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
         }
 
+        if (previousItem == null || !previousItem.getSeoIdentifier().equals(currentItem.getSeoIdentifier())) {
+            mSelectedSizeIndex = -1;
+        }
+
         if (!mProductSizes.isEmpty()) {
             mSizesContainer.setVisibility(View.VISIBLE);
 
@@ -1642,8 +1607,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             }
 
             mSizesFlowLayout.setAdapter(sizesAdapter);
+
             if (mSelectedSizeIndex >= 0) {
-                sizesAdapter.setSelectedList(Sets.newHashSet(mSelectedSizeIndex));
+                sizesAdapter.setSelectedList(Math.min(mSelectedSizeIndex, mProductSizes.size() - 1));
             }
 
             mSizesFlowLayout.setOnTagClickListener((view, position, parent) -> false);
@@ -1685,6 +1651,50 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
         mActivity.getProfiler().setEndLogTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue());
 
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.MILLISECONDS,
+                mActivity.getProfiler().getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMDETAILS.getValue()));
+        parameters.put(DataCollector.EventParameters.PRODUCT_VIEW_REQUEST, productViewRequest);
+        parameters.put(DataCollector.EventParameters.ITEM_ID, saleDetail.getSkuId());
+        parameters.put(DataCollector.EventParameters.ITEM_NAME, saleDetail.getName());
+        if (saleDetail.getSalePrice() != null) {
+            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getSalePrice().getValue());
+        } else if (saleDetail.getPrice() != null) {
+            parameters.put(DataCollector.EventParameters.PRICE, saleDetail.getPrice().getValue());
+        }
+        parameters.put(DataCollector.EventParameters.COUNTRY_ID, Settings.getSelectedCountry().countryId);
+        parameters.put(DataCollector.EventParameters.ITEM_BRAND, saleDetail.getBrandName());
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, SaleItemDetailsController.class.getSimpleName());
+
+        GA4EventParams.GA4ViewItemParams ga4EventParams = new GA4EventParams.GA4ViewItemParams();
+        ArrayList<GA4EventParams.Item> ga4Items = new ArrayList<>();
+        GA4EventParams.Item ga4Item = new GA4EventParams.Item();
+        ga4Item.setItemName(saleDetail.getName());
+        ga4Item.setItemId(saleDetail.getProductId());
+        if (saleDetail.getSalePrice() != null) {
+            ga4Item.setPrice(saleDetail.getSalePrice().getValue());
+        } else if (saleDetail.getPrice() != null) {
+            ga4Item.setPrice((saleDetail.getPrice().getValue()));
+        } else {
+            ga4Item.setPrice(0.0);
+        }
+        ga4Item.setQuantity(1);
+        ga4Item.setItemBrand(saleDetail.getBrandName());
+        ga4Item.setItemCategories(saleDetail.getCategories());
+        ga4Items.add(ga4Item);
+        ga4EventParams.setItems(ga4Items);
+        ga4EventParams.setCurrency(Settings.getSelectedCountry().currencyCode);
+        if (saleDetail.getSalePrice() != null) {
+            ga4EventParams.setValue(saleDetail.getSalePrice().getValue());
+        } else if (saleDetail.getPrice() != null) {
+            ga4EventParams.setValue((saleDetail.getPrice().getValue()));
+        } else {
+            ga4EventParams.setValue(0.0);
+        }
+        parameters.put(DataCollector.EventParameters.GA4_EVENT_PARAMS, ga4EventParams);
+
+        DataCollector.logEvent(Events.CVItemDetails, parameters);
     }
 
     public void setupPartialProductDetails(SaleItemProduct saleDetail) {
@@ -2767,7 +2777,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         }
 
         // force selection - this prevents deselecting tags
-        mSizesFlowLayout.getAdapter().setSelectedList(Sets.newHashSet(selectedIndex));
+        if (mSizesFlowLayout.getSelectedList().isEmpty()) {
+            mSizesFlowLayout.getAdapter().setSelectedList(selectedIndex);
+        }
 
         mSkuId = mProductSizes.get(selectedIndex).second;
 

@@ -231,7 +231,9 @@ public class MainController extends BaseController implements MainMvpView {
         mBottomNavigationView.setInactiveColor(mActivity.getResources().getColor(R.color.bottom_nav_inactive));
         readjustBottomNavigationViewLayoutWidth();
 
-        showHomePage();
+        if (!mHasSavedStateInstance) {
+            showHomePage(false);
+        }
         previousPagerPosition = mHomeViewPager.getCurrentItem();
 
         mHomeButton.setOnClickListener(it -> {
@@ -710,7 +712,7 @@ public class MainController extends BaseController implements MainMvpView {
     @SuppressLint("ClickableViewAccessibility")
     private void setupViewPager() {
 
-        RouterPagerAdapter mViewPagerAdapter = new RouterPagerAdapter(this) {
+        RouterPagerAdapter viewPagerAdapter = new RouterPagerAdapter(this) {
             @Override
             public void configureRouter(@NonNull Router router, int position) {
                 setupRouterAtPosition(router, position);
@@ -728,8 +730,7 @@ public class MainController extends BaseController implements MainMvpView {
         };
 
 
-        mHomeViewPager.setAdapter(mViewPagerAdapter);
-        mHomeViewPager.setCurrentItem(SHOP_INDEX, false);
+        mHomeViewPager.setAdapter(viewPagerAdapter);
         mHomeViewPager.setMyScroller();
 
         mHomeViewPager.setOffscreenPageLimit(VIEWPAGER_SIZE);
@@ -755,6 +756,8 @@ public class MainController extends BaseController implements MainMvpView {
         });
 
         mHomeViewPager.setIsSwipeable(false);
+
+        mHomeViewPager.setCurrentItem(SHOP_INDEX, false);
     }
 
     private void onPageSwitch(int position, boolean isCurrent) {
@@ -850,29 +853,37 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     private void setViewPagerItem(int position) {
+        setViewPagerItem(position, true);
+    }
+
+    private void setViewPagerItem(int position, boolean isAnimated) {
         if (mHomeViewPager.getCurrentItem() == position) {
             return;
         }
 
-        CommonUtils.fadeOutView(mHomeViewPager, new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                super.onAnimationCancel(animation);
-                mHomeViewPager.setCurrentItem(position, false);
-                CommonUtils.fadeInView(mHomeViewPager, null);
-                final Router previousRouter = routers.get(previousPagerPosition);
-                popCheckoutController(previousRouter);
-            }
+        if (isAnimated) {
+            CommonUtils.fadeOutView(mHomeViewPager, new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    super.onAnimationCancel(animation);
+                    mHomeViewPager.setCurrentItem(position, false);
+                    CommonUtils.fadeInView(mHomeViewPager, null);
+                    final Router previousRouter = routers.get(previousPagerPosition);
+                    popCheckoutController(previousRouter);
+                }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                mHomeViewPager.setCurrentItem(position, false);
-                CommonUtils.fadeInView(mHomeViewPager, null);
-                final Router previousRouter = routers.get(previousPagerPosition);
-                popCheckoutController(previousRouter);
-            }
-        });
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    mHomeViewPager.setCurrentItem(position, false);
+                    CommonUtils.fadeInView(mHomeViewPager, null);
+                    final Router previousRouter = routers.get(previousPagerPosition);
+                    popCheckoutController(previousRouter);
+                }
+            });
+        } else {
+            mHomeViewPager.setCurrentItem(position, false);
+        }
     }
 
     private void setBottomNavigationItem(int index) {
@@ -888,10 +899,10 @@ public class MainController extends BaseController implements MainMvpView {
 
     @Override
     public void showShopController() {
-        showShopController(false);
+        showShopController(false, true);
     }
 
-    private void showShopController(boolean willNotNavigateFromAwayShop) {
+    private void showShopController(boolean willNotNavigateFromAwayShop, boolean isAnimated) {
         setBottomNavigationItem(CATEGORY_INDEX);
         if (previousPagerPosition == SHOP_INDEX) {
             if (!willNotNavigateFromAwayShop) {
@@ -901,7 +912,7 @@ public class MainController extends BaseController implements MainMvpView {
                 setViewPagerItem(CATEGORY_INDEX);
             }
         } else {
-            setViewPagerItem(SHOP_INDEX);
+            setViewPagerItem(SHOP_INDEX, isAnimated);
         }
         resetSecureFlag(getCurrentControllerOnRouter(getShopRouter()));
 
@@ -1367,7 +1378,11 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public void showHomePage() {
-        if (getShopRouter() != null && getShopRouter().getBackstackSize() > 0) {
+        showHomePage(true);
+    }
+
+    public void showHomePage(boolean isAnimated) {
+        if (getShopRouter() != null && getShopRouter().getBackstackSize() > 1) {
             getShopRouter().popToRoot();
         }
         if (getCategoriesRouter() != null && getCategoriesRouter().getBackstackSize() > 0) {
@@ -1376,7 +1391,7 @@ public class MainController extends BaseController implements MainMvpView {
                 ((NewSaleCategoriesController) controller).resetLevels();
             }
         }
-        showShopController(true);
+        showShopController(true, isAnimated);
     }
 
     public void showBrands() {

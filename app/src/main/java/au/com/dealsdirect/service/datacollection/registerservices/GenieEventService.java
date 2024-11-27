@@ -18,6 +18,7 @@ import au.com.dealsdirect.BuildConfig;
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.data.network.model.events.BannerClickEventRequest;
 import au.com.dealsdirect.data.network.model.events.CategoryRequest;
+import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.DeliveryPriceViewEventRequest;
 import au.com.dealsdirect.data.network.model.events.FeatureUsageEventRequest;
 import au.com.dealsdirect.data.network.model.events.FrontEndInfo;
@@ -26,7 +27,6 @@ import au.com.dealsdirect.data.network.model.events.RecentlyViewedEventRequest;
 import au.com.dealsdirect.data.network.model.events.RecommendationEventRequest;
 import au.com.dealsdirect.data.network.model.events.SaleEventRequest;
 import au.com.dealsdirect.data.network.model.events.SearchEventRequest;
-import au.com.dealsdirect.data.network.model.events.CommonCheckoutRequest;
 import au.com.dealsdirect.data.network.model.events.SellerLinkEventRequest;
 import au.com.dealsdirect.data.network.model.events.VisitorInfo;
 import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
@@ -621,8 +621,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
 
     private static String getVisitorId() {
         String visitorId = "";
-        for (Iterator<Cookie> it = CookieUtils.getInstance().getCookieIterator(); it.hasNext(); ) {
-            Cookie cookie = it.next();
+        for (Cookie cookie : CookieUtils.getInstance().getCookieSet()) {
             if (cookie.name().equalsIgnoreCase("v")) {
                 visitorId = cookie.value();
                 break;
@@ -634,10 +633,9 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
 
     private static ArrayList<String> getCohorts() {
         ArrayList<String> cohorts = new ArrayList<>();
-        for (Iterator<Cookie> it = CookieUtils.getInstance().getCookieIterator(); it.hasNext(); ) {
-            Cookie cookie = it.next();
+        for (Cookie cookie : CookieUtils.getInstance().getCookieSet()) {
             if (cookie.name().contains("ut")) {
-                String ut[] = cookie.value().split("&");
+                String[] ut = cookie.value().split("&");
                 for (String anUt : ut) {
                     if (ut.length > 1) {
                         cohorts.add(anUt.split("=")[1]);
@@ -651,8 +649,7 @@ public class GenieEventService implements GenieEventServiceInterface, DataCollec
 
     private static String getUserGroup() {
         String userGroup = "";
-        for (Iterator<Cookie> it = CookieUtils.getInstance().getCookieIterator(); it.hasNext(); ) {
-            Cookie cookie = it.next();
+        for (Cookie cookie : CookieUtils.getInstance().getCookieSet()) {
             if (cookie.name().equalsIgnoreCase("us")) {
                 String[] subCookies = cookie.value().split("&");
                 if (subCookies.length > 0) {

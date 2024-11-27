@@ -177,8 +177,19 @@ public class ContactSelectOrderController extends BaseController implements Cont
 
     @OnClick(R.id.controller_contact_select_order_invoice_input_button)
     void onSubmitClick() {
+        Integer number = null;
+        try {
+            number = Integer.parseInt(mInvoiceInputField.getText().toString());
+        } catch (NumberFormatException e) {
+            onError("Invalid invoice number");
+        }
+
+        if (number == null) {
+            return;
+        }
+
         // no order number?
-        submitInvoiceNumber(-1, Integer.parseInt(mInvoiceInputField.getText().toString()));
+        submitInvoiceNumber(-1, number);
     }
 
     private void submitInvoiceNumber(int orderNumber, int invoiceNumber) {

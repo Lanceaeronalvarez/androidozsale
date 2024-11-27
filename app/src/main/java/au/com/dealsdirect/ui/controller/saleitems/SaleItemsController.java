@@ -1110,7 +1110,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     final int indexInList = itemsContainerHelper.indexOfItem(id);
                     if (indexInList >= 0 && !isInWishlist) {
                         itemsContainerHelper.removeItem(id);
-                        mSaleItemsAdapter.removeData(indexInList);
+                        mSaleItemsAdapter.updateData(itemsContainerHelper.getItems());
                     } else if (indexInList < 0 && isInWishlist) {
                         if (isViewAttached()) {
                             refreshContents();
@@ -1300,7 +1300,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                 switch (mSourceMode) {
                     case NORMAL:
                         if (!mInitialLoad) {
-                            if (itemsContainerHelper.getSize() < getResources().getInteger(R.integer.sale_items_threshold)) {
+                            if (itemsContainerHelper.getSize() < mActivity.getResources().getInteger(R.integer.sale_items_threshold)) {
                                 mHasLoadedAllItems = true;
                             } else {
                                 mIsLoadingProgress = true;
@@ -1422,8 +1422,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mFilterCard.setOnClickListener(view12 -> {
             if (tabsLoaded) {
-                final Controller saleFilterController = SaleFilterController.newInstance(mTabTitles, mFacets, this, new ArrayList<SearchChipModel>(mSelectedFilterList), new ArrayList<String>(mSelectedCategoryKeys), mSortingResponse,
-                        mCategoryTreeResponse, false, mGenieTotal, mSaleId, linkOptions, mGenieMaxPrice, mCategoryKeyFromCategorySearch, mSourceType.sourceTypeName);
+                final Controller saleFilterController = SaleFilterController.newInstance(
+                        mTabTitles,
+                        mFacets,
+                        this,
+                        new ArrayList<SearchChipModel>(mSelectedFilterList),
+                        new ArrayList<String>(mSelectedCategoryKeys),
+                        mSortingResponse,
+                        mCategoryTreeResponse,
+                        false,
+                        mGenieTotal,
+                        mSaleId,
+                        linkOptions,
+                        mGenieMaxPrice,
+                        mCategoryKeyFromCategorySearch,
+                        mSourceType.sourceTypeName);
 
                 RouterTransaction filterRouterTransaction = RouterTransaction
                         .with(saleFilterController).pushChangeHandler(new HorizontalChangeHandler())
@@ -1437,8 +1450,21 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mSortCard.setOnClickListener(view12 -> {
             if (tabsLoaded) {
-                final Controller saleFilterController = SaleFilterController.newInstance(mTabTitles, mFacets, this, new ArrayList<SearchChipModel>(mSelectedFilterList), new ArrayList<String>(mSelectedCategoryKeys), mSortingResponse,
-                        mCategoryTreeResponse, true, mGenieTotal, mSaleId, linkOptions, mGenieMaxPrice, mCategoryKeyFromCategorySearch, mSourceType.sourceTypeName);
+                final Controller saleFilterController = SaleFilterController.newInstance(
+                        mTabTitles,
+                        mFacets,
+                        this,
+                        new ArrayList<SearchChipModel>(mSelectedFilterList),
+                        new ArrayList<String>(mSelectedCategoryKeys),
+                        mSortingResponse,
+                        mCategoryTreeResponse,
+                        true,
+                        mGenieTotal,
+                        mSaleId,
+                        linkOptions,
+                        mGenieMaxPrice,
+                        mCategoryKeyFromCategorySearch,
+                        mSourceType.sourceTypeName);
 
                 RouterTransaction sortRouterTransaction = RouterTransaction
                         .with(saleFilterController).pushChangeHandler(new HorizontalChangeHandler())
@@ -1664,7 +1690,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
             HashMap<String, Object> parameters = new HashMap<>();
             parameters.put(DataCollector.EventParameters.MILLISECONDS,
-                    Profiler.getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue()));
+                    mActivity.getProfiler().getTotalTime(DataCollector.EventParameters.CustomEventType.CV_ITEMLIST.getValue()));
             parameters.put(DataCollector.EventParameters.CATEGORY_REQUEST, categoryRequest);
             parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
             parameters.put(DataCollector.EventParameters.ITEM_LIST, categories);
@@ -1703,20 +1729,22 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         mIsLoadingProgress = false;
 
-        if (items.size() == 0 && !itemsContainerHelper.isEmpty()) {
+        setupSearchFilters();
+
+        boolean willInitializePaginateManager = false;
+        if (items.isEmpty() && !itemsContainerHelper.isEmpty()) {
             mHasLoadedAllItems = true;
             if (mPaginateManager != null) {
                 mPaginateManager.setHasMoreDataToLoad(false);
             }
         } else {
-
             if (pageNumber == 0 || mIsSearch) {
                 if (mPaginateManager != null) {
                     mPaginateManager.unbind();
                 }
 
-                if (items.size() <= getResources().getInteger(R.integer.sale_items_threshold)) {
-                    if (mPaginateManager == null || items.size() == 0) {
+                if (items.size() <= mActivity.getResources().getInteger(R.integer.sale_items_threshold)) {
+                    if (mPaginateManager == null || items.isEmpty()) {
                         if (mHasLoadedAllItems) {
                             showPlaceholder(true);
                         }
@@ -1727,8 +1755,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
                     }
                 } else {
                     showPlaceholder(false);
-                    mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
-                    mSaleItemsRecyclerView.scrollToPosition(0);
+                    willInitializePaginateManager = true;
                 }
                 itemsContainerHelper.clearItems();
 
@@ -1737,10 +1764,15 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         itemsContainerHelper.setItemsInSlot(pageNumber, items, !isFromCache);
-        mSaleItemsAdapter.replaceData(itemsContainerHelper.getItems());
+        mSaleItemsAdapter.updateData(itemsContainerHelper.getItems(), mInitialLoad);
 
-        setupSearchFilters();
+        if (willInitializePaginateManager) {
+            mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
+            mSaleItemsRecyclerView.scrollToPosition(0);
+        }
+
         setupTabs();
+
         if (mInitialLoad) mInitialLoad = false;
 
         //replace category tree all the time.
@@ -1776,7 +1808,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         itemsContainerHelper.setItemsInSlot(offset, wishlist, true);
-        mSaleItemsAdapter.replaceData(itemsContainerHelper.getItems());
+        mSaleItemsAdapter.updateData(itemsContainerHelper.getItems());
 
         if (mPaginateManager == null) {
             mPaginateManager = PaginateUtils.init(mSaleItemsRecyclerView, mPaginateCallbacks);
@@ -1803,11 +1835,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
         final int indexOfItem = itemsContainerHelper.indexOfItem(productId);
         if (indexOfItem >= 0) {
-            mSaleItemsAdapter.removeData(indexOfItem);
             itemsContainerHelper.removeItem(productId);
-        } else {
-            mSaleItemsAdapter.replaceData(itemsContainerHelper.getItems());
         }
+        mSaleItemsAdapter.updateData(itemsContainerHelper.getItems());
 
         showPlaceholderWithAnimation(itemsContainerHelper.isEmpty());
         determineWhereToShowAds();
@@ -2617,7 +2647,9 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             default:
                 break;
         }
-        mChipGroup.removeAllViews();
+        if (mChipGroup != null) {
+            mChipGroup.removeAllViews();
+        }
         mSelectedFilterList.clear();
         mSelectedFilterList.addAll(chipsList);
         mSelectedCategoryKeys.clear();
@@ -3054,14 +3086,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         final LayoutAnimationController controller =
                 AnimationUtils.loadLayoutAnimation(mActivity, R.anim.layout_sale_list_skeleton);
 
-        ArrayList<SaleItemProduct> nullList = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            nullList.add(null);
-        }
         if (mSaleItemsRecyclerView != null) {
             mSaleItemsRecyclerView.setLayoutAnimation(controller);
         }
-        mSaleItemsAdapter.addData(nullList, false);
+        mSaleItemsAdapter.updateData(CommonUtils.initArrayListWithCopiesOfObject(8, null));
         mSaleItemsRecyclerView.scheduleLayoutAnimation();
         mGridLayoutManager.setScrollEnabled(false);
 
@@ -3278,6 +3306,10 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void showResultCount(boolean shouldShow) {
+        if (!isViewAttached()) {
+            return;
+        }
+
         if ((searchResultAnimation != null && searchResultAnimation.isRunning()) ||
                 (toolbarAnimation != null && toolbarAnimation.isRunning())) {
             return;
@@ -3300,7 +3332,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         }
 
         searchResultAnimation.addUpdateListener(valueAnimator -> {
-            if (mSaleResultCountTextView == null) {
+            if (mSaleResultCountTextView == null || !isViewAttached()) {
+                valueAnimator.cancel();
                 return;
             }
             int val = (Integer) valueAnimator.getAnimatedValue();
@@ -3310,10 +3343,13 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mSaleResultCountTextView.setVisibility(val > 0 ? View.VISIBLE : View.GONE);
         });
         searchResultAnimation.setDuration(SALE_RESULTS_ANIMATION_DURATION);
-        searchResultAnimation.start();
+        if (mSaleResultCountTextView != null) {
+            searchResultAnimation.start();
+        }
 
         toolbarAnimation.addUpdateListener(valueAnimator -> {
-            if (mToolbarBorder == null) {
+            if (mToolbarBorder == null || !isViewAttached()) {
+                valueAnimator.cancel();
                 return;
             }
             int val = (Integer) valueAnimator.getAnimatedValue();
@@ -3323,6 +3359,8 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
             mToolbarBorder.setVisibility(val > 0 ? View.VISIBLE : View.GONE);
         });
         toolbarAnimation.setDuration(SALE_RESULTS_ANIMATION_DURATION);
-        toolbarAnimation.start();
+        if (mToolbarBorder != null) {
+            toolbarAnimation.start();
+        }
     }
 }
