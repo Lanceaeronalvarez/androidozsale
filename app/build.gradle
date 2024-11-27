@@ -64,8 +64,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -93,8 +93,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -117,8 +117,8 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -147,8 +147,8 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -171,8 +171,8 @@ android {
         }
 
         ozsaleRC {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -201,8 +201,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "au.com.ozsale.test"
 
             ext.appName = "OZSALE Test"
@@ -230,8 +230,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -260,8 +260,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "sg.com.singsale.test"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -284,8 +284,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -314,8 +314,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "nz.co.nzsale.test"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -339,8 +339,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -368,8 +368,8 @@ android {
         }
 
         mysaleTest {
-            versionCode 500
-            versionName "8.11.1"
+            versionCode 505
+            versionName "8.11.2"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -920,8 +920,10 @@ tasks.register('getLegacyVersion') {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
+                            def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
+                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
+                                classpath = files(path)
                                 main = "au.com.dealsdirect.data.network.ApiEndPoint"
                             }
                         }
@@ -942,8 +944,10 @@ tasks.register('printCountryId') {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
+                            def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
+                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
+                                classpath = files(path)
                                 main = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_COUNTRY_ID"
                             }
@@ -964,8 +968,10 @@ tasks.register('printAccountId') {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
+                            def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
+                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
+                                classpath = files(path)
                                 main = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_ACCOUNT_ID"
                             }
@@ -986,8 +992,10 @@ tasks.register('printGenieApi') {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
+                            def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
+                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
+                                classpath = files(path)
                                 main = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_GENIE_API"
                             }
@@ -1008,8 +1016,10 @@ tasks.register('printCurrencyCode') {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
+                            def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
+                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
+                                classpath = files(path)
                                 main = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args countryName, flavorName, "PRINT_CURRENCY_CODE"
                             }
@@ -1030,8 +1040,10 @@ tasks.register('printRecaptcha') {
                     flavor ->
                         if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
                             def buildVariant = flavorName + variant.buildType.name.capitalize()
+                            def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
+                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
                             javaexec {
-                                classpath = files(project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/classes/")
+                                classpath = files(path)
                                 main = "au.com.dealsdirect.ui.controller.main.Settings"
                                 args "", flavorName, "PRINT_RECAPTCHA"
                             }
