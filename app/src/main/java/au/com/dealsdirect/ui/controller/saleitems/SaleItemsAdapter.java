@@ -40,6 +40,16 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private DiffUtil.ItemCallback<SaleItemProduct> diffUtilItemCallback = new DiffUtil.ItemCallback<SaleItemProduct>() {
         @Override
         public boolean areItemsTheSame(@NonNull SaleItemProduct oldItem, @NonNull SaleItemProduct newItem) {
+            if (oldItem.getSeoIdentifier() == null) {
+                if (newItem.getSeoIdentifier() == null) {
+                    if (oldItem.getId() == null) {
+                        return newItem.getId() == null;
+                    }
+                    return oldItem.getId().equals(newItem.getId());
+                } else {
+                    return false;
+                }
+            }
             return oldItem.getSeoIdentifier().equals(newItem.getSeoIdentifier());
         }
 
