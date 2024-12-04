@@ -57,7 +57,6 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.views.custom.recyclerview.CustomGridLayoutManager;
 import com.paginate.Paginate;
 
@@ -1358,7 +1357,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mGridLayoutManager = gridLayoutManager;
         mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
-        mSaleItemsAdapter.notifyDataSetChanged();
         mSaleItemsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -1560,7 +1558,6 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         mGridLayoutManager = gridLayoutManager;
         mSaleItemsRecyclerView.setLayoutManager(gridLayoutManager);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
-        mSaleItemsAdapter.notifyDataSetChanged();
     }
 
     private void setupSaleRemainingTime(String endDate) {
@@ -2461,11 +2458,12 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
 
     private void determineWhereToShowAds() {
         if (getView() == null) {
-            if (mSaleItemsAdapter != null) {
-                mSaleItemsAdapter.setFooterEnabled(false);
-            }
+            itemsContainerHelper.setFooters(null);
             if (mFooterAds != null) {
                 mFooterAds.setVisibility(View.GONE);
+            }
+            if (mSaleItemsAdapter != null) {
+                mSaleItemsAdapter.updateData(itemsContainerHelper.getItems());
             }
             return;
         }
@@ -2475,18 +2473,19 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         int adjustedHeight = getView().getHeight() - (onlyOneRowLeft ? 0 : mSaleItemsAdapter.getHeightOfCell());
         if (contentHeight > adjustedHeight) {
             // ads as footer
-            if (mSaleItemsAdapter != null) {
-                mSaleItemsAdapter.setFooterEnabled(true);
-            }
+            itemsContainerHelper.setFooters(new ArrayList<Integer>() {{
+                add(SaleItemFooterPlaceholder.VIEW_TYPE_ADMOB);
+            }});
             mFooterAds.setVisibility(View.GONE);
         } else {
             // ads below recyclerview and placeholder
-            if (mSaleItemsAdapter != null) {
-                mSaleItemsAdapter.setFooterEnabled(false);
-            }
+            itemsContainerHelper.setFooters(null);
             mFooterAds.setVisibility(View.VISIBLE);
             CommonUtils.showAdmob(mActivity, mFooterAds,
                     mActivity.getResources().getString(R.string.admob_products_id));
+        }
+        if (mSaleItemsAdapter != null) {
+            mSaleItemsAdapter.updateData(itemsContainerHelper.getItems());
         }
     }
 
@@ -2549,19 +2548,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         });
     }
 
-    /* bug/gen-8605_ozsale-reskin_bugfixing - four item row on mobile landscape */
     @Override
     public void onOrientationChanged(Configuration newConfig) {
         if (!isViewAttached() || !isViewBound()) return;
 
         GridLayoutManager gridLayoutManager = (GridLayoutManager) mSaleItemsRecyclerView.getLayoutManager();
-        int currentScrollPosition = gridLayoutManager.findFirstVisibleItemPosition();
+        int currentScrollPosition = gridLayoutManager != null ? gridLayoutManager.findFirstVisibleItemPosition() : 0;
         mSaleItemsAdapter.computeItemViewDimensions(mActivity);
         mSaleItemsRecyclerView.setAdapter(mSaleItemsAdapter);
-        mSaleItemsAdapter.notifyDataSetChanged();
-        gridLayoutManager.scrollToPosition(currentScrollPosition);
-
-        gridLayoutManager.setSpanCount(mSaleItemsAdapter.getColumnCount());
+        if (gridLayoutManager != null) {
+            gridLayoutManager.scrollToPosition(currentScrollPosition);
+            gridLayoutManager.setSpanCount(mSaleItemsAdapter.getColumnCount());
+        }
 
         determineWhereToShowAds();
     }
@@ -3089,7 +3087,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mSaleItemsRecyclerView != null) {
             mSaleItemsRecyclerView.setLayoutAnimation(controller);
         }
-        mSaleItemsAdapter.updateData(CommonUtils.initArrayListWithCopiesOfObject(8, null));
+        mSaleItemsAdapter.updateData(CommonUtils.initImmutableListWithCopiesOfObject(8, new SaleItemProduct()));
         mSaleItemsRecyclerView.scheduleLayoutAnimation();
         mGridLayoutManager.setScrollEnabled(false);
 

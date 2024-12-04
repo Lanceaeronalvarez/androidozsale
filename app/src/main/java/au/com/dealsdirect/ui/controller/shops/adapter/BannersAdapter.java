@@ -274,7 +274,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         false,
                         HorizontalPageIndicatorAdapter.Style.CIRCLE);
             case VIEW_HOLDER_TYPE_FOOTER:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_ads, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.footer_container, parent, false);
                 return new FooterViewHolder(view);
             default:
                 if (isViewHolderOldType(viewType)) {

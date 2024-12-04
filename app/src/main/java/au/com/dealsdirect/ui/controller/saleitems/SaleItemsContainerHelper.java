@@ -1,5 +1,9 @@
 package au.com.dealsdirect.ui.controller.saleitems;
 
+import androidx.annotation.NonNull;
+
+import com.google.common.collect.ImmutableList;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +15,12 @@ public class SaleItemsContainerHelper {
 
     private final Map<Integer, List<SaleItemProduct>> items;
     private final List<Integer> indices; //should always be sorted
-    private List<SaleItemProduct> mergedItems;
+    private ImmutableList<SaleItemProduct> mergedItems;
     private int size;
+
+    @NonNull
+    private List<Integer> footers = new ArrayList<>();
+    private List<SaleItemProduct> footerPlaceholders = null;
 
     public SaleItemsContainerHelper() {
         items = new HashMap<>();
@@ -23,7 +31,7 @@ public class SaleItemsContainerHelper {
     public SaleItemsContainerHelper(SaleItemsContainerHelper existingContainer) {
         items = new HashMap<>(existingContainer.items);
         indices = new ArrayList<>(existingContainer.indices);
-        mergedItems = new ArrayList<>(existingContainer.mergedItems);
+        mergedItems = ImmutableList.copyOf(existingContainer.mergedItems);
         size = mergedItems.size();
     }
 
@@ -107,23 +115,49 @@ public class SaleItemsContainerHelper {
         return indices.get(indices.size() - 1);
     }
 
-    public List<SaleItemProduct> getItems() {
+    public ImmutableList<SaleItemProduct> getItems() {
         if (mergedItems == null) {
-            mergedItems = new ArrayList<>();
+            final List<SaleItemProduct> mergedItems = new ArrayList<>();
             for (int i = 0; i < indices.size(); i++) {
                 // indices have to be sorted
-                List<SaleItemProduct> items = this.items.get(indices.get(i));
+                final List<SaleItemProduct> items = this.items.get(indices.get(i));
                 if (items != null) {
                     mergedItems.addAll(items);
                 }
             }
             size = mergedItems.size();
+            if (!footers.isEmpty()) {
+                mergedItems.addAll(getFooterPlaceholders());
+            }
+            this.mergedItems = ImmutableList.copyOf(mergedItems);
         }
         return mergedItems;
     }
 
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    @NonNull
+    public List<Integer> getFooters() {
+        return footers;
+    }
+
+    public void setFooters(List<Integer> footers) {
+        this.footers = footers != null ? footers : new ArrayList<>();
+        footerPlaceholders = null;
+        mergedItems = null;
+    }
+
+    private List<SaleItemProduct> getFooterPlaceholders() {
+        if (footerPlaceholders != null) {
+            return footerPlaceholders;
+        }
+        footerPlaceholders = new ArrayList<>();
+        for (Integer footerType : footers) {
+            footerPlaceholders.add(new SaleItemFooterPlaceholder(footerType != null ? footerType : 0));
+        }
+        return footerPlaceholders;
     }
 
     private void insertIndex(int index) {
