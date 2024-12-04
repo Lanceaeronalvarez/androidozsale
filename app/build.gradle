@@ -548,7 +548,8 @@ dependencies {
 
     // conductor
     implementation "com.bluelinelabs:conductor:$rootProject.conductorVersion"
-    implementation "com.bluelinelabs:conductor-support:$rootProject.conductorVersion"
+    implementation "com.bluelinelabs:conductor-androidx-transition:$rootProject.conductorVersion"
+    implementation "com.bluelinelabs:conductor-viewpager:$rootProject.conductorVersion"
 
     // paginate
     implementation "com.github.markomilos:paginate:$rootProject.paginateVersion"

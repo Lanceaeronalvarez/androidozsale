@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.bluelinelabs.conductor.support.RouterPagerAdapter;
+import com.bluelinelabs.conductor.viewpager.RouterPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -232,7 +233,14 @@ public class MainController extends BaseController implements MainMvpView {
         readjustBottomNavigationViewLayoutWidth();
 
         if (!mHasSavedStateInstance) {
-            showHomePage(false);
+            view.setVisibility(View.INVISIBLE);
+            // post showHomePage so that it is called after the host controller for the
+            // ControllerHostedRouter is set
+            (new Handler(view.getContext().getMainLooper()))
+                    .post(() -> {
+                        view.setVisibility(View.VISIBLE);
+                        showHomePage(false);
+                    });
         }
         previousPagerPosition = mHomeViewPager.getCurrentItem();
 
@@ -1382,7 +1390,7 @@ public class MainController extends BaseController implements MainMvpView {
     }
 
     public void showHomePage(boolean isAnimated) {
-        if (getShopRouter() != null && getShopRouter().getBackstackSize() > 1) {
+        if (getShopRouter() != null) {
             getShopRouter().popToRoot();
         }
         if (getCategoriesRouter() != null && getCategoriesRouter().getBackstackSize() > 0) {

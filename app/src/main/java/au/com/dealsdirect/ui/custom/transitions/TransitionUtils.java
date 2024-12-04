@@ -1,19 +1,17 @@
 package au.com.dealsdirect.ui.custom.transitions;
 
-import android.annotation.TargetApi;
 import android.graphics.Rect;
-import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import android.transition.Transition;
-import android.transition.TransitionSet;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.transition.Transition;
+import androidx.transition.TransitionSet;
 
 import java.util.List;
 import java.util.Map;
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class TransitionUtils {
 
     public static void findNamedViews(@NonNull Map<String, View> namedViews, View view) {

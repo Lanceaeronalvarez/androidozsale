@@ -23,9 +23,7 @@ import androidx.annotation.StringRes;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.Router;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,7 +36,6 @@ import au.com.dealsdirect.service.datacollection.registerservices.FirebaseAnalyt
 import au.com.dealsdirect.service.datacollection.registerservices.GenieEventService;
 import au.com.dealsdirect.ui.main.MainActivity;
 import au.com.dealsdirect.utils.LoadingDialogType;
-
 
 public abstract class BaseController
         extends RefWatchingController
@@ -68,7 +65,7 @@ public abstract class BaseController
 
     @NonNull
     @Override
-    protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+    protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedViewState) {
         setHasOptionsMenu(false);
 
         mControllerComponent = DaggerControllerComponent.builder()
@@ -78,7 +75,7 @@ public abstract class BaseController
 
         mControllerComponent.inject(this);
 
-        return super.onCreateView(inflater, container);
+        return super.onCreateView(inflater, container, savedViewState);
     }
 
     @Override

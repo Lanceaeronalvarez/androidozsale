@@ -1,32 +1,31 @@
 package au.com.dealsdirect.ui.custom.transitions;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import android.transition.ArcMotion;
-import android.transition.ChangeBounds;
-import android.transition.ChangeClipBounds;
-import android.transition.ChangeTransform;
-import android.transition.Fade;
-import android.transition.Transition;
-import android.transition.Transition.TransitionListener;
-import android.transition.TransitionSet;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.transition.ArcMotion;
+import androidx.transition.ChangeBounds;
+import androidx.transition.ChangeClipBounds;
+import androidx.transition.ChangeTransform;
+import androidx.transition.Fade;
+import androidx.transition.Transition;
+import androidx.transition.Transition.TransitionListener;
+import androidx.transition.TransitionSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class ArcFadeMoveChangeHandler extends SharedElementTransitionChangeHandler {
 
     private static final String KEY_SHARED_ELEMENT_NAMES = "ArcFadeMoveChangeHandler.sharedElementNames";
 
     private final ArrayList<String> sharedElementNames = new ArrayList<>();
 
-    public ArcFadeMoveChangeHandler() { }
+    public ArcFadeMoveChangeHandler() {
+    }
 
     public ArcFadeMoveChangeHandler(String... sharedElementNames) {
         Collections.addAll(this.sharedElementNames, sharedElementNames);
@@ -73,16 +72,20 @@ public class ArcFadeMoveChangeHandler extends SharedElementTransitionChangeHandl
             }
 
             @Override
-            public void onTransitionEnd(Transition transition) { }
+            public void onTransitionEnd(Transition transition) {
+            }
 
             @Override
-            public void onTransitionCancel(Transition transition) { }
+            public void onTransitionCancel(Transition transition) {
+            }
 
             @Override
-            public void onTransitionPause(Transition transition) { }
+            public void onTransitionPause(Transition transition) {
+            }
 
             @Override
-            public void onTransitionResume(Transition transition) { }
+            public void onTransitionResume(Transition transition) {
+            }
         });
 
         return transition;

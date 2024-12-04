@@ -1,23 +1,22 @@
 package au.com.dealsdirect.ui.custom.transitions;
 
-import android.annotation.TargetApi;
 import android.app.SharedElementCallback;
 import android.graphics.Rect;
-import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import android.transition.Transition;
-import android.transition.Transition.TransitionListener;
-import android.transition.TransitionSet;
 import android.util.ArrayMap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnPreDrawListener;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.transition.Transition;
+import androidx.transition.Transition.TransitionListener;
+import androidx.transition.TransitionSet;
+
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
-import com.bluelinelabs.conductor.changehandler.TransitionChangeHandler;
+import com.bluelinelabs.conductor.changehandler.androidxtransition.TransitionChangeHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.List;
  * and shared elements between the two.
  */
 // Much of this class is based on FragmentTransition.java and FragmentTransitionCompat21.java from the Android support library
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public abstract class SharedElementTransitionChangeHandler extends TransitionChangeHandler {
 
     // A map of from -> to names. Generally these will be the same.
@@ -170,8 +168,8 @@ public abstract class SharedElementTransitionChangeHandler extends TransitionCha
                 public void run() {
                     waitForTransitionNames.remove(view.getTransitionName());
 
-                    removedViews.add(new ViewParentPair(view, (ViewGroup)view.getParent()));
-                    ((ViewGroup)view.getParent()).removeView(view);
+                    removedViews.add(new ViewParentPair(view, (ViewGroup) view.getParent()));
+                    ((ViewGroup) view.getParent()).removeView(view);
 
                     if (waitForTransitionNames.size() == 0) {
                         to.getViewTreeObserver().removeOnPreDrawListener(parentPreDrawListener);
@@ -461,16 +459,20 @@ public abstract class SharedElementTransitionChangeHandler extends TransitionCha
             }
 
             @Override
-            public void onTransitionEnd(Transition transition) { }
+            public void onTransitionEnd(Transition transition) {
+            }
 
             @Override
-            public void onTransitionCancel(Transition transition) { }
+            public void onTransitionCancel(Transition transition) {
+            }
 
             @Override
-            public void onTransitionPause(Transition transition) { }
+            public void onTransitionPause(Transition transition) {
+            }
 
             @Override
-            public void onTransitionResume(Transition transition) { }
+            public void onTransitionResume(Transition transition) {
+            }
         });
     }
 
@@ -570,7 +572,7 @@ public abstract class SharedElementTransitionChangeHandler extends TransitionCha
      * "from" view to the name used in the "to" view if they are not the same.
      *
      * @param fromName The transition name used in the "from" view
-     * @param toName The transition name used in the "to" view
+     * @param toName   The transition name used in the "to" view
      */
     protected final void addSharedElement(@NonNull String fromName, @NonNull String toName) {
         sharedElementNames.put(fromName, toName);
@@ -581,7 +583,7 @@ public abstract class SharedElementTransitionChangeHandler extends TransitionCha
      * "from" view to the name used in the "to" view if they are not the same.
      *
      * @param sharedElement The view from the "from" view that will take part in the shared element transition
-     * @param toName The transition name used in the "to" view
+     * @param toName        The transition name used in the "to" view
      */
     protected final void addSharedElement(@NonNull View sharedElement, @NonNull String toName) {
         String transitionName = sharedElement.getTransitionName();
