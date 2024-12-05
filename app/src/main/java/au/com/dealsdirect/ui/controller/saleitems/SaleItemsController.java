@@ -3087,7 +3087,7 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
         if (mSaleItemsRecyclerView != null) {
             mSaleItemsRecyclerView.setLayoutAnimation(controller);
         }
-        mSaleItemsAdapter.updateData(CommonUtils.initImmutableListWithCopiesOfObject(8, new SaleItemProduct()));
+        mSaleItemsAdapter.updateData(CommonUtils.initImmutableListWithCopiesOfObject(8, new SaleItemSkeletonPlaceholder()));
         mSaleItemsRecyclerView.scheduleLayoutAnimation();
         mGridLayoutManager.setScrollEnabled(false);
 

@@ -162,8 +162,9 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (holder.getItemViewType() == 0 && !data.isEmpty() && holder instanceof SaleItemViewHolder) {
             final SaleItemViewHolder saleItemViewHolder = (SaleItemViewHolder) holder;
-            if (product == null) {
+            if (product == null || product instanceof SaleItemSkeletonPlaceholder) {
                 saleItemViewHolder.setupViewHolderSkeleton(true);
+                saleItemViewHolder.itemView.setOnClickListener(null);
             } else {
                 saleItemViewHolder.setupViewHolderSkeleton(false);
                 final List<String> images = product.getImages();
