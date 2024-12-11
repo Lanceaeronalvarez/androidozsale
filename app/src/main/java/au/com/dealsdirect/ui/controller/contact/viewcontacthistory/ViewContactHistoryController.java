@@ -1,10 +1,7 @@
 package au.com.dealsdirect.ui.controller.contact.viewcontacthistory;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
@@ -18,8 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -47,19 +45,12 @@ import au.com.dealsdirect.ui.controller.returns.returndetails.ReturnDetailsListe
 import au.com.dealsdirect.ui.custom.CustomAlertDialog;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AsyncResponse;
-import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ImageUploadUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static android.app.Activity.RESULT_OK;
-
-/**
- * dp Created by Admin on 6/21/17.
- */
 
 public class ViewContactHistoryController extends BaseController implements ViewContactHistoryMvpView,
         ReturnDetailsListener, AsyncResponse {
@@ -97,13 +88,12 @@ public class ViewContactHistoryController extends BaseController implements View
     private boolean mHasSavedInstance = false;
     private boolean isFromReturnDetails = false;
     private ViewContactsAddImageAdapter mImageAdapter;
-    private ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
-    private HashMap<Integer, File> mImageFileHashMap = new HashMap<>();
-    private ArrayList<SetAttachmentForContactRequest.Item> itemsList = new ArrayList<>();
+    private final ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
+    private final HashMap<Integer, File> mImageFileHashMap = new HashMap<>();
+    private final ArrayList<SetAttachmentForContactRequest.Item> itemsList = new ArrayList<>();
     private String mAttachmentId = "";
     private String mMessageId = "";
-    ImageUploadUtil.UploadFileToServer uploadFileToServer;
-    private LinearLayoutManager mLayoutManager;
+    private ImageUploadUtil.UploadFileToServer uploadFileToServer;
 
     private ContactHistoryAdapter contactHistoryAdapter = null;
 
@@ -196,7 +186,6 @@ public class ViewContactHistoryController extends BaseController implements View
         mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
     }
 
-
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_view_contact_history, container, false);
@@ -232,14 +221,14 @@ public class ViewContactHistoryController extends BaseController implements View
 
         mImageAdapter = new ViewContactsAddImageAdapter(mActivity, this,
                 mImageUriArray);
-        mLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
+        LinearLayoutManager imageLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
         mImageRecyclerView.setAdapter(mImageAdapter);
-        mImageRecyclerView.setLayoutManager(mLayoutManager);
+        mImageRecyclerView.setLayoutManager(imageLayoutManager);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
-        layoutManager.setStackFromEnd(true);
-        layoutManager.setReverseLayout(true);
-        mContactHistoryRecyclerView.setLayoutManager(layoutManager);
+        LinearLayoutManager contactHistoryLayoutManager = new LinearLayoutManager(mActivity);
+        contactHistoryLayoutManager.setStackFromEnd(true);
+        contactHistoryLayoutManager.setReverseLayout(true);
+        mContactHistoryRecyclerView.setLayoutManager(contactHistoryLayoutManager);
     }
 
     @Override
@@ -259,7 +248,7 @@ public class ViewContactHistoryController extends BaseController implements View
         setupMessagesAdapter(response.getMessages());
         setupMessagesAdapter(response.getEscalate(), response.getActions());
 
-        if (mImageUriArray.size() != 0) {
+        if (!mImageUriArray.isEmpty()) {
             mMessageId = response.getMessages().get(0).getId();
 
             for (int i = 0; i < mImageUriArray.size(); i++) {
@@ -453,24 +442,31 @@ public class ViewContactHistoryController extends BaseController implements View
 
     @Override
     public void getImageFromDirectory(boolean uploadImage) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ActivityCompat.checkSelfPermission(mActivity,
-                Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mActivity,
-                    new String[]{
-                            Manifest.permission.READ_MEDIA_IMAGES},
-                    1);
-        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && ActivityCompat.checkSelfPermission(mActivity,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    AppConstants.REQUEST_CODE_PERMISSION);
-        } else {
-            Intent cameraIntent = new Intent(Intent.ACTION_PICK);
-            cameraIntent.setType("image/*");
-            if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                startActivityForResult(cameraIntent, AppConstants.REQUEST_CODE_FOR_SUCCESS);
-            }
+        final ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                registerActivityResultLauncher(TAG, new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    if (uri == null) {
+                        return;
+                    }
+
+                    mImageRecyclerView.setVisibility(View.VISIBLE);
+
+                    ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
+                    imageLinks.setIsURL(false);
+                    imageLinks.setLink(uri.toString());
+                    mImageUriArray.add(0, imageLinks);
+
+                    ViewContactsAddImageAdapter adapter = (ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter();
+                    if (adapter != null) {
+                        adapter.addItem();
+                    }
+                });
+
+        if (pickMedia == null) {
+            return;
         }
+        pickMedia.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build());
     }
 
     @Override
@@ -481,7 +477,7 @@ public class ViewContactHistoryController extends BaseController implements View
             adapter.removeItem(position);
         }
 
-        if (mImageUriArray.size() == 0) {
+        if (mImageUriArray.isEmpty()) {
             mImageRecyclerView.setVisibility(View.GONE);
         }
     }
@@ -521,7 +517,10 @@ public class ViewContactHistoryController extends BaseController implements View
                     mImageRecyclerView.findViewHolderForLayoutPosition(imageCount);
 
             if (vh != null) {
-                ((ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter()).showProgressBar(vh);
+                ViewContactsAddImageAdapter adapter = (ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter();
+                if (adapter != null) {
+                    adapter.showProgressBar(vh);
+                }
             }
         }
 
@@ -548,29 +547,10 @@ public class ViewContactHistoryController extends BaseController implements View
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK || resultCode == AppConstants.REQUEST_CODE_FOR_SUCCESS) {
-            Uri chosenImageUri = data.getData();
-
-            mImageRecyclerView.setVisibility(View.VISIBLE);
-
-            ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
-            imageLinks.setIsURL(false);
-            imageLinks.setLink(String.valueOf(chosenImageUri));
-            mImageUriArray.add(0, imageLinks);
-
-            ((ViewContactsAddImageAdapter) Objects.requireNonNull(mImageRecyclerView.getAdapter())).addItem();
-
-        }
-    }
-
-    @Override
     public void asyncExecutionFinished(String imageUrl, int imagePosition) {
         if (imageUrl == null) {
             onError("Image may not be uploaded.");
         }
-
         getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
 
         if (mImageRecyclerView != null) {
@@ -578,7 +558,10 @@ public class ViewContactHistoryController extends BaseController implements View
                     mImageRecyclerView.findViewHolderForLayoutPosition(imagePosition);
 
             if (vh != null) {
-                ((ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter()).hideVisibility(vh);
+                ViewContactsAddImageAdapter adapter = (ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter();
+                if (adapter != null) {
+                    adapter.hideVisibility(vh);
+                }
             }
         }
 

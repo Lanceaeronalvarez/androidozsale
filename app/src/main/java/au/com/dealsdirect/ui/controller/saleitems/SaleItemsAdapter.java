@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.List;
 
 import au.com.dealsdirect.R;
@@ -26,8 +28,6 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private int mColumnCount;
     private static final int FOOTER_VIEW = 1;
     private final int mMinColumn;
-    private boolean mIsFooterEnabled = true;
-    private int mCurrentItemCount = -1;
     private final SaleItemAdapterHelper helper;
     private final boolean isPriceInfoClickable;
     private final boolean isSupplierOriginalPriceInfoEnabled;
@@ -37,9 +37,18 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private boolean useAlternatePriceBlockHelper = false;
 
-    private DiffUtil.ItemCallback<SaleItemProduct> diffUtilItemCallback = new DiffUtil.ItemCallback<SaleItemProduct>() {
+    private final DiffUtil.ItemCallback<SaleItemProduct> diffUtilItemCallback = new DiffUtil.ItemCallback<SaleItemProduct>() {
         @Override
         public boolean areItemsTheSame(@NonNull SaleItemProduct oldItem, @NonNull SaleItemProduct newItem) {
+            if (oldItem instanceof SaleItemFooterPlaceholder) {
+                if (newItem instanceof SaleItemFooterPlaceholder) {
+                    return ((SaleItemFooterPlaceholder) oldItem).getViewType() == ((SaleItemFooterPlaceholder) newItem).getViewType();
+                } else {
+                    return false;
+                }
+            } else if (newItem instanceof SaleItemFooterPlaceholder) {
+                return false;
+            }
             if (oldItem.getSeoIdentifier() == null) {
                 if (newItem.getSeoIdentifier() == null) {
                     if (oldItem.getId() == null) {
@@ -55,15 +64,24 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @Override
         public boolean areContentsTheSame(@NonNull SaleItemProduct oldItem, @NonNull SaleItemProduct newItem) {
+            if (oldItem instanceof SaleItemFooterPlaceholder) {
+                if (newItem instanceof SaleItemFooterPlaceholder) {
+                    return ((SaleItemFooterPlaceholder) oldItem).getViewType() == ((SaleItemFooterPlaceholder) newItem).getViewType();
+                } else {
+                    return false;
+                }
+            } else if (newItem instanceof SaleItemFooterPlaceholder) {
+                return false;
+            }
             return helper.isProductInWishlist(oldItem) == helper.isProductInWishlist(newItem);
         }
     };
 
-    private AsyncListDiffer<SaleItemProduct> asyncListDiffer = new AsyncListDiffer<>(this, diffUtilItemCallback);
+    private final AsyncListDiffer<SaleItemProduct> asyncListDiffer = new AsyncListDiffer<>(this, diffUtilItemCallback);
 
     public SaleItemsAdapter(
             Context context,
-            List<SaleItemProduct> saleItems,
+            ImmutableList<SaleItemProduct> saleItems,
             int minColumn,
             boolean isPriceInfoClilckable,
             boolean isSupplierOriginalPriceInfoEnabled,
@@ -126,7 +144,7 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (viewType == FOOTER_VIEW) {
             view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.footer_ads, parent, false);
+                    .inflate(R.layout.footer_container, parent, false);
             return new SaleItemFooterViewHolder(view);
         } else {
             view = LayoutInflater.from(parent.getContext())
@@ -139,24 +157,36 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final Context context = holder.itemView.getContext();
 
-        List<SaleItemProduct> data = asyncListDiffer.getCurrentList();
+        final List<SaleItemProduct> data = asyncListDiffer.getCurrentList();
+        final SaleItemProduct product = data.get(position);
 
         if (holder.getItemViewType() == 0 && !data.isEmpty() && holder instanceof SaleItemViewHolder) {
             final SaleItemViewHolder saleItemViewHolder = (SaleItemViewHolder) holder;
-            final SaleItemProduct product = data.get(position);
-            if (product == null) {
+            if (product == null || product instanceof SaleItemSkeletonPlaceholder) {
                 saleItemViewHolder.setupViewHolderSkeleton(true);
+                saleItemViewHolder.itemView.setOnClickListener(null);
             } else {
                 saleItemViewHolder.setupViewHolderSkeleton(false);
-                final String imageUrl = product.getImages().isEmpty() ? "" : (product.getImages().size() < 4 ? product.getImages().get(0) : product.getImages().get(1));
+                final List<String> images = product.getImages();
+                final String imageUrl = images == null || images.isEmpty() ? "" : (product.getImages().size() < 4 ? product.getImages().get(0) : product.getImages().get(1));
                 saleItemViewHolder.setupViewHolder(product, imageUrl, helper.isProductInWishlist(product));
                 setupViewHolderWithPriceBlockClicks(saleItemViewHolder, imageUrl, product, position);
             }
         } else if (holder instanceof SaleItemFooterViewHolder) {
             final SaleItemFooterViewHolder footerViewHolder = (SaleItemFooterViewHolder) holder;
-            if (footerViewHolder.adView != null && helper.isGoogleAdsEnabled()) {
-                CommonUtils.showAdmob(context, footerViewHolder.adView,
-                        context.getResources().getString(R.string.admob_products_id));
+            final SaleItemFooterPlaceholder itemFooterPlaceholder = (SaleItemFooterPlaceholder) product;
+            switch (itemFooterPlaceholder.getViewType()) {
+                case SaleItemFooterPlaceholder.VIEW_TYPE_ADMOB:
+                    if (footerViewHolder.contentView != null && helper.isGoogleAdsEnabled()) {
+                        CommonUtils.showAdmob(context, footerViewHolder.contentView,
+                                context.getResources().getString(R.string.admob_products_id));
+                    }
+                    break;
+                default:
+                    if (footerViewHolder.contentView != null) {
+                        footerViewHolder.contentView.removeAllViews();
+                    }
+                    break;
             }
         }
     }
@@ -221,22 +251,20 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         super.onViewDetachedFromWindow(holder);
     }
 
-    public void updateData(List<SaleItemProduct> saleItems) {
+    public void updateData(ImmutableList<SaleItemProduct> saleItems) {
         updateData(saleItems, false);
     }
 
-    public void updateData(List<SaleItemProduct> saleItems, boolean willEmptyFirst) {
+    public void updateData(ImmutableList<SaleItemProduct> saleItems, boolean willEmptyFirst) {
         if (willEmptyFirst) {
             asyncListDiffer.submitList(null);
         }
         asyncListDiffer.submitList(saleItems);
-        mCurrentItemCount = getItemCount();
     }
 
     @Override
     public int getItemCount() {
-        List<SaleItemProduct> data = asyncListDiffer.getCurrentList();
-        return data.size() + (mIsFooterEnabled && !data.isEmpty() ? 1 : 0);
+        return asyncListDiffer.getCurrentList().size();
     }
 
     public List<SaleItemProduct> getData() {
@@ -249,33 +277,11 @@ public class SaleItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        if (isPositionFooter(position)) {
+        final List<SaleItemProduct> data = asyncListDiffer.getCurrentList();
+        if (data.get(position) instanceof SaleItemFooterPlaceholder) {
             return FOOTER_VIEW;
         }
         return super.getItemViewType(position);
-    }
-
-    private boolean isPositionFooter(int position) {
-        List<SaleItemProduct> data = asyncListDiffer.getCurrentList();
-        return mIsFooterEnabled && !data.isEmpty() && position == getItemCount() - 1;
-    }
-
-    public void reloadCell(int position) {
-        notifyItemChanged(position);
-    }
-
-    public boolean isFooterEnabled() {
-        return mIsFooterEnabled;
-    }
-
-    public void setFooterEnabled(boolean footerEnabled) {
-        List<SaleItemProduct> data = asyncListDiffer.getCurrentList();
-        if (mIsFooterEnabled && !footerEnabled) {
-            notifyItemRemoved(data.size() + 1);
-        } else if (!mIsFooterEnabled && footerEnabled) {
-            notifyItemInserted(data.size());
-        }
-        mIsFooterEnabled = footerEnabled;
     }
 
     public int getContentHeight() {

@@ -94,8 +94,8 @@ public class AccountController extends BaseController implements AccountMvpView,
     @BindView(R.id.account_detail_container)
     ViewGroup mAccountDetailContainer;
 
-    @BindView(R.id.adView_banner)
-    View mAdView;
+    @BindView(R.id.footer_content_container)
+    ViewGroup mAdView;
 
     @BindView(R.id.rl_footer)
     RelativeLayout mAdFooter;

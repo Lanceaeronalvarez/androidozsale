@@ -10,7 +10,7 @@ import butterknife.ButterKnife;
 
 class FooterViewHolder extends RecyclerView.ViewHolder {
 
-    @BindView(R.id.adView_banner)
+    @BindView(R.id.footer_content_container)
     View adView;
 
     FooterViewHolder(View view) {

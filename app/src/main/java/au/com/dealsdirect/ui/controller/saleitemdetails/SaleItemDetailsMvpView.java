@@ -51,4 +51,6 @@ public interface SaleItemDetailsMvpView extends MvpView {
     void showLeaderboardBanner(GetBannerResponse response);
 
     void showPricingInfoText(String rrpText, Double totalPercentOff, Double originalPrice, String combinedPricingInfoText);
+
+    void showTrendingBrands(GetBannerResponse getBannerResponses);
 }

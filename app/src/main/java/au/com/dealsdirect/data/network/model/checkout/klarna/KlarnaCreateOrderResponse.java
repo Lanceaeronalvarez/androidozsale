@@ -3,6 +3,7 @@ package au.com.dealsdirect.data.network.model.checkout.klarna;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class KlarnaCreateOrderResponse {
@@ -360,7 +361,7 @@ public class KlarnaCreateOrderResponse {
 
             @SerializedName("Price")
             @Expose
-            private int price;
+            private BigDecimal price;
 
             @SerializedName("Quantity")
             @Expose
@@ -382,7 +383,7 @@ public class KlarnaCreateOrderResponse {
                 return sizeName;
             }
 
-            public int getPrice() {
+            public BigDecimal getPrice() {
                 return price;
             }
 

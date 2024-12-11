@@ -1073,6 +1073,31 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/controller_product_details_trending_brands_container"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_small"
+                                android:layout_marginBottom="@dimen/margin_small"
+                                android:background="@color/white"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    fontPath="@string/font_app_bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/margin_small"
+                                    android:paddingTop="@dimen/margin_small"
+                                    android:paddingRight="@dimen/margin_small"
+                                    android:paddingBottom="@dimen/margin_small"
+                                    android:text="@string/trending_brands"
+                                    android:textAllCaps="true"
+                                    android:textColor="@color/text_extra_dark"
+                                    android:textSize="@dimen/text_size_caption1" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:id="@+id/controller_product_details_recently_viewed_container"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

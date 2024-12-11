@@ -57,7 +57,7 @@
             android:background="@color/white"
             android:layout_alignParentBottom="true">
 
-            <include layout="@layout/footer_ads" />
+            <include layout="@layout/footer_container" />
 
         </RelativeLayout>
     </RelativeLayout>

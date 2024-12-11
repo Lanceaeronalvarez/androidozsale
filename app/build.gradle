@@ -64,8 +64,8 @@ android {
 
     productFlavors {
         buyinviteRC {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "au.com.buyinvite.bi"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -93,8 +93,8 @@ android {
         }
 
         buyinviteTest {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "au.com.buyinvite.bi.test"
 
             buildConfigField "String", "APP_NAME", "\"buyinvite\""
@@ -117,8 +117,8 @@ android {
         }
 
         dealsDirectRC {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "au.com.dealsdirect"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -147,8 +147,8 @@ android {
         }
 
         dealsDirectTest {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "au.com.dealsdirect.test"
 
             buildConfigField "String", "APP_NAME", "\"dealsdirect\""
@@ -171,8 +171,8 @@ android {
         }
 
         ozsaleRC {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "au.com.ozsale"
 
             buildConfigField "String", "APP_NAME", "\"ozsale\""
@@ -201,8 +201,8 @@ android {
         }
 
         ozsaleTest {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "au.com.ozsale.test"
 
             ext.appName = "OZSALE Test"
@@ -230,8 +230,8 @@ android {
         }
 
         singsaleRC {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "sg.com.singsale"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -260,8 +260,8 @@ android {
         }
 
         singsaleTest {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "sg.com.singsale.test"
 
             buildConfigField "String", "APP_NAME", "\"singsale\""
@@ -284,8 +284,8 @@ android {
         }
 
         nzsaleRC {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "nz.co.nzsale"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -314,8 +314,8 @@ android {
         }
 
         nzsaleTest {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "nz.co.nzsale.test"
 
             buildConfigField "String", "APP_NAME", "\"nzsale\""
@@ -339,8 +339,8 @@ android {
         }
 
         mysaleRC {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "my.mysale.mysale"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -368,8 +368,8 @@ android {
         }
 
         mysaleTest {
-            versionCode 507
-            versionName "8.11.3"
+            versionCode 509
+            versionName "8.12.0"
             applicationId "my.mysale.mysaleTest"
 
             buildConfigField "String", "APP_NAME", "\"mysale\""
@@ -501,6 +501,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.2.0'
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.2.0'
+    implementation 'androidx.activity:activity:1.9.3'
 
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
 
@@ -547,7 +548,8 @@ dependencies {
 
     // conductor
     implementation "com.bluelinelabs:conductor:$rootProject.conductorVersion"
-    implementation "com.bluelinelabs:conductor-support:$rootProject.conductorVersion"
+    implementation "com.bluelinelabs:conductor-androidx-transition:$rootProject.conductorVersion"
+    implementation "com.bluelinelabs:conductor-viewpager:$rootProject.conductorVersion"
 
     // paginate
     implementation "com.github.markomilos:paginate:$rootProject.paginateVersion"
@@ -638,7 +640,7 @@ dependencies {
     implementation "com.google.guava:guava:$rootProject.guavaVersion"
 
     // klarna
-    implementation 'com.klarna.mobile:sdk:2.6.18'
+    implementation 'com.klarna.mobile:sdk:2.6.20'
 //    implementation 'com.klarna.checkout:sdk:1.6.15'
 
     implementation project(path: ':genie-utility')

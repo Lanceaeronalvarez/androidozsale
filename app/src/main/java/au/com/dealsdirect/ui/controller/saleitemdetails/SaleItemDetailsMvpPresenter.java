@@ -1,5 +1,6 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
+import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
 import au.com.dealsdirect.data.network.model.saleitemdetails.SaleItemDetails;
@@ -72,4 +73,6 @@ public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPrese
     void loadLeaderboardBanner();
 
     void getPricingInfoText(String seoIdentifier, String saleId);
+
+    void loadTrendingBrands(GetBannerRequest request);
 }

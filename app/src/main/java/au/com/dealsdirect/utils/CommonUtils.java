@@ -28,6 +28,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -353,5 +354,9 @@ public final class CommonUtils {
 
     public static <T> List<T> initArrayListWithCopiesOfObject(int number, T object) {
         return new ArrayList<>(Collections.nCopies(number, object));
+    }
+
+    public static <T> ImmutableList<T> initImmutableListWithCopiesOfObject(int number, T object) {
+        return ImmutableList.copyOf(Collections.nCopies(number, object));
     }
 }

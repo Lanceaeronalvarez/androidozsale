@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background_default"
     android:orientation="vertical"
     tools:ignore="MissingPrefix">
 
     <include layout="@layout/partial_toolbar_arrow" />
 
-    <include
-        layout="@layout/partial_checkout_empty" />
+    <include layout="@layout/partial_checkout_empty" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/checkout_scrollview"
@@ -23,8 +22,8 @@
             android:id="@+id/controller_checkout_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:descendantFocusability="blocksDescendants"
             android:background="@android:color/transparent"
+            android:descendantFocusability="blocksDescendants"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -32,7 +31,7 @@
                 android:id="@+id/controller_checkout_recyclerview_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <include layout="@layout/partial_checkout_address" />
 
@@ -57,8 +56,8 @@
                 fontPath="@string/font_app_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_default_half"
                 android:layout_marginTop="@dimen/padding_default_half"
+                android:layout_marginBottom="@dimen/padding_default_half"
                 android:paddingStart="@dimen/padding_default"
                 android:paddingEnd="@dimen/padding_default"
                 android:text="@string/payment_options"
@@ -73,7 +72,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_40"/>
+                android:layout_height="@dimen/margin_40" />
 
         </LinearLayout>
 

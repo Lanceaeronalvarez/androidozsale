@@ -63,6 +63,9 @@ public class SaleItemDetails extends SaleItemProduct {
     @SerializedName("buyBoxGroup")
     @Expose
     private List<BuyBoxItem> buyBoxItem;
+    @SerializedName("taxonomy")
+    @Expose
+    private List<Category> taxonomy;
 
     public String getPersonalisation() {
         return personalisation;
@@ -134,6 +137,10 @@ public class SaleItemDetails extends SaleItemProduct {
 
     public List<BuyBoxItem> getBuyBoxGroup() {
         return buyBoxItem;
+    }
+
+    public List<Category> getTaxonomy() {
+        return taxonomy;
     }
 
     public static class BuyBoxItem {
@@ -252,6 +259,24 @@ public class SaleItemDetails extends SaleItemProduct {
 
         public String getShippingText() {
             return shippingText;
+        }
+    }
+
+    public static class Category {
+        @SerializedName("id")
+        @Expose
+        private String id;
+
+        @SerializedName("category")
+        @Expose
+        private String category;
+
+        public String getId() {
+            return id;
+        }
+
+        public String getCategory() {
+            return category;
         }
     }
 }

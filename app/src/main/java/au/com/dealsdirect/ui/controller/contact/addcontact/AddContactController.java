@@ -1,9 +1,7 @@
 package au.com.dealsdirect.ui.controller.contact.addcontact;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
@@ -18,8 +16,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -55,7 +54,6 @@ import au.com.dealsdirect.ui.controller.contact.listener.ContactSuggestionsClick
 import au.com.dealsdirect.ui.controller.contact.selectorder.ContactSelectOrderController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactHistoryController;
 import au.com.dealsdirect.ui.controller.contact.viewcontacthistory.ViewContactsAddImageAdapter;
-import au.com.dealsdirect.ui.controller.contact.viewcontacts.ViewContactsMvpView;
 import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.ui.controller.orders.orderdetails.OrderDetailsController;
 import au.com.dealsdirect.ui.controller.orders.tracking.OrderTrackingClickListener;
@@ -75,12 +73,6 @@ import au.com.dealsdirect.utils.module.ControllerFactory;
 import au.com.dealsdirect.utils.module.GateKeeper;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static android.app.Activity.RESULT_OK;
-
-/**
- * dp Created by Admin on 6/20/17.
- */
 
 public class AddContactController extends BaseController
         implements AddContactMvpView,
@@ -139,15 +131,13 @@ public class AddContactController extends BaseController
     private boolean mIsInvoiceRequired = true;
     private String mPresetMessage = "";
 
-    private ViewContactsMvpView mViewContactsMvpView;
     private boolean mHasSavedInstance = false;
     private ViewContactsAddImageAdapter mImageAdapter;
-    private ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
-    private LinearLayoutManager mLayoutManager;
+    private final ArrayList<ImageUtils.ImageLink> mImageUriArray = new ArrayList<>();
     private String mMessageId = "";
     private int mNumber = -1;
-    private HashMap<Integer, File> mImageFileHashMap = new HashMap<>();
-    private ArrayList<SetAttachmentForContactRequest.Item> itemsList = new ArrayList<>();
+    private final HashMap<Integer, File> mImageFileHashMap = new HashMap<>();
+    private final ArrayList<SetAttachmentForContactRequest.Item> itemsList = new ArrayList<>();
     ImageUploadUtil.UploadFileToServer uploadFileToServer;
 
     private ContactSuggestionsAdapter contactSuggestionsAdapter = null;
@@ -312,11 +302,6 @@ public class AddContactController extends BaseController
         View view = inflater.inflate(R.layout.controller_add_contact, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
-        if (mHasSavedInstance) {
-            mViewContactsMvpView = mActivity.getContactsController();
-        } else {
-            mViewContactsMvpView = ((ViewContactsMvpView) mActivity.getCurrentRouter().getControllerWithTag(ViewContactsMvpView.TAG));
-        }
         return view;
     }
 
@@ -349,9 +334,9 @@ public class AddContactController extends BaseController
 
         mImageAdapter = new ViewContactsAddImageAdapter(mActivity, this,
                 mImageUriArray);
-        mLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
+        LinearLayoutManager imageLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
         mImageRecyclerView.setAdapter(mImageAdapter);
-        mImageRecyclerView.setLayoutManager(mLayoutManager);
+        mImageRecyclerView.setLayoutManager(imageLayoutManager);
     }
 
     private void setupFields() {
@@ -462,7 +447,7 @@ public class AddContactController extends BaseController
                 StringUtils.isNumeric(createContactResponse)) {
             mContactNumber = Integer.parseInt(createContactResponse);
 
-            if (mImageUriArray.size() != 0) {
+            if (!mImageUriArray.isEmpty()) {
                 GetContactHistoryRequest getContactHistoryRequest = new GetContactHistoryRequest();
                 getContactHistoryRequest.setNumber(mContactNumber);
                 mPresenter.loadContactHistory(getContactHistoryRequest);
@@ -511,9 +496,9 @@ public class AddContactController extends BaseController
                 Uri uri = Uri.parse(mImageUriArray.get(i).getLink());
                 Bitmap bitmap;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getActivity().getContentResolver(), uri));
+                    bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(mActivity.getContentResolver(), uri));
                 } else {
-                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                    bitmap = MediaStore.Images.Media.getBitmap(mActivity.getContentResolver(), uri);
                 }
                 addItemFromLink("", i, bitmap);
             } catch (IOException e) {
@@ -648,8 +633,10 @@ public class AddContactController extends BaseController
             }
         }
 
-        contactSuggestionsAdapter.setTemplates(contactSubjectTemplatesResponse.getSuggestions());
-        contactSuggestionsAdapter.notifyDataSetChanged();
+        if (contactSuggestionsAdapter != null) {
+            contactSuggestionsAdapter.setTemplates(contactSubjectTemplatesResponse.getSuggestions());
+            contactSuggestionsAdapter.notifyDataSetChanged();
+        }
         mContactSuggestions.setVisibility(View.VISIBLE);
     }
 
@@ -681,24 +668,32 @@ public class AddContactController extends BaseController
 
     @Override
     public void getImageFromDirectory(boolean uploadImage) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ActivityCompat.checkSelfPermission(mActivity,
-                Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mActivity,
-                    new String[]{
-                            Manifest.permission.READ_MEDIA_IMAGES},
-                    1);
-        } else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && ActivityCompat.checkSelfPermission(mActivity,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    AppConstants.REQUEST_CODE_PERMISSION);
-        }else {
-            Intent cameraIntent = new Intent(Intent.ACTION_PICK);
-            cameraIntent.setType("image/*");
-            if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                startActivityForResult(cameraIntent, AppConstants.REQUEST_CODE_FOR_SUCCESS);
-            }
+        final ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                registerActivityResultLauncher(TAG, new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    if (uri == null) {
+                        return;
+                    }
+
+                    ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
+                    imageLinks.setIsURL(false);
+                    imageLinks.setLink(uri.toString());
+
+                    mImageUriArray.add(0, imageLinks);
+
+                    ViewContactsAddImageAdapter adapter = (ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter();
+                    if (adapter != null) {
+                        adapter.addItem();
+                    }
+
+                    mImageRecyclerView.setVisibility(View.VISIBLE);
+                });
+
+        if (pickMedia == null) {
+            return;
         }
+        pickMedia.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build());
     }
 
     @Override
@@ -711,31 +706,14 @@ public class AddContactController extends BaseController
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK || resultCode == AppConstants.REQUEST_CODE_FOR_SUCCESS) {
-            Uri chosenImageUri = data.getData();
-
-            ImageUtils.ImageLink imageLinks = new ImageUtils.ImageLink();
-            imageLinks.setIsURL(false);
-            imageLinks.setLink(String.valueOf(chosenImageUri));
-
-            mImageUriArray.add(0, imageLinks);
-
-            ((ViewContactsAddImageAdapter) Objects.requireNonNull(mImageRecyclerView.getAdapter())).addItem();
-
-            mImageRecyclerView.setVisibility(View.VISIBLE);
-
-        }
-    }
-
-    @Override
     public void removeImage(Bitmap image, int position, boolean uploadImage, boolean isAddImageAdapter) {
-        ViewContactsAddImageAdapter adapter = ((ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter());
         mImageUriArray.remove(position);
-        adapter.removeItem(position);
+        ViewContactsAddImageAdapter adapter = ((ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter());
+        if (adapter != null) {
+            adapter.removeItem(position);
+        }
 
-        if (mImageUriArray.size() == 0) {
+        if (mImageUriArray.isEmpty()) {
             mImageRecyclerView.setVisibility(View.GONE);
         }
     }
@@ -766,7 +744,6 @@ public class AddContactController extends BaseController
         if (imageUrl == null) {
             onError("Image may not be uploaded.");
         }
-
         getImageUrl(ImageUploadUtil.convertStringUrltoJSON(imageUrl));
 
         if (mImageRecyclerView != null) {
@@ -774,7 +751,11 @@ public class AddContactController extends BaseController
                     mImageRecyclerView.findViewHolderForLayoutPosition(imagePosition);
 
             if (vh != null) {
-                ((ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter()).hideVisibility(vh);
+                ViewContactsAddImageAdapter adapter = (ViewContactsAddImageAdapter) mImageRecyclerView.getAdapter();
+                if (adapter != null) {
+                    adapter.hideVisibility(vh);
+                }
+
             }
         }
 
