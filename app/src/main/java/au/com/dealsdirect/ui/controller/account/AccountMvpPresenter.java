@@ -15,8 +15,6 @@ import au.com.dealsdirect.ui.controller.account.model.AccountOption;
 
 public interface AccountMvpPresenter <V extends MvpView> extends MvpPresenter<V> {
 
-    void loadAccountItems(List<AccountItem> accountItems);
-
     void onAccountItemClick(Context context, AccountOption option);
 
     void setMultiCountry(boolean isMultiCountry);

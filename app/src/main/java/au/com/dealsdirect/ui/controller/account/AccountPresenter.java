@@ -10,7 +10,6 @@ import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
-import au.com.dealsdirect.ui.controller.account.model.AccountItem;
 import au.com.dealsdirect.ui.controller.account.model.AccountOption;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
@@ -120,10 +119,4 @@ public class AccountPresenter<V extends AccountMvpView> extends BasePresenter<V>
     public boolean willScreenChange(Context context, String option) {
         return true;
     }
-
-    @Override
-    public void loadAccountItems(List<AccountItem> accountItems) {
-        getMvpView().showAccountItems(accountItems);
-    }
-
 }
