@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.checkout.checkouthost;
 
+import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,11 +13,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,11 +35,16 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliverySe
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.events.WishlistEventRequest;
+import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
+import au.com.dealsdirect.data.network.model.saleitems.SaleItemProduct;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
+import au.com.dealsdirect.service.datacollection.enums.EventTypeId;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.BaseController;
+import au.com.dealsdirect.ui.controller.bestsellers.BestSellersWidgetHelper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutController;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper.MappedShipment;
@@ -43,6 +52,7 @@ import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutListener;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpPresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutMvpView;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutOrderAdapter;
+import au.com.dealsdirect.ui.controller.saleitemdetails.HorizontalScrollingItemsAdapter;
 import au.com.dealsdirect.ui.controller.saleitemdetails.SaleItemDetailsController;
 import au.com.dealsdirect.ui.custom.BottomPopupView;
 import au.com.dealsdirect.ui.custom.BottomPopupWebViewContentAdapter;
@@ -52,6 +62,8 @@ import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.CommonUtils;
+import au.com.dealsdirect.utils.ScreenUtils;
+import au.com.dealsdirect.utils.ScrollingImageHorizontal.HorizontalRecyclerItemsViewHolder;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Optional;
@@ -65,10 +77,12 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @Inject
     CheckoutMvpPresenter<CheckoutMvpView> mPresenter;
 
+    @BindView(R.id.controller_checkout_host_left_container)
+    ViewGroup mLeftContainer;
+    @BindView(R.id.controller_checkout_host_empty_container)
+    ViewGroup mEmptyContainer;
     @BindView(R.id.checkout_detail_container)
     ViewGroup mCheckoutDetailContainer;
-    @BindView(R.id.no_cart_items_layout)
-    RelativeLayout mNoCartItemsLayout;
     @BindView(R.id.controller_checkout_container)
     ViewGroup mCheckoutContainer;
 
@@ -86,6 +100,12 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     @BindView(R.id.controller_checkout_recyclerview_items)
     RecyclerView mRecyclerView;
 
+    @Nullable
+    @BindView(R.id.partial_checkout_empty_widget_area)
+    ViewGroup mWidgetArea;
+
+    private ViewGroup checkoutHostView = null;
+
     private Router mCheckoutDetailRouter;
     private CheckoutMvpView mCheckoutDetailView;
     private CheckoutOrderAdapter mAdapter;
@@ -96,6 +116,10 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     private boolean mHasSavedInstance = false;
 
     private BottomPopupView currentBottomPopupView = null;
+
+    private int lastBestSellerItemPosition = -1;
+    private HorizontalRecyclerItemsViewHolder bestSellersViewHolder = null;
+    private BestSellersWidgetHelper bestSellersWidgetHelper = null;
 
 
     public static CheckoutHostController newInstance() {
@@ -113,6 +137,10 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
         View view = inflater.inflate(R.layout.controller_checkout_host, container, false);
         getControllerComponent().inject(this);
         mPresenter.onAttach(this);
+
+        if (view instanceof ViewGroup) {
+            checkoutHostView = (ViewGroup) view;
+        }
 
         return view;
     }
@@ -234,12 +262,17 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 
     @Override
     public void showCartDetailsOnHost(List<MappedShipment> items) {
-        if (items == null) return;
+        if (items == null || items.isEmpty()) {
+            showNoCartItemsLayout();
+            return;
+        }
         mItemList = items;
 
         refreshItemList(hasDeliveryAddress);
-        mNoCartItemsLayout.setVisibility(View.GONE);
-        mCheckoutContainer.setVisibility(View.VISIBLE);
+
+        mEmptyContainer.setVisibility(View.GONE);
+        mLeftContainer.setVisibility(View.VISIBLE);
+        mCheckoutDetailContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -410,15 +443,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public CheckoutMvpPresenter getPresenter() {
-        if (mCheckoutDetailView != null) {
-            return mCheckoutDetailView.getPresenter();
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     public boolean isOurPaySelectDeliveryMethod() {
         if (mCheckoutDetailView != null) {
             return mCheckoutDetailView.isOurPaySelectDeliveryMethod();
@@ -438,8 +462,9 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
 //    }
 
     private void showNoCartItemsLayout() {
-        mNoCartItemsLayout.setVisibility(View.VISIBLE);
-        mCheckoutContainer.setVisibility(View.GONE);
+        mEmptyContainer.setVisibility(View.VISIBLE);
+        mLeftContainer.setVisibility(View.GONE);
+        mCheckoutDetailContainer.setVisibility(View.GONE);
     }
 
     @Optional
@@ -499,13 +524,6 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     @Override
-    public void updateCartWithValue(Value value) {
-        if (mCheckoutDetailView != null) {
-            mCheckoutDetailView.updateCartWithValue(value);
-        }
-    }
-
-    @Override
     public void updateCartWithMappedValues(CheckoutDetailsMapper mappedValues) {
         if (mCheckoutDetailView != null) {
             mCheckoutDetailView.updateCartWithMappedValues(mappedValues);
@@ -521,11 +539,14 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
     }
 
     private void showBottomPopupView(String textContent) {
+        if (checkoutHostView == null) {
+            return;
+        }
         if (currentBottomPopupView != null) {
             currentBottomPopupView.dismiss(true);
         }
         final BottomPopupWebViewContentAdapter adapter = new BottomPopupWebViewContentAdapter();
-        currentBottomPopupView = new BottomPopupView(mCheckoutContainer, adapter);
+        currentBottomPopupView = new BottomPopupView(checkoutHostView, adapter);
 
         adapter.setWebViewContent(textContent);
         adapter.setOnCloseButtonClickListener(() -> currentBottomPopupView.dismiss(true));
@@ -536,5 +557,106 @@ public class CheckoutHostController extends BaseController implements CheckoutHo
             return true;
         });
         currentBottomPopupView.show(true);
+    }
+
+    @Override
+    public void showBestSellers(List<GetBestSellerResponse> getBestSellerResponses) {
+        if (mWidgetArea == null) {
+            return;
+        }
+
+        final List<SaleItemProduct> items = new ArrayList<>(getBestSellerResponses);
+
+        if (items.isEmpty()) {
+            if (bestSellersViewHolder != null && mWidgetArea.indexOfChild(bestSellersViewHolder.itemView) < 0) {
+                mWidgetArea.removeView(bestSellersViewHolder.itemView);
+            }
+            return;
+        }
+
+        HorizontalScrollingItemsAdapter adapter = new HorizontalScrollingItemsAdapter(items, true, false, true);
+        adapter.setOnItemTappedListener((item, position, size) -> {
+            lastBestSellerItemPosition = position;
+
+            SaleItemDetailsController.Parameters.FromSaleItemProduct parameters = new SaleItemDetailsController.Parameters.FromSaleItemProduct(item);
+
+            RouterTransaction routerTransaction = RouterTransaction
+                    .with(SaleItemDetailsController.newInstance(parameters));
+
+            routerTransaction = routerTransaction
+                    .pushChangeHandler(new HorizontalChangeHandler())
+                    .popChangeHandler(new HorizontalChangeHandler());
+
+            getRouter().pushController(routerTransaction);
+        });
+
+        adapter.setOnPriceInfoTappedListener(item -> mPresenter.getPricingInfoText(item.getSeoIdentifier()));
+
+        adapter.setWishlistListener(new HorizontalScrollingItemsAdapter.WishlistListener() {
+            @Override
+            public void addToWishlist(SaleItemProduct item) {
+                final String productId = item.getId();
+                CheckoutMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
+                    logWishlistEvent(productId, true);
+                };
+                mPresenter.addProductToWishlist(item.getId(), item.getSeoIdentifier(), "", delayedCallback);
+            }
+
+            @Override
+            public void removeFromWishlist(SaleItemProduct item) {
+                final String productId = item.getId();
+                CheckoutMvpPresenter.WishlistDelayedCallback delayedCallback = () -> {
+                    logWishlistEvent(productId, false);
+                };
+                mPresenter.removeProductFromWishlist(item.getId(), delayedCallback);
+            }
+
+            @Override
+            public boolean isProductInWishlist(SaleItemProduct item) {
+                return mPresenter.isProductInWishlist(item.getId());
+            }
+        });
+
+        bestSellersWidgetHelper = new BestSellersWidgetHelper(adapter, mActivity, mPresenter.isTablet());
+        final int orientation = ScreenUtils.getOrientation(mActivity);
+        if (bestSellersViewHolder == null) {
+            bestSellersViewHolder = bestSellersWidgetHelper.createViewHolder(mWidgetArea, orientation);
+        }
+        if (mWidgetArea.indexOfChild(bestSellersViewHolder.itemView) < 0) {
+            mWidgetArea.addView(bestSellersViewHolder.itemView);
+        }
+        bestSellersViewHolder.onViewBound();
+        bestSellersWidgetHelper.onBindViewHolder(bestSellersViewHolder, orientation);
+    }
+
+    @Override
+    public void showPricingInfoText(String rrpText, Double totalPercentOff, Double originalPrice, String combinedPricingInfoText) {
+        if (mActivity.getSupplierOriginalPriceInfoHelper() != null) {
+            showBottomPopupView(
+                    mActivity.getSupplierOriginalPriceInfoHelper()
+                            .getOriginalPriceInfoWebViewContent(rrpText, totalPercentOff, originalPrice));
+        } else {
+            showBottomPopupView(combinedPricingInfoText);
+        }
+    }
+
+    private void logWishlistEvent(String productId, boolean liked) {
+        WishlistEventRequest request = new WishlistEventRequest();
+        request.setEventType(EventTypeId.EVENT_WISHLIST);
+
+        WishlistEventRequest.WishListInfo wishlistInfo = new WishlistEventRequest.WishListInfo();
+        request.setWishlistInfo(wishlistInfo);
+
+        wishlistInfo.setOperation(liked ? 1 : 0);
+        wishlistInfo.setProductId(productId);
+        wishlistInfo.setReferrer(PRODUCT_PAGE);
+        wishlistInfo.setProductsQuantity(mPresenter.wishlistCount());
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(DataCollector.EventParameters.WISHLIST_EVENT_REQUEST, request);
+        parameters.put(DataCollector.EventParameters.SCREEN_NAME, TAG);
+        parameters.put(DataCollector.EventParameters.APP_CONTEXT, mActivity);
+
+        DataCollector.logEvent(Events.WishlistEvent, parameters);
     }
 }

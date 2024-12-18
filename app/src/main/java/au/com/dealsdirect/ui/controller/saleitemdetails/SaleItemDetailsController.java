@@ -3297,9 +3297,9 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (adapter != null) {
             if (trendingBrandsViewHolder == null) {
                 trendingBrandsViewHolder = trendingBrandsWidgetHelper.createViewHolder(mTrendingBrandsContainer);
-                if (mTrendingBrandsContainer.indexOfChild(trendingBrandsViewHolder.itemView) < 0) {
-                    mTrendingBrandsContainer.addView(trendingBrandsViewHolder.itemView);
-                }
+            }
+            if (mTrendingBrandsContainer.indexOfChild(trendingBrandsViewHolder.itemView) < 0) {
+                mTrendingBrandsContainer.addView(trendingBrandsViewHolder.itemView);
             }
 
             trendingBrandsViewHolder.onViewBound();
