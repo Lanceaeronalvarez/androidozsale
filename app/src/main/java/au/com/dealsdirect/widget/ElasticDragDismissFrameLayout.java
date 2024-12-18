@@ -12,10 +12,6 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * dp Created by Admin on 6/15/17.
- */
-
 public class ElasticDragDismissFrameLayout extends FrameLayout {
 
     public static abstract class ElasticDragDismissCallback {
@@ -60,12 +56,16 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
     private float flingThreshold = 1;
 
     // state
-    private float oldX = 0;
-    private float oldY = 0;
-    private float dX = 0;
-    private float dY = 0;
-    private float speedX = 0; //rawX per millisecond
-    private float speedY = 0; //rawY per millisecond
+    private float startX = 0;
+    private float startY = 0;
+    private float prevX = 0;
+    private float prevY = 0;
+    private float touchPrevX = 0;
+    private float touchPrevY = 0;
+    private float touchPivotX = 0;
+    private float touchPivotY = 0;
+    private float touchSpeedX = 0; //rawX per millisecond
+    private float touchSpeedY = 0; //rawY per millisecond
     // lower is smoother/slower
     // at 1.0, it snaps instantly
     // at 0.0, it doesn't move
@@ -153,19 +153,19 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
     private void calculateTouchVelocity(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                speedX = 0;
-                speedY = 0;
-                oldX = event.getRawX();
-                oldY = event.getRawY();
+                touchSpeedX = 0;
+                touchSpeedY = 0;
+                touchPrevX = event.getRawX();
+                touchPrevY = event.getRawY();
                 timeElapsedForSpeedUpdate = 0;
                 isGestureDirectionChanged = false;
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (timeElapsedForSpeedUpdate > timeElapsedToSpeedUpdate) {
-                    speedX = (event.getRawX() - oldX) / (float) timeElapsedToSpeedUpdate;
-                    speedY = (event.getRawY() - oldY) / (float) timeElapsedToSpeedUpdate;
-                    oldX = event.getRawX();
-                    oldY = event.getRawY();
+                    touchSpeedX = (event.getRawX() - touchPrevX) / (float) timeElapsedToSpeedUpdate;
+                    touchSpeedY = (event.getRawY() - touchPrevY) / (float) timeElapsedToSpeedUpdate;
+                    touchPrevX = event.getRawX();
+                    touchPrevY = event.getRawY();
                     timeElapsedForSpeedUpdate -= timeElapsedToSpeedUpdate;
                 }
                 break;
@@ -220,8 +220,14 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
     private void setupTouchPivotPoint(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                dX = getXTransformed() - event.getRawX();
-                dY = this.getY() - event.getRawY();
+                touchPivotX = event.getRawX();
+                touchPivotY = event.getRawY();
+                startX = getX();
+                startY = getY();
+                setPivotX(event.getX());
+                setPivotY(event.getY());
+                prevX = getX();
+                prevY = getY();
                 break;
         }
     }
@@ -254,15 +260,15 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
     private boolean shouldHorizontalDragBeActivated(MotionEvent event) {
         return isHorizontalDismissEnabled &&
                 event.getRawX() < dragActivationAreaWidth &&
-                speedX > dragHorizontalThreshold &&
-                (Math.abs(speedY) < dragVerticalThreshold || isDragging);
+                touchSpeedX > dragHorizontalThreshold &&
+                (Math.abs(touchSpeedY) < dragVerticalThreshold || isDragging);
     }
 
     private boolean shouldVerticalDragBeActivated(MotionEvent event) {
         return isVerticalDismissEnabled &&
                 event.getRawY() < dragActivationAreaHeight &&
-                speedY > dragVerticalThreshold &&
-                (Math.abs(speedX) < dragHorizontalThreshold || isDragging)
+                touchSpeedY > dragVerticalThreshold &&
+                (Math.abs(touchSpeedX) < dragHorizontalThreshold || isDragging)
                 && isDirectionAlmostVerticalDown(verticalDirectionThreshold) &&
                 !isGestureDirectionChanged;
     }
@@ -283,22 +289,24 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
     }
 
     private double getDirection() {
-        return Math.toDegrees(Math.atan2(speedY, speedX));
+        return Math.toDegrees(Math.atan2(touchSpeedY, touchSpeedX));
     }
 
     private float getDistanceFromInitialTouchPoint(MotionEvent event) {
-        return (float) Math.hypot(event.getRawX() + dX, Math.max(0, event.getRawY() + dY));
+        final float x = event.getRawX();
+        final float y = event.getRawY();
+        return (float) Math.hypot(x - touchPivotX, y - touchPivotY);
     }
 
     private float getScaleWithDistance(float distance) {
         float t = Math.min(distance / dragDismissDistance, 1f);
-        return 1f * (1 - t) + dragDismissScale * t;
+        return lerp(1f, dragDismissScale, t);
     }
 
     private boolean processFlingGesture(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP &&
                 isVerticalDismissEnabled &&
-                speedY > flingThreshold) {
+                touchSpeedY > flingThreshold) {
             dispatchDismissCallback();
             return true;
         }
@@ -306,17 +314,17 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
     }
 
     private void processDraggingGesture(MotionEvent event) {
-        float distance = getDistanceFromInitialTouchPoint(event);
-        float scale = getScaleWithDistance(distance);
+        final float distance = getDistanceFromInitialTouchPoint(event);
+        final float scale = getScaleWithDistance(distance);
         switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
                 isDragging = true;
-                float centerX = (-dX / this.getWidth());
-                float centerY = (-dY / this.getHeight());
-                float newPosX = event.getRawX() + dX + this.getWidth() / 2 * (-1 + scale + centerX * 2 * (1 - scale));
-                float newPosY = event.getRawY() + dY + this.getHeight() / 2 * (-1 + scale + centerY * 2 * (1 - scale));
-                setX(transformX(lerp(getXTransformed(), newPosX, dragSmoothness)));
-                setY(lerp(getY(), newPosY, dragSmoothness));
+                final float newPosX = startX + (event.getRawX() - touchPivotX);
+                final float newPosY = startY + (event.getRawY() - touchPivotY);
+                setX(lerp(prevX, newPosX, dragSmoothness));
+                setY(lerp(prevY, newPosY, dragSmoothness));
+                prevX = getX();
+                prevY = getY();
                 setScaleX(scale);
                 setScaleY(scale);
                 dispatchDragCallback(scale, distance,
@@ -325,8 +333,8 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
         }
     }
 
-    private float lerp(float oldPos, float newPos, float t) {
-        return oldPos * (1 - t) + newPos * t;
+    private float lerp(float a, float b, float t) {
+        return a * (1 - t) + b * t;
     }
 
     private void processEndDragGesture(MotionEvent event) {
@@ -424,7 +432,7 @@ public class ElasticDragDismissFrameLayout extends FrameLayout {
     }
 
     public void removeListener(ElasticDragDismissCallback listener) {
-        if (callbacks != null && callbacks.size() > 0) {
+        if (callbacks != null && !callbacks.isEmpty()) {
             callbacks.remove(listener);
         }
     }
