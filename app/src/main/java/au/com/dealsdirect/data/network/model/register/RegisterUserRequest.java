@@ -24,7 +24,7 @@ public class RegisterUserRequest {
     String captchaResponse;
 
     // 2 for apps https://apacsale.atlassian.net/wiki/spaces/CX/pages/708641008/V3.26
-    int clientID = 2;
+    int clientID = 1;
 
     public RegisterUserRequest(
             String languageID, String countryID, int clientType,

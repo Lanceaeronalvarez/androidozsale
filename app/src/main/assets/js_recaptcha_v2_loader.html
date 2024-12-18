@@ -1,0 +1,23 @@
+<html>
+<head>
+    <script>
+        var onSubmit = function(token) {
+            console.log('token received');
+            console.log(token);
+            CALLBACK_GOES_HERE
+        };
+
+        var onloadCallback = function() {
+            console.log('begin');
+            grecaptcha.render('submit', {
+                'sitekey' : 'RECAPTCHA_SITE_KEY',
+                'callback' : onSubmit
+            });
+        };
+    </script>
+</head>
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"></script>
+<body>
+<div id="submit"></div>
+</body>
+</html>

@@ -19,7 +19,7 @@ public class LoginEmail {
         private String captchaResponse;
 
         // 2 for apps https://apacsale.atlassian.net/wiki/spaces/CX/pages/708641008/V3.26
-        private int clientID = 2;
+        private int clientID = 1;
 
         public RequestValue(String userName, String password, String countryID, String languageID, String captchaResponse) {
             this.userName = userName;

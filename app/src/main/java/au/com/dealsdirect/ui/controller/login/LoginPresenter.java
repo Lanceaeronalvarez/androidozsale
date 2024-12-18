@@ -3,18 +3,14 @@ package au.com.dealsdirect.ui.controller.login;
  * Created by CodeineBot on 6/15/17.
  */
 
-import android.content.Context;
-import androidx.annotation.NonNull;
-
 import com.androidnetworking.error.ANError;
-import com.google.android.gms.safetynet.SafetyNet;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.data.DataManager;
+import au.com.dealsdirect.data.network.AppApiCallback;
 import au.com.dealsdirect.data.network.model.login.LoginEmail;
 import au.com.dealsdirect.ui.base.AuthenticationBasePresenter;
-import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -30,62 +26,45 @@ public class LoginPresenter<V extends LoginMvpView> extends AuthenticationBasePr
     }
 
     @Override
-    public boolean loginViaEmail(Context context, String username, String password) {
-        SafetyNet.getClient(context)
-                .verifyWithRecaptcha(Settings.getReCaptchaSiteKey())
-                .addOnSuccessListener(recaptchaTokenResponse -> {
-                    String token = recaptchaTokenResponse.getTokenResult();
-                    loginViewEmailWithToken(username, password, token);
-                }).addOnFailureListener(e -> {
-                    if (!isViewAttached()) {
-                        return;
-                    }
-                    getMvpView().showLoginError(e.getMessage(), false);
-                });
-        return true;
-    }
-
-    private void loginViewEmailWithToken(String username, String password, String token) {
+    public void loginViaEmail(String username, String password, String token) {
         if (!isViewAttached()) {
             return;
         }
         getMvpView().showLoginStart();
-        getCompositeDisposable().add(getDataManager()
-                .callLoginViaEmail(
-                        new LoginEmail.RequestValue(
-                                username,
-                                password,
-                                getDataManager().getCountryId(),
-                                getDataManager().getLanguageId(),
-                                token))
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(responseValue -> {
-                    if (!isViewAttached()) {
-                        return;
-                    }
 
-                    if (responseValue.isSuccess()) {
-                        getDataManager().acknowledgeAuth(responseValue.getTicket());
-                        getMvpView().showLoginSuccessful(responseValue.getTicket(), false);
-                    } else {
-                        getMvpView().showLoginError(responseValue.getMessage(), false);
-                    }
-                },
-                        throwable ->
-                        {
-                            if (!isViewAttached()) {
-                                return;
-                            }
+        LoginEmail.RequestValue requestValue = new LoginEmail.RequestValue(
+                username,
+                password,
+                getDataManager().getCountryId(),
+                getDataManager().getLanguageId(),
+                token);
 
-                            getMvpView().hideLoading();
-                            getMvpView().showLoginError(throwable.getMessage(), false);
+        doApiCallForResponse(getDataManager().callLoginViaEmail(requestValue), new AppApiCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                if (!isViewAttached() || !(o instanceof LoginEmail.ResponseValue)) {
+                    return;
+                }
 
-                            // handle load accounts error here
-                            if (throwable instanceof ANError) {
-                                ANError anError = (ANError) throwable;
-                                handleApiError(anError);
-                            }
-                        }));
+                final LoginEmail.ResponseValue responseValue = (LoginEmail.ResponseValue) o;
+
+                if (responseValue.isSuccess()) {
+                    getDataManager().acknowledgeAuth(responseValue.getTicket());
+                    getMvpView().showLoginSuccessful(responseValue.getTicket(), false);
+                } else {
+                    getMvpView().showLoginError(responseValue.getMessage(), false);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (!isViewAttached()) {
+                    return;
+                }
+
+                getMvpView().hideLoading();
+                getMvpView().showLoginError(t.getMessage(), false);
+            }
+        });
     }
 }

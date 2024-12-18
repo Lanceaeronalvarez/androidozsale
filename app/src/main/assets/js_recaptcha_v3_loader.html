@@ -1,0 +1,15 @@
+<html>
+<head>
+    <script>
+        function onLoadCallback() {
+            grecaptcha.ready(function() {
+                grecaptcha.execute('RECAPTCHA_SITE_KEY', {action: 'submit'}).then(function(token) {
+                    CALLBACK_GOES_HERE
+                });
+            });
+        }
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onLoadCallback&render=RECAPTCHA_SITE_KEY"></script>
+</head>
+<body></body>
+</html>

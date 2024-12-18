@@ -35,8 +35,6 @@ public class Settings {
 
     private static Country[] supportedCountries;
 
-    private static String reCaptchaSiteKey;
-
     public static Country getSelectedCountry() {
         return selectedCountry;
     }
@@ -47,14 +45,6 @@ public class Settings {
 
     public static boolean getIsMultiCountry() {
         return supportedCountries.length > 1;
-    }
-
-    public static String getReCaptchaSiteKey() {
-        return reCaptchaSiteKey;
-    }
-
-    public static void setReCaptchaSiteKey(String reCaptchaSiteKey) {
-        Settings.reCaptchaSiteKey = reCaptchaSiteKey;
     }
 
     public static Country[] getSupportedCountries() {
@@ -247,29 +237,17 @@ public class Settings {
         }
 
         if (!getIsMultiCountry()) setCountry(Settings.getDefaultCountry());
-
-        setupReCaptchaSiteKey();
     }
 
     static void populatePackageWithCountries(Country[] countries) {
         supportedCountries = countries;
     }
 
-    static void setupReCaptchaSiteKey() {
-        if (BuildConfig.IS_TEST) {
-            reCaptchaSiteKey = "6LdvI6cUAAAAAIO16n0Sj8nQ4HNX1WEf6m27eRzb";
-        } else {
-            reCaptchaSiteKey = "6LehI6cUAAAAACrjaAGPQLQx1eomvLqrb0S_QxSi";
-        }
-    }
-
-
     // Below is for automation build purposes
 
     public static void main(String[] args) {
 
         load();
-        setupReCaptchaSiteKey();
 
         String country = args[0];
         String appName = args[1];
@@ -287,9 +265,6 @@ public class Settings {
                 break;
             case "PRINT_CURRENCY_CODE":
                 System.out.println(printCurrencyCode(country, appName));
-                break;
-            case "PRINT_RECAPTCHA":
-                System.out.println(reCaptchaSiteKey);
                 break;
         }
     }

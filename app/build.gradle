@@ -90,6 +90,9 @@ android {
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", ""
+
+            ext.reCaptchaSiteKey = "6LdxiZ4UAAAAAGKk5Xzpbps1vHtDy0cfAEbr-88n"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
         buyinviteTest {
@@ -114,6 +117,9 @@ android {
             ext.newRelicAppToken = "AAf4ce8e1466bf9d9b7c3dcfdf7c569defebda9edc"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", ""
+
+            ext.reCaptchaSiteKey = "6Lfch54UAAAAANa6APm8vBBUttkU6mJxX0M1Kti5"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
         dealsDirectRC {
@@ -144,6 +150,8 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", ""
 
+            ext.reCaptchaSiteKey = "6LdxiZ4UAAAAAGKk5Xzpbps1vHtDy0cfAEbr-88n"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
         dealsDirectTest {
@@ -168,6 +176,9 @@ android {
             ext.newRelicAppToken = "AAa9d543732ff39dddc60c9cb9ad8c9cf22297904b"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", ""
+
+            ext.reCaptchaSiteKey = "6Lfch54UAAAAANa6APm8vBBUttkU6mJxX0M1Kti5"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
         ozsaleRC {
@@ -198,6 +209,8 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", "hHjxmc1ZTEOCgJrLGobtlQ"
 
+            ext.reCaptchaSiteKey = "6LdxiZ4UAAAAAGKk5Xzpbps1vHtDy0cfAEbr-88n"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
         ozsaleTest {
@@ -227,6 +240,8 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", "hHjxmc1ZTEOCgJrLGobtlQ"
 
+            ext.reCaptchaSiteKey = "6Lfch54UAAAAANa6APm8vBBUttkU6mJxX0M1Kti5"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
         singsaleRC {
@@ -257,6 +272,8 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", "VK14gfQWa02i5K12OaA5aA"
 
+            ext.reCaptchaSiteKey = "6LdxiZ4UAAAAAGKk5Xzpbps1vHtDy0cfAEbr-88n"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
         singsaleTest {
@@ -281,6 +298,9 @@ android {
             ext.newRelicAppToken = "AA7859bf063d467b13d1118979fb839dec128eb88a"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", "VK14gfQWa02i5K12OaA5aA"
+
+            ext.reCaptchaSiteKey = "6Lfch54UAAAAANa6APm8vBBUttkU6mJxX0M1Kti5"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
         nzsaleRC {
@@ -311,6 +331,8 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", "w95zHeQSyUe2AjkNuGd_BQ"
 
+            ext.reCaptchaSiteKey = "6LdxiZ4UAAAAAGKk5Xzpbps1vHtDy0cfAEbr-88n"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
         nzsaleTest {
@@ -336,6 +358,8 @@ android {
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", "w95zHeQSyUe2AjkNuGd_BQ"
 
+            ext.reCaptchaSiteKey = "6Lfch54UAAAAANa6APm8vBBUttkU6mJxX0M1Kti5"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
         mysaleRC {
@@ -365,6 +389,9 @@ android {
             ext.newRelicAppToken = "AAfb90a146f4b17ba00df83492608b2d7057e99e16"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", ""
+
+            ext.reCaptchaSiteKey = "6LdxiZ4UAAAAAGKk5Xzpbps1vHtDy0cfAEbr-88n"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
         mysaleTest {
@@ -389,6 +416,9 @@ android {
             ext.newRelicAppToken = "AAfb90a146f4b17ba00df83492608b2d7057e99e16"
             resValue "string", "new_relic_app_token", ext.newRelicAppToken
             resValue "string", "gift_card_id", ""
+
+            ext.reCaptchaSiteKey = "6Lfch54UAAAAANa6APm8vBBUttkU6mJxX0M1Kti5"
+            resValue "string", "recaptcha_site_key", ext.reCaptchaSiteKey
         }
 
     }
@@ -628,9 +658,6 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-ads:23.5.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-
-    // reCAPTCHA
-    implementation 'com.google.android.gms:play-services-safetynet:18.1.0'
 
     implementation 'com.stripe:stripe-android:20.23.1'
 
@@ -1033,25 +1060,12 @@ tasks.register('printCurrencyCode') {
 }
 
 tasks.register('printRecaptcha') {
-    android.applicationVariants.configureEach {
-        ApplicationVariant variant ->
-
-            doLast {
-                android.productFlavors.configureEach {
-                    flavor ->
-                        if (flavorName.matches(flavor.name) && buildTypeAssemble.matches(variant.name.capitalize())) {
-                            def buildVariant = flavorName + variant.buildType.name.capitalize()
-                            def compileWithJavac = "compile" + buildVariant.capitalize() + "JavaWithJavac"
-                            def path = project.projectDir.absolutePath + "/build/intermediates/javac/" + buildVariant + "/" + compileWithJavac + "/classes/";
-                            javaexec {
-                                classpath = files(path)
-                                main = "au.com.dealsdirect.ui.controller.main.Settings"
-                                args "", flavorName, "PRINT_RECAPTCHA"
-                            }
-                        }
-
+    doLast {
+        android.productFlavors.configureEach {
+            flavor ->
+                if (flavorName.matches(flavor.name)) {
+                    println flavor.ext.reCaptchaSiteKey
                 }
-
-            }
+        }
     }
 }

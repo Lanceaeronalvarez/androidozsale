@@ -1,12 +1,4 @@
 package au.com.dealsdirect.ui.controller.register;
-/*
- * Created by CodeineBot on 5/15/17.
- */
-
-
-import android.content.Context;
-
-import com.google.android.gms.safetynet.SafetyNet;
 
 import java.util.HashMap;
 
@@ -19,9 +11,7 @@ import au.com.dealsdirect.data.network.model.register.RegisterUserResponse;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
 import au.com.dealsdirect.ui.base.AuthenticationBasePresenter;
-import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppConstants;
-import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -32,29 +22,18 @@ public class RegisterPresenter<V extends RegisterMvpView> extends Authentication
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
-
     @Override
-    public void registerUser(Context context, String firstName, String lastName, String email, String password,
-                             boolean tncAccepted, boolean emailsAccepted) {
-        getMvpView().showLoading(LoadingDialogType.DEFAULT);
-        SafetyNet.getClient(context)
-                .verifyWithRecaptcha(Settings.getReCaptchaSiteKey())
-                .addOnSuccessListener(recaptchaTokenResponse -> {
-                    String token = recaptchaTokenResponse.getTokenResult();
-                    registerUserWithToken(
-                            firstName, lastName,
-                            email, password,
-                            tncAccepted, emailsAccepted,
-                            token);
-                }).addOnFailureListener(e -> {
-            getMvpView().showLoginError(e.getMessage(), false);
-        });
-    }
-
-    private void registerUserWithToken(String firstName, String lastName, String email, String password,
-                             boolean tncAccepted, boolean emailsAccepted, String token) {
-
-        getMvpView().showLoading(LoadingDialogType.DEFAULT);
+    public void registerUser(String firstName,
+                             String lastName,
+                             String email,
+                             String password,
+                             boolean tncAccepted,
+                             boolean emailsAccepted,
+                             String token) {
+        if (!isViewAttached()) {
+            return;
+        }
+//        getMvpView().showLoading(LoadingDialogType.DEFAULT);
         RegisterUserRequest registerUserRequest
                 = new RegisterUserRequest(
                 getDataManager().getLanguageId(),

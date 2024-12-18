@@ -12,6 +12,7 @@
         layout="@layout/partial_toolbar_login_close" />
 
     <RelativeLayout
+        android:id="@+id/register_base_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -58,8 +59,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
                     android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
@@ -93,8 +94,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
@@ -128,8 +129,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
@@ -163,8 +164,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/border_thin"
                     android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
@@ -241,19 +242,19 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/padding_small"
                             app:textToggleLeft="Yes"
-                            app:textToggleRight="No"/>
+                            app:textToggleRight="No" />
 
                         <TextView
                             android:id="@+id/controller_register_tnc_text"
-                            android:layout_toRightOf="@+id/controller_register_tnc_toggle"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/padding_small"
-                            android:layout_alignBottom="@+id/controller_register_tnc_toggle"
                             android:layout_alignTop="@+id/controller_register_tnc_toggle"
+                            android:layout_alignBottom="@+id/controller_register_tnc_toggle"
+                            android:layout_marginLeft="@dimen/padding_small"
+                            android:layout_toRightOf="@+id/controller_register_tnc_toggle"
                             android:gravity="center_vertical"
                             android:textSize="@dimen/text_size_caption1"
-                            tools:text="I agree to the Terms and Conditions"/>
+                            tools:text="I agree to the Terms and Conditions" />
 
                         <au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch
                             android:id="@+id/controller_register_emails_toggle"
@@ -261,19 +262,19 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/controller_register_tnc_toggle"
                             app:textToggleLeft="Yes"
-                            app:textToggleRight="No"/>
+                            app:textToggleRight="No" />
 
                         <TextView
                             android:id="@+id/controller_register_emails_text"
-                            android:layout_toRightOf="@+id/controller_register_emails_toggle"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/padding_small"
-                            android:layout_alignBottom="@+id/controller_register_emails_toggle"
                             android:layout_alignTop="@+id/controller_register_emails_toggle"
+                            android:layout_alignBottom="@+id/controller_register_emails_toggle"
+                            android:layout_marginLeft="@dimen/padding_small"
+                            android:layout_toRightOf="@+id/controller_register_emails_toggle"
                             android:gravity="center_vertical"
                             android:textSize="@dimen/text_size_caption1"
-                            tools:text="I agree to receive promotional emails"/>
+                            tools:text="I agree to receive promotional emails" />
 
                     </RelativeLayout>
 
@@ -327,10 +328,10 @@
                         android:id="@+id/button_visa_checkout"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/default_button_height"
-                        android:layout_marginTop="@dimen/margin_small"
                         android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/margin_small"
                         android:background="@drawable/vco_button"
-                        app:animation="true"/>
+                        app:animation="true" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -345,8 +346,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/save_80_off"
                             android:textColor="@color/text_extra_dark"
-                            android:textStyle="bold"
-                            android:textSize="@dimen/text_size_body" />
+                            android:textSize="@dimen/text_size_body"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/controller_register_login_text"
@@ -354,34 +355,34 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:clickable="true"
-                            android:paddingEnd="0dp"
                             android:paddingStart="@dimen/margin_extra_small"
+                            android:paddingEnd="0dp"
                             android:text="@string/log_in"
                             android:textAllCaps="true"
                             android:textColor="@color/bg_button_default"
                             android:textSize="@dimen/text_size_caption1"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingEnd="0dp"
                             android:paddingStart="@dimen/margin_extra_small"
+                            android:paddingEnd="0dp"
                             android:text="@string/here"
                             android:textColor="@color/text_extra_dark"
                             android:textSize="@dimen/text_size_caption1"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                     </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingBottom="@dimen/margin_small"
                         android:text="@string/designer_fashion_more"
                         android:textColor="@color/text_extra_dark"
-                        android:textSize="@dimen/text_size_caption2"
-                        android:layout_gravity="center"
-                        android:paddingBottom="@dimen/margin_small"/>
+                        android:textSize="@dimen/text_size_caption2" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -400,19 +401,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingTop="@dimen/padding_default_half"
-                android:paddingBottom="@dimen/padding_default_half"
                 android:background="@color/background_default"
-                android:gravity="center">
+                android:gravity="center"
+                android:paddingTop="@dimen/padding_default_half"
+                android:paddingBottom="@dimen/padding_default_half">
 
                 <TextView
                     android:id="@+id/controller_login_about_us_textview"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.33"
-                    android:textColor="@color/facet_item_text_selector"
-                    android:text="@string/account_about_us"
                     android:gravity="center"
+                    android:text="@string/account_about_us"
+                    android:textColor="@color/facet_item_text_selector"
                     android:textSize="@dimen/text_size_body" />
 
                 <TextView
@@ -420,9 +421,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.33"
-                    android:textColor="@color/facet_item_text_selector"
-                    android:text="@string/account_tnc"
                     android:gravity="center"
+                    android:text="@string/account_tnc"
+                    android:textColor="@color/facet_item_text_selector"
                     android:textSize="@dimen/text_size_body" />
 
                 <TextView
@@ -430,9 +431,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.33"
-                    android:textColor="@color/facet_item_text_selector"
-                    android:text="@string/account_privacy"
                     android:gravity="center"
+                    android:text="@string/account_privacy"
+                    android:textColor="@color/facet_item_text_selector"
                     android:textSize="@dimen/text_size_body" />
 
             </LinearLayout>

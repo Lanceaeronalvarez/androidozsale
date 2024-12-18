@@ -3,6 +3,11 @@ package au.com.dealsdirect.ui.controller.login;
  * Created by CodeineBot on 6/15/17.
  */
 
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.FACEBOOK;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.FORGOT_PASSWORD;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.LOGIN;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.NO_ACTION;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -38,13 +43,9 @@ import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
+import au.com.dealsdirect.utils.recaptcha.ReCaptchaWebHelper;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.FACEBOOK;
-import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.FORGOT_PASSWORD;
-import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.LOGIN;
-import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.LoginType.NO_ACTION;
 
 public class LoginController extends BaseController implements LoginMvpView {
 
@@ -86,10 +87,15 @@ public class LoginController extends BaseController implements LoginMvpView {
     @BindView(R.id.controller_login_privacy_textview)
     TextView mPrivacyTextView;
 
+    @BindView(R.id.login_base_container)
+    ViewGroup mBaseContainer;
+
     private String mLoginMethod = NO_ACTION;
     private boolean isLoginSuccess = false;
 
     private CallbackManager mCallbackManager;
+
+    private ReCaptchaWebHelper reCaptchaWebHelper = null;
 
     public static LoginController newInstance() {
         return new LoginController(
@@ -211,6 +217,12 @@ public class LoginController extends BaseController implements LoginMvpView {
 
     @Override
     public boolean handleBack() {
+        if (reCaptchaWebHelper != null) {
+            reCaptchaWebHelper.onBackPressed();
+            reCaptchaWebHelper = null;
+            return true;
+        }
+
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(DataCollector.EventParameters.METHOD, mLoginMethod);
         parameters.put(DataCollector.EventParameters.RESULT, isLoginSuccess);
@@ -262,9 +274,18 @@ public class LoginController extends BaseController implements LoginMvpView {
     }
 
     private void callLoginApi() {
+        hideKeyboard();
+
         String email = mEmailEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
-        mPresenter.loginViaEmail(mActivity, email, password);
+        reCaptchaWebHelper = new ReCaptchaWebHelper();
+        reCaptchaWebHelper.initiateReCaptchaV2Challenge(
+                mBaseContainer,
+                mActivity.getResources().getString(R.string.recaptcha_site_key),
+                token -> {
+                    mPresenter.loginViaEmail(email, password, token);
+                    reCaptchaWebHelper = null;
+                });
     }
 
     @OnClick(R.id.controller_login_signup_text)

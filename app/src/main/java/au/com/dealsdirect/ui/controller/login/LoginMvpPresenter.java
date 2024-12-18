@@ -9,5 +9,5 @@ import au.com.dealsdirect.ui.base.AuthenticationMvpPresenter;
 
 public interface LoginMvpPresenter<V extends LoginMvpView> extends AuthenticationMvpPresenter<V> {
 
-    boolean loginViaEmail(Context context, String username, String password);
+    void loginViaEmail(String username, String password, String recaptchaToken);
 }
