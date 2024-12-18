@@ -137,7 +137,10 @@ public class BundleKeys {
     public static final String CONTACT_NUMBER = "CONTACT_NUMBER";
 
     public static final String CONTACT_NAME = "CONTACT_NAME";
+    public static final String CONTACT_SUBJECT_ID = "CONTACT_SUBJECT_ID";
     public static final String CONTACT_INVOICE_NUMBER = "CONTACT_INVOICE_NUMBER";
+    public static final String CONTACT_IS_INVOICE_REQUIRED = "CONTACT_IS_INVOICE_REQUIRED";
+    public static final String CONTACT_ACTIONS = "CONTACT_ACTIONS";
     public static final String CONTACT_TIME_STAMP = "CONTACT_TIME_STAMP";
 
     //Ourpay SMS Verification

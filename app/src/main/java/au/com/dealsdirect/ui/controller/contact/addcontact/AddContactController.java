@@ -1,5 +1,14 @@
 package au.com.dealsdirect.ui.controller.contact.addcontact;
 
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_ACTIONS;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_INVOICE_NUMBER;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_IS_INVOICE_REQUIRED;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_SUBJECT;
+import static au.com.dealsdirect.utils.BundleKeys.CONTACT_SUBJECT_ID;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_HAS_SAVED_INSTANCE;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_WEBVIEW_CONTROLLER_TITLE;
+import static au.com.dealsdirect.utils.BundleKeys.KEY_WEBVIEW_CONTROLLER_URL;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -64,7 +73,6 @@ import au.com.dealsdirect.utils.ActivityLaunchUtil;
 import au.com.dealsdirect.utils.AppConstants;
 import au.com.dealsdirect.utils.AsyncResponse;
 import au.com.dealsdirect.utils.BundleBuilder;
-import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.ImageUploadUtil;
 import au.com.dealsdirect.utils.ImageUtils;
 import au.com.dealsdirect.utils.KeyboardUtils;
@@ -233,8 +241,8 @@ public class AddContactController extends BaseController
 
         private void openInfoPage(String title, String url) {
             Bundle bundle = new BundleBuilder(new Bundle())
-                    .putString(BundleKeys.KEY_WEBVIEW_CONTROLLER_URL, url)
-                    .putString(BundleKeys.KEY_WEBVIEW_CONTROLLER_TITLE, title)
+                    .putString(KEY_WEBVIEW_CONTROLLER_URL, url)
+                    .putString(KEY_WEBVIEW_CONTROLLER_TITLE, title)
                     .build();
 
             RouterTransaction transaction = RouterTransaction
@@ -285,15 +293,23 @@ public class AddContactController extends BaseController
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(BundleKeys.CONTACT_SUBJECT, mSubject);
-        outState.putBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE, true);
+        outState.putString(CONTACT_SUBJECT, mSubject);
+        outState.putString(CONTACT_SUBJECT_ID, mSubjectId);
+        outState.putInt(CONTACT_INVOICE_NUMBER, mInvoiceNumber);
+        outState.putBoolean(CONTACT_IS_INVOICE_REQUIRED, mIsInvoiceRequired);
+        outState.putStringArrayList(CONTACT_ACTIONS, new ArrayList<>(mActions));
+        outState.putBoolean(KEY_HAS_SAVED_INSTANCE, true);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mSubject = savedInstanceState.getString(BundleKeys.CONTACT_SUBJECT);
-        mHasSavedInstance = savedInstanceState.getBoolean(BundleKeys.KEY_HAS_SAVED_INSTANCE);
+        mSubject = savedInstanceState.getString(CONTACT_SUBJECT);
+        mSubjectId = savedInstanceState.getString(CONTACT_SUBJECT_ID);
+        mInvoiceNumber = savedInstanceState.getInt(CONTACT_INVOICE_NUMBER, mInvoiceNumber);
+        mIsInvoiceRequired = savedInstanceState.getBoolean(CONTACT_IS_INVOICE_REQUIRED);
+        mActions = savedInstanceState.getStringArrayList(CONTACT_ACTIONS);
+        mHasSavedInstance = savedInstanceState.getBoolean(KEY_HAS_SAVED_INSTANCE);
     }
 
     @NonNull
@@ -309,6 +325,11 @@ public class AddContactController extends BaseController
     public void onViewBound(@NonNull View view) {
         super.onViewBound(view);
         setUp(view);
+    }
+
+    @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
     }
 
     @Override
