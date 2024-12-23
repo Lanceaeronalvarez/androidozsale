@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -116,6 +118,34 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     @BindView(R.id.sale_filter_horizontal_view)
     HorizontalScrollView mHorizontalView;
 
+    @BindView(R.id.sale_filter_brands_sort_a_z)
+    RelativeLayout mBrandsSortAToZ;
+
+    @BindView(R.id.sale_filter_brands_sort_qty)
+    RelativeLayout mBrandsSortQTY;
+
+    @BindView(R.id.sale_filter_brands_sort_a_z_text)
+    LinearLayout mBrandsSortAToZText;
+
+    @BindView(R.id.sale_filter_brands_sort_qty_text)
+    LinearLayout mBrandsSortQTYText;
+
+    @BindView(R.id.sale_filter_brands_sort_a_z_textview)
+    TextView mBrandsSortAToZTextView;
+
+    @BindView(R.id.sale_filter_brands_sort_qty_textview)
+    TextView mBrandsSortQTYTextView;
+
+    @BindView(R.id.sale_filter_brands_sort)
+    LinearLayout mBrandsSortLayout;
+
+    @BindView(R.id.sale_filter_brands_sort_a_z_icon)
+    ImageView mBrandsAtoZIcon;
+
+    @BindView(R.id.sale_filter_brands_sort_qty_icon)
+    ImageView mBrandsQtyIcon;
+
+
     @Inject
     SearchFilterMvpPresenter<SearchFilterMvpView> mPresenter;
 
@@ -125,6 +155,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     private List<SaleItemFacet> mFacets;
     private ArrayList<String> mBrandList = new ArrayList<>();
     private ArrayList<String> mBrandCountList = new ArrayList<>();
+    private ArrayList<Pair<String, String>> mBrandsWithTotal = new ArrayList<>();
     private ArrayList<String> mSizeList = new ArrayList<>();
     private ArrayList<String> mSizeCountList = new ArrayList<>();
     private ArrayList<String> mColorList = new ArrayList<>();
@@ -167,6 +198,10 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     private static final int DEFAULT_PRICE_THRESHOLD = 200;
 
     boolean mShowColor = false;
+    boolean mSortAZ = false;
+    boolean mSortZA = true;
+    boolean mSortQtyAsc = false;
+    boolean mSortQtyDesc = true;
 
     public SaleFilterController(Bundle build) {
     }
@@ -219,6 +254,10 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         setupPriceFacet();
         showClearButton();
         mSaleItemResults.setText("See all " + mSaleItemCount + " products");
+
+        mBrandsAtoZIcon.setImageResource(R.drawable.new_sort_desc);
+        mBrandsSortAToZ.setBackground(mActivity.getResources().getDrawable(R.drawable.border_black));
+        mBrandsSortAToZText.setBackgroundColor(mActivity.getResources().getColor(R.color.beige_50));
     }
 
     private void createCategoryMap(List<GetCategoryTreeResponse> getCategoryTreeResponses) {
@@ -262,6 +301,55 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
 
         mToolbarRightButton.setOnClickListener(it -> {
             clearFilters();
+        });
+
+        mBrandsSortAToZ.setOnClickListener(it -> {
+            mSortQtyAsc = false;
+            mSortQtyDesc = true;
+            mBrandsQtyIcon.setImageResource(R.drawable.new_sort_icon);
+            mBrandsSortQTY.setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+            mBrandsSortQTYText.setBackground(mActivity.getResources().getDrawable(R.drawable.border_black));
+
+            mBrandsSortAToZ.setBackground(mActivity.getResources().getDrawable(R.drawable.border_black));
+            mBrandsSortAToZText.setBackgroundColor(mActivity.getResources().getColor(R.color.beige_50));
+
+            if (mSortAZ) {
+                brandsSortBy("A-Z");
+                mSortZA = true;
+                mSortAZ = false;
+                mBrandsSortAToZTextView.setText("Brands A-Z");
+                mBrandsAtoZIcon.setImageResource(R.drawable.new_sort_desc);
+            } else {
+                brandsSortBy("Z-A");
+                mSortAZ = true;
+                mSortZA = false;
+                mBrandsSortAToZTextView.setText("Brands Z-A");
+                mBrandsAtoZIcon.setImageResource(R.drawable.new_sort_asc);
+            }
+
+        });
+
+        mBrandsSortQTY.setOnClickListener(it -> {
+            mSortZA = false;
+            mSortAZ = true;
+            mBrandsAtoZIcon.setImageResource(R.drawable.new_sort_icon);
+            mBrandsSortAToZ.setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+            mBrandsSortAToZText.setBackground(mActivity.getResources().getDrawable(R.drawable.border_black));
+
+            mBrandsSortQTY.setBackground(mActivity.getResources().getDrawable(R.drawable.border_black));
+            mBrandsSortQTYText.setBackgroundColor(mActivity.getResources().getColor(R.color.beige_50));
+
+            if (mSortQtyAsc) {
+                brandsSortBy("qtyA");
+                mSortQtyAsc = false;
+                mSortQtyDesc = true;
+                mBrandsQtyIcon.setImageResource(R.drawable.new_sort_asc);
+            } else {
+                brandsSortBy("qtyD");
+                mSortQtyDesc = false;
+                mSortQtyAsc = true;
+                mBrandsQtyIcon.setImageResource(R.drawable.new_sort_desc);
+            }
         });
 
         mShowColor = getDataManager().isColorFilterEnabled();
@@ -321,6 +409,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     @Override
     public void onCategoryClicked(String category, int type) {
         mfilterLevel = 2;
+        mBrandsSortLayout.setVisibility(View.GONE);
         showClearButton();
 
         if (category.equals("Category")) {
@@ -344,8 +433,15 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
             mFilterType = BundleKeys.PRICE_FACETFILTER_NAME;
         }
         if (category.equals("Brands")) {
+            mBrandsWithTotal.clear();
             mToolbarTitle.setText(category);
-            setSecondLevelFilters(mBrandList, BundleKeys.BRANDS_FACETFILTER_NAME, mBrandCountList);
+            mBrandsSortLayout.setVisibility(View.VISIBLE);
+
+            for (int i = 0; i <= mBrandList.size() - 1; i++) {
+                mBrandsWithTotal.add(new Pair<>(mBrandList.get(i), mBrandCountList.get(i)));
+            }
+
+            brandsSortBy("A-Z");
         }
         if (category.equals("Color")) {
             mToolbarTitle.setText(category);
@@ -422,6 +518,25 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         requestLoadItems();
     }
 
+    public void brandsSortBy(String sortType) {
+        Collections.sort(mBrandsWithTotal, new Comparator<Pair<String, String>>() {
+            @Override
+            public int compare(Pair<String, String> s1, Pair<String, String> s2) {
+                if (sortType == "A-Z") {
+                    return s1.first.compareToIgnoreCase(s2.first);
+                } else if (sortType == "Z-A") {
+                    return s2.first.compareToIgnoreCase(s1.first);
+                } else if (sortType == "qtyA") {
+                    return Integer.compare(Integer.parseInt(s1.second), Integer.parseInt(s2.second));
+                } else {
+                    return Integer.compare(Integer.parseInt(s2.second), Integer.parseInt(s1.second));
+                }
+            }
+        });
+
+        setSecondLevelFilters(mBrandList, BundleKeys.BRANDS_FACETFILTER_NAME, mBrandCountList);
+    }
+
     void addChipGroupFilterChip(String title) {
         Chip chip = (Chip) mActivity.getLayoutInflater().inflate(R.layout.single_chip_layout, mChipGroup, false);
         chip.setText(title);
@@ -484,13 +599,13 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
         }
     }
 
-    public void setSecondLevelFilters(ArrayList filers, String type, ArrayList<String> filterCountList) {
+    public void setSecondLevelFilters(ArrayList filters, String type, ArrayList<String> filterCountList) {
         mChipGroup.setVisibility(View.GONE);
         mFilterByText.setVisibility(View.GONE);
         mFiltersToDisplay.clear();
         mSoldOutLayout.setVisibility(View.GONE);
         mfilterLevel = 2;
-        mFiltersToDisplay.addAll(filers);
+        mFiltersToDisplay.addAll(filters);
         mFilterType = type;
         setRecyclerAdapter(type, filterCountList);
     }
@@ -514,7 +629,8 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
                 mShowColor,
                 mCategoryKey,
                 mSourceType,
-                mShowCategory);
+                mShowCategory,
+                mBrandsWithTotal);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(mFilterAdapter);
@@ -875,6 +991,7 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
             mRecyclerView.setVisibility(View.VISIBLE);
             mSeekbarLayout.setVisibility(View.GONE);
             mPriceText.setVisibility(View.GONE);
+            mBrandsSortLayout.setVisibility(View.GONE);
             if (!mSelectedFilters.isEmpty() || !mCategoryKeys.isEmpty()) {
                 mFilterByText.setVisibility(View.VISIBLE);
             } else {
