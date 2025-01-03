@@ -71,10 +71,8 @@ import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
-import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
-import com.mysale.genie.profiler.Profiler;
 import com.mysale.genie.utility.RxBus;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -358,12 +356,19 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             private final SaleItemProduct saleItemProduct;
 
-            public FromSaleItemProduct(SaleItemProduct saleItemProduct) {
+            private final Map<String, String> utmKeys;
+
+            public FromSaleItemProduct(SaleItemProduct saleItemProduct, Map<String, String> utmKeys) {
                 this.saleItemProduct = saleItemProduct;
+                this.utmKeys = utmKeys;
             }
 
             public SaleItemProduct getSaleItemProduct() {
                 return saleItemProduct;
+            }
+
+            public Map<String, String>  getUtmKeys() {
+                return utmKeys;
             }
         }
     }
@@ -671,6 +676,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
     private SaleItemProductPriceBlockHelper priceBlockHelper = null;
 
     private SaleItemProduct partialProductDetailsToShow = null;
+    private Map<String, String> mUtmKeys = new HashMap<>();
 
     private SaleItemDetailsHorizontalScrollingItemsHelper recommendedItemsHelper = null;
     private SaleItemDetailsHorizontalScrollingItemsHelper youMayAlsoLikeHelper = null;
@@ -785,10 +791,12 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
             controller.mOrigin = DataCollector.EventParameters.ViewSource.SALE;
         } else if (parameters instanceof Parameters.FromSaleItemProduct) {
             final SaleItemProduct item = ((Parameters.FromSaleItemProduct) parameters).getSaleItemProduct();
+            final Map<String, String> utmKeys = ((Parameters.FromSaleItemProduct) parameters).getUtmKeys();
             controller.mSaleId = item.getId();
             controller.mSeoIdentifierId = item.getSeoIdentifier();
             controller.mSaleName = item.getName();
             controller.partialProductDetailsToShow = item;
+            controller.mUtmKeys = utmKeys;
         }
 
         return controller;
@@ -1847,7 +1855,7 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
         if (currentBottomPopupView != null) {
             currentBottomPopupView.dismiss(true);
         }
-        mPresenter.loadProductDetails(saleId, seoIdentifierId);
+        mPresenter.loadProductDetails(saleId, seoIdentifierId, mUtmKeys);
         onLoadProductDetails = this::setupProductDetails;
     }
 

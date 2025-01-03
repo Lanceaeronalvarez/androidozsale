@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 
 import com.androidnetworking.error.ANError;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -37,13 +39,16 @@ import au.com.dealsdirect.service.ourpay.OurpayStateManager;
 import au.com.dealsdirect.ui.base.BasePresenter;
 import au.com.dealsdirect.ui.controller.checkout.checkout.CheckoutDetailsMapper;
 import au.com.dealsdirect.ui.controller.leaderboardbanner.LeaderboardPresenterHelper;
+import au.com.dealsdirect.ui.controller.main.Settings;
 import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.CartUtil;
+import au.com.dealsdirect.utils.CookieUtils;
 import au.com.dealsdirect.utils.CurrencyUtil;
 import au.com.dealsdirect.utils.LoadingDialogType;
 import au.com.dealsdirect.utils.rx.SchedulerProvider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import okhttp3.Cookie;
 
 public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends BasePresenter<V> implements SaleItemDetailsMvpPresenter<V> {
 
@@ -71,9 +76,12 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
     }
 
     @Override
-    public void loadProductDetails(String saleId, String seoIdentifierId) {
+    public void loadProductDetails(String saleId, String seoIdentifierId, Map<String, String> utmKeys) {
 
         // note: sale_id is from a product list opened from banners
+
+        //add utm cookies to best seller items
+        CookieUtils.addCookie(utmKeys);
 
         Observable<SaleItemDetails> callGetSaleItemDetailObservable = saleId == null || saleId.isEmpty() ?
                 getDataManager().callGetSaleItemDetails(seoIdentifierId) :
@@ -83,6 +91,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
             @Override
             public void onSuccess(Object response) {
                 super.onSuccess(response);
+                resetUtmCookies();
                 SaleItemDetails saleItemDetails = (SaleItemDetails) response;
 
                 if (response != null) {
@@ -98,7 +107,7 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                 super.onFailure(throwable);
 
                 getMvpView().hideLoading();
-
+                resetUtmCookies();
                 // handle load accounts error here
                 if (throwable instanceof ANError) {
                     ANError anError = (ANError) throwable;
@@ -717,5 +726,16 @@ public class SaleItemDetailsPresenter<V extends SaleItemDetailsMvpView> extends 
                         getMvpView().showTrendingBrands(null);
                     }
                 });
+    }
+
+    void resetUtmCookies(){
+        Map<String, String> utmKeys = new HashMap<>();
+        utmKeys.put("sc", "");
+        utmKeys.put("c", "");
+        utmKeys.put("ca", "");
+        utmKeys.put("utm_source", "");
+        utmKeys.put("utm_campaign", "");
+
+        CookieUtils.addCookie(utmKeys);
     }
 }
