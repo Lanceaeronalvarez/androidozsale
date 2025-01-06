@@ -358,6 +358,11 @@ public class SaleItemDetailsController extends BaseController implements SaleIte
 
             private final Map<String, String> utmKeys;
 
+            public FromSaleItemProduct(SaleItemProduct saleItemProduct) {
+                this.saleItemProduct = saleItemProduct;
+                this.utmKeys = new HashMap<>();
+            }
+
             public FromSaleItemProduct(SaleItemProduct saleItemProduct, Map<String, String> utmKeys) {
                 this.saleItemProduct = saleItemProduct;
                 this.utmKeys = utmKeys;
