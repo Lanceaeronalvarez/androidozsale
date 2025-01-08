@@ -6,6 +6,8 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
 import static au.com.dealsdirect.data.network.model.events.WishlistEventRequest.WishListInfo.ReferrerValue.PRODUCT_PAGE;
 import static au.com.dealsdirect.service.ourpay.OurpayTemplateText.KEY_OURPAY_TC_VALIDATION_FAILED;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -297,6 +299,9 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
     @BindView(R.id.button_visa_checkout)
     Button mVcoButton;
 
+    @Nullable
+    @BindView(R.id.partial_checkout_empty_button)
+    View mGoToShopButton;
     @Nullable
     @BindView(R.id.partial_checkout_empty_widget_area)
     ViewGroup mWidgetArea;
@@ -1723,6 +1728,14 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
         hidePaymentButtons();
         if (mNoCartItemsLayout != null) {
             mNoCartItemsLayout.setVisibility(View.VISIBLE);
+            if (currentBottomPopupView != null) {
+                currentBottomPopupView.setListener(null);
+                currentBottomPopupView.dismiss(false);
+            }
+            if (mGoToShopButton != null) {
+                mGoToShopButton.setVisibility(View.VISIBLE);
+                CommonUtils.fadeInView(mGoToShopButton, null);
+            }
         }
         mCheckoutContainer.setVisibility(View.GONE);
         mPresenter.resetIsCartAlreadyLoaded();
@@ -2468,14 +2481,13 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             }
         });
 
-        bestSellersWidgetHelper = new BestSellersWidgetHelper(adapter, mActivity, mPresenter.isTablet());
         final int orientation = ScreenUtils.getOrientation(mActivity);
-        if (bestSellersViewHolder == null) {
-            bestSellersViewHolder = bestSellersWidgetHelper.createViewHolder(mWidgetArea, orientation);
+        if (bestSellersViewHolder != null) {
+            mWidgetArea.removeView(bestSellersViewHolder.itemView);
         }
-        if (mWidgetArea.indexOfChild(bestSellersViewHolder.itemView) < 0) {
-            mWidgetArea.addView(bestSellersViewHolder.itemView);
-        }
+        bestSellersWidgetHelper = new BestSellersWidgetHelper(adapter, mActivity, mPresenter.isTablet());
+        bestSellersViewHolder = bestSellersWidgetHelper.createViewHolder(mWidgetArea, orientation);
+        mWidgetArea.addView(bestSellersViewHolder.itemView);
         bestSellersViewHolder.onViewBound();
         bestSellersWidgetHelper.onBindViewHolder(bestSellersViewHolder, orientation);
     }
@@ -2501,6 +2513,7 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
             return;
         }
         if (currentBottomPopupView != null) {
+            currentBottomPopupView.setListener(null);
             currentBottomPopupView.dismiss(true);
         }
         final BottomPopupWebViewContentAdapter adapter = new BottomPopupWebViewContentAdapter();
@@ -2513,6 +2526,46 @@ public class CheckoutController extends BaseController implements CheckoutMvpVie
                 ActivityLaunchUtil.launchActivity(mActivity, url);
             }
             return true;
+        });
+        currentBottomPopupView.setListener(new BottomPopupView.BottomPopupViewListener() {
+            @Override
+            public void willShow() {
+                if (mGoToShopButton == null) {
+                    return;
+                }
+                CommonUtils.fadeOutView(mGoToShopButton, new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        super.onAnimationCancel(animation);
+                        mGoToShopButton.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        mGoToShopButton.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            @Override
+            public void onShow() {
+
+            }
+
+            @Override
+            public void willDismiss() {
+
+            }
+
+            @Override
+            public void onDismiss() {
+                if (mGoToShopButton == null) {
+                    return;
+                }
+                mGoToShopButton.setVisibility(View.VISIBLE);
+                CommonUtils.fadeInView(mGoToShopButton, null);
+            }
         });
         currentBottomPopupView.show(true);
     }
