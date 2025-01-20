@@ -8,6 +8,21 @@
     tools:ignore="MissingPrefix">
 
     <LinearLayout
+        android:id="@+id/controller_checkout_host_empty_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <include layout="@layout/partial_toolbar_arrow" />
+
+        <include layout="@layout/partial_checkout_empty" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/controller_checkout_host_left_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -52,10 +67,6 @@
                     android:nestedScrollingEnabled="false" />
 
             </LinearLayout>
-
-            <include
-                layout="@layout/partial_checkout_empty"
-                android:visibility="gone" />
 
         </FrameLayout>
     </LinearLayout>

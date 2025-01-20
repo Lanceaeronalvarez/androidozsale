@@ -53,7 +53,7 @@
     <integer name="trending_brands_circular_column_count_for_tablet">5</integer>
     <integer name="best_sellers_column_count_for_mobile">3</integer>
     <integer name="best_sellers_column_count_for_portrait_tablet">4</integer>
-    <integer name="best_sellers_column_count_for_landscape_tablet">6</integer>
+    <integer name="best_sellers_column_count_for_landscape_tablet">8</integer>
     <integer name="you_may_also_like_width">225</integer>
     <integer name="you_may_also_like_height">360</integer>
     <integer name="brand_bubbles_max_results">10</integer>

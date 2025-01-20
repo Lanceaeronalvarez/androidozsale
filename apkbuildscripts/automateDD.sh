@@ -251,7 +251,7 @@ fi
 
 # Check recaptcha
 print_blue "\nCHECKING RECAPTCHA KEY"
-expectedRecaptchaKey="6LehI6cUAAAAACrjaAGPQLQx1eomvLqrb0S_QxSi"
+expectedRecaptchaKey="6LdxiZ4UAAAAAGKk5Xzpbps1vHtDy0cfAEbr-88n"
 currentRecaptchaKey=$(./gradlew -q printRecaptcha -PflavorName=$flavorName -PbuildTypeAssemble=$buildTypeAssemble)
 if [ $expectedRecaptchaKey = "$currentRecaptchaKey" ]; then
 print_green "\nexpected: $expectedRecaptchaKey and current: $currentRecaptchaKey is the same\n"

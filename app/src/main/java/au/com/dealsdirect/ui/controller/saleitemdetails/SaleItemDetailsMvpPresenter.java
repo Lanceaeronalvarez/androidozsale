@@ -1,5 +1,7 @@
 package au.com.dealsdirect.ui.controller.saleitemdetails;
 
+import java.util.Map;
+
 import au.com.dealsdirect.data.network.model.banner.GetBannerRequest;
 import au.com.dealsdirect.data.network.model.ourpaydata.OurpayDataResponse;
 import au.com.dealsdirect.data.network.model.saleitemdetails.AddToCartRequest;
@@ -14,7 +16,7 @@ import au.com.dealsdirect.ui.base.MvpView;
 public interface SaleItemDetailsMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
     //    void loadProductDetails(GetPublicItemDetailsRequest publicItemDetailsRequest, GetPublicSaleDetailsRequest publicSaleDetailsRequest);
-    void loadProductDetails(String saleId, String seoIdentifierId);
+    void loadProductDetails(String saleId, String seoIdentifierId, Map<String, String> utmKeys);
 
     void loadOurpayData(SaleItemDetails value);
 

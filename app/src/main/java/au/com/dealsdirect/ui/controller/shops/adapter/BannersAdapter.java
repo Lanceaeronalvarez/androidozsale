@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.banner.GetBannerResponse;
 import au.com.dealsdirect.service.datacollection.enums.Events;
-import au.com.dealsdirect.ui.controller.priceblock.SaleItemProductPriceBlockHelper;
+import au.com.dealsdirect.ui.controller.bestsellers.BestSellersWidgetHelper;
 import au.com.dealsdirect.ui.controller.saleitemdetails.HorizontalScrollingItemsAdapter;
 import au.com.dealsdirect.ui.controller.trendingbrands.TrendingBrandsWidgetHelper;
 import au.com.dealsdirect.utils.CommonUtils;
@@ -131,6 +131,7 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private HorizontalScrollingItemsAdapter mBestSellersAdapter = null;
     private final BannersAdapterHelper bannersAdapterHelper;
     private TrendingBrandsWidgetHelper trendingBrandsWidgetHelper = null;
+    private BestSellersWidgetHelper bestSellersWidgetHelper = null;
 
 
     private final HashSet<HorizontalRecyclerBannerViewHolder> horizontalRecyclerViewHolders = new HashSet<>();
@@ -252,18 +253,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 return trendingBrandsWidgetHelper.createViewHolder(parent);
             }
             case VIEW_HOLDER_TYPE_BEST_SELLERS_WIDGET:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
-                float height = computeBestSellersGrid().getItemHeight();
-                height += context.getResources().getDimension(R.dimen.horizontal_banner_header_title_height);
-                height += context.getResources().getDimension(R.dimen.horizontal_banner_circle_indicator_height);
-                height += context.getResources().getDimension(R.dimen.margin_extra_small) * 2;
-                return new HorizontalRecyclerItemsViewHolder(
-                        view,
-                        (int) height,
-                        mBestSellersAdapter,
-                        true,
-                        false,
-                        HorizontalPageIndicatorAdapter.Style.RECTANGLE);
+                if (bestSellersWidgetHelper == null) {
+                    bestSellersWidgetHelper = new BestSellersWidgetHelper(mBestSellersAdapter, context, isTablet);
+                }
+                return bestSellersWidgetHelper.createViewHolder(parent, mOrientation);
             case VIEW_HOLDER_TYPE_SPONSORED_BANNER:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_horizontal_scrolling_banner, parent, false);
                 return new HorizontalRecyclerBannerViewHolder(
@@ -378,29 +371,10 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 trendingBrandsWidgetHelper.onBindViewHolder(horizontalRecyclerBannersViewHolder);
                 break;
             case VIEW_HOLDER_TYPE_BEST_SELLERS_WIDGET:
-                if (horizontalRecyclerItemsViewHolder == null) {
+                if (bestSellersWidgetHelper == null || horizontalRecyclerItemsViewHolder == null) {
                     break;
                 }
-                setupBestSellersDimensions();
-                horizontalRecyclerItemsViewHolder.setAdapter(mBestSellersAdapter);
-
-                if (mBestSellersAdapter != null) {
-                    mBestSellersAdapter.resetReyclerViewPosition();
-                    final int numberOfColumns = isTablet ?
-                            (mOrientation == Configuration.ORIENTATION_LANDSCAPE ?
-                                    context.getResources().getInteger(R.integer.best_sellers_column_count_for_landscape_tablet) :
-                                    context.getResources().getInteger(R.integer.best_sellers_column_count_for_portrait_tablet)) :
-                            context.getResources().getInteger(R.integer.best_sellers_column_count_for_mobile);
-                    horizontalRecyclerItemsViewHolder.setScrollStepSize(numberOfColumns);
-                    horizontalRecyclerItemsViewHolder.setPageIndicatorCountWithPageSize(numberOfColumns);
-                } else {
-                    horizontalRecyclerItemsViewHolder.setPageIndicatorItemCount(0);
-                }
-
-                if (horizontalRecyclerItemsViewHolder.getPageIndicatorAdapter() != null) {
-                    horizontalRecyclerItemsViewHolder.getPageIndicatorAdapter().setSelectedPosition(0);
-                }
-                horizontalRecyclerItemsViewHolder.setHeaderText(context.getString(R.string.best_sellers).toUpperCase());
+                bestSellersWidgetHelper.onBindViewHolder(horizontalRecyclerItemsViewHolder, mOrientation);
                 break;
             case VIEW_HOLDER_TYPE_SPONSORED_BANNER:
                 if (horizontalRecyclerBannersViewHolder == null) {
@@ -794,38 +768,6 @@ public class BannersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mSponsoredBannersAdapter.setImageWidth(sponsoredBannersImageSize().first);
         mSponsoredBannersAdapter.setImageHeight(sponsoredBannersImageSize().second);
         mSponsoredBannersAdapter.setupDimensions((int) sponsoredBannersGrid.getItemWidth(), (int) sponsoredBannersGrid.getItemHeight());
-    }
-
-    private ImageUtils.Grid computeBestSellersGrid() {
-        final float numberOfColumns = isTablet ?
-                (mOrientation == Configuration.ORIENTATION_LANDSCAPE ?
-                        context.getResources().getInteger(R.integer.best_sellers_column_count_for_landscape_tablet) :
-                        context.getResources().getInteger(R.integer.best_sellers_column_count_for_portrait_tablet)) :
-                context.getResources().getInteger(R.integer.best_sellers_column_count_for_mobile);
-        final float screenDensity = ScreenUtils.getScreenDensity(context);
-        final int proposedWidth = (int) (context.getResources().getInteger(R.integer.item_image_width) * screenDensity);
-        final int proposedHeight = (int) ((context.getResources().getInteger(R.integer.item_image_height) * screenDensity) +
-                context.getResources().getDimension((R.dimen.product_list_item_like_button_size)) +
-                context.getResources().getDimension((R.dimen.product_list_text_view_height)) +
-                context.getResources().getDimension(R.dimen.price_block_top_text_height) +
-                context.getResources().getDimension(R.dimen.price_block_height) +
-                SaleItemProductPriceBlockHelper.getBottomTextViewHeight(context, true, false) +
-                context.getResources().getDimension(R.dimen.price_block_free_shipping_text_height));
-        final float ratio = (float) proposedHeight / Math.max(1, proposedWidth);
-        return ImageUtils.getExactGridDefinition(
-                numberOfColumns,
-                ratio,
-                ScreenUtils.getScreenWidth(context));
-    }
-
-    private void setupBestSellersDimensions() {
-        if (mBestSellersAdapter == null) {
-            return;
-        }
-        ImageUtils.Grid grid = computeBestSellersGrid();
-        float height = grid.getItemHeight();
-        height += context.getResources().getDimension(R.dimen.margin_extra_small) * 2;
-        mBestSellersAdapter.setupDimensions((int) grid.getItemWidth(), (int) height);
     }
 
     public int getOffset() {

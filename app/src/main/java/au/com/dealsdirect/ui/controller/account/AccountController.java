@@ -8,7 +8,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -187,8 +186,6 @@ public class AccountController extends BaseController implements AccountMvpView,
         super.onViewDidAppear(previousController);
 
         if (mHasSavedInstance) {
-            createAccountItems();
-            mPresenter.loadAccountItems(mAccountItems);
             mActivity.getMainController().setSavedCurrentItem();
         }
 
@@ -211,8 +208,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
 
         createAccountItems();
-
-        mPresenter.loadAccountItems(mAccountItems);
+        setupAccountMenu(mAccountItems);
 
         mTitleTextView.setText(R.string.my_account);
         mLeftToolbarButton.setVisibility(View.INVISIBLE);
@@ -264,7 +260,7 @@ public class AccountController extends BaseController implements AccountMvpView,
 
     public void reloadAccountItems() {
         createAccountItems();
-        mPresenter.loadAccountItems(mAccountItems);
+        setupAccountMenu(mAccountItems);
     }
 
     private void createAccountItems() {
@@ -333,8 +329,11 @@ public class AccountController extends BaseController implements AccountMvpView,
         }
     }
 
-    @Override
-    public void showAccountItems(List<AccountItem> accountItems) {
+    public void setupAccountMenu(List<AccountItem> accountItems) {
+        if (!isViewBound()) {
+            return;
+        }
+
         mRecyclerViewExpandableItemManager = new RecyclerViewExpandableItemManager(null);
         mLayoutManager = new LinearLayoutManager(mActivity);
 
@@ -346,7 +345,9 @@ public class AccountController extends BaseController implements AccountMvpView,
         mAccountRecyclerView.setAdapter(mRecyclerViewExpandableItemManager.createWrappedAdapter(mAccountItemAdapter));
         mAccountRecyclerView.setLayoutManager(mLayoutManager);
         // NOTE: need to disable change animations to ripple effect work properly
-        ((SimpleItemAnimator) mAccountRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        if (mAccountRecyclerView.getItemAnimator() instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) mAccountRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        }
 
 
         mRecyclerViewExpandableItemManager.attachRecyclerView(mAccountRecyclerView);
@@ -636,7 +637,7 @@ public class AccountController extends BaseController implements AccountMvpView,
         mActivity.callLogout(new AuthHandler() {
             @Override
             public void success() {
-                mPresenter.loadAccountItems(mAccountItems);
+                reloadAccountItems();
                 setupLoginButton(false);
 
                 if (showDialog) {

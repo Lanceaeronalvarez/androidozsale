@@ -16,8 +16,6 @@ public interface AccountMvpView extends MvpView {
 
     String TAG = "AccountController";
 
-    void showAccountItems(List<AccountItem> accountItems);
-
     void showMyDetailsController();
 
     void showMyAddressesController();

@@ -11,6 +11,7 @@ import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.DeliverySe
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Summary;
 import au.com.dealsdirect.data.network.model.checkout.getcurrentorder.Value;
 import au.com.dealsdirect.data.network.model.checkout.getuserpaymentmethods.PaymentMethod;
+import au.com.dealsdirect.data.network.model.productdetails.GetBestSellerResponse;
 import au.com.dealsdirect.data.network.model.vouchers.Voucher;
 import au.com.dealsdirect.service.ourpay.Ourpay;
 import au.com.dealsdirect.ui.base.MvpView;
@@ -72,8 +73,6 @@ public interface CheckoutMvpView extends MvpView {
 
     void setCartIsLoading(boolean val);
 
-    CheckoutMvpPresenter getPresenter();
-
     boolean isOurPaySelectDeliveryMethod();
 
     Router getDisplayRouter();
@@ -84,7 +83,9 @@ public interface CheckoutMvpView extends MvpView {
 
     void showAgeRestriction(boolean hasAgeRestriction);
 
-    void updateCartWithValue(Value value);
-
     void updateCartWithMappedValues(CheckoutDetailsMapper mappedValues);
+
+    void showBestSellers(List<GetBestSellerResponse> getBestSellerResponses);
+
+    void showPricingInfoText(String rrpText, Double totalPercentOff, Double originalPrice, String combinedPricingInfoText);
 }

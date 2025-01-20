@@ -1,6 +1,9 @@
 package au.com.dealsdirect.ui.controller.register;
 
-import android.app.Activity;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RegisterMethod.FACEBOOK;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RegisterMethod.NO_ACTION;
+import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RegisterMethod.REGISTRATION;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -18,18 +21,14 @@ import androidx.annotation.Nullable;
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
-//import com.braintreepayments.api.models.BraintreeRequestCodes;
 import com.facebook.CallbackManager;
 import com.facebook.internal.CallbackManagerImpl;
-import com.google.gson.Gson;
-//import com.visa.checkout.VisaCheckoutSdk;
 
 import java.util.HashMap;
 
 import javax.inject.Inject;
 
 import au.com.dealsdirect.R;
-import au.com.dealsdirect.data.network.model.login.LoginVisa;
 import au.com.dealsdirect.data.pref.AppPreferencesHelper;
 import au.com.dealsdirect.service.datacollection.core.DataCollector;
 import au.com.dealsdirect.service.datacollection.enums.Events;
@@ -37,22 +36,16 @@ import au.com.dealsdirect.ui.base.BaseController;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpPresenter;
 import au.com.dealsdirect.ui.base.VisaCheckoutMvpView;
 import au.com.dealsdirect.ui.controller.login.LoginController;
-import au.com.dealsdirect.ui.controller.visacheckout.VisaCheckoutController;
 import au.com.dealsdirect.ui.custom.toggleswitch.CustomToggleSwitch;
 import au.com.dealsdirect.utils.AppConstants;
-import au.com.dealsdirect.utils.AppLogger;
 import au.com.dealsdirect.utils.BackChangeHandler;
 import au.com.dealsdirect.utils.BundleBuilder;
 import au.com.dealsdirect.utils.BundleKeys;
 import au.com.dealsdirect.utils.KeyboardUtils;
 import au.com.dealsdirect.utils.module.GateKeeper;
+import au.com.dealsdirect.utils.recaptcha.ReCaptchaWebHelper;
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RegisterMethod.FACEBOOK;
-import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RegisterMethod.NO_ACTION;
-import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RegisterMethod.REGISTRATION;
-import static au.com.dealsdirect.service.datacollection.core.DataCollector.EventParameters.RegisterMethod.VCO;
 
 /*
  * Created by Ayi on 05/06/2017.
@@ -140,8 +133,14 @@ public class RegisterController extends BaseController implements RegisterMvpVie
     @BindView(R.id.button_visa_checkout)
     Button mVcoButton;
 
+    @BindView(R.id.register_base_container)
+    ViewGroup mBaseContainer;
+
+
     private String mRegisterMethod = NO_ACTION;
     private boolean isRegisterSuccess = false;
+
+    private ReCaptchaWebHelper reCaptchaWebHelper = null;
 
     public static RegisterController newInstance() {
 
@@ -296,6 +295,12 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
     @Override
     public boolean handleBack() {
+        if (reCaptchaWebHelper != null) {
+            reCaptchaWebHelper.onBackPressed();
+            reCaptchaWebHelper = null;
+            return true;
+        }
+
         if (!isRegisterSuccess) {
             mActivity.cancelAuthHandlers();
         }
@@ -467,14 +472,23 @@ public class RegisterController extends BaseController implements RegisterMvpVie
 
             boolean emailsAccepted = mEmailsToggle != null && mEmailsToggle.getCheckedTogglePosition() == 0;
 
-            mPresenter.registerUser(
-                    mActivity,
-                    mRegisterForenameField.getText().toString(),
-                    mRegisterSurnameField.getText().toString(),
-                    mRegisterEmailField.getText().toString(),
-                    mRegisterPasswordField.getText().toString(),
-                    tncAccepted,
-                    emailsAccepted);
+            hideKeyboard();
+
+            reCaptchaWebHelper = new ReCaptchaWebHelper();
+            reCaptchaWebHelper.initiateReCaptchaV2Challenge(
+                    mBaseContainer,
+                    mActivity.getResources().getString(R.string.recaptcha_site_key),
+                    token -> {
+                        mPresenter.registerUser(
+                                mRegisterForenameField.getText().toString(),
+                                mRegisterSurnameField.getText().toString(),
+                                mRegisterEmailField.getText().toString(),
+                                mRegisterPasswordField.getText().toString(),
+                                tncAccepted,
+                                emailsAccepted,
+                                token);
+                        reCaptchaWebHelper = null;
+                    });
         }
     }
 

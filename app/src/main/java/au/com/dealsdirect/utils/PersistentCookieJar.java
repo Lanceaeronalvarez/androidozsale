@@ -72,17 +72,22 @@ public class PersistentCookieJar implements ClearableCookieJar {
         for (Iterator<Cookie> it = cache.iterator(); it.hasNext(); ) {
             Cookie currentCookie = it.next();
 
-            if (isCookieExpired(currentCookie)) {
+            if (isCookieExpired(currentCookie) || currentCookie.value().equals("")) {
                 cookiesToRemove.add(currentCookie);
                 it.remove();
 
             } else if (currentCookie.matches(url) || BuildConfig.IS_TEST) {
                 validCookies.add(currentCookie);
+            } else if(currentCookie.name().equals("sc") ||
+                    currentCookie.name().equals("c") ||
+                    currentCookie.name().equals("ca") ||
+                    currentCookie.name().equals("utm_source") ||
+                    currentCookie.name().equals("utm_campaign")){
+                cookiesToRemove.add(currentCookie);
             }
         }
 
         persistor.removeAll(cookiesToRemove);
-
         updateCookieSet();
         return validCookies;
     }
@@ -111,6 +116,10 @@ public class PersistentCookieJar implements ClearableCookieJar {
 
     synchronized public Set<Cookie> getCookieSet() {
         return new HashSet<>(cookieSet);
+    }
+
+    synchronized public CookieCache getCookieCache() {
+        return cache;
     }
 
     synchronized private void updateCookieSet() {

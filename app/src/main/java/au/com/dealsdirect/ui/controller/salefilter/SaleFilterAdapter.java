@@ -4,13 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
@@ -24,7 +24,6 @@ import java.util.Set;
 import au.com.dealsdirect.R;
 import au.com.dealsdirect.data.network.model.category.GetCategoryTreeResponse;
 import au.com.dealsdirect.data.network.model.sorting.SortingResponse;
-import au.com.dealsdirect.ui.controller.saleitems.SaleItemsController;
 import au.com.dealsdirect.ui.controller.searchfilter.adapter.SearchChipModel;
 import au.com.dealsdirect.utils.BundleKeys;
 import butterknife.BindView;
@@ -40,6 +39,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
     private String mSourceType = "";
     private boolean mShowSubCategories;
     private boolean mShowSort;
+    private boolean isBrandFilter;
     private boolean mShowColor;
     private boolean mShowCategory;
     private Set<SearchChipModel> mSearchItemsList;
@@ -52,8 +52,9 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
     private ArrayList<SortingResponse> mSortingList = new ArrayList<>();
     private ArrayList<String> mfilterCountList = new ArrayList<>();
     private ArrayList<String> mSubCategoriesToShow = new ArrayList<>();
+    private ArrayList<Pair<String, String>> mBrandsWithTotal = new ArrayList();
 
-    public SaleFilterAdapter(Context context, SaleFilterClickListener clickListener, int filterLevel, List<?> data, List<String> tabTitles, String filterType, List<SearchChipModel> selectedFilters, List<GetCategoryTreeResponse> mCategoryTree, boolean showSubCategories, Set<String> categoryKeys, ArrayList<SortingResponse> sortingList, Boolean showSort, ArrayList<String> filterCountList, Boolean showColor, String categoryKey, String sourceType, boolean showCategory) {
+    public SaleFilterAdapter(Context context, SaleFilterClickListener clickListener, int filterLevel, List<?> data, List<String> tabTitles, String filterType, List<SearchChipModel> selectedFilters, List<GetCategoryTreeResponse> mCategoryTree, boolean showSubCategories, Set<String> categoryKeys, ArrayList<SortingResponse> sortingList, Boolean showSort, ArrayList<String> filterCountList, Boolean showColor, String categoryKey, String sourceType, boolean showCategory, ArrayList<Pair<String, String>> brandsWithTotal) {
         mContext = context;
         mSaleFilterAdapterClickListener = clickListener;
         mFilterLevel = filterLevel;
@@ -76,6 +77,10 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
         } else {
             mfilterCountList.addAll(filterCountList);
             mData = (ArrayList<String>) tabTitles;
+        }
+        if(mFilterType.equalsIgnoreCase(BundleKeys.BRANDS_FACETFILTER_NAME)) {
+            isBrandFilter = true;
+            mBrandsWithTotal.addAll(brandsWithTotal);
         }
     }
 
@@ -112,6 +117,12 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
 
             if (!mShowSort && mFilterType != BundleKeys.COLORS_FACETFILTER_NAME && !mfilterCountList.isEmpty()) {
                 holder.productCountText.setText("(" + mfilterCountList.get(position) + ")");
+            }
+
+            //Brand filter improvements
+            if(mFilterType == BundleKeys.BRANDS_FACETFILTER_NAME){
+                holder.categoryText.setText(mBrandsWithTotal.get(position).first);
+                holder.productCountText.setText("(" + mBrandsWithTotal.get(position).second + ")");
             }
 
             if (mShowSubCategories) {
@@ -284,13 +295,16 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                     notifyDataSetChanged();
                 });
             } else {
+
                 for (SearchChipModel chip : mSelectedFilters) {
                     if (chip.getFilterType().equals(mFilterType)) {
-                        if (chip.getChipTitle().equals(mData.get(position))) {
+                        if (chip.getChipTitle().equals(mData.get(position)) && !isBrandFilter) {
                             holder.filterCheckbox.setChecked(true);
                             if (mShowSort) {
                                 holder.filterCheck.setVisibility(View.VISIBLE);
                             }
+                        }else if(isBrandFilter && chip.getChipTitle().equals(mBrandsWithTotal.get(position).first)){
+                            holder.filterCheckbox.setChecked(true);
                         }
                     }
                 }
@@ -299,6 +313,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
+                            System.out.println("brandfilterChecked : " + mBrandsWithTotal.get(position).first + " | " + isBrandFilter);
                             addChip(position);
                         } else {
                             removeChip(position);
@@ -363,9 +378,9 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
     }
 
     private void addChip(int position) {
-        SearchChipModel newChip = new SearchChipModel(mFilterType, mData.get(position), mShowSort ? mSortingList.get(position).getKey() : "");
+        SearchChipModel newChip = new SearchChipModel(mFilterType,  isBrandFilter ? mBrandsWithTotal.get(position).first : mData.get(position), mShowSort ? mSortingList.get(position).getKey() : "");
         mSearchItemsList.add(newChip);
-        mSaleFilterAdapterClickListener.onAddFilter(mFilterType, mData.get(position), newChip);
+        mSaleFilterAdapterClickListener.onAddFilter(mFilterType, isBrandFilter ? mBrandsWithTotal.get(position).first : mData.get(position), newChip);
     }
 
     private void removeChip(int position) {
@@ -375,7 +390,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
             final Set<SearchChipModel> newSet = new HashSet<>(mPreSelectedFilters);
             for (Iterator<SearchChipModel> it = mPreSelectedFilters.iterator(); it.hasNext(); ) {
                 SearchChipModel chip = it.next();
-                if (chip.getChipTitle().equals(mData.get(position))) {
+                if (chip.getChipTitle().equals(isBrandFilter ? mBrandsWithTotal.get(position).first : mData.get(position))) {
                     newSet.remove(chip);
                 }
             }
@@ -386,7 +401,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
             final Set<SearchChipModel> newSet = new HashSet<>(mSelectedFilters);
             for (Iterator<SearchChipModel> it = mSelectedFilters.iterator(); it.hasNext(); ) {
                 SearchChipModel chip = it.next();
-                if (chip.getChipTitle().equals(mData.get(position)) && chip.getFilterType().equals(mFilterType)) {
+                if (chip.getChipTitle().equals(isBrandFilter ? mBrandsWithTotal.get(position).first : mData.get(position)) && chip.getFilterType().equals(mFilterType)) {
                     newSet.remove(chip);
                     chipToRemove = chip;
                 }
@@ -395,7 +410,7 @@ public class SaleFilterAdapter extends RecyclerView.Adapter<SaleFilterAdapter.Sa
 
         if (chipToRemove != null) {
             mSearchItemsList.remove(chipToRemove);
-            mSaleFilterAdapterClickListener.onRemoveFilter(mFilterType, mData.get(position), chipToRemove);
+            mSaleFilterAdapterClickListener.onRemoveFilter(mFilterType, isBrandFilter ? mBrandsWithTotal.get(position).first : mData.get(position), chipToRemove);
         }
     }
 
