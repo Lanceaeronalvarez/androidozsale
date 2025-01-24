@@ -613,10 +613,8 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
     public void setRecyclerAdapter(String type, ArrayList<String> filterCountList) {
         mCurrentCountList = filterCountList;
         mFilterAdapter = new SaleFilterAdapter(
-                mActivity,
                 this,
                 mfilterLevel,
-                new ArrayList<>(),
                 mFiltersToDisplay,
                 type,
                 mSelectedFilters,
@@ -627,8 +625,6 @@ public class SaleFilterController extends BaseController implements SaleFilterCl
                 mShowSort,
                 filterCountList,
                 mShowColor,
-                mCategoryKey,
-                mSourceType,
                 mShowCategory,
                 mBrandsWithTotal);
 

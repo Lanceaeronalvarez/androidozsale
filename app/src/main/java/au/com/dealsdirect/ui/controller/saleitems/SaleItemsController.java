@@ -2104,9 +2104,18 @@ public class SaleItemsController extends BaseController implements SaleItemsMvpV
     }
 
     private void setupSearchFilters() {
+        if (!isViewAttached()) {
+            return;
+        }
+
         mSearchFilterRouter = getChildRouter(mSearchFilterContainer);
         mSearchFilterSkeleton.setVisibility(View.GONE);
         if (mSearchFilterMvpView == null) {
+
+            if (mActivity.getMainController() == null ||
+                    mActivity.getMainController().getShopRouter() == null) {
+                return;
+            }
 
             // because two instances of SaleItemsController can exist,
             // there needs to be a SearchFilterController independently available for each
